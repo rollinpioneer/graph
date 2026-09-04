@@ -1,0 +1,9 @@
+claim_id,claim_text,priority,evidence_source,support_status,support_metric,support_value,limitation,paper_location
+C1,Graph-structured dense reward represents multi-path demonstrations.,primary,Stage5 frozen reward + Stage7.2 ablation,supported,alternative_structural_support,True,bounded benchmark graph,method/results
+C2,Reward represents failure and recovery transitions.,primary,Stage5 recovery diagnostics + Stage7.2,supported,recovery_structural_support,True,recovery coverage is finite,results
+C3,Long history is necessary.,primary,Stage7.3 history comparison,partially_supported,history32_vs_history1_node_f1_gain,0.13,engineering choice; not a universal necessity,ablation
+C4,Stable policy improvement across seeds.,secondary,Stage6/6R1 paired evidence,not_supported,strict_seed_consistency,False,retain as mixed secondary evidence,limitations
+C5,Automatic graph discovery is the main contribution.,primary,Stage7.6 auto graph extension,not_supported,cross_seed_node_ari,0.58,manual graph remains main,limitations
+C6,Uncertainty calibration is an auxiliary error signal.,secondary,Stage7.5 OOD uncertainty,supported,reward_error_AUROC,0.72,not used to change main reward,diagnostics
+C7,Coverage scaling establishes a general learning curve.,secondary,R1 real trained coverage subsets,not_supported,real_coverage_node_macro_f1,below_support_threshold,coverage test contains no paired legal order for path gap,limitations
+C8,Generalization to an unseen alternative order.,secondary,R1 real trained order holdout,not_supported,unseen_order_alternative_edge_f1/path_gap,threshold_not_met_or_not_estimable,do not claim unseen-order generalization,limitations

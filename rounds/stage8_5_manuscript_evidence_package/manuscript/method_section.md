@@ -1,0 +1,3 @@
+# Method
+
+We use the frozen manual runtime graph specifications `transport_dual_order_graph_runtime_v1.0.1.yaml, transport_recovery_graph_runtime_v1.0.1.yaml`. A checkpoint ensemble predicts graph-node and edge distributions, remaining cost, and within-node progress. The reward engine then applies the fixed graph transition rule in `method_equations.tex`. The locked values are lambda=0.5, eta=0.0, and beta=0.0. Because eta and beta are zero, nonzero loop penalties and uncertainty LCB are not presented as validated main-result contributions. Recovery credit is bounded by accumulated failure debt.

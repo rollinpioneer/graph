@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_history_granularity.py", line 52, in <module>
+    if __name__=='__main__':main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_history_granularity.py", line 31, in main
+    ck=Path(j['output_dir'])/'checkpoints/best.pt';selected.append({'variant_id':j['variant_id'],'seed':j['seed'],'history_steps':j['history_steps'],'granularity':j['granularity'],'checkpoint_path':str(ck),'checkpoint_sha256':__import__('hashlib').sha256(ck.read_bytes()).hexdigest(),'selection_split':'val','test_used':False,'status':'PASS'})
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/pathlib.py", line 1259, in read_bytes
+    with self.open(mode='rb') as f:
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/pathlib.py", line 1252, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/pathlib.py", line 1120, in _opener
+    return self._accessor.open(self, flags, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_reward_only/model_variants_v1/history_granularity_v1/jobs/history_1_default__s20260906/checkpoints/best.pt'
+{
+  "training_jobs": 12,
+  "inference_jobs": 36,
+  "status": "PASS",
+  "decision": "HISTORY_GRANULARITY_COMPLETE"
+}

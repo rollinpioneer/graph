@@ -1,0 +1,146 @@
+{
+  "episode_id": "transport_dual_order__0081",
+  "task_id": "transport_dual_order",
+  "graph_id": "transport_dual_order_graph",
+  "graph_version": "1.0.0",
+  "source_path": "artifacts/pathgraph_sarm/stage2/rounds/stage2_2_targeted_collection/jobs/synthetic/transport_dual_order__0081.json",
+  "path_signature": [
+    "B",
+    "A"
+  ],
+  "outcome": "success",
+  "node_intervals": [
+    {
+      "node_id": "start",
+      "start_step": 0,
+      "end_step": 9,
+      "history_required": false,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "info.subgoal_A_done",
+        "info.subgoal_B_done"
+      ]
+    },
+    {
+      "node_id": "B_done",
+      "start_step": 10,
+      "end_step": 49,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "info.subgoal_A_done",
+        "info.subgoal_B_done"
+      ]
+    },
+    {
+      "node_id": "A_done",
+      "start_step": 50,
+      "end_step": 94,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "info.subgoal_A_done",
+        "info.subgoal_B_done"
+      ]
+    },
+    {
+      "node_id": "success",
+      "start_step": 95,
+      "end_step": 119,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "info.subgoal_A_done",
+        "info.subgoal_B_done"
+      ]
+    }
+  ],
+  "edge_intervals": [
+    {
+      "edge_id": "start_to_B_done",
+      "edge_type": "alternative",
+      "start_step": 9,
+      "end_step": 10,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    },
+    {
+      "edge_id": "B_done_to_A_done",
+      "edge_type": "alternative",
+      "start_step": 49,
+      "end_step": 50,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    },
+    {
+      "edge_id": "A_done_to_success",
+      "edge_type": "forward",
+      "start_step": 94,
+      "end_step": 95,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    }
+  ],
+  "progress_anchors": [
+    {
+      "node_id": "start",
+      "step": 0,
+      "value": 0.0
+    },
+    {
+      "node_id": "B_done",
+      "step": 10,
+      "value": 0.0
+    },
+    {
+      "node_id": "A_done",
+      "step": 50,
+      "value": 0.0
+    },
+    {
+      "node_id": "success",
+      "step": 95,
+      "value": 0.0
+    },
+    {
+      "node_id": "start",
+      "step": 9,
+      "value": 1.0
+    },
+    {
+      "node_id": "B_done",
+      "step": 49,
+      "value": 1.0
+    },
+    {
+      "node_id": "A_done",
+      "step": 94,
+      "value": 1.0
+    },
+    {
+      "node_id": "success",
+      "step": 119,
+      "value": 1.0
+    }
+  ],
+  "failure_events": [],
+  "recovery_events": [],
+  "review": {
+    "status": "accepted",
+    "reviewer": "stage2_deterministic_rule_review",
+    "notes": "evidence from state trace or intervention log; no stage1 placeholder events"
+  },
+  "provenance": [
+    "state rule"
+  ]
+}

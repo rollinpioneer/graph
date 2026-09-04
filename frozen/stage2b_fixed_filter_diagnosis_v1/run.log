@@ -1,0 +1,67 @@
+
+AUDIT
+{
+  "matrix_path": "/home/__compress_data/xushijie/CUPID/results/influence_layers/rollout_demo_influence.npy",
+  "matrix_sha256": "95a9579a56c7f897fa9e42a5229b286820fde07aa2ede193cb53903f3b918fb9",
+  "manifest_path": "/home/__compress_data/xushijie/CUPID/manifests/rollout100/episode_manifest.csv",
+  "manifest_sha256": "7e6558519f3fb74ab584286d95e876d6db3d95042878c4fa4f8040c18f1e9fed",
+  "split_json_path": "/home/__compress_data/xushijie/CUPID/manifests/training_split/dataset_split.json",
+  "split_json_sha256": "c9cd503db9acd00e02917474018c98c09be22da90b197e1f648f89d11a53d2cc",
+  "official_scores_path": "/home/__compress_data/xushijie/CUPID/results/influence_layers/final_demo_scores.csv",
+  "official_scores_sha256": "9fe42db8d5c26d8ea13d27584f39f118c11ed1afb8b5cd516e39b058b997eb43",
+  "num_rollouts": 100,
+  "num_demos": 192,
+  "success_count": 71,
+  "failure_count": 29,
+  "official_score_column": "score",
+  "official_id_column": "dataset_demo_index",
+  "reconstruction": {
+    "max_abs_error": 7.1316965239986985e-06,
+    "rmse": 1.3010468700718802e-06,
+    "direct_sum_rmse": 26.42021611148073
+  }
+}
+
+BOUNDARY SUMMARY
+ proportion  delete_k  last_delete_original_demo  first_keep_original_demo  full100_boundary_gap  pairwise_gap_standard_error  gap_divided_by_standard_error  demos_within_one_standard_error_of_boundary  demos_within_two_standard_errors_of_boundary  bootstrap_stable_delete_count_p_ge_0.90  bootstrap_stable_keep_count_p_le_0.10  bootstrap_ambiguous_count
+       0.05        10                        201                        90              0.012603                     0.292275                       0.043121                                           21                                            37                                        0                                    169                         23
+       0.10        19                        269                       191              0.005598                     0.214853                       0.026053                                           31                                            70                                        2                                    154                         36
+       0.20        38                        250                       127              0.000200                     0.067776                       0.002956                                           57                                           121                                        7                                    116                         69
+       0.30        58                        121                       257              0.000622                     0.102557                       0.006063                                           87                                           155                                       16                                     81                         95
+
+SUBSAMPLE SUMMARY
+ budget  proportion  delete_k  stable_delete_count_p_ge_0.90  stable_keep_count_p_le_0.10  ambiguous_count_p_between_0.10_and_0.90  strongly_ambiguous_count_p_between_0.20_and_0.80
+     10        0.05        10                              0                          154                                       38                                                13
+     10        0.10        19                              0                          126                                       66                                                34
+     10        0.20        38                              0                           58                                      134                                                82
+     10        0.30        58                              0                           14                                      178                                               136
+     25        0.05        10                              0                          161                                       31                                                17
+     25        0.10        19                              0                          141                                       51                                                34
+     25        0.20        38                              0                           92                                      100                                                68
+     25        0.30        58                              0                           47                                      145                                               105
+     50        0.05        10                              0                          169                                       23                                                15
+     50        0.10        19                              2                          154                                       36                                                27
+     50        0.20        38                              5                          114                                       73                                                46
+     50        0.30        58                             13                           78                                      101                                                69
+     75        0.05        10                              2                          174                                       16                                                11
+     75        0.10        19                              5                          162                                       25                                                15
+     75        0.20        38                             17                          131                                       44                                                30
+     75        0.30        58                             28                          102                                       62                                                34
+
+CROSS-POOL SUMMARY
+                           method  evaluations  nonempty_rate  selected_count_mean  selected_count_median  precision_mean  precision_std  recall_mean  jaccard_mean  independent_rank_percentile_mean  independent_negative_score_rate_mean
+                   fixed_bottom10          200           1.00               19.000                   19.0        0.542895       0.103607     0.271447      0.223116                          0.292318                              0.695263
+                   fixed_bottom20          200           1.00               38.000                   38.0        0.422105       0.062644     0.422105      0.269509                          0.357269                              0.607105
+matched_size_bottom_for_p_ge_0.80          200           1.00               11.005                   11.0        0.597905       0.149923     0.169342      0.151785                          0.261895                              0.734731
+matched_size_bottom_for_p_ge_0.90          200           1.00                5.290                    5.0        0.631562       0.238420     0.083553      0.079280                          0.247305                              0.755652
+matched_size_bottom_for_p_ge_0.95          200           0.95                2.495                    2.0        0.548246       0.365221     0.036184      0.035224                          0.294784                              0.683289
+            stable_core_p_ge_0.80          200           1.00               11.005                   11.0        0.530887       0.149273     0.151447      0.133760                          0.304385                              0.674298
+            stable_core_p_ge_0.90          200           1.00                5.290                    5.0        0.526538       0.245837     0.070789      0.066397                          0.297123                              0.693886
+            stable_core_p_ge_0.95          200           0.95                2.495                    2.0        0.488246       0.364511     0.030526      0.029603                          0.308594                              0.658202
+
+DECISION: FAIL_SQUARE_FIXED_FILTER_BRANCH_CONSIDER_TRANSPORT
+OUTPUT: /home/xushijie/CUPID/results/stage2b_fixed_filter_diagnosis_v1
+
+real	0m1.476s
+user	0m1.783s
+sys	0m2.572s

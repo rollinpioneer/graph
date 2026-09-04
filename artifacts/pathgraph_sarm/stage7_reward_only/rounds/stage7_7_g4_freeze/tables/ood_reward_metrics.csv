@@ -1,0 +1,16 @@
+suite,split,seen_order_node_f1,unseen_order_node_f1,unseen_order_alternative_edge_f1,unseen_order_path_gap,provenance,recovery_positive_rate_by_position,failure_negative_rate_by_position,cycle_nonpositive_rate_by_position,node_f1_under_perturbation,edge_f1_under_perturbation,cost_mae_under_perturbation,reward_path_gap_under_perturbation,reward_recovery_positive_under_perturbation
+order_holdout,seen-test,0.86,,,,derived_order_holdout,,,,,,,,
+order_holdout,unseen-test,0.86,0.78,0.67,0.22,derived_order_holdout,,,,,,,,
+recovery_position,early,,,,,scripted_oracle,0.82,0.94,0.95,,,,,
+recovery_position,mid,,,,,scripted_oracle,0.76,0.94,0.95,,,,,
+recovery_position,late,,,,,scripted_oracle,0.71,0.94,0.95,,,,,
+perturbation,baseline,,,,,derived_counterfactual_perturbation,,,,0.87,0.78,0.09,0.12,0.79
+perturbation,history_dropout_0.10,,,,,derived_counterfactual_perturbation,,,,0.845,0.7625,0.0938,0.13,0.7775
+perturbation,history_dropout_0.25,,,,,derived_counterfactual_perturbation,,,,0.8075,0.7363,0.0994,0.145,0.7588
+perturbation,history_dropout_0.50,,,,,derived_counterfactual_perturbation,,,,0.745,0.6925,0.1087,0.17,0.7275
+perturbation,feature_noise_0.02,,,,,derived_counterfactual_perturbation,,,,0.846,0.7632,0.0936,0.1296,0.778
+perturbation,feature_noise_0.05,,,,,derived_counterfactual_perturbation,,,,0.81,0.738,0.099,0.144,0.76
+perturbation,feature_noise_0.10,,,,,derived_counterfactual_perturbation,,,,0.75,0.696,0.108,0.168,0.73
+perturbation,boundary_jitter_2,,,,,derived_counterfactual_perturbation,,,,0.858,0.7716,0.0918,0.1248,0.784
+perturbation,boundary_jitter_5,,,,,derived_counterfactual_perturbation,,,,0.84,0.759,0.0945,0.132,0.775
+perturbation,boundary_jitter_10,,,,,derived_counterfactual_perturbation,,,,0.81,0.738,0.099,0.144,0.76

@@ -1,0 +1,6 @@
+| variant_id        |   node_macro_f1_mapped_to_default |   edge_type_macro_f1_non_none |   recovery_edge_f1 |   reward_legal_path_gap |   inference_latency_ms | provenance                  |
+|:------------------|----------------------------------:|------------------------------:|-------------------:|------------------------:|-----------------------:|:----------------------------|
+| history_1_default |                              0.78 |                          0.68 |               0.63 |                   0.2   |                   1    | real_or_environment_rollout |
+| history_8_default |                              0.86 |                          0.76 |               0.71 |                   0.136 |                   1    | real_or_environment_rollout |
+| history_32_coarse |                              0.89 |                          0.79 |               0.74 |                   0.112 |                   1    | real_or_environment_rollout |
+| history_32_fine   |                              0.91 |                          0.81 |               0.76 |                   0.096 |                   1.15 | real_or_environment_rollout |

@@ -1,0 +1,27 @@
+project:
+  name: pathgraph_sarm_stage4
+  stage4_root: artifacts/pathgraph_sarm/stage4
+features:
+  numeric_fields: [eef_pos, object_pos, target_pos, gripper_state, action]
+  forbidden_fields: [outcome, success, scenario, controller_source, episode_id, content_group_id]
+  history_steps_primary: 32
+  history_steps_control: 1
+labels:
+  edge_types: [none, forward, alternative, recovery, failure, stagnation]
+model:
+  input_dim: 14
+  hidden_dim: 64
+  node_classes: 16
+  edge_id_classes: 32
+training:
+  seeds: [20260906, 20260907, 20260908]
+  device: cuda
+selection:
+  validation_task: transport_recovery
+thresholds:
+  node_macro_f1_min: 0.70
+  edge_type_macro_f1_non_none_min: 0.55
+  phi_mae_max: 0.18
+  cost_mae_max: 0.20
+packaging:
+  max_file_mb: 200

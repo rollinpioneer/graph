@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/train_reward_variant.py", line 14, in <module>
+    if __name__=='__main__':main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/train_reward_variant.py", line 9, in main
+    manifest=Path(a.supervision)/'tables/episode_manifest.csv'; row=next(csv.DictReader(manifest.open())); z=np.load(Path(a.supervision)/row['file']); x=z['x']; n=min(len(x),64); w=np.zeros((n,a.history_steps,14),np.float32)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/csv.py", line 111, in __next__
+    row = next(self.reader)
+StopIteration

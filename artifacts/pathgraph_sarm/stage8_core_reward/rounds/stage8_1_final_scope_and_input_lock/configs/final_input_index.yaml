@@ -1,0 +1,31 @@
+mode: core_reward_only
+statistics_unit: content_group_id
+model:
+  ensemble_size: 3
+  bundle: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6/stage6_inputs/reward_v1_persistent/configs/model_bundle_persistent.json
+  checkpoint_manifest: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage8_core_reward/final_inputs_v1/manifests/final_checkpoint_manifest.tsv
+suites:
+  val:
+    supervision_root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage4/supervision_v1
+    selection: split_original=val
+  test:
+    supervision_root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage4/supervision_v1
+    selection: split_original=test
+  stage3_diagnostic:
+    diagnostic_root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage3/diagnostic_suite_v1
+    selection: 'frozen Stage 3 reporting panel: val plus test recovery episodes'
+reward:
+  config: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/configs/reward_config_v1.yaml
+  lock: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/configs/reward_selection_lock.json
+  engine: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/code/reward_engine.py
+reference_results:
+  reward_main_table: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_refine1/g4_refine1_v1/tables/reward_main_table.csv
+  core_ablation_effects: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_refine1/g4_refine1_v1/tables/core_ablation_effects.csv
+  history_granularity: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_refine1/g4_refine1_v1/tables/history_granularity_summary.csv
+  uncertainty: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_refine1/g4_refine1_v1/tables/uncertainty_error_detection.csv
+unsupported_extensions:
+  coverage_scaling: false
+  unseen_order: false
+  stable_policy: false
+  auto_graph_main: false
+input_hash_manifest: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage8_core_reward/final_inputs_v1/manifests/final_input_hashes.tsv

@@ -1,0 +1,85 @@
+/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/llvmlite/binding/ffi.py:175: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+numcodec 'imagecodecs_aec' already registered
+numcodec 'imagecodecs_apng' already registered
+numcodec 'imagecodecs_avif' already registered
+numcodec 'imagecodecs_bitorder' already registered
+numcodec 'imagecodecs_bitshuffle' already registered
+numcodec 'imagecodecs_blosc' already registered
+numcodec 'imagecodecs_blosc2' already registered
+numcodec 'imagecodecs_brotli' already registered
+numcodec 'imagecodecs_byteshuffle' already registered
+numcodec 'imagecodecs_bz2' already registered
+numcodec 'imagecodecs_cms' already registered
+numcodec 'imagecodecs_deflate' already registered
+numcodec 'imagecodecs_delta' already registered
+numcodec 'imagecodecs_float24' already registered
+numcodec 'imagecodecs_floatpred' already registered
+numcodec 'imagecodecs_gif' already registered
+numcodec 'imagecodecs_heif' already registered
+numcodec 'imagecodecs_jetraw' already registered
+numcodec 'imagecodecs_jpeg' already registered
+numcodec 'imagecodecs_jpeg2k' already registered
+numcodec 'imagecodecs_jpegls' already registered
+numcodec 'imagecodecs_jpegxl' already registered
+numcodec 'imagecodecs_jpegxr' already registered
+numcodec 'imagecodecs_lerc' already registered
+numcodec 'imagecodecs_ljpeg' already registered
+numcodec 'imagecodecs_lz4' already registered
+numcodec 'imagecodecs_lz4f' already registered
+numcodec 'imagecodecs_lzf' already registered
+numcodec 'imagecodecs_lzma' already registered
+numcodec 'imagecodecs_lzw' already registered
+numcodec 'imagecodecs_packbits' already registered
+numcodec 'imagecodecs_pglz' already registered
+numcodec 'imagecodecs_png' already registered
+numcodec 'imagecodecs_qoi' already registered
+numcodec 'imagecodecs_rcomp' already registered
+numcodec 'imagecodecs_snappy' already registered
+numcodec 'imagecodecs_spng' already registered
+numcodec 'imagecodecs_tiff' already registered
+numcodec 'imagecodecs_webp' already registered
+numcodec 'imagecodecs_xor' already registered
+numcodec 'imagecodecs_zfp' already registered
+numcodec 'imagecodecs_zlib' already registered
+numcodec 'imagecodecs_zlibng' already registered
+numcodec 'imagecodecs_zopfli' already registered
+numcodec 'imagecodecs_zstd' already registered
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/repo/train_trak_diffusion.py", line 240, in <module>
+    main()
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/click/core.py", line 1128, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/click/core.py", line 1053, in main
+    rv = self.invoke(ctx)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/click/core.py", line 1395, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/click/core.py", line 754, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/__compress_data/xushijie/CUPID/repo/train_trak_diffusion.py", line 115, in main
+    policy, cfg = get_policy_from_checkpoint(checkpoint, device=device)
+  File "/home/__compress_data/xushijie/CUPID/repo/diffusion_policy/common/trak_util.py", line 117, in get_policy_from_checkpoint
+    payload = torch.load(open(str(checkpoint), 'rb'), pickle_module=dill)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 712, in load
+    return _load(opened_zipfile, map_location, pickle_module, **pickle_load_args)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 1049, in _load
+    result = unpickler.load()
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/dill/_dill.py", line 646, in load
+    obj = StockUnpickler.load(self)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 1019, in persistent_load
+    load_tensor(dtype, nbytes, key, _maybe_decode_ascii(location))
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 1001, in load_tensor
+    wrap_storage=restore_location(storage, location),
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 175, in default_restore_location
+    result = fn(storage, location)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/serialization.py", line 157, in _cuda_deserialize
+    return obj.cuda(device)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/_utils.py", line 71, in _cuda
+    with torch.cuda.device(device):
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/cuda/__init__.py", line 275, in __enter__
+    self.prev_idx = torch.cuda.current_device()
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/cuda/__init__.py", line 482, in current_device
+    _lazy_init()
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/cuda/__init__.py", line 217, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: Unrecognized CachingAllocator option: expandable_segments

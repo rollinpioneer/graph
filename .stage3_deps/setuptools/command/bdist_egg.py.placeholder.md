@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `bdist_egg.py`
+- Original relative path: `.stage3_deps/setuptools/command/bdist_egg.py`
+- File type: `environment_binary`
+- Intended use: local CUDA/PyTorch environment installation
+- Original size: 17142 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `.stage3_deps/setuptools/command/bdist_egg.py`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

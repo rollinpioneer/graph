@@ -1,0 +1,21 @@
+| Evidence role                            | Result / claim                                   | Status                              | Provenance                          |
+|:-----------------------------------------|:-------------------------------------------------|:------------------------------------|:------------------------------------|
+| supported_primary_result                 | path_consistency                                 | supported                           | limited_controlled_support          |
+| supported_primary_result                 | failure_sign                                     | supported                           | group_bootstrap                     |
+| supported_primary_result                 | recovery_sign                                    | supported                           | group_bootstrap                     |
+| supported_primary_result                 | loop_safety                                      | supported                           | limited_controlled_support          |
+| supported_primary_result                 | success_separation                               | supported                           | group_bootstrap                     |
+| qualified_or_inconclusive_primary_result | alternative_A_collapse                           | not_supported_or_inconclusive       | limited_controlled_support          |
+| qualified_or_inconclusive_primary_result | alternative_B_collapse                           | not_supported_or_inconclusive       | limited_controlled_support          |
+| supported_primary_result                 | remove_recovery                                  | supported                           | group_bootstrap                     |
+| supported_primary_result                 | remove_debt_cap                                  | supported                           | group_bootstrap                     |
+| qualified_or_inconclusive_primary_result | remove_phi                                       | not_supported_or_inconclusive       | group_bootstrap                     |
+| qualified_auxiliary_result               | node_macro_f1                                    | descriptive_checkpoint_reproduction | stage8_reproduced_reward_main_table |
+| qualified_auxiliary_result               | edge_type_macro_f1_non_none                      | descriptive_checkpoint_reproduction | stage8_reproduced_reward_main_table |
+| qualified_auxiliary_result               | phi_mae                                          | descriptive_checkpoint_reproduction | stage8_reproduced_reward_main_table |
+| qualified_auxiliary_result               | cost_mae                                         | descriptive_checkpoint_reproduction | stage8_reproduced_reward_main_table |
+| unsupported_or_negative_result           | stable policy improvement                        | excluded_by_final_claim_scope       | final_claim_scope_lock              |
+| unsupported_or_negative_result           | coverage scaling generalization                  | excluded_by_final_claim_scope       | final_claim_scope_lock              |
+| unsupported_or_negative_result           | unseen-order generalization                      | excluded_by_final_claim_scope       | final_claim_scope_lock              |
+| unsupported_or_negative_result           | automatic graph discovery as main contribution   | excluded_by_final_claim_scope       | final_claim_scope_lock              |
+| unsupported_or_negative_result           | nonzero beta or eta as validated main components | excluded_by_final_claim_scope       | final_claim_scope_lock              |

@@ -1,0 +1,19 @@
+linearizations:
+  dual_order_A_first:
+    task_id: transport_dual_order
+    canonical_nodes: [start, A_done, B_done, success]
+    off_chain_projection: last_valid_rank_with_local_reset
+  dual_order_B_first:
+    task_id: transport_dual_order
+    canonical_nodes: [start, B_done, A_done, success]
+    off_chain_projection: last_valid_rank_with_local_reset
+  transport_recovery_chain:
+    task_id: transport_recovery
+    canonical_nodes: [start, grasped, in_transit, placed, success]
+    off_chain_projection: last_valid_rank_with_local_reset
+expected_semantic_sign:
+  forward: positive
+  alternative: positive
+  recovery: positive
+  failure: negative
+  stagnation: non_positive

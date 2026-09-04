@@ -1,0 +1,12 @@
+milestone = M5_REWARD_EVIDENCE_R1
+decision = GO_STAGE8_CORE_REWARD_ONLY
+mode = reward_only
+coverage_training = real_cuda_6_of_6
+coverage_inference = real_checkpoint_18_of_18
+order_holdout_training = real_cuda_6_of_6
+order_holdout_inference = real_checkpoint_12_of_12
+manual_graph_is_main = true
+policy_evidence = secondary_mixed
+main_reward_retuned = false
+policy_training_reopened = false
+checkpoint_packaging = omitted_by_default

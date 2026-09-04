@@ -1,0 +1,14 @@
+# M1 decision: GO_STAGE3
+
+All Stage 2 hard gates pass.
+
+- decision: GO_STAGE3
+- graph_valid_task_count: 2
+- alternative_order_task_count: 1
+- recovery_task_count: 1
+- path_min: 20
+- recovery_min: 20
+- critical_edge_min: 8
+- graph_specs_valid: True
+- stage1_placeholder_in_gt: False
+- split_group_leakage: 0

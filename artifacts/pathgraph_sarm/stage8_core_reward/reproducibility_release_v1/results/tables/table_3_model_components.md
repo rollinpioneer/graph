@@ -1,0 +1,8 @@
+| Component metric            |   Value |
+|:----------------------------|--------:|
+| node_macro_f1               |   0.735 |
+| edge_type_macro_f1_non_none |   0.62  |
+| edge_id_macro_f1            |   0.678 |
+| phi_mae                     |   0.151 |
+| remaining_cost_mae          |   0.167 |
+| cost_pair_accuracy          |   0.871 |

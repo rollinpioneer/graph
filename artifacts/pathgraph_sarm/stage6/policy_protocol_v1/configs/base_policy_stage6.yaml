@@ -1,0 +1,35 @@
+stage: 6
+stage5_reward_bundle: artifacts/pathgraph_sarm/stage5/reward_v1
+statistics_unit: content_group_id
+tasks:
+  - transport_recovery
+  - transport_dual_order
+policy:
+  obs_dim: 14
+  action_dim: 4
+  action_chunk_size: 16
+  obs_horizon: 2
+  hidden_dim: 128
+  train_steps: 2000
+  smoke_steps: 2000
+  batch_size: 32
+  learning_rate: 0.002
+  policy_seeds: [20260909, 20260910, 20260911]
+reward:
+  history_steps: 32
+  lambda: 0.5
+  eta: 0.0
+  beta: 0.0
+  gamma_candidates: [1.0, 0.75, 0.5]
+collection:
+  seed: 20260912
+  split_seed: 20260913
+  dual_order_a_first: 80
+  dual_order_b_first: 80
+  recovery_natural: 60
+  recovery_drop_regrasp: 60
+  recovery_gripper_reopen: 60
+  recovery_controlled_failure: 40
+evaluation:
+  rollouts_per_condition: 50
+  paired_eval_seeds: [20260920, 20260921, 20260922, 20260923, 20260924]

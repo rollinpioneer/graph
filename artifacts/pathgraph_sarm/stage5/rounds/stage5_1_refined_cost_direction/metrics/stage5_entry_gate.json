@@ -1,0 +1,60 @@
+{
+  "decision": "REAL_MODEL_READY",
+  "bundle_ok": true,
+  "seed_count": 3,
+  "seed_pass_count": 2,
+  "required_seed_passes": 2,
+  "seed_checks": [
+    {
+      "prediction": "/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/rounds/stage5_1_refined_cost_direction/jobs/val_s20260906/predictions.jsonl.gz",
+      "checks": {
+        "node_macro_f1": true,
+        "edge_type_macro_f1_non_none": true,
+        "phi_mae": true,
+        "phi_spearman": true,
+        "cost_mae": true,
+        "cost_spearman": true,
+        "cost_pair_accuracy": true,
+        "failure_cost_increase_rate": true,
+        "recovery_cost_decrease_rate": true
+      },
+      "passed": true
+    },
+    {
+      "prediction": "/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/rounds/stage5_1_refined_cost_direction/jobs/val_s20260907/predictions.jsonl.gz",
+      "checks": {
+        "node_macro_f1": true,
+        "edge_type_macro_f1_non_none": true,
+        "phi_mae": true,
+        "phi_spearman": true,
+        "cost_mae": false,
+        "cost_spearman": false,
+        "cost_pair_accuracy": true,
+        "failure_cost_increase_rate": true,
+        "recovery_cost_decrease_rate": true
+      },
+      "passed": false
+    },
+    {
+      "prediction": "/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/rounds/stage5_1_refined_cost_direction/jobs/val_s20260908/predictions.jsonl.gz",
+      "checks": {
+        "node_macro_f1": true,
+        "edge_type_macro_f1_non_none": true,
+        "phi_mae": true,
+        "phi_spearman": true,
+        "cost_mae": true,
+        "cost_spearman": true,
+        "cost_pair_accuracy": true,
+        "failure_cost_increase_rate": true,
+        "recovery_cost_decrease_rate": true
+      },
+      "passed": true
+    }
+  ],
+  "failed_metrics": [
+    "cost_mae",
+    "cost_spearman"
+  ],
+  "selection_allowed": true,
+  "statistics_unit": "content_group_id"
+}

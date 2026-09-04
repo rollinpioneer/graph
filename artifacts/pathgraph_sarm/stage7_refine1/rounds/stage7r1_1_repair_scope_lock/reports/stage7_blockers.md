@@ -1,0 +1,11 @@
+# Stage 7 blocker inspection
+
+{
+  "coverage_training_fail_count": 6,
+  "coverage_subset_zero_count": 6,
+  "coverage_checkpoint_missing_count": 18,
+  "holdout_training_fail_count": 6,
+  "ood_csv_writer_error_found": true,
+  "g4_declared_go": true,
+  "content_gate_pass": false
+}

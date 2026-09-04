@@ -1,0 +1,131 @@
+# =============================================================================
+# ec_spec.yaml -- frozen E-C training spec (PFF / SCIA), round 2
+#
+# ONE file, three families. Round 1's F-tf ended up non-homogeneous (seeds 0-2
+# stopped near epoch 12 with ~604 log records/epoch; seeds 3-5 reached 49 with
+# ~117), which is what per-family hand-edited configs drifting apart looks
+# like. This file is the single source of truth: ec_preflight.py validates it
+# and ec_launch.py translates it into hydra overrides. Nothing else sets these
+# values, and nothing is edited per seed.
+#
+# NOT a hydra config -- a plain YAML spec, read directly by both tools. This
+# avoids hydra searchpath/defaults-list composition entirely.
+#
+# VERIFY BEFORE LAUNCH: `config_name` and `task` are the two fields that
+# encode repo-specific naming. Round 1's checkpoints recorded
+# task.name=square_lowdim with abs_action=true for F-cnn/F-tf and false for
+# F-lstm, which is why the task values below differ. Confirm each against the
+# repo's config/task/ directory before --run.
+# =============================================================================
+
+meta:
+  frozen_on: "2026-08-24"
+  round: 2
+  supersedes: "round-1 configs (num_epochs=50, checkpoint_every=50,
+    rollout_every=1000000) -- see ledger: trained weights never persisted"
+  cost_convention: "c_s = measured wall clock minus estimated in-training
+    monitoring rollout time; monitoring is kept under 1% by construction and
+    the deduction is recorded per seed in ec_cost_manifest.json"
+  rng_note: "rollout_every advances the global RNG, so it is part of the
+    policy-generating procedure, not a tuning knob. Identical for all 18
+    seeds. Do not change mid-campaign."
+  epoch_deviation: "num_epochs = reference + 1 for every family. With
+    num_epochs=5000 the final epoch is 4999, which is prime, so no
+    checkpoint_every except 1 divides it and the final weights cannot be
+    persisted without writing a ~1GB checkpoint 5000 times. The +1 moves the
+    final epoch to 5000/8000, where checkpoint_every=1000 is legal. This is a
+    deliberate, logged deviation from the reference recipe."
+
+defaults: &defaults
+  checkpoint_every: 1000        # (num_epochs - 1) % checkpoint_every == 0
+  rollout_every: 500            # >= 11 monitoring points per run
+  topk_k: 12                    # >= number of save points: keep every snapshot
+  monitor_n_test: 10            # monitoring only; ec_eval overrides at eval time
+  monitor_n_train: 0
+  debug: false
+  max_train_steps: null
+  save_last_ckpt: true
+  wandb_mode: offline           # no network dependency mid-campaign
+  topk_monitor_key: null        # null = inherit the repo default. See note.
+
+families:
+
+  F-cnn:
+    <<: *defaults
+    config_name: train_diffusion_unet_lowdim_workspace   # VERIFY against repo
+    task: square_lowdim_abs                              # VERIFY against repo
+    expect_abs_action: true
+    reference_num_epochs: 5000
+    num_epochs: 5001
+    mean_rollout_sec: 2.47      # round-1 clean seeds 3-5
+    measured_sec_per_epoch: 7.12  # 373/343/353 s over 50 epochs, seeds 3-5
+    notes: "only family with a trustworthy round-1 cost measurement; seeds 0-2
+      had appended logs and near-identical wall clocks (419.8/419.7/419.6) and
+      were excluded from the per-epoch estimate"
+
+  F-tf:
+    <<: *defaults
+    config_name: train_diffusion_transformer_lowdim_workspace  # VERIFY
+    task: square_lowdim_abs                                    # VERIFY
+    expect_abs_action: true
+    reference_num_epochs: 8000
+    num_epochs: 8001
+    mean_rollout_sec: 2.08
+    measured_sec_per_epoch: null   # round 1 recorded 0.0 train cost
+    notes: "per-epoch rate UNKNOWN. Run the 20-epoch timing probe before
+      committing 6 seeds x 8001 epochs."
+
+  F-lstm:
+    <<: *defaults
+    config_name: train_robomimic_lowdim_workspace   # VERIFY
+    task: square_lowdim                             # non-abs: round-1 cfg had
+    expect_abs_action: false                        # abs_action=false here
+    reference_num_epochs: 8000
+    num_epochs: 8001
+    mean_rollout_sec: 0.71
+    measured_sec_per_epoch: null   # round 1 recorded 0.0 train cost
+    notes: "abs_action differs from the other two families. Harmless if E-C's
+      estimand is within-family seed heterogeneity; a confound if the three
+      families are cross-compared. Resolve before the paper claims anything
+      across families."
+
+# Bands used by the launcher as a pre-registered sanity anchor on c_s/c_e.
+# The paper's measured ratios are 7,410 / 11,160 / 22,981 (frozen reference
+# rho_Delta = 6,234). Round 1 produced 124-154, the undertraining artifact.
+sanity:
+  rho_lo: 5000
+  rho_hi: 30000
+  monitor_frac_max: 0.02
+
+# -----------------------------------------------------------------------------
+# CADENCE INVARIANT  (added after the F-tf probe crash)
+#
+#   checkpoint_every % rollout_every == 0
+#
+# The top-k manager reads its monitor key out of the metric dict assembled at
+# the save epoch. If a save epoch is not also an eval epoch, that key is simply
+# absent and the save raises. 1000 % 500 == 0 holds for every family above, so
+# every save point is an eval point at full length.
+#
+# The F-tf probe violated it: 20 epochs with checkpoint_every=1000 /
+# rollout_every=500 leaves epoch 0 as the only eval point, and forcing a save
+# at the final probe epoch lands on an epoch where no eval ever ran. Probe runs
+# therefore derive their own cadence (checkpoint_every = rollout_every =
+# probe_epochs) rather than inheriting the full-run values.
+#
+# NOTE ON topk_monitor_key: the repo's train loop sanitises step_log keys with
+# key.replace('/', '_') BEFORE handing them to the top-k manager. So
+# `test/mean_score` in logs.json.txt and `test_mean_score` in the checkpoint
+# config are the same quantity, and the stock `test_mean_score` is correct.
+# Verify with:
+#     grep -rn "replace('/'" <repo>/diffusion_policy/workspace/
+#     grep -rn "monitor_key" <repo>/diffusion_policy/common/checkpoint_util.py
+# Only set topk_monitor_key here if that grep shows no sanitisation.
+# -----------------------------------------------------------------------------
+probe:
+  epochs: 20
+  note: "cadence derived, not inherited: num_epochs = epochs + 1,
+    checkpoint_every = rollout_every = epochs, so the final probe epoch is both
+    a save point and an eval point. Two eval points keeps the monitoring
+    deduction small enough that sec_per_epoch stays trustworthy."
+

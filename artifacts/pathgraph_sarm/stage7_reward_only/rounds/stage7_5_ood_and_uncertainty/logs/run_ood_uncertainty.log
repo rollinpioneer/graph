@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 80, in <module>
+    if __name__=='__main__': main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 29, in main
+    write_csv(od/'tables/episode_manifest.csv',rows,fields)
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 10, in write_csv
+    with path.open('w',newline='') as f: w=csv.DictWriter(f,fieldnames=fields,delimiter=delimiter); w.writeheader(); w.writerows(rows)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/csv.py", line 157, in writerows
+    return self.writer.writerows(map(self._dict_to_list, rowdicts))
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/csv.py", line 149, in _dict_to_list
+    raise ValueError("dict contains fields not in fieldnames: "
+ValueError: dict contains fields not in fieldnames: 'holdout_direction', 'provenance'
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 86, in <module>
+    if __name__=='__main__': main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 80, in main
+    write_csv(r/'tables/ood_reward_metrics.csv',ood)
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7/run_ood_uncertainty.py", line 16, in write_csv
+    with path.open('w',newline='') as f: w=csv.DictWriter(f,fieldnames=fields,delimiter=delimiter); w.writeheader(); w.writerows(rows)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/csv.py", line 157, in writerows
+    return self.writer.writerows(map(self._dict_to_list, rowdicts))
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/csv.py", line 149, in _dict_to_list
+    raise ValueError("dict contains fields not in fieldnames: "
+ValueError: dict contains fields not in fieldnames: 'failure_negative_rate_by_position', 'cycle_nonpositive_rate_by_position', 'recovery_positive_rate_by_position'
+{
+  "decision": "OOD_UNCERTAINTY_COMPLETE",
+  "order_holdout_training_jobs": 6,
+  "order_holdout_inference_jobs": 12,
+  "perturbation_inference_jobs": 60,
+  "unseen_order_path_gap": 0.22,
+  "unseen_order_alternative_edge_f1": 0.67,
+  "light_perturbation_recovery_positive_rate": 0.76,
+  "light_perturbation_cycle_nonpositive_rate": 0.95,
+  "uncertainty_reward_error_auroc": 0.72,
+  "uncertainty_useful": true,
+  "provenance": "mixed_real_and_derived_diagnostics"
+}

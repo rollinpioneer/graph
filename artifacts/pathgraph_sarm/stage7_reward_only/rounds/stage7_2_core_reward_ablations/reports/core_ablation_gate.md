@@ -1,0 +1,11 @@
+# Core ablation gate
+
+{
+  "decision": "CORE_REWARD_ABLATIONS_COMPLETE",
+  "alternative_structural_support": true,
+  "recovery_structural_support": true,
+  "debt_cap_empirical_support": true,
+  "within_node_progress_support": true,
+  "jobs": 56,
+  "probes_posthoc_only": true
+}

@@ -1,0 +1,46 @@
+collection:
+  dual_order_a_first: 80
+  dual_order_b_first: 80
+  recovery_controlled_failure: 40
+  recovery_drop_regrasp: 60
+  recovery_gripper_reopen: 60
+  recovery_natural: 60
+  seed: 20260912
+  split_seed: 20260913
+evaluation:
+  paired_eval_seeds:
+  - 20260920
+  - 20260921
+  - 20260922
+  - 20260923
+  - 20260924
+  rollouts_per_condition: 50
+policy:
+  action_chunk_size: 16
+  action_dim: 4
+  batch_size: 32
+  hidden_dim: 128
+  learning_rate: 0.002
+  obs_dim: 14
+  obs_horizon: 2
+  policy_seeds:
+  - 20260909
+  - 20260910
+  - 20260911
+  smoke_steps: 2000
+  train_steps: 2000
+reward:
+  beta: 0.0
+  eta: 0.0
+  gamma_candidates:
+  - 1.0
+  - 0.75
+  - 0.5
+  history_steps: 32
+  lambda: 0.5
+stage: 6
+stage5_reward_bundle: artifacts/pathgraph_sarm/stage5/reward_v1
+statistics_unit: content_group_id
+tasks:
+- transport_recovery
+- transport_dual_order

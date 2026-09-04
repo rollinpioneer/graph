@@ -1,0 +1,15 @@
+# Stage 7 input summary
+
+Decision: `REWARD_ONLY_INPUTS_LOCKED`
+
+{
+  "g3_r1_narrow_reward_only": true,
+  "claim_scope_locked": true,
+  "no_more_policy_training": true,
+  "reward_selection_lock_exists": true,
+  "persistent_checkpoints_3_of_3": true,
+  "checkpoint_hashes_match": true,
+  "real_predictions_present": true,
+  "statistics_unit_content_group_id": true,
+  "portable_manifest_verified": true
+}

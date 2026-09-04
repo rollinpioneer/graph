@@ -1,0 +1,13 @@
+2026-09-03T10:25:39+08:00
+privileged_query: sudo -n rejected because password is required
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
+
+cuda_python_smoke:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import torch; print(torch.__version__)
+    ^^^^^^^^^^^^
+  File "/home/xushijie/CUPID/.stage3_cuda/torch/__init__.py", line 2585, in <module>
+    _C._initExtension(_manager_path())  # pyrefly: ignore[bad-argument-type]
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'torch.sparse'

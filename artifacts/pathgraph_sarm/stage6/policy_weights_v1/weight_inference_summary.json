@@ -1,0 +1,69 @@
+{
+  "rows": 1912,
+  "base_chunks": 478,
+  "methods": {
+    "bc_all": 478,
+    "linear_sarm_equiv": 478,
+    "sequential_transition": 478,
+    "pathgraph_reward_v1_locked": 478
+  },
+  "positive_weight_ratio": 0.9100418410041841,
+  "finite": true,
+  "normalizers": {
+    "transport_dual_order": {
+      "positive_q99": 1.0382784662147364,
+      "train_nonzero_ratio": 1.0
+    },
+    "transport_recovery": {
+      "positive_q99": 0.8043506780266761,
+      "train_nonzero_ratio": 0.8854625550660793
+    }
+  },
+  "selection": {
+    "linear_sarm_equiv": {
+      "gamma": 1.0,
+      "per_task": {
+        "transport_dual_order": {
+          "q99": 0.9325534129142761,
+          "mean_norm": 0.9960552613036169
+        },
+        "transport_recovery": {
+          "q99": 0.8486584353446961,
+          "mean_norm": 0.5415042520654099
+        }
+      },
+      "train_ess_ratio": 0.7557790080256561,
+      "recovery_positive_coverage": 0.8854625550660793
+    },
+    "sequential_transition": {
+      "gamma": 1.0,
+      "per_task": {
+        "transport_dual_order": {
+          "q99": 0.9324276614189148,
+          "mean_norm": 0.44603899996965335
+        },
+        "transport_recovery": {
+          "q99": 0.8486584353446961,
+          "mean_norm": 0.5415042520654099
+        }
+      },
+      "train_ess_ratio": 0.5836265083487544,
+      "recovery_positive_coverage": 0.8854625550660793
+    },
+    "pathgraph_reward_v1_locked": {
+      "gamma": 1.0,
+      "per_task": {
+        "transport_dual_order": {
+          "q99": 1.0382784662147364,
+          "mean_norm": 0.949840778383668
+        },
+        "transport_recovery": {
+          "q99": 0.8043506780266761,
+          "mean_norm": 0.5703863812339663
+        }
+      },
+      "train_ess_ratio": 0.7730903391653444,
+      "recovery_positive_coverage": 0.8854625550660793
+    }
+  }
+}

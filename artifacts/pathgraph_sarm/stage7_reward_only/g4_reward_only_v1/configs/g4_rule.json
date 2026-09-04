@@ -1,0 +1,24 @@
+{
+  "go_stage8_reward_only": {
+    "input_gate_pass": true,
+    "full_reward_reproduces_g2_core_metrics": true,
+    "alternative_structural_support": true,
+    "recovery_structural_support": true,
+    "no_post_test_main_reward_retuning": true,
+    "portable_manifest_pass": true,
+    "scaling_boundary_reported": true,
+    "ood_boundary_reported": true,
+    "policy_claim_marked_secondary": true
+  },
+  "refine_stage7_core_only": {
+    "allowed_once": true,
+    "method_retuning_allowed": false
+  },
+  "stop_pathgraph": {
+    "trigger_if_any": [
+      "full reward fails truthful recomputation",
+      "alternative structural claim unsupported",
+      "recovery structural claim unsupported"
+    ]
+  }
+}

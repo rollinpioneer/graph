@@ -1,0 +1,37 @@
+statistics_unit: content_group_id
+stage7_mode: reward_only
+graph_specs:
+  root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage3/input_adapter_v1/runtime_graph_specs_v1.0.1
+  version: v1.0.1
+ground_truth:
+  root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage2/m1_freeze_v1/gt_v1
+  splits: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage2/m1_freeze_v1/gt_v1/gt_splits.csv
+diagnostic_suite:
+  root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage3/diagnostic_suite_v1
+  frozen_sha256: 0d77df78c41becec02de555ca78db3cf9cc3fd25a38042a0d6cb73122bf930b3
+supervision:
+  root: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage4/stage4_complete_bundle/supervision
+  forbidden_features:
+  - outcome
+  - success
+  - scenario
+  - controller_source
+  - episode_id
+  - content_group_id
+real_predictions:
+  val: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/real_predictions_v1/tables/ensemble_val_predictions.jsonl.gz
+  test: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/real_predictions_v1/tables/ensemble_test_predictions.jsonl.gz
+  stage3_diagnostic: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/real_predictions_v1/tables/ensemble_stage3_diagnostic_predictions.jsonl.gz
+reward:
+  config: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/configs/reward_config_v1.yaml
+  selection_lock: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/configs/reward_selection_lock.json
+  engine: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage5/reward_v1/code/reward_engine.py
+model_bundle:
+  persistent_manifest: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6/stage6_inputs/reward_v1_persistent/configs/model_bundle_persistent.json
+  checkpoint_count: 3
+policy_evidence:
+  status: secondary_mixed
+  g3_r1: NARROW_TO_REWARD_ONLY
+source_roots:
+  stage6_policy_evidence: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6/m4_policy_results_v1
+  stage6r1_evidence: /home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/m4_refine1_results_v1

@@ -1,0 +1,28 @@
+main:
+  id: full_locked
+  role: frozen_main
+ablations:
+- id: collapse_alternative_to_A_first
+  role: ablation_or_probe
+- id: collapse_alternative_to_B_first
+  role: ablation_or_probe
+- id: remove_recovery_edge
+  role: ablation_or_probe
+- id: no_recovery_debt_cap
+  role: ablation_or_probe
+- id: no_phi
+  role: ablation_or_probe
+- id: cost_only
+  role: ablation_or_probe
+probes:
+- id_prefix: eta_probe
+  values:
+  - 0.0
+  - 0.05
+  - 0.1
+  - 0.25
+- id_prefix: beta_probe
+  values:
+  - 0.0
+  - 0.5
+  - 1.0

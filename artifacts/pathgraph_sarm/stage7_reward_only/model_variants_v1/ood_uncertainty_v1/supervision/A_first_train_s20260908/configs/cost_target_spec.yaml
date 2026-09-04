@@ -1,0 +1,13 @@
+version: 1
+source: observed_suffix_edge_cost
+edge_cost_field: base_step_cost
+fallback_edge_cost: 1.0
+within_node_residual_weight: 0.25
+normalization: per_task_train_p95
+clip_normalized: [0.0, 2.0]
+success_terminal_value: 0.0
+terminal_failure_mode: censored_plus_pairwise
+pair_margins:
+  failure_increase: 0.10
+  recovery_decrease: 0.10
+  recovery_no_overshoot_tolerance: 0.05

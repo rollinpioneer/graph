@@ -1,0 +1,4 @@
+task_id,registry_source,config_path,env_class,num_objects,num_targets,independent_subgoals,order_can_vary,existing_checkpoint,rollout_entrypoint,notes
+transport,repo/diffusion_policy/config/task/transport_lowdim_abs.yaml,repo/diffusion_policy/config/task/transport_lowdim_abs.yaml,robosuite Transport,1,1,no,no,repo/data/outputs/train/20260722_cupid_transport_stage3/.../latest.ckpt,repo/eval_save_episodes.py,fixed-chain control
+transport_recovery,stage2 minimal wrapper,configs/stage2/task_state_fields.yaml,scripted_lowdim_composite,1,1,recovery,no,none,tools/stage2/collect_graph_rollouts.py,scripted_oracle; transparent synthetic state trace
+transport_dual_order,stage2 minimal wrapper,configs/stage2/task_state_fields.yaml,scripted_lowdim_composite,2,2,"A,B",yes,none,tools/stage2/collect_graph_rollouts.py,scripted_oracle; success=A_done AND B_done

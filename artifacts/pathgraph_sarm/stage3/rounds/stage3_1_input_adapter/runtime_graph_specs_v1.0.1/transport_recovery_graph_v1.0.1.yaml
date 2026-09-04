@@ -1,0 +1,255 @@
+graph_id: transport_recovery_graph
+version: 1.0.1
+task_id: transport_recovery
+description: single-object transport with explicit drop/regrasp recovery
+start_node: start
+success_nodes:
+- success
+terminal_failure_nodes:
+- terminal_failure
+nodes:
+- id: start
+  name: start
+  description: start
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: false
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: grasped
+  name: grasped
+  description: grasped
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: in_transit
+  name: in_transit
+  description: in_transit
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: placed
+  name: placed
+  description: placed
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: dropped_or_misaligned
+  name: dropped_or_misaligned
+  description: dropped_or_misaligned
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: recovery
+  name: recovery
+  description: recovery
+  terminal: false
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: success
+  name: success
+  description: success
+  terminal: true
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+- id: terminal_failure
+  name: terminal_failure
+  description: terminal_failure
+  terminal: true
+  observable_conditions:
+  - state.eef_pos
+  - state.object_pos
+  - state.gripper_state
+  entry_condition: state evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: distance_or_stability
+  allowed_attempt_groups:
+  - grasp
+  - transport
+  - place
+edges:
+- id: start_to_grasped
+  src: start
+  dst: grasped
+  type: forward
+  description: initial stable grasp
+  guard_condition: state evidence
+  completion_condition: grasped stable
+  repeatable: false
+  attempt_group: grasp
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: grasped_to_in_transit
+  src: grasped
+  dst: in_transit
+  type: forward
+  description: transport begins
+  guard_condition: state evidence
+  completion_condition: in transit
+  repeatable: false
+  attempt_group: transport
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: in_transit_to_placed
+  src: in_transit
+  dst: placed
+  type: forward
+  description: object reaches placement
+  guard_condition: state evidence
+  completion_condition: placed stable
+  repeatable: false
+  attempt_group: place
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: placed_to_success
+  src: placed
+  dst: success
+  type: forward
+  description: placement task success
+  guard_condition: success evidence
+  completion_condition: episode success
+  repeatable: false
+  attempt_group: place
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: in_transit_to_dropped_or_misaligned
+  src: in_transit
+  dst: dropped_or_misaligned
+  type: failure
+  description: object lost or misaligned
+  guard_condition: relative pose invalid
+  completion_condition: drop evidence
+  repeatable: true
+  attempt_group: transport
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: in_transit_to_terminal_failure
+  src: in_transit
+  dst: terminal_failure
+  type: failure
+  description: unrecoverable terminal failure
+  guard_condition: terminal failure evidence
+  completion_condition: episode termination
+  repeatable: false
+  attempt_group: transport
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: dropped_or_misaligned_to_recovery
+  src: dropped_or_misaligned
+  dst: recovery
+  type: recovery
+  description: recovery action starts
+  guard_condition: new approach action
+  completion_condition: recovery begins
+  repeatable: true
+  attempt_group: recovery
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: recovery_to_grasped
+  src: recovery
+  dst: grasped
+  type: recovery
+  description: stable regrasp
+  guard_condition: grasp stability
+  completion_condition: grasped stable
+  repeatable: true
+  attempt_group: grasp
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: stagnation_loop
+  src: recovery
+  dst: recovery
+  type: stagnation
+  description: no effective progress
+  guard_condition: motion/action below threshold
+  completion_condition: 30-frame window
+  repeatable: true
+  attempt_group: recovery
+  base_step_cost: 0
+  max_repeat_before_stagnation: 3
+path_templates:
+- - start
+  - grasped
+  - in_transit
+  - placed
+  - success
+- - start
+  - grasped
+  - in_transit
+  - dropped_or_misaligned
+  - recovery
+  - grasped
+  - in_transit
+  - placed
+  - success
+history_policy: retain complete episode; recovery requires prior failure
+progress_policy: 0, .25, .5, .75, 1 anchors

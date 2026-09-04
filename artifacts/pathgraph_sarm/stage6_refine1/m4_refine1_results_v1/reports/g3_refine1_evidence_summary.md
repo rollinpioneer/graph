@@ -1,0 +1,31 @@
+# G3-R1 evidence summary
+
+{
+  "new_seed_improved_count": 1,
+  "new_seed_ceiling_tie_count": 1,
+  "new_seed_degraded_count": 0,
+  "combined_graph_task_success_gain": 0.0666666666666667,
+  "combined_graph_task_success_ci95": [
+    0.0,
+    0.1333333333333333
+  ],
+  "combined_recovery_success_gain": 0.1666666666666666,
+  "combined_recovery_success_ci95": [
+    0.0,
+    0.3333333333333333
+  ],
+  "combined_worst_order_success_gain": 0.0,
+  "combined_worst_order_success_ci95": [
+    0.0,
+    0.0
+  ],
+  "combined_long_horizon_completion_gain": 0.0666666666666667,
+  "combined_fixed_order_drop": 0.0,
+  "combined_fixed_order_gain": 0.0,
+  "combined_seed_count": 6,
+  "paired_evaluation": true,
+  "reward_retuned_after_test": false,
+  "bootstrap_resamples": 5000,
+  "locked_comparator": "linear_sarm_equiv",
+  "evidence_source": "six_seed_raw_paired_rollouts"
+}

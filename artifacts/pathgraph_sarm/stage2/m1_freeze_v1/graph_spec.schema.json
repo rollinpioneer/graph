@@ -1,0 +1,13 @@
+{
+  "title": "PathGraph-SARM Graph spec v1",
+  "type": "object",
+  "required": ["graph_id", "version", "task_id", "description", "start_node", "success_nodes", "terminal_failure_nodes", "nodes", "edges", "path_templates", "history_policy", "progress_policy"],
+  "properties": {
+    "graph_id": {"type": "string"}, "version": {"type": "string"}, "task_id": {"type": "string"}, "description": {"type": "string"},
+    "start_node": {"type": "string"}, "success_nodes": {"type": "array", "items": {"type": "string"}}, "terminal_failure_nodes": {"type": "array", "items": {"type": "string"}},
+    "nodes": {"type": "array", "items": {"type": "object", "required": ["id", "name", "description", "terminal", "observable_conditions", "entry_condition", "exit_condition", "history_required", "within_node_progress_signal", "allowed_attempt_groups"]}},
+    "edges": {"type": "array", "items": {"type": "object", "required": ["id", "src", "dst", "type", "description", "guard_condition", "completion_condition", "repeatable", "attempt_group", "base_step_cost", "max_repeat_before_stagnation"]}},
+    "path_templates": {"type": "array", "minItems": 1}, "history_policy": {"type": "string"}, "progress_policy": {"type": "string"}
+  },
+  "edge_types": ["forward", "alternative", "failure", "recovery", "stagnation"]
+}

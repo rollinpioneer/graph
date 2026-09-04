@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse
+from pathlib import Path
+from tools.stage8.common import dump_json
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--release-root',type=Path,required=True);p.add_argument('--verify-log',type=Path,required=True);p.add_argument('--dry-run',type=Path,required=True);p.add_argument('--external-manifest',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--report',type=Path,required=True);a=p.parse_args();needed=['README.md','RELEASE_SHA256SUMS.txt','scripts/verify_release.sh','scripts/reproduce_from_checkpoints.sh','scripts/reproduce_from_cached_predictions.sh','scripts/reproduce_figures.sh','manifests/code_manifest.tsv'];missing=[x for x in needed if not (a.release_root/x).is_file()];verify='VERIFY_RELEASE_PASS' in a.verify_log.read_text(errors='ignore');dry='CACHED_PREDICTION_DRY_RUN_PASS' in (a.dry_run/'dry_run_status.txt').read_text(errors='ignore') if (a.dry_run/'dry_run_status.txt').exists() else False;external=a.external_manifest.is_file() and a.external_manifest.stat().st_size>0;packaged_checkpoints=list(a.release_root.rglob('*.pt'))+list(a.release_root.rglob('*.ckpt'));decision='REPRODUCIBILITY_BUNDLE_READY' if not missing and verify and dry and external and not packaged_checkpoints else ('MISSING_RELEASE_ARTIFACT' if missing or not external else 'REPAIR_RELEASE_SCRIPT');dump_json(a.output,{'decision':decision,'internal_checksums_pass':verify,'cached_dry_run_pass':dry,'checkpoint_data_externalized':external,'checkpoint_packaged':bool(packaged_checkpoints),'missing':missing});a.report.parent.mkdir(parents=True,exist_ok=True);a.report.write_text(f'# Reproducibility Bundle Summary\n\nDecision: `{decision}`. Checkpoints and raw predictions are externalized through the manifest.\n',encoding='utf-8');
+ if decision!='REPRODUCIBILITY_BUNDLE_READY':raise SystemExit(2)
+if __name__=='__main__':main()
