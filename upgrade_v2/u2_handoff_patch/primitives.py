@@ -24,6 +24,40 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_inventory(paths: Iterable[Path], root: Path | None = None) -> dict[str, Any]:
+    """Return a deterministic digest for a finite collection of input files.
+
+    The returned aggregate hash covers both each path and each file digest.  It
+    is deliberately a compact provenance record: result-status JSON files can
+    prove the exact cached inputs used without embedding thousands of hashes.
+    Missing paths are returned separately rather than silently dropped.
+    """
+
+    digest = hashlib.sha256()
+    present: list[dict[str, Any]] = []
+    missing: list[str] = []
+    for path in sorted({Path(value) for value in paths}, key=lambda value: str(value)):
+        try:
+            label = str(path.resolve().relative_to(root.resolve())) if root else str(path.resolve())
+        except ValueError:
+            label = str(path.resolve())
+        if not path.is_file():
+            missing.append(label)
+            continue
+        file_digest = sha256_file(path)
+        digest.update(label.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(file_digest.encode("ascii"))
+        digest.update(b"\n")
+        present.append({"path": label, "size_bytes": path.stat().st_size, "sha256": file_digest})
+    return {
+        "file_count": len(present),
+        "sha256": digest.hexdigest(),
+        "files": present,
+        "missing_paths": missing,
+    }
+
+
 def read_csv_rows(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))

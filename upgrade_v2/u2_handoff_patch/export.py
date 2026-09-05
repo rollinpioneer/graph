@@ -55,42 +55,125 @@ def _safe_float(value: Any) -> float:
         return float("nan")
 
 
-def _candidate_schema() -> dict[str, Any]:
+def _candidate_schema(predicate_vocabulary: list[str]) -> dict[str, Any]:
     return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "u3_candidate_graph_v1",
+        "title": "U3 simulator-scoped hypothesized candidate graph",
+        "type": "object",
+        "required": ["candidate_id", "scope", "nodes", "edges"],
+        "additionalProperties": False,
+        "properties": {
+            "candidate_id": {"type": "string", "minLength": 1},
+            "scope": {"const": "stochastic_simulator_only"},
+            "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+            "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+        },
+        "$defs": {
+            "node": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["id", "description", "observable_predicates", "unknown_conditions", "evidence_segment_ids", "status"],
+                "properties": {
+                    "id": {"type": "string", "minLength": 1},
+                    "description": {"type": "string", "minLength": 1},
+                    "observable_predicates": {"type": "array", "items": {"enum": predicate_vocabulary}, "uniqueItems": True},
+                    "unknown_conditions": {"type": "array", "items": {"type": "string"}, "uniqueItems": True},
+                    "evidence_segment_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": True},
+                    "status": {"const": "hypothesized"},
+                },
+            },
+            "edge": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["src", "dst", "preconditions", "effects", "hypothesized_type", "evidence_segment_ids", "status", "cost_measurement_needed"],
+                "properties": {
+                    "src": {"type": "string", "minLength": 1},
+                    "dst": {"type": "string", "minLength": 1},
+                    "preconditions": {"type": "array", "items": {"enum": predicate_vocabulary}, "uniqueItems": True},
+                    "effects": {"type": "array", "items": {"enum": predicate_vocabulary}, "uniqueItems": True},
+                    "hypothesized_type": {"enum": ["forward", "failure", "recovery", "alternative", "unknown"]},
+                    "evidence_segment_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": True},
+                    "status": {"const": "hypothesized"},
+                    "cost_measurement_needed": {"type": "string", "minLength": 1},
+                },
+            },
+        },
         "schema_version": "u3_candidate_graph_v1",
         "scope": "stochastic_simulator_only",
-        "status_values": ["hypothesized", "observed", "contradicted", "validated"],
-        "node": {
-            "required": ["id", "description", "observable_predicates", "unknown_conditions", "evidence_segment_ids", "status"],
-            "status_default": "hypothesized",
-        },
-        "edge": {
-            "required": ["src", "dst", "preconditions", "effects", "hypothesized_type", "evidence_segment_ids", "status", "cost_measurement_needed"],
-            "hypothesized_type_values": ["forward", "failure", "recovery", "alternative", "unknown"],
-            "status_default": "hypothesized",
-        },
+        "candidate_status": "hypothesized_only",
         "predicate_policy": {
             "mode": "finite_declarative_vocabulary",
             "allow_arbitrary_code": False,
             "numeric_cost_is_ground_truth": False,
+            "allowed_predicates": predicate_vocabulary,
         },
     }
 
 
-def _condition_prompt(condition: str, train_summary: list[dict[str, Any]], prototypes: dict[str, Any], transitions: list[dict[str, Any]], fallback: list[dict[str, Any]]) -> str:
+def _transition_evidence(transitions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: dict[tuple[int, int], dict[str, Any]] = {}
+    for row in transitions:
+        key = (int(row["from_cluster_id"]), int(row["to_cluster_id"]))
+        item = counts.setdefault(key, {"from_cluster_id": key[0], "to_cluster_id": key[1], "n_transitions": 0, "root_family_ids": set()})
+        item["n_transitions"] += 1
+        item["root_family_ids"].add(str(row["root_family_id"]))
+    result = []
+    for item in counts.values():
+        result.append({
+            "from_cluster_id": item["from_cluster_id"],
+            "to_cluster_id": item["to_cluster_id"],
+            "n_transitions": item["n_transitions"],
+            "support_root_families": len(item["root_family_ids"]),
+        })
+    return sorted(result, key=lambda row: (-row["n_transitions"], row["from_cluster_id"], row["to_cluster_id"]))[:32]
+
+
+def _condition_prompt(
+    condition: str,
+    task_contract: dict[str, Any],
+    train_summary: list[dict[str, Any]],
+    prototypes: dict[str, Any],
+    transitions: list[dict[str, Any]],
+    fallback: list[dict[str, Any]],
+) -> str:
     base = (
         "You are proposing a semantic graph for the explicit-state stochastic simulator only. "
         "Return exactly one JSON object conforming to schema u3_candidate_graph_v1. "
         "Every node and edge must remain hypothesized; do not claim validation. "
-        "Use only observable predicates and preserve unknown conditions. "
+        "Use only the supplied finite observable predicate vocabulary, preserve unknown conditions, "
+        "cite only supplied train segment IDs, and treat numeric costs as measurements required in U4 rather than ground truth. "
     )
     if condition == "instruction_only":
-        return base + "Input condition: instruction, roles, sensors, and actions only; no trajectory examples."
+        return base + "Input condition: instruction, roles, sensors, and actions only; no trajectory examples. Task contract=" + json.dumps(task_contract, ensure_ascii=False, sort_keys=True)
+    compact_prototypes = [{key: value for key, value in prototype.items() if key != "root_family_ids"} for _, prototype in sorted(prototypes.items(), key=lambda item: (-int(item[1]["n_segments"]), int(item[0])))[:24]]
+    compact_segments = [{
+        "segment_id": row.get("segment_id"),
+        "cluster_id": row.get("cluster_id"),
+        "duration": row.get("duration"),
+        "observable_contact_history": row.get("observable_contact_history"),
+        "observable_contact_loss_count": row.get("observable_contact_loss_count"),
+        "unknown_fraction": row.get("unknown_fraction", row.get("uncertainty")),
+    } for row in train_summary[:48]]
+    auto_evidence = {
+        "task_contract": task_contract,
+        "cluster_prototypes": compact_prototypes,
+        "observed_cluster_transitions": _transition_evidence(transitions),
+        "train_segment_examples": compact_segments,
+    }
     if condition == "instruction_plus_auto_train_segments":
-        evidence = [{"segment_id": x.get("segment_id"), "cluster_id": x.get("cluster_id"), "uncertainty": x.get("uncertainty")} for x in train_summary[:32]]
-        return base + "Input condition: train-only automatic segment summaries with unknown retained. Evidence sample=" + json.dumps(evidence, ensure_ascii=False, sort_keys=True)
-    evidence = [{"clip_id": x.get("clip_id"), "episode_id": x.get("episode_id"), "start_t": x.get("start_t"), "end_t": x.get("end_t"), "label_source": x.get("label_source")} for x in fallback]
-    return base + "Input condition: the same train-only automatic summaries plus explicitly budgeted simulator clip confirmations (not human labels). Clip sample=" + json.dumps(evidence, ensure_ascii=False, sort_keys=True)
+        return base + "Input condition: train-only automatic segment summaries with unknown retained. Evidence=" + json.dumps(auto_evidence, ensure_ascii=False, sort_keys=True)
+    fallback_evidence = [{
+        "clip_id": row.get("clip_id"),
+        "episode_id": row.get("episode_id"),
+        "root_family_id": row.get("root_family_id"),
+        "start_t": row.get("start_t"),
+        "end_t": row.get("end_t"),
+        "event_id": row.get("event_id"),
+        "label_source": row.get("label_source"),
+    } for row in fallback]
+    auto_evidence["budgeted_train_fallback"] = fallback_evidence
+    return base + "Input condition: the same train-only automatic summaries plus explicitly budgeted simulator clip confirmations. Evidence=" + json.dumps(auto_evidence, ensure_ascii=False, sort_keys=True)
 
 
 def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_unknown: bool = True, fallback_max_clips: int = 30) -> dict[str, Any]:
@@ -102,10 +185,18 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
     episode_by_id = {row["episode_id"]: row for row in manifest}
     train_rows = [row for row in manifest if row["split"] == split]
     forbidden_rows = [row for row in manifest if row["split"] != split]
+    train_episode_ids = {row["episode_id"] for row in train_rows}
+    train_family_ids = {row["root_family_id"] for row in train_rows}
+    forbidden_episode_ids = {row["episode_id"] for row in forbidden_rows}
+    forbidden_family_ids = {row["root_family_id"] for row in forbidden_rows}
+    if train_episode_ids & forbidden_episode_ids or train_family_ids & forbidden_family_ids:
+        raise RuntimeError("episode/root-family split isolation is violated in the authoritative manifest")
     output.mkdir(parents=True, exist_ok=True)
 
     segments_path = u2_root / "segment_representation_v1" / "segments" / "segments.jsonl"
     segment_summary_path = u2_root / "segment_representation_v1" / "segment_event_summary.jsonl"
+    observable_schema_path = u2_root / "data_v1" / "formal" / "configs" / "observable_schema.json"
+    event_schema_path = u2_root / "data_v1" / "formal" / "configs" / "event_schema.json"
     if not segments_path.is_file():
         raise FileNotFoundError(f"missing segment summary source: {segments_path}")
     all_segments = _load_jsonl(segments_path)
@@ -118,9 +209,8 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         for key in ("cluster_id", "event_posterior", "uncertainty", "observable_predicate_summary", "duration_statistics", "following_observed_cluster_id"):
             if key in compact and key not in row:
                 row[key] = compact[key]
-    train_episode_ids = {row["episode_id"] for row in train_rows}
     train_segments = [row for row in all_segments if row.get("split") == split and row.get("episode_id") in train_episode_ids]
-    leaked = [row for row in train_segments if row.get("split") != split or row.get("episode_id") not in train_episode_ids]
+    leaked = [row for row in train_segments if row.get("split") != split or row.get("episode_id") not in train_episode_ids or row.get("root_family_id") not in train_family_ids]
     if leaked:
         raise RuntimeError("train segment export contains a non-train row")
 
@@ -133,8 +223,9 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
             value["split"] = split
             value["source_type"] = "auto_boundary_train_only"
             value["status"] = "hypothesized"
+            value["unknown_retained"] = bool(value.get("unknown_fraction", value.get("uncertainty", 0.0)) > 0.0)
             if not include_unknown:
-                value.pop("uncertainty", None)
+                raise ValueError("U3 train export must retain unknown; --include-unknown false is unsupported")
             handle.write(json.dumps(value, ensure_ascii=False, sort_keys=True) + "\n")
 
     # Cluster prototypes are recomputed solely from train segments.  The
@@ -193,7 +284,10 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         if row["root_family_id"] in calibration_families:
             calibration_frames += int(row.get("n_steps", 0))
     oracle_path = u2_root / "boundary_models_v1" / "configs" / "oracle30_clip_ids.csv"
-    oracle = read_csv_rows(oracle_path)[:fallback_max_clips] if oracle_path.is_file() else []
+    oracle_all = read_csv_rows(oracle_path) if oracle_path.is_file() else []
+    oracle = [row for row in oracle_all if row.get("split") == split and row.get("episode_id") in train_episode_ids and row.get("root_family_id") in train_family_ids][:fallback_max_clips]
+    if len(oracle) != min(fallback_max_clips, len(oracle_all)):
+        raise RuntimeError("fallback budget contains a non-train or manifest-unknown clip")
     fallback_frames = sum(max(0, int(row.get("end_t", 0)) - int(row.get("start_t", 0)) + 1) for row in oracle)
     ledger = []
     for row in oracle:
@@ -253,7 +347,28 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
     candidates_dir = output / "candidates"
     (candidates_dir / "raw_responses").mkdir(parents=True, exist_ok=True)
     (candidates_dir / "parsed_graphs").mkdir(parents=True, exist_ok=True)
-    schema = _candidate_schema()
+    observable_schema = json.loads(observable_schema_path.read_text(encoding="utf-8"))
+    event_schema = json.loads(event_schema_path.read_text(encoding="utf-8"))
+    predicate_vocabulary = [f"observable:{name}" for name in observable_schema["features"]]
+    predicate_vocabulary += [
+        "segment:observable_contact_history",
+        "segment:observable_contact_loss_count",
+        "segment:unknown_fraction",
+    ]
+    task_contract = {
+        "scope": "stochastic_simulator_only",
+        "simulator_roles": "A two-dimensional agent approaches, contacts, and transports an object to a goal while an obstacle can cause collision or detour behavior.",
+        "action_fields": ["action_x", "action_y"],
+        "observable_features": observable_schema["features"],
+        "forbidden_prompt_fields": observable_schema["forbidden"],
+        "event_timing": event_schema["boundary_timing"],
+        "event_names_are_not_prompt_labels": True,
+        "finite_predicate_vocabulary": predicate_vocabulary,
+        "candidate_status": "hypothesized_only",
+        "external_llm_execution": "MODEL_EXECUTION_PENDING",
+    }
+    write_json(output / "task_contract.json", task_contract)
+    schema = _candidate_schema(predicate_vocabulary)
     write_json(candidates_dir / "schema.json", schema)
     conditions = ["instruction_only", "instruction_plus_auto_train_segments", "instruction_plus_budgeted_train_fallback"]
     requests_path = candidates_dir / "requests.jsonl"
@@ -269,7 +384,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
                 "temperature": 0.0,
                 "max_output_tokens": 2500,
                 "schema_path": str((candidates_dir / "schema.json").relative_to(repo_root)),
-                "prompt": _condition_prompt(condition, train_segments, prototypes, transitions, oracle),
+                "prompt": _condition_prompt(condition, task_contract, train_segments, prototypes, transitions, oracle),
                 "input_split": split,
                 "test_gold_in_prompt": False,
             })
@@ -280,7 +395,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         (candidates_dir / name / "README.md").write_text("MODEL_EXECUTION_PENDING: no external LLM was called; no response or parsed graph is present.\n", encoding="utf-8")
 
     embedding_path = u2_root / "segment_representation_v1" / "embeddings" / "segment_embeddings.parquet"
-    files_for_manifest = [manifest_path, segments_path, segment_summary_path, embedding_path, calibration_path, oracle_path, train_summary_path, output / "cluster_prototypes_train.json", output / "observed_segment_transitions_train.csv", output / "fallback_policy.json", candidates_dir / "schema.json", candidates_dir / "requests.jsonl"]
+    files_for_manifest = [manifest_path, segments_path, segment_summary_path, embedding_path, calibration_path, oracle_path, observable_schema_path, event_schema_path, train_summary_path, output / "cluster_prototypes_train.json", output / "observed_segment_transitions_train.csv", output / "fallback_policy.json", output / "task_contract.json", candidates_dir / "schema.json", candidates_dir / "requests.jsonl"]
     file_hashes = []
     for path in files_for_manifest:
         if path.is_file():
@@ -296,6 +411,8 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         "train_transition_count": len(transitions),
         "excluded_split_counts": dict(Counter(row["split"] for row in forbidden_rows)),
         "excluded_episode_count": len(forbidden_rows),
+        "root_family_split_overlap_count": len(train_family_ids & forbidden_family_ids),
+        "train_segment_non_train_id_count": len(leaked),
         "unknown_retained": include_unknown,
         "shared_calibration_family_count": len(calibration_families),
         "shared_calibration_frame_count": calibration_frames,
@@ -305,6 +422,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         "llm_candidate_count": 0,
         "llm_status": "MODEL_EXECUTION_PENDING",
         "test_gold_in_prompts": False,
+        "missing_input_items": [str(path.relative_to(repo_root)) for path in files_for_manifest if not path.is_file()],
         "files": file_hashes,
     }
     write_json(output / "prompt_input_manifest.json", prompt_manifest)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 
@@ -34,6 +35,8 @@ def _freeze_handoff(args: argparse.Namespace) -> int:
     old_handoff = _read_json_if_exists(old_handoff_path)
     source_lock = _read_json_if_exists(u2_root / "segment_representation_v1" / "configs" / "boundary_source_lock.json")
     fallback_policy = _read_json_if_exists(args.fallback_policy)
+    locked_source = source_lock.get("source_method", old_handoff.get("boundary_source", "unknown"))
+    corrected_metrics = _locked_boundary_metrics(args.boundary_status.parent, locked_source)
     handoff = {
         "schema": "u3_minimal_handoff_v1",
         "status": "U3_ENTRY_READY_WITH_BOUNDARY_FALLBACK",
@@ -45,9 +48,16 @@ def _freeze_handoff(args: argparse.Namespace) -> int:
         "boundary": {
             "automatic_boundary_supported": False,
             "fallback_required": True,
-            "locked_source": source_lock.get("source_method", old_handoff.get("boundary_source", "unknown")),
+            "locked_source": locked_source,
             "original_metrics": {"source": "u2_final_report_and_frozen_tables", "status": "historical_preserved"},
-            "corrected_metrics": {"status": boundary_status.get("status", "NOT_RUN"), "path": _relative(boundary_status.get("output_root", ""), repo_root), "models_evaluated": boundary_status.get("models_evaluated", []), "missing_prediction_count": boundary_status.get("missing_prediction_count", 0)},
+            "corrected_metrics": {
+                "status": boundary_status.get("status", "NOT_RUN"),
+                "path": _relative(boundary_status.get("output_root", ""), repo_root),
+                "models_evaluated": boundary_status.get("models_evaluated", []),
+                "missing_prediction_count": boundary_status.get("missing_prediction_count", 0),
+                "locked_source_test_tol2": corrected_metrics,
+                "old_vs_corrected_path": _relative(args.boundary_status.parent / "old_vs_corrected_metrics.csv", repo_root),
+            },
         },
         "reward": {
             "status": reward_source.get("status", "NOT_RUN"),
@@ -110,6 +120,30 @@ def _read_json_if_exists(path: str | Path | None) -> dict:
         return value if isinstance(value, dict) else {}
     except json.JSONDecodeError:
         return {}
+
+
+def _locked_boundary_metrics(boundary_root: Path, locked_source: str) -> dict:
+    """Return the actual corrected locked-source test result when available."""
+
+    metrics_path = boundary_root / "boundary_metrics_by_model.csv"
+    if not metrics_path.is_file():
+        return {"status": "not_estimable", "reason": "corrected metric table missing"}
+    with metrics_path.open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            if row.get("split") == "test" and row.get("tolerance") == "2" and (row.get("model") == locked_source or row.get("model", "").endswith(f":{locked_source}")):
+                fields = (
+                    "boundary_f1",
+                    "boundary_precision",
+                    "boundary_recall",
+                    "boundary_mae",
+                    "boundary_root_family_macro",
+                    "boundary_root_family_macro_ci_low",
+                    "boundary_root_family_macro_ci_high",
+                    "unknown_frame_rate",
+                    "boundary_estimability",
+                )
+                return {"status": row.get("boundary_estimability", "not_estimable"), **{name: row.get(name, "not_estimable") or "not_estimable" for name in fields}}
+    return {"status": "not_estimable", "reason": f"no corrected test tolerance=2 row for locked source {locked_source}"}
 
 
 def _relative(value: str | Path, repo_root: Path) -> str:
@@ -181,7 +215,15 @@ def _run_boundaries(args: argparse.Namespace) -> int:
 
 
 def _run_reward(args: argparse.Namespace) -> int:
-    status = recompute_reward(args.u2_root, args.output, args.split, args.bootstrap, args.seed)
+    status = recompute_reward(
+        args.u2_root,
+        args.output,
+        args.split,
+        args.bootstrap,
+        args.seed,
+        args.potential_lock,
+        args.boundary_lock,
+    )
     status["output_root"] = str(args.output.resolve())
     write_json(args.output / "reward_source_map.json", status)
     print(json.dumps(status, ensure_ascii=False, indent=2))

@@ -13,12 +13,11 @@ from typing import Any, Iterable, Sequence
 import numpy as np
 
 from .primitives import (
-    bool_value,
     incoming_segment_return,
     match_events,
     metric_from_counts,
     read_csv_rows,
-    sha256_file,
+    sha256_inventory,
     write_csv_rows,
     write_json,
 )
@@ -94,6 +93,41 @@ def _mean(values: Iterable[float | None]) -> float | None:
     return float(np.mean(clean)) if clean else None
 
 
+def _family_macro_interval(rows: Sequence[dict[str, Any]], value_key: str, seed: int) -> dict[str, Any]:
+    """Family-macro mean and deterministic nonparametric 95% interval."""
+
+    values = [float(row[value_key]) for row in rows if row.get(value_key) is not None and math.isfinite(float(row[value_key]))]
+    if not values:
+        return {
+            "root_family_macro": None,
+            "root_family_macro_ci_low": None,
+            "root_family_macro_ci_high": None,
+            "root_family_macro_estimability": "not_estimable",
+        }
+    sample = np.asarray(values, dtype=float)
+    rng = np.random.default_rng(seed)
+    draws = rng.choice(sample, size=(5000, len(sample)), replace=True).mean(axis=1)
+    return {
+        "root_family_macro": float(sample.mean()),
+        "root_family_macro_ci_low": float(np.quantile(draws, 0.025)),
+        "root_family_macro_ci_high": float(np.quantile(draws, 0.975)),
+        "root_family_macro_estimability": "estimable",
+    }
+
+
+def _unknown_summary(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    total = sum(int(row.get("frame_count", 0)) for row in rows)
+    predicted = sum(int(row.get("unknown_predicted_frame_count", 0)) for row in rows)
+    gold = sum(int(row.get("unknown_gold_frame_count", 0)) for row in rows)
+    return {
+        "unknown_frame_count": predicted,
+        "unknown_gold_frame_count": gold,
+        "unknown_frame_rate": (predicted / total) if total else None,
+        "unknown_gold_frame_rate": (gold / total) if total else None,
+        "unknown_retained": True,
+    }
+
+
 def recompute_boundaries(
     u2_root: Path,
     output: Path,
@@ -123,9 +157,10 @@ def recompute_boundaries(
     by_episode: list[dict[str, Any]] = []
     by_model: list[dict[str, Any]] = []
     by_family: list[dict[str, Any]] = []
-    by_event: list[dict[str, Any]] = []
+    event_episode_rows: list[dict[str, Any]] = []
     missing: list[dict[str, Any]] = []
     available_models: list[str] = []
+    input_paths: list[Path] = [dataset]
     for model_name, root in prediction_roots.items():
         model_episode_rows: list[dict[str, Any]] = []
         if not root.exists():
@@ -136,25 +171,63 @@ def recompute_boundaries(
                 missing.append({"model": model_name, "episode_id": row["episode_id"], "split": row["split"], "expected_root": str(root)})
                 continue
             episode = _load_episode(row, repo_root)
+            input_paths.extend([repo_root / row["npz_path"], Path(path)])
             predicted_boundary = _payload_array(payload, "boundary_prediction", "boundary_probability", len(episode["gold_boundary"]))
             predicted_event = np.asarray(payload.get("event_prediction", payload.get("event_argmax", np.zeros(len(episode["gold_event_id"]), dtype=np.int8))))
-            unknown = payload.get("unknown", np.zeros(len(predicted_boundary), dtype=np.int8))
+            unknown = np.asarray(payload.get("unknown", np.zeros(len(predicted_boundary), dtype=np.int8)), dtype=bool)
+            unknown = np.logical_or(unknown, predicted_event == 10)
+            common = {
+                "model": model_name,
+                "episode_id": row["episode_id"],
+                "root_family_id": row[group_key],
+                "split": row["split"],
+                "prediction_path": path,
+                "frame_count": len(predicted_boundary),
+                "unknown_predicted_frame_count": int(unknown.sum()),
+                "unknown_gold_frame_count": int(np.sum(np.asarray(episode["gold_event_id"]) == 10)),
+            }
             for tolerance in tolerances:
                 metric = _boundary_metric(predicted_boundary, episode["gold_boundary"], tolerance)
-                model_episode_rows.append({"model": model_name, "episode_id": row["episode_id"], "root_family_id": row[group_key], "split": row["split"], "tolerance": tolerance, "prediction_path": path, "unknown_rate": float(np.mean(unknown)), **_metric_row("boundary", metric)})
+                model_episode_rows.append({**common, "tolerance": tolerance, **_metric_row("boundary", metric)})
                 for event_id, event_name in EVENT_NAMES.items():
                     if event_id == 0:
                         continue
                     event_metric = _event_metric(predicted_event, episode["gold_event_id"], event_id, tolerance)
-                    by_event.append({"model": model_name, "split": row["split"], "tolerance": tolerance, "event_id": event_id, "event": event_name, **event_metric})
+                    event_episode_rows.append({**common, "tolerance": tolerance, "event_id": event_id, "event": event_name, **event_metric})
         if not model_episode_rows:
             continue
         available_models.append(model_name)
         by_episode.extend(model_episode_rows)
         for (split, tolerance), group in _group_rows(model_episode_rows, ("split", "tolerance")):
-            by_model.append({"model": model_name, "split": split, "tolerance": tolerance, "episodes": len(group), **_aggregate_metric_rows(group, "boundary")})
+            family_rows: list[dict[str, Any]] = []
+            for (_, _, family), family_group in _group_rows(group, ("split", "tolerance", "root_family_id")):
+                family_rows.append({"root_family_id": family, **_aggregate_metric_rows(family_group, "boundary")})
+            macro = _family_macro_interval(family_rows, "boundary_f1", seed=20260957 + int(tolerance))
+            by_model.append({
+                "model": model_name,
+                "split": split,
+                "tolerance": tolerance,
+                "episodes": len(group),
+                "root_family_count": len(family_rows),
+                **_aggregate_metric_rows(group, "boundary"),
+                **{f"boundary_{key}": value for key, value in macro.items()},
+                **_unknown_summary(group),
+            })
         for (split, tolerance, family), group in _group_rows(model_episode_rows, ("split", "tolerance", "root_family_id")):
-            by_family.append({"model": model_name, "split": split, "tolerance": tolerance, "root_family_id": family, "episodes": len(group), **_aggregate_metric_rows(group, "boundary")})
+            by_family.append({"model": model_name, "split": split, "tolerance": tolerance, "root_family_id": family, "episodes": len(group), **_aggregate_metric_rows(group, "boundary"), **_unknown_summary(group)})
+
+    by_event: list[dict[str, Any]] = []
+    for (model, split, tolerance, event_id, event), group in _group_rows(event_episode_rows, ("model", "split", "tolerance", "event_id", "event")):
+        tp = sum(int(row["tp"]) for row in group)
+        fp = sum(int(row["fp"]) for row in group)
+        fn = sum(int(row["fn"]) for row in group)
+        error_sum = sum(float(row.get("error_sum", 0.0) or 0.0) for row in group)
+        matched_count = sum(int(row.get("matched_count", 0) or 0) for row in group)
+        metric = metric_from_counts(tp, fp, fn)
+        metric["error_sum"] = error_sum
+        metric["matched_count"] = matched_count
+        metric["mae"] = error_sum / matched_count if matched_count else None
+        by_event.append({"model": model, "split": split, "tolerance": tolerance, "event_id": event_id, "event": event, "episodes": len(group), **metric})
 
     old_vs_corrected: list[dict[str, Any]] = []
     # The old table is retained for traceability; these are not recomputed with
@@ -168,14 +241,31 @@ def recompute_boundaries(
             continue
         for old in read_csv_rows(old_path):
             model = old.get("job_id") or old.get("config_name") or old.get("variant") or old.get("method") or "unknown"
-            corrected = [x for x in by_model if x["model"].endswith(model) or x["model"] == model and x["tolerance"] == 2]
-            old_vs_corrected.append({"model": model, "old_source": str(old_path), "old_split": old.get("split", old.get("evaluation_split", "unknown")), "old_boundary_f1_tol2": old.get("boundary_f1_tol2", ""), "corrected_rows_available": len(corrected), "correction_note": "episode-local dynamic-program matching; historical checkpoint selection unchanged"})
+            old_split = old.get("split", old.get("evaluation_split", "unknown"))
+            corrected = next((item for item in by_model if item["tolerance"] == 2 and item["split"] == old_split and (item["model"] == model or item["model"].endswith(f":{model}"))), None)
+            old_f1 = old.get("boundary_f1_tol2", "")
+            corrected_f1 = corrected.get("boundary_f1") if corrected else None
+            try:
+                delta = float(corrected_f1) - float(old_f1) if corrected_f1 is not None and old_f1 != "" else None
+            except ValueError:
+                delta = None
+            old_vs_corrected.append({
+                "model": model,
+                "old_source": str(old_path.relative_to(repo_root)),
+                "old_split": old_split,
+                "old_boundary_f1_tol2": old_f1,
+                "corrected_boundary_f1_tol2": corrected_f1 if corrected else "not_estimable",
+                "corrected_minus_old_f1_tol2": delta if delta is not None else "not_estimable",
+                "corrected_estimability": corrected.get("boundary_estimability", "not_estimable") if corrected else "not_estimable",
+                "correction_note": "episode-local dynamic-program matching; historical checkpoint selection unchanged",
+            })
 
     write_csv_rows(output / "boundary_metrics_by_episode.csv", by_episode)
     write_csv_rows(output / "boundary_metrics_by_family.csv", by_family)
     write_csv_rows(output / "boundary_metrics_by_model.csv", by_model)
     write_csv_rows(output / "event_metrics_by_type.csv", by_event)
     write_csv_rows(output / "old_vs_corrected_metrics.csv", old_vs_corrected)
+    inventory = sha256_inventory(input_paths, repo_root)
     status = {
         "status": "BOUNDARY_CACHE_RECOMPUTED" if by_episode else "BOUNDARY_CACHE_INCOMPLETE",
         "source_commit": _source_commit(repo_root),
@@ -187,6 +277,7 @@ def recompute_boundaries(
         "episodes_evaluated": len({(x["model"], x["episode_id"]) for x in by_episode}),
         "missing_prediction_count": len(missing),
         "missing_predictions": missing,
+        "input_file_inventory": {key: inventory[key] for key in ("file_count", "sha256", "missing_paths")},
         "algorithm": "episode-local one-to-one monotone dynamic programming; maximize TP then minimize total absolute error",
         "unknown_is_retained": True,
     }
@@ -254,14 +345,14 @@ def _select_boundary_path(u2_root: Path, source: str, row: dict[str, str]) -> tu
     raise ValueError(f"unknown boundary source: {source}")
 
 
-def _boundary_indices(source: str, u2_root: Path, row: dict[str, str], episode: dict[str, np.ndarray]) -> tuple[np.ndarray, str]:
+def _boundary_indices(source: str, u2_root: Path, row: dict[str, str], episode: dict[str, np.ndarray]) -> tuple[np.ndarray, str, Path | None]:
     path, resolved = _select_boundary_path(u2_root, source, row)
     if source == "gold":
-        return np.asarray(episode["gold_boundary"], dtype=bool), resolved
+        return np.asarray(episode["gold_boundary"], dtype=bool), resolved, None
     if path is None or not path.is_file():
         raise FileNotFoundError(f"missing boundary prediction for {source}: {path}")
     with np.load(path) as payload:
-        return _payload_array(payload, "boundary_prediction", "boundary_probability", len(episode["gold_boundary"])), resolved
+        return _payload_array(payload, "boundary_prediction", "boundary_probability", len(episode["gold_boundary"])), resolved, path
 
 
 def _segments_from_boundary(boundary: Sequence[int]) -> list[tuple[int, int]]:
@@ -276,35 +367,48 @@ def _segments_from_boundary(boundary: Sequence[int]) -> list[tuple[int, int]]:
     return result
 
 
-def recompute_reward(u2_root: Path, output: Path, split: str = "test", bootstrap: int = 5000, seed: int = 20260957) -> dict[str, Any]:
+def recompute_reward(
+    u2_root: Path,
+    output: Path,
+    split: str = "test",
+    bootstrap: int = 5000,
+    seed: int = 20260957,
+    potential_lock: Path | None = None,
+    boundary_lock: Path | None = None,
+) -> dict[str, Any]:
     """Recompute incoming segment returns and test-only family bootstrap tables."""
 
     repo_root = _find_repo_root(u2_root)
     manifest = read_csv_rows(u2_root / "data_v1" / "formal" / "episode_manifest.csv")
     rows = [x for x in manifest if x["split"] == split]
     potential_root = u2_root / "reward_impact_v1" / "predictions"
-    segment_root = u2_root / "reward_impact_v1" / "segments"
+    potential_lock = potential_lock or (u2_root / "reward_impact_v1" / "configs" / "value_potential_lock.json")
+    boundary_lock = boundary_lock or (u2_root / "segment_representation_v1" / "configs" / "boundary_source_lock.json")
     output.mkdir(parents=True, exist_ok=True)
     sources = ["gold", "best_causal", "best_rule", "uniform", "best_budget"]
     segment_rows: list[dict[str, Any]] = []
     event_rows: list[dict[str, Any]] = []
     conservation: list[dict[str, Any]] = []
     missing: list[str] = []
+    input_paths: list[Path] = [u2_root / "data_v1" / "formal" / "episode_manifest.csv", potential_lock, boundary_lock]
     for row in rows:
         episode = _load_episode(row, repo_root)
         potential_path = potential_root / f"{row['episode_id']}.npz"
         if not potential_path.is_file():
             missing.append(str(potential_path))
             continue
+        input_paths.extend([repo_root / row["npz_path"], potential_path])
         with np.load(potential_path) as payload:
             phi = np.asarray(payload["phi"], dtype=float)
         whole_return = float(phi[-1] - phi[0]) if len(phi) > 1 else 0.0
         for source in sources:
             try:
-                boundary, resolved = _boundary_indices(source, u2_root, row, episode)
+                boundary, resolved, boundary_path = _boundary_indices(source, u2_root, row, episode)
             except FileNotFoundError as exc:
                 missing.append(str(exc))
                 continue
+            if boundary_path is not None:
+                input_paths.append(boundary_path)
             current: list[dict[str, Any]] = []
             for index, (start, end) in enumerate(_segments_from_boundary(boundary)):
                 events = np.asarray(episode["gold_event_id"][start : end + 1], dtype=int)
@@ -320,7 +424,33 @@ def recompute_reward(u2_root: Path, output: Path, split: str = "test", bootstrap
                 for local_index, event_value in enumerate(events):
                     event_id = int(event_value)
                     if event_id in (3, 4, 5, 7, 8, 9):
-                        event_rows.append({"boundary_source": source, "resolved_source": resolved, "segment_id": row_out["segment_id"], "episode_id": row["episode_id"], "root_family_id": row["root_family_id"], "event_t": start + local_index, "event_id": event_id, "event": EVENT_NAMES[event_id], "segment_return": value, "direction_correct": (value < 0 if event_id in (3, 9) else value > 0)})
+                        event_t = start + local_index
+                        direction_evaluable = event_t > 0
+                        incoming_return = float(phi[event_t] - phi[event_t - 1]) if direction_evaluable else None
+                        direction_correct: bool | str
+                        if not direction_evaluable:
+                            direction_correct = "not_estimable"
+                        elif event_id in (3, 9):
+                            direction_correct = incoming_return < 0
+                        else:
+                            direction_correct = incoming_return > 0
+                        event_rows.append({
+                            "boundary_source": source,
+                            "resolved_source": resolved,
+                            "segment_id": row_out["segment_id"],
+                            "episode_id": row["episode_id"],
+                            "root_family_id": row["root_family_id"],
+                            "event_t": event_t,
+                            "event_id": event_id,
+                            "event": EVENT_NAMES[event_id],
+                            "event_incoming_return": incoming_return,
+                            "segment_return": value,
+                            "direction_evaluable": direction_evaluable,
+                            "direction_correct": direction_correct,
+                            "event_covered_by_segment": True,
+                            "event_at_segment_boundary": event_t in {start, end},
+                            "direction_metric": "incoming_transition_phi_t_minus_phi_t_minus_1",
+                        })
             partition_sum = float(sum(item["segment_return"] for item in current))
             conservation.append({"boundary_source": source, "episode_id": row["episode_id"], "root_family_id": row["root_family_id"], "split": split, "whole_return_phi_last_minus_phi_first": whole_return, "segment_return_sum": partition_sum, "partition_residual": abs(partition_sum - whole_return), "closed_full_input_cycle_residual": "not_measured"})
     write_csv_rows(output / "segment_returns_test_v2.csv", segment_rows)
@@ -332,25 +462,58 @@ def recompute_reward(u2_root: Path, output: Path, split: str = "test", bootstrap
     rng = np.random.default_rng(seed)
     for source in sources:
         data = [row for row in segment_rows if row["boundary_source"] == source]
+        source_events = [row for row in event_rows if row["boundary_source"] == source]
         families = sorted({row["root_family_id"] for row in data})
         per_family: list[dict[str, Any]] = []
         for family in families:
             subset = [row for row in data if row["root_family_id"] == family]
-            failures = [float(row["segment_return"]) < 0 for row in subset if bool(row["contains_failure"])]
-            recoveries = [float(row["segment_return"]) > 0 for row in subset if bool(row["contains_recovery"])]
-            per_family.append({"boundary_source": source, "root_family_id": family, "failure_negative_rate": float(np.mean(failures)) if failures else None, "recovery_positive_rate": float(np.mean(recoveries)) if recoveries else None, "segments": len(subset), "events": sum(bool(row["contains_failure"] or row["contains_recovery"] or row["contains_success"]) for row in subset)})
+            family_events = [row for row in source_events if row["root_family_id"] == family]
+            failures = [bool(row["direction_correct"]) for row in family_events if row["event_id"] in (3, 9) and row["direction_evaluable"]]
+            recoveries = [bool(row["direction_correct"]) for row in family_events if row["event_id"] in (4, 5) and row["direction_evaluable"]]
+            successes = [bool(row["direction_correct"]) for row in family_events if row["event_id"] in (7, 8) and row["direction_evaluable"]]
+            per_family.append({
+                "boundary_source": source,
+                "root_family_id": family,
+                "failure_negative_rate": float(np.mean(failures)) if failures else None,
+                "recovery_positive_rate": float(np.mean(recoveries)) if recoveries else None,
+                "success_positive_rate": float(np.mean(successes)) if successes else None,
+                "segments": len(subset),
+                "events": len(family_events),
+                "direction_evaluable_events": sum(bool(row["direction_evaluable"]) for row in family_events),
+                "direction_not_estimable_events": sum(not bool(row["direction_evaluable"]) for row in family_events),
+            })
         family_metrics.extend(per_family)
         fail_values = [float(x["failure_negative_rate"]) for x in per_family if x["failure_negative_rate"] is not None]
         rec_values = [float(x["recovery_positive_rate"]) for x in per_family if x["recovery_positive_rate"] is not None]
+        success_values = [float(x["success_positive_rate"]) for x in per_family if x["success_positive_rate"] is not None]
         fail_boot = rng.choice(np.asarray(fail_values), size=(bootstrap, len(fail_values)), replace=True).mean(axis=1) if fail_values else np.asarray([])
         rec_boot = rng.choice(np.asarray(rec_values), size=(bootstrap, len(rec_values)), replace=True).mean(axis=1) if rec_values else np.asarray([])
         def ci(values: np.ndarray) -> tuple[float | None, float | None]:
             return (float(np.quantile(values, .025)), float(np.quantile(values, .975))) if len(values) else (None, None)
         fl, fh = ci(fail_boot); rl, rh = ci(rec_boot)
-        failures = [row for row in data if bool(row["contains_failure"])]
-        recoveries = [row for row in data if bool(row["contains_recovery"])]
-        successes = [row for row in data if bool(row["contains_success"])]
-        summary.append({"boundary_source": source, "split": split, "n_root_families": len(families), "n_segments": len(data), "n_events": len([x for x in event_rows if x["boundary_source"] == source]), "failure_negative_rate": float(np.mean([float(x["segment_return"]) < 0 for x in failures])) if failures else None, "failure_negative_rate_ci_low": fl, "failure_negative_rate_ci_high": fh, "recovery_positive_rate": float(np.mean([float(x["segment_return"]) > 0 for x in recoveries])) if recoveries else None, "recovery_positive_rate_ci_low": rl, "recovery_positive_rate_ci_high": rh, "success_positive_rate": float(np.mean([float(x["segment_return"]) > 0 for x in successes])) if successes else None, "failure_recovery_mixed_segment_rate": float(np.mean([bool(x["mixed_failure_recovery"]) for x in data])) if data else None, "empty_event_segment_fraction": float(np.mean([x["event_purity"] == "not_applicable" for x in data])) if data else None, "event_segment_purity": float(np.mean([float(x["event_purity"]) for x in data if x["event_purity"] != "not_applicable"])) if any(x["event_purity"] != "not_applicable" for x in data) else None, "max_partition_residual": max((float(x["partition_residual"]) for x in conservation if x["boundary_source"] == source), default=None), "closed_full_input_cycle_residual": "not_measured", "bootstrap_resamples": bootstrap})
+        summary.append({
+            "boundary_source": source,
+            "split": split,
+            "n_root_families": len(families),
+            "n_segments": len(data),
+            "n_events": len(source_events),
+            "n_direction_evaluable_events": sum(bool(row["direction_evaluable"]) for row in source_events),
+            "n_direction_not_estimable_events": sum(not bool(row["direction_evaluable"]) for row in source_events),
+            "direction_metric": "incoming_transition_phi_t_minus_phi_t_minus_1",
+            "failure_negative_rate": float(np.mean(fail_values)) if fail_values else None,
+            "failure_negative_rate_ci_low": fl,
+            "failure_negative_rate_ci_high": fh,
+            "recovery_positive_rate": float(np.mean(rec_values)) if rec_values else None,
+            "recovery_positive_rate_ci_low": rl,
+            "recovery_positive_rate_ci_high": rh,
+            "success_positive_rate": float(np.mean(success_values)) if success_values else None,
+            "failure_recovery_mixed_segment_rate": float(np.mean([bool(x["mixed_failure_recovery"]) for x in data])) if data else None,
+            "empty_event_segment_fraction": float(np.mean([x["event_purity"] == "not_applicable" for x in data])) if data else None,
+            "event_segment_purity": float(np.mean([float(x["event_purity"]) for x in data if x["event_purity"] != "not_applicable"])) if any(x["event_purity"] != "not_applicable" for x in data) else None,
+            "max_partition_residual": max((float(x["partition_residual"]) for x in conservation if x["boundary_source"] == source), default=None),
+            "closed_full_input_cycle_residual": "not_measured",
+            "bootstrap_resamples": bootstrap,
+        })
     gold = next((x for x in summary if x["boundary_source"] == "gold"), None)
     for row in summary:
         if gold:
@@ -358,7 +521,19 @@ def recompute_reward(u2_root: Path, output: Path, split: str = "test", bootstrap
             row["recovery_positive_rate_delta_vs_gold"] = row["recovery_positive_rate"] - gold["recovery_positive_rate"] if row["recovery_positive_rate"] is not None and gold["recovery_positive_rate"] is not None else None
     write_csv_rows(output / "reward_metrics_by_family_v2.csv", family_metrics)
     write_csv_rows(output / "reward_summary_test_v2.csv", summary)
-    source_lock = u2_root / "segment_representation_v1" / "configs" / "boundary_source_lock.json"
-    source_map = {"status": "REWARD_CACHE_RECOMPUTED" if summary else "REWARD_CACHE_INCOMPLETE", "source_commit": _source_commit(repo_root), "split": split, "potential_lock": str((u2_root / "reward_impact_v1" / "configs" / "value_potential_lock.json").relative_to(repo_root)), "boundary_lock": str(source_lock.relative_to(repo_root)), "sources": sources, "missing": missing, "direction_metric_is_separate_from_boundary_localization": True, "closed_full_input_cycle_residual": "not_measured"}
+    inventory = sha256_inventory(input_paths, repo_root)
+    source_map = {
+        "status": "REWARD_CACHE_RECOMPUTED" if summary else "REWARD_CACHE_INCOMPLETE",
+        "source_commit": _source_commit(repo_root),
+        "split": split,
+        "potential_lock": str(potential_lock.relative_to(repo_root)),
+        "boundary_lock": str(boundary_lock.relative_to(repo_root)),
+        "sources": sources,
+        "missing": missing,
+        "missing_item_count": len(missing) + len(inventory["missing_paths"]),
+        "input_file_inventory": {key: inventory[key] for key in ("file_count", "sha256", "missing_paths")},
+        "direction_metric_is_separate_from_boundary_localization": True,
+        "closed_full_input_cycle_residual": "not_measured",
+    }
     write_json(output / "reward_source_map.json", source_map)
     return source_map
