@@ -143,7 +143,11 @@ def package_complete(repo:Path,u2_root:Path,output:Path,max_file_mb:int)->dict[s
                     continue
                 # Rebuild the U2 subtree from the current canonical layout;
                 # stale entries from an earlier packaging pass must not linger.
-                if name.startswith("artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/"):
+                if any(name.startswith(prefix) for prefix in (
+                    "artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/",
+                    "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/",
+                    "artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph/",
+                )):
                     continue
                 if Path(name).suffix in LARGE_SUFFIXES:
                     skipped_previous.append(name);continue
@@ -168,7 +172,17 @@ def package_complete(repo:Path,u2_root:Path,output:Path,max_file_mb:int)->dict[s
             continue
         if p.stat().st_size<=max_file_mb*1024*1024:
             selected.append(p)
-    for p in [repo/"upgrade_v2"/"u2",repo/"artifacts"/"pathgraph_sarm"/"upgrade_v2"/"results"/"u1_data_bridge"/"u2_handoff_v2.json"]:
+    # Include the corrective handoff code and its lightweight U3 entry
+    # materials in the same cumulative archive.  Heavy NPZ/Parquet/JSONL and
+    # checkpoints continue through the placeholder path above.
+    extra_roots = [
+        repo/"upgrade_v2"/"u2",
+        repo/"upgrade_v2"/"u2_handoff_patch",
+        repo/"artifacts"/"pathgraph_sarm"/"upgrade_v2"/"u2_handoff_patch_v1",
+        repo/"artifacts"/"pathgraph_sarm"/"upgrade_v2"/"u3_candidate_graph",
+        repo/"artifacts"/"pathgraph_sarm"/"upgrade_v2"/"results"/"u1_data_bridge"/"u2_handoff_v2.json",
+    ]
+    for p in extra_roots:
         if p.is_dir():selected += [x for x in p.rglob("*") if x.is_file() and x.suffix not in LARGE_SUFFIXES]
         elif p.is_file():selected.append(p)
     # Merge by archive path so refreshing the single package never introduces

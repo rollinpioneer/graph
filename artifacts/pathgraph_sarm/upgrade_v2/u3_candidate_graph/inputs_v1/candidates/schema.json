@@ -1,0 +1,46 @@
+{
+  "edge": {
+    "hypothesized_type_values": [
+      "forward",
+      "failure",
+      "recovery",
+      "alternative",
+      "unknown"
+    ],
+    "required": [
+      "src",
+      "dst",
+      "preconditions",
+      "effects",
+      "hypothesized_type",
+      "evidence_segment_ids",
+      "status",
+      "cost_measurement_needed"
+    ],
+    "status_default": "hypothesized"
+  },
+  "node": {
+    "required": [
+      "id",
+      "description",
+      "observable_predicates",
+      "unknown_conditions",
+      "evidence_segment_ids",
+      "status"
+    ],
+    "status_default": "hypothesized"
+  },
+  "predicate_policy": {
+    "allow_arbitrary_code": false,
+    "mode": "finite_declarative_vocabulary",
+    "numeric_cost_is_ground_truth": false
+  },
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "status_values": [
+    "hypothesized",
+    "observed",
+    "contradicted",
+    "validated"
+  ]
+}

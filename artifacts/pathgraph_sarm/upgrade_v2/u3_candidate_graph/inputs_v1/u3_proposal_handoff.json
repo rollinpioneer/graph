@@ -1,0 +1,97 @@
+{
+  "additional_fallback": {
+    "clip_count": 30,
+    "frame_count": 135,
+    "source": "oracle30_clip_ids.csv",
+    "unique_clip_count": 30,
+    "unique_frame_count": 135
+  },
+  "allowed_next": [
+    "U3 simulator-scoped candidate graph proposal",
+    "U4 simulator-scoped data validation"
+  ],
+  "boundary": {
+    "automatic_boundary_supported": false,
+    "corrected_metrics": {
+      "missing_prediction_count": 0,
+      "models_evaluated": [
+        "weak_zero_gold",
+        "weak_plus_small_gold_calibration",
+        "sensor_hysteresis_01",
+        "uniform_00",
+        "boundary_model:causal_weak_only_s621",
+        "boundary_model:causal_weak_only_s622",
+        "boundary_model:causal_weak_only_s623",
+        "boundary_model:causal_weak_plus_oracle30_s621",
+        "boundary_model:causal_weak_plus_oracle30_s622",
+        "boundary_model:causal_weak_plus_oracle30_s623",
+        "boundary_model:offline_teacher_s621",
+        "boundary_model:offline_teacher_s622",
+        "boundary_model:offline_teacher_s623",
+        "boundary_model:offline_teacher_to_causal_s621",
+        "boundary_model:offline_teacher_to_causal_s622",
+        "boundary_model:offline_teacher_to_causal_s623",
+        "budget_model:budget0_s641",
+        "budget_model:budget0_s642",
+        "budget_model:budget0_s643",
+        "budget_model:budget30_entropy_x_event_importance_s641",
+        "budget_model:budget30_entropy_x_event_importance_s642",
+        "budget_model:budget30_entropy_x_event_importance_s643",
+        "budget_model:budget30_random_stratified_s641",
+        "budget_model:budget30_random_stratified_s642",
+        "budget_model:budget30_random_stratified_s643"
+      ],
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/boundaries_v2",
+      "status": "BOUNDARY_CACHE_RECOMPUTED"
+    },
+    "fallback_required": true,
+    "locked_source": "offline_teacher_to_causal_s623",
+    "original_metrics": {
+      "source": "u2_final_report_and_frozen_tables",
+      "status": "historical_preserved"
+    }
+  },
+  "llm_candidates": {
+    "count": 0,
+    "parsed_graphs_present": false,
+    "raw_responses_present": false,
+    "request_count": 9,
+    "status": "MODEL_EXECUTION_PENDING"
+  },
+  "original_archive_decision": "GO_U3_WITH_BOUNDARY_FALLBACK",
+  "original_task_generalization_eligible": false,
+  "physical_generalization_eligible": false,
+  "reward": {
+    "closed_full_input_cycle_residual": "not_measured",
+    "path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/reward_v2",
+    "split": "test",
+    "status": "REWARD_CACHE_RECOMPUTED"
+  },
+  "schema": "u3_minimal_handoff_v1",
+  "scope": "same stochastic simulator family only",
+  "shared_gold_calibration": {
+    "family_count": 8,
+    "family_ids": [
+      "u2_family_002",
+      "u2_family_010",
+      "u2_family_012",
+      "u2_family_034",
+      "u2_family_038",
+      "u2_family_039",
+      "u2_family_080",
+      "u2_family_083"
+    ],
+    "frame_count": 1108,
+    "source": "weak_calibration_families.csv"
+  },
+  "source_commit": "4fd1daa373f7f7cdf99604476c18af2644682a63",
+  "status": "U3_ENTRY_READY_WITH_BOUNDARY_FALLBACK",
+  "u3_prompt_input": {
+    "path": "artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph/inputs_v1/prompt_input_manifest.json",
+    "status": "TRAIN_ONLY_VERIFIED_MODEL_EXECUTION_PENDING",
+    "test_gold_in_prompts": false,
+    "train_only_verified": true,
+    "train_root_family_count": 84,
+    "train_segment_count": 2651
+  }
+}
