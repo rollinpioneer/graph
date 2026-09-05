@@ -1,0 +1,39 @@
+{
+  "schema": "u2_event_schema_v1",
+  "events": {
+    "0": "none",
+    "1": "contact_on",
+    "2": "transport_on",
+    "3": "contact_off_failure",
+    "4": "recovery_start",
+    "5": "contact_reestablished",
+    "6": "detour_start",
+    "7": "goal_enter",
+    "8": "stable_success",
+    "9": "terminal_failure",
+    "10": "stagnation_onset"
+  },
+  "modes": {
+    "0": "approach",
+    "1": "contact_established",
+    "2": "transport",
+    "3": "contact_lost",
+    "4": "recovery_approach",
+    "5": "contact_reestablished",
+    "6": "detour",
+    "7": "goal_entered",
+    "8": "stable_success",
+    "9": "terminal_failure",
+    "10": "stagnation"
+  },
+  "boundary_timing": "gold_boundary[t]=1 denotes an event on transition (x[t-1], a[t-1], x[t])",
+  "model_input_forbidden": [
+    "gold_event",
+    "gold_mode",
+    "scenario",
+    "future_outcome",
+    "t_over_T",
+    "root_family_id",
+    "episode_id"
+  ]
+}

@@ -1,0 +1,25 @@
+window:
+  causal: 8
+  offline_future: 4
+contact:
+  on_threshold: 0.5
+  off_threshold: 0.5
+  hysteresis_steps: 2
+motion:
+  object_speed_on: 0.015
+  object_speed_off: 0.006
+  velocity_correlation_on: 0.55
+goal:
+  enter_sensor_threshold: 0.5
+  progress_derivative_abs: 0.015
+action:
+  change_norm: 0.3
+dynamics:
+  residual_quantile_train: 0.9
+stagnation:
+  object_speed_max: 0.004
+  goal_progress_abs_max: 0.003
+  consecutive_steps: 6
+posterior:
+  unknown_max_probability: 0.55
+  unknown_margin: 0.12

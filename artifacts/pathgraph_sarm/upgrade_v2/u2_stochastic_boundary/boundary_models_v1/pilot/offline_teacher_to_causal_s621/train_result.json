@@ -1,0 +1,58 @@
+{
+  "job_id": "offline_teacher_to_causal_s621",
+  "variant": "offline_teacher_to_causal",
+  "seed": 621,
+  "status": "PASS",
+  "cuda_used": true,
+  "device": "NVIDIA A100-SXM4-40GB",
+  "steps": 400,
+  "validation_every": 100,
+  "validation_history": [
+    {
+      "boundary_f1_tol2": 0.3253012048192771,
+      "boundary_mae": 1.962962962962963,
+      "recovery_start_recall": 0.0,
+      "step": 100
+    },
+    {
+      "boundary_f1_tol2": 0.3419354838709678,
+      "boundary_mae": 1.471698113207547,
+      "recovery_start_recall": 0.5,
+      "step": 200
+    },
+    {
+      "boundary_f1_tol2": 0.3419354838709678,
+      "boundary_mae": 1.471698113207547,
+      "recovery_start_recall": 1.0,
+      "step": 300
+    },
+    {
+      "boundary_f1_tol2": 0.3419354838709678,
+      "boundary_mae": 1.471698113207547,
+      "recovery_start_recall": 1.0,
+      "step": 400
+    }
+  ],
+  "loss_final": 0.8266717195510864,
+  "loss_finite": true,
+  "checkpoint": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/boundary_models_v1/pilot/offline_teacher_to_causal_s621/best.pt",
+  "checkpoint_sha256": "a29f627a4e2a83f3ff2228b3218cc27ff2d41ce5678bfb0a6b986b7716300e16",
+  "best_step": 200,
+  "test_used_for_selection": false,
+  "offline_teacher_checkpoint": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/boundary_models_v1/pilot/offline_teacher_to_causal_s621/teacher.pt",
+  "method": "offline_teacher_to_causal",
+  "split": "val",
+  "episodes": 12,
+  "boundary_precision_tol1": 0.20703125,
+  "boundary_recall_tol1": 0.9814814814814815,
+  "boundary_f1_tol1": 0.3419354838709678,
+  "boundary_precision_tol2": 0.20703125,
+  "boundary_recall_tol2": 0.9814814814814815,
+  "boundary_f1_tol2": 0.3419354838709678,
+  "boundary_mae": 1.471698113207547,
+  "event_macro_f1": 0.46794296883982983,
+  "recovery_start_recall": 0.5,
+  "contact_reestablished_recall": 0.0,
+  "unknown_rate": 0.0,
+  "events_per_episode": 21.333333333333332
+}

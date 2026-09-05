@@ -1,0 +1,21 @@
+schema: u2_budget_protocol_v1
+budget_unit: simulator_gold_oracle_clip_budget_not_human_minutes
+budgets:
+- 0
+- 15
+- 30
+- 60
+strategies:
+- random_stratified
+- entropy_only
+- entropy_x_event_importance
+- expected_boundary_disagreement
+importance:
+  recovery_start: 2.0
+  contact_off_failure: 2.0
+  contact_reestablished: 2.0
+  terminal_failure: 1.5
+  goal_enter: 1.2
+  other: 1.0
+selection_split: train
+test_used_for_queue_selection: false

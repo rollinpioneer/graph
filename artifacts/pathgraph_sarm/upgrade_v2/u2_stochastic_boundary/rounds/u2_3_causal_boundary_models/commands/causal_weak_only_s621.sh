@@ -1,0 +1,1 @@
+/home/__compress_data/xushijie/.conda/envs/cupid/bin/python -m upgrade_v2.u2.cli run-boundary-job --job-table /home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/rounds/u2_3_causal_boundary_models/tables/u2_boundary_formal_jobs.tsv --job-id causal_weak_only_s621
