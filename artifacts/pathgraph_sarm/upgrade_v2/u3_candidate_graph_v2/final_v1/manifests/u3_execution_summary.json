@@ -1,0 +1,49 @@
+{
+  "schema": "u3_execution_summary_v1",
+  "decision": "U3_INCONCLUSIVE",
+  "scope": "same stochastic simulator family only",
+  "models": {
+    "primary": "qwen3.7-plus",
+    "crosscheck": "deepseek-v4-flash",
+    "input_modality": "text_only",
+    "qwen_response_mode": "json_object_local_validation",
+    "deepseek_response_mode": "json_object_local_validation"
+  },
+  "formal_candidate_call_accounting": {
+    "qwen_original": 9,
+    "qwen_single_allowed_prompt_refinement": 3,
+    "deepseek_primary": 3,
+    "deepseek_schema_repairs": 3,
+    "total": 15,
+    "cap": 15,
+    "external_model_invocations_total": 18,
+    "accounting_note": "The 15-call cap applies to formal candidate-generation requests. Three successful DeepSeek schema-repair calls are corrective calls, not new candidates."
+  },
+  "execution": {
+    "qwen_http_success": "12/12",
+    "qwen_parsed_candidates": 6,
+    "deepseek_http_success": "3/3",
+    "deepseek_parsed_candidates": 3,
+    "test_val_prompt_leakage": 0,
+    "api_key_leakage": 0
+  },
+  "hard_validation": {
+    "qwen_hard_valid": 2,
+    "deepseek_hard_valid": 0,
+    "instruction_only_qwen_hard_valid": 2,
+    "instruction_plus_auto_train_segments_qwen_hard_valid": 0,
+    "instruction_plus_budgeted_train_fallback_qwen_hard_valid": 0,
+    "eligible_hallucinated_evidence_ids": 0
+  },
+  "u4": {
+    "selected_candidates": 0,
+    "handoff_permitted": false
+  },
+  "scientific_limits": {
+    "all_graph_statuses": "hypothesized_only",
+    "automatic_boundary_fully_supported": false,
+    "boundary_fallback_required": true,
+    "physical_generalization_eligible": false,
+    "original_task_generalization_eligible": false
+  }
+}

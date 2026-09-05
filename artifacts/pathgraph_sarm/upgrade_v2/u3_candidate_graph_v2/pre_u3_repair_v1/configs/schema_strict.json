@@ -1,0 +1,287 @@
+{
+  "$id": "u3_candidate_graph_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "edges": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_measurement_needed": {
+            "type": "boolean"
+          },
+          "dst": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "effects": {
+            "items": {
+              "enum": [
+                "contact_present",
+                "contact_absent",
+                "contact_recently_lost",
+                "contact_reestablished",
+                "agent_approaching_object",
+                "agent_receding_from_object",
+                "object_moving",
+                "object_stationary",
+                "object_moving_with_agent",
+                "object_approaching_goal",
+                "object_receding_from_goal",
+                "collision_detected",
+                "object_inside_goal",
+                "stable_goal_occupancy",
+                "stagnation_detected",
+                "progress_unknown"
+              ],
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "evidence_segment_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "hypothesized_type": {
+            "enum": [
+              "forward",
+              "failure",
+              "recovery",
+              "alternative",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "preconditions": {
+            "items": {
+              "enum": [
+                "contact_present",
+                "contact_absent",
+                "contact_recently_lost",
+                "contact_reestablished",
+                "agent_approaching_object",
+                "agent_receding_from_object",
+                "object_moving",
+                "object_stationary",
+                "object_moving_with_agent",
+                "object_approaching_goal",
+                "object_receding_from_goal",
+                "collision_detected",
+                "object_inside_goal",
+                "stable_goal_occupancy",
+                "stagnation_detected",
+                "progress_unknown"
+              ],
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "source_transition_pairs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "from_cluster_id": {
+                  "type": "integer"
+                },
+                "to_cluster_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "from_cluster_id",
+                "to_cluster_id"
+              ],
+              "type": "object"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "src": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "const": "hypothesized"
+          },
+          "unknown_conditions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "src",
+          "dst",
+          "preconditions",
+          "effects",
+          "hypothesized_type",
+          "source_transition_pairs",
+          "evidence_segment_ids",
+          "unknown_conditions",
+          "cost_measurement_needed",
+          "status"
+        ],
+        "type": "object"
+      },
+      "maxItems": 30,
+      "minItems": 2,
+      "type": "array"
+    },
+    "graph_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "nodes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "evidence_segment_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "observable_predicates": {
+            "items": {
+              "enum": [
+                "contact_present",
+                "contact_absent",
+                "contact_recently_lost",
+                "contact_reestablished",
+                "agent_approaching_object",
+                "agent_receding_from_object",
+                "object_moving",
+                "object_stationary",
+                "object_moving_with_agent",
+                "object_approaching_goal",
+                "object_receding_from_goal",
+                "collision_detected",
+                "object_inside_goal",
+                "stable_goal_occupancy",
+                "stagnation_detected",
+                "progress_unknown"
+              ],
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "role": {
+            "enum": [
+              "start",
+              "intermediate",
+              "success_terminal",
+              "failure_terminal",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "source_cluster_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "status": {
+            "const": "hypothesized"
+          },
+          "unknown_conditions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "role",
+          "observable_predicates",
+          "unknown_conditions",
+          "source_cluster_ids",
+          "evidence_segment_ids",
+          "status"
+        ],
+        "type": "object"
+      },
+      "maxItems": 15,
+      "minItems": 3,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "u3_candidate_graph_v1"
+    },
+    "scope": {
+      "const": "stochastic_simulator_only"
+    },
+    "unresolved_questions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_edge_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "affected_node_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "evidence_needed": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "question": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "affected_node_ids",
+          "affected_edge_ids",
+          "evidence_needed"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "graph_id",
+    "scope",
+    "nodes",
+    "edges",
+    "unresolved_questions"
+  ],
+  "type": "object"
+}

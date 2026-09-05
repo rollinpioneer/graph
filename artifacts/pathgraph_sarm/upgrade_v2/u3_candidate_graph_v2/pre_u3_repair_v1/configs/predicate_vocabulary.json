@@ -1,0 +1,170 @@
+{
+  "allowed_predicates": [
+    {
+      "causal_observables": [
+        "contact_sensor"
+      ],
+      "description": "contact sensor is active",
+      "history_window": 1,
+      "name": "contact_present",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "contact_sensor"
+      ],
+      "description": "contact sensor is inactive",
+      "history_window": 1,
+      "name": "contact_absent",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "contact_sensor"
+      ],
+      "description": "contact changes from present to absent",
+      "history_window": 3,
+      "name": "contact_recently_lost",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "contact_sensor"
+      ],
+      "description": "contact changes from absent to present",
+      "history_window": 3,
+      "name": "contact_reestablished",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "agent_to_object_position_x",
+        "agent_to_object_position_y"
+      ],
+      "description": "agent-object distance decreases over stored history",
+      "history_window": 3,
+      "name": "agent_approaching_object",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "agent_to_object_position_x",
+        "agent_to_object_position_y"
+      ],
+      "description": "agent-object distance increases over stored history",
+      "history_window": 3,
+      "name": "agent_receding_from_object",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_velocity_x",
+        "object_velocity_y"
+      ],
+      "description": "object velocity magnitude is non-negligible",
+      "history_window": 1,
+      "name": "object_moving",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_velocity_x",
+        "object_velocity_y"
+      ],
+      "description": "object velocity magnitude is small",
+      "history_window": 1,
+      "name": "object_stationary",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "contact_sensor",
+        "agent_velocity_x",
+        "agent_velocity_y",
+        "object_velocity_x",
+        "object_velocity_y"
+      ],
+      "description": "contact is present while agent and object move",
+      "history_window": 2,
+      "name": "object_moving_with_agent",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_to_goal_position_x",
+        "object_to_goal_position_y"
+      ],
+      "description": "object-goal distance decreases over stored history",
+      "history_window": 3,
+      "name": "object_approaching_goal",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_to_goal_position_x",
+        "object_to_goal_position_y"
+      ],
+      "description": "object-goal distance increases over stored history",
+      "history_window": 3,
+      "name": "object_receding_from_goal",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "collision_sensor"
+      ],
+      "description": "collision sensor is active",
+      "history_window": 1,
+      "name": "collision_detected",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_in_goal_sensor"
+      ],
+      "description": "object-in-goal sensor is active",
+      "history_window": 1,
+      "name": "object_inside_goal",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_in_goal_sensor"
+      ],
+      "description": "object remains in goal across stored history",
+      "history_window": 3,
+      "name": "stable_goal_occupancy",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [
+        "object_to_goal_position_x",
+        "object_to_goal_position_y",
+        "object_velocity_x",
+        "object_velocity_y"
+      ],
+      "description": "stored history has negligible progress",
+      "history_window": 5,
+      "name": "stagnation_detected",
+      "requires_future": false
+    },
+    {
+      "causal_observables": [],
+      "description": "available observables do not establish progress state",
+      "history_window": 1,
+      "name": "progress_unknown",
+      "requires_future": false
+    }
+  ],
+  "forbidden_predicates": [
+    "future_success",
+    "true_task_stage",
+    "gold_mode",
+    "hidden_controller_state",
+    "scenario_id",
+    "candidate_feasible",
+    "exact_remaining_cost",
+    "optimal_cost"
+  ],
+  "schema": "u3_predicate_vocabulary_v1"
+}

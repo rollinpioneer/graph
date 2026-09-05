@@ -1,0 +1,54 @@
+{
+  "content_nonempty": true,
+  "errors": [],
+  "http_success": true,
+  "provider": "deepseek",
+  "requested_model": "deepseek-v4-flash",
+  "response_mode": "json_object_local_validation",
+  "returned_model": "deepseek-v4-flash",
+  "sanitized_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"u3_candidate_graph_v1\",\n  \"graph_id\": \"stochastic_push_candidate_v1\",\n  \"scope\": \"stochastic_simulator_only\",\n  \"nodes\": [\n    {\n      \"id\": \"start\",\n      \"description\": \"Initial observation: no contact with object\",\n      \"role\": \"start\",\n      \"observable_predicates\": [\"contact_absent\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [\"seg_initial\"],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"contact\",\n      \"description\": \"Agent makes contact with object\",\n      \"role\": \"intermediate\",\n      \"observable_predicates\": [\"contact_present\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [\"seg_contact\"],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"success\",\n      \"description\": \"Object is inside goal region\",\n      \"role\": \"success_terminal\",\n      \"observable_predicates\": [\"object_inside_goal\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [\"seg_goal\"],\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"e1_approach_contact\",\n      \"src\": \"start\",\n      \"dst\": \"contact\",\n      \"preconditions\": [\"contact_absent\"],\n      \"effects\": [\"contact_present\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [],\n      \"evidence_segment_ids\": [\"seg_contact\"],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"e2_contact_goal\",\n      \"src\": \"contact\",\n      \"dst\": \"success\",\n      \"preconditions\": [\"contact_present\"],\n      \"effects\": [\"object_inside_goal\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [],\n      \"evidence_segment_ids\": [\"seg_goal\"],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"e3_alternate_reapproach\",\n      \"src\": \"contact\",\n      \"dst\": \"start\",\n      \"preconditions\": [\"contact_present\"],\n      \"effects\": [\"contact_absent\"],\n      \"hypothesized_type\": \"alternative\",\n      \"source_transition_pairs\": [],\n      \"evidence_segment_ids\": [\"seg_retreat\"],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"unresolved_questions\": [\n    {\n      \"question\": \"Does maintaining contact always eventually push the object into the goal?\",\n      \"affected_node_ids\": [\"success\"],\n      \"affected_edge_ids\": [\"e2_contact_goal\"],\n      \"evidence_needed\": \"Stochastic simulator rollouts with contact_present starting condition and goal occupancy observations.\"\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content_present": true,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788624017,
+    "id": "db811a2b-3c1e-4c39-a540-9e404c539f7f",
+    "model": "deepseek-v4-flash",
+    "usage": {
+      "completion_tokens": 1106,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 407,
+        "rejected_prediction_tokens": null,
+        "text_tokens": null
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1768,
+      "prompt_tokens": 1768,
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cache_write_tokens": null,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 2874
+    }
+  },
+  "schema_valid": true,
+  "status": "PASS"
+}

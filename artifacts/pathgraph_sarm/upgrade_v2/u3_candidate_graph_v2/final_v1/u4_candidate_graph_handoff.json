@@ -1,0 +1,73 @@
+{
+  "all_statuses": "hypothesized",
+  "allowed_next": [
+    "preserve U2/U3 artifacts",
+    "review failed candidate evidence grounding before a future separately-authorized U3 run"
+  ],
+  "boundary_fallback_required": true,
+  "contradiction_queue_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph_v2/candidate_validation_v1/candidate_contradiction_queue.csv",
+  "crosscheck_model": "deepseek-v4-flash",
+  "fallback_policy": {
+    "additional_fallback": {
+      "clip_count": 30,
+      "frame_count": 135,
+      "source": "oracle30_clip_ids.csv",
+      "unique_clip_count": 30,
+      "unique_frame_count": 135
+    },
+    "automatic_boundary_supported": false,
+    "confirmed_fragment_is_not_validated_graph": true,
+    "default_source": "validation_locked_causal_or_rule_source",
+    "fallback_budget_unit": "unique_clip_and_unique_frame",
+    "fallback_source": "explicitly_disclosed_simulator_gold_train_clip",
+    "scope": "same stochastic simulator family only",
+    "shared_calibration_supervision": {
+      "family_count": 8,
+      "family_ids": [
+        "u2_family_002",
+        "u2_family_010",
+        "u2_family_012",
+        "u2_family_034",
+        "u2_family_038",
+        "u2_family_039",
+        "u2_family_080",
+        "u2_family_083"
+      ],
+      "frame_count": 1108,
+      "source": "weak_calibration_families.csv"
+    },
+    "test_gold_in_prompts": false,
+    "unknown_action": "keep_unknown_and_request_budgeted_confirmation"
+  },
+  "original_task_generalization_eligible": false,
+  "physical_generalization_eligible": false,
+  "predicate_vocabulary_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph_v2/pre_u3_repair_v1/configs/predicate_vocabulary.json",
+  "primary_model": "qwen3.7-plus",
+  "schema": "u3_to_u4_candidate_handoff_v1",
+  "scope": "same stochastic simulator family only",
+  "selected_candidates": [],
+  "supervision_cost_ledger": {
+    "instruction_only": {
+      "additional_fallback_clips": 0,
+      "additional_fallback_frames": 0,
+      "shared_calibration_families": 0,
+      "shared_calibration_frames": 0
+    },
+    "instruction_plus_auto_train_segments": {
+      "additional_fallback_clips": 0,
+      "additional_fallback_frames": 0,
+      "shared_calibration_families": 8,
+      "shared_calibration_frames": 1108
+    },
+    "instruction_plus_budgeted_train_fallback": {
+      "additional_fallback_clips": 30,
+      "additional_fallback_frames": 135,
+      "shared_calibration_families": 8,
+      "shared_calibration_frames": 1108
+    }
+  },
+  "task_contract_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph_v2/pre_u3_repair_v1/configs/task_contract.json",
+  "test_gold_used_for_generation": false,
+  "u3_decision": "U3_INCONCLUSIVE",
+  "unknown_retained": true
+}

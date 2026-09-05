@@ -1,0 +1,94 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "transport",
+      "effects": [
+        "contact_present"
+      ],
+      "evidence_segment_ids": [],
+      "hypothesized_type": "forward",
+      "id": "e1",
+      "preconditions": [
+        "contact_absent"
+      ],
+      "source_transition_pairs": [],
+      "src": "start",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "success",
+      "effects": [
+        "object_inside_goal"
+      ],
+      "evidence_segment_ids": [],
+      "hypothesized_type": "forward",
+      "id": "e2",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [],
+      "src": "transport",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "success persistence needs U4 validation"
+      ]
+    }
+  ],
+  "graph_id": "example_hypothesis",
+  "nodes": [
+    {
+      "description": "observable initial condition",
+      "evidence_segment_ids": [],
+      "id": "start",
+      "observable_predicates": [
+        "contact_absent"
+      ],
+      "role": "start",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "route feasibility unknown"
+      ]
+    },
+    {
+      "description": "contacted transport hypothesis",
+      "evidence_segment_ids": [],
+      "id": "transport",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "observable goal occupancy",
+      "evidence_segment_ids": [],
+      "id": "success",
+      "observable_predicates": [
+        "object_inside_goal"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [],
+      "affected_node_ids": [
+        "transport"
+      ],
+      "evidence_needed": "independent continuation validation",
+      "question": "Which observable loss configurations remain recoverable?"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_intermediate",
+      "effects": [
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_005_r00_s00"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_start_to_intermediate",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 10,
+          "to_cluster_id": 3
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether contact is established before transport begins."
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_success",
+      "effects": [
+        "object_inside_goal"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s00"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_intermediate_to_success",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 3,
+          "to_cluster_id": 2
+        }
+      ],
+      "src": "n_intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether object reaches goal without collision or stagnation."
+      ]
+    }
+  ],
+  "graph_id": "fallback_min_graph_001",
+  "nodes": [
+    {
+      "description": "Initial state before any contact or transport events are observed.",
+      "evidence_segment_ids": [
+        "formal_u2_family_005_r00_s00"
+      ],
+      "id": "n_start",
+      "observable_predicates": [
+        "progress_unknown"
+      ],
+      "role": "start",
+      "source_cluster_ids": [
+        10
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether contact is present at initialization."
+      ]
+    },
+    {
+      "description": "Intermediate state where contact is present and progress is unknown.",
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s00"
+      ],
+      "id": "n_intermediate",
+      "observable_predicates": [
+        "contact_present",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        3
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether transport is active or object is moving with agent."
+      ]
+    },
+    {
+      "description": "Terminal success state where object is inside the goal region.",
+      "evidence_segment_ids": [
+        "formal_u2_family_080_r04_s00"
+      ],
+      "id": "n_success",
+      "observable_predicates": [
+        "object_inside_goal"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [
+        2
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether stable_goal_occupancy is achieved."
+      ]
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [
+        "e_intermediate_to_success"
+      ],
+      "affected_node_ids": [
+        "n_intermediate",
+        "n_success"
+      ],
+      "evidence_needed": "Observations of object_to_goal_position_x, object_to_goal_position_y, and object_in_goal_sensor during transport.",
+      "question": "What conditions determine transition from contact_present to object_inside_goal?"
+    }
+  ]
+}

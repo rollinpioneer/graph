@@ -1,0 +1,525 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_contact_established",
+      "effects": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_005_r00_s01",
+        "formal_u2_family_005_r03_s01",
+        "formal_u2_family_011_r01_s01"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_approach_to_contact",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 10,
+          "to_cluster_id": 3
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "exact contact timing"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_transport_active",
+      "effects": [
+        "object_approaching_goal",
+        "object_moving_with_agent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s02",
+        "formal_u2_family_000_r05_s02",
+        "formal_u2_family_001_r01_s02"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_contact_to_transport",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 3,
+          "to_cluster_id": 5
+        }
+      ],
+      "src": "n_contact_established",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "transport stability"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_contact_lost",
+      "effects": [
+        "contact_recently_lost",
+        "contact_absent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_004_r05_s01",
+        "formal_u2_family_005_r00_s01",
+        "formal_u2_family_010_r00_s01"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_transport_to_contact_lost",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 5,
+          "to_cluster_id": 8
+        }
+      ],
+      "src": "n_transport_active",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "cause of contact loss"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_contact_established",
+      "effects": [
+        "contact_reestablished",
+        "contact_present"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_001_r03_s02",
+        "formal_u2_family_001_r04_s02",
+        "formal_u2_family_002_r00_s02"
+      ],
+      "hypothesized_type": "recovery",
+      "id": "e_contact_lost_recovery",
+      "preconditions": [
+        "contact_recently_lost",
+        "contact_absent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 8,
+          "to_cluster_id": 5
+        }
+      ],
+      "src": "n_contact_lost",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "recovery success probability"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_stagnation",
+      "effects": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_006_r00_s02",
+        "formal_u2_family_006_r01_s02",
+        "formal_u2_family_006_r02_s02"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_transport_to_stagnation",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 1,
+          "to_cluster_id": 6
+        }
+      ],
+      "src": "n_transport_active",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "stagnation cause and duration"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_transport_active",
+      "effects": [
+        "object_approaching_goal",
+        "object_moving_with_agent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_008_r01_s03",
+        "formal_u2_family_008_r05_s03",
+        "formal_u2_family_020_r03_s03"
+      ],
+      "hypothesized_type": "recovery",
+      "id": "e_stagnation_recovery",
+      "preconditions": [
+        "stagnation_detected"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 6,
+          "to_cluster_id": 2
+        }
+      ],
+      "src": "n_stagnation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "recovery mechanism"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_success",
+      "effects": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s05",
+        "formal_u2_family_000_r01_s05",
+        "formal_u2_family_000_r02_s05"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_transport_to_success",
+      "preconditions": [
+        "contact_present",
+        "object_approaching_goal"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 9,
+          "to_cluster_id": 2
+        }
+      ],
+      "src": "n_transport_active",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_failure_terminal",
+      "effects": [
+        "stagnation_detected"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r01_s04",
+        "formal_u2_family_000_r02_s04",
+        "formal_u2_family_000_r03_s04"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_stagnation_to_failure",
+      "preconditions": [
+        "stagnation_detected"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 4,
+          "to_cluster_id": 7
+        }
+      ],
+      "src": "n_stagnation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "terminal failure threshold"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_contact_established",
+      "effects": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_007_r05_s03",
+        "formal_u2_family_007_r05_s04",
+        "formal_u2_family_007_r05_s05"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_detour_to_contact",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 0,
+          "to_cluster_id": 3
+        }
+      ],
+      "src": "n_detour_active",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "detour completion"
+      ]
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n_detour_active",
+      "effects": [
+        "contact_recently_lost",
+        "contact_absent"
+      ],
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s03",
+        "formal_u2_family_001_r02_s03",
+        "formal_u2_family_001_r03_s04"
+      ],
+      "hypothesized_type": "alternative",
+      "id": "e_transport_to_detour",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 5,
+          "to_cluster_id": 4
+        }
+      ],
+      "src": "n_transport_active",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "obstacle avoidance strategy"
+      ]
+    }
+  ],
+  "graph_id": "pusher_transport_semantic_graph_v1",
+  "nodes": [
+    {
+      "description": "Initial state where agent is approaching the object but has not yet established contact",
+      "evidence_segment_ids": [
+        "formal_u2_family_005_r00_s00",
+        "formal_u2_family_047_r00_s00",
+        "formal_u2_family_083_r05_s00"
+      ],
+      "id": "n_start",
+      "observable_predicates": [
+        "contact_absent",
+        "agent_approaching_object",
+        "progress_unknown"
+      ],
+      "role": "start",
+      "source_cluster_ids": [
+        10
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "object initial position relative to goal",
+        "obstacle configuration"
+      ]
+    },
+    {
+      "description": "Agent has made contact with the object and is beginning to push it toward the goal",
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r00_s00",
+        "formal_u2_family_045_r00_s00",
+        "formal_u2_family_083_r03_s01"
+      ],
+      "id": "n_contact_established",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        3
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether contact will be maintained during transport"
+      ]
+    },
+    {
+      "description": "Object is being actively transported toward the goal with contact maintained",
+      "evidence_segment_ids": [
+        "formal_u2_family_004_r05_s02",
+        "formal_u2_family_015_r02_s01",
+        "formal_u2_family_007_r01_s02"
+      ],
+      "id": "n_transport_active",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        5,
+        1
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "remaining distance to goal",
+        "potential for contact loss"
+      ]
+    },
+    {
+      "description": "Contact between agent and object has been lost during transport",
+      "evidence_segment_ids": [
+        "formal_u2_family_002_r00_s01",
+        "formal_u2_family_020_r04_s02",
+        "formal_u2_family_079_r05_s01"
+      ],
+      "id": "n_contact_lost",
+      "observable_predicates": [
+        "contact_recently_lost",
+        "contact_absent",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        8
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether recovery is possible",
+        "object current position"
+      ]
+    },
+    {
+      "description": "Agent is navigating around an obstacle to reach the object or goal",
+      "evidence_segment_ids": [
+        "formal_u2_family_013_r02_s03",
+        "formal_u2_family_019_r05_s13",
+        "formal_u2_family_079_r05_s15"
+      ],
+      "id": "n_detour_active",
+      "observable_predicates": [
+        "contact_absent",
+        "agent_approaching_object",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        0
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "obstacle geometry",
+        "detour completion time"
+      ]
+    },
+    {
+      "description": "Object has not made progress toward the goal for an extended period",
+      "evidence_segment_ids": [
+        "formal_u2_family_008_r00_s04",
+        "formal_u2_family_081_r03_s03",
+        "formal_u2_family_083_r05_s04"
+      ],
+      "id": "n_stagnation",
+      "observable_predicates": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        6
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether stagnation is recoverable",
+        "cause of stagnation"
+      ]
+    },
+    {
+      "description": "Object has reached and remained in the goal region",
+      "evidence_segment_ids": [
+        "formal_u2_family_000_r01_s05",
+        "formal_u2_family_036_r02_s05",
+        "formal_u2_family_083_r05_s06"
+      ],
+      "id": "n_success",
+      "observable_predicates": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [
+        2
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "Terminal failure state due to collision or unrecoverable stagnation",
+      "evidence_segment_ids": [
+        "formal_u2_family_025_r01_s02",
+        "formal_u2_family_065_r05_s03",
+        "formal_u2_family_037_r01_s03"
+      ],
+      "id": "n_failure_terminal",
+      "observable_predicates": [
+        "collision_detected",
+        "stagnation_detected"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [
+        4
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether failure is truly terminal"
+      ]
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [
+        "e_transport_to_contact_lost"
+      ],
+      "affected_node_ids": [
+        "n_transport_active",
+        "n_contact_lost"
+      ],
+      "evidence_needed": "statistical analysis of contact loss events across multiple episodes",
+      "question": "What determines the transition probability from transport to contact loss?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_stagnation_to_failure"
+      ],
+      "affected_node_ids": [
+        "n_stagnation",
+        "n_failure_terminal"
+      ],
+      "evidence_needed": "observation of stagnation duration thresholds leading to failure",
+      "question": "Under what conditions does stagnation become terminal failure?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_contact_lost_recovery"
+      ],
+      "affected_node_ids": [
+        "n_contact_lost",
+        "n_contact_established"
+      ],
+      "evidence_needed": "tracking of recovery attempts and their outcomes",
+      "question": "What is the success probability of contact recovery after contact loss?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_detour_to_contact"
+      ],
+      "affected_node_ids": [
+        "n_detour_active",
+        "n_contact_established"
+      ],
+      "evidence_needed": "correlation between obstacle configurations and detour outcomes",
+      "question": "How does obstacle geometry affect detour duration and success?"
+    }
+  ]
+}
