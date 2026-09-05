@@ -317,9 +317,10 @@ def recompute_reward(u2_root: Path, output: Path, split: str = "test", bootstrap
                 row_out = {"boundary_source": source, "resolved_source": resolved, "segment_id": f"{row['episode_id']}_{source}_{index}", "episode_id": row["episode_id"], "root_family_id": row["root_family_id"], "split": split, "start_t": start, "end_t": end, "segment_return": value, "dominant_gold_event": int(Counter(events).most_common(1)[0][0]) if len(events) else 0, "event_purity": purity, "contains_failure": bool(np.isin(events, [3, 9]).any()), "contains_recovery": bool(np.isin(events, [4, 5]).any()), "contains_success": bool(np.isin(events, [7, 8]).any()), "mixed_failure_recovery": bool(np.isin(events, [3, 9]).any() and np.isin(events, [4, 5]).any()), "direction_evaluable": True}
                 current.append(row_out)
                 segment_rows.append(row_out)
-                for event_id in (3, 4, 5, 7, 8, 9):
-                    if bool(np.any(events == event_id)):
-                        event_rows.append({"boundary_source": source, "resolved_source": resolved, "segment_id": row_out["segment_id"], "event_id": event_id, "event": EVENT_NAMES[event_id], "segment_return": value, "direction_correct": (value < 0 if event_id in (3, 9) else value > 0)})
+                for local_index, event_value in enumerate(events):
+                    event_id = int(event_value)
+                    if event_id in (3, 4, 5, 7, 8, 9):
+                        event_rows.append({"boundary_source": source, "resolved_source": resolved, "segment_id": row_out["segment_id"], "episode_id": row["episode_id"], "root_family_id": row["root_family_id"], "event_t": start + local_index, "event_id": event_id, "event": EVENT_NAMES[event_id], "segment_return": value, "direction_correct": (value < 0 if event_id in (3, 9) else value > 0)})
             partition_sum = float(sum(item["segment_return"] for item in current))
             conservation.append({"boundary_source": source, "episode_id": row["episode_id"], "root_family_id": row["root_family_id"], "split": split, "whole_return_phi_last_minus_phi_first": whole_return, "segment_return_sum": partition_sum, "partition_residual": abs(partition_sum - whole_return), "closed_full_input_cycle_residual": "not_measured"})
     write_csv_rows(output / "segment_returns_test_v2.csv", segment_rows)
