@@ -1,0 +1,15 @@
+{
+  "version": "u1_selection_lock_v1",
+  "scope": "mechanism_only",
+  "tasks": ["transport_recovery", "transport_dual_order"],
+  "allowed_observables": ["eef_to_target_object_position", "object_to_goal_position", "actual_gripper_width", "previous_applied_action"],
+  "forbidden_inputs": ["t/T", "outcome", "scenario", "path_signature", "GT node", "node rank"],
+  "continuation_policy": "observed_suffix_only",
+  "horizon_steps": 16,
+  "variants": ["cost_only_norank", "success_only_norank", "dual_value_nograph"],
+  "formal_seeds": [611, 612, 613],
+  "validation_selection": "minimum validation loss; earlier step breaks ties",
+  "test_used_for_selection": false,
+  "test_status": "no_new_independent_physical_test_available",
+  "primary_statistics": "descriptive_only by deterministic source-family grouping"
+}
