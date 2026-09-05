@@ -25,16 +25,16 @@ from .primitives import (
 
 EVENT_NAMES = {
     0: "none",
-    1: "contact_acquired",
-    2: "contact_maintained",
-    3: "collision_or_failure",
+    1: "contact_on",
+    2: "transport_on",
+    3: "contact_off_failure",
     4: "recovery_start",
     5: "contact_reestablished",
-    6: "detour",
-    7: "success",
+    6: "detour_start",
+    7: "goal_enter",
     8: "stable_success",
-    9: "stagnation",
-    10: "unknown_event",
+    9: "terminal_failure",
+    10: "stagnation_onset",
 }
 
 
@@ -175,7 +175,6 @@ def recompute_boundaries(
             predicted_boundary = _payload_array(payload, "boundary_prediction", "boundary_probability", len(episode["gold_boundary"]))
             predicted_event = np.asarray(payload.get("event_prediction", payload.get("event_argmax", np.zeros(len(episode["gold_event_id"]), dtype=np.int8))))
             unknown = np.asarray(payload.get("unknown", np.zeros(len(predicted_boundary), dtype=np.int8)), dtype=bool)
-            unknown = np.logical_or(unknown, predicted_event == 10)
             common = {
                 "model": model_name,
                 "episode_id": row["episode_id"],
@@ -184,7 +183,7 @@ def recompute_boundaries(
                 "prediction_path": path,
                 "frame_count": len(predicted_boundary),
                 "unknown_predicted_frame_count": int(unknown.sum()),
-                "unknown_gold_frame_count": int(np.sum(np.asarray(episode["gold_event_id"]) == 10)),
+                "unknown_gold_frame_count": 0,
             }
             for tolerance in tolerances:
                 metric = _boundary_metric(predicted_boundary, episode["gold_boundary"], tolerance)
