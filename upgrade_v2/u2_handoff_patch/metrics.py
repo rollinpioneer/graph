@@ -251,7 +251,7 @@ def recompute_boundaries(
                 delta = None
             old_vs_corrected.append({
                 "model": model,
-                "old_source": str(old_path.relative_to(repo_root)),
+                "old_source": _relative_path(old_path, repo_root),
                 "old_split": old_split,
                 "old_boundary_f1_tol2": old_f1,
                 "corrected_boundary_f1_tol2": corrected_f1 if corrected else "not_estimable",
@@ -298,6 +298,13 @@ def _find_repo_root(path: Path) -> Path:
         if (candidate / ".git").exists():
             return candidate
     return path.resolve()
+
+
+def _relative_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve()))
+    except ValueError:
+        return str(path)
 
 
 def _group_rows(rows: Sequence[dict[str, Any]], keys: Sequence[str]):
@@ -526,8 +533,8 @@ def recompute_reward(
         "status": "REWARD_CACHE_RECOMPUTED" if summary else "REWARD_CACHE_INCOMPLETE",
         "source_commit": _source_commit(repo_root),
         "split": split,
-        "potential_lock": str(potential_lock.relative_to(repo_root)),
-        "boundary_lock": str(boundary_lock.relative_to(repo_root)),
+        "potential_lock": _relative_path(potential_lock, repo_root),
+        "boundary_lock": _relative_path(boundary_lock, repo_root),
         "sources": sources,
         "missing": missing,
         "missing_item_count": len(missing) + len(inventory["missing_paths"]),

@@ -20,6 +20,13 @@ def _repo_root(path: Path) -> Path:
     return path
 
 
+def _relative_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve()))
+    except ValueError:
+        return str(path)
+
+
 def _episode_npz(row: dict[str, str], repo_root: Path) -> dict[str, np.ndarray]:
     raw = Path(row["npz_path"])
     candidates = [raw, repo_root / raw]
@@ -383,7 +390,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
                 "model_version": "unresolved_no_local_or_authorized_model",
                 "temperature": 0.0,
                 "max_output_tokens": 2500,
-                "schema_path": str((candidates_dir / "schema.json").relative_to(repo_root)),
+                "schema_path": _relative_path(candidates_dir / "schema.json", repo_root),
                 "prompt": _condition_prompt(condition, task_contract, train_segments, prototypes, transitions, oracle),
                 "input_split": split,
                 "test_gold_in_prompt": False,
@@ -399,7 +406,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
     file_hashes = []
     for path in files_for_manifest:
         if path.is_file():
-            file_hashes.append({"path": str(path.relative_to(repo_root)) if path.is_relative_to(repo_root) else str(path), "size_bytes": path.stat().st_size, "sha256": sha256_file(path)})
+            file_hashes.append({"path": _relative_path(path, repo_root), "size_bytes": path.stat().st_size, "sha256": sha256_file(path)})
     prompt_manifest = {
         "schema": "u3_prompt_input_manifest_v1",
         "status": "TRAIN_ONLY_VERIFIED_MODEL_EXECUTION_PENDING",
@@ -422,7 +429,7 @@ def export_u3_train(u2_root: Path, output: Path, split: str = "train", include_u
         "llm_candidate_count": 0,
         "llm_status": "MODEL_EXECUTION_PENDING",
         "test_gold_in_prompts": False,
-        "missing_input_items": [str(path.relative_to(repo_root)) for path in files_for_manifest if not path.is_file()],
+        "missing_input_items": [_relative_path(path, repo_root) for path in files_for_manifest if not path.is_file()],
         "files": file_hashes,
     }
     write_json(output / "prompt_input_manifest.json", prompt_manifest)
