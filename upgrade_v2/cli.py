@@ -503,12 +503,16 @@ def cmd_score_baselines(args: argparse.Namespace) -> int:
                           "reason": "canonical Stage6 data has no independent GT node sequence", "input_id": None, "checkpoint_sha256": None, "scorer_version": "baseline_spec_v3", "split_version": "legacy_existing", "label_source": "unavailable"})
     args.output.mkdir(parents=True, exist_ok=True)
     fields = ["method_id", "task_id", "suite", "provenance", "metric", "n_parent_groups", "n_events", "value", "ci_low", "ci_high", "status", "reason", "input_id", "checkpoint_sha256", "scorer_version", "split_version", "label_source"]
-    _write_csv(args.output / "corrected_main_table.csv", per_group, fields)
-    _write_csv(args.output / "per_group_metrics.csv", per_group, fields)
-    _write_csv(args.output / "transition_metrics.csv", transition_rows, fields)
-    _write_csv(args.output / "real_structure_ablation.csv", [{**row, "status": "not_computed", "reason": "no independent node posterior semantics available for a valid graph-filter ablation", "value": None} for row in per_group[:2]], fields)
-    _write_csv(args.output / "old_vs_corrected.csv", [{"method_id": "manual_rank_prior_legacy", "task_id": "all", "suite": "historical_reference", "provenance": "deterministic_state_machine_probe", "metric": "identity", "n_parent_groups": 0, "n_events": 0, "value": None, "ci_low": None, "ci_high": None, "status": "not_computed", "reason": "old rank-based checkpoint deliberately excluded from corrected learned-method claim", "input_id": None, "checkpoint_sha256": checkpoint["actual_sha256"], "scorer_version": "legacy", "split_version": "legacy_existing", "label_source": "historical"}], fields)
-    _write_json(args.output / "u0_handoff.json", {"u1_scope": "MECHANISM_ONLY", "readable_input": "stage6 deterministic 14-D rollouts", "forbidden_inputs": ["t/T", "GT node", "path_signature", "outcome"], "unavailable_metrics": ["physical generalization", "independent physical reset statistics"], "checkpoint": checkpoint, "device": device, "legacy_model_source": str(archived_model_source), "legacy_rank_prior_not_used_as_new_scorer": True})
+    suffix = f"_{args.output_suffix}" if args.output_suffix else ""
+    def output_name(name: str) -> Path:
+        path = Path(name)
+        return args.output / f"{path.stem}{suffix}{path.suffix}"
+    _write_csv(output_name("corrected_main_table.csv"), per_group, fields)
+    _write_csv(output_name("per_group_metrics.csv"), per_group, fields)
+    _write_csv(output_name("transition_metrics.csv"), transition_rows, fields)
+    _write_csv(output_name("real_structure_ablation.csv"), [{**row, "status": "not_computed", "reason": "no independent node posterior semantics available for a valid graph-filter ablation", "value": None} for row in per_group[:2]], fields)
+    _write_csv(output_name("old_vs_corrected.csv"), [{"method_id": "manual_rank_prior_legacy", "task_id": "all", "suite": "historical_reference", "provenance": "deterministic_state_machine_probe", "metric": "identity", "n_parent_groups": 0, "n_events": 0, "value": None, "ci_low": None, "ci_high": None, "status": "not_computed", "reason": "old rank-based checkpoint deliberately excluded from corrected learned-method claim", "input_id": None, "checkpoint_sha256": checkpoint["actual_sha256"], "scorer_version": "legacy", "split_version": "legacy_existing", "label_source": "historical"}], fields)
+    _write_json(output_name("u0_handoff.json"), {"u1_scope": "MECHANISM_ONLY", "readable_input": "stage6 deterministic 14-D rollouts", "forbidden_inputs": ["t/T", "GT node", "path_signature", "outcome"], "unavailable_metrics": ["physical generalization", "independent physical reset statistics"], "checkpoint": checkpoint, "device": device, "legacy_model_source": str(archived_model_source), "legacy_rank_prior_not_used_as_new_scorer": True})
     print(json.dumps({"output": str(args.output), "checkpoint": checkpoint["path"], "device": device, "episodes_scored": len({row["input_id"].split(":")[0] for row in transition_rows})}, ensure_ascii=False))
     return 0
 
@@ -747,6 +751,7 @@ def cmd_evaluate_u1_mechanism(args: argparse.Namespace) -> int:
     from upgrade_v2.models.value import ValueModel
     torch.set_num_threads(1); rows = list(csv.DictReader(args.checkpoints.open(encoding="utf-8"))); episodes = {r["episode_uid"]: r for r in _load_jsonl_rows(args.data / "observable_records.jsonl")}; targets = [r for r in _load_jsonl_rows(args.targets / "targets.jsonl") if r["split"] == "val"]
     output = []
+    verification = []
     for ck in rows:
         task_targets = [r for r in targets if r["task_id"] == ck["task_id"]]
         payload = torch.load(ck["checkpoint"], map_location="cpu", weights_only=False); model = ValueModel(variant=ck["variant"]); model.load_state_dict(payload["state_dict"], strict=True); model.eval()
@@ -756,6 +761,7 @@ def cmd_evaluate_u1_mechanism(args: argparse.Namespace) -> int:
         with torch.no_grad(): pred = model(torch.tensor(x))
         q_mask = np.asarray([bool(int(r.get("q_mask", r["q_target"] is not None))) for r in task_targets])
         d_mask = np.asarray([bool(int(r.get("d_mask", r["d_target_normalized"] is not None))) for r in task_targets])
+        verification.append({"task_id": ck["task_id"], "variant": ck["variant"], "seed": int(ck["seed"]), "checkpoint": ck["checkpoint"], "checkpoint_sha256": ck["checkpoint_sha256"], "strict_state_dict_load": True, "forward_input_shape": list(x.shape), "q_head_present": pred["q_logit"] is not None, "d_head_present": pred["d_normalized"] is not None, "q_labeled_anchors": int(q_mask.sum()), "d_labeled_anchors": int(d_mask.sum())})
         common = {"task_id": ck["task_id"], "variant": ck["variant"], "seed": ck["seed"], "status": "descriptive_only", "reason": "validation mechanism-only source", "checkpoint_sha256": ck["checkpoint_sha256"]}
         if pred["q_logit"] is not None and q_mask.any():
             q = torch.sigmoid(pred["q_logit"]).numpy()[q_mask]; y = np.asarray([r["q_target"] for r in task_targets], dtype=float)[q_mask]
@@ -763,8 +769,8 @@ def cmd_evaluate_u1_mechanism(args: argparse.Namespace) -> int:
         if pred["d_normalized"] is not None and d_mask.any():
             d = pred["d_normalized"].numpy()[d_mask]; y = np.asarray([r["d_target_normalized"] for r in task_targets], dtype=float)[d_mask]
             output.extend([{**common, "metric": "d_mse", "value": float(np.mean((d-y)**2)), "n_parent_groups": len({r["root_family_id"] for r, keep in zip(task_targets, d_mask) if keep}), "n_labeled_anchors": int(d_mask.sum())}, {**common, "metric": "d_mae", "value": float(np.mean(np.abs(d-y))), "n_parent_groups": len({r["root_family_id"] for r, keep in zip(task_targets, d_mask) if keep}), "n_labeled_anchors": int(d_mask.sum())}])
-    args.output.mkdir(parents=True, exist_ok=True); _write_csv(args.output / "mechanism_validation_metrics.csv", output, list(output[0])); _write_csv(args.output / "matched_pair_metrics.csv", [{"metric": "matched_pair", "status": "not_computed", "reason": "no independent continuation pairs; observed suffix is one outcome per anchor"}], ["metric", "status", "reason"]); _write_csv(args.output / "natural_test_metrics.csv", [{"metric": "natural_test", "status": "not_computed", "reason": "no new independent physical test families"}], ["metric", "status", "reason"])
-    print(json.dumps({"metric_rows": len(output), "output": str(args.output)}, ensure_ascii=False)); return 0
+    args.output.mkdir(parents=True, exist_ok=True); _write_csv(args.output / args.metrics_filename, output, list(output[0])); _write_json(args.output / "checkpoint_forward_reverification.json", {"runtime": {"torch": torch.__version__, "device": "cpu"}, "checkpoints": verification, "metric_rows": len(output)}); _write_csv(args.output / "matched_pair_metrics.csv", [{"metric": "matched_pair", "status": "not_computed", "reason": "no independent continuation pairs; observed suffix is one outcome per anchor"}], ["metric", "status", "reason"]); _write_csv(args.output / "natural_test_metrics.csv", [{"metric": "natural_test", "status": "not_computed", "reason": "no new independent physical test families"}], ["metric", "status", "reason"])
+    print(json.dumps({"metric_rows": len(output), "output": str(args.output / args.metrics_filename), "forward_verified": len(verification)}, ensure_ascii=False)); return 0
 
 
 def cmd_finalize_u1(args: argparse.Namespace) -> int:
@@ -778,7 +784,7 @@ def cmd_finalize_u1(args: argparse.Namespace) -> int:
 
 def cmd_export_complete(args: argparse.Namespace) -> int:
     root, out = args.root.resolve(), args.output.resolve()
-    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u1_final", root / "rounds", root / "runs/u1_formal"]
+    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "rounds", root / "runs/u1_formal"]
     omitted = []
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -794,8 +800,8 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
                 z.write(p, f"{base.name}/{p.relative_to(base).as_posix()}")
         buf = __import__('io').StringIO(); writer = csv.DictWriter(buf, fieldnames=["path", "size_bytes", "artifact_type", "reason_omitted"], delimiter='\t'); writer.writeheader(); writer.writerows(omitted)
         z.writestr("large_file_manifest.tsv", buf.getvalue())
-        z.writestr("round_status.json", json.dumps({"status": "U0_COMPLETE_PARTIAL_LEGACY_AND_U1_MECHANISM_ONLY", "reason": "deterministic mechanism-only evidence", "post_delivery_corrections": "target provenance repaired without label changes; four replacement checkpoint forwards and U0 baseline v3 rescore remain pending a PyTorch runtime"}, ensure_ascii=False, indent=2))
-        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 complete delivery\n\nU0 corrected legacy measurement; U1 completed rank-free pilots/formal models and mechanism-only validation. Target provenance was repaired without changing supervision labels. No physical/generalization claim is made; four checkpoint re-evaluations and the U0 baseline v3 rescore remain pending a PyTorch runtime.\n")
+        z.writestr("round_status.json", json.dumps({"status": "U0_U1_MECHANISM_VERSION_FROZEN", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "U2_ELIGIBLE": False, "NEXT": "U1_DATA_BRIDGE"}, ensure_ascii=False, indent=2))
+        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 complete delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. The frozen result is mechanism-only: no physical/generalization claim is made and U2 remains ineligible pending the U1 data bridge.\n")
         z.writestr("commands/executed.sh", "# Actual command records are retained in round reports and job_result.json files.\n")
     with zipfile.ZipFile(out) as z:
         bad = z.testzip()
@@ -864,6 +870,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--metric-spec", type=Path, required=True)
     score.add_argument("--output", type=Path, required=True)
     score.add_argument("--cpu-workers", type=int, default=1)
+    score.add_argument("--output-suffix", default="", help="optional suffix for side-by-side result versions, e.g. v3")
     score.set_defaults(func=cmd_score_baselines)
     summary = sub.add_parser("summarize-u0", help="write U0 actual status and handoff")
     summary.add_argument("--evidence", type=Path, required=True)
@@ -924,7 +931,7 @@ def build_parser() -> argparse.ArgumentParser:
     select = sub.add_parser("select-value-checkpoints", help="verify and lock all formal U1 checkpoints")
     select.add_argument("--job-root", type=Path, required=True); select.add_argument("--selection-lock", type=Path, required=True); select.add_argument("--output", type=Path, required=True); select.add_argument("--lock-output", type=Path, required=True); select.set_defaults(func=cmd_select_value_checkpoints)
     evaluate = sub.add_parser("evaluate-u1-mechanism", help="evaluate formal checkpoints only on the mechanism validation split")
-    evaluate.add_argument("--checkpoints", type=Path, required=True); evaluate.add_argument("--data", type=Path, required=True); evaluate.add_argument("--targets", type=Path, required=True); evaluate.add_argument("--output", type=Path, required=True); evaluate.set_defaults(func=cmd_evaluate_u1_mechanism)
+    evaluate.add_argument("--checkpoints", type=Path, required=True); evaluate.add_argument("--data", type=Path, required=True); evaluate.add_argument("--targets", type=Path, required=True); evaluate.add_argument("--output", type=Path, required=True); evaluate.add_argument("--metrics-filename", default="mechanism_validation_metrics.csv"); evaluate.set_defaults(func=cmd_evaluate_u1_mechanism)
     finalize = sub.add_parser("finalize-u1", help="write a truthful U1 mechanism-only decision and handoff")
     finalize.add_argument("--results", type=Path, required=True); finalize.add_argument("--checkpoint-lock", type=Path, required=True); finalize.add_argument("--output-dir", type=Path, required=True); finalize.add_argument("--status-out", type=Path, required=True); finalize.add_argument("--handoff", type=Path, required=True); finalize.set_defaults(func=cmd_finalize_u1)
     export = sub.add_parser("export-complete", help="create the single U0/U1 lightweight delivery ZIP")

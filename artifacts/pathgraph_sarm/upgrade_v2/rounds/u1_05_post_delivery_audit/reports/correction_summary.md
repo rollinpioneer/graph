@@ -14,13 +14,14 @@ masked rather than becoming an irrecoverable failure.
 
 The former selection CSV disagrees with current formal `job_result.json` in
 four recovery runs.  The v1 CSV is retained as history.  The v2 CSV locks the
-18 currently present checkpoint hashes, but the current `python` cannot import
-PyTorch, so loading these four replacement weights and recomputing their
-validation metrics remains pending.  Existing validation rows must therefore
-not be presented as evaluations of the v2 selection for those four runs.
+18 currently present checkpoint hashes.  A PyTorch 2.8.0 CPU runtime strictly
+loaded and forwarded all four replacements on 915 recovery validation anchors;
+the seven resulting rows are in `results/u1_final/mechanism_validation_metrics_v2.csv`
+and their provenance is in `checkpoint_forward_reverification.json`.
 
 U0 topology scoring now uses non-negative Dijkstra and derives fixed chains
-from GraphSpec start-to-success paths, not classifier label order.  A full
-legacy checkpoint rescore is likewise pending a Python runtime with PyTorch.
-Neither pending operation changes the mechanism-only scope or makes U2
-eligible.
+from GraphSpec start-to-success paths, not classifier label order.  The legacy
+checkpoint was successfully rescored on CPU over all 380 readable episodes;
+the baseline v3 tables and report are in `results/u0_corrected_v3/`.  These
+completed repairs freeze the U0/U1 mechanism version.  They do not change the
+mechanism-only scope or make U2 eligible.
