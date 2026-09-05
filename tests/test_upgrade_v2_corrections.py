@@ -7,9 +7,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import numpy as np
+
 from upgrade_v2.cli import cmd_make_outcome_time_targets, cmd_normalize_continuation_records
 from upgrade_v2.rewards.graph_rules import legal_success_chains, oracle_topology_cost
-from upgrade_v2.adapters.stochastic_d1 import StochasticPushSimulator
+from upgrade_v2.adapters.stochastic_d1 import StochasticGoalSimulator, StochasticPushSimulator
 
 
 class GraphRuleTests(unittest.TestCase):
@@ -86,6 +88,16 @@ class D1SnapshotTests(unittest.TestCase):
             actual.append(restored.state_vector())
         for left, right in zip(expected, actual):
             self.assertEqual(float(abs(left - right).max()), 0.0)
+
+    def test_distance_matched_free_and_collision_routes_have_distinct_outcomes(self) -> None:
+        free_position = np.asarray([0.25, 0.80])
+        goal_distance = np.linalg.norm(StochasticGoalSimulator.goal - free_position)
+        collision_position = np.asarray([StochasticGoalSimulator.goal[0] - goal_distance, 0.50])
+        self.assertEqual(float(np.linalg.norm(StochasticGoalSimulator.goal - collision_position)), float(goal_distance))
+        free_result = StochasticGoalSimulator(free_position, seed=20260905).run_goal_controller()
+        collision_result = StochasticGoalSimulator(collision_position, seed=20260905).run_goal_controller()
+        self.assertTrue(free_result["success"])
+        self.assertTrue(collision_result["failed"])
 
 
 if __name__ == "__main__":

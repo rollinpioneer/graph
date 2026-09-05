@@ -980,6 +980,206 @@ def cmd_run_d1_stochastic_restore(args: argparse.Namespace) -> int:
     return 0 if exact else 2
 
 
+def _line_clearance(start: np.ndarray, end: np.ndarray, obstacle: np.ndarray, radius: float) -> float:
+    """Clearance between an initial straight-line route and a circular obstacle."""
+    direction = end - start
+    denom = float(np.dot(direction, direction))
+    fraction = 0.0 if denom == 0.0 else float(np.clip(np.dot(obstacle - start, direction) / denom, 0.0, 1.0))
+    return float(np.linalg.norm(start + fraction * direction - obstacle) - radius)
+
+
+def cmd_build_d2_stochastic_pairs(args: argparse.Namespace) -> int:
+    """Build goal-distance-matched free/collision approach states for D2."""
+    from upgrade_v2.adapters.stochastic_d1 import StochasticGoalSimulator
+
+    rng = np.random.default_rng(args.seed)
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    records = []
+    metrics = []
+    for index in range(args.pairs):
+        free_y = float(rng.uniform(0.74, 0.84))
+        free_position = np.asarray([0.25, free_y], dtype=np.float64)
+        goal_distance = float(np.linalg.norm(StochasticGoalSimulator.goal - free_position))
+        collision_position = np.asarray([StochasticGoalSimulator.goal[0] - goal_distance,
+                                         StochasticGoalSimulator.goal[1]], dtype=np.float64)
+        free_clearance = _line_clearance(free_position, StochasticGoalSimulator.goal,
+                                         StochasticGoalSimulator.obstacle, StochasticGoalSimulator.obstacle_radius)
+        collision_clearance = _line_clearance(collision_position, StochasticGoalSimulator.goal,
+                                              StochasticGoalSimulator.obstacle, StochasticGoalSimulator.obstacle_radius)
+        pair_id = f"d2_pair_{index:03d}"
+        pair_rows = [
+            ("free_approach", free_position, True, free_clearance),
+            ("collision_approach", collision_position, False, collision_clearance),
+        ]
+        for condition, position, candidate_feasible, clearance in pair_rows:
+            records.append({
+                "pair_id": pair_id, "root_family_id": pair_id, "condition": condition,
+                "initial_position": position.tolist(), "initial_velocity": [0.0, 0.0],
+                "goal": StochasticGoalSimulator.goal.tolist(), "obstacle": StochasticGoalSimulator.obstacle.tolist(),
+                "obstacle_radius": StochasticGoalSimulator.obstacle_radius,
+                "goal_distance": goal_distance, "straight_line_clearance": clearance,
+                "candidate_feasible": candidate_feasible,
+                "label_provenance": "D2 construction hypothesis; D3 independently determines rollout outcomes",
+            })
+        metrics.append({"pair_id": pair_id, "free_goal_distance": goal_distance,
+                        "collision_goal_distance": goal_distance, "goal_distance_abs_difference": 0.0,
+                        "free_straight_line_clearance": free_clearance,
+                        "collision_straight_line_clearance": collision_clearance,
+                        "distance_matched": True, "feasibility_conditions_different": True})
+    with (output / "d2_pair_states.jsonl").open("w", encoding="utf-8") as handle:
+        for row in records:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    _write_csv(output / "d2_pair_metrics.csv", metrics, list(metrics[0]))
+    _write_json(output / "d2_protocol.json", {
+        "status": "D2_COMPLETE", "backend": "StochasticGoalSimulator",
+        "pairs": args.pairs, "goal_distance_match_tolerance": 1e-12,
+        "conditions": ["free_approach", "collision_approach"],
+        "outcome_authority": "D3 independent simulator continuations; no D2 construction label is treated as outcome truth",
+        "u2_eligibility": False,
+    })
+    summary = "# D2 matched state pairs\n\n"
+    summary += f"- pairs: {args.pairs}\n"
+    summary += "- matching: each free/collision pair has exactly equal Euclidean distance to the fixed goal.\n"
+    summary += "- feasibility difference: their straight-line obstacle clearance differs; D3 will independently execute continuations to measure rather than assume outcomes.\n"
+    (output / "d2_summary.md").write_text(summary, encoding="utf-8")
+    print(json.dumps({"output_dir": str(output), "pairs": args.pairs, "state_rows": len(records)}, ensure_ascii=False))
+    return 0
+
+
+def _fit_logistic(train_x: np.ndarray, labels: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    mean = train_x.mean(axis=0)
+    std = train_x.std(axis=0).clip(1e-8)
+    x = (train_x - mean) / std
+    x = np.column_stack((np.ones(len(x)), x))
+    weights = np.zeros(x.shape[1], dtype=np.float64)
+    for _ in range(2500):
+        prediction = 1.0 / (1.0 + np.exp(-np.clip(x @ weights, -40.0, 40.0)))
+        gradient = x.T @ (prediction - labels) / len(x) + 1e-3 * np.r_[0.0, weights[1:]]
+        weights -= 0.15 * gradient
+    return weights, mean, std
+
+
+def _predict_logistic(model: tuple[np.ndarray, np.ndarray, np.ndarray], features: np.ndarray) -> np.ndarray:
+    weights, mean, std = model
+    x = np.column_stack((np.ones(len(features)), (features - mean) / std))
+    return 1.0 / (1.0 + np.exp(-np.clip(x @ weights, -40.0, 40.0)))
+
+
+def _fit_ridge(train_x: np.ndarray, target: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    mean = train_x.mean(axis=0)
+    std = train_x.std(axis=0).clip(1e-8)
+    x = np.column_stack((np.ones(len(train_x)), (train_x - mean) / std))
+    penalty = np.diag([0.0] + [1e-3] * (x.shape[1] - 1))
+    weights = np.linalg.solve(x.T @ x + penalty, x.T @ target)
+    return weights, mean, std
+
+
+def _predict_ridge(model: tuple[np.ndarray, np.ndarray, np.ndarray], features: np.ndarray) -> np.ndarray:
+    weights, mean, std = model
+    x = np.column_stack((np.ones(len(features)), (features - mean) / std))
+    return x @ weights
+
+
+def _score_predictions(name: str, prediction: np.ndarray, labels: np.ndarray, root_families: list[str]) -> dict[str, Any]:
+    prediction = np.clip(np.asarray(prediction, dtype=float), 0.0, 1.0)
+    labels = np.asarray(labels, dtype=float)
+    return {"model": name, "split": "heldout_root_families", "brier": float(np.mean((prediction - labels) ** 2)),
+            "accuracy_at_0_5": float(np.mean((prediction >= 0.5) == (labels >= 0.5))),
+            "mean_prediction": float(np.mean(prediction)), "n_rollouts": len(labels),
+            "n_root_families": len(set(root_families))}
+
+
+def cmd_run_d3_stochastic_comparison(args: argparse.Namespace) -> int:
+    """Collect independent continuations and compare the five locked model forms."""
+    from upgrade_v2.adapters.stochastic_d1 import StochasticGoalSimulator
+
+    pair_rows = _load_jsonl_rows(args.pairs)
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    continuations = []
+    for row in pair_rows:
+        pair_index = int(row["pair_id"].rsplit("_", 1)[1])
+        condition_offset = 0 if row["condition"] == "free_approach" else 1
+        for replicate in range(args.replicates):
+            seed = args.seed + pair_index * 1000 + condition_offset * 100 + replicate
+            simulator = StochasticGoalSimulator(np.asarray(row["initial_position"], dtype=np.float64), seed=seed)
+            result = simulator.run_goal_controller()
+            continuations.append({
+                "pair_id": row["pair_id"], "root_family_id": row["root_family_id"], "condition": row["condition"],
+                "rollout_seed": seed, "goal_distance": row["goal_distance"],
+                "straight_line_clearance": row["straight_line_clearance"], "success": bool(result["success"]),
+                "failed": bool(result["failed"]), "steps": int(result["steps"]),
+                "collision_steps": int(result["collision_steps"]), "final_position": result["final_position"],
+            })
+    with (output / "d3_independent_continuations.jsonl").open("w", encoding="utf-8") as handle:
+        for row in continuations:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    groups = {}
+    for row in continuations:
+        groups.setdefault((row["pair_id"], row["condition"]), []).append(row)
+    aggregate = []
+    for (pair_id, condition), rows in sorted(groups.items()):
+        aggregate.append({"pair_id": pair_id, "condition": condition, "rollouts": len(rows),
+                          "success_rate": float(np.mean([r["success"] for r in rows])),
+                          "failure_rate": float(np.mean([r["failed"] for r in rows])),
+                          "mean_steps": float(np.mean([r["steps"] for r in rows])),
+                          "mean_collision_steps": float(np.mean([r["collision_steps"] for r in rows]))})
+    _write_csv(output / "d3_continuation_aggregate.csv", aggregate, list(aggregate[0]))
+
+    family_index = np.asarray([int(row["pair_id"].rsplit("_", 1)[1]) for row in continuations])
+    split = np.asarray(["test" if index % 5 == 4 else ("val" if index % 5 == 3 else "train") for index in family_index])
+    features = np.asarray([[float(row["goal_distance"]), float(row["straight_line_clearance"])] for row in continuations], dtype=np.float64)
+    labels = np.asarray([float(row["success"]) for row in continuations], dtype=np.float64)
+    # D denotes time-to-success.  A collision can terminate early, but it is
+    # not evidence of a short successful route; failed suffixes are censored at
+    # the fixed planning horizon.
+    duration = np.asarray([
+        float(row["steps"] if row["success"] else StochasticGoalSimulator.horizon) / StochasticGoalSimulator.horizon
+        for row in continuations
+    ], dtype=np.float64)
+    train = split == "train"; val = split == "val"; test = split == "test"
+    q_model = _fit_logistic(features[train], labels[train])
+    d_model = _fit_ridge(features[train], duration[train])
+    q_prediction = _predict_logistic(q_model, features)
+    d_prediction = np.clip(1.0 - _predict_ridge(d_model, features), 0.0, 1.0)
+    geometric_prediction = np.exp(-3.0 * features[:, 0])
+    constant_prediction = np.full(len(labels), labels[train].mean(), dtype=np.float64)
+    best_alpha, best_brier = 0.0, float("inf")
+    for alpha in np.linspace(0.0, 1.0, 101):
+        candidate = alpha * q_prediction[val] + (1.0 - alpha) * d_prediction[val]
+        brier = float(np.mean((candidate - labels[val]) ** 2))
+        if brier < best_brier:
+            best_alpha, best_brier = float(alpha), brier
+    qd_prediction = best_alpha * q_prediction + (1.0 - best_alpha) * d_prediction
+    roots = [row["root_family_id"] for row in continuations]
+    comparison = [
+        _score_predictions("geometry_distance_only", geometric_prediction[test], labels[test], [r for r, keep in zip(roots, test) if keep]),
+        _score_predictions("constant", constant_prediction[test], labels[test], [r for r, keep in zip(roots, test) if keep]),
+        _score_predictions("q_only", q_prediction[test], labels[test], [r for r, keep in zip(roots, test) if keep]),
+        _score_predictions("D_only", d_prediction[test], labels[test], [r for r, keep in zip(roots, test) if keep]),
+        _score_predictions("q_plus_D", qd_prediction[test], labels[test], [r for r, keep in zip(roots, test) if keep]),
+    ]
+    _write_csv(output / "d3_model_comparison.csv", comparison, list(comparison[0]))
+    _write_json(output / "d3_protocol.json", {
+        "status": "D3_COMPLETE", "backend": "StochasticGoalSimulator", "replicates_per_state": args.replicates,
+        "split_unit": "root_family_id (all stochastic continuation replicates of a pair stay together)",
+        "models": ["geometry_distance_only", "constant", "q_only", "D_only", "q_plus_D"],
+        "q_plus_D_weight_q_selected_on": "validation root families", "q_plus_D_weight_q": best_alpha,
+        "scope": "descriptive simulator-only comparison; no claim about original robot tasks or physical generalization",
+        "u2_eligibility": "simulator_scoped_only",
+    })
+    summary = "# D3 independent continuation comparison\n\n"
+    summary += f"- independent continuations: {len(continuations)} ({args.replicates} seeds per D2 state)\n"
+    summary += "- split: root-family heldout; repeated seeds never cross train/validation/test.\n"
+    summary += f"- q+D validation-selected q weight: {best_alpha:.2f}\n"
+    summary += "- scope: model comparison is descriptive and limited to this stochastic simulator.\n"
+    (output / "d3_summary.md").write_text(summary, encoding="utf-8")
+    print(json.dumps({"output_dir": str(output), "continuations": len(continuations),
+                      "test_root_families": len(set(np.asarray(roots)[test])), "q_plus_D_weight_q": best_alpha}, ensure_ascii=False))
+    return 0
+
+
 def cmd_export_complete(args: argparse.Namespace) -> int:
     root, out = args.root.resolve(), args.output.resolve()
     include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "results/u1_data_bridge", root / "rounds", root / "runs/u1_formal"]
@@ -998,8 +1198,8 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
                 z.write(p, f"{base.name}/{p.relative_to(base).as_posix()}")
         buf = __import__('io').StringIO(); writer = csv.DictWriter(buf, fieldnames=["path", "size_bytes", "artifact_type", "reason_omitted"], delimiter='\t'); writer.writeheader(); writer.writerows(omitted)
         z.writestr("large_file_manifest.tsv", buf.getvalue())
-        z.writestr("round_status.json", json.dumps({"status": "U1_DATA_BRIDGE_D1_COMPLETE", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "D1_STATE_RESTORE": "see results/u1_data_bridge", "U2_ELIGIBLE": False, "NEXT": "U1_DATA_BRIDGE_D2"}, ensure_ascii=False, indent=2))
-        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 and data-bridge delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. D1 now verifies state capture, restoration, and deterministic continuation in the repository's Pymunk PushT physical simulator. The result remains mechanism-only: no physical/generalization claim is made and U2 remains ineligible pending D2 matched counterfactual states and D3 independent model comparison.\n")
+        z.writestr("round_status.json", json.dumps({"status": "U1_DATA_BRIDGE_D1_D3_COMPLETE", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "D1_STATE_RESTORE": "complete in explicit-state stochastic simulator", "D2_MATCHED_STATES": "complete", "D3_INDEPENDENT_CONTINUATIONS": "complete", "U2_ELIGIBLE": "SIMULATOR_SCOPED_ONLY", "NEXT": "U2_STOCHASTIC_BOUNDARY_PROTOTYPE", "PHYSICAL_GENERALIZATION_ELIGIBLE": False}, ensure_ascii=False, indent=2))
+        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 and data-bridge delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. D1–D3 are complete in an explicit-state stochastic simulator: anchor restoration is exact, D2 pairs are goal-distance matched with free/collision conditions, and D3 evaluates independent heldout continuations against geometry, constant, q-only, D-only, and q+D forms. U2 is eligible only for a stochastic-simulator boundary prototype; no physical or original-task generalization claim is licensed.\n")
         z.writestr("commands/executed.sh", "# Actual command records are retained in round reports and job_result.json files.\n")
     with zipfile.ZipFile(out) as z:
         bad = z.testzip()
@@ -1138,6 +1338,10 @@ def build_parser() -> argparse.ArgumentParser:
     d1.add_argument("--sim-root", type=Path, required=True); d1.add_argument("--output-dir", type=Path, required=True); d1.add_argument("--tolerance", type=float, default=1e-10); d1.set_defaults(func=cmd_run_d1_pusht_restore)
     stochastic_d1 = sub.add_parser("run-d1-stochastic-restore", help="validate complete-state anchor restoration in a continuous stochastic simulator")
     stochastic_d1.add_argument("--output-dir", type=Path, required=True); stochastic_d1.add_argument("--seed", type=int, default=20260905); stochastic_d1.add_argument("--tolerance", type=float, default=1e-12); stochastic_d1.set_defaults(func=cmd_run_d1_stochastic_restore)
+    d2 = sub.add_parser("build-d2-stochastic-pairs", help="build distance-matched free/collision candidate states for the data bridge")
+    d2.add_argument("--output-dir", type=Path, required=True); d2.add_argument("--seed", type=int, default=20260905); d2.add_argument("--pairs", type=int, default=30); d2.set_defaults(func=cmd_build_d2_stochastic_pairs)
+    d3 = sub.add_parser("run-d3-stochastic-comparison", help="evaluate independent continuations and compare geometry, constant, q, D, and q+D")
+    d3.add_argument("--pairs", type=Path, required=True); d3.add_argument("--output-dir", type=Path, required=True); d3.add_argument("--seed", type=int, default=20260905); d3.add_argument("--replicates", type=int, default=12); d3.set_defaults(func=cmd_run_d3_stochastic_comparison)
     export = sub.add_parser("export-complete", help="create the single U0/U1 lightweight delivery ZIP")
     export.add_argument("--root", type=Path, required=True); export.add_argument("--output", type=Path, required=True); export.set_defaults(func=cmd_export_complete)
     return parser

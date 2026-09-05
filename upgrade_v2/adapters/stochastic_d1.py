@@ -98,3 +98,57 @@ class StochasticPushSimulator:
     def state_vector(self) -> np.ndarray:
         return np.concatenate((self.agent_position, self.agent_velocity,
                                self.object_position, self.object_velocity)).copy()
+
+
+class StochasticGoalSimulator:
+    """Continuous noisy navigation with a circular collision exclusion zone.
+
+    D2 uses this only to create paired nearby initial states.  A trial either
+    reaches the goal or enters the obstacle; the outcome comes from the
+    simulator rollout and is never inferred from the pair's intended label.
+    """
+
+    goal = np.asarray([0.85, 0.50], dtype=np.float64)
+    obstacle = np.asarray([0.50, 0.50], dtype=np.float64)
+    obstacle_radius = 0.11
+    success_radius = 0.07
+    horizon = 40
+
+    def __init__(self, position: np.ndarray, seed: int):
+        self.rng = np.random.default_rng(int(seed))
+        self.position = np.asarray(position, dtype=np.float64).reshape(2).copy()
+        self.velocity = np.zeros(2, dtype=np.float64)
+        self.step_index = 0
+        self.done = False
+        self.success = False
+        self.failed = False
+
+    def observation(self) -> np.ndarray:
+        return np.concatenate((self.position, self.velocity, self.goal - self.position)).copy()
+
+    def step(self, action: np.ndarray) -> tuple[np.ndarray, dict[str, Any]]:
+        if self.done:
+            raise RuntimeError("step called after terminal state")
+        control = np.clip(np.asarray(action, dtype=np.float64).reshape(2), -1.0, 1.0)
+        noise = self.rng.normal(0.0, 0.002, size=2)
+        self.velocity = 0.82 * self.velocity + 0.075 * control + noise
+        self.position = np.clip(self.position + self.velocity, 0.0, 1.0)
+        self.step_index += 1
+        collision = bool(np.linalg.norm(self.position - self.obstacle) <= self.obstacle_radius)
+        self.success = bool(np.linalg.norm(self.position - self.goal) <= self.success_radius)
+        self.failed = collision and not self.success
+        self.done = bool(self.success or self.failed or self.step_index >= self.horizon)
+        return self.observation(), {"collision": collision, "success": self.success,
+                                    "failed": self.failed, "noise": noise.tolist()}
+
+    def run_goal_controller(self) -> dict[str, Any]:
+        collisions = 0
+        while not self.done:
+            direction = self.goal - self.position
+            norm = float(np.linalg.norm(direction))
+            action = direction / norm if norm > 0 else np.zeros(2, dtype=np.float64)
+            _, info = self.step(action)
+            collisions += int(info["collision"])
+        return {"success": self.success, "failed": self.failed,
+                "steps": self.step_index, "collision_steps": collisions,
+                "final_position": self.position.tolist()}
