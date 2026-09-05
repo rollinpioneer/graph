@@ -37,6 +37,7 @@ def _freeze_handoff(args: argparse.Namespace) -> int:
     fallback_policy = _read_json_if_exists(args.fallback_policy)
     locked_source = source_lock.get("source_method", old_handoff.get("boundary_source", "unknown"))
     corrected_metrics = _locked_boundary_metrics(args.boundary_status.parent, locked_source)
+    historical_metrics = _historical_locked_boundary_metrics(args.boundary_status.parent, locked_source)
     handoff = {
         "schema": "u3_minimal_handoff_v1",
         "status": "U3_ENTRY_READY_WITH_BOUNDARY_FALLBACK",
@@ -49,7 +50,11 @@ def _freeze_handoff(args: argparse.Namespace) -> int:
             "automatic_boundary_supported": False,
             "fallback_required": True,
             "locked_source": locked_source,
-            "original_metrics": {"source": "u2_final_report_and_frozen_tables", "status": "historical_preserved"},
+            "original_metrics": {
+                "source": "u2_final_report_and_frozen_tables",
+                "status": "historical_preserved",
+                "locked_source_test_tol2": historical_metrics,
+            },
             "corrected_metrics": {
                 "status": boundary_status.get("status", "NOT_RUN"),
                 "path": _relative(boundary_status.get("output_root", ""), repo_root),
@@ -144,6 +149,24 @@ def _locked_boundary_metrics(boundary_root: Path, locked_source: str) -> dict:
                 )
                 return {"status": row.get("boundary_estimability", "not_estimable"), **{name: row.get(name, "not_estimable") or "not_estimable" for name in fields}}
     return {"status": "not_estimable", "reason": f"no corrected test tolerance=2 row for locked source {locked_source}"}
+
+
+def _historical_locked_boundary_metrics(boundary_root: Path, locked_source: str) -> dict:
+    """Read, but never overwrite, the frozen pre-correction comparison row."""
+
+    comparison_path = boundary_root / "old_vs_corrected_metrics.csv"
+    if not comparison_path.is_file():
+        return {"status": "not_estimable", "reason": "historical comparison table missing"}
+    with comparison_path.open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            if row.get("model") == locked_source and row.get("old_split") == "test":
+                return {
+                    "status": row.get("corrected_estimability", "not_estimable"),
+                    "boundary_f1": row.get("old_boundary_f1_tol2", "not_estimable") or "not_estimable",
+                    "correction_delta": row.get("corrected_minus_old_f1_tol2", "not_estimable") or "not_estimable",
+                    "source": row.get("old_source", "historical_preserved"),
+                }
+    return {"status": "not_estimable", "reason": f"no historical test row for locked source {locked_source}"}
 
 
 def _relative(value: str | Path, repo_root: Path) -> str:
