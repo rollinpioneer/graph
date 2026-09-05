@@ -13,6 +13,18 @@
   "boundary": {
     "automatic_boundary_supported": false,
     "corrected_metrics": {
+      "locked_source_test_tol2": {
+        "boundary_estimability": "estimable",
+        "boundary_f1": "0.5935190449118818",
+        "boundary_mae": "0.038314176245210725",
+        "boundary_precision": "0.4250814332247557",
+        "boundary_recall": "0.9830508474576272",
+        "boundary_root_family_macro": "0.6105159174435015",
+        "boundary_root_family_macro_ci_high": "0.6637247234123244",
+        "boundary_root_family_macro_ci_low": "0.5607047740998631",
+        "status": "estimable",
+        "unknown_frame_rate": "0.7278911564625851"
+      },
       "missing_prediction_count": 0,
       "models_evaluated": [
         "weak_zero_gold",
@@ -41,12 +53,19 @@
         "budget_model:budget30_random_stratified_s642",
         "budget_model:budget30_random_stratified_s643"
       ],
+      "old_vs_corrected_path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/boundaries_v2/old_vs_corrected_metrics.csv",
       "path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/boundaries_v2",
       "status": "BOUNDARY_CACHE_RECOMPUTED"
     },
     "fallback_required": true,
     "locked_source": "offline_teacher_to_causal_s623",
     "original_metrics": {
+      "locked_source_test_tol2": {
+        "boundary_f1": "0.5878339965889711",
+        "correction_delta": "0.005685048322910724",
+        "source": "artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/rounds/u2_3_causal_boundary_models/tables/u2_boundary_model_metrics.csv",
+        "status": "estimable"
+      },
       "source": "u2_final_report_and_frozen_tables",
       "status": "historical_preserved"
     }
@@ -84,7 +103,7 @@
     "frame_count": 1108,
     "source": "weak_calibration_families.csv"
   },
-  "source_commit": "7f977b2604a3e57c65b8fc18e2d36f94997e1f97",
+  "source_commit": "b8a14d56f761e54ff91982a72bedcbd556428f89",
   "status": "U3_ENTRY_READY_WITH_BOUNDARY_FALLBACK",
   "u3_prompt_input": {
     "path": "artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph/inputs_v1/prompt_input_manifest.json",

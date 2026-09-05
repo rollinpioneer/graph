@@ -1,46 +1,236 @@
 {
-  "edge": {
-    "hypothesized_type_values": [
-      "forward",
-      "failure",
-      "recovery",
-      "alternative",
-      "unknown"
-    ],
-    "required": [
-      "src",
-      "dst",
-      "preconditions",
-      "effects",
-      "hypothesized_type",
-      "evidence_segment_ids",
-      "status",
-      "cost_measurement_needed"
-    ],
-    "status_default": "hypothesized"
+  "$defs": {
+    "edge": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_measurement_needed": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "dst": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "effects": {
+          "items": {
+            "enum": [
+              "observable:agent_to_object_position_x",
+              "observable:agent_to_object_position_y",
+              "observable:agent_velocity_x",
+              "observable:agent_velocity_y",
+              "observable:object_to_goal_position_x",
+              "observable:object_to_goal_position_y",
+              "observable:object_velocity_x",
+              "observable:object_velocity_y",
+              "observable:agent_to_obstacle_position_x",
+              "observable:agent_to_obstacle_position_y",
+              "observable:object_to_obstacle_position_x",
+              "observable:object_to_obstacle_position_y",
+              "observable:contact_sensor",
+              "observable:collision_sensor",
+              "observable:object_in_goal_sensor",
+              "observable:previous_action_x",
+              "observable:previous_action_y",
+              "segment:observable_contact_history",
+              "segment:observable_contact_loss_count",
+              "segment:unknown_fraction"
+            ]
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_segment_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "hypothesized_type": {
+          "enum": [
+            "forward",
+            "failure",
+            "recovery",
+            "alternative",
+            "unknown"
+          ]
+        },
+        "preconditions": {
+          "items": {
+            "enum": [
+              "observable:agent_to_object_position_x",
+              "observable:agent_to_object_position_y",
+              "observable:agent_velocity_x",
+              "observable:agent_velocity_y",
+              "observable:object_to_goal_position_x",
+              "observable:object_to_goal_position_y",
+              "observable:object_velocity_x",
+              "observable:object_velocity_y",
+              "observable:agent_to_obstacle_position_x",
+              "observable:agent_to_obstacle_position_y",
+              "observable:object_to_obstacle_position_x",
+              "observable:object_to_obstacle_position_y",
+              "observable:contact_sensor",
+              "observable:collision_sensor",
+              "observable:object_in_goal_sensor",
+              "observable:previous_action_x",
+              "observable:previous_action_y",
+              "segment:observable_contact_history",
+              "segment:observable_contact_loss_count",
+              "segment:unknown_fraction"
+            ]
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "src": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "status": {
+          "const": "hypothesized"
+        }
+      },
+      "required": [
+        "src",
+        "dst",
+        "preconditions",
+        "effects",
+        "hypothesized_type",
+        "evidence_segment_ids",
+        "status",
+        "cost_measurement_needed"
+      ],
+      "type": "object"
+    },
+    "node": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "evidence_segment_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "observable_predicates": {
+          "items": {
+            "enum": [
+              "observable:agent_to_object_position_x",
+              "observable:agent_to_object_position_y",
+              "observable:agent_velocity_x",
+              "observable:agent_velocity_y",
+              "observable:object_to_goal_position_x",
+              "observable:object_to_goal_position_y",
+              "observable:object_velocity_x",
+              "observable:object_velocity_y",
+              "observable:agent_to_obstacle_position_x",
+              "observable:agent_to_obstacle_position_y",
+              "observable:object_to_obstacle_position_x",
+              "observable:object_to_obstacle_position_y",
+              "observable:contact_sensor",
+              "observable:collision_sensor",
+              "observable:object_in_goal_sensor",
+              "observable:previous_action_x",
+              "observable:previous_action_y",
+              "segment:observable_contact_history",
+              "segment:observable_contact_loss_count",
+              "segment:unknown_fraction"
+            ]
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "status": {
+          "const": "hypothesized"
+        },
+        "unknown_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "observable_predicates",
+        "unknown_conditions",
+        "evidence_segment_ids",
+        "status"
+      ],
+      "type": "object"
+    }
   },
-  "node": {
-    "required": [
-      "id",
-      "description",
-      "observable_predicates",
-      "unknown_conditions",
-      "evidence_segment_ids",
-      "status"
-    ],
-    "status_default": "hypothesized"
-  },
+  "$id": "u3_candidate_graph_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "candidate_status": "hypothesized_only",
   "predicate_policy": {
     "allow_arbitrary_code": false,
+    "allowed_predicates": [
+      "observable:agent_to_object_position_x",
+      "observable:agent_to_object_position_y",
+      "observable:agent_velocity_x",
+      "observable:agent_velocity_y",
+      "observable:object_to_goal_position_x",
+      "observable:object_to_goal_position_y",
+      "observable:object_velocity_x",
+      "observable:object_velocity_y",
+      "observable:agent_to_obstacle_position_x",
+      "observable:agent_to_obstacle_position_y",
+      "observable:object_to_obstacle_position_x",
+      "observable:object_to_obstacle_position_y",
+      "observable:contact_sensor",
+      "observable:collision_sensor",
+      "observable:object_in_goal_sensor",
+      "observable:previous_action_x",
+      "observable:previous_action_y",
+      "segment:observable_contact_history",
+      "segment:observable_contact_loss_count",
+      "segment:unknown_fraction"
+    ],
     "mode": "finite_declarative_vocabulary",
     "numeric_cost_is_ground_truth": false
   },
+  "properties": {
+    "candidate_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/edge"
+      },
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/node"
+      },
+      "type": "array"
+    },
+    "scope": {
+      "const": "stochastic_simulator_only"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "scope",
+    "nodes",
+    "edges"
+  ],
   "schema_version": "u3_candidate_graph_v1",
   "scope": "stochastic_simulator_only",
-  "status_values": [
-    "hypothesized",
-    "observed",
-    "contradicted",
-    "validated"
-  ]
+  "title": "U3 simulator-scoped hypothesized candidate graph",
+  "type": "object"
 }

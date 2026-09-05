@@ -1,0 +1,62 @@
+{
+  "action_fields": [
+    "action_x",
+    "action_y"
+  ],
+  "candidate_status": "hypothesized_only",
+  "event_names_are_not_prompt_labels": true,
+  "event_timing": "gold_boundary[t]=1 denotes an event on transition (x[t-1], a[t-1], x[t])",
+  "external_llm_execution": "MODEL_EXECUTION_PENDING",
+  "finite_predicate_vocabulary": [
+    "observable:agent_to_object_position_x",
+    "observable:agent_to_object_position_y",
+    "observable:agent_velocity_x",
+    "observable:agent_velocity_y",
+    "observable:object_to_goal_position_x",
+    "observable:object_to_goal_position_y",
+    "observable:object_velocity_x",
+    "observable:object_velocity_y",
+    "observable:agent_to_obstacle_position_x",
+    "observable:agent_to_obstacle_position_y",
+    "observable:object_to_obstacle_position_x",
+    "observable:object_to_obstacle_position_y",
+    "observable:contact_sensor",
+    "observable:collision_sensor",
+    "observable:object_in_goal_sensor",
+    "observable:previous_action_x",
+    "observable:previous_action_y",
+    "segment:observable_contact_history",
+    "segment:observable_contact_loss_count",
+    "segment:unknown_fraction"
+  ],
+  "forbidden_prompt_fields": [
+    "gold_event",
+    "gold_mode",
+    "scenario",
+    "future outcome",
+    "time fraction",
+    "root_family_id",
+    "episode_id"
+  ],
+  "observable_features": [
+    "agent_to_object_position_x",
+    "agent_to_object_position_y",
+    "agent_velocity_x",
+    "agent_velocity_y",
+    "object_to_goal_position_x",
+    "object_to_goal_position_y",
+    "object_velocity_x",
+    "object_velocity_y",
+    "agent_to_obstacle_position_x",
+    "agent_to_obstacle_position_y",
+    "object_to_obstacle_position_x",
+    "object_to_obstacle_position_y",
+    "contact_sensor",
+    "collision_sensor",
+    "object_in_goal_sensor",
+    "previous_action_x",
+    "previous_action_y"
+  ],
+  "scope": "stochastic_simulator_only",
+  "simulator_roles": "A two-dimensional agent approaches, contacts, and transports an object to a goal while an obstacle can cause collision or detour behavior."
+}
