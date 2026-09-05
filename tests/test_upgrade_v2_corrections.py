@@ -9,9 +9,12 @@ from pathlib import Path
 
 import numpy as np
 
-from upgrade_v2.cli import cmd_make_outcome_time_targets, cmd_normalize_continuation_records
+from upgrade_v2.cli import (cmd_build_u2_stochastic_boundary_data,
+                            cmd_make_outcome_time_targets,
+                            cmd_normalize_continuation_records)
 from upgrade_v2.rewards.graph_rules import legal_success_chains, oracle_topology_cost
 from upgrade_v2.adapters.stochastic_d1 import StochasticGoalSimulator, StochasticPushSimulator
+from upgrade_v2.adapters.stochastic_u2 import U2BoundarySimulator
 
 
 class GraphRuleTests(unittest.TestCase):
@@ -98,6 +101,39 @@ class D1SnapshotTests(unittest.TestCase):
         collision_result = StochasticGoalSimulator(collision_position, seed=20260905).run_goal_controller()
         self.assertTrue(free_result["success"])
         self.assertTrue(collision_result["failed"])
+
+
+class U2DataContractTests(unittest.TestCase):
+    def test_u2_snapshot_restores_stochastic_transition_and_features_are_numeric(self) -> None:
+        original = U2BoundarySimulator(np.asarray([0.20, 0.50]), seed=20260905)
+        original.step(np.asarray([1.0, 0.0, 1.0]))
+        snapshot = original.snapshot()
+        expected_features, expected_info = original.step(np.asarray([0.0, 1.0, 1.0]))
+        restored = U2BoundarySimulator(np.asarray([0.20, 0.50]), seed=1)
+        restored.restore(snapshot)
+        actual_features, actual_info = restored.step(np.asarray([0.0, 1.0, 1.0]))
+        self.assertEqual(expected_features, actual_features)
+        self.assertEqual(expected_info, actual_info)
+        self.assertEqual(len(actual_features), 11)
+        self.assertTrue(all(isinstance(value, float) for value in actual_features))
+
+    def test_u2_transition_records_exclude_generation_strata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            historical = root / "u2_handoff.json"
+            historical.write_text('{"u2_eligible": false}\n', encoding="utf-8")
+            out = root / "u2"
+            handoff = root / "u2_handoff_v2.json"
+            cmd_build_u2_stochastic_boundary_data(argparse.Namespace(
+                historical_handoff=historical, handoff=handoff, output_dir=out,
+                seed=20260905, per_stratum=2,
+            ))
+            first = json.loads((out / "u2_transition_records.jsonl").read_text(encoding="utf-8").splitlines()[0])
+            self.assertNotIn("generation_stratum", first)
+            self.assertNotIn("intervention_schedule", first)
+            self.assertTrue(all(isinstance(value, float) for value in first["features_before"]))
+            authority = json.loads(handoff.read_text(encoding="utf-8"))
+            self.assertTrue(authority["historical_file_preserved"])
 
 
 if __name__ == "__main__":

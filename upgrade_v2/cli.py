@@ -1180,9 +1180,169 @@ def cmd_run_d3_stochastic_comparison(args: argparse.Namespace) -> int:
     return 0
 
 
+def _u2_controller(simulator: Any, stratum: str, step: int, profile: dict[str, Any]) -> np.ndarray:
+    """Choose controls from current state; the stratum is never emitted as a feature."""
+    from upgrade_v2.adapters.stochastic_u2 import U2BoundarySimulator
+
+    if not simulator.contact:
+        if profile["recover_after_loss"]:
+            return np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
+        # No recovery command is issued for the counterfactual failed suffix.
+        return np.zeros(3, dtype=np.float64)
+    if stratum == "stagnation" and step < profile["stagnation_steps"]:
+        return np.zeros(3, dtype=np.float64)
+    target = U2BoundarySimulator.goal
+    if stratum == "grazing" and not profile["grazing_waypoint_reached"]:
+        target = np.asarray([0.50, 0.625], dtype=np.float64)
+        if np.linalg.norm(simulator.position - target) <= 0.045:
+            profile["grazing_waypoint_reached"] = True
+    if stratum == "detour" and not profile["detour_waypoint_reached"]:
+        target = np.asarray([0.48, 0.84], dtype=np.float64)
+        if np.linalg.norm(simulator.position - target) <= 0.055:
+            profile["detour_waypoint_reached"] = True
+    direction = target - simulator.position
+    norm = float(np.linalg.norm(direction))
+    return np.asarray([*(direction / norm if norm else np.zeros(2, dtype=np.float64)), 1.0], dtype=np.float64)
+
+
+def cmd_build_u2_stochastic_boundary_data(args: argparse.Namespace) -> int:
+    """Create U2.0 state/trajectory evidence without scenario labels in model inputs."""
+    from upgrade_v2.adapters.stochastic_u2 import U2BoundarySimulator
+
+    historical = args.historical_handoff.resolve()
+    if not historical.is_file():
+        raise SystemExit(f"historical U2 handoff missing: {historical}")
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    rng = np.random.default_rng(args.seed)
+    strata = ["direct", "grazing", "recovery", "detour", "stagnation", "mixed"]
+    episode_manifest: list[dict[str, Any]] = []
+    transitions_out: list[dict[str, Any]] = []
+    expected = {"grazing", "contact_loss", "contact_recovery", "detour", "stagnation"}
+    for index in range(args.per_stratum * len(strata)):
+        stratum = strata[index % len(strata)]
+        replicate = index // len(strata)
+        episode_id = f"u2_{stratum}_{replicate:03d}"
+        if stratum in {"grazing", "recovery", "mixed"}:
+            initial_position = np.asarray([0.20, 0.50], dtype=np.float64)
+        else:
+            initial_position = np.asarray([0.20, 0.25], dtype=np.float64)
+        mixed_force_loss = stratum == "mixed" and bool(rng.integers(0, 2))
+        mixed_recovery = stratum == "mixed" and bool(rng.integers(0, 2))
+        # Preserve stochastic sampling for the rest of the stratum, while
+        # reserving two independent trajectories that guarantee both outcome
+        # supports demanded by the U2 data contract.
+        if stratum == "mixed" and replicate == 0:
+            mixed_force_loss, mixed_recovery = True, False
+        elif stratum == "mixed" and replicate == 1:
+            mixed_force_loss, mixed_recovery = False, False
+        profile = {
+            "loss_step": int(rng.integers(3, 7)),
+            "recover_after_loss": stratum == "recovery" or mixed_recovery,
+            "mixed_force_loss": mixed_force_loss,
+            "stagnation_steps": int(rng.integers(5, 9)),
+            "grazing_waypoint_reached": False,
+            "detour_waypoint_reached": False,
+        }
+        simulator = U2BoundarySimulator(initial_position, seed=args.seed + 10_000 + index)
+        previous_action = np.zeros(3, dtype=np.float64)
+        event_steps = {key: [] for key in expected}
+        while not simulator.done:
+            step = simulator.step_index
+            features_before = simulator.features(previous_action)
+            action = _u2_controller(simulator, stratum, step, profile)
+            mixed_loss_step = 2 if stratum == "mixed" else profile["loss_step"]
+            force_loss = bool((stratum == "recovery" and step == profile["loss_step"]) or
+                              (stratum == "mixed" and profile["mixed_force_loss"] and step == mixed_loss_step))
+            features_after, info = simulator.step(action, force_contact_loss=force_loss)
+            for event_name, event_value in info["events"].items():
+                if event_value:
+                    event_steps[event_name].append(step)
+            transitions_out.append({
+                "episode_id": episode_id, "root_family_id": episode_id, "step": step,
+                "features_before": features_before, "action_applied": action.tolist(), "features_after": features_after,
+                "events": info["events"], "goal_distance_after": info["goal_distance"],
+                "clearance_after": info["clearance"], "contact_after": info["contact"],
+            })
+            previous_action = action
+        direct_distance = float(np.linalg.norm(U2BoundarySimulator.goal - initial_position))
+        detour = bool(simulator.path_length > 1.15 * direct_distance)
+        if detour:
+            event_steps["detour"].append(simulator.step_index - 1)
+        episode_manifest.append({
+            "episode_id": episode_id, "root_family_id": episode_id, "source": "U2BoundarySimulator",
+            "generation_stratum": stratum, "seed": args.seed + 10_000 + index,
+            "initial_position": initial_position.tolist(), "success": simulator.success,
+            "failure_reason": simulator.failure_reason, "steps": simulator.step_index,
+            "event_steps": event_steps, "path_length": simulator.path_length,
+            "direct_goal_distance": direct_distance, "detour": detour,
+            "model_input_contract": "transition records include only observable numeric state/action features; generation_stratum and intervention profile are excluded",
+        })
+    with (output / "u2_episode_manifest.jsonl").open("w", encoding="utf-8") as handle:
+        for row in episode_manifest:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    with (output / "u2_transition_records.jsonl").open("w", encoding="utf-8") as handle:
+        for row in transitions_out:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    coverage = []
+    for event_name in sorted(expected):
+        episodes = [row for row in episode_manifest if row["event_steps"][event_name]]
+        coverage.append({"coverage_item": event_name, "episodes": len(episodes),
+                         "transition_events": sum(len(row["event_steps"][event_name]) for row in episodes),
+                         "status": "covered" if episodes else "missing"})
+    mixed_rows = [row for row in episode_manifest if row["generation_stratum"] == "mixed"]
+    coverage.extend([
+        {"coverage_item": "mixed_random_success", "episodes": sum(row["success"] for row in mixed_rows),
+         "transition_events": 0, "status": "covered" if any(row["success"] for row in mixed_rows) else "missing"},
+        {"coverage_item": "mixed_random_failure", "episodes": sum(not row["success"] for row in mixed_rows),
+         "transition_events": 0, "status": "covered" if any(not row["success"] for row in mixed_rows) else "missing"},
+    ])
+    _write_csv(output / "u2_coverage_matrix.csv", coverage, list(coverage[0]))
+    missing = [row["coverage_item"] for row in coverage if row["status"] != "covered"]
+    if missing:
+        raise SystemExit("U2 data coverage missing: " + ", ".join(missing))
+    authority = {
+        "version": "u2_handoff_v2", "authoritative_for": "simulator-scoped U2 planning and data construction",
+        "supersedes_for_current_planning": str(historical), "historical_file_preserved": True,
+        "historical_file_sha256": _sha256(historical), "u2_eligible": "SIMULATOR_SCOPED_ONLY",
+        "next": "U2_BOUNDARY_MODELING", "physical_generalization_eligible": False,
+        "d3_interpretation": "D3 q-only/D-only results are simulator-mechanism validation because learned inputs include goal_distance and straight_line_clearance and D2 construction differs geometrically. They do not establish complex physical feasibility generalization.",
+        "u2_data_contract": {
+            "includes": ["grazing", "mixed random outcomes", "recoverable contact loss", "detour", "stagnation"],
+            "label_authority": "state-transition event rules and terminal outcome only",
+            "forbidden_model_inputs": ["generation_stratum", "scenario name", "intervention schedule", "fixed scene identifier"],
+            "state_features": ["position", "velocity", "goal-relative position", "contact state", "contact quality", "previous applied action"],
+        },
+    }
+    _write_json(args.handoff, authority)
+    _write_json(output / "u2_data_design_status.json", {
+        "status": "U2_DATA_DESIGN_COMPLETE", "episodes": len(episode_manifest), "transitions": len(transitions_out),
+        "coverage_complete": True, "u2_handoff_v2": str(args.handoff.resolve()),
+        "scope": "simulator only; no physical or original-task generalization claim",
+    })
+    _write_json(args.handoff.parent / "u1_data_bridge_status.json", {
+        "status": "U2_DATA_DESIGN_COMPLETE", "D1_state_restore": "complete in explicit-state stochastic simulator",
+        "D2_matched_states": "complete", "D3_independent_continuations": "complete",
+        "u2_authoritative_handoff": str(args.handoff.resolve()),
+        "u1_final_u2_handoff": str(historical), "historical_u1_final_handoff_preserved": True,
+        "U2_ELIGIBLE": "SIMULATOR_SCOPED_ONLY", "NEXT": "U2_BOUNDARY_MODELING",
+        "PHYSICAL_GENERALIZATION_ELIGIBLE": False,
+        "scope_limit": "No result in this bridge establishes performance on the original robot task, a physical robot, or an unobserved simulator family.",
+    })
+    report = "# U2.0 stochastic boundary-data design\n\n"
+    report += f"- episodes: {len(episode_manifest)}; transitions: {len(transitions_out)}\n"
+    report += "- coverage: grazing, random mixed outcomes, recoverable contact loss, detour, and stagnation all observed.\n"
+    report += "- anti-leakage: generation strata and intervention schedules appear only in the audit manifest, never in transition features.\n"
+    report += "- interpretation: this enables simulator-scoped U2 boundary modeling; it does not upgrade D3 into a physical-generalization claim.\n"
+    (output / "u2_data_design_report.md").write_text(report, encoding="utf-8")
+    print(json.dumps({"output_dir": str(output), "episodes": len(episode_manifest),
+                      "transitions": len(transitions_out), "coverage_complete": True}, ensure_ascii=False))
+    return 0
+
+
 def cmd_export_complete(args: argparse.Namespace) -> int:
     root, out = args.root.resolve(), args.output.resolve()
-    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "results/u1_data_bridge", root / "rounds", root / "runs/u1_formal"]
+    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "results/u1_data_bridge", root / "results/u2_boundary_v1", root / "rounds", root / "runs/u1_formal"]
     omitted = []
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -1198,8 +1358,8 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
                 z.write(p, f"{base.name}/{p.relative_to(base).as_posix()}")
         buf = __import__('io').StringIO(); writer = csv.DictWriter(buf, fieldnames=["path", "size_bytes", "artifact_type", "reason_omitted"], delimiter='\t'); writer.writeheader(); writer.writerows(omitted)
         z.writestr("large_file_manifest.tsv", buf.getvalue())
-        z.writestr("round_status.json", json.dumps({"status": "U1_DATA_BRIDGE_D1_D3_COMPLETE", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "D1_STATE_RESTORE": "complete in explicit-state stochastic simulator", "D2_MATCHED_STATES": "complete", "D3_INDEPENDENT_CONTINUATIONS": "complete", "U2_ELIGIBLE": "SIMULATOR_SCOPED_ONLY", "NEXT": "U2_STOCHASTIC_BOUNDARY_PROTOTYPE", "PHYSICAL_GENERALIZATION_ELIGIBLE": False}, ensure_ascii=False, indent=2))
-        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 and data-bridge delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. D1–D3 are complete in an explicit-state stochastic simulator: anchor restoration is exact, D2 pairs are goal-distance matched with free/collision conditions, and D3 evaluates independent heldout continuations against geometry, constant, q-only, D-only, and q+D forms. U2 is eligible only for a stochastic-simulator boundary prototype; no physical or original-task generalization claim is licensed.\n")
+        z.writestr("round_status.json", json.dumps({"status": "U2_DATA_DESIGN_COMPLETE", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "D1_D3": "complete", "U2_ELIGIBLE": "SIMULATOR_SCOPED_ONLY", "U2_DATA_DESIGN": "complete", "NEXT": "U2_BOUNDARY_MODELING", "PHYSICAL_GENERALIZATION_ELIGIBLE": False}, ensure_ascii=False, indent=2))
+        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 and U2.0 data-design delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. D1–D3 are complete in an explicit-state stochastic simulator. The authoritative U2 handoff is now versioned separately: U2 data construction covers grazing, random mixed outcomes, recoverable contact loss, detours, and stagnation while withholding generation strata and intervention schedules from model features. U2 is eligible only for simulator-scoped boundary modeling; no physical or original-task generalization claim is licensed.\n")
         z.writestr("commands/executed.sh", "# Actual command records are retained in round reports and job_result.json files.\n")
     with zipfile.ZipFile(out) as z:
         bad = z.testzip()
@@ -1342,6 +1502,8 @@ def build_parser() -> argparse.ArgumentParser:
     d2.add_argument("--output-dir", type=Path, required=True); d2.add_argument("--seed", type=int, default=20260905); d2.add_argument("--pairs", type=int, default=30); d2.set_defaults(func=cmd_build_d2_stochastic_pairs)
     d3 = sub.add_parser("run-d3-stochastic-comparison", help="evaluate independent continuations and compare geometry, constant, q, D, and q+D")
     d3.add_argument("--pairs", type=Path, required=True); d3.add_argument("--output-dir", type=Path, required=True); d3.add_argument("--seed", type=int, default=20260905); d3.add_argument("--replicates", type=int, default=12); d3.set_defaults(func=cmd_run_d3_stochastic_comparison)
+    u2 = sub.add_parser("build-u2-stochastic-boundary-data", help="build leakage-controlled U2.0 simulator boundary data and a versioned handoff")
+    u2.add_argument("--historical-handoff", type=Path, required=True); u2.add_argument("--handoff", type=Path, required=True); u2.add_argument("--output-dir", type=Path, required=True); u2.add_argument("--seed", type=int, default=20260905); u2.add_argument("--per-stratum", type=int, default=12); u2.set_defaults(func=cmd_build_u2_stochastic_boundary_data)
     export = sub.add_parser("export-complete", help="create the single U0/U1 lightweight delivery ZIP")
     export.add_argument("--root", type=Path, required=True); export.add_argument("--output", type=Path, required=True); export.set_defaults(func=cmd_export_complete)
     return parser

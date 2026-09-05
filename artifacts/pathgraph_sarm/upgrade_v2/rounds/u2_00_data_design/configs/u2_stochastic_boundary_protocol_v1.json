@@ -1,0 +1,42 @@
+{
+  "round_id": "u2_00_data_design",
+  "authority": "results/u1_data_bridge/u2_handoff_v2.json",
+  "historical_handoff": "results/u1_final/u2_handoff.json",
+  "backend": "upgrade_v2.adapters.stochastic_u2.U2BoundarySimulator",
+  "seed": 20260905,
+  "episodes_per_generation_stratum": 12,
+  "generation_strata_for_coverage_audit_only": [
+    "direct",
+    "grazing",
+    "recovery",
+    "detour",
+    "stagnation",
+    "mixed"
+  ],
+  "required_observed_coverage": [
+    "grazing",
+    "mixed_random_success",
+    "mixed_random_failure",
+    "contact_loss",
+    "contact_recovery",
+    "detour",
+    "stagnation"
+  ],
+  "model_feature_contract": {
+    "allowed": [
+      "position",
+      "velocity",
+      "goal-relative position",
+      "contact state",
+      "contact quality",
+      "previous applied action"
+    ],
+    "forbidden": [
+      "generation stratum",
+      "scenario name",
+      "intervention schedule",
+      "fixed scene identifier"
+    ]
+  },
+  "scope": "simulator-scoped U2 data construction only"
+}

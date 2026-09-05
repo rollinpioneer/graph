@@ -1,0 +1,35 @@
+{
+  "version": "u2_handoff_v2",
+  "authoritative_for": "simulator-scoped U2 planning and data construction",
+  "supersedes_for_current_planning": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/results/u1_final/u2_handoff.json",
+  "historical_file_preserved": true,
+  "historical_file_sha256": "d4e67bdf503ad4b63a24b151f4c02be85f35e6a1e9894547013df7ff340ae4f3",
+  "u2_eligible": "SIMULATOR_SCOPED_ONLY",
+  "next": "U2_BOUNDARY_MODELING",
+  "physical_generalization_eligible": false,
+  "d3_interpretation": "D3 q-only/D-only results are simulator-mechanism validation because learned inputs include goal_distance and straight_line_clearance and D2 construction differs geometrically. They do not establish complex physical feasibility generalization.",
+  "u2_data_contract": {
+    "includes": [
+      "grazing",
+      "mixed random outcomes",
+      "recoverable contact loss",
+      "detour",
+      "stagnation"
+    ],
+    "label_authority": "state-transition event rules and terminal outcome only",
+    "forbidden_model_inputs": [
+      "generation_stratum",
+      "scenario name",
+      "intervention schedule",
+      "fixed scene identifier"
+    ],
+    "state_features": [
+      "position",
+      "velocity",
+      "goal-relative position",
+      "contact state",
+      "contact quality",
+      "previous applied action"
+    ]
+  }
+}
