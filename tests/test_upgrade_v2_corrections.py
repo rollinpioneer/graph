@@ -9,6 +9,7 @@ from pathlib import Path
 
 from upgrade_v2.cli import cmd_make_outcome_time_targets, cmd_normalize_continuation_records
 from upgrade_v2.rewards.graph_rules import legal_success_chains, oracle_topology_cost
+from upgrade_v2.adapters.stochastic_d1 import StochasticPushSimulator
 
 
 class GraphRuleTests(unittest.TestCase):
@@ -63,6 +64,28 @@ class OutcomeEvidenceTests(unittest.TestCase):
             self.assertEqual(first["terminal_reason"], "unknown")
             self.assertEqual(first["label_reason"], "right_censored")
             self.assertEqual((first["q_mask"], first["d_mask"]), (0, 0))
+
+
+class D1SnapshotTests(unittest.TestCase):
+    def test_snapshot_restores_rng_and_continuation_exactly(self) -> None:
+        prefix = [[0.95, 0.0]] * 4
+        suffix = [[0.80, 0.30]] * 6
+        original = StochasticPushSimulator(seed=20260905)
+        for action in prefix:
+            original.step(action)
+        snapshot = original.snapshot()
+        expected = []
+        for action in suffix:
+            original.step(action)
+            expected.append(original.state_vector())
+        restored = StochasticPushSimulator(seed=1)
+        restored.restore(snapshot)
+        actual = []
+        for action in suffix:
+            restored.step(action)
+            actual.append(restored.state_vector())
+        for left, right in zip(expected, actual):
+            self.assertEqual(float(abs(left - right).max()), 0.0)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,18 @@
+{
+  "round_id": "u1_06_d1_data_bridge",
+  "purpose": "Verify that a stateful stochastic simulator can capture a complete anchor and reproduce its continuation exactly.",
+  "backend": "upgrade_v2.adapters.stochastic_d1.StochasticPushSimulator",
+  "seed": 20260905,
+  "anchor_step": 4,
+  "continuation_steps": 6,
+  "state_fields": [
+    "agent position",
+    "agent velocity",
+    "object position",
+    "object velocity",
+    "contact count",
+    "numpy PCG64 RNG state"
+  ],
+  "restore_tolerance": 1e-12,
+  "u2_eligibility": false
+}

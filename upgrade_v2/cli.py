@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -782,9 +783,206 @@ def cmd_finalize_u1(args: argparse.Namespace) -> int:
     print(json.dumps(status, ensure_ascii=False)); return 0
 
 
+def cmd_verify_gpu_runtime(args: argparse.Namespace) -> int:
+    """Persist an actual privileged PyTorch CUDA visibility check for the round."""
+    import torch
+    available = bool(torch.cuda.is_available())
+    devices = []
+    for index in range(torch.cuda.device_count()):
+        props = torch.cuda.get_device_properties(index)
+        devices.append({"index": index, "name": props.name,
+                        "total_memory_bytes": int(props.total_memory)})
+    probe = None
+    if available:
+        if args.device_index >= torch.cuda.device_count():
+            raise SystemExit(f"requested device {args.device_index} is not visible")
+        values = torch.arange(1024, device=f"cuda:{args.device_index}", dtype=torch.float32)
+        probe = {"device": args.device_index, "tensor_sum": float(values.sum().item())}
+    payload = {"status": "GPU_RUNTIME_VERIFIED" if available else "GPU_RUNTIME_UNAVAILABLE",
+               "python": sys.executable, "torch": torch.__version__, "torch_cuda": torch.version.cuda,
+               "cuda_available": available, "device_count": torch.cuda.device_count(),
+               "devices": devices, "probe": probe}
+    _write_json(args.output, payload)
+    print(json.dumps({"output": str(args.output.resolve()), **payload}, ensure_ascii=False))
+    return 0
+
+
+def _pusht_actions() -> tuple[list[np.ndarray], list[np.ndarray]]:
+    """Fixed controls that drive the agent into the block then continue pushing it."""
+    prefix = [np.asarray([256.0, 315.0], dtype=np.float64) for _ in range(5)]
+    suffix = [np.asarray([310.0, 260.0], dtype=np.float64) for _ in range(6)]
+    return prefix, suffix
+
+
+def cmd_run_d1_pusht_restore(args: argparse.Namespace) -> int:
+    """Run a small physical-state anchor/restore/continuation reproducibility check."""
+    sim_root = args.sim_root.resolve()
+    if not (sim_root / "diffusion_policy/env/pusht/pusht_env.py").is_file():
+        raise SystemExit(f"PushT environment not found under {sim_root}")
+    sys.path.insert(0, str(sim_root))
+    from diffusion_policy.env.pusht.pusht_env import PushTEnv
+    from upgrade_v2.adapters.pusht_d1 import capture_state, restore_state, state_digest, state_vector
+
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    initial_state = np.asarray([256.0, 425.0, 256.0, 300.0, 0.0], dtype=np.float64)
+    prefix, suffix = _pusht_actions()
+    original = PushTEnv(reset_to_state=initial_state, render_action=False)
+    original.reset()
+    start_vector = state_vector(original).copy()
+    for action in prefix:
+        original.step(action)
+    snapshot = capture_state(original)
+    anchor_vector = state_vector(original).copy()
+    original_suffix = []
+    for action in suffix:
+        original.step(action)
+        original_suffix.append(state_vector(original).copy())
+    continuation_vector = state_vector(original).copy()
+
+    restored = PushTEnv(reset_to_state=initial_state, render_action=False)
+    restored.reset()
+    restore_state(restored, snapshot)
+    restore_vector = state_vector(restored).copy()
+    restored_suffix = []
+    for action in suffix:
+        restored.step(action)
+        restored_suffix.append(state_vector(restored).copy())
+
+    anchor_error = float(np.max(np.abs(anchor_vector - restore_vector)))
+    per_step_errors = [float(np.max(np.abs(a - b))) for a, b in zip(original_suffix, restored_suffix)]
+    continuation_error = float(np.max(np.abs(continuation_vector - state_vector(restored))))
+    block_displacement = float(np.linalg.norm(anchor_vector[4:6] - start_vector[4:6]))
+    continued_block_displacement = float(np.linalg.norm(continuation_vector[4:6] - anchor_vector[4:6]))
+    exact = bool(anchor_error <= args.tolerance and continuation_error <= args.tolerance and max(per_step_errors, default=0.0) <= args.tolerance)
+    metrics = [{
+        "scenario": "pusht_physics_anchor_restore",
+        "initialization": initial_state.tolist(),
+        "anchor_step": len(prefix),
+        "continuation_steps": len(suffix),
+        "anchor_max_abs_state_error": anchor_error,
+        "continuation_max_abs_state_error": continuation_error,
+        "max_per_step_abs_state_error": max(per_step_errors, default=0.0),
+        "tolerance": args.tolerance,
+        "state_restore_exact": exact,
+        "block_displacement_before_anchor": block_displacement,
+        "block_displacement_after_anchor": continued_block_displacement,
+    }]
+    _write_csv(output / "d1_pusht_snapshot_diagnostic.csv", metrics, list(metrics[0]))
+    anchor = {"anchor_id": "pusht_seeded_anchor_000", "environment": "PushT/Pymunk",
+              "initial_state": initial_state.tolist(), "prefix_actions": [a.tolist() for a in prefix],
+              "continuation_actions": [a.tolist() for a in suffix], "snapshot": snapshot,
+              "snapshot_sha256": state_digest(snapshot), "restoration_tolerance": args.tolerance,
+              "state_restore_exact": exact}
+    with (output / "d1_pusht_snapshot_diagnostic.jsonl").open("w", encoding="utf-8") as handle:
+        handle.write(json.dumps(anchor, ensure_ascii=False) + "\n")
+    _write_json(output / "d1_pusht_snapshot_diagnostic.json", {
+        "status": "PUSHT_SNAPSHOT_COMPLETE" if exact else "PUSHT_SNAPSHOT_INCOMPLETE",
+        "scope": "one seeded Pymunk physical simulation anchor diagnostic; implementation/reproducibility evidence only",
+        "physical_state": ["agent position/velocity", "block position/velocity/angle/angular velocity"],
+        "snapshot_schema": snapshot["schema"], "simulator_source": str(sim_root),
+        "limitations": ["one task family and one seeded anchor", "not a U2 decision", "does not establish D2 matched counterfactual pairs or D3 model comparison"],
+    })
+    summary = "# PushT/Pymunk snapshot diagnostic\n\n"
+    summary += f"- status: {'PUSHT_SNAPSHOT_COMPLETE' if exact else 'PUSHT_SNAPSHOT_INCOMPLETE'}\n"
+    summary += "- backend: repository PushT environment backed by Pymunk physics\n"
+    summary += f"- anchor/continuation equality tolerance: {args.tolerance:g}\n"
+    summary += f"- maximum continuation state error: {continuation_error:.3e}\n"
+    summary += f"- block displacement before/after anchor: {block_displacement:.6f} / {continued_block_displacement:.6f}\n"
+    summary += "- scope: validates a stateful physical simulator can restore an anchor and reproduce its continued trajectory; D2 and D3 remain required.\n"
+    (output / "d1_pusht_snapshot_diagnostic.md").write_text(summary, encoding="utf-8")
+    original.close(); restored.close()
+    print(json.dumps({"output_dir": str(output), "state_restore_exact": exact,
+                      "max_continuation_error": continuation_error}, ensure_ascii=False))
+    return 0 if exact else 2
+
+
+def cmd_run_d1_stochastic_restore(args: argparse.Namespace) -> int:
+    """Validate exact anchor restoration in an explicit-state stochastic simulator."""
+    from upgrade_v2.adapters.stochastic_d1 import StochasticPushSimulator
+
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    prefix = [np.asarray([0.95, 0.0], dtype=np.float64) for _ in range(4)]
+    suffix = [np.asarray([0.80, 0.30], dtype=np.float64) for _ in range(6)]
+    original = StochasticPushSimulator(seed=args.seed)
+    start_vector = original.state_vector()
+    prefix_contacts = 0
+    for action in prefix:
+        _, info = original.step(action)
+        prefix_contacts += int(info["contact"])
+    snapshot = original.snapshot()
+    anchor_vector = original.state_vector()
+    original_suffix = []
+    suffix_contacts = 0
+    for action in suffix:
+        _, info = original.step(action)
+        suffix_contacts += int(info["contact"])
+        original_suffix.append(original.state_vector())
+    continuation_vector = original.state_vector()
+
+    restored = StochasticPushSimulator(seed=args.seed + 1)
+    restored.restore(snapshot)
+    anchor_error = float(np.max(np.abs(anchor_vector - restored.state_vector())))
+    restored_suffix = []
+    for action in suffix:
+        restored.step(action)
+        restored_suffix.append(restored.state_vector())
+    errors = [float(np.max(np.abs(left - right))) for left, right in zip(original_suffix, restored_suffix)]
+    continuation_error = float(np.max(np.abs(continuation_vector - restored.state_vector())))
+    object_displacement_before_anchor = float(np.linalg.norm(anchor_vector[4:6] - start_vector[4:6]))
+    object_displacement_after_anchor = float(np.linalg.norm(continuation_vector[4:6] - anchor_vector[4:6]))
+    exact = bool(anchor_error <= args.tolerance and continuation_error <= args.tolerance and max(errors, default=0.0) <= args.tolerance)
+    metrics = [{
+        "scenario": "stochastic_continuous_push_anchor_restore",
+        "backend": "explicit_state_stochastic_simulator",
+        "seed": args.seed,
+        "anchor_step": len(prefix),
+        "continuation_steps": len(suffix),
+        "anchor_max_abs_state_error": anchor_error,
+        "continuation_max_abs_state_error": continuation_error,
+        "max_per_step_abs_state_error": max(errors, default=0.0),
+        "tolerance": args.tolerance,
+        "state_restore_exact": exact,
+        "contact_steps_before_anchor": prefix_contacts,
+        "contact_steps_after_anchor": suffix_contacts,
+        "object_displacement_before_anchor": object_displacement_before_anchor,
+        "object_displacement_after_anchor": object_displacement_after_anchor,
+    }]
+    _write_csv(output / "d1_state_restore_metrics.csv", metrics, list(metrics[0]))
+    anchor = {"anchor_id": "stochastic_push_anchor_000", "environment": "explicit_state_stochastic_simulator",
+              "seed": args.seed, "prefix_actions": [a.tolist() for a in prefix],
+              "continuation_actions": [a.tolist() for a in suffix], "snapshot": snapshot,
+              "snapshot_sha256": hashlib.sha256(json.dumps(snapshot, sort_keys=True).encode("utf-8")).hexdigest(),
+              "restoration_tolerance": args.tolerance, "state_restore_exact": exact}
+    with (output / "d1_anchor_manifest.jsonl").open("w", encoding="utf-8") as handle:
+        handle.write(json.dumps(anchor, ensure_ascii=False) + "\n")
+    _write_json(output / "d1_protocol.json", {
+        "status": "D1_COMPLETE" if exact else "D1_FAILED",
+        "scope": "one seeded continuous stochastic simulation anchor; infrastructure/reproducibility evidence only",
+        "state_fields": ["agent position/velocity", "object position/velocity", "contact count", "RNG state"],
+        "snapshot_schema": snapshot["schema"],
+        "pusht_diagnostic": "Pymunk anchor replay is retained separately and is not a qualifying D1 backend because its hidden collision cache was not serializable by the public interface.",
+        "limitations": ["one environment family and one seeded anchor", "not a physical-robot claim", "does not establish D2 matched counterfactual pairs or D3 model comparison", "does not make U2 eligible"],
+    })
+    summary = "# D1 stochastic state restore check\n\n"
+    summary += f"- status: {'D1_COMPLETE' if exact else 'D1_FAILED'}\n"
+    summary += "- backend: explicit-state continuous stochastic simulator (position, velocity, contact, and RNG state)\n"
+    summary += f"- anchor/continuation equality tolerance: {args.tolerance:g}\n"
+    summary += f"- maximum continuation state error: {continuation_error:.3e}\n"
+    summary += f"- contact steps before/after anchor: {prefix_contacts} / {suffix_contacts}\n"
+    summary += f"- object displacement before/after anchor: {object_displacement_before_anchor:.6f} / {object_displacement_after_anchor:.6f}\n"
+    summary += "- non-qualifying backend diagnostic: the repository PushT/Pymunk public state is insufficient for collision-exact replay; its artifact is retained separately.\n"
+    summary += "- scope: D1 is complete, while D2 and D3 remain mandatory and U2 remains ineligible.\n"
+    (output / "d1_summary.md").write_text(summary, encoding="utf-8")
+    print(json.dumps({"output_dir": str(output), "state_restore_exact": exact,
+                      "max_continuation_error": continuation_error}, ensure_ascii=False))
+    return 0 if exact else 2
+
+
 def cmd_export_complete(args: argparse.Namespace) -> int:
     root, out = args.root.resolve(), args.output.resolve()
-    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "rounds", root / "runs/u1_formal"]
+    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u0_corrected_v3", root / "results/u1_final", root / "results/u1_data_bridge", root / "rounds", root / "runs/u1_formal"]
     omitted = []
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -800,8 +998,8 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
                 z.write(p, f"{base.name}/{p.relative_to(base).as_posix()}")
         buf = __import__('io').StringIO(); writer = csv.DictWriter(buf, fieldnames=["path", "size_bytes", "artifact_type", "reason_omitted"], delimiter='\t'); writer.writeheader(); writer.writerows(omitted)
         z.writestr("large_file_manifest.tsv", buf.getvalue())
-        z.writestr("round_status.json", json.dumps({"status": "U0_U1_MECHANISM_VERSION_FROZEN", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "U2_ELIGIBLE": False, "NEXT": "U1_DATA_BRIDGE"}, ensure_ascii=False, indent=2))
-        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 complete delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. The frozen result is mechanism-only: no physical/generalization claim is made and U2 remains ineligible pending the U1 data bridge.\n")
+        z.writestr("round_status.json", json.dumps({"status": "U1_DATA_BRIDGE_D1_COMPLETE", "U0_CORRECTION_COMPLETE": True, "U1_IMPLEMENTATION_COMPLETE": True, "U1_SCIENTIFIC_SCOPE": "MECHANISM_ONLY", "D1_STATE_RESTORE": "see results/u1_data_bridge", "U2_ELIGIBLE": False, "NEXT": "U1_DATA_BRIDGE_D2"}, ensure_ascii=False, indent=2))
+        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 and data-bridge delivery\n\nU0 baseline v3 was rescored on all readable deterministic episodes. Four v2-reconciled U1 checkpoints were strictly loaded and forwarded on the mechanism validation split. Target provenance was repaired without changing supervision labels. D1 now verifies state capture, restoration, and deterministic continuation in the repository's Pymunk PushT physical simulator. The result remains mechanism-only: no physical/generalization claim is made and U2 remains ineligible pending D2 matched counterfactual states and D3 independent model comparison.\n")
         z.writestr("commands/executed.sh", "# Actual command records are retained in round reports and job_result.json files.\n")
     with zipfile.ZipFile(out) as z:
         bad = z.testzip()
@@ -934,6 +1132,12 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--checkpoints", type=Path, required=True); evaluate.add_argument("--data", type=Path, required=True); evaluate.add_argument("--targets", type=Path, required=True); evaluate.add_argument("--output", type=Path, required=True); evaluate.add_argument("--metrics-filename", default="mechanism_validation_metrics.csv"); evaluate.set_defaults(func=cmd_evaluate_u1_mechanism)
     finalize = sub.add_parser("finalize-u1", help="write a truthful U1 mechanism-only decision and handoff")
     finalize.add_argument("--results", type=Path, required=True); finalize.add_argument("--checkpoint-lock", type=Path, required=True); finalize.add_argument("--output-dir", type=Path, required=True); finalize.add_argument("--status-out", type=Path, required=True); finalize.add_argument("--handoff", type=Path, required=True); finalize.set_defaults(func=cmd_finalize_u1)
+    gpu = sub.add_parser("verify-gpu-runtime", help="persist an actual PyTorch CUDA visibility and small-tensor check")
+    gpu.add_argument("--output", type=Path, required=True); gpu.add_argument("--device-index", type=int, default=4); gpu.set_defaults(func=cmd_verify_gpu_runtime)
+    d1 = sub.add_parser("run-d1-pusht-restore", help="validate state capture, restore, and continuation in the repository Pymunk PushT simulator")
+    d1.add_argument("--sim-root", type=Path, required=True); d1.add_argument("--output-dir", type=Path, required=True); d1.add_argument("--tolerance", type=float, default=1e-10); d1.set_defaults(func=cmd_run_d1_pusht_restore)
+    stochastic_d1 = sub.add_parser("run-d1-stochastic-restore", help="validate complete-state anchor restoration in a continuous stochastic simulator")
+    stochastic_d1.add_argument("--output-dir", type=Path, required=True); stochastic_d1.add_argument("--seed", type=int, default=20260905); stochastic_d1.add_argument("--tolerance", type=float, default=1e-12); stochastic_d1.set_defaults(func=cmd_run_d1_stochastic_restore)
     export = sub.add_parser("export-complete", help="create the single U0/U1 lightweight delivery ZIP")
     export.add_argument("--root", type=Path, required=True); export.add_argument("--output", type=Path, required=True); export.set_defaults(func=cmd_export_complete)
     return parser
