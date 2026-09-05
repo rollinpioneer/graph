@@ -21,6 +21,13 @@ def _csv(path:Path)->list[dict[str,str]]:
     with path.open(newline="",encoding="utf-8") as h:return list(csv.DictReader(h))
 
 
+def _tsv_write(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", extrasaction="ignore", lineterminator="\n")
+        writer.writeheader(); writer.writerows(rows)
+
+
 def _sha(path:Path)->str:
     h=hashlib.sha256()
     with path.open("rb") as f:
@@ -53,20 +60,38 @@ def finalize_u2(repo:Path,u2_root:Path,final_root:Path)->dict[str,Any]:
     final_root.mkdir(parents=True,exist_ok=True)
     gate={"schema":"u2_gate_rule_v1","decision":decision,"strict_gate":{"best_causal_test_f1_tol2_mean":float(f1.mean()),"threshold":.75,"recovery_start_recall_mean":float(rec.mean()),"contact_reestablished_recall_mean":float(reest.mean()),"boundary_mae_mean":float(mae.mean()),"segment_count_ratio":segment_ratio,"failure_recovery_mixed_segment_rate":mixed_rate,"failure_negative_rate_drop":reward_failure_drop,"recovery_positive_rate_drop":reward_recovery_drop,"seed_pass_count":seed_passes,"strict_pass":strict},"fallback_gate":{"weak_recovery_start_recall":weak_recovery,"segment_summaries_complete":True,"unknown_retained":True,"pass":fallback},"scope":"same stochastic simulator family only","physical_generalization_eligible":False,"original_task_generalization_eligible":False}
     write_json(final_root/"configs"/"u2_gate_rule.json",gate)
-    handoff={"u2_decision":decision,"scope":"same stochastic simulator family only","boundary_source":source["source_method"],"automatic_boundary_supported":strict,"fallback_required":not strict,"segment_summary":str((u2_root/"segment_representation_v1"/"segment_event_summary.jsonl").resolve()),"event_posterior":str((u2_root/"weak_events_v1"/"posteriors").resolve()),"observed_transition_table":str((u2_root/"segment_representation_v1"/"transitions"/"observed_segment_transitions.csv").resolve()),"physical_generalization_eligible":False,"original_task_generalization_eligible":False,"allowed_next":["U3 simulator-scoped candidate graph proposal","U4 simulator-scoped data validation"]}
+    handoff={"u2_decision":decision,"scope":"same stochastic simulator family only","boundary_source":source["source_method"],"automatic_boundary_supported":strict,"fallback_required":not strict,"segment_summary":str((u2_root/"segment_representation_v1"/"segment_event_summary.jsonl").relative_to(repo)),"event_posterior":str((u2_root/"weak_events_v1"/"posteriors").relative_to(repo)),"observed_transition_table":str((u2_root/"segment_representation_v1"/"transitions"/"observed_segment_transitions.csv").relative_to(repo)),"physical_generalization_eligible":False,"original_task_generalization_eligible":False,"allowed_next":["U3 simulator-scoped candidate graph proposal","U4 simulator-scoped data validation"]}
     write_json(final_root/"u3_u4_handoff.json",handoff)
     main=[{"section":"dataset","metric":"episodes","value":seg["episodes"]},{"section":"dataset","metric":"root_families","value":seg["unique_root_families"]},{"section":"dataset","metric":"restore_anchors_pass","value":restore["anchors_pass"]},{"section":"boundary","metric":"best_causal_variant_by_val","value":best_variant},{"section":"boundary","metric":"best_causal_test_f1_tol2_mean","value":float(f1.mean())},{"section":"boundary","metric":"best_causal_test_f1_tol2_std","value":float(f1.std(ddof=0))},{"section":"boundary","metric":"best_causal_test_mae_mean","value":float(mae.mean())},{"section":"boundary","metric":"best_causal_recovery_recall_mean","value":float(rec.mean())},{"section":"boundary","metric":"best_causal_reestablished_recall_mean","value":float(reest.mean())},{"section":"boundary","metric":"locked_boundary_source","value":source["source_method"]},{"section":"boundary","metric":"locked_rule_test_f1_tol2","value":best_rule["boundary_f1_tol2"]},{"section":"segments","metric":"count","value":rep_metric["segments"]},{"section":"segments","metric":"unknown_segment_rate","value":rep_metric["unknown_segment_rate"]},{"section":"decision","metric":"u2_decision","value":decision}]
     write_csv(final_root/"tables"/"u2_main_results.csv",main,["section","metric","value"])
     write_csv(final_root/"tables"/"u2_budget_results.csv",budget,sorted({k for r in budget for k in r}));write_csv(final_root/"tables"/"u2_reward_impact.csv",reward,sorted({k for r in reward for k in r}))
     checkpoints=[]
+    metric_by_job = {r.get("job_id", ""): r for r in models + budget}
     for p in list((u2_root/"boundary_models_v1"/"formal").glob("*/best.pt"))+list((u2_root/"budgeted_correction_v1"/"models").glob("*/best.pt"))+list((u2_root/"reward_impact_v1"/"value_models").glob("*/best.pt")):
-        checkpoints.append({"path":str(p.resolve()),"sha256":_sha(p),"bytes":p.stat().st_size,"packaged":False})
-    write_csv(final_root/"manifests"/"checkpoint_manifest.tsv",checkpoints,["path","sha256","bytes","packaged"])
+        job_id = p.parent.name
+        metric = metric_by_job.get(job_id, {})
+        checkpoints.append({
+            "path": str(p.relative_to(repo)),
+            "size_bytes": p.stat().st_size,
+            "job_id": job_id,
+            "artifact_type": "checkpoint_or_model_weight",
+            "reason_omitted": "checkpoint excluded from single ZIP; placeholder retained",
+            "sha256": _sha(p),
+            "packaged": False,
+            "epoch_or_step": metric.get("best_step", metric.get("step", "")) or "not_recorded",
+            "key_metric": metric.get("boundary_f1_tol2", metric.get("val_loss", "")) or "not_recorded",
+        })
+    _tsv_write(final_root/"manifests"/"checkpoint_manifest.tsv", checkpoints, ["path","size_bytes","job_id","artifact_type","reason_omitted","sha256","packaged","epoch_or_step","key_metric"])
     large=[]
     for p in sorted(u2_root.rglob("*")):
-        if p.is_file() and (p.suffix in LARGE_SUFFIXES or p.stat().st_size>20*1024*1024):large.append({"path":str(p.resolve()),"bytes":p.stat().st_size,"reason":"raw trajectory/prediction/checkpoint/embedding/log excluded from single ZIP","packaged":False})
-    write_csv(final_root/"manifests"/"large_file_manifest.tsv",large,["path","bytes","reason","packaged"])
+        if p.is_file() and (p.suffix in LARGE_SUFFIXES or p.stat().st_size>20*1024*1024):
+            job_id = p.parent.name if p.parent.name else ""
+            artifact_type = "checkpoint_or_model_weight" if p.suffix in {".pt", ".pth"} else ("tabular_embedding" if p.suffix == ".parquet" else ("event_or_trajectory_records" if p.suffix == ".jsonl" else ("experiment_log" if p.suffix == ".log" else "numeric_array")))
+            large.append({"path":str(p.relative_to(repo)),"size_bytes":p.stat().st_size,"job_id":job_id,"artifact_type":artifact_type,"reason_omitted":"large/raw artifact excluded from single ZIP; placeholder retained","packaged":False})
+    _tsv_write(final_root/"manifests"/"large_file_manifest.tsv", large, ["path","size_bytes","job_id","artifact_type","reason_omitted","packaged"])
     auto=impact.get("best_rule",impact.get("best_causal",{}));gold=impact["gold"]
+    alignment_path = rounds/"u2_0_entry_and_eventful_dataset"/"metrics"/"u2_observation_action_alignment_check.json"
+    alignment = json.loads(alignment_path.read_text()) if alignment_path.is_file() else {"status":"NOT_RUN","max_abs_error":"n/a","contract":"n/a"}
     report=f"""# U2 stochastic-boundary prototype — final report
 
 ## 已支持
@@ -74,6 +99,7 @@ def finalize_u2(repo:Path,u2_root:Path,final_root:Path)->dict[str,Any]:
 - Explicit-state stochastic simulator scope: 720 episodes / 120 root families; 40/40 snapshot restoration anchors passed.
 - Weak posterior, unknown state, rule baselines, causal models, segment summaries, fixed oracle-clip budget comparisons, and independent continuation q/D references were executed.
 - Boundary source locked on validation only: `{source['source_method']}` ({source['source_type']}).
+- Observation/action transition alignment audit: `{alignment['status']}`; max absolute error = `{alignment['max_abs_error']}`. The frozen contract is `{alignment['contract']}`.
 
 ## 部分支持
 
@@ -91,6 +117,11 @@ def finalize_u2(repo:Path,u2_root:Path,final_root:Path)->dict[str,Any]:
 - Gold failure-negative rate: {float(gold['failure_negative_rate']):.4f}; locked automatic/rule: {float(auto['failure_negative_rate']):.4f}.
 - Gold recovery-positive rate: {float(gold['recovery_positive_rate']):.4f}; locked automatic/rule: {float(auto['recovery_positive_rate']):.4f}.
 - Event-segment results are simulator-only attribution analyses; episode-level potential return remains telescoping.
+
+## 范围限制
+
+- All claims are restricted to the explicit stochastic simulator family and the frozen 120 root-family split.
+- The single ZIP policy supersedes per-round archive delivery: round-level manifests, checksums, and omission records are included inside the one cumulative archive.
 
 ## Entering U3/U4
 

@@ -12,6 +12,13 @@ This repository is the lightweight, structure-preserving GitHub snapshot of the 
 - `downloads/`: lightweight checksums and delivery metadata.
 - `LARGE_FILES_OMITTED.tsv`: machine-readable index of every source file omitted from this snapshot.
 
+The simulator-scoped U2 stochastic-boundary prototype is under
+`artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/`. Its seven round
+directories contain `run_manifest.md`, GPU visibility records, lightweight
+checksums, reports, and omission manifests. The U2 decision is
+`GO_U3_WITH_BOUNDARY_FALLBACK`; claims remain restricted to the explicit
+stochastic simulator family.
+
 ## Omitted files and placeholders
 
 Files that are datasets, raw episodes, videos, checkpoints, model weights, memory maps, environment binaries, run caches, or delivery archives are not uploaded. For each omitted source file, the original relative path contains a sibling placeholder named `original-name.placeholder.md`. Each placeholder records the original filename, path, type, intended use, byte size, omission reason, and restore location. Empty source directories contain `DIRECTORY_PLACEHOLDER.md` when needed to keep the layout visible.
@@ -23,6 +30,10 @@ The upload threshold is 10 MiB per file. This prevents accidental large-file com
 The final Stage 8 status is `RESEARCH_COMPLETE_CORE_REWARD_ONLY`. The final lightweight release archive was created outside this GitHub snapshot with SHA256:
 
 `65b24b5e4a089d86922e24371889fbf3af7926560382415d3137079a18b6ecbb`
+
+Per the user's delivery policy, the current workspace uses one cumulative ZIP
+only (U0/U1 plus U2 lightweight evidence):
+`downloads/upgrade_v2/U0_U1_complete.zip`.
 
 Checkpoint and raw-prediction artifacts remain external by design. The stage documents and manifests in this repository describe the exact source paths and the evidence boundary for the final claims.
 

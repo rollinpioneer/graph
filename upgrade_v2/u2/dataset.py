@@ -88,7 +88,10 @@ def collect_dataset(mode: str, root_families: int, rollouts_per_family: int, see
                 "success": bool(episode["success"]), "terminal_reason": episode["terminal_reason"] or "stable_success",
                 "event_instance_count": int(sum(value != 0 for value in episode["gold_event_id"])),
                 "recovery_event_count": int(counts.get(4, 0) + counts.get(5, 0)), "source_provenance": "explicit_state_stochastic_simulator",
-                "npz_path": str(path.resolve()),
+                # Keep manifests portable across clones.  The loader also
+                # accepts the legacy absolute ``.../data/...`` paths emitted
+                # by earlier runs for backwards-compatible audit/replay.
+                "npz_path": str(path.relative_to(output_root)),
             })
     write_csv(output_root / "episode_manifest.csv", manifests, list(manifests[0]))
     write_csv(output_root / "root_family_split.csv", split_rows, list(split_rows[0]))
@@ -96,13 +99,85 @@ def collect_dataset(mode: str, root_families: int, rollouts_per_family: int, see
     write_json(output_root / "configs" / "observable_schema.json", {
         "dimension": 17, "features": ["agent_to_object_position_x", "agent_to_object_position_y", "agent_velocity_x", "agent_velocity_y", "object_to_goal_position_x", "object_to_goal_position_y", "object_velocity_x", "object_velocity_y", "agent_to_obstacle_position_x", "agent_to_obstacle_position_y", "object_to_obstacle_position_x", "object_to_obstacle_position_y", "contact_sensor", "collision_sensor", "object_in_goal_sensor", "previous_action_x", "previous_action_y"],
         "forbidden": ["gold_event", "gold_mode", "scenario", "future outcome", "time fraction", "root_family_id", "episode_id"],
+        "transition_indexing": {
+            "observation_t": "x_t (state after the recorded transition)",
+            "action_t": "a_{t-1} (the action that enters x_t)",
+            "previous_action_fields": "observations[t][15:17] == actions[t]",
+            "causal_student_input": "o_0:t and a_0:t-1 only",
+        },
     })
     return manifests, split_rows
 
 
+def _resolve_episode_path(row: dict[str, str]) -> Path:
+    """Resolve an episode path from both legacy and portable manifests.
+
+    Early U2 manifests were generated before the canonical ``data_v1`` name
+    was frozen and therefore contain an absolute ``.../data/...`` path.  A
+    checkout on another machine must not depend on that historical prefix.
+    Prefer the manifest path when it exists, then resolve the canonical
+    repository-relative location from the episode id.
+    """
+    raw = str(row.get("npz_path", "")).strip()
+    direct = Path(raw) if raw else None
+    candidates: list[Path] = []
+    if direct is not None:
+        candidates.append(direct)
+        if not direct.is_absolute():
+            candidates.append(Path.cwd() / direct)
+    repo_root = Path(__file__).resolve().parents[2]
+    artifact_root = repo_root / "artifacts" / "pathgraph_sarm" / "upgrade_v2" / "u2_stochastic_boundary"
+    if direct is not None and direct.is_absolute():
+        text = str(direct)
+        marker = "artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/"
+        if marker in text:
+            suffix = text.split(marker, 1)[1]
+            if suffix.startswith("data/"):
+                suffix = "data_v1/" + suffix[len("data/"):]
+            candidates.append(repo_root / "artifacts" / "pathgraph_sarm" / "upgrade_v2" / "u2_stochastic_boundary" / suffix)
+    episode_id = str(row.get("episode_id", ""))
+    if episode_id:
+        mode = "pilot" if episode_id.startswith("pilot_") else "formal"
+        candidates.append(artifact_root / "data_v1" / mode / "episodes" / f"{episode_id}.npz")
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    rendered = ", ".join(str(path) for path in candidates)
+    raise FileNotFoundError(f"episode artifact not found for {episode_id!r}; tried: {rendered}")
+
+
 def load_episode(row: dict[str, str]) -> dict[str, np.ndarray]:
-    with np.load(row["npz_path"], allow_pickle=False) as payload:
+    with np.load(_resolve_episode_path(row), allow_pickle=False) as payload:
         return {key: payload[key] for key in payload.files}
+
+
+def verify_observation_action_alignment(dataset_root: Path) -> dict[str, Any]:
+    """Verify the frozen transition indexing contract for every episode.
+
+    ``observations[t]`` is the post-transition state ``x_t`` and
+    ``actions[t]`` is the action that entered it (the protocol's ``a_{t-1}``).
+    The final two observation fields are therefore expected to equal
+    ``actions[t]`` exactly.  This is an audit of causal history alignment, not
+    a gold-label check.
+    """
+    rows = read_csv(dataset_root / "episode_manifest.csv")
+    max_abs_error = 0.0
+    mismatched = 0
+    for row in rows:
+        episode = load_episode(row)
+        observed_previous = episode["observations"][:, 15:17]
+        transition_actions = episode["actions"]
+        error = float(np.max(np.abs(observed_previous - transition_actions))) if len(transition_actions) else 0.0
+        max_abs_error = max(max_abs_error, error)
+        mismatched += int(error > 1e-6)
+    return {
+        "status": "U2_OBSERVATION_ACTION_ALIGNMENT_PASS" if mismatched == 0 else "U2_OBSERVATION_ACTION_ALIGNMENT_FAIL",
+        "episodes": len(rows),
+        "max_abs_error": max_abs_error,
+        "mismatched_episodes": mismatched,
+        "contract": "observations[t]=x_t; actions[t]=a_{t-1} enters x_t; observations[t][15:17]=actions[t]",
+        "future_action_in_observation": False,
+    }
 
 
 def group_by_split(rows: Iterable[dict[str, str]]) -> dict[str, list[dict[str, str]]]:

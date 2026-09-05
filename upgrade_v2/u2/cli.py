@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .changepoints import evaluate_selected_baselines, run_baselines
-from .dataset import (collect_dataset, dataset_gate, verify_state_restore, write_csv, write_json)
+from .dataset import (collect_dataset, dataset_gate, verify_observation_action_alignment, verify_state_restore, write_csv, write_json)
 from .evaluate import evaluate_weak
 from .jobs import (build_inference_jobs, build_jobs, evaluate_models, evaluate_offline_teachers, launch_inference_jobs, launch_training_jobs,
                    run_inference_job, run_training_job, select_checkpoints, select_gold_clips)
@@ -57,6 +57,12 @@ def cmd_validate(args: argparse.Namespace) -> int:
     _handoff(); summary, events, scenarios, report = dataset_gate(args.dataset)
     write_json(args.output, summary); write_csv(args.event_counts, events, list(events[0])); write_csv(args.scenario_counts, scenarios, list(scenarios[0]))
     args.report.parent.mkdir(parents=True, exist_ok=True); args.report.write_text(report, encoding="utf-8"); print(json.dumps(summary)); return 0 if summary["status"] == "U2_EVENTFUL_DATASET_READY" else 2
+
+
+def cmd_alignment(args: argparse.Namespace) -> int:
+    _handoff(); summary = verify_observation_action_alignment(args.dataset)
+    write_json(args.output, summary); print(json.dumps(summary));
+    return 0 if summary["status"] == "U2_OBSERVATION_ACTION_ALIGNMENT_PASS" else 2
 
 
 def cmd_rules(args: argparse.Namespace) -> int: _handoff(); save_rules(args.output); return 0
@@ -151,6 +157,7 @@ def parser() -> argparse.ArgumentParser:
     q = sub.add_parser("verify-state-restore"); q.add_argument("--families", type=int, required=True); q.add_argument("--anchors-per-family", type=int, required=True); q.add_argument("--continuation-steps", type=int, required=True); q.add_argument("--seed", type=int, required=True); q.add_argument("--tolerance", type=float, required=True); q.add_argument("--output", type=Path, required=True); q.add_argument("--details", type=Path, required=True); q.set_defaults(func=cmd_verify)
     q = sub.add_parser("collect-eventful-dataset"); q.add_argument("--mode", required=True); q.add_argument("--root-families", type=int, required=True); q.add_argument("--rollouts-per-family", type=int, required=True); q.add_argument("--scenarios", required=True); q.add_argument("--split-ratios", default="0.70,0.15,0.15"); q.add_argument("--split-unit", default="root_family_id"); q.add_argument("--seed", type=int, required=True); q.add_argument("--output-root", type=Path, required=True); q.add_argument("--manifest", type=Path); q.add_argument("--split-table", type=Path); q.set_defaults(func=cmd_collect)
     q = sub.add_parser("validate-eventful-dataset"); q.add_argument("--dataset", type=Path, required=True); q.add_argument("--event-schema", type=Path); q.add_argument("--output", type=Path, required=True); q.add_argument("--event-counts", type=Path, required=True); q.add_argument("--scenario-counts", type=Path, required=True); q.add_argument("--report", type=Path, required=True); q.set_defaults(func=cmd_validate)
+    q = sub.add_parser("audit-observation-action-alignment"); q.add_argument("--dataset", type=Path, required=True); q.add_argument("--output", type=Path, required=True); q.set_defaults(func=cmd_alignment)
     q = sub.add_parser("write-weak-rules"); q.add_argument("--output", type=Path, required=True); q.set_defaults(func=cmd_rules)
     q = sub.add_parser("extract-event-candidates"); q.add_argument("--dataset", type=Path, required=True); q.add_argument("--rules", type=Path, required=True); q.add_argument("--workers", type=int, default=1); q.add_argument("--output-root", type=Path, required=True); q.add_argument("--manifest", type=Path, required=True); q.set_defaults(func=cmd_extract)
     q = sub.add_parser("aggregate-weak-events"); q.add_argument("--candidate-root", type=Path, required=True); q.add_argument("--dataset", type=Path, required=True); q.add_argument("--modes", required=True); q.add_argument("--calibration-family-fraction", type=float, required=True); q.add_argument("--seed", type=int, required=True); q.add_argument("--output-root", type=Path, required=True); q.add_argument("--weight-table", type=Path, required=True); q.add_argument("--calibration-families", type=Path, required=True); q.add_argument("--rules", type=Path, required=True); q.set_defaults(func=cmd_aggregate)
