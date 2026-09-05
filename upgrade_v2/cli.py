@@ -12,7 +12,6 @@ import hashlib
 import json
 import os
 import subprocess
-import shutil
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,7 +44,7 @@ def _write_json(path: Path, value: Any) -> None:
 def _write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -152,7 +151,7 @@ def cmd_inspect_sources(args: argparse.Namespace) -> int:
     return 0
 
 
-REGISTRY_YAML = """version: baseline_spec_v2
+REGISTRY_YAML = """version: baseline_spec_v3
 methods:
   - id: time_fraction_oracle
     role: offline_reference
@@ -172,7 +171,7 @@ methods:
     inputs: [pred_node_belief, chain_spec]
     input_privilege: predicted_state_only
     checkpoint: resolve_actual
-  - id: manual_graph_topology_v2
+  - id: manual_graph_topology_v3
     role: learned_perception_manual_topology
     scorer: upgrade_v2.rewards.graph_rules.graph_from_belief
     inputs: [pred_node_belief, graph_spec]
@@ -447,10 +446,12 @@ def cmd_score_baselines(args: argparse.Namespace) -> int:
     model = load_strict_legacy_graph_model(archived_model_source, Path(checkpoint["path"]), device=device)
     label_maps = json.loads((root / "artifacts/pathgraph_sarm/stage4/supervision_v1/configs/label_maps.json").read_text(encoding="utf-8"))
     graphs: dict[str, dict[str, Any]] = {}
+    graph_chains: dict[str, list[list[str]]] = {}
     for task, path in resolved["graph_specs"].items():
         raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
         graphs[task] = {"terminal_nodes": raw.get("success_nodes", []), "edges": [{"source": edge["src"], "target": edge["dst"], "base_step_cost": edge.get("base_step_cost", 1.0)} for edge in raw.get("edges", [])]}
-    from upgrade_v2.rewards.graph_rules import fixed_chain_from_belief, graph_from_belief
+        graph_chains[task] = raw
+    from upgrade_v2.rewards.graph_rules import fixed_chain_from_belief, graph_from_belief, legal_success_chains
     records = _load_jsonl_rows(args.data / "episodes.jsonl")
     transition_rows: list[dict[str, Any]] = []
     per_group: list[dict[str, Any]] = []
@@ -462,12 +463,25 @@ def cmd_score_baselines(args: argparse.Namespace) -> int:
         probs, costs = _model_predictions_for_episode(model, episode["observations"], device)
         names = label_maps["node_maps"][task]
         beliefs = [{name: float(value) for name, value in zip(names, row[:len(names)])} for row in probs]
-        chain_a = names
-        chain_b = list(reversed(names))
-        for method, scores in (("time_fraction_oracle", [float(index) / max(1, len(beliefs) - 1) for index in range(len(beliefs))]),
-                               ("learned_fixed_chain_proxy_A", [fixed_chain_from_belief(item, chain_a) for item in beliefs]),
-                               ("learned_fixed_chain_proxy_B", [fixed_chain_from_belief(item, chain_b) for item in beliefs]),
-                               ("manual_graph_topology_v2", [graph_from_belief(item, graphs[task]) for item in beliefs])):
+        methods: list[tuple[str, list[float | None]]] = [
+            ("time_fraction_oracle", [float(index) / max(1, len(beliefs) - 1) for index in range(len(beliefs))]),
+            ("manual_graph_topology_v3", [graph_from_belief(item, graphs[task]) for item in beliefs]),
+        ]
+        legal_chains = [chain for chain in legal_success_chains(graph_chains[task]) if set(chain).issubset(names)]
+        # The dual-order A/B probes require both subgoals on the path.  Shorter
+        # graph paths are state-compression alternatives, not an A-first/B-first
+        # ordering comparison.
+        if task == "transport_dual_order":
+            legal_chains = [chain for chain in legal_chains if {"A_done", "B_done"}.issubset(chain)]
+        for position, chain in enumerate(legal_chains, start=1):
+            if task == "transport_dual_order" and len(chain) == 4 and chain[1:3] == ["A_done", "B_done"]:
+                method = "learned_fixed_chain_proxy_A_first"
+            elif task == "transport_dual_order" and len(chain) == 4 and chain[1:3] == ["B_done", "A_done"]:
+                method = "learned_fixed_chain_proxy_B_first"
+            else:
+                method = f"learned_fixed_chain_proxy_graph_path_{position}"
+            methods.append((method, [fixed_chain_from_belief(item, chain) for item in beliefs]))
+        for method, scores in methods:
             valid = [float(score) for score in scores if score is not None]
             if len(valid) < 2:
                 continue
@@ -477,16 +491,16 @@ def cmd_score_baselines(args: argparse.Namespace) -> int:
                                         "provenance": episode["provenance"], "metric": "signed_transition_reward", "n_parent_groups": 1,
                                         "n_events": 1, "value": reward, "ci_low": None, "ci_high": None, "status": "computed",
                                         "reason": "checkpoint forward completed; mechanism-only source", "input_id": f"{episode['episode_uid']}:{step}",
-                                        "checkpoint_sha256": checkpoint["actual_sha256"], "scorer_version": "baseline_spec_v2", "split_version": "legacy_existing", "label_source": "none"})
+                                        "checkpoint_sha256": checkpoint["actual_sha256"], "scorer_version": "baseline_spec_v3", "split_version": "legacy_existing", "label_source": "none"})
             per_group.append({"method_id": method, "task_id": task, "suite": "mechanism_legacy_recompute", "provenance": episode["provenance"],
                               "metric": "episode_signed_return", "n_parent_groups": 1, "n_events": len(rewards), "value": sum(rewards), "ci_low": None, "ci_high": None,
                               "status": "computed", "reason": "mechanism-only; not a U1 independent test", "input_id": episode["episode_uid"], "checkpoint_sha256": checkpoint["actual_sha256"],
-                              "scorer_version": "baseline_spec_v2", "split_version": "legacy_existing", "label_source": "none"})
+                              "scorer_version": "baseline_spec_v3", "split_version": "legacy_existing", "label_source": "none"})
     # Make the unavailable oracle explicit rather than mapping it to zero.
     for task in sorted(graphs):
         per_group.append({"method_id": "oracle_graph_cost", "task_id": task, "suite": "mechanism_legacy_recompute", "provenance": "deterministic_state_machine_probe",
                           "metric": "episode_signed_return", "n_parent_groups": 0, "n_events": 0, "value": None, "ci_low": None, "ci_high": None, "status": "not_computed",
-                          "reason": "canonical Stage6 data has no independent GT node sequence", "input_id": None, "checkpoint_sha256": None, "scorer_version": "baseline_spec_v2", "split_version": "legacy_existing", "label_source": "unavailable"})
+                          "reason": "canonical Stage6 data has no independent GT node sequence", "input_id": None, "checkpoint_sha256": None, "scorer_version": "baseline_spec_v3", "split_version": "legacy_existing", "label_source": "unavailable"})
     args.output.mkdir(parents=True, exist_ok=True)
     fields = ["method_id", "task_id", "suite", "provenance", "metric", "n_parent_groups", "n_events", "value", "ci_low", "ci_high", "status", "reason", "input_id", "checkpoint_sha256", "scorer_version", "split_version", "label_source"]
     _write_csv(args.output / "corrected_main_table.csv", per_group, fields)
@@ -564,16 +578,54 @@ def cmd_assign_families(args: argparse.Namespace) -> int:
     print(json.dumps({"groups": len(rows), "test_status": "unavailable"}, ensure_ascii=False)); return 0
 
 
+def _optional_bool(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)) and value in (0, 1):
+        return bool(value)
+    if isinstance(value, str) and value.lower() in {"true", "false"}:
+        return value.lower() == "true"
+    return None
+
+
+def _episode_outcome_evidence(path: Path) -> dict[str, dict[str, Any]]:
+    """Load outcome evidence keyed by episode id without deriving it from reward."""
+    evidence: dict[str, dict[str, Any]] = {}
+    for row in _load_jsonl_rows(path):
+        episode_uid = str(row.get("episode_uid", row.get("episode_id", "")))
+        if not episode_uid:
+            raise SystemExit(f"outcome evidence row has no episode_uid/episode_id: {path}")
+        if episode_uid in evidence:
+            raise SystemExit(f"duplicate outcome evidence for {episode_uid}: {path}")
+        success, failed = _optional_bool(row.get("success")), _optional_bool(row.get("failed"))
+        if success is True and failed is True:
+            raise SystemExit(f"contradictory success/failed evidence for {episode_uid}: {path}")
+        evidence[episode_uid] = {**row, "success": success, "failed": failed}
+    return evidence
+
+
 def cmd_normalize_continuation_records(args: argparse.Namespace) -> int:
-    horizon = 16; count = 0
+    horizon = 16; count = 0; evidence = _episode_outcome_evidence(args.continuations)
     with args.output.open("w", encoding="utf-8") as handle:
         for episode in _load_jsonl_rows(args.observables / "observable_records.jsonl"):
-            success = float(episode["terminal_reward"]) > 0
+            episode_uid = episode["episode_uid"]
+            source = evidence.get(episode_uid, {})
+            if source and source.get("task_id") not in (None, episode["task_id"]):
+                raise SystemExit(f"outcome evidence task mismatch for {episode_uid}")
+            if source and source.get("split") not in (None, episode["split"]):
+                raise SystemExit(f"outcome evidence split mismatch for {episode_uid}")
+            success, failed = source.get("success"), source.get("failed")
+            if success is True:
+                terminal_reason, irrecoverable_verified = "goal_reached", False
+            elif failed is True:
+                terminal_reason, irrecoverable_verified = "verified_irrecoverable_failure", True
+            else:
+                terminal_reason, irrecoverable_verified = "unknown", False
             for step in range(episode["n_steps"]):
                 remain = episode["n_steps"] - step
-                rec = {"anchor_uid": f"{episode['episode_uid']}:{step}", "episode_uid": episode["episode_uid"], "source_step": step, "root_family_id": episode["root_family_id"], "task_id": episode["task_id"], "split": episode["split"], "provenance": episode["provenance"], "continuation_uid": f"{episode['episode_uid']}:{step}:observed_suffix", "behavior_policy_id": "scripted_env_controller", "control_dt": None, "horizon_steps": horizon, "first_goal_step": remain if success else None, "observed_followup_steps": remain, "terminal_reason": "success" if success else "irrecoverable_failure", "irrecoverable_verified": not success, "evaluator_id": "recorded_TransportGraphEnv_terminal", "independent_label_source": "observed_suffix_mechanism_only", "observation_kind": "observed_suffix"}
+                rec = {"anchor_uid": f"{episode_uid}:{step}", "episode_uid": episode_uid, "source_step": step, "root_family_id": episode["root_family_id"], "task_id": episode["task_id"], "split": episode["split"], "provenance": episode["provenance"], "continuation_uid": f"{episode_uid}:{step}:observed_suffix", "behavior_policy_id": str(source.get("controller_source", "unknown")), "control_dt": None, "horizon_steps": horizon, "first_goal_step": remain if success is True else None, "observed_followup_steps": remain, "terminal_reason": terminal_reason, "irrecoverable_verified": irrecoverable_verified, "goal_reached": success, "evaluator_id": "stage6_policy_episode_manifest.success_failed" if source else "unknown", "outcome_evidence_path": str(args.continuations.resolve()), "independent_label_source": "observed_suffix_mechanism_only", "observation_kind": "observed_suffix"}
                 handle.write(json.dumps(rec, ensure_ascii=False) + "\n"); count += 1
-    print(json.dumps({"records": count, "mode": "observed_suffix"}, ensure_ascii=False)); return 0
+    print(json.dumps({"records": count, "mode": "observed_suffix", "evidence_episodes": len(evidence)}, ensure_ascii=False)); return 0
 
 
 def cmd_make_outcome_time_targets(args: argparse.Namespace) -> int:
@@ -588,7 +640,7 @@ def cmd_make_outcome_time_targets(args: argparse.Namespace) -> int:
             q, d, reason = 0, horizon, "verified_irrecoverable_failure"
         else:
             q, d, reason = None, None, "right_censored"
-        rows.append({**rec, "q_target": q, "d_target_steps": d, "d_target_normalized": None if d is None else d / horizon, "q_mask": int(q is not None), "d_mask": int(d is not None), "censor_u": None if q is not None else seen, "target_policy_id": "observed_suffix_only", "target_version": "u1_target_v1", "label_reason": reason})
+        rows.append({**rec, "q_target": q, "d_target_steps": d, "d_target_normalized": None if d is None else d / horizon, "q_mask": int(q is not None), "d_mask": int(d is not None), "censor_u": None if q is not None else seen, "target_policy_id": "observed_suffix_only", "target_version": "u1_target_v2_event_provenance", "label_reason": reason})
     args.output_root.mkdir(parents=True, exist_ok=True)
     with (args.output_root / "targets.jsonl").open("w", encoding="utf-8") as handle:
         for row in rows: handle.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -624,23 +676,50 @@ def cmd_train_value(args: argparse.Namespace) -> int:
         for i, row in enumerate(rows):
             features = (np.asarray(episodes[row["episode_uid"]]["features"], dtype=np.float32) - mean) / std
             part = features[max(0, row["source_step"] - 31):row["source_step"] + 1]; x[i, -len(part):] = part
-        return torch.tensor(x, device=device), torch.tensor([r["q_target"] for r in rows], dtype=torch.float32, device=device), torch.tensor([r["d_target_normalized"] for r in rows], dtype=torch.float32, device=device)
-    train_x, train_q, train_d = materialize(train)
-    val_x, val_q, val_d = materialize(val)
+        q = [0.0 if row["q_target"] is None else float(row["q_target"]) for row in rows]
+        d = [0.0 if row["d_target_normalized"] is None else float(row["d_target_normalized"]) for row in rows]
+        q_mask = [bool(int(row.get("q_mask", row["q_target"] is not None))) for row in rows]
+        d_mask = [bool(int(row.get("d_mask", row["d_target_normalized"] is not None))) for row in rows]
+        return (torch.tensor(x, device=device), torch.tensor(q, dtype=torch.float32, device=device),
+                torch.tensor(d, dtype=torch.float32, device=device), torch.tensor(q_mask, dtype=torch.bool, device=device),
+                torch.tensor(d_mask, dtype=torch.bool, device=device))
+    train_x, train_q, train_d, train_q_mask, train_d_mask = materialize(train)
+    val_x, val_q, val_d, val_q_mask, val_d_mask = materialize(val)
     torch.manual_seed(args.seed); rng = np.random.default_rng(args.seed)
     model = ValueModel(variant=args.variant).to(device); opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
+    eligible = torch.zeros(len(train), dtype=torch.bool, device=device)
+    if model.q_head is not None: eligible |= train_q_mask
+    if model.d_head is not None: eligible |= train_d_mask
+    if not bool(eligible.any()):
+        raise SystemExit(f"no supervised {args.variant} targets for {args.task} train split")
+    eligible_indices = torch.nonzero(eligible, as_tuple=False).squeeze(1)
+
+    def masked_losses(out, q, d, q_mask, d_mask):
+        losses = []
+        if out["q_logit"] is not None and bool(q_mask.any()):
+            values = torch.nn.functional.binary_cross_entropy_with_logits(out["q_logit"], q, reduction="none")
+            losses.append(values[q_mask].mean())
+        if out["d_normalized"] is not None and bool(d_mask.any()):
+            values = torch.nn.functional.mse_loss(out["d_normalized"], d, reduction="none")
+            losses.append(values[d_mask].mean())
+        return losses
+
     best, best_state, best_step = float("inf"), None, 0
     for step in range(1, args.max_steps + 1):
-        index = torch.as_tensor(rng.integers(0, len(train), size=min(64, len(train))), device=device)
-        x, q, d = train_x[index], train_q[index], train_d[index]; out = model(x); loss = 0.0
-        if out["q_logit"] is not None: loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(out["q_logit"], q)
-        if out["d_normalized"] is not None: loss = loss + torch.nn.functional.mse_loss(out["d_normalized"], d)
+        sample = rng.integers(0, len(eligible_indices), size=min(64, len(eligible_indices)))
+        index = eligible_indices[torch.as_tensor(sample, device=device)]
+        x, q, d = train_x[index], train_q[index], train_d[index]
+        out = model(x); losses = masked_losses(out, q, d, train_q_mask[index], train_d_mask[index])
+        if not losses:
+            raise RuntimeError("eligible batch contains no supervised value head")
+        loss = sum(losses)
         opt.zero_grad(); loss.backward(); opt.step()
         if step % 100 == 0 or step == args.max_steps:
             with torch.no_grad():
-                out = model(val_x); metric = 0.0
-                if out["q_logit"] is not None: metric += float(torch.nn.functional.binary_cross_entropy_with_logits(out["q_logit"], val_q))
-                if out["d_normalized"] is not None: metric += float(torch.nn.functional.mse_loss(out["d_normalized"], val_d))
+                out = model(val_x); losses = masked_losses(out, val_q, val_d, val_q_mask, val_d_mask)
+                if not losses:
+                    raise SystemExit(f"no supervised {args.variant} targets for {args.task} validation split")
+                metric = sum(float(item) for item in losses)
             if metric < best:
                 best, best_state, best_step = metric, {k: v.cpu().clone() for k, v in model.state_dict().items()}, step
     args.output.mkdir(parents=True, exist_ok=True); ckpt = args.output / "best.pt"
@@ -659,7 +738,7 @@ def cmd_select_value_checkpoints(args: argparse.Namespace) -> int:
         rows.append({"task_id": row["task"], "variant": row["variant"], "seed": row["seed"], "checkpoint": str(checkpoint.resolve()), "checkpoint_sha256": row["checkpoint_sha256"], "best_step": row["best_step"], "val_selection_loss": row["val_selection_loss"]})
     if len(rows) != 18: raise SystemExit(f"expected 18 formal checkpoints, got {len(rows)}")
     _write_csv(args.output, rows, list(rows[0]))
-    _write_json(args.lock_output, {"status": "FORMAL_CHECKPOINTS_LOCKED", "count": len(rows), "test_used_for_selection": False, "selection": "per-job validation minimum; lower step breaks ties"})
+    _write_json(args.lock_output, {"status": "FORMAL_CHECKPOINTS_HASH_LOCKED", "count": len(rows), "test_used_for_selection": False, "selection": "per-job validation minimum; lower step breaks ties", "verification_scope": "checkpoint exists and SHA256 matches job_result.json; torch.load and forward verification are separate requirements"})
     print(json.dumps({"selected": len(rows), "output": str(args.output)}, ensure_ascii=False)); return 0
 
 
@@ -675,10 +754,15 @@ def cmd_evaluate_u1_mechanism(args: argparse.Namespace) -> int:
         for i, r in enumerate(task_targets):
             f = (np.asarray(episodes[r["episode_uid"]]["features"], dtype=np.float32) - mean) / std; p = f[max(0, r["source_step"] - 31):r["source_step"] + 1]; x[i, -len(p):] = p
         with torch.no_grad(): pred = model(torch.tensor(x))
-        if pred["q_logit"] is not None:
-            q = torch.sigmoid(pred["q_logit"]).numpy(); y = np.asarray([r["q_target"] for r in task_targets]); output.append({"task_id": ck["task_id"], "variant": ck["variant"], "seed": ck["seed"], "metric": "q_brier", "value": float(np.mean((q-y)**2)), "n_parent_groups": len({r["root_family_id"] for r in task_targets}), "status": "descriptive_only", "reason": "validation mechanism-only source", "checkpoint_sha256": ck["checkpoint_sha256"]})
-        if pred["d_normalized"] is not None:
-            d = pred["d_normalized"].numpy(); y = np.asarray([r["d_target_normalized"] for r in task_targets]); output.extend([{ "task_id": ck["task_id"], "variant": ck["variant"], "seed": ck["seed"], "metric": "d_mse", "value": float(np.mean((d-y)**2)), "n_parent_groups": len({r["root_family_id"] for r in task_targets}), "status": "descriptive_only", "reason": "validation mechanism-only source", "checkpoint_sha256": ck["checkpoint_sha256"]},{ "task_id": ck["task_id"], "variant": ck["variant"], "seed": ck["seed"], "metric": "d_mae", "value": float(np.mean(np.abs(d-y))), "n_parent_groups": len({r["root_family_id"] for r in task_targets}), "status": "descriptive_only", "reason": "validation mechanism-only source", "checkpoint_sha256": ck["checkpoint_sha256"]}])
+        q_mask = np.asarray([bool(int(r.get("q_mask", r["q_target"] is not None))) for r in task_targets])
+        d_mask = np.asarray([bool(int(r.get("d_mask", r["d_target_normalized"] is not None))) for r in task_targets])
+        common = {"task_id": ck["task_id"], "variant": ck["variant"], "seed": ck["seed"], "status": "descriptive_only", "reason": "validation mechanism-only source", "checkpoint_sha256": ck["checkpoint_sha256"]}
+        if pred["q_logit"] is not None and q_mask.any():
+            q = torch.sigmoid(pred["q_logit"]).numpy()[q_mask]; y = np.asarray([r["q_target"] for r in task_targets], dtype=float)[q_mask]
+            output.append({**common, "metric": "q_brier", "value": float(np.mean((q-y)**2)), "n_parent_groups": len({r["root_family_id"] for r, keep in zip(task_targets, q_mask) if keep}), "n_labeled_anchors": int(q_mask.sum())})
+        if pred["d_normalized"] is not None and d_mask.any():
+            d = pred["d_normalized"].numpy()[d_mask]; y = np.asarray([r["d_target_normalized"] for r in task_targets], dtype=float)[d_mask]
+            output.extend([{**common, "metric": "d_mse", "value": float(np.mean((d-y)**2)), "n_parent_groups": len({r["root_family_id"] for r, keep in zip(task_targets, d_mask) if keep}), "n_labeled_anchors": int(d_mask.sum())}, {**common, "metric": "d_mae", "value": float(np.mean(np.abs(d-y))), "n_parent_groups": len({r["root_family_id"] for r, keep in zip(task_targets, d_mask) if keep}), "n_labeled_anchors": int(d_mask.sum())}])
     args.output.mkdir(parents=True, exist_ok=True); _write_csv(args.output / "mechanism_validation_metrics.csv", output, list(output[0])); _write_csv(args.output / "matched_pair_metrics.csv", [{"metric": "matched_pair", "status": "not_computed", "reason": "no independent continuation pairs; observed suffix is one outcome per anchor"}], ["metric", "status", "reason"]); _write_csv(args.output / "natural_test_metrics.csv", [{"metric": "natural_test", "status": "not_computed", "reason": "no new independent physical test families"}], ["metric", "status", "reason"])
     print(json.dumps({"metric_rows": len(output), "output": str(args.output)}, ensure_ascii=False)); return 0
 
@@ -693,8 +777,8 @@ def cmd_finalize_u1(args: argparse.Namespace) -> int:
 
 
 def cmd_export_complete(args: argparse.Namespace) -> int:
-    root, out = args.root.resolve(), args.output.resolve(); export = out.parent / ".u0_u1_export_work"
-    include = [root.parents[2] / "upgrade_v2", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u1_final", root / "rounds", root / "runs/u1_formal"]
+    root, out = args.root.resolve(), args.output.resolve()
+    include = [root.parents[2] / "upgrade_v2", root.parents[2] / "tests", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u1_final", root / "rounds", root / "runs/u1_formal"]
     omitted = []
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -702,7 +786,7 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
             if not base.exists():
                 continue
             for p in sorted(base.rglob('*')):
-                if not p.is_file():
+                if not p.is_file() or "__pycache__" in p.parts or p.suffix == ".pyc":
                     continue
                 if p.suffix.lower() in {'.pt', '.pth', '.ckpt', '.npy', '.npz'}:
                     omitted.append({"path": str(p), "size_bytes": p.stat().st_size, "artifact_type": "checkpoint_or_raw_array", "reason_omitted": "single lightweight delivery"})
@@ -710,34 +794,9 @@ def cmd_export_complete(args: argparse.Namespace) -> int:
                 z.write(p, f"{base.name}/{p.relative_to(base).as_posix()}")
         buf = __import__('io').StringIO(); writer = csv.DictWriter(buf, fieldnames=["path", "size_bytes", "artifact_type", "reason_omitted"], delimiter='\t'); writer.writeheader(); writer.writerows(omitted)
         z.writestr("large_file_manifest.tsv", buf.getvalue())
-        z.writestr("round_status.json", json.dumps({"status": "U0_COMPLETE_PARTIAL_LEGACY_AND_U1_MECHANISM_ONLY", "reason": "all executable U0/U1 work completed; deterministic mechanism-only evidence"}, ensure_ascii=False, indent=2))
-        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 complete delivery\n\nU0 corrected legacy measurement; U1 completed rank-free pilots/formal models and mechanism-only validation. No physical/generalization claim is made.\n")
+        z.writestr("round_status.json", json.dumps({"status": "U0_COMPLETE_PARTIAL_LEGACY_AND_U1_MECHANISM_ONLY", "reason": "deterministic mechanism-only evidence", "post_delivery_corrections": "target provenance repaired without label changes; four replacement checkpoint forwards and U0 baseline v3 rescore remain pending a PyTorch runtime"}, ensure_ascii=False, indent=2))
+        z.writestr("run_summary.md", "# PathGraph-SARM U0/U1 complete delivery\n\nU0 corrected legacy measurement; U1 completed rank-free pilots/formal models and mechanism-only validation. Target provenance was repaired without changing supervision labels. No physical/generalization claim is made; four checkpoint re-evaluations and the U0 baseline v3 rescore remain pending a PyTorch runtime.\n")
         z.writestr("commands/executed.sh", "# Actual command records are retained in round reports and job_result.json files.\n")
-    with zipfile.ZipFile(out) as z:
-        bad = z.testzip()
-        if bad: raise SystemExit("ZIP CRC failed: " + bad)
-    digest = _sha256(out); out.with_suffix(out.suffix + ".sha256").write_text(f"{digest}  {out.name}\n", encoding="utf-8")
-    print(json.dumps({"zip_path": str(out), "sha256": digest, "omitted": len(omitted)}, ensure_ascii=False)); return 0
-    if export.exists(): shutil.rmtree(export)
-    export.mkdir(parents=True)
-    include = [root.parents[2] / "upgrade_v2", root / "configs", root / "evidence", root / "registry", root / "results/u0_corrected", root / "results/u1_final", root / "rounds"]
-    omitted = []
-    for base in include:
-        if not base.exists(): continue
-        target = export / base.name
-        shutil.copytree(base, target, ignore=shutil.ignore_patterns("*.pt", "*.pth", "*.ckpt", "*.npy", "*.npz", "__pycache__"), dirs_exist_ok=True)
-        for p in base.rglob('*'):
-            if p.is_file() and p.suffix.lower() in {'.pt', '.pth', '.ckpt', '.npy', '.npz'}:
-                omitted.append({"path": str(p), "size_bytes": p.stat().st_size, "artifact_type": "checkpoint_or_raw_array", "reason_omitted": "single lightweight delivery"})
-    export.mkdir(parents=True, exist_ok=True)
-    _write_csv(export / "large_file_manifest.tsv", omitted, ["path", "size_bytes", "artifact_type", "reason_omitted"])
-    _write_json(export / "round_status.json", {"status": "U0_COMPLETE_PARTIAL_LEGACY_AND_U1_MECHANISM_ONLY", "reason": "all executable U0/U1 work completed; evidence remains restricted to deterministic mechanism data"})
-    (export / "run_summary.md").write_text("# PathGraph-SARM U0/U1 complete delivery\n\nU0 corrected legacy measurement and completed readable mechanism baseline scoring. U1 completed rank-free model implementation, six pilots, eighteen formal models, and mechanism-only validation. No physical/generalization claim is made.\n", encoding="utf-8")
-    (export / "commands/executed.sh").write_text("# Actual command records are retained in round reports and job_result.json files.\n", encoding="utf-8")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-        for p in sorted(export.rglob('*')):
-            if p.is_file(): z.write(p, p.relative_to(export))
     with zipfile.ZipFile(out) as z:
         bad = z.testzip()
         if bad: raise SystemExit("ZIP CRC failed: " + bad)
