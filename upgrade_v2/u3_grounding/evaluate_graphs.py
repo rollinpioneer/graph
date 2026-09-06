@@ -107,10 +107,8 @@ def _graph_metrics(graph: dict, segments: list[dict], transitions: list[dict], s
     explained = [t for t in trans if (t["from_cluster_id"], t["to_cluster_id"]) in graph_pairs]
     total = len(trans); transition_coverage = len(explained) / total if total else 0.0
     pred_scores = []
-    for node in nodes:
-        wanted = set(node.get("observable_predicates", [])); matched = [s for s in segs if node.get("grounding", {}).get("raw_cluster_id") == s.get("cluster_id")]
-        if matched: pred_scores.extend(_jaccard(wanted, set()) for _ in [])
-    # Segment records expose cluster assignment; fit is measured against each graph node's declared predicates and the stable cluster-level observable signal.
+    # Fit is measured against each graph node's declared predicates and the
+    # stable cluster-level observable signal assigned from train references.
     for node in nodes:
         if node.get("grounding", {}).get("cluster_handle"):
             matched = [s for s in segs if int(s["evaluation_cluster_id"]) == int(node["grounding"]["cluster_handle"][1:])]
@@ -167,6 +165,6 @@ def evaluate_graphs(*, grounded_graph_root: Path | None, data_only_graph: Path, 
         row = _graph_metrics(read_json(path), segments, transitions, split, bootstrap, seed)
         row["path"] = str(path)
         rows.append(row)
-    details_rows = [{"graph_id": row["graph_id"], "split": split, "detail": "metrics computed from episode-local segment transitions", "test_gold_used_for_selection": split == "test" and selected is not None} for row in rows]
+    details_rows = [{"graph_id": row["graph_id"], "split": split, "detail": "metrics computed from episode-local segment transitions", "evaluation_role": "final_evaluation_only" if split == "test" else "validation_for_selection", "test_gold_used_for_selection": False, "test_not_used_for_selection": True} for row in rows]
     write_csv(output, rows); write_csv(details, details_rows); report.parent.mkdir(parents=True, exist_ok=True); report.write_text("# Graph evaluation\n\n" + "\n".join([f"- split: `{split}`", f"- graph_count: `{len(rows)}`", f"- statistics_unit: `{statistics_unit}`", f"- test gold used for threshold selection: `{False if split == 'val' else 'not_applicable'}`"]) + "\n", encoding="utf-8")
     return {"status": "PASS", "split": split, "graph_count": len(rows), "test_gold_used_for_selection": False if split == "val" else "not_applicable"}

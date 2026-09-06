@@ -33,7 +33,7 @@ def ground_edges(*, candidate_dir: Path, node_grounding: Path, transition_catalo
                     effect = _effect_score(edge, profiles.get(src["cluster_handle"], {}), profiles.get(dst["cluster_handle"], {}))
                     type_score = 0.75 if edge.get("hypothesized_type") in {"forward", "failure", "recovery", "alternative"} else 0.25
                     score = 0.40 * node_pair + 0.30 * effect + 0.20 * type_score + 0.10 * support
-                    scored.append({"transition_handle": trans["handle"], "from_cluster_handle": trans["from_cluster_handle"], "to_cluster_handle": trans["to_cluster_handle"], "from_cluster_id": pair[0], "to_cluster_id": pair[1], "score": round(score, 8), "node_pair_score": round(node_pair, 8), "predicate_effect_score": round(effect, 8), "edge_type_score": round(type_score, 8), "family_support_score": round(support, 8), "support_root_families": trans.get("support_root_families", 0)})
+                    scored.append({"transition_handle": trans["handle"], "from_cluster_handle": trans["from_cluster_handle"], "to_cluster_handle": trans["to_cluster_handle"], "from_cluster_id": pair[0], "to_cluster_id": pair[1], "transition_count": int(trans.get("transition_count", 0)), "score": round(score, 8), "node_pair_score": round(node_pair, 8), "predicate_effect_score": round(effect, 8), "edge_type_score": round(type_score, 8), "family_support_score": round(support, 8), "support_root_families": trans.get("support_root_families", 0)})
             scored.sort(key=lambda row: (-row["score"], row["transition_handle"])); top = scored[:top_k]
             edge_type = edge.get("hypothesized_type", "")
             fallback_events = {

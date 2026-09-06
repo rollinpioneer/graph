@@ -39,7 +39,7 @@ def ground_nodes(*, candidate_dir: Path, cluster_profiles: Path, thresholds: lis
                 history_score = _history_score(predicates, profile)
                 family_score = min(1.0, safe_float(profile.get("support_root_families")) / 84.0)
                 score = 0.50 * predicate_score + 0.20 * role_score + 0.15 * history_score + 0.15 * family_score
-                scored.append({"cluster_handle": profile["cluster_handle"], "raw_cluster_id": profile["raw_cluster_id"], "score": round(score, 8), "predicate_score": round(predicate_score, 8), "role_score": round(role_score, 8), "history_score": round(history_score, 8), "family_support_score": round(family_score, 8)})
+                scored.append({"cluster_handle": profile["cluster_handle"], "raw_cluster_id": profile["raw_cluster_id"], "n_segments": int(profile.get("n_segments", 0)), "support_root_families": int(profile.get("support_root_families", 0)), "score": round(score, 8), "predicate_score": round(predicate_score, 8), "role_score": round(role_score, 8), "history_score": round(history_score, 8), "family_support_score": round(family_score, 8)})
             scored.sort(key=lambda row: (-row["score"], row["cluster_handle"])); top = scored[:top_k]
             result["nodes"].append({"node_id": node["id"], "candidates": top})
             for item in top:

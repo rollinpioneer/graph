@@ -21,7 +21,7 @@ def build_data_only_graph(*, cluster_profiles: Path, transition_catalog: Path, m
         if cid == success_id and success_id != start_id: role = "success_terminal"
         event_names = {e["event"] for e in p.get("top_event_posterior", [])[:3]}
         if {"terminal_failure", "stagnation_onset", "contact_off_failure"} & event_names: role = "failure_terminal" if cid != start_id and cid != success_id else role
-        nodes.append({"id": p["cluster_handle"], "raw_cluster_id": cid, "role": role, "status": "observed" if int(p.get("support_root_families", 0)) >= minimum_cluster_families else "unresolved", "observable_predicates": p.get("top_predicates", []), "support_root_families": p.get("support_root_families", 0), "unknown_fraction": p.get("unknown_fraction", 1)})
+        nodes.append({"id": p["cluster_handle"], "raw_cluster_id": cid, "role": role, "status": "observed" if int(p.get("support_root_families", 0)) >= minimum_cluster_families else "unresolved", "observable_predicates": p.get("top_predicates", []), "n_segments": int(p.get("n_segments", 0)), "support_root_families": p.get("support_root_families", 0), "unknown_fraction": p.get("unknown_fraction", 1)})
     edges = []; edits = []
     for t in transitions:
         pair = (int(t["from_cluster_id"]), int(t["to_cluster_id"])); rare = int(t.get("support_root_families", 0)) < minimum_transition_families
