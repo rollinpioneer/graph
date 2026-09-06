@@ -12,6 +12,17 @@ def build_evidence_handles(*, clusters: Path, transitions: Path, fallback: Path,
     cluster_rows = sorted(read_json(clusters)["clusters"], key=lambda row: int(row["cluster_id"]))
     transition_rows = sorted(read_json(transitions)["transitions"], key=lambda row: (-int(row.get("support_root_families", 0)), -int(row.get("observation_count", 0)), int(row["from_cluster_id"]), int(row["to_cluster_id"])))
     fallback_rows = sorted(read_jsonl(fallback), key=lambda row: str(row.get("clip_id", "")))
+    registry_value = read_json(registry)
+    if registry_value.get("input_split") != "train":
+        raise ValueError("evidence registry is not train-only")
+    registry_pairs = {(int(x["from_cluster_id"]), int(x["to_cluster_id"])) for x in registry_value.get("transition_pairs", [])}
+    source_pairs = {(int(x["from_cluster_id"]), int(x["to_cluster_id"])) for x in transition_rows}
+    if registry_pairs != source_pairs:
+        raise ValueError("transition registry does not match compact evidence")
+    registry_fallback = set(registry_value.get("fallback_clip_ids", []))
+    source_fallback = {str(x.get("clip_id")) for x in fallback_rows}
+    if registry_fallback != source_fallback:
+        raise ValueError("fallback registry does not match compact evidence")
     cluster_handles = []
     raw: dict[str, Any] = {"clusters": {}, "transitions": {}, "fallback": {}}
     cmap: dict[int, str] = {}

@@ -30,6 +30,8 @@ def _predicates(row: dict[str, Any]) -> set[str]:
 
 def build_cluster_profiles(*, cluster_catalog: Path, predicate_vocabulary: Path, train_segments: Path, output: Path, table: Path, report: Path) -> dict[str, Any]:
     catalog = read_json(cluster_catalog)["clusters"]
+    vocabulary = read_json(predicate_vocabulary)
+    allowed_predicates = {item["name"] for item in vocabulary.get("allowed_predicates", [])}
     by_cluster: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for row in read_jsonl(train_segments):
         if row.get("split", "train") == "train": by_cluster[int(row["cluster_id"])].append(row)
@@ -43,8 +45,23 @@ def build_cluster_profiles(*, cluster_catalog: Path, predicate_vocabulary: Path,
             for i, value in enumerate(posterior[:len(events)]): events[i] += safe_float(value)
         denom = max(1, len(segments)); pred_probs = {key: round(value / denom, 8) for key, value in sorted(counts.items())}
         top_events = [{"event": EVENT_NAMES[i], "posterior": round(value / denom, 8)} for i, value in sorted(enumerate(events), key=lambda x: -x[1])[:5]]
+        unknown_predicates = set(pred_probs) - allowed_predicates
+        if unknown_predicates:
+            raise ValueError(f"predicate vocabulary mismatch: {sorted(unknown_predicates)}")
         profile = {"cluster_handle": c["handle"], "raw_cluster_id": cid, "support_root_families": c.get("support_root_families", 0), "mean_duration": c.get("mean_duration", 0), "unknown_fraction": c.get("mean_unknown_fraction", 1), "predicate_probabilities": pred_probs, "top_predicates": [key for key, _ in sorted(pred_probs.items(), key=lambda x: -x[1])[:8]], "top_event_posterior": top_events, "incoming_transition_handles": [], "outgoing_transition_handles": []}
         profiles.append(profile); rows.append({"cluster_handle": c["handle"], "raw_cluster_id": cid, "support_root_families": profile["support_root_families"], "top_predicates": ";".join(profile["top_predicates"]), "top_event": top_events[0]["event"] if top_events else "none", "mean_duration": profile["mean_duration"], "unknown_fraction": profile["unknown_fraction"]})
+    transition_path = cluster_catalog.parent / "transition_handles.json"
+    if transition_path.is_file():
+        transitions = read_json(transition_path)["transitions"]
+        by_id = {p["raw_cluster_id"]: p for p in profiles}
+        for transition in transitions:
+            src = by_id[int(transition["from_cluster_id"])]
+            dst = by_id[int(transition["to_cluster_id"])]
+            src["outgoing_transition_handles"].append(transition["handle"])
+            dst["incoming_transition_handles"].append(transition["handle"])
+        for profile in profiles:
+            profile["incoming_transition_handles"].sort()
+            profile["outgoing_transition_handles"].sort()
     write_json(output, {"schema": "u3_cluster_predicate_profiles_v1", "input_split": "train", "profiles": profiles})
     write_csv(table, rows)
     report.parent.mkdir(parents=True, exist_ok=True); report.write_text("# Cluster predicate profiles\n\n- split: `train`\n- cluster_count: `%d`\n- test/val gold used: `false`\n" % len(profiles), encoding="utf-8")
