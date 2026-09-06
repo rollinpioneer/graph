@@ -4,7 +4,7 @@
 - purpose: Freeze the existing U3 negative result before deterministic grounding.
 - generated_at: `2026-09-06`
 - repo_root: `/home/__compress_data/xushijie/graph_github_upload`
-- code_baseline: `c455d993a76231059b14b06ab667ae387edccef2` plus maintenance branch edits
+- code_baseline: `9b33044` plus this protocol-conformance rerun
 - gpu_query: `direct_fallback_noninteractive`; no GPU computation was started
 - api_calls: `0`; API keys were not read
 - commands: freeze existing U3 execution summary, handoff, hard checks, and scores; validate the frozen lock
