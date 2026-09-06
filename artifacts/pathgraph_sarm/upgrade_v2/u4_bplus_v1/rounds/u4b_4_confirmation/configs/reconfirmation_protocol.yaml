@@ -1,0 +1,23 @@
+version: u4_bplus_v1_reconfirmation_after_implementation_correction
+created_date: 2026-09-06
+reason: initial confirmation was executed before the corrected frozen mapper and graph evaluation implementation
+contaminated_confirmation:
+  family_indices: [24, 35]
+  rollout_count: 48
+  use_for_final_claims: false
+family_extension:
+  generator_seed: 840100
+  generator_count: 48
+  selected_indices: [36, 47]
+  family_count: 12
+  rollouts_per_family: 4
+  rollout_seed_base: 8500000
+continuations:
+  seed: 854000
+  horizon: 32
+  repetitions_per_anchor: 3
+  max_total: 96
+freeze_policy:
+  no_graph_mapper_boundary_semantic_or_threshold_changes_after_lock: true
+scope: same_explicit_stochastic_simulator_distribution
+physical_generalization_eligible: false

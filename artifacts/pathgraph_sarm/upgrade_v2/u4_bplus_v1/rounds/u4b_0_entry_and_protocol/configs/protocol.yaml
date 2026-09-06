@@ -1,0 +1,39 @@
+version: u4_bplus_v1
+source_commit: 4c3520d6ca07b5f39e2b5a7e0ea3cb15a5c2e1f6
+scope: same_explicit_stochastic_simulator_distribution
+entry_decision: GO_U4_DATA_ONLY
+history_read_only: true
+main_api_calls: 0
+main_training_jobs: 0
+family:
+  seed: 840100
+  namespace: u4b_v1
+  total: 36
+  dev_fit: 12
+  dev_route: 12
+  confirm: 12
+  rollouts_per_family: 4
+continuations:
+  controller: frozen_u2_policy_action
+  horizon: 32
+  max_query_classes: 6
+  dev_limit: 144
+  confirm_limit: 96
+routing:
+  u2_unresolved_rate: 0.25
+  u2_recall_gain_with_reference_boundaries: 0.10
+  u2_mixed_error_drop: 0.15
+  u2_label_flip_rate: 0.20
+  u3_boundary_rescue_gain_max: 0.05
+  u3_semantic_unresolved_rate: 0.30
+  u3_concrete_ambiguous_groups_min: 2
+  max_repair_branches: 1
+statistics:
+  unit: root_family_id
+  aggregation: eligible_family_macro
+  bootstrap: 5000
+  seed: 844500
+  confirmation_once: true
+api_authorized: true
+api_authorization_scope: conditional_run_u3b_only
+api_key_read: false

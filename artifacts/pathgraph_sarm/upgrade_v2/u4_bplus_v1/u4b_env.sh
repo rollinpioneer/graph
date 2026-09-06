@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
+export U4B_ROOT="$REPO_ROOT/artifacts/pathgraph_sarm/upgrade_v2/u4_bplus_v1"
+export U4B_PROTOCOL="$U4B_ROOT/protocol"
+export U4B_DATA="$U4B_ROOT/data"
+export U4B_EVIDENCE="$U4B_ROOT/evidence"
+export U4B_QUERY="$U4B_ROOT/queries"
+export U4B_DIAG="$U4B_ROOT/diagnostics"
+export U4B_REPAIR="$U4B_ROOT/targeted_repair"
+export U4B_GRAPHS="$U4B_ROOT/graphs"
+export U4B_EVAL="$U4B_ROOT/evaluation"
+export U4B_FINAL="$U4B_ROOT/final"
+export U4B_ROUNDS="$U4B_ROOT/rounds"
+export U4B_DOWNLOADS="${U4B_DOWNLOADS:-$REPO_ROOT/downloads/u4_bplus}"
+export U3B_API_AUTHORIZED="${U3B_API_AUTHORIZED:-0}"
+mkdir -p "$U4B_PROTOCOL" "$U4B_DATA" "$U4B_EVIDENCE" "$U4B_QUERY" "$U4B_DIAG" "$U4B_REPAIR" "$U4B_GRAPHS" "$U4B_EVAL" "$U4B_FINAL" "$U4B_ROUNDS" "$U4B_DOWNLOADS"
