@@ -88,7 +88,8 @@ def package_u3_complete(*, u3_root: Path, final_root: Path, output: Path, max_fi
     u3_root = u3_root.resolve()
     final_root = final_root.resolve()
     output = output.resolve()
-    scan = scan_paths([root / "upgrade_v2" / "u3", u3_root], root, include_git_diff=True)
+    grounding_code = root / "upgrade_v2" / "u3_grounding"
+    scan = scan_paths([root / "upgrade_v2" / "u3", grounding_code, u3_root], root, include_git_diff=True)
     if scan["status"] != "PASS":
         raise RuntimeError("secret scan failed; refusing to package")
     entries: dict[str, bytes] = {}
@@ -97,10 +98,10 @@ def package_u3_complete(*, u3_root: Path, final_root: Path, output: Path, max_fi
             for name in previous.namelist():
                 if name.endswith("/"):
                     continue
-                if name.startswith("upgrade_v2/u3/") or name.startswith("artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph_v2/"):
+                if name.startswith("upgrade_v2/u3/"):
                     continue
                 entries[name] = previous.read(name)
-    selected_roots = [(root / "upgrade_v2" / "u3").resolve(), u3_root]
+    selected_roots = [(root / "upgrade_v2" / "u3").resolve(), grounding_code.resolve(), u3_root]
     placeholders: list[dict[str, Any]] = []
     for source_root in selected_roots:
         for path in sorted(source_root.rglob("*")):

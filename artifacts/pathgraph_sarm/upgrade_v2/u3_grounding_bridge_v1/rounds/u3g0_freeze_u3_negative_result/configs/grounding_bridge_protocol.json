@@ -1,0 +1,25 @@
+{
+  "protocol": "u3_grounding_bridge_v1",
+  "source_u3_decision": "U3_INCONCLUSIVE",
+  "external_model_calls_allowed": false,
+  "semantic_candidates": [
+    "qwen:instruction_only_r01",
+    "qwen:instruction_only_r02"
+  ],
+  "required_baseline": "data_only_transition_graph",
+  "grounding_split": "train",
+  "selection_split": "val",
+  "final_evaluation_split": "test",
+  "boundary_fallback_required": true,
+  "unknown_retained": true,
+  "status_policy": {
+    "llm_elements": "hypothesized",
+    "train_supported_elements": "observed",
+    "val_continuation_supported_elements": "empirically_validated",
+    "contradicted_elements": "contradicted",
+    "insufficient_elements": "unresolved"
+  },
+  "manual_candidate_editing_allowed": false,
+  "main_reward_retuning_allowed": false,
+  "policy_training_allowed": false
+}

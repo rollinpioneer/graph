@@ -1,0 +1,457 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_made",
+      "effects": [
+        "contact_present",
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C10",
+        "score": 0.47092857,
+        "status": "observed",
+        "to_cluster_handle": "C03",
+        "transition_handle": "T018"
+      },
+      "hypothesized_type": "forward",
+      "id": "e_approach_to_contact",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_approach",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "stochastic slip at initial contact"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_lost",
+      "effects": [
+        "contact_recently_lost",
+        "object_stationary",
+        "agent_receding_from_object"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": "C03",
+        "transition_handle": null
+      },
+      "hypothesized_type": "failure",
+      "id": "e_contact_to_lost",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_contact_made",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "cause of contact loss: slip vs obstacle"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_collision",
+      "effects": [
+        "collision_detected",
+        "object_stationary"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": 0.58052381,
+        "status": "observed",
+        "to_cluster_handle": "C04",
+        "transition_handle": "T022"
+      },
+      "hypothesized_type": "failure",
+      "id": "e_contact_to_collision",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_contact_made",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "obstacle proximity at time of collision"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_goal_reached",
+      "effects": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": null,
+        "transition_handle": null
+      },
+      "hypothesized_type": "forward",
+      "id": "e_contact_to_goal",
+      "preconditions": [
+        "contact_present",
+        "object_approaching_goal"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_contact_made",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "object settling dynamics inside goal"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_recovery",
+      "effects": [
+        "contact_reestablished",
+        "agent_approaching_object"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": "C03",
+        "transition_handle": null
+      },
+      "hypothesized_type": "recovery",
+      "id": "e_lost_to_recovery",
+      "preconditions": [
+        "contact_recently_lost",
+        "agent_receding_from_object"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_contact_lost",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "agent re-approach strategy",
+        "object displacement during loss"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_stagnation",
+      "effects": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": "C10",
+        "transition_handle": null
+      },
+      "hypothesized_type": "failure",
+      "id": "e_lost_to_stagnation",
+      "preconditions": [
+        "contact_recently_lost",
+        "object_stationary"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_contact_lost",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "whether recovery is still feasible"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_made",
+      "effects": [
+        "contact_present",
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C03",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": "C03",
+        "transition_handle": null
+      },
+      "hypothesized_type": "forward",
+      "id": "e_recovery_to_contact",
+      "preconditions": [
+        "contact_reestablished"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_recovery",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "quality of re-established contact"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_stagnation",
+      "effects": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [],
+      "grounding": {
+        "from_cluster_handle": "C10",
+        "score": null,
+        "status": "unresolved",
+        "to_cluster_handle": "C10",
+        "transition_handle": null
+      },
+      "hypothesized_type": "failure",
+      "id": "e_approach_to_stagnation",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [],
+      "src": "n_approach",
+      "status": "unresolved",
+      "unknown_conditions": [
+        "agent trapped by obstacle geometry"
+      ]
+    }
+  ],
+  "graph_id": "push_transport_stochastic_v1_grounded_t0p35",
+  "grounding_threshold": 0.35,
+  "nodes": [
+    {
+      "description": "Agent navigates toward the object without yet making contact.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C10",
+        "raw_cluster_id": 10,
+        "score": 0.55,
+        "status": "observed"
+      },
+      "id": "n_approach",
+      "observable_predicates": [
+        "contact_absent",
+        "agent_approaching_object",
+        "object_stationary",
+        "progress_unknown"
+      ],
+      "role": "start",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "agent_heading alignment to object",
+        "presence of obstacles in direct path"
+      ]
+    },
+    {
+      "description": "Agent has established contact with the object and begins initial transport.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C03",
+        "raw_cluster_id": 3,
+        "score": 0.50107143,
+        "status": "observed"
+      },
+      "id": "n_contact_made",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "contact stability under stochastic perturbations",
+        "whether transport direction aligns with goal"
+      ]
+    },
+    {
+      "description": "Contact with the object has been recently lost during transport.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C03",
+        "raw_cluster_id": 3,
+        "score": 0.46107143,
+        "status": "observed"
+      },
+      "id": "n_contact_lost",
+      "observable_predicates": [
+        "contact_recently_lost",
+        "object_stationary",
+        "agent_receding_from_object",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "object final position after slip",
+        "agent orientation relative to object"
+      ]
+    },
+    {
+      "description": "A collision with an obstacle has been detected, halting progress.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C04",
+        "raw_cluster_id": 4,
+        "score": 0.49083333,
+        "status": "observed"
+      },
+      "id": "n_collision",
+      "observable_predicates": [
+        "collision_detected",
+        "object_stationary"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "severity of collision",
+        "recoverability of agent pose"
+      ]
+    },
+    {
+      "description": "Object shows negligible progress toward the goal over an extended window.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C10",
+        "raw_cluster_id": 10,
+        "score": 0.48868204,
+        "status": "observed"
+      },
+      "id": "n_stagnation",
+      "observable_predicates": [
+        "stagnation_detected",
+        "object_stationary",
+        "contact_absent"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether agent is stuck or merely paused",
+        "object wedged against obstacle"
+      ]
+    },
+    {
+      "description": "Agent re-establishes contact after a loss and resumes transport.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": "C03",
+        "raw_cluster_id": 3,
+        "score": 0.50107143,
+        "status": "observed"
+      },
+      "id": "n_recovery",
+      "observable_predicates": [
+        "contact_reestablished",
+        "agent_approaching_object",
+        "object_stationary"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "new contact angle",
+        "resulting transport direction"
+      ]
+    },
+    {
+      "description": "Object has entered and remained inside the goal region.",
+      "evidence_segment_ids": [],
+      "grounding": {
+        "cluster_handle": null,
+        "raw_cluster_id": null,
+        "score": null,
+        "status": "unresolved"
+      },
+      "id": "n_goal_reached",
+      "observable_predicates": [
+        "stable_goal_occupancy",
+        "object_inside_goal"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [],
+      "status": "unresolved",
+      "unknown_conditions": [
+        "long-term stability of object in goal"
+      ]
+    }
+  ],
+  "schema": "u3_grounded_candidate_graph_v1",
+  "scope": "same stochastic simulator family only",
+  "semantic_status": "hypothesized",
+  "source_candidate_id": "qwen:instruction_only_r02",
+  "source_sha256": "a2b3483470681d6ab4f34f6deba51c0a2fe23b90f7fbe861f2094f0d7ba42718",
+  "status_vocabulary": [
+    "hypothesized",
+    "observed",
+    "contradicted_on_train",
+    "unresolved"
+  ],
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [
+        "e_contact_to_collision",
+        "e_contact_to_lost"
+      ],
+      "affected_node_ids": [
+        "n_contact_made",
+        "n_collision",
+        "n_contact_lost"
+      ],
+      "evidence_needed": "Transition frequency data from stochastic simulator runs showing branching ratios at contact maintenance failure.",
+      "question": "Under what stochastic conditions does contact transition directly to collision versus contact loss?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_lost_to_recovery",
+        "e_lost_to_stagnation"
+      ],
+      "affected_node_ids": [
+        "n_contact_lost",
+        "n_recovery",
+        "n_stagnation"
+      ],
+      "evidence_needed": "Empirical recovery success rates across multiple stochastic episodes with varying object displacement magnitudes.",
+      "question": "What fraction of contact loss events lead to successful recovery versus stagnation?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_contact_to_goal"
+      ],
+      "affected_node_ids": [
+        "n_goal_reached"
+      ],
+      "evidence_needed": "Temporal persistence data of object_in_goal_sensor after first activation under stochastic perturbations.",
+      "question": "Does stable goal occupancy reliably follow initial object_inside_goal detection under stochastic dynamics?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_lost_to_stagnation",
+        "e_approach_to_stagnation"
+      ],
+      "affected_node_ids": [
+        "n_stagnation",
+        "n_approach",
+        "n_contact_lost"
+      ],
+      "evidence_needed": "Comparison of stagnation_detected predicate activation against eventual progress in extended-horizon simulator traces.",
+      "question": "Can stagnation be reliably distinguished from temporary pausing using available observables?"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "protocol": "u3_grounding_graph_evaluation_v1",
+  "selection_split": "val",
+  "final_evaluation_split": "test",
+  "statistics_unit": "root_family_id",
+  "test_evaluation_is_single_run": true,
+  "test_not_used_for_selection": true,
+  "score_formula": {
+    "transition_coverage": 0.25,
+    "predicate_fit": 0.2,
+    "recovery_evidence": 0.2,
+    "failure_evidence": 0.15,
+    "start_success_reachability": 0.1,
+    "unknown_honesty": 0.1,
+    "complexity_penalty": -0.1
+  },
+  "gold_usage": {
+    "candidate_generation": false,
+    "threshold_selection": false,
+    "graph_editing": false
+  },
+  "scope": "same stochastic simulator family only",
+  "physical_generalization_eligible": false
+}
