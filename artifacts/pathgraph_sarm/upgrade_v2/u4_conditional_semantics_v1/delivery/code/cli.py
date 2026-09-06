@@ -90,7 +90,7 @@ def _rescore(a: argparse.Namespace) -> dict:
 def _normalize_legacy_occurrences(rows: list[dict]) -> list[dict]:
     """Convert the recovered U4 B+ event table without using proposed labels."""
     event_to_semantic = {"contact_off_failure": "failure_event", "recovery_start": "recovery_attempt", "contact_reestablished": "recovery_achieved", "transport_on": "progress", "goal_enter": "progress", "detour_start": "alternative", "stagnation_onset": "dwell", "stable_success": "terminal_success", "terminal_failure": "terminal_failure"}
-    prior_loss: dict[str, bool] = defaultdict(bool); normalized = []
+    normalized = []
     for row in rows:
         item = dict(row)
         event = str(item.get("event") or "")
@@ -102,9 +102,21 @@ def _normalize_legacy_occurrences(rows: list[dict]) -> list[dict]:
         else: status = "nonterminal"
         before = set(item.get("observable_predicates_before") or []); after = set(item.get("observable_predicates_after") or [])
         context = dict(item.get("observable_context") or {})
-        context.update({"contact_before": "contact_present" in before, "contact_after": "contact_present" in after, "contact_present": "contact_present" in after, "collision_detected": "collision_detected" in after, "object_inside_goal": "object_inside_goal" in after, "object_moving": "object_moving" in after, "contact_recently_lost": prior_loss[item.get("episode_id", "")], "recent_recovery_attempt": False, "stagnation_detected": event == "stagnation_onset", "goal_distance_delta_sign": "unknown", "object_speed_bin": "moving" if "object_moving" in after else "still", "action_norm": 0.0, "history_event_count": int(item.get("action_index", 0))})
+        for leaked in ("terminal_failure_event", "stable_success_event", "terminal_success_event", "contact_recently_lost", "recent_recovery_attempt", "stagnation_detected"):
+            context.pop(leaked, None)
+        context.update({
+            "contact_before": "contact_present" in before,
+            "contact_after": "contact_present" in after,
+            "contact_present": "contact_present" in after,
+            "collision_detected": "collision_detected" in after,
+            "object_inside_goal": "object_inside_goal" in after,
+            "object_moving": "object_moving" in after,
+            "goal_distance_delta_sign": "unknown",
+            "object_speed_bin": "moving" if "object_moving" in after else "still",
+            "action_norm": 0.0,
+            "history_event_count": int(item.get("action_index", 0)),
+        })
         item["observable_context"] = context; item["evaluator_semantics"] = sorted(set(labels + (["terminal_failure"] if status == "failure_terminal" else []) + (["censored_unknown"] if status == "censored_unknown" else []))); item["terminal_status"] = status; item["terminated"] = status in {"failure_terminal", "success_terminal"}; item["truncated"] = status == "censored_unknown"; item["evaluator_label_origin"] = "simulator_info.events_diagnostic_only"; item["provenance"] = "recovered_u4b_event_field_not_proposed_semantics"; item["hidden_or_future_features_used"] = False
-        if event == "contact_off_failure": prior_loss[item.get("episode_id", "")] = True
         normalized.append(item)
     return normalized
 

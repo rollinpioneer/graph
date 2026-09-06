@@ -77,6 +77,12 @@ def terminal_status(event: dict[str, Any], episode: dict[str, Any], index: int) 
 
 
 def observable_context(before: list[float], after: list[float], action: list[float], history: list[dict[str, Any]]) -> dict[str, Any]:
+    """Build guard context from current/past observations and actions only.
+
+    ``history`` contains previously emitted contexts, never simulator event
+    dictionaries. Event records are diagnostic labels and are kept separate
+    from the causal feature path.
+    """
     contact_before = bool(len(before) > 12 and float(before[12]) >= 0.5)
     contact_after = bool(len(after) > 12 and float(after[12]) >= 0.5)
     collision = bool(len(after) > 13 and float(after[13]) >= 0.5)
@@ -86,20 +92,37 @@ def observable_context(before: list[float], after: list[float], action: list[flo
     after_goal = (float(after[4]) ** 2 + float(after[5]) ** 2) ** 0.5 if len(after) > 5 else before_goal
     delta = after_goal - before_goal
     object_speed = (float(after[6]) ** 2 + float(after[7]) ** 2) ** 0.5 if len(after) > 7 else 0.0
-    recent_names = {name for item in history[-8:] for name in item.get("all_events", [])}
+    action_norm = (float(action[0]) ** 2 + float(action[1]) ** 2) ** 0.5 if len(action) >= 2 else 0.0
+    recent_history = history[-8:]
+    current_loss = contact_before and not contact_after
+    prior_loss = any(
+        bool(item.get("contact_before")) and not bool(item.get("contact_after"))
+        for item in recent_history
+    )
+    still_window = [
+        item for item in recent_history[-3:]
+        if item.get("object_speed_bin") == "still"
+        and item.get("goal_distance_delta_sign") == "zero"
+        and float(item.get("action_norm", 0.0) or 0.0) < 0.06
+    ]
+    recovery_history = any(
+        bool(item.get("contact_recently_lost"))
+        and (bool(item.get("object_moving")) or float(item.get("action_norm", 0.0) or 0.0) >= 0.06)
+        for item in recent_history
+    )
     context = {
         "contact_before": contact_before,
         "contact_after": contact_after,
         "contact_present": contact_after,
-        "contact_recently_lost": (not contact_before and "contact_off_failure" in recent_names),
+        "contact_recently_lost": bool(current_loss or prior_loss),
         "collision_detected": collision,
         "object_inside_goal": goal_after,
-        "stagnation_detected": "stagnation_onset" in recent_names,
+        "stagnation_detected": len(still_window) >= 2,
         "goal_distance_delta_sign": "negative" if delta < -1e-9 else ("positive" if delta > 1e-9 else "zero"),
         "object_speed_bin": "moving" if object_speed >= 0.06 else ("slow" if object_speed >= 0.007 else "still"),
-        "recent_recovery_attempt": "recovery_start" in recent_names,
+        "recent_recovery_attempt": bool(recovery_history or (prior_loss and action_norm >= 0.06)),
         "object_moving": object_speed >= 0.06,
-        "action_norm": (float(action[0]) ** 2 + float(action[1]) ** 2) ** 0.5 if len(action) >= 2 else 0.0,
+        "action_norm": action_norm,
         "history_event_count": len(history),
     }
     # These names are useful for model inputs but are not added to the gold
@@ -167,12 +190,11 @@ def build_occurrences(rollout_root: Path, output: Path, repo: Path, split: str, 
                 "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "transition_pair": [assign_cluster(before, refs), assign_cluster(after, refs)],
                 "family_scenario_for_analysis_only": episode.get("family", {}).get("scenario"),
-                "terminal_failure_event": status == "failure_terminal",
-                "stable_success_event": status == "success_terminal",
+                "diagnostic_terminal_status": status,
                 "horizon_censored": status == "censored_unknown",
             }
             rows.append(row)
-            history.append(event)
+            history.append(context)
     write_jsonl(output, rows)
     return {"status": "PASS", "rows": len(rows), "episodes": len({r["episode_id"] for r in rows}), "split": split}
 
@@ -253,9 +275,9 @@ def build_u2_train_occurrences(dataset_root: Path, output: Path, repo: Path) -> 
                 "online_feature_fields": sorted(context), "hidden_or_future_features_used": False,
                 "boundary_source_id": "u2_gold_boundary_diagnostic_only", "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "transition_pair": [src, dst], "family_scenario_for_analysis_only": meta.get("scenario_for_analysis_only"),
-                "terminal_failure_event": status == "failure_terminal", "stable_success_event": status == "success_terminal",
+                "diagnostic_terminal_status": status,
                 "horizon_censored": False, "gold_boundary_diagnostic": bool(boundaries[t]),
             })
-            history.append({"all_events": event_set})
+            history.append(context)
     write_jsonl(output, rows)
     return {"status": "PASS", "rows": len(rows), "episodes": episode_count, "split": "train", "source": str(manifest_path.resolve()), "label_source": "u2_npz.gold_event_id_diagnostic_only", "hidden_or_future_features_used": False}

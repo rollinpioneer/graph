@@ -25,16 +25,29 @@ def _node(graph: dict[str, Any], node_id: str) -> dict[str, Any]:
 
 
 def occurrence_context(row: dict[str, Any]) -> dict[str, Any]:
+    """Return only causal, online-available guard inputs.
+
+    ``terminal_status`` and ``evaluator_event_set`` are labels used after a
+    rollout for scoring.  They must never be copied into the context used to
+    activate a graph guard.  In particular, deriving
+    ``terminal_failure_event`` from ``terminal_status`` makes a terminal guard
+    look perfect while using the answer as an input.
+
+    Horizon flags are retained only when explicitly supplied as runtime
+    censoring metadata.  They are not inferred from the gold terminal label.
+    Missing terminal-event fields therefore remain missing and the guard DSL
+    returns ``ambiguous``.
+    """
     context = dict(row.get("observable_context") or {})
-    status = row.get("terminal_status")
-    context.update({
-        "terminal_failure_event": status == "failure_terminal" or bool(row.get("terminal_failure_event", False)),
-        "stable_success_event": status == "success_terminal" or bool(row.get("stable_success_event", False)),
-        "terminal_success_event": status == "success_terminal" or bool(row.get("terminal_success_event", False)),
-        "horizon_censored": status == "censored_unknown" or bool(row.get("horizon_censored", False)),
-        "horizon": status == "censored_unknown" or bool(row.get("horizon", False)),
-        "nonterminal": status == "nonterminal",
-    })
+    for leaked in (
+        "terminal_failure_event", "stable_success_event", "terminal_success_event",
+        "terminal_status", "evaluator_semantics", "evaluator_event_set",
+        "terminal_reason", "event", "all_events", "gold_mode",
+    ):
+        context.pop(leaked, None)
+    explicit_horizon = row.get("horizon_censored", context.get("horizon_censored", False))
+    context["horizon_censored"] = bool(explicit_horizon)
+    context["horizon"] = bool(row.get("horizon", context.get("horizon", False)))
     if "contact_before" not in context and "contact_present" in context:
         context["contact_before"] = context["contact_present"]
     if "contact_after" not in context and "contact_present" in context:
