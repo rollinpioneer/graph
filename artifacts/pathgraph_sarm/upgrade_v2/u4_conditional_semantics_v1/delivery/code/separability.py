@@ -9,14 +9,14 @@ from .io import read_jsonl, write_csv, write_json
 
 FORBIDDEN = {
     "scenario", "phase", "gold_mode", "future", "outcome", "root_family_id", "episode_id",
-    "terminal_failure_event", "terminal_success_event", "horizon", "contact_loss_in_history",
+    "terminal_failure_event", "terminal_success_event", "horizon", "horizon_censored",
     "evaluator_semantics", "terminal_status", "terminal_reason",
 }
 LABEL_ORDER = (
     "terminal_failure", "failure_event", "recovery_achieved", "recovery_attempt",
     "terminal_success", "progress", "alternative", "dwell", "censored_unknown", "none",
 )
-CONTEXT_KEYS = ("contact_present", "collision_detected", "object_inside_goal", "object_moving")
+CONTEXT_KEYS = ("contact_before", "contact_after", "contact_recently_lost", "collision_detected", "object_inside_goal", "stagnation_detected", "recent_recovery_attempt", "object_moving", "goal_distance_delta_sign", "object_speed_bin")
 
 
 def _label(row: dict[str, Any]) -> str:
@@ -28,7 +28,9 @@ def _numeric_context(context: dict[str, Any], prefix: str = "") -> dict[str, flo
     values: dict[str, float] = {}
     for key in CONTEXT_KEYS:
         value = context.get(key, False)
-        values[f"{prefix}{key}"] = float(bool(value)) if isinstance(value, bool) else float(value or 0.0)
+        if isinstance(value, bool): values[f"{prefix}{key}"] = float(value)
+        elif isinstance(value, (int, float)): values[f"{prefix}{key}"] = float(value)
+        else: values[f"{prefix}{key}={value}"] = 1.0
     for key in ("action_norm",):
         if key in context:
             values[f"{prefix}{key}"] = float(context[key] or 0.0)
@@ -57,15 +59,9 @@ def _feature_rows(rows: list[dict[str, Any]], group: str) -> tuple[list[dict[str
 
 
 def _rule(features: dict[str, Any]) -> str:
-    if features.get("current_horizon", 0.0):
-        return "censored_unknown"
-    if features.get("current_terminal_failure_event", 0.0):
-        return "terminal_failure"
-    if features.get("current_terminal_success_event", 0.0) or features.get("current_object_inside_goal", 0.0):
-        return "terminal_success"
-    if features.get("current_contact_loss_in_history", 0.0):
+    if features.get("current_contact_recently_lost", 0.0):
         return "recovery_attempt"
-    if features.get("current_contact_present", 0.0) and features.get("current_object_moving", 0.0):
+    if features.get("current_contact_after", 0.0) and features.get("current_object_moving", 0.0):
         return "progress"
     return "none"
 
@@ -83,8 +79,12 @@ def _metrics(y_true: list[str], y_pred: list[str], labels: list[str]) -> dict[st
     }
 
 
-def fit_baselines(rows_path, output: Any, table: Any | None = None) -> dict[str, Any]:
+def fit_baselines(rows_path, output: Any, table: Any | None = None, per_pair: Any | None = None, *args: Any, **kwargs: Any) -> dict[str, Any]:
     rows = read_jsonl(rows_path)
+    raw_train_splits = kwargs.get("train_splits", "train,dev_fit")
+    train_splits = set(raw_train_splits if isinstance(raw_train_splits, (list, tuple, set)) else str(raw_train_splits).split(","))
+    train_splits = {str(item).strip() for item in train_splits if str(item).strip()}
+    validation_split = kwargs.get("validation_split", "dev_route")
     try:
         from sklearn.feature_extraction import DictVectorizer
     except Exception as exc:  # pragma: no cover - environment dependent
@@ -92,12 +92,26 @@ def fit_baselines(rows_path, output: Any, table: Any | None = None) -> dict[str,
         write_json(output, payload)
         return payload
     results: list[dict[str, Any]] = []
-    model_names = ("majority", "guard_rules", "logistic", "tree_depth4")
-    for group in ("pair_only", "current", "past8"):
+    model_names = tuple(kwargs.get("models") or ("majority", "guard_rules", "logistic", "tree_depth4"))
+    feature_groups = tuple(kwargs.get("feature_groups") or ("pair_only", "current", "past8"))
+    allowed_models = {"majority", "guard_rules", "logistic", "tree_depth4"}
+    unknown_models = sorted(set(model_names) - allowed_models)
+    if unknown_models:
+        payload = {"schema": "u4r1_separability_v2", "status": "BLOCKED", "reason": f"unsupported models: {unknown_models}"}
+        write_json(output, payload)
+        return payload
+    for group in feature_groups:
+        if group not in {"pair_only", "current", "past8"}:
+            payload = {"schema": "u4r1_separability_v2", "status": "BLOCKED", "reason": f"unsupported feature group: {group}"}
+            write_json(output, payload)
+            return payload
         examples, feature_names = _feature_rows(rows, group)
         families = sorted({str(item["root_family_id"]) for item in examples})
-        validation_families = set(families[::5] or families[-1:])
-        train = [item for item in examples if str(item["root_family_id"]) not in validation_families]
+        row_split = {str(row.get("root_family_id")): str(row.get("split", "dev_fit")) for row in rows}
+        validation_families = {family for family in families if row_split.get(family) == validation_split}
+        if not validation_families:
+            validation_families = set(families[::5] or families[-1:])
+        train = [item for item in examples if str(item["root_family_id"]) not in validation_families and row_split.get(str(item["root_family_id"]), "dev_fit") in train_splits]
         validation = [item for item in examples if str(item["root_family_id"]) in validation_families]
         if not validation:
             validation, train = train, examples
@@ -134,7 +148,7 @@ def fit_baselines(rows_path, output: Any, table: Any | None = None) -> dict[str,
                 "feature_count": len(feature_names),
                 "class_count": len(set(y_train)),
                 "majority_label": majority,
-                "forbidden_feature_violations": 0,
+                "forbidden_feature_violations": sum(1 for name in feature_names if any(token in name.lower() for token in FORBIDDEN)),
                 **_metrics(y_val, predictions, list(LABEL_ORDER)),
             })
     by_key = {(item["feature_group"], item["model"]): item for item in results}
@@ -148,16 +162,30 @@ def fit_baselines(rows_path, output: Any, table: Any | None = None) -> dict[str,
         "rows": len(rows),
         "eligible_family_count": len({x.get("root_family_id") for x in rows}),
         "models": list(model_names),
-        "feature_groups": ["pair_only", "current", "past8"],
+        "feature_groups": list(feature_groups),
         "forbidden_features": sorted(FORBIDDEN),
         "forbidden_feature_violations": 0,
         "label_source": "evaluator_semantics",
         "split_policy": "deterministic family holdout every fifth family; no confirmation families",
         "results": results,
     }
-    write_json(output, payload)
+    if str(output).lower().endswith(".csv"):
+        write_csv(output, results)
+        write_json(output.with_suffix(".json"), payload)
+    else:
+        write_json(output, payload)
     if table:
         write_csv(table, results)
+    if per_pair:
+        # Pair-level validation summary is descriptive and never used for
+        # selecting a graph.
+        pair_rows = []
+        for group in feature_groups:
+            examples, _ = _feature_rows(rows, group)
+            for pair in sorted({str(item["features"].get("pair")) for item in examples}):
+                subset = [item for item in examples if str(item["features"].get("pair")) == pair]
+                pair_rows.append({"feature_group": group, "cluster_pair": pair, "validation_rows": len(subset), "majority_label": max((item["label"] for item in subset), key=[item["label"] for item in subset].count) if subset else "none"})
+        write_csv(per_pair, pair_rows)
     return payload
 
 
@@ -171,5 +199,10 @@ def summarize_mixed(rows_path, output: Any) -> dict[str, Any]:
         labels = sorted({label for x in items for label in x.get("evaluator_semantics", [])})
         if len(labels) > 1:
             mixed.append({"src_cluster_id": pair[0], "dst_cluster_id": pair[1], "labels": labels, "occurrences": len(items), "families": len({x.get("root_family_id") for x in items})})
-    write_json(output, {"schema": "u4r1_mixed_pairs_v1", "mixed_pair_count": len(mixed), "pairs": mixed})
+    payload = {"schema": "u4r1_mixed_pairs_v1", "mixed_pair_count": len(mixed), "pairs": mixed}
+    if str(output).lower().endswith(".csv"):
+        write_csv(output, mixed)
+        write_json(output.with_suffix(".json"), payload)
+    else:
+        write_json(output, payload)
     return {"status": "PASS", "mixed_pair_count": len(mixed)}

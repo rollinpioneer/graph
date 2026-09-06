@@ -399,6 +399,14 @@
   "input_split": "train",
   "nodes": [
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_off_failure": 47,
+        "detour_start": 2,
+        "recovery_start": 125,
+        "stagnation_onset": 6,
+        "terminal_failure": 7
+      },
       "id": "C00",
       "n_segments": 135,
       "observable_predicates": [
@@ -406,26 +414,46 @@
         "object_stationary",
         "collision_detected"
       ],
+      "predicate_distribution": {
+        "collision_detected": 2,
+        "contact_absent": 2,
+        "object_outside_goal": 2,
+        "object_stationary": 2
+      },
       "raw_cluster_id": 0,
       "role": "failure_terminal",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 8,
-      "unknown_fraction": 0.8333333333333334
+      "support_root_families": 29,
+      "unknown_fraction": 0.6191446028513238
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_on": 1,
+        "contact_reestablished": 25,
+        "transport_on": 22
+      },
       "id": "C01",
       "n_segments": 273,
       "observable_predicates": [
         "contact_present",
         "object_stationary"
       ],
+      "predicate_distribution": {},
       "raw_cluster_id": 1,
       "role": "intermediate",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 35,
-      "unknown_fraction": 0.9486146129003271
+      "support_root_families": 44,
+      "unknown_fraction": 0.9670175438596491
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "goal_enter": 471,
+        "stable_success": 471
+      },
       "id": "C02",
       "n_segments": 410,
       "observable_predicates": [
@@ -434,26 +462,57 @@
         "object_stationary",
         "object_moving"
       ],
+      "predicate_distribution": {
+        "collision_absent": 183,
+        "contact_present": 183,
+        "object_inside_goal": 183,
+        "object_stationary": 183
+      },
       "raw_cluster_id": 2,
       "role": "success_terminal",
+      "static_role": "success_terminal",
       "status": "observed",
-      "support_root_families": 70,
-      "unknown_fraction": 0.9585365853658536
+      "support_root_families": 86,
+      "unknown_fraction": 0.3333333333333333
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_on": 562,
+        "contact_reestablished": 7,
+        "recovery_start": 1,
+        "stagnation_onset": 4,
+        "terminal_failure": 2,
+        "transport_on": 267
+      },
       "id": "C03",
       "n_segments": 446,
       "observable_predicates": [
         "contact_present",
         "object_stationary"
       ],
+      "predicate_distribution": {
+        "collision_absent": 289,
+        "contact_present": 289,
+        "object_outside_goal": 289,
+        "object_stationary": 289
+      },
       "raw_cluster_id": 3,
       "role": "start",
+      "static_role": "start",
       "status": "observed",
-      "support_root_families": 79,
-      "unknown_fraction": 0.36322869955156944
+      "support_root_families": 103,
+      "unknown_fraction": 0.747982062780269
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_off_failure": 1,
+        "contact_reestablished": 1,
+        "detour_start": 228,
+        "stagnation_onset": 1,
+        "terminal_failure": 96
+      },
       "id": "C04",
       "n_segments": 208,
       "observable_predicates": [
@@ -461,13 +520,26 @@
         "contact_present",
         "object_stationary"
       ],
+      "predicate_distribution": {
+        "collision_detected": 41,
+        "contact_present": 41,
+        "object_outside_goal": 41,
+        "object_stationary": 41
+      },
       "raw_cluster_id": 4,
       "role": "failure_terminal",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 35,
-      "unknown_fraction": 0.4400113241459395
+      "support_root_families": 59,
+      "unknown_fraction": 0.8320453374549202
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_on": 1,
+        "contact_reestablished": 31,
+        "transport_on": 291
+      },
       "id": "C05",
       "n_segments": 329,
       "observable_predicates": [
@@ -476,26 +548,41 @@
         "collision_detected",
         "object_moving"
       ],
+      "predicate_distribution": {},
       "raw_cluster_id": 5,
       "role": "failure_terminal",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 54,
-      "unknown_fraction": 0.7445288753799392
+      "support_root_families": 73,
+      "unknown_fraction": 0.731442869057548
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_reestablished": 9
+      },
       "id": "C06",
       "n_segments": 264,
       "observable_predicates": [
         "contact_present",
         "object_stationary"
       ],
+      "predicate_distribution": {
+        "collision_absent": 85,
+        "contact_present": 85,
+        "object_outside_goal": 85,
+        "object_stationary": 85
+      },
       "raw_cluster_id": 6,
       "role": "intermediate",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 35,
-      "unknown_fraction": 0.9207279830859376
+      "support_root_families": 52,
+      "unknown_fraction": 0.9961783439490446
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {},
       "id": "C07",
       "n_segments": 137,
       "observable_predicates": [
@@ -503,13 +590,25 @@
         "object_stationary",
         "object_moving"
       ],
+      "predicate_distribution": {
+        "collision_absent": 105,
+        "contact_present": 105,
+        "object_outside_goal": 105,
+        "object_stationary": 105
+      },
       "raw_cluster_id": 7,
       "role": "intermediate",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 35,
+      "support_root_families": 42,
       "unknown_fraction": 1.0
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_on": 2,
+        "contact_reestablished": 58
+      },
       "id": "C08",
       "n_segments": 126,
       "observable_predicates": [
@@ -518,13 +617,17 @@
         "contact_present",
         "collision_detected"
       ],
+      "predicate_distribution": {},
       "raw_cluster_id": 8,
       "role": "failure_terminal",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 28,
-      "unknown_fraction": 0.24603174603174602
+      "support_root_families": 26,
+      "unknown_fraction": 0.04918032786885246
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {},
       "id": "C09",
       "n_segments": 239,
       "observable_predicates": [
@@ -533,24 +636,40 @@
         "object_inside_goal",
         "object_moving"
       ],
+      "predicate_distribution": {},
       "raw_cluster_id": 9,
       "role": "intermediate",
+      "static_role": "intermediate",
       "status": "observed",
       "support_root_families": 35,
-      "unknown_fraction": 0.8560802284651657
+      "unknown_fraction": 1.0
     },
     {
+      "conditional_roles": [],
+      "event_distribution": {
+        "contact_off_failure": 96,
+        "recovery_start": 18,
+        "stagnation_onset": 52,
+        "terminal_failure": 3
+      },
       "id": "C10",
       "n_segments": 84,
       "observable_predicates": [
         "contact_absent",
         "object_stationary"
       ],
+      "predicate_distribution": {
+        "collision_absent": 152,
+        "contact_absent": 152,
+        "object_outside_goal": 152,
+        "object_stationary": 152
+      },
       "raw_cluster_id": 10,
       "role": "failure_terminal",
+      "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 14,
-      "unknown_fraction": 0.0
+      "support_root_families": 46,
+      "unknown_fraction": 0.800942285041225
     }
   ],
   "physical_generalization_eligible": false,

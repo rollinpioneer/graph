@@ -6,46 +6,72 @@
   "compiler": "pre_registered_guard_rules",
   "edges": [
     {
+      "abstain_if_guard_missing": true,
       "dst": "C05",
-      "edge_id": "T000",
-      "guard": null,
-      "id": "T000",
+      "edge_id": "CE000",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "goal_distance_delta_sign",
+              "value": "negative"
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "collision_detected",
+              "value": false
+            }
+          }
+        ]
+      },
+      "id": "CE000",
       "raw_pair": [
         3,
         5
       ],
-      "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
-      "semantic_type": "unknown",
+      "semantic_type": "progress",
       "src": "C03",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 208,
-      "unresolved_reason": ""
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 289,
+      "support_root_families": 49
     },
     {
+      "abstain_if_guard_missing": true,
       "dst": "C02",
-      "edge_id": "T001",
-      "guard": null,
-      "id": "T001",
+      "edge_id": "CE001",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "goal_distance_delta_sign",
+              "value": "negative"
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "collision_detected",
+              "value": false
+            }
+          }
+        ]
+      },
+      "id": "CE001",
       "raw_pair": [
         9,
         2
       ],
-      "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
-      "semantic_type": "unknown",
+      "semantic_type": "progress",
       "src": "C09",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 206,
-      "unresolved_reason": ""
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 206,
+      "support_root_families": 35
     },
     {
       "abstain_if_guard_missing": true,
@@ -78,8 +104,8 @@
       "semantic_type": "progress",
       "src": "C06",
       "status": "observed_train_dev_fit",
-      "support_occurrences": 34,
-      "support_root_families": 9
+      "support_occurrences": 238,
+      "support_root_families": 44
     },
     {
       "dst": "C06",
@@ -92,13 +118,11 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C01",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 335,
+      "support_root_families": 35,
       "transition_count": 196,
       "unresolved_reason": ""
     },
@@ -113,13 +137,11 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C04",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 202,
+      "support_root_families": 35,
       "transition_count": 137,
       "unresolved_reason": ""
     },
@@ -134,36 +156,93 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
       "semantic_type": "unknown",
       "src": "C07",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 206,
+      "support_root_families": 35,
       "transition_count": 137,
       "unresolved_reason": ""
     },
     {
+      "abstain_if_guard_missing": true,
       "dst": "C04",
-      "edge_id": "T006",
-      "guard": null,
-      "id": "T006",
+      "edge_id": "CE006",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "collision_detected",
+          "value": true
+        }
+      },
+      "id": "CE006",
       "raw_pair": [
         5,
         4
       ],
-      "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
+      "semantic_type": "alternative",
       "src": "C05",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 175,
-      "unresolved_reason": ""
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 187,
+      "support_root_families": 34
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C04",
+      "edge_id": "CE007",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "terminal_failure_event",
+          "value": true
+        }
+      },
+      "id": "CE007",
+      "raw_pair": [
+        5,
+        4
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "terminal_failure",
+      "src": "C05",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 84,
+      "support_root_families": 14
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C04",
+      "edge_id": "CE008",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_before",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_after",
+              "value": false
+            }
+          }
+        ]
+      },
+      "id": "CE008",
+      "raw_pair": [
+        5,
+        4
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "failure_event",
+      "src": "C05",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
     },
     {
       "dst": "C09",
@@ -176,8 +255,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C04",
       "status": "observed",
@@ -187,25 +264,38 @@
       "unresolved_reason": ""
     },
     {
+      "abstain_if_guard_missing": true,
       "dst": "C01",
-      "edge_id": "T008",
-      "guard": null,
-      "id": "T008",
+      "edge_id": "CE010",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "goal_distance_delta_sign",
+              "value": "negative"
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "collision_detected",
+              "value": false
+            }
+          }
+        ]
+      },
+      "id": "CE010",
       "raw_pair": [
         3,
         1
       ],
-      "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
-      "semantic_type": "unknown",
+      "semantic_type": "progress",
       "src": "C03",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 128,
-      "unresolved_reason": ""
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 22,
+      "support_root_families": 9
     },
     {
       "dst": "C06",
@@ -218,188 +308,18 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
       "semantic_type": "unknown",
       "src": "C06",
       "status": "observed",
-      "support_occurrences": 45,
-      "support_root_families": 10,
+      "support_occurrences": 1955,
+      "support_root_families": 45,
       "transition_count": 57,
       "unresolved_reason": ""
     },
     {
-      "dst": "C08",
-      "edge_id": "T010",
-      "guard": null,
-      "id": "T010",
-      "raw_pair": [
-        3,
-        8
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
-      "semantic_type": "unknown",
-      "src": "C03",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 96,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C09",
-      "edge_id": "T011",
-      "guard": null,
-      "id": "T011",
-      "raw_pair": [
-        9,
-        9
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
-      "semantic_type": "unknown",
-      "src": "C09",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 33,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C01",
-      "edge_id": "T012",
-      "guard": null,
-      "id": "T012",
-      "raw_pair": [
-        1,
-        1
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
-      "src": "C01",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 53,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C05",
-      "edge_id": "T013",
-      "guard": null,
-      "id": "T013",
-      "raw_pair": [
-        5,
-        5
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
-      "src": "C05",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 55,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C01",
-      "edge_id": "T014",
-      "guard": null,
-      "id": "T014",
-      "raw_pair": [
-        8,
-        1
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
-      "src": "C08",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 53,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C05",
-      "edge_id": "T015",
-      "guard": null,
-      "id": "T015",
-      "raw_pair": [
-        10,
-        5
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "unknown",
-      "semantic_type": "unknown",
-      "src": "C10",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 31,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C05",
-      "edge_id": "T016",
-      "guard": null,
-      "id": "T016",
-      "raw_pair": [
-        8,
-        5
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
-      "src": "C08",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 35,
-      "unresolved_reason": ""
-    },
-    {
-      "dst": "C04",
-      "edge_id": "T017",
-      "guard": null,
-      "id": "T017",
-      "raw_pair": [
-        8,
-        4
-      ],
-      "semantic_distribution": {},
-      "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
-      "src": "C08",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 20,
-      "unresolved_reason": ""
-    },
-    {
       "abstain_if_guard_missing": true,
-      "dst": "C03",
-      "edge_id": "CE018",
+      "dst": "C08",
+      "edge_id": "CE012",
       "guard": {
         "all_of": [
           {
@@ -425,7 +345,215 @@
           }
         ]
       },
+      "id": "CE012",
+      "raw_pair": [
+        3,
+        8
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "recovery_achieved",
+      "src": "C03",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
+    },
+    {
+      "dst": "C09",
+      "edge_id": "T011",
+      "guard": null,
+      "id": "T011",
+      "raw_pair": [
+        9,
+        9
+      ],
+      "semantic_distribution": {},
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "unknown",
+      "src": "C09",
+      "status": "observed",
+      "support_occurrences": 844,
+      "support_root_families": 35,
+      "transition_count": 33,
+      "unresolved_reason": ""
+    },
+    {
+      "dst": "C01",
+      "edge_id": "T012",
+      "guard": null,
+      "id": "T012",
+      "raw_pair": [
+        1,
+        1
+      ],
+      "semantic_distribution": {},
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "unknown",
+      "src": "C01",
+      "status": "observed",
+      "support_occurrences": 986,
+      "support_root_families": 35,
+      "transition_count": 53,
+      "unresolved_reason": ""
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C05",
+      "edge_id": "CE015",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "goal_distance_delta_sign",
+              "value": "negative"
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "collision_detected",
+              "value": false
+            }
+          }
+        ]
+      },
+      "id": "CE015",
+      "raw_pair": [
+        5,
+        5
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "progress",
+      "src": "C05",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
+    },
+    {
+      "dst": "C01",
+      "edge_id": "T014",
+      "guard": null,
+      "id": "T014",
+      "raw_pair": [
+        8,
+        1
+      ],
+      "semantic_distribution": {},
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "unknown",
+      "src": "C08",
+      "status": "observed",
+      "support_occurrences": 26,
+      "support_root_families": 11,
+      "transition_count": 53,
+      "unresolved_reason": ""
+    },
+    {
+      "dst": "C05",
+      "edge_id": "T015",
+      "guard": null,
+      "id": "T015",
+      "raw_pair": [
+        10,
+        5
+      ],
+      "semantic_distribution": {},
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "unknown",
+      "src": "C10",
+      "status": "observed",
+      "support_occurrences": 0,
+      "support_root_families": 0,
+      "transition_count": 31,
+      "unresolved_reason": ""
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C05",
+      "edge_id": "CE018",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "goal_distance_delta_sign",
+              "value": "negative"
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "collision_detected",
+              "value": false
+            }
+          }
+        ]
+      },
       "id": "CE018",
+      "raw_pair": [
+        8,
+        5
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "progress",
+      "src": "C08",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C04",
+      "edge_id": "CE019",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "collision_detected",
+          "value": true
+        }
+      },
+      "id": "CE019",
+      "raw_pair": [
+        8,
+        4
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "alternative",
+      "src": "C08",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 6,
+      "support_root_families": 6
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C03",
+      "edge_id": "CE020",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_before",
+              "value": false
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_after",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_recently_lost",
+              "value": true
+            }
+          }
+        ]
+      },
+      "id": "CE020",
       "raw_pair": [
         10,
         3
@@ -438,25 +566,164 @@
       "support_root_families": 4
     },
     {
+      "abstain_if_guard_missing": true,
+      "dst": "C03",
+      "edge_id": "CE021",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "stagnation_detected",
+          "value": true
+        }
+      },
+      "id": "CE021",
+      "raw_pair": [
+        10,
+        3
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "dwell",
+      "src": "C10",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C03",
+      "edge_id": "CE022",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_after",
+              "value": false
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_recently_lost",
+              "value": true
+            }
+          }
+        ]
+      },
+      "id": "CE022",
+      "raw_pair": [
+        10,
+        3
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "recovery_attempt",
+      "src": "C10",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
+    },
+    {
+      "abstain_if_guard_missing": true,
       "dst": "C00",
-      "edge_id": "T019",
-      "guard": null,
-      "id": "T019",
+      "edge_id": "CE023",
+      "guard": {
+        "all_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_after",
+              "value": false
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "contact_recently_lost",
+              "value": true
+            }
+          }
+        ]
+      },
+      "id": "CE023",
       "raw_pair": [
         0,
         0
       ],
-      "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
-      "semantic_type": "unknown",
+      "semantic_type": "recovery_attempt",
       "src": "C00",
-      "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
-      "transition_count": 125,
-      "unresolved_reason": ""
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 47,
+      "support_root_families": 17
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C00",
+      "edge_id": "CE024",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "stagnation_detected",
+          "value": true
+        }
+      },
+      "id": "CE024",
+      "raw_pair": [
+        0,
+        0
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "dwell",
+      "src": "C00",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 6,
+      "support_root_families": 5
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C00",
+      "edge_id": "CE025",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "terminal_failure_event",
+          "value": true
+        }
+      },
+      "id": "CE025",
+      "raw_pair": [
+        0,
+        0
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "terminal_failure",
+      "src": "C00",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 6,
+      "support_root_families": 6
+    },
+    {
+      "abstain_if_guard_missing": true,
+      "dst": "C00",
+      "edge_id": "CE026",
+      "guard": {
+        "field": {
+          "comparison": "==",
+          "name": "collision_detected",
+          "value": true
+        }
+      },
+      "id": "CE026",
+      "raw_pair": [
+        0,
+        0
+      ],
+      "semantic_label_source": "evaluator_semantics",
+      "semantic_type": "alternative",
+      "src": "C00",
+      "status": "observed_train_dev_fit",
+      "support_occurrences": 1,
+      "support_root_families": 1
     },
     {
       "dst": "C00",
@@ -469,8 +736,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C08",
       "status": "observed",
@@ -490,20 +755,18 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "unknown",
       "semantic_type": "unknown",
       "src": "C10",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 1,
+      "support_root_families": 1,
       "transition_count": 27,
       "unresolved_reason": ""
     },
     {
       "abstain_if_guard_missing": true,
       "dst": "C04",
-      "edge_id": "CE022",
+      "edge_id": "CE029",
       "guard": {
         "field": {
           "comparison": "==",
@@ -511,7 +774,7 @@
           "value": true
         }
       },
-      "id": "CE022",
+      "id": "CE029",
       "raw_pair": [
         3,
         4
@@ -520,13 +783,13 @@
       "semantic_type": "alternative",
       "src": "C03",
       "status": "observed_train_dev_fit",
-      "support_occurrences": 23,
-      "support_root_families": 7
+      "support_occurrences": 24,
+      "support_root_families": 8
     },
     {
       "abstain_if_guard_missing": true,
       "dst": "C04",
-      "edge_id": "CE023",
+      "edge_id": "CE030",
       "guard": {
         "field": {
           "comparison": "==",
@@ -534,7 +797,7 @@
           "value": true
         }
       },
-      "id": "CE023",
+      "id": "CE030",
       "raw_pair": [
         3,
         4
@@ -557,13 +820,11 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
       "semantic_type": "unknown",
       "src": "C05",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 36,
+      "support_root_families": 19,
       "transition_count": 9,
       "unresolved_reason": ""
     },
@@ -578,8 +839,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C08",
       "status": "observed",
@@ -599,8 +858,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C01",
       "status": "observed",
@@ -620,8 +877,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "unknown",
       "semantic_type": "unknown",
       "src": "C03",
       "status": "observed",
@@ -641,13 +896,11 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
       "semantic_type": "unknown",
       "src": "C06",
       "status": "observed",
-      "support_occurrences": 0,
-      "support_root_families": 0,
+      "support_occurrences": 152,
+      "support_root_families": 35,
       "transition_count": 3,
       "unresolved_reason": ""
     },
@@ -662,8 +915,6 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "mixed",
       "semantic_type": "unknown",
       "src": "C05",
       "status": "unresolved",
@@ -683,20 +934,14 @@
       ],
       "semantic_distribution": {},
       "semantic_label_source": "evaluator_semantics",
-      "semantic_provenance": "train_dev_fit_only",
-      "semantic_status": "proposed",
       "semantic_type": "unknown",
       "src": "C04",
       "status": "unresolved",
-      "support_occurrences": 2,
-      "support_root_families": 1,
+      "support_occurrences": 1600,
+      "support_root_families": 36,
       "transition_count": 2,
       "unresolved_reason": "unresolved_rare_edge"
     }
-  ],
-  "fit_splits": [
-    "train",
-    "dev_fit"
   ],
   "graph_id": "G3_guard_rule_multigraph",
   "guard_dsl_version": "u4r1_guard_dsl_v2",
@@ -706,7 +951,11 @@
     {
       "conditional_roles": [],
       "event_distribution": {
-        "detour_start": 1
+        "contact_off_failure": 47,
+        "detour_start": 2,
+        "recovery_start": 125,
+        "stagnation_onset": 6,
+        "terminal_failure": 7
       },
       "id": "C00",
       "n_segments": 135,
@@ -725,12 +974,16 @@
       "role": "failure_terminal",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 1,
-      "unknown_fraction": 0.5
+      "support_root_families": 29,
+      "unknown_fraction": 0.6191446028513238
     },
     {
       "conditional_roles": [],
-      "event_distribution": {},
+      "event_distribution": {
+        "contact_on": 1,
+        "contact_reestablished": 25,
+        "transport_on": 22
+      },
       "id": "C01",
       "n_segments": 273,
       "observable_predicates": [
@@ -742,14 +995,14 @@
       "role": "intermediate",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 0,
-      "unknown_fraction": null
+      "support_root_families": 44,
+      "unknown_fraction": 0.9670175438596491
     },
     {
       "conditional_roles": [],
       "event_distribution": {
-        "goal_enter": 61,
-        "stable_success": 61
+        "goal_enter": 471,
+        "stable_success": 471
       },
       "id": "C02",
       "n_segments": 410,
@@ -769,15 +1022,18 @@
       "role": "success_terminal",
       "static_role": "success_terminal",
       "status": "observed",
-      "support_root_families": 16,
+      "support_root_families": 86,
       "unknown_fraction": 0.3333333333333333
     },
     {
       "conditional_roles": [],
       "event_distribution": {
-        "contact_on": 76,
-        "contact_reestablished": 5,
-        "transport_on": 76
+        "contact_on": 562,
+        "contact_reestablished": 7,
+        "recovery_start": 1,
+        "stagnation_onset": 4,
+        "terminal_failure": 2,
+        "transport_on": 267
       },
       "id": "C03",
       "n_segments": 446,
@@ -795,15 +1051,17 @@
       "role": "start",
       "static_role": "start",
       "status": "observed",
-      "support_root_families": 19,
-      "unknown_fraction": 0.7197231833910035
+      "support_root_families": 103,
+      "unknown_fraction": 0.747982062780269
     },
     {
       "conditional_roles": [],
       "event_distribution": {
+        "contact_off_failure": 1,
         "contact_reestablished": 1,
-        "detour_start": 27,
-        "terminal_failure": 12
+        "detour_start": 228,
+        "stagnation_onset": 1,
+        "terminal_failure": 96
       },
       "id": "C04",
       "n_segments": 208,
@@ -822,12 +1080,16 @@
       "role": "failure_terminal",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 10,
-      "unknown_fraction": 0.04878048780487805
+      "support_root_families": 59,
+      "unknown_fraction": 0.8320453374549202
     },
     {
       "conditional_roles": [],
-      "event_distribution": {},
+      "event_distribution": {
+        "contact_on": 1,
+        "contact_reestablished": 31,
+        "transport_on": 291
+      },
       "id": "C05",
       "n_segments": 329,
       "observable_predicates": [
@@ -841,8 +1103,8 @@
       "role": "failure_terminal",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 0,
-      "unknown_fraction": null
+      "support_root_families": 73,
+      "unknown_fraction": 0.731442869057548
     },
     {
       "conditional_roles": [],
@@ -865,8 +1127,8 @@
       "role": "intermediate",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 14,
-      "unknown_fraction": 0.8941176470588236
+      "support_root_families": 52,
+      "unknown_fraction": 0.9961783439490446
     },
     {
       "conditional_roles": [],
@@ -888,12 +1150,15 @@
       "role": "intermediate",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 7,
+      "support_root_families": 42,
       "unknown_fraction": 1.0
     },
     {
       "conditional_roles": [],
-      "event_distribution": {},
+      "event_distribution": {
+        "contact_on": 2,
+        "contact_reestablished": 58
+      },
       "id": "C08",
       "n_segments": 126,
       "observable_predicates": [
@@ -907,8 +1172,8 @@
       "role": "failure_terminal",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 0,
-      "unknown_fraction": null
+      "support_root_families": 26,
+      "unknown_fraction": 0.04918032786885246
     },
     {
       "conditional_roles": [],
@@ -926,16 +1191,16 @@
       "role": "intermediate",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 0,
-      "unknown_fraction": null
+      "support_root_families": 35,
+      "unknown_fraction": 1.0
     },
     {
       "conditional_roles": [],
       "event_distribution": {
-        "contact_off_failure": 18,
+        "contact_off_failure": 96,
         "recovery_start": 18,
-        "stagnation_onset": 3,
-        "terminal_failure": 2
+        "stagnation_onset": 52,
+        "terminal_failure": 3
       },
       "id": "C10",
       "n_segments": 84,
@@ -953,13 +1218,13 @@
       "role": "failure_terminal",
       "static_role": "intermediate",
       "status": "observed",
-      "support_root_families": 9,
-      "unknown_fraction": 0.7302631578947368
+      "support_root_families": 46,
+      "unknown_fraction": 0.800942285041225
     }
   ],
   "physical_generalization_eligible": false,
   "proposed_semantics_used_as_gold": false,
-  "schema": "u4b_g1_semantic_only_v1",
+  "schema": "u3_data_only_transition_graph_v1",
   "scope": "same stochastic simulator family only",
   "source_candidate_id": "data_only",
   "start_cluster_handle": "C03",
