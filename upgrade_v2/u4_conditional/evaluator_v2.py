@@ -84,10 +84,40 @@ def graph_metrics(graph: dict[str, Any], rows: list[dict[str, Any]]) -> dict[str
         by_family[str(row.get("root_family_id"))].append(evaluate_occurrence(graph, row))
     family_rows = []
     for family, items in sorted(by_family.items()):
-        typed = sum(bool(x.get("active_typed_edges")) for x in items)
-        failure = sum("failure_event" in x.get("evaluator_semantics", []) for x in items)
-        recovery = sum("recovery_achieved" in x.get("evaluator_semantics", []) for x in items)
-        terminal = [x for x in items if x.get("terminal_status") in {"failure_terminal", "success_terminal", "censored_unknown"}]
-        false_claim = sum(x.get("terminal_status") != "failure_terminal" for x in terminal)
-        family_rows.append({"root_family_id": family, "transition_coverage": sum(bool(x.get("src_cluster_id") is not None and x.get("dst_cluster_id") is not None) for x in items) / len(items) if items else None, "typed_occurrence_coverage": typed / len(items) if items else None, "failure_event_recall": failure / len(items) if items else None, "recovery_achieved_recall": recovery / len(items) if items else None, "false_terminal_claim_rate": false_claim / len(terminal) if terminal else None})
+        typed = sum(any(edge.get("semantic_type") not in {None, "unknown"} for edge in x.get("active_typed_edges", [])) for x in items)
+        predicted_labels = [
+            {str(edge.get("semantic_type", "unknown")) for edge in x.get("active_typed_edges", [])}
+            for x in items
+        ]
+        failure_den = sum("failure_event" in x.get("evaluator_semantics", []) for x in items)
+        recovery_den = sum("recovery_achieved" in x.get("evaluator_semantics", []) for x in items)
+        failure_tp = sum("failure_event" in x.get("evaluator_semantics", []) and "failure_event" in predicted_labels[index] for index, x in enumerate(items))
+        recovery_tp = sum("recovery_achieved" in x.get("evaluator_semantics", []) and "recovery_achieved" in predicted_labels[index] for index, x in enumerate(items))
+        terminal_claims = [
+            x for x in items
+            if x.get("node_role_evaluation", {}).get("occurrence_terminal_status")
+            in {"failure_terminal", "success_terminal", "terminal_role_without_terminal_occurrence"}
+        ]
+        failure_terminal_claims = [
+            x for x in terminal_claims
+            if x.get("node_role_evaluation", {}).get("occurrence_terminal_status")
+            in {"failure_terminal", "terminal_role_without_terminal_occurrence"}
+        ]
+        false_claim = sum(
+            x.get("node_role_evaluation", {}).get("occurrence_terminal_status") == "terminal_role_without_terminal_occurrence"
+            for x in failure_terminal_claims
+        )
+        family_rows.append({
+            "root_family_id": family,
+            "transition_coverage": sum(bool(x.get("src_cluster_id") is not None and x.get("dst_cluster_id") is not None) for x in items) / len(items) if items else None,
+            "typed_occurrence_coverage": typed / len(items) if items else None,
+            "failure_event_recall": failure_tp / failure_den if failure_den else None,
+            "recovery_achieved_recall": recovery_tp / recovery_den if recovery_den else None,
+            "failure_event_precision": failure_tp / sum("failure_event" in labels for labels in predicted_labels) if any("failure_event" in labels for labels in predicted_labels) else None,
+            "recovery_achieved_precision": recovery_tp / sum("recovery_achieved" in labels for labels in predicted_labels) if any("recovery_achieved" in labels for labels in predicted_labels) else None,
+            "failure_event_denominator": failure_den,
+            "recovery_achieved_denominator": recovery_den,
+            "terminal_claim_coverage": len(failure_terminal_claims) / len(items) if items else None,
+            "false_terminal_claim_rate": false_claim / len(failure_terminal_claims) if failure_terminal_claims else None,
+        })
     return {"schema": "u4r1_evaluator_metrics_v1", "graph_id": graph.get("graph_id", graph.get("schema", "graph")), "rows": len(rows), "eligible_family_count": len(family_rows), "family_rows": family_rows, "horizon_excluded_from_failure": True, "label_origin": "simulator_info.events_and_explicit_terminal_reason"}

@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import unittest
+import tempfile
+from pathlib import Path
 
 from .evaluator_v2 import evaluate_node_role, matching_edges
 from .guard_dsl import GuardError, evaluate_guard, validate_guard
+from .confirm import build_lock, evaluate as evaluate_confirmation
+from .io import write_json, write_jsonl
 
 
 class GuardAndEvaluatorTest(unittest.TestCase):
@@ -57,6 +61,35 @@ class GuardAndEvaluatorTest(unittest.TestCase):
         result = evaluate_occurrence(graph, row)
         self.assertIsNone(result["proposed_semantics"])
         self.assertEqual(result["evaluator_semantics"], ["dwell"])
+
+    def test_confirmation_gate_blocks_missing_lock(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            result = evaluate_confirmation([], root / "missing.jsonl", root / "metrics.csv", root / "paired.csv", root / "family.csv")
+            self.assertEqual(result["status"], "BLOCKED")
+
+    def test_confirmation_gate_blocks_hash_mismatch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            graph = root / "graph.json"; selection = root / "selection.json"; protocol = root / "protocol.json"; family = root / "family.json"
+            write_json(graph, {"graph_id": "G", "nodes": [], "edges": []})
+            write_json(selection, {"selected_graph": "G"}); write_json(protocol, {"version": "test"}); write_json(family, {"families": 1})
+            lock = root / "lock.json"; build_lock(lock, [graph], selection, protocol, family)
+            write_json(family, {"families": 2})
+            result = evaluate_confirmation([graph], root / "missing.jsonl", root / "metrics.csv", root / "paired.csv", root / "family.csv", lock, family)
+            self.assertEqual(result["status"], "BLOCKED")
+
+    def test_confirmation_gate_passes_with_locked_inputs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            graph = root / "graph.json"; selection = root / "selection.json"; protocol = root / "protocol.json"; family = root / "family.json"
+            write_json(graph, {"graph_id": "G", "nodes": [], "edges": []})
+            write_json(selection, {"selected_graph": "G"}); write_json(protocol, {"version": "test"}); write_json(family, {"families": 1})
+            lock = root / "lock.json"; build_lock(lock, [graph], selection, protocol, family)
+            occurrences = root / "occurrences.jsonl"
+            write_jsonl(occurrences, [{"root_family_id": "f", "src_cluster_id": 1, "dst_cluster_id": 2, "terminal_status": "nonterminal", "evaluator_semantics": [], "observable_context": {}}])
+            result = evaluate_confirmation([graph], occurrences, root / "metrics.csv", root / "paired.csv", root / "family.csv", lock, family)
+            self.assertEqual(result["status"], "PASS")
 
 
 if __name__ == "__main__":

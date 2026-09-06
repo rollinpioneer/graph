@@ -612,6 +612,47 @@
       "unknown_fraction": 0.36322869955156944
     },
     {
+      "conditional_role_guard": {
+        "any_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "terminal_failure_event",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "horizon",
+              "value": true
+            }
+          }
+        ]
+      },
+      "conditional_roles": [
+        {
+          "guard": {
+            "any_of": [
+              {
+                "field": {
+                  "comparison": "==",
+                  "name": "terminal_failure_event",
+                  "value": true
+                }
+              },
+              {
+                "field": {
+                  "comparison": "==",
+                  "name": "horizon",
+                  "value": true
+                }
+              }
+            ]
+          },
+          "role": "failure_terminal"
+        }
+      ],
       "id": "C04",
       "n_segments": 208,
       "observable_predicates": [
@@ -620,7 +661,26 @@
         "object_stationary"
       ],
       "raw_cluster_id": 4,
-      "role": "failure_terminal",
+      "role": "conditional_terminal",
+      "role_condition": {
+        "any_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "terminal_failure_event",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "horizon",
+              "value": true
+            }
+          }
+        ]
+      },
+      "static_role": "intermediate",
       "status": "observed",
       "support_root_families": 35,
       "unknown_fraction": 0.4400113241459395
@@ -698,6 +758,47 @@
       "unknown_fraction": 0.8560802284651657
     },
     {
+      "conditional_role_guard": {
+        "any_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "terminal_failure_event",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "horizon",
+              "value": true
+            }
+          }
+        ]
+      },
+      "conditional_roles": [
+        {
+          "guard": {
+            "any_of": [
+              {
+                "field": {
+                  "comparison": "==",
+                  "name": "terminal_failure_event",
+                  "value": true
+                }
+              },
+              {
+                "field": {
+                  "comparison": "==",
+                  "name": "horizon",
+                  "value": true
+                }
+              }
+            ]
+          },
+          "role": "failure_terminal"
+        }
+      ],
       "id": "C10",
       "n_segments": 84,
       "observable_predicates": [
@@ -705,7 +806,26 @@
         "object_stationary"
       ],
       "raw_cluster_id": 10,
-      "role": "failure_terminal",
+      "role": "conditional_terminal",
+      "role_condition": {
+        "any_of": [
+          {
+            "field": {
+              "comparison": "==",
+              "name": "terminal_failure_event",
+              "value": true
+            }
+          },
+          {
+            "field": {
+              "comparison": "==",
+              "name": "horizon",
+              "value": true
+            }
+          }
+        ]
+      },
+      "static_role": "intermediate",
       "status": "observed",
       "support_root_families": 14,
       "unknown_fraction": 0.0

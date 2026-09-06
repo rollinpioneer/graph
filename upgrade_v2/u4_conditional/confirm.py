@@ -45,7 +45,24 @@ def build_lock(output: Path, graph_paths: list[Path], selection: Path, protocol:
     return {"status": "PASS", "lock": str(output), "input_count": len(inputs), "selected_graph": payload["selected_graph"]}
 
 
-def evaluate(graph_paths: list[Path], occurrences: Path, output: Path, paired: Path, family_table: Path) -> dict[str, Any]:
+def evaluate(
+    graph_paths: list[Path],
+    occurrences: Path,
+    output: Path,
+    paired: Path,
+    family_table: Path,
+    pipeline_lock: Path | None = None,
+    family_lock: Path | None = None,
+) -> dict[str, Any]:
+    if pipeline_lock is None or family_lock is None:
+        result = {"status": "BLOCKED", "reason": "confirmation requires final pipeline lock and family lock"}
+        write_json(output.with_suffix(".json"), result)
+        return result
+    gate = verify_lock(pipeline_lock, family_lock)
+    if gate["status"] != "PASS":
+        result = {"status": "BLOCKED", "reason": "confirmation gate failed", "gate": gate}
+        write_json(output.with_suffix(".json"), result)
+        return result
     rows = read_jsonl(occurrences)
     metrics = []
     family_rows = []
@@ -70,5 +87,5 @@ def evaluate(graph_paths: list[Path], occurrences: Path, output: Path, paired: P
         effect = right - left if isinstance(left, float) and isinstance(right, float) else None
         paired_rows.append({"comparison": "G2_minus_G1", "metric": field, "effect": effect, "ci_low": effect, "ci_high": effect, "paired_family_count": len({x.get("root_family_id") for x in family_rows if x.get("graph_id") == "G1_semantic_only"}), "bootstrap_resamples": 5000 if effect is not None else 0, "status": "estimable" if effect is not None else "not_estimable", "bootstrap_unit": "root_family_id"})
     write_csv(paired, paired_rows)
-    write_json(output.with_suffix(".json"), {"schema": "u4r1_confirmation_metrics_v1", "graphs": metrics, "paired_effects": paired_rows, "confirmation_frozen": True, "horizon_is_censored": True})
-    return {"status": "PASS", "graphs": metrics, "paired_effects": paired_rows}
+    write_json(output.with_suffix(".json"), {"schema": "u4r1_confirmation_metrics_v1", "graphs": metrics, "paired_effects": paired_rows, "confirmation_frozen": True, "horizon_is_censored": True, "confirmation_gate": gate})
+    return {"status": "PASS", "graphs": metrics, "paired_effects": paired_rows, "confirmation_gate": gate}

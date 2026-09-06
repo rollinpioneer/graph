@@ -75,8 +75,6 @@ def observable_context(before: list[float], action: list[float], history: list[d
         "collision_detected": bool(len(before) > 13 and float(before[13]) >= 0.5),
         "object_inside_goal": bool(len(before) > 14 and float(before[14]) >= 0.5),
         "object_moving": bool(len(before) > 7 and (float(before[6]) ** 2 + float(before[7]) ** 2) ** 0.5 >= 0.06),
-        "history_event_count": len(history),
-        "contact_loss_in_history": any("contact_off_failure" in x.get("all_events", []) for x in history),
         "action_norm": (float(action[0]) ** 2 + float(action[1]) ** 2) ** 0.5 if len(action) >= 2 else 0.0,
     }
     return context
@@ -112,12 +110,6 @@ def build_occurrences(rollout_root: Path, output: Path, repo: Path, split: str, 
             if status == "censored_unknown":
                 semantics.append("censored_unknown")
             context = observable_context(before, actions[index], history)
-            context.update({
-                "terminal_failure_event": status == "failure_terminal",
-                "terminal_success_event": status == "success_terminal",
-                "horizon": status == "censored_unknown",
-                "nonterminal": status == "nonterminal",
-            })
             row = {
                 "occurrence_id": f"{episode['episode_id']}:t{index}",
                 "episode_id": episode["episode_id"],
@@ -143,7 +135,7 @@ def build_occurrences(rollout_root: Path, output: Path, repo: Path, split: str, 
                 "known_state_budget": True,
                 "online_feature_fields": sorted(context),
                 "hidden_or_future_features_used": False,
-                "boundary_source_id": "u4b_torch_recovery_v2_locked_or_historical_cache",
+                "boundary_source_id": (prediction or {}).get("boundary_source_id", "u4b_torch_recovery_v2_locked_or_historical_cache"),
                 "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "transition_pair": [assign_cluster(before, refs), assign_cluster(after, refs)],
                 "family_scenario_for_analysis_only": episode.get("family", {}).get("scenario"),

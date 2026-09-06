@@ -58,9 +58,15 @@ def build_graphs(raw_graph: Path, occurrences: Path, output_dir: Path, edit_log:
     ]}
     validate_guard(terminal_guard)
     for node in g2.get("nodes", []):
-        if node.get("id") in {"C04", "C10"} and node.get("role_condition"):
+        if node.get("id") in {"C04", "C10"}:
+            # A failure-looking cluster is not a universal terminal state.
+            # Terminal status is decided per occurrence from observable events;
+            # horizon remains censored by evaluator_v2 even though the guard
+            # is allowed to route it for analysis.
+            node["static_role"] = "intermediate"
+            node["conditional_roles"] = [{"role": "failure_terminal", "guard": terminal_guard}]
+            node["role_condition"] = terminal_guard
             node["conditional_role_guard"] = terminal_guard
-            node["static_role"] = node.get("role")
             node["role"] = "conditional_terminal"
     for edge in list(g2.get("edges", [])):
         pair = _pair(edge)
