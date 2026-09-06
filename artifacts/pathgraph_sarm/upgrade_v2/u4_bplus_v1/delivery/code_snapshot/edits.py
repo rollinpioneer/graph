@@ -50,6 +50,22 @@ def freeze(graph_paths, input_selection, route, claims, edit_log, family_lock, o
     files = {}
     for path in graph_paths + [input_selection, route, claims, edit_log, family_lock]:
         if path and path.is_file(): files[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
-    lock = {"schema": "u4b_final_pipeline_lock_v1", "graphs": [str(x) for x in graph_paths], "input_hashes": files, "confirmation_locked": True, "confirm_anchor_rule": "first_eligible_per_claim_family", "query_order_locked": True, "edit_budget": 6, "fallback_rule": "retain_unknown_and_disclose", "metric_version": "u4b_metrics_v1"}
+    selection = read_json(input_selection) if input_selection and input_selection.is_file() else {}
+    lock = {
+        "schema": "u4b_final_pipeline_lock_v2",
+        "graphs": [str(x) for x in graph_paths],
+        "input_selection": str(input_selection.resolve()) if input_selection else None,
+        "boundary_source": selection.get("boundary_source", "frozen_rule_fallback"),
+        "automatic_boundary_status": selection.get("automatic_boundary_status", "not_computed"),
+        "checkpoint": selection.get("checkpoint"),
+        "checkpoint_sha256": selection.get("checkpoint_sha256"),
+        "input_hashes": files,
+        "confirmation_locked": True,
+        "confirm_anchor_rule": "first_eligible_per_claim_family",
+        "query_order_locked": True,
+        "edit_budget": 6,
+        "fallback_rule": "retain_unknown_and_disclose",
+        "metric_version": "u4b_metrics_v1",
+    }
     write_json(output, lock); report.parent.mkdir(parents=True, exist_ok=True); report.write_text("# Final pipeline lock\n\n- confirmation is now locked; no graph, mapper, boundary or semantic rule changes are allowed.\n", encoding="utf-8")
     return {"status": "PASS", "confirmation_locked": True, "input_count": len(files)}

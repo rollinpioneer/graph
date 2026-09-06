@@ -69,14 +69,35 @@ def terminal_status(event: dict[str, Any], episode: dict[str, Any], index: int) 
     return "nonterminal", False, False
 
 
-def observable_context(before: list[float], action: list[float], history: list[dict[str, Any]]) -> dict[str, Any]:
+def observable_context(before: list[float], after: list[float], action: list[float], history: list[dict[str, Any]]) -> dict[str, Any]:
+    contact_before = bool(len(before) > 12 and float(before[12]) >= 0.5)
+    contact_after = bool(len(after) > 12 and float(after[12]) >= 0.5)
+    collision = bool(len(after) > 13 and float(after[13]) >= 0.5)
+    goal_before = bool(len(before) > 14 and float(before[14]) >= 0.5)
+    goal_after = bool(len(after) > 14 and float(after[14]) >= 0.5)
+    before_goal = (float(before[4]) ** 2 + float(before[5]) ** 2) ** 0.5 if len(before) > 5 else 0.0
+    after_goal = (float(after[4]) ** 2 + float(after[5]) ** 2) ** 0.5 if len(after) > 5 else before_goal
+    delta = after_goal - before_goal
+    object_speed = (float(after[6]) ** 2 + float(after[7]) ** 2) ** 0.5 if len(after) > 7 else 0.0
+    recent_names = {name for item in history[-8:] for name in item.get("all_events", [])}
     context = {
-        "contact_present": bool(len(before) > 12 and float(before[12]) >= 0.5),
-        "collision_detected": bool(len(before) > 13 and float(before[13]) >= 0.5),
-        "object_inside_goal": bool(len(before) > 14 and float(before[14]) >= 0.5),
-        "object_moving": bool(len(before) > 7 and (float(before[6]) ** 2 + float(before[7]) ** 2) ** 0.5 >= 0.06),
+        "contact_before": contact_before,
+        "contact_after": contact_after,
+        "contact_present": contact_after,
+        "contact_recently_lost": (not contact_before and "contact_off_failure" in recent_names),
+        "collision_detected": collision,
+        "object_inside_goal": goal_after,
+        "stagnation_detected": "stagnation_onset" in recent_names,
+        "goal_distance_delta_sign": "negative" if delta < -1e-9 else ("positive" if delta > 1e-9 else "zero"),
+        "object_speed_bin": "moving" if object_speed >= 0.06 else ("slow" if object_speed >= 0.007 else "still"),
+        "recent_recovery_attempt": "recovery_start" in recent_names,
+        "object_moving": object_speed >= 0.06,
         "action_norm": (float(action[0]) ** 2 + float(action[1]) ** 2) ** 0.5 if len(action) >= 2 else 0.0,
+        "history_event_count": len(history),
     }
+    # These names are useful for model inputs but are not added to the gold
+    # label set or to scenario/phase metadata.
+    context["goal_entered_before"] = goal_before
     return context
 
 
@@ -109,7 +130,7 @@ def build_occurrences(rollout_root: Path, output: Path, repo: Path, split: str, 
                 semantics.append("terminal_failure")
             if status == "censored_unknown":
                 semantics.append("censored_unknown")
-            context = observable_context(before, actions[index], history)
+            context = observable_context(before, after, actions[index], history)
             row = {
                 "occurrence_id": f"{episode['episode_id']}:t{index}",
                 "episode_id": episode["episode_id"],
@@ -127,18 +148,21 @@ def build_occurrences(rollout_root: Path, output: Path, repo: Path, split: str, 
                 "observable_predicates_after": [],
                 "evaluator_event_set": all_events,
                 "evaluator_semantics": semantics,
-                "evaluator_label_origin": "simulator_info.events_and_explicit_terminal_reason",
+                "evaluator_label_origin": "simulator_info.events_diagnostic_only",
                 "terminal_status": status,
                 "terminated": terminated,
                 "truncated": truncated,
                 "terminal_reason": str(event.get("terminal_reason") or ""),
                 "known_state_budget": True,
-                "online_feature_fields": sorted(context),
+                "online_feature_fields": sorted(key for key in context if key != "goal_entered_before"),
                 "hidden_or_future_features_used": False,
                 "boundary_source_id": (prediction or {}).get("boundary_source_id", "u4b_torch_recovery_v2_locked_or_historical_cache"),
                 "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "transition_pair": [assign_cluster(before, refs), assign_cluster(after, refs)],
                 "family_scenario_for_analysis_only": episode.get("family", {}).get("scenario"),
+                "terminal_failure_event": status == "failure_terminal",
+                "stable_success_event": status == "success_terminal",
+                "horizon_censored": status == "censored_unknown",
             }
             rows.append(row)
             history.append(event)

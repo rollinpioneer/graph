@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 
 from .evaluator_v2 import evaluate_node_role, matching_edges
-from .guard_dsl import GuardError, evaluate_guard, validate_guard
+from .guard_dsl import GuardError, evaluate_guard, guard_status, validate_guard
 from .confirm import build_lock, evaluate as evaluate_confirmation
 from .io import write_json, write_jsonl
 
@@ -53,6 +53,40 @@ class GuardAndEvaluatorTest(unittest.TestCase):
     def test_guard_missing_field_is_false(self):
         guard = {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}
         self.assertFalse(evaluate_guard(guard, {}))
+        self.assertEqual(guard_status(guard, {}), "ambiguous")
+
+    def test_mixed_terminal_failure_event_true(self):
+        result = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}}, {"terminal_status": "failure_terminal", "observable_context": {}})
+        self.assertEqual(result["occurrence_terminal_status"], "failure_terminal")
+
+    def test_mixed_false_is_nonterminal(self):
+        result = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}}, {"terminal_status": "nonterminal", "observable_context": {}})
+        self.assertEqual(result["occurrence_terminal_status"], "nonterminal")
+
+    def test_missing_role_field_is_ambiguous(self):
+        result = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "contact_after", "comparison": "==", "value": True}}}, {"terminal_status": "nonterminal", "observable_context": {}})
+        self.assertEqual(result["occurrence_terminal_status"], "guard_ambiguous")
+
+    def test_terminal_metrics_report_coverage_and_precision(self):
+        from .evaluator_v2 import graph_metrics
+        graph = {"graph_id": "G", "nodes": [{"id": "C1", "role": "failure_terminal"}], "edges": []}
+        result = graph_metrics(graph, [{"root_family_id": "f", "dst_cluster_id": 1, "terminal_status": "failure_terminal", "evaluator_semantics": [], "observable_context": {}}])
+        aggregate = result["aggregate"]
+        self.assertIn("failure_terminal_precision", aggregate)
+        self.assertIn("terminal_claim_coverage", aggregate)
+
+    def test_same_node_can_be_terminal_or_nonterminal(self):
+        node = {"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}}
+        self.assertEqual(evaluate_node_role(node, {"terminal_status": "failure_terminal", "observable_context": {}})["occurrence_terminal_status"], "failure_terminal")
+        self.assertEqual(evaluate_node_role(node, {"terminal_status": "nonterminal", "observable_context": {}})["occurrence_terminal_status"], "nonterminal")
+
+    def test_guard_rejects_scenario(self):
+        with self.assertRaises(GuardError):
+            validate_guard({"field": {"name": "scenario", "comparison": "==", "value": "nominal_success"}})
+
+    def test_compact_guard_schema(self):
+        guard = {"==": {"field": "contact_after", "constant": True}}
+        self.assertTrue(evaluate_guard(guard, {"contact_after": True}))
 
     def test_no_proposed_semantics_gold(self):
         from .evaluator_v2 import evaluate_occurrence

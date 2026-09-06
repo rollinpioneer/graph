@@ -189,6 +189,7 @@ def infer_rollouts(
             reference = [bool(item.get("all_events")) for item in episode["events"]]
             row = {
                 "schema": "u4b_boundary_prediction_v1",
+                "boundary_source_id": "offline_teacher_to_causal_s623",
                 "episode_id": episode["episode_id"],
                 "root_family_id": episode["root_family_id"],
                 "n_steps": len(actions),
@@ -480,6 +481,14 @@ def finalize_torch_recovery(
             "source": "offline_teacher_to_causal_s623",
             "status": "computed_and_locked",
             "checkpoint_sha256": "fe0464076a3590de19b31d88cd668d4c0e8cf92ee2a80ec413e8191fea34c94e",
+            "execution_environment": {
+                "python_executable": development_inference.get("python_executable"),
+                "python_version": development_inference.get("python_version"),
+                "torch_version": development_inference.get("torch_version"),
+                "torch_cuda_build": development_inference.get("torch_cuda_build"),
+                "cuda_available": development_inference.get("cuda_available"),
+                "device": development_inference.get("device"),
+            },
             "threshold": 0.5,
             "development_auto_recovery_recall": diagnostics.get("auto_recovery_recall"),
             "development_reference_recovery_recall": diagnostics.get("reference_recovery_recall"),

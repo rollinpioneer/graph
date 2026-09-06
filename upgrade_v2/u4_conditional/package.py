@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import hashlib
 import zipfile
+import subprocess
+import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .io import sha256_file, write_csv, write_json
 
 
-def _zip(root: Path, output: Path) -> dict[str, Any]:
+def _zip(root: Path, output: Path, max_file_mb: int = 200) -> dict[str, Any]:
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
         for path in sorted(root.rglob("*")):
@@ -17,7 +20,7 @@ def _zip(root: Path, output: Path) -> dict[str, Any]:
                 continue
             if path.name.endswith("occurrences.jsonl") or path.name.endswith("boundaries.jsonl") or "rollouts" in path.parts:
                 continue
-            if path.stat().st_size > 200 * 1024 * 1024:
+            if path.stat().st_size > max_file_mb * 1024 * 1024:
                 continue
             archive.write(path, path.relative_to(root).as_posix())
     with zipfile.ZipFile(output) as archive:
@@ -27,15 +30,18 @@ def _zip(root: Path, output: Path) -> dict[str, Any]:
     return {"path": str(output.resolve()), "sha256": sha256_file(output), "size_bytes": output.stat().st_size}
 
 
-def package_round(root: Path, output: Path) -> dict[str, Any]:
-    result = _zip(root, output)
+def package_round(root: Path, output: Path, max_file_mb: int = 200) -> dict[str, Any]:
+    manifest = root / "run_manifest.json"
+    if not manifest.exists():
+        write_json(manifest, {"schema": "u4r1_run_manifest_v1", "round_id": root.name, "generated_at": datetime.now(timezone.utc).isoformat(), "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(), "python": sys.executable, "max_file_mb": max_file_mb, "device": "cpu", "torch_policy": "existing_cupid_environment", "api_calls": 0, "training_jobs": 0})
+    result = _zip(root, output, max_file_mb)
     write_json(output.with_suffix(".sha256.json"), result)
     return {"status": "PASS", **result}
 
 
-def package_complete(root: Path, output: Path, rounds: list[Path]) -> dict[str, Any]:
+def package_complete(root: Path, output: Path, rounds: list[Path], max_file_mb: int = 200) -> dict[str, Any]:
     index = [{"path": str(path.resolve()), "sha256": sha256_file(path)} for path in rounds if path.is_file()]
     write_json(root / "round_index.json", {"schema": "u4r1_round_index_v1", "rounds": index})
-    result = _zip(root, output)
+    result = _zip(root, output, max_file_mb)
     write_json(output.with_suffix(".sha256.json"), {**result, "rounds": index})
     return {"status": "PASS", **result, "rounds": index}

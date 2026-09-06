@@ -161,6 +161,66 @@ def cmd_verify_final_lock(a):
     return result
 
 
+def cmd_resolve_input_selection(a):
+    """Resolve the boundary source without silently discarding a usable model."""
+    payload = {
+        "schema": "u4b_selected_input_pipeline_v1",
+        "boundary_source": "frozen_rule_fallback",
+        "automatic_boundary_status": "not_computed",
+        "mapper_source": "legacy_reference_mapper_train_only",
+        "fallback": "retain_unknown_and_disclose_observability_limit",
+    }
+    selected_path = a.recovered_selection
+    if selected_path is not None:
+        if not selected_path.is_file():
+            return {"status": "BLOCKED", "reason": f"recovered selection is missing: {selected_path}"}
+        selected = read_json(selected_path)
+        if selected.get("automatic_boundary_status") != "computed_and_locked":
+            return {"status": "BLOCKED", "reason": "recovered selection is not computed_and_locked"}
+        checkpoint = selected.get("checkpoint")
+        expected = selected.get("checkpoint_sha256")
+        if checkpoint and expected and sha256_file(Path(checkpoint)) != expected:
+            return {"status": "BLOCKED", "reason": "recovered checkpoint hash mismatch"}
+        payload.update(selected)
+        payload["source_selection"] = str(selected_path.resolve())
+    elif a.checkpoint is not None or a.inference_manifest is not None:
+        if a.checkpoint is None or a.inference_manifest is None:
+            return {"status": "BLOCKED", "reason": "checkpoint and inference manifest must be supplied together"}
+        manifest = read_json(a.inference_manifest)
+        expected = manifest.get("checkpoint_sha256")
+        if manifest.get("status") != "PASS" or not expected or sha256_file(a.checkpoint) != expected:
+            return {"status": "BLOCKED", "reason": "automatic-boundary inference manifest does not match checkpoint"}
+        payload.update({
+            "boundary_source": "offline_teacher_to_causal_s623",
+            "automatic_boundary_status": "computed_and_locked",
+            "checkpoint": str(a.checkpoint.resolve()),
+            "checkpoint_sha256": expected,
+            "execution_environment": {
+                "python_executable": manifest.get("python_executable"),
+                "python_version": manifest.get("python_version"),
+                "torch_version": manifest.get("torch_version"),
+                "device": manifest.get("device"),
+            },
+            "source_inference_manifest": str(a.inference_manifest.resolve()),
+            "fallback": "retain_unknown_and_disclose_semantic_uncertainty",
+        })
+    write_json(a.output, payload)
+    return {"status": "PASS", "source": payload["boundary_source"], "automatic_boundary_status": payload["automatic_boundary_status"]}
+
+
+def cmd_evaluate_final_graphs(a):
+    lock = read_json(a.pipeline_lock)
+    selection_path = lock.get("input_selection")
+    selection = read_json(Path(selection_path)) if selection_path and Path(selection_path).is_file() else {}
+    boundary_source = a.boundary_source or lock.get("boundary_source") or selection.get("boundary_source") or "frozen_rule_fallback"
+    automatic_status = a.automatic_boundary_status or lock.get("automatic_boundary_status") or selection.get("automatic_boundary_status") or "not_computed"
+    return evaluate_graphs(
+        [Path(path) for path in lock["graphs"]], a.rollouts, a.continuations,
+        a.metrics, a.paired_effects, a.per_family, a.per_claim, a.bootstrap,
+        a.seed, boundary_source, automatic_status,
+    )
+
+
 def build_parser():
     p = argparse.ArgumentParser(prog="python -m upgrade_v2.u4_bplus.cli"); s = p.add_subparsers(dest="command", required=True)
     def common(x): x.add_argument("--run-id", default="u4b_manual"); x.add_argument("--resume", action="store_true")
@@ -188,11 +248,11 @@ def build_parser():
     x=s.add_parser("fit-final-semantics"); common(x); x.add_argument("--source-graph",type=Path,required=True); x.add_argument("--legacy",type=Path,required=True); x.add_argument("--development",type=Path); x.add_argument("--fit-splits"); x.add_argument("--input-selection",type=Path); x.add_argument("--protocol",type=Path); x.add_argument("--output",type=Path,required=True); x.set_defaults(func=lambda a: fit_final_semantics(a.source_graph,a.legacy,(a.development.parent.parent/"evidence"/"dev_occurrences.jsonl") if a.development else None,a.output))
     x=s.add_parser("propose-edits"); common(x); x.add_argument("--graph",type=Path,required=True); x.add_argument("--diagnosis",type=Path,required=True); x.add_argument("--continuations",type=Path); x.add_argument("--proposal-split"); x.add_argument("--repair-root",type=Path); x.add_argument("--max-proposals",type=int,default=12); x.add_argument("--output",type=Path,required=True); x.add_argument("--report",type=Path,required=True); x.set_defaults(func=lambda a: proposals(a.graph,a.diagnosis,a.continuations or a.diagnosis,a.output,a.report))
     x=s.add_parser("select-edits"); common(x); x.add_argument("--semantic-graph",type=Path,required=True); x.add_argument("--proposals",type=Path,required=True); x.add_argument("--development",type=Path); x.add_argument("--selection-split"); x.add_argument("--continuations",type=Path); x.add_argument("--input-selection",type=Path); x.add_argument("--protocol",type=Path); x.add_argument("--max-accepted",type=int,default=6); x.add_argument("--output",type=Path,required=True); x.add_argument("--edit-log",type=Path,required=True); x.add_argument("--comparison",type=Path,required=True); x.set_defaults(func=lambda a: select_edits(a.semantic_graph,a.proposals,a.output,a.edit_log,a.comparison))
-    x=s.add_parser("resolve-input-selection"); common(x); x.add_argument("--route",type=Path,required=True); x.add_argument("--original-boundary",type=Path,required=True); x.add_argument("--repair-root",type=Path); x.add_argument("--mapper-lock",type=Path); x.add_argument("--protocol",type=Path); x.add_argument("--output",type=Path,required=True); x.set_defaults(func=lambda a: (write_json(a.output,{"schema":"u4b_selected_input_pipeline_v1","boundary_source":"frozen_rule_fallback","automatic_boundary_status":"not_computed_current_python_without_torch","mapper_source":"legacy_reference_mapper_train_only","fallback":"retain_unknown_and_disclose_observability_limit"}),{"status":"PASS","source":"frozen_rule_fallback"})[-1])
+    x=s.add_parser("resolve-input-selection"); common(x); x.add_argument("--route",type=Path,required=True); x.add_argument("--original-boundary",type=Path,required=True); x.add_argument("--repair-root",type=Path); x.add_argument("--mapper-lock",type=Path); x.add_argument("--protocol",type=Path); x.add_argument("--recovered-selection",type=Path); x.add_argument("--checkpoint",type=Path); x.add_argument("--inference-manifest",type=Path); x.add_argument("--output",type=Path,required=True); x.set_defaults(func=cmd_resolve_input_selection)
     x=s.add_parser("freeze-final-pipeline"); common(x); x.add_argument("--graphs",type=Path,nargs=3,required=True); x.add_argument("--input-selection",type=Path,required=True); x.add_argument("--route",type=Path,required=True); x.add_argument("--claims",type=Path,required=True); x.add_argument("--edit-log",type=Path,required=True); x.add_argument("--family-lock",type=Path,required=True); x.add_argument("--confirm-anchor-rule"); x.add_argument("--protocol",type=Path); x.add_argument("--output",type=Path,required=True); x.add_argument("--report",type=Path,required=True); x.set_defaults(func=lambda a: freeze(a.graphs,a.input_selection,a.route,a.claims,a.edit_log,a.family_lock,a.output,a.report))
     x=s.add_parser("verify-final-lock"); common(x); x.add_argument("--lock",type=Path,required=True); x.add_argument("--family-lock",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.set_defaults(func=cmd_verify_final_lock)
     x=s.add_parser("confirm-claims"); common(x); x.add_argument("--rollouts",type=Path,required=True); x.add_argument("--claims",type=Path,required=True); x.add_argument("--pipeline-lock",type=Path,required=True); x.add_argument("--family-plan",type=Path); x.add_argument("--max-total",type=int,default=96); x.add_argument("--repetitions",type=int,default=3); x.add_argument("--horizon",type=int,default=32); x.add_argument("--preserve-environment-budget",action="store_true"); x.add_argument("--seed",type=int,default=844000); x.add_argument("--workers",type=int,default=1); x.add_argument("--output",type=Path,required=True); x.add_argument("--status",type=Path,required=True); x.set_defaults(func=cmd_confirm)
-    x=s.add_parser("evaluate-final-graphs"); common(x); x.add_argument("--pipeline-lock",type=Path,required=True); x.add_argument("--rollouts",type=Path,required=True); x.add_argument("--continuations",type=Path,required=True); x.add_argument("--unit"); x.add_argument("--bootstrap",type=int,default=5000); x.add_argument("--seed",type=int,default=844500); x.add_argument("--boundary-source",default="frozen_rule_fallback"); x.add_argument("--automatic-boundary-status",default="not_computed"); x.add_argument("--metrics",type=Path,required=True); x.add_argument("--paired-effects",type=Path,required=True); x.add_argument("--per-family",type=Path,required=True); x.add_argument("--per-claim",type=Path,required=True); x.add_argument("--report",type=Path,required=True); x.set_defaults(func=lambda a: evaluate_graphs([Path(x) for x in read_json(a.pipeline_lock)["graphs"]],a.rollouts,a.continuations,a.metrics,a.paired_effects,a.per_family,a.per_claim,a.bootstrap,a.seed,a.boundary_source,a.automatic_boundary_status))
+    x=s.add_parser("evaluate-final-graphs"); common(x); x.add_argument("--pipeline-lock",type=Path,required=True); x.add_argument("--rollouts",type=Path,required=True); x.add_argument("--continuations",type=Path,required=True); x.add_argument("--unit"); x.add_argument("--bootstrap",type=int,default=5000); x.add_argument("--seed",type=int,default=844500); x.add_argument("--boundary-source"); x.add_argument("--automatic-boundary-status"); x.add_argument("--metrics",type=Path,required=True); x.add_argument("--paired-effects",type=Path,required=True); x.add_argument("--per-family",type=Path,required=True); x.add_argument("--per-claim",type=Path,required=True); x.add_argument("--report",type=Path,required=True); x.set_defaults(func=cmd_evaluate_final_graphs)
     x=s.add_parser("finalize"); common(x); x.add_argument("--pipeline-lock",type=Path,required=True); x.add_argument("--diagnostic-route",type=Path,required=True); x.add_argument("--confirmation",type=Path,required=True); x.add_argument("--paired-effects",type=Path,required=True); x.add_argument("--claim-results",type=Path,required=True); x.add_argument("--protocol",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.add_argument("--report",type=Path,required=True); x.set_defaults(func=lambda a: finalize(a.pipeline_lock,a.diagnostic_route,a.confirmation,a.paired_effects,a.claim_results,a.protocol,a.output,a.report))
     x=s.add_parser("stage-final-delivery"); common(x); x.add_argument("--root",type=Path,required=True); x.add_argument("--final",type=Path,required=True); x.add_argument("--rounds",type=Path,required=True); x.add_argument("--download-dir",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.add_argument("--include-code-snapshot",action="store_true"); x.add_argument("--externalize-checkpoints",action="store_true"); x.add_argument("--externalize-trajectories",action="store_true"); x.set_defaults(func=cmd_stage_delivery)
     return p

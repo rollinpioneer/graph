@@ -11,7 +11,7 @@ def freeze_history(repo: Path, output: Path, paths: list[Path]) -> dict[str, Any
     resolved = []
     for path in paths:
         path = path if path.is_absolute() else repo / path
-        if path.is_file():
+        if path.is_file() and path not in [Path(x["path"]) for x in resolved]:
             resolved.append({"path": str(path.resolve()), "sha256": sha256_file(path), "size_bytes": path.stat().st_size})
     payload = {
         "schema": "u4r1_historical_lock_v1",

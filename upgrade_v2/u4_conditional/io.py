@@ -22,10 +22,43 @@ def write_json(path: Path, value: Any) -> None:
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.is_file():
         return []
+    if path.suffix.lower() == ".parquet":
+        try:
+            import pandas as pd
+            rows = pd.read_parquet(path).to_dict(orient="records")
+            for row in rows:
+                for key in ("observable_context", "evaluator_semantics", "evaluator_event_set", "observable_predicates_before", "observable_predicates_after", "history_observation_flat", "history_action_flat"):
+                    value = row.get(key)
+                    if isinstance(value, str) and value[:1] in "[{\"":
+                        try:
+                            row[key] = json.loads(value)
+                        except json.JSONDecodeError:
+                            pass
+            return rows
+        except Exception:
+            # Some lightweight delivery environments have no parquet engine;
+            # the producer below may have stored JSONL with a parquet suffix.
+            pass
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
+    rows = list(rows)
+    if path.suffix.lower() == ".parquet":
+        try:
+            import pandas as pd
+            flat = []
+            for row in rows:
+                item = dict(row)
+                for key, value in list(item.items()):
+                    if isinstance(value, (dict, list, tuple)):
+                        item[key] = json.dumps(value, ensure_ascii=False, sort_keys=True)
+                flat.append(item)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(flat).to_parquet(path, index=False)
+            return
+        except Exception:
+            pass
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
 

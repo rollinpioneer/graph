@@ -1,0 +1,28 @@
+{
+  "schema": "u4r1_protocol_v1",
+  "historical_status": "U4_COMPLETE_NO_EDIT_GAIN",
+  "historical_result_modified": false,
+  "mandatory_repairs": [
+    "execute role_condition during terminal evaluation",
+    "treat horizon as censored rather than terminal failure",
+    "separate static node role from occurrence-level terminal decision",
+    "allow multiple guarded semantic edges for one cluster pair"
+  ],
+  "forbidden": [
+    "new LLM candidate calls",
+    "reward retuning",
+    "policy training",
+    "boundary model retraining",
+    "editing after fresh confirmation",
+    "using confirmation for threshold selection"
+  ],
+  "fit_sources": ["train", "dev_fit"],
+  "selection_source": "dev_route",
+  "historical_rescore_source": "frozen_confirmation_indices_60_71",
+  "fresh_confirmation_source": "new_locked_families",
+  "statistics_unit": "root_family_id",
+  "api_calls": 0,
+  "api_key_read": false,
+  "training_jobs": 0,
+  "device_policy": "use_existing_cupid_environment; cpu_allowed_and_recorded"
+}

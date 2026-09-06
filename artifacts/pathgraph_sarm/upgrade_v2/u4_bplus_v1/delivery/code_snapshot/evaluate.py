@@ -148,6 +148,17 @@ def finalize(lock_path, route_path, confirmation_metrics, paired_effects, claim_
         with paired_effects.open(encoding="utf-8") as handle:
             paired_rows = list(csv.DictReader(handle))
     accepted = max((int(row.get("accepted_edit_count", 0) or 0) for row in rows), default=0)
+    selection_path = lock.get("input_selection")
+    selection = read_json(Path(selection_path)) if selection_path and Path(selection_path).is_file() else {}
+    if lock.get("automatic_boundary_status") == "computed_and_locked":
+        environment = selection.get("execution_environment", {})
+        boundary_note = (
+            "automatic boundary inference was completed with "
+            f"{environment.get('torch_version', 'recorded PyTorch')} on "
+            f"{environment.get('device', 'recorded device')}"
+        )
+    else:
+        boundary_note = "automatic boundary inference was unavailable; frozen rule fallback was retained and disclosed"
     if not lock.get("confirmation_locked"):
         status = FinalStatus.BLOCKED.value
     elif route.get("route") == "CONTINUE_WITH_FALLBACK":
@@ -156,7 +167,7 @@ def finalize(lock_path, route_path, confirmation_metrics, paired_effects, claim_
         status = FinalStatus.NO_EDIT_GAIN.value
     else:
         status = FinalStatus.SCOPED_SUPPORT.value if any(x.get("validation_status") == "empirically_validated" for x in claims) else FinalStatus.PARTIAL.value
-    final = {"schema": "u4b_final_handoff_v1", "scientific_status": status, "development_route": route.get("route"), "u3_history": "U3_INCONCLUSIVE", "graphs": rows, "paired_effects": paired_rows, "claims": claims, "accepted_edit_count": accepted, "limitations": ["same explicit stochastic simulator family only", "no physical robot or new task generalization", "unknown/not_encountered retained", "fixed potential reward was not changed", "the base execution Python had no torch; two candidate Conda environments did not complete torch import within 20 seconds, so locked causal checkpoint inference was not used and the frozen rule fallback is disclosed", "initial confirmation was contaminated by an implementation correction and excluded; final claims use separately locked reconfirmation families 36-47"], "confirmation_locked": bool(lock.get("confirmation_locked")), "api_calls": 0, "training_jobs": 0, "confirmation_protocol": "u4_bplus_v1_reconfirmation_after_implementation_correction", "contaminated_confirmation_used_for_final_claims": False, "execution_counts": {"unique_generated_families": 48, "development_base_rollouts": 96, "contaminated_confirmation_base_rollouts": 48, "valid_reconfirmation_base_rollouts": 48, "total_base_rollouts": 192, "development_continuations": 72, "contaminated_confirmation_continuations": 96, "valid_reconfirmation_continuations": 15, "total_continuations": 183}, "repair_execution": {"u2r_triggered": False, "u3b_triggered": False, "training_jobs": 0, "api_calls": 0, "api_key_read": False}, "protocol_deviation": {"type": "contaminated_implementation_correction", "score_chasing": False, "original_confirmation_excluded": True, "remedy": "same generator stream extended to prelocked indices 36-47 without changing graph, mapper, boundary, semantic rules, thresholds, or metrics"}}
+    final = {"schema": "u4b_final_handoff_v1", "scientific_status": status, "development_route": route.get("route"), "u3_history": "U3_INCONCLUSIVE", "graphs": rows, "paired_effects": paired_rows, "claims": claims, "accepted_edit_count": accepted, "limitations": ["same explicit stochastic simulator family only", "no physical robot or new task generalization", "unknown/not_encountered retained", "fixed potential reward was not changed", "initial confirmation was contaminated by an implementation correction and excluded; final claims use separately locked reconfirmation families 36-47", boundary_note], "confirmation_locked": bool(lock.get("confirmation_locked")), "api_calls": 0, "training_jobs": 0, "confirmation_protocol": "u4_bplus_v1_reconfirmation_after_implementation_correction", "contaminated_confirmation_used_for_final_claims": False, "execution_counts": {"unique_generated_families": 48, "development_base_rollouts": 96, "contaminated_confirmation_base_rollouts": 48, "valid_reconfirmation_base_rollouts": 48, "total_base_rollouts": 192, "development_continuations": 72, "contaminated_confirmation_continuations": 96, "valid_reconfirmation_continuations": 15, "total_continuations": 183}, "repair_execution": {"u2r_triggered": False, "u3b_triggered": False, "training_jobs": 0, "api_calls": 0, "api_key_read": False}, "protocol_deviation": {"type": "contaminated_implementation_correction", "score_chasing": False, "original_confirmation_excluded": True, "remedy": "same generator stream extended to prelocked indices 36-47 without changing graph, mapper, boundary, semantic rules, thresholds, or metrics"}}
     output_dir.mkdir(parents=True, exist_ok=True); write_json(output_dir / "u4b_final_handoff.json", final); (output_dir / "u4b_status.txt").write_text(status + "\n", encoding="utf-8")
     key_effect = next((row for row in paired_rows if row.get("metric") == "false_terminal_claim_rate"), {})
     report.parent.mkdir(parents=True, exist_ok=True); report.write_text(
