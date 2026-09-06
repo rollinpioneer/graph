@@ -2,6 +2,8 @@
 
 - decision: `STOP_AUTO_GRAPH_KEEP_MANUAL`
 - historical U4 status: `U4_COMPLETE_NO_EDIT_GAIN` (unchanged)
+- historical input lock: `PASS` after `u4r1_9_historical_lock_reconciliation`; no scientific rerun
+- replacement lock SHA256: `ec45a17a83b64d66e3d3d8833f5d725aad8b207f1dcca5ff0e79cca47320f106`
 - evaluator role_condition executed: `True`
 - horizon: `censored_unknown` and excluded from failure-terminal claims
 - semantic separability: `CONDITIONAL_SEMANTICS_JUSTIFIED`

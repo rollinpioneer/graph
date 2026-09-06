@@ -17,6 +17,11 @@ class GuardAndEvaluatorTest(unittest.TestCase):
         self.assertTrue(evaluate_guard(guard, {"terminal_failure_event": True}))
         self.assertFalse(evaluate_guard(guard, {"terminal_failure_event": False}))
 
+    def test_mixed_terminal_failure_event_true_uses_explicit_runtime_observable(self):
+        node = {"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}}
+        row = {"terminal_status": "nonterminal", "observable_context": {"terminal_failure_event": True}, "runtime_observable_fields": ["terminal_failure_event"]}
+        self.assertEqual(evaluate_node_role(node, row)["occurrence_terminal_status"], "failure_terminal")
+
     def test_guard_any_of(self):
         guard = {"any_of": [{"field": {"name": "horizon", "comparison": "==", "value": True}}, {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}]}
         self.assertTrue(evaluate_guard(guard, {"horizon": True, "terminal_failure_event": False}))
@@ -41,6 +46,13 @@ class GuardAndEvaluatorTest(unittest.TestCase):
         result = evaluate_node_role(node, row)
         self.assertEqual(result["occurrence_terminal_status"], "guard_ambiguous")
 
+    def test_success_terminal_uses_explicit_stable_success_observable(self):
+        node = {"id": "C02", "role": "success_terminal"}
+        success = {"terminal_status": "nonterminal", "observable_context": {"stable_success_event": True}, "runtime_observable_fields": ["stable_success_event"]}
+        not_yet = {"terminal_status": "nonterminal", "observable_context": {"stable_success_event": False}, "runtime_observable_fields": ["stable_success_event"]}
+        self.assertEqual(evaluate_node_role(node, success)["occurrence_terminal_status"], "success_terminal")
+        self.assertEqual(evaluate_node_role(node, not_yet)["occurrence_terminal_status"], "nonterminal")
+
     def test_diagnostic_event_log_is_not_online_context(self):
         row = {
             "terminal_status": "failure_terminal",
@@ -51,6 +63,14 @@ class GuardAndEvaluatorTest(unittest.TestCase):
         self.assertNotIn("terminal_failure_event", context)
         self.assertNotIn("all_events", context)
         self.assertNotIn("event", context)
+
+    def test_legacy_label_aliases_are_not_online_context(self):
+        row = {"observable_context": {"horizon": True, "nonterminal": False, "terminal_failure_event": True, "terminal_success_event": True}}
+        context = occurrence_context(row)
+        self.assertNotIn("horizon", context)
+        self.assertNotIn("nonterminal", context)
+        self.assertNotIn("terminal_failure_event", context)
+        self.assertNotIn("terminal_success_event", context)
 
     def test_guarded_edge_does_not_use_terminal_label(self):
         graph = {"edges": [{"id": "E1", "raw_pair": [4, 4], "semantic_type": "dwell"}, {"id": "E2", "raw_pair": [4, 4], "semantic_type": "terminal_failure", "guard": {"field": {"name": "terminal_failure_event", "comparison": "==", "value": True}}}]}
@@ -78,6 +98,14 @@ class GuardAndEvaluatorTest(unittest.TestCase):
     def test_missing_role_field_is_ambiguous(self):
         result = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": {"field": {"name": "contact_after", "comparison": "==", "value": True}}}, {"terminal_status": "nonterminal", "observable_context": {}})
         self.assertEqual(result["occurrence_terminal_status"], "guard_ambiguous")
+
+    def test_removing_role_condition_changes_evaluation(self):
+        condition = {"field": {"name": "contact_after", "comparison": "==", "value": True}}
+        row = {"terminal_status": "nonterminal", "observable_context": {"contact_after": True}}
+        with_condition = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}], "role_condition": condition}, row)
+        without_condition = evaluate_node_role({"id": "C04", "role": "mixed", "conditional_roles": [{"role": "failure_terminal"}]}, row)
+        self.assertEqual(with_condition["occurrence_terminal_status"], "failure_terminal")
+        self.assertEqual(without_condition["occurrence_terminal_status"], "guard_ambiguous")
 
     def test_terminal_metrics_report_coverage_and_precision(self):
         from .evaluator_v2 import graph_metrics

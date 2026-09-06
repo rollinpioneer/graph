@@ -14,6 +14,7 @@ from typing import Any, Iterable
 from .guard_dsl import guard_status
 
 TERMINAL_STATUSES = {"failure_terminal", "success_terminal"}
+RUNTIME_GUARD_FIELDS = {"terminal_failure_event", "stable_success_event"}
 SEMANTIC_TARGETS = (
     "failure_event", "recovery_attempt", "recovery_achieved", "terminal_failure",
     "terminal_success", "progress", "alternative", "dwell",
@@ -31,7 +32,9 @@ def occurrence_context(row: dict[str, Any]) -> dict[str, Any]:
     rollout for scoring.  They must never be copied into the context used to
     activate a graph guard.  In particular, deriving
     ``terminal_failure_event`` from ``terminal_status`` makes a terminal guard
-    look perfect while using the answer as an input.
+    look perfect while using the answer as an input.  ``stable_success_event``
+    is retained only when an upstream runtime adapter explicitly supplies it
+    inside ``observable_context``; it is never reconstructed from labels.
 
     Horizon flags are retained only when explicitly supplied as runtime
     censoring metadata.  They are not inferred from the gold terminal label.
@@ -39,15 +42,21 @@ def occurrence_context(row: dict[str, Any]) -> dict[str, Any]:
     returns ``ambiguous``.
     """
     context = dict(row.get("observable_context") or {})
+    runtime_fields = set(row.get("runtime_observable_fields") or [])
     for leaked in (
         "terminal_failure_event", "stable_success_event", "terminal_success_event",
         "terminal_status", "evaluator_semantics", "evaluator_event_set",
-        "terminal_reason", "event", "all_events", "gold_mode",
+        "terminal_reason", "event", "all_events", "gold_mode", "horizon",
+        "nonterminal", "contact_loss_in_history",
     ):
-        context.pop(leaked, None)
-    explicit_horizon = row.get("horizon_censored", context.get("horizon_censored", False))
-    context["horizon_censored"] = bool(explicit_horizon)
-    context["horizon"] = bool(row.get("horizon", context.get("horizon", False)))
+        if leaked not in RUNTIME_GUARD_FIELDS or leaked not in runtime_fields:
+            context.pop(leaked, None)
+    if "horizon_censored" not in runtime_fields:
+        context.pop("horizon_censored", None)
+    if "horizon_censored" in runtime_fields:
+        context["horizon_censored"] = bool(context.get("horizon_censored"))
+    if "horizon" in runtime_fields:
+        context["horizon"] = bool(context.get("horizon"))
     if "contact_before" not in context and "contact_present" in context:
         context["contact_before"] = context["contact_present"]
     if "contact_after" not in context and "contact_present" in context:
