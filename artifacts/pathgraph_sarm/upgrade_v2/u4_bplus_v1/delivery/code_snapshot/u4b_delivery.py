@@ -9,6 +9,9 @@ SECRET_RE = re.compile(rb"(?:sk-[A-Za-z0-9._-]{20,}|Authorization:\s*Bearer\s+\S
 RAW_PATTERNS = (
     "data/development/*.json", "data/confirmation/*.json", "data/reconfirmation/*.json",
     "evidence/*.jsonl", "queries/*continuations.jsonl", "queries/dev_anchors.jsonl", "diagnostics/*.jsonl",
+    "torch_recovery_v2/data/confirmation/*.json", "torch_recovery_v2/evidence/*.jsonl",
+    "torch_recovery_v2/predictions/*.jsonl", "torch_recovery_v2/queries/*.jsonl",
+    "torch_recovery_v2/diagnostics/*.jsonl",
 )
 ROUND_SPECS = {
     "u4b_0_entry_and_protocol": {"jobs": [2, 0, 0], "denominators": {"families_locked": 36}, "next_action": "build semantic evidence", "commands": ["prepare-entry", "plan-families"]},
@@ -17,6 +20,8 @@ ROUND_SPECS = {
     "u4b_3_graph_lock": {"jobs": [5, 0, 0], "denominators": {"proposals": 4, "accepted_edits": 1, "edit_budget": 6}, "next_action": "open locked confirmation", "commands": ["fit-final-semantics", "propose-edits", "select-edits", "resolve-input-selection", "freeze-final-pipeline"]},
     "u4b_4_confirmation": {"jobs": [4, 0, 0], "denominators": {"families": 12, "base_rollouts": 48, "continuations": 96}, "next_action": "exclude contaminated confirmation and execute separately locked reconfirmation", "commands": ["verify-final-lock", "collect-rollouts", "confirm-claims", "evaluate-final-graphs"], "scientific_use": "excluded_contaminated_implementation_correction"},
     "u4b_4_reconfirmation": {"jobs": [5, 0, 0], "denominators": {"families": 12, "base_rollouts": 48, "mapped_occurrences": 1170, "continuations": 15}, "next_action": "finalize U4 B+", "commands": ["verify-final-lock", "collect-rollouts", "map-new-rollouts", "confirm-claims", "evaluate-final-graphs", "finalize"], "scientific_use": "valid_final_confirmation"},
+    "u4b_2b_torch_recovery": {"jobs": [7, 0, 0], "denominators": {"families": 24, "base_rollouts_reused": 96, "transitions_inferred": 2359, "auto_boundary_occurrences": 1074, "diagnostic_cases": 446}, "next_action": "freeze the recovered-boundary pipeline and open a new confirmation extension", "commands": ["infer-auto-boundaries", "diagnose-recovered-boundaries", "decide-development-route", "map-new-rollouts", "fit-final-semantics", "propose-edits", "select-edits"], "scientific_use": "post_confirmation_development_protocol_extension"},
+    "u4b_4b_torch_recovery_confirmation": {"jobs": [7, 0, 0], "denominators": {"families": 12, "base_rollouts": 48, "transitions_inferred": 1193, "auto_boundary_occurrences": 528, "continuations": 0}, "next_action": "retain G1 and the negative edit result; do not start another search round", "commands": ["plan-confirmation-extension", "lock-recovered-boundary", "freeze-final-pipeline", "verify-final-lock", "collect-rollouts", "infer-auto-boundaries", "map-new-rollouts", "confirm-claims", "evaluate-final-graphs", "finalize-torch-recovery"], "scientific_use": "valid_torch_recovery_confirmation"},
 }
 ROUND_FILES = {
     "u4b_0_entry_and_protocol": {
@@ -56,6 +61,31 @@ ROUND_FILES = {
         "evidence/confirmation_occurrences.jsonl.placeholder.md": "manifests/confirmation_occurrences.jsonl.placeholder.md",
         "queries/confirmation_continuations.jsonl.placeholder.md": "manifests/confirmation_continuations.jsonl.placeholder.md",
     },
+    "u4b_2b_torch_recovery": {
+        "torch_recovery_v2/protocol/inference_manifest.json": "configs/inference_manifest.json",
+        "torch_recovery_v2/protocol/dev_mapping_manifest.csv": "configs/dev_mapping_manifest.csv",
+        "torch_recovery_v2/diagnostics/diagnostic_metrics.json": "metrics/diagnostic_metrics.json",
+        "torch_recovery_v2/diagnostics/development_route.json": "metrics/development_route.json",
+        "torch_recovery_v2/diagnostics/diagnostic_by_family.csv": "tables/diagnostic_by_family.csv",
+        "torch_recovery_v2/graphs/G1_semantic_only.json": "tables/G1_semantic_only.json",
+        "torch_recovery_v2/graphs/G2_evidence_edited.json": "tables/G2_evidence_edited.json",
+        "torch_recovery_v2/graphs/accepted_rejected_edits.csv": "tables/accepted_rejected_edits.csv",
+        "manifests/external_artifacts.tsv": "manifests/external_artifacts.tsv",
+    },
+    "u4b_4b_torch_recovery_confirmation": {
+        "torch_recovery_v2/protocol/protocol.yaml": "configs/protocol.yaml",
+        "torch_recovery_v2/protocol/selected_input_pipeline.json": "configs/selected_input_pipeline.json",
+        "torch_recovery_v2/protocol/confirmation_family_lock.json": "configs/confirmation_family_lock.json",
+        "torch_recovery_v2/protocol/final_pipeline_lock.json": "configs/final_pipeline_lock.json",
+        "torch_recovery_v2/protocol/confirmation_inference_manifest.json": "configs/confirmation_inference_manifest.json",
+        "torch_recovery_v2/protocol/confirmation_mapping_manifest.csv": "configs/confirmation_mapping_manifest.csv",
+        "torch_recovery_v2/evaluation/confirmation_metrics.csv": "metrics/confirmation_metrics.csv",
+        "torch_recovery_v2/evaluation/G2_minus_G1_effects.csv": "metrics/G2_minus_G1_effects.csv",
+        "torch_recovery_v2/evaluation/confirmation_by_family.csv": "tables/confirmation_by_family.csv",
+        "torch_recovery_v2/evaluation/claim_confirmation.csv": "tables/claim_confirmation.csv",
+        "torch_recovery_v2/final/u4b_final_handoff.json": "reports/u4b_final_handoff.json",
+        "manifests/external_artifacts.tsv": "manifests/external_artifacts.tsv",
+    },
 }
 
 def sha_file(path: Path) -> str:
@@ -90,9 +120,11 @@ def external_inventory(root: Path, output: Path) -> dict:
         writer.writeheader(); writer.writerows(rows)
     return {"status": "PASS", "output": str(output), "external_file_count": len(rows), "external_bytes": sum(row["size_bytes"] for row in rows)}
 
-def round_manifests(root: Path, download_dir: Path, commit: str) -> dict:
+def round_manifests(root: Path, download_dir: Path, commit: str, round_ids: str | None = None) -> dict:
     rounds = root.resolve() / "rounds"; written = []
+    selected = set(round_ids.split(",")) if round_ids else set(ROUND_SPECS)
     for round_id, spec in ROUND_SPECS.items():
+        if round_id not in selected: continue
         round_dir = rounds / round_id
         round_dir.mkdir(parents=True, exist_ok=True)
         files = [path for path in round_dir.rglob("*") if path.is_file() and path.name != "run_manifest.json"]
@@ -142,6 +174,8 @@ def package_index(download_dir: Path, output: Path, legacy_zip: Path) -> dict:
             row["scientific_use"] = "excluded_contaminated_implementation_correction"
         elif path.name == "u4b_4_reconfirmation.zip":
             row["scientific_use"] = "valid_final_confirmation"
+        elif path.name == "u4b_4b_torch_recovery_confirmation.zip":
+            row["scientific_use"] = "valid_torch_recovery_confirmation"
         packages.append(row)
     legacy = legacy_zip.resolve()
     payload = {
@@ -190,7 +224,7 @@ def main():
     p=argparse.ArgumentParser(); s=p.add_subparsers(dest="command",required=True)
     x=s.add_parser("pack"); x.add_argument("--root",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.add_argument("--max-mb",type=float,default=200); x.set_defaults(func=lambda a: pack(a.root,a.output,a.max_mb))
     x=s.add_parser("inventory"); x.add_argument("--root",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.set_defaults(func=lambda a: external_inventory(a.root,a.output))
-    x=s.add_parser("round-manifests"); x.add_argument("--root",type=Path,required=True); x.add_argument("--download-dir",type=Path,required=True); x.add_argument("--commit",required=True); x.set_defaults(func=lambda a: round_manifests(a.root,a.download_dir,a.commit))
+    x=s.add_parser("round-manifests"); x.add_argument("--root",type=Path,required=True); x.add_argument("--download-dir",type=Path,required=True); x.add_argument("--commit",required=True); x.add_argument("--round-ids"); x.set_defaults(func=lambda a: round_manifests(a.root,a.download_dir,a.commit,a.round_ids))
     x=s.add_parser("stage-rounds"); x.add_argument("--root",type=Path,required=True); x.set_defaults(func=lambda a: stage_rounds(a.root))
     x=s.add_parser("package-index"); x.add_argument("--download-dir",type=Path,required=True); x.add_argument("--output",type=Path,required=True); x.add_argument("--legacy-zip",type=Path,required=True); x.set_defaults(func=lambda a: package_index(a.download_dir,a.output,a.legacy_zip))
     a=p.parse_args(); print(json.dumps(a.func(a),ensure_ascii=False,indent=2))

@@ -9,6 +9,7 @@ from .diagnostics import decide
 from .io import sha256_file, verify_locked_inputs, write_json, write_jsonl
 from .occurrence import episode_occurrences
 from .simulator_adapter import family_specs, validate_snapshot_replay
+from .auto_boundary import _family_macro, _nearest_boundary, plan_confirmation_extension, transition_observations
 
 
 class U4BContractsTest(unittest.TestCase):
@@ -84,6 +85,47 @@ class U4BContractsTest(unittest.TestCase):
         phi = [0.0, 0.2, -0.1, 0.4]
         transitions = [phi[index + 1] - phi[index] for index in range(len(phi) - 1)]
         self.assertAlmostEqual(sum(transitions), phi[-1] - phi[0])
+
+    def test_auto_boundary_alignment_excludes_reset_observation(self) -> None:
+        reset = [0.0] * 17
+        first = [0.0] * 15 + [0.2, -0.1]
+        second = [0.0] * 15 + [-0.4, 0.3]
+        episode = {"episode_id": "e", "observations": [reset, first, second], "actions": [[0.2, -0.1], [-0.4, 0.3]]}
+        aligned = transition_observations(episode)
+        self.assertEqual(aligned.shape, (2, 17))
+        self.assertTrue((abs(aligned[:, 15:17] - episode["actions"]) < 1e-6).all())
+
+    def test_nearest_boundary_does_not_cross_episode(self) -> None:
+        self.assertIsNone(_nearest_boundary([False, False], 0))
+        self.assertEqual(_nearest_boundary([False, True, False], 2), 1)
+
+    def test_family_macro_does_not_treat_events_as_independent(self) -> None:
+        rows = [
+            {"root_family_id": "a", "hit": 1, "total": 1},
+            {"root_family_id": "b", "hit": 0, "total": 9},
+        ]
+        self.assertEqual(_family_macro(rows, "hit", "total"), 0.5)
+
+    def test_confirmation_extension_starts_after_prior_families(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result = plan_confirmation_extension(840100, 60, 48, 12, 8600000, root / "plan.jsonl", root / "lock.json")
+            rows = [json.loads(line) for line in (root / "plan.jsonl").read_text().splitlines()]
+            self.assertEqual(result["selected_indices"], [48, 59])
+            self.assertEqual(rows[0]["root_family_id"], "u4b_v1_48")
+            self.assertEqual(rows[-1]["root_family_id"], "u4b_v1_59")
+            self.assertEqual(len({seed for row in rows for seed in row["rollout_seeds"]}), 48)
+
+    def test_occurrence_boundary_source_is_explicit(self) -> None:
+        observation = [0.0] * 17
+        episode = {
+            "episode_id": "episode-a", "root_family_id": "family-a",
+            "family": {"scenario": "analysis-only"}, "observations": [observation, observation],
+            "events": [{"event": "none", "event_id": 0, "all_events": [], "terminal_reason": ""}],
+            "success": False,
+        }
+        row = episode_occurrences(episode, "confirm", boundary_source_id="offline_teacher_to_causal_s623")[0]
+        self.assertEqual(row["boundary_source_id"], "offline_teacher_to_causal_s623")
 
 
 if __name__ == "__main__":

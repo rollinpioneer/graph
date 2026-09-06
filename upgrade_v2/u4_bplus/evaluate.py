@@ -27,7 +27,7 @@ def _semantic_counts(rows: list[dict[str, Any]], prediction: dict[tuple[int, int
     return tp, fp, fn
 
 
-def evaluate_graphs(graphs: list, rollouts, continuations, metrics, paired, per_family, per_claim, bootstrap=5000, seed=844500) -> dict[str, Any]:
+def evaluate_graphs(graphs: list, rollouts, continuations, metrics, paired, per_family, per_claim, bootstrap=5000, seed=844500, boundary_source="frozen_rule_fallback", automatic_boundary_status="not_computed") -> dict[str, Any]:
     episodes = [read_json(p) for p in sorted(rollouts.glob("*.json"))] if rollouts.is_dir() else []
     cont = read_jsonl(continuations) if continuations.is_file() else []
     root = rollouts.parent.parent
@@ -76,7 +76,7 @@ def evaluate_graphs(graphs: list, rollouts, continuations, metrics, paired, per_
             "untested_claim_count": len(graph.get("edges", [])), "node_count": len(graph.get("nodes", [])), "edge_count": len(graph.get("edges", [])),
             "accepted_edit_count": graph.get("accepted_edit_count", 0), "continuation_calls": len(cont), "eligible_family_count": len(by_family),
             "split": "confirm", "provenance": "confirmation_same_input_frozen_pipeline", "label_origin": "simulator_info.events",
-            "boundary_source": "frozen_rule_fallback", "automatic_boundary_status": "not_computed_current_python_without_torch", "status": "estimable" if total else "not_estimable",
+            "boundary_source": boundary_source, "automatic_boundary_status": automatic_boundary_status, "status": "estimable" if total else "not_estimable",
         })
     write_csv(metrics, output_rows)
     write_csv(per_family, family_rows)

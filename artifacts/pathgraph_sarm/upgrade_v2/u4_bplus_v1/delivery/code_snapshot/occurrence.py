@@ -67,7 +67,7 @@ def _legacy_occurrences(input_index: dict[str, Any]) -> list[dict[str, Any]]:
     return output
 
 
-def episode_occurrences(episode: dict[str, Any], split: str, refs: dict[int, dict] | None = None) -> list[dict[str, Any]]:
+def episode_occurrences(episode: dict[str, Any], split: str, refs: dict[int, dict] | None = None, boundary_source_id: str = "frozen_rule_fallback_with_evaluator_reference") -> list[dict[str, Any]]:
     rows = []
     family = episode["family"]
     for t, event in enumerate(episode["events"]):
@@ -91,7 +91,7 @@ def episode_occurrences(episode: dict[str, Any], split: str, refs: dict[int, dic
             "observable_predicates_before": predicates(before), "observable_predicates_after": predicates(after), "observable_loss_count": int("contact_off_failure" in all_events),
             "proposed_semantics": sorted(set(semantics)), "evaluator_event_set": sorted(all_events), "evaluator_label_origin": "simulator_info.events",
             "terminated": bool(event.get("terminal_reason") and event.get("terminal_reason") != "horizon"), "truncated": event.get("terminal_reason") == "horizon", "terminal_reason": event.get("terminal_reason", ""),
-            "known_state_budget": True, "is_incoming_transition": True, "original_edge_id": "", "boundary_source_id": "frozen_rule_fallback_with_evaluator_reference", "mapper_sha": "legacy_reference_mapper_train_only",
+            "known_state_budget": True, "is_incoming_transition": True, "original_edge_id": "", "boundary_source_id": boundary_source_id, "mapper_sha": "legacy_reference_mapper_train_only",
             "family_scenario_for_analysis_only": family["scenario"], "event": event["event"], "event_id": event["event_id"], "success": episode["success"],
             "transition_pair": [src, dst] if src is not None and dst is not None else [],
         })
@@ -105,13 +105,22 @@ def build_occurrences(input_index: dict[str, Any], splits: list[str], output, ma
     return {"status": "PASS" if rows else "PARTIAL", "occurrence_count": len(rows), "legacy": True}
 
 
-def build_new_occurrences(rollout_root, output, split_map: dict[str, str], repository=None) -> list[dict[str, Any]]:
+def build_new_occurrences(rollout_root, output, split_map: dict[str, str], repository=None, boundary_predictions=None, boundary_key: str = "auto_boundary", boundary_source_id: str = "frozen_rule_fallback_with_evaluator_reference") -> list[dict[str, Any]]:
     from pathlib import Path
     repository = Path(repository or Path.cwd())
     refs = _reference_clusters(repository)
+    prediction_index = {}
+    if boundary_predictions:
+        prediction_index = {row["episode_id"]: row for row in read_jsonl(Path(boundary_predictions))}
     rows = []
     for path in sorted(rollout_root.glob("*.json")):
         episode = read_json(path)
-        rows.extend(episode_occurrences(episode, split_map.get(episode["root_family_id"], ""), refs))
+        episode_rows = episode_occurrences(episode, split_map.get(episode["root_family_id"], ""), refs, boundary_source_id)
+        if prediction_index:
+            prediction = prediction_index.get(episode["episode_id"])
+            if prediction is None or len(prediction.get(boundary_key, [])) != episode["n_steps"]:
+                raise ValueError(f"missing or misaligned {boundary_key} prediction for {episode['episode_id']}")
+            episode_rows = [row for row in episode_rows if prediction[boundary_key][int(row["action_index"])]]
+        rows.extend(episode_rows)
     write_jsonl(output, rows)
     return rows

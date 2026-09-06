@@ -126,6 +126,10 @@ def predict_model(model: torch.nn.Module, dataset: Path, weak: Path, split: str,
     model.train()
 
 
-def load_and_predict(checkpoint: Path, dataset: Path, weak: Path, split: str, output: Path) -> None:
-    data = torch.load(checkpoint, map_location="cuda")
-    model: torch.nn.Module = OfflineBoundaryTeacher() if data.get("architecture") == "OfflineBoundaryTeacher" else CausalBoundaryGRU(); model.load_state_dict(data["state_dict"]); model.cuda(); predict_model(model, dataset, weak, split, output)
+def load_and_predict(checkpoint: Path, dataset: Path, weak: Path, split: str, output: Path, device: str | None = None) -> None:
+    selected = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+    data = torch.load(checkpoint, map_location=selected)
+    model: torch.nn.Module = OfflineBoundaryTeacher() if data.get("architecture") == "OfflineBoundaryTeacher" else CausalBoundaryGRU()
+    model.load_state_dict(data["state_dict"])
+    model.to(selected)
+    predict_model(model, dataset, weak, split, output)

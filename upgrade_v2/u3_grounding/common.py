@@ -7,7 +7,7 @@ import hashlib
 import json
 import re
 import subprocess
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -16,7 +16,7 @@ ROUND_DIRS = ("configs", "commands", "gpu", "logs", "metrics", "tables", "figure
 
 
 def now_iso() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def repo_root(path: Path | None = None) -> Path:

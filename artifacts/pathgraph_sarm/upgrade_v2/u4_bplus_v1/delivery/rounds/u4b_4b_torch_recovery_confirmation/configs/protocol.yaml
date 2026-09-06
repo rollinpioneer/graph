@@ -1,0 +1,43 @@
+version: u4_bplus_torch_recovery_v2
+created_date: 2026-09-06
+reason: rerun after correcting the checkpoint path to the U2 handoff-locked source
+prior_extension:
+  id: torch_recovery_v1
+  status: excluded_checkpoint_mismatch
+  confirmation_indices: [48, 59]
+automatic_boundary:
+  source: offline_teacher_to_causal_s623
+  checkpoint: artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/boundary_models_v1/formal/offline_teacher_to_causal_s623/best.pt
+  checkpoint_sha256: fe0464076a3590de19b31d88cd668d4c0e8cf92ee2a80ec413e8191fea34c94e
+  threshold: 0.5
+  architecture: CausalBoundaryGRU
+  input: post_transition_observations_17d
+  hidden_or_future_features: false
+environment:
+  python: /home/__compress_data/xushijie/.conda/envs/cupid/bin/python
+  python_version: 3.9.18
+  torch_version: 1.12.1
+  user_site_enabled: false
+  inference_device: cpu
+development:
+  family_count: 24
+  rollout_count: 96
+  fixed_H: evaluator_high_impact_events_plus_T028_T029_occurrences
+confirmation_extension:
+  generator_seed: 840100
+  generator_count: 72
+  selected_indices: [60, 71]
+  family_count: 12
+  rollouts_per_family: 4
+  rollout_seed_base: 8700000
+  continuation_seed: 874000
+  continuation_horizon: 32
+  continuation_repetitions: 3
+  max_continuations: 96
+freeze_policy:
+  no_graph_mapper_boundary_semantic_threshold_or_metric_changes_after_lock: true
+  original_confirmations_rewritten: false
+  training_jobs: 0
+  API_calls: 0
+scope: same_explicit_stochastic_simulator_distribution
+physical_generalization_eligible: false
