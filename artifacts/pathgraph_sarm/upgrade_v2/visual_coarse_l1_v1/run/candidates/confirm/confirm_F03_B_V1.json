@@ -1,0 +1,196 @@
+{
+  "clarification_question": "红色碗在当前视野中不可见，请确认它是否应位于桌面上、是否被其他物体遮挡，或是否需要我从其他区域寻找？",
+  "edges": [
+    {
+      "action": "request_clarification",
+      "dst": "clarify_bowl_missing",
+      "expected_effects": [
+        "获得关于红色碗位置的明确信息"
+      ],
+      "id": "e1",
+      "preconditions": [
+        "红色碗在初始图像中不可见"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": "红色碗未在当前视野中被检测到"
+    },
+    {
+      "action": "observe_scene",
+      "dst": "locate_bowl",
+      "expected_effects": [
+        "更新对红色碗位置的假设"
+      ],
+      "id": "e2",
+      "preconditions": [
+        "用户确认红色碗应存在于场景中"
+      ],
+      "src": "clarify_bowl_missing",
+      "status": "hypothesized",
+      "trigger": "澄清后确认需主动搜索"
+    },
+    {
+      "action": "approach_object",
+      "dst": "grasp_bowl",
+      "expected_effects": [
+        "机械臂接近红色碗准备抓取"
+      ],
+      "id": "e3",
+      "preconditions": [
+        "红色碗位置已确定且可达"
+      ],
+      "src": "locate_bowl",
+      "status": "hypothesized",
+      "trigger": "成功定位红色碗"
+    },
+    {
+      "action": "transport_object",
+      "dst": "place_on_plate",
+      "expected_effects": [
+        "红色碗被移动至白色盘子上方"
+      ],
+      "id": "e4",
+      "preconditions": [
+        "红色碗已被稳定抓取",
+        "白色盘子位置已知"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": "抓取验证通过"
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "红色碗静止于盘子中央"
+      ],
+      "id": "e5",
+      "preconditions": [
+        "红色碗对准盘子中心",
+        "高度适合释放"
+      ],
+      "src": "place_on_plate",
+      "status": "hypothesized",
+      "trigger": "放置姿态对齐完成"
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "goal_state",
+      "expected_effects": [
+        "确认碗-盘中心对齐关系成立"
+      ],
+      "id": "e6",
+      "preconditions": [
+        "碗已释放"
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": "释放动作完成后"
+    }
+  ],
+  "goal_interpretation": "将红色碗移动到白色盘子的正上方中心位置并释放，使碗稳定放置在盘子上。当前场景中未观察到红色碗，需先确认其位置或状态。",
+  "needs_clarification": true,
+  "nodes": [
+    {
+      "description": "初始场景：白色盘子可见，红色碗缺失",
+      "id": "start_state",
+      "observable_conditions": [
+        "白色盘子位于桌面右侧",
+        "棕色长方体位于桌面左侧"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗的位置",
+        "红色碗是否被遮挡或在视野外"
+      ]
+    },
+    {
+      "description": "尝试通过观察或询问确认红色碗的位置",
+      "id": "locate_bowl",
+      "observable_conditions": [],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗是否存在于当前工作空间"
+      ]
+    },
+    {
+      "description": "抓取红色碗（假设已定位）",
+      "id": "grasp_bowl",
+      "observable_conditions": [],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗的精确位姿",
+        "抓取稳定性",
+        "是否可安全接近"
+      ]
+    },
+    {
+      "description": "将红色碗放置于白色盘子中央",
+      "id": "place_on_plate",
+      "observable_conditions": [],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "盘子表面平整度",
+        "碗底与盘面的接触稳定性"
+      ]
+    },
+    {
+      "description": "红色碗稳定置于白色盘子中央",
+      "id": "goal_state",
+      "observable_conditions": [
+        "碗位于盘子几何中心上方"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "碗是否滑动或倾倒风险"
+      ]
+    },
+    {
+      "description": "因红色碗不可见，需澄清其位置或任务前提",
+      "id": "clarify_bowl_missing",
+      "observable_conditions": [],
+      "role": "clarification",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "用户是否期望机器人自主搜索",
+        "红色碗是否已被移除或尚未放置"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面右侧的白色圆形盘子",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "任务指定的红色碗，当前图像中不可见",
+      "id": "red_bowl",
+      "observability": "not_observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面左侧的棕色长方体障碍物",
+      "id": "brown_block",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "红色碗的实际存在性与可抓取性需物理验证",
+    "白色盘子表面是否足够平坦以支撑碗体",
+    "棕色长方体是否阻碍通往盘子或碗的路径",
+    "碗与盘之间的摩擦系数未知，影响放置后稳定性",
+    "抓取点是否位于碗的重心附近以防倾覆"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

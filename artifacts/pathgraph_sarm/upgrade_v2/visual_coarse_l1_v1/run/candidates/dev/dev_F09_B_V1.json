@@ -1,0 +1,173 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "observe_target_slot",
+      "expected_effects": [
+        "获取托盘空位的详细视觉信息",
+        "确认空位可用性"
+      ],
+      "id": "edge_observe",
+      "preconditions": [
+        "机器人处于初始位置"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_selected_cup",
+      "expected_effects": [
+        "成功抓取杯子",
+        "杯子离开桌面"
+      ],
+      "id": "edge_grasp",
+      "preconditions": [
+        "托盘空位确认可用",
+        "选定目标杯子（如green_cup_1）"
+      ],
+      "src": "observe_target_slot",
+      "status": "hypothesized",
+      "trigger": "空位观察完成且无阻碍"
+    },
+    {
+      "action": "transport_object",
+      "dst": "place_in_tray",
+      "expected_effects": [
+        "杯子移动至托盘空位上方",
+        "准备执行放置动作"
+      ],
+      "id": "edge_transport_place",
+      "preconditions": [
+        "杯子已被稳固抓取",
+        "托盘位置已知"
+      ],
+      "src": "grasp_selected_cup",
+      "status": "hypothesized",
+      "trigger": "抓取验证通过"
+    },
+    {
+      "action": "release_object",
+      "dst": "release_and_verify",
+      "expected_effects": [
+        "夹爪松开",
+        "杯子独立支撑于托盘内"
+      ],
+      "id": "edge_release",
+      "preconditions": [
+        "杯子已接触托盘空位底部",
+        "杯子姿态垂直"
+      ],
+      "src": "place_in_tray",
+      "status": "hypothesized",
+      "trigger": "放置动作完成"
+    }
+  ],
+  "goal_interpretation": "将桌面上其中一个绿色杯子移动到灰色托盘内的空位上，并释放抓握。需确认目标杯子的选择及托盘内是否有足够空间容纳该杯子。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：两个绿色杯子和一个灰色托盘放置在橙色桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "存在两个绿色杯子",
+        "存在一个灰色托盘",
+        "托盘内似乎有空位"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "哪个杯子是首选操作对象",
+        "托盘空位的确切尺寸是否匹配杯子底部",
+        "杯子重量及抓取稳定性"
+      ]
+    },
+    {
+      "description": "观察并确认灰色托盘内的空位状态及尺寸",
+      "id": "observe_target_slot",
+      "observable_conditions": [
+        "托盘空位的几何形状",
+        "空位内是否有隐藏障碍物"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "空位深度是否足以稳定放置杯子"
+      ]
+    },
+    {
+      "description": "尝试抓取选定的绿色杯子（默认为左侧杯子或根据观察结果调整）",
+      "id": "grasp_selected_cup",
+      "observable_conditions": [
+        "机械臂接近杯子",
+        "夹爪闭合接触杯身"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳固",
+        "杯子是否会滑动或倾倒"
+      ]
+    },
+    {
+      "description": "将抓取的杯子移动至托盘空位上方并下降放置",
+      "id": "place_in_tray",
+      "observable_conditions": [
+        "杯子位于托盘空位正上方",
+        "杯子底部接触托盘表面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "放置位置是否精确居中",
+        "杯子是否与托盘边缘碰撞"
+      ]
+    },
+    {
+      "description": "释放杯子并验证其是否稳定停留在托盘空位内",
+      "id": "release_and_verify",
+      "observable_conditions": [
+        "夹爪已张开",
+        "杯子保持直立未倾倒"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子是否因重心问题随后倾倒",
+        "任务是否完全满足语义要求"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于左侧的绿色圆柱形杯子，带有把手",
+      "id": "green_cup_1",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于右侧靠近托盘的绿色圆柱形杯子，带有把手",
+      "id": "green_cup_2",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "深灰色矩形托盘，内部有一个可见的空位区域",
+      "id": "grey_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取绿色杯子时的摩擦力和重心稳定性",
+    "检查托盘空位尺寸与杯子底部的匹配度",
+    "确认运输过程中杯子不会触碰托盘边缘",
+    "验证释放后杯子在托盘内的静态平衡性"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

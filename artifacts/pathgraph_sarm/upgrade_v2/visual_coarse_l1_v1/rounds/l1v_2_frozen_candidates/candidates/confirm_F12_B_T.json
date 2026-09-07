@@ -1,0 +1,218 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "observe_targets",
+      "expected_effects": [
+        "6D pose estimates for green cup.",
+        "Coordinate frame for the empty tray slot."
+      ],
+      "id": "e1_observe",
+      "preconditions": [
+        "Scene is illuminated.",
+        "Camera view covers both cup and tray."
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "cup_grasped",
+      "expected_effects": [
+        "Gripper closes around the cup.",
+        "Cup is lifted from the table."
+      ],
+      "id": "e2_approach_grasp",
+      "preconditions": [
+        "Cup pose is known.",
+        "Grasp approach vector is collision-free."
+      ],
+      "src": "observe_targets",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "cup_grasped",
+      "expected_effects": [
+        "Confirmation that the cup is securely held.",
+        "Detection of any immediate slip."
+      ],
+      "id": "e3_verify_hold",
+      "preconditions": [
+        "Cup is lifted."
+      ],
+      "src": "cup_grasped",
+      "status": "hypothesized",
+      "trigger": "If slip is detected, trigger recovery."
+    },
+    {
+      "action": "place_object",
+      "dst": "cup_placed",
+      "expected_effects": [
+        "Cup is moved to the slot location.",
+        "Cup is lowered until contact with the tray."
+      ],
+      "id": "e4_transport_place",
+      "preconditions": [
+        "Cup is securely held.",
+        "Target slot pose is known."
+      ],
+      "src": "cup_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "Gripper opens.",
+        "Robot arm retracts from the tray area."
+      ],
+      "id": "e5_release",
+      "preconditions": [
+        "Cup is supported by the tray slot.",
+        "Gripper is not under high load."
+      ],
+      "src": "cup_placed",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "goal_state",
+      "expected_effects": [
+        "Visual confirmation that the green cup is in the gray tray."
+      ],
+      "id": "e6_verify_goal",
+      "preconditions": [
+        "Robot has released the cup."
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "start_state",
+      "expected_effects": [
+        "Cup is safely placed back on the table.",
+        "Task resets to observation phase."
+      ],
+      "id": "e7_recovery_slip",
+      "preconditions": [
+        "Slip detected during verify_hold."
+      ],
+      "src": "cup_grasped",
+      "status": "hypothesized",
+      "trigger": "Slip detected or grasp force anomaly."
+    }
+  ],
+  "goal_interpretation": "Identify the green cup and the gray tray with an empty slot, transport the cup to the slot, place it securely, and release the grasp.",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "Initial scene state with green cup and gray tray visible on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Green cup is visible on the table surface.",
+        "Gray tray is visible on the table surface."
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Exact pose of the cup relative to the robot base.",
+        "Friction coefficient of the cup surface.",
+        "Weight of the cup."
+      ]
+    },
+    {
+      "description": "Visual confirmation of the green cup and identification of an empty slot in the gray tray.",
+      "id": "observe_targets",
+      "observable_conditions": [
+        "Green cup segmented and localized.",
+        "Empty slot in gray tray identified and localized."
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether the slot dimensions perfectly fit the cup base.",
+        "Occlusion status of the slot from current camera angle."
+      ]
+    },
+    {
+      "description": "Robot has successfully grasped the green cup and verified hold stability.",
+      "id": "cup_grasped",
+      "observable_conditions": [
+        "Cup is lifted slightly off the table.",
+        "No slip detected during initial lift."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Long-term grasp stability during transport.",
+        "Internal stress on the cup material."
+      ]
+    },
+    {
+      "description": "Green cup is positioned over the empty slot and lowered into contact with the tray.",
+      "id": "cup_placed",
+      "observable_conditions": [
+        "Cup is in contact with the tray slot.",
+        "Robot end-effector is still holding the cup lightly or just released."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Whether the cup is upright and stable in the slot.",
+        "Whether the cup interferes with adjacent slots."
+      ]
+    },
+    {
+      "description": "Green cup is resting in the gray tray's empty slot, and the robot has released it.",
+      "id": "goal_state",
+      "observable_conditions": [
+        "Robot gripper is open and retracted.",
+        "Cup remains stationary in the tray slot."
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Final semantic verification of 'correct' placement if multiple slots exist."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "The target object to be moved, identified by its green color and cup shape.",
+      "id": "green_cup",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "The target container with specific slots for holding objects.",
+      "id": "gray_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "A specific vacant position within the gray tray suitable for placing the cup.",
+      "id": "tray_empty_slot",
+      "observability": "partially_observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify the green cup is not too heavy for the gripper payload limit.",
+    "Check if the gray tray is fixed or sliding on the table surface.",
+    "Ensure the empty slot is large enough to accommodate the base of the green cup.",
+    "Confirm no other objects obstruct the path between the cup and the tray.",
+    "Verify the material of the cup allows for a stable friction grasp."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

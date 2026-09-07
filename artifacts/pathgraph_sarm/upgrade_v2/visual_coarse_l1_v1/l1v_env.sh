@@ -1,0 +1,10 @@
+set -euo pipefail
+export REPO_ROOT="$(git rev-parse --show-toplevel)"
+export PYTHON_BIN="${PYTHON_BIN:-/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python}"
+export L1V_CODE="$REPO_ROOT/upgrade_v2/visual_coarse_l1"
+export L1V_ROOT="$REPO_ROOT/artifacts/pathgraph_sarm/upgrade_v2/visual_coarse_l1_v1"
+export L1V_DOWNLOADS="$REPO_ROOT/downloads/l1v"
+export RUNNER="$L1V_CODE/tools/l1v_runner.py"
+export L1V_PREPARED="$L1V_ROOT/prepared"
+export L1V_RUN="$L1V_ROOT/run"
+export L1V_PRIVATE="$L1V_ROOT/evaluation_private"

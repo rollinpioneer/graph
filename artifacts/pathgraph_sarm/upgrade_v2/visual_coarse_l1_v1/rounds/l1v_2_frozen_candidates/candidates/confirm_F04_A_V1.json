@@ -1,0 +1,183 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object and grasp_object",
+      "dst": "grasp_bowl",
+      "expected_effects": [
+        "红碗被牢固夹持",
+        "机器人获得对红碗的运动控制权"
+      ],
+      "id": "e1_approach_grasp",
+      "preconditions": [
+        "红碗在可达范围内",
+        "无遮挡物阻挡抓取路径"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold and transport_object",
+      "dst": "transport_to_plate",
+      "expected_effects": [
+        "红碗悬空移至白盘上方",
+        "准备进行垂直放置动作"
+      ],
+      "id": "e2_lift_move",
+      "preconditions": [
+        "抓取稳定性验证通过",
+        "白盘位置已知且固定"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "place_center",
+      "expected_effects": [
+        "红碗平稳落在白盘表面",
+        "位置接近白盘几何中心"
+      ],
+      "id": "e3_lower_align",
+      "preconditions": [
+        "红碗位于白盘投影区域内",
+        "下方无障碍物"
+      ],
+      "src": "transport_to_plate",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation and release_object",
+      "dst": "verify_and_release",
+      "expected_effects": [
+        "红碗独立支撑于白盘中央",
+        "任务完成状态确立"
+      ],
+      "id": "e4_check_release",
+      "preconditions": [
+        "红碗与白盘接触稳定",
+        "视觉确认相对位置居中"
+      ],
+      "src": "place_center",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object and retract",
+      "dst": "start_state",
+      "expected_effects": [
+        "红碗回到桌面原位或附近",
+        "系统重置为可重新尝试状态"
+      ],
+      "id": "e5_recover_slip",
+      "preconditions": [
+        "检测到抓取失败或物体滑落"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": "verify_hold returns false or slip detected"
+    }
+  ],
+  "goal_interpretation": "将红色碗从当前位置移动并放置到白色盘子的几何中心上方，随后释放抓握。需验证最终相对位置关系是否符合'中央'的语义定义。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：红碗与白盘分离放置在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗位于左侧",
+        "白色盘子位于右侧",
+        "两者之间无遮挡"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红碗的确切重量与摩擦系数",
+        "白盘表面的平整度与防滑性"
+      ]
+    },
+    {
+      "description": "尝试抓取红色碗的侧壁或边缘",
+      "id": "grasp_bowl",
+      "observable_conditions": [
+        "机械臂接近红碗",
+        "夹爪对准碗身"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳定不滑落",
+        "抓取姿态是否阻碍后续放置"
+      ]
+    },
+    {
+      "description": "将红碗悬空移动至白盘正上方",
+      "id": "transport_to_plate",
+      "observable_conditions": [
+        "红碗离开桌面",
+        "红碗水平位移至白盘区域"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径是否存在动态障碍",
+        "高度是否足以避免碰撞盘沿"
+      ]
+    },
+    {
+      "description": "下降红碗直至接触白盘表面并调整至中心",
+      "id": "place_center",
+      "observable_conditions": [
+        "红碗底部接触白盘",
+        "视觉反馈显示大致居中"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "接触力是否导致盘子滑动",
+        "精确中心位置的误差范围"
+      ]
+    },
+    {
+      "description": "确认红碗位于白盘中央后松开夹爪",
+      "id": "verify_and_release",
+      "observable_conditions": [
+        "夹爪张开",
+        "红碗静止于白盘上"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放后红碗是否保持平衡",
+        "是否满足'中央'的严格几何定义"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的红色圆柱形碗状物体",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的白色扁平圆盘状物体",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "红碗材质是否光滑导致难以抓取",
+    "白盘是否过轻易被推动",
+    "红碗重心是否偏高影响放置稳定性",
+    "桌面振动是否影响精密对中",
+    "光照条件是否干扰颜色与边缘识别"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,213 @@
+{
+  "edges": [
+    {
+      "action": "approach_object and grasp_object",
+      "dst": "grasp_cube",
+      "expected_effects": [
+        "机械爪闭合包围蓝色方块",
+        "方块离开桌面"
+      ],
+      "id": "e1_approach_grasp",
+      "preconditions": [
+        "蓝色方块在视野内",
+        "机械臂可达蓝色方块"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "transport_over_box",
+      "expected_effects": [
+        "确认方块被稳固持握",
+        "准备移动"
+      ],
+      "id": "e2_verify_hold",
+      "preconditions": [
+        "已执行抓取动作"
+      ],
+      "src": "grasp_cube",
+      "status": "hypothesized",
+      "trigger": "hold_verified == true"
+    },
+    {
+      "action": "transport_object",
+      "dst": "insert_and_release",
+      "expected_effects": [
+        "方块悬停于透明盒子开口上方",
+        "对齐盒子中心"
+      ],
+      "id": "e3_move_to_box",
+      "preconditions": [
+        "方块被持握",
+        "路径规划避开棕色障碍物"
+      ],
+      "src": "transport_over_box",
+      "status": "hypothesized",
+      "trigger": "position_aligned == true"
+    },
+    {
+      "action": "place_object and release_object",
+      "dst": "verify_goal",
+      "expected_effects": [
+        "方块静止于盒底",
+        "机械爪松开并 retract"
+      ],
+      "id": "e4_place_release",
+      "preconditions": [
+        "方块位于盒子内部空间",
+        "方块接近盒底"
+      ],
+      "src": "insert_and_release",
+      "status": "hypothesized",
+      "trigger": "release_complete == true"
+    },
+    {
+      "action": "observe_scene",
+      "dst": "recover_failed_grasp",
+      "expected_effects": [
+        "获取方块当前精确位姿",
+        "更新抓取计划"
+      ],
+      "id": "e5_recovery_grasp",
+      "preconditions": [
+        "抓取动作执行后方块未离地或滑脱"
+      ],
+      "src": "grasp_cube",
+      "status": "hypothesized",
+      "trigger": "hold_verified == false"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_cube",
+      "expected_effects": [
+        "重新尝试抓取蓝色方块"
+      ],
+      "id": "e6_retry_from_recovery",
+      "preconditions": [
+        "已观测到方块新位置",
+        "机械臂可安全接近"
+      ],
+      "src": "recover_failed_grasp",
+      "status": "hypothesized",
+      "trigger": "new_grasp_plan_ready == true"
+    }
+  ],
+  "goal_interpretation": "将蓝色方块放入透明盒子内部并释放，确保方块稳定位于盒底。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：蓝色方块、透明盒子和棕色障碍物在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块可见",
+        "透明盒子可见",
+        "棕色障碍物位于两者之间"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块的确切抓取点",
+        "透明盒子内部是否有残留物",
+        "棕色障碍物是否稳固"
+      ]
+    },
+    {
+      "description": "尝试抓取蓝色方块",
+      "id": "grasp_cube",
+      "observable_conditions": [
+        "机械臂接近蓝色方块"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否成功",
+        "抓取后方块姿态是否稳定"
+      ]
+    },
+    {
+      "description": "将蓝色方块移动至透明盒子上方",
+      "id": "transport_over_box",
+      "observable_conditions": [
+        "方块被持握",
+        "方块位于盒子开口正上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径是否与棕色障碍物碰撞",
+        "盒子边缘高度是否阻碍进入"
+      ]
+    },
+    {
+      "description": "将方块放入盒子并释放",
+      "id": "insert_and_release",
+      "observable_conditions": [
+        "方块进入盒子内部",
+        "机械爪张开"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块是否完全落入盒底",
+        "释放后方块是否倾倒"
+      ]
+    },
+    {
+      "description": "验证蓝色方块是否在透明盒子内",
+      "id": "verify_goal",
+      "observable_conditions": [
+        "视觉确认方块在盒子轮廓内"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块与盒壁的接触状态"
+      ]
+    },
+    {
+      "description": "若抓取失败，重新调整抓取策略",
+      "id": "recover_failed_grasp",
+      "observable_conditions": [
+        "方块未被提起或滑脱"
+      ],
+      "role": "recovery",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块当前位置偏移量"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面上的蓝色立方体",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面上的透明方形容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于蓝色方块和透明盒子之间的高大棕色长方体",
+      "id": "tall_brown_block",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "蓝色方块尺寸是否小于透明盒子内径",
+    "棕色障碍物是否会在运输路径中造成碰撞",
+    "透明盒子是否固定不动",
+    "蓝色方块表面摩擦系数是否支持稳定抓取",
+    "释放后方块重心是否在盒子支撑面内"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,191 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "observe_box_capacity",
+      "expected_effects": [
+        "获取盒子内部空间信息",
+        "评估黄色方块对放置的影响"
+      ],
+      "id": "edge_start_to_observe",
+      "preconditions": [
+        "机器人处于初始位置"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "approach_object",
+      "dst": "grasp_blue_cube",
+      "expected_effects": [
+        "机械臂靠近蓝色方块",
+        "准备执行抓取动作"
+      ],
+      "id": "edge_observe_to_grasp",
+      "preconditions": [
+        "确认盒子有足够空间容纳蓝色方块",
+        "黄色方块不会完全阻塞入口"
+      ],
+      "src": "observe_box_capacity",
+      "status": "hypothesized",
+      "trigger": "盒子内部空间评估为可用"
+    },
+    {
+      "action": "verify_hold",
+      "dst": "transport_to_box",
+      "expected_effects": [
+        "确认物体被牢固持有",
+        "开始向目标位置移动"
+      ],
+      "id": "edge_grasp_to_transport",
+      "preconditions": [
+        "蓝色方块已被成功抓取",
+        "抓取稳定性通过验证"
+      ],
+      "src": "grasp_blue_cube",
+      "status": "hypothesized",
+      "trigger": "抓取验证通过"
+    },
+    {
+      "action": "place_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "蓝色方块进入盒子内部",
+        "夹爪准备释放"
+      ],
+      "id": "edge_transport_to_place",
+      "preconditions": [
+        "蓝色方块位于盒口正上方",
+        "下方无不可逾越障碍"
+      ],
+      "src": "transport_to_box",
+      "status": "hypothesized",
+      "trigger": "到达预定释放位置"
+    },
+    {
+      "action": "release_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "蓝色方块脱离夹爪",
+        "任务完成状态待验证"
+      ],
+      "id": "edge_place_to_goal",
+      "preconditions": [
+        "蓝色方块已接触盒底或黄色方块顶部",
+        "夹爪处于释放姿态"
+      ],
+      "src": "place_and_release",
+      "status": "hypothesized",
+      "trigger": "释放指令执行"
+    }
+  ],
+  "goal_interpretation": "将桌面上的蓝色方块抓取并放入右侧的透明盒子中，然后释放。需确认盒子内部空间是否足以容纳蓝色方块，以及黄色方块是否会阻碍放置。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：蓝色方块在桌面上，透明盒子内有黄色方块",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块位于桌面左侧",
+        "透明盒子位于桌面右侧",
+        "黄色方块位于透明盒子内部"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块与透明盒子的精确相对位置",
+        "透明盒子内部剩余空间大小",
+        "黄色方块是否固定或可移动"
+      ]
+    },
+    {
+      "description": "观察透明盒子内部空间及黄色方块状态",
+      "id": "observe_box_capacity",
+      "observable_conditions": [
+        "盒子内部可见区域",
+        "黄色方块占据的空间比例"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块放入后是否与黄色方块碰撞",
+        "盒子深度是否足够容纳蓝色方块"
+      ]
+    },
+    {
+      "description": "尝试抓取蓝色方块",
+      "id": "grasp_blue_cube",
+      "observable_conditions": [
+        "机械臂接近蓝色方块",
+        "夹爪对准蓝色方块侧面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳定",
+        "蓝色方块重量是否在机器人承载范围内"
+      ]
+    },
+    {
+      "description": "将蓝色方块移动至透明盒子上方",
+      "id": "transport_to_box",
+      "observable_conditions": [
+        "蓝色方块悬于盒口正上方",
+        "未与盒壁或黄色方块接触"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径是否无碰撞",
+        "释放高度是否合适"
+      ]
+    },
+    {
+      "description": "将蓝色方块放入盒子并释放",
+      "id": "place_and_release",
+      "observable_conditions": [
+        "蓝色方块位于盒子内部",
+        "夹爪已张开"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块是否稳定放置",
+        "是否与黄色方块发生位移干扰"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的蓝色立方体",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的透明方形容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于透明盒子内部的黄色立方体",
+      "id": "yellow_cube",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "蓝色方块尺寸是否小于透明盒子内径",
+    "黄色方块是否可被轻微推移以腾出空间",
+    "抓取蓝色方块时是否会发生滑动",
+    "运输过程中蓝色方块是否会晃动脱落",
+    "释放后蓝色方块是否能稳定停留在盒内"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

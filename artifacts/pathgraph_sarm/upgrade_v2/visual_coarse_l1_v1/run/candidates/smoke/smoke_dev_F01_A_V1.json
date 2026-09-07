@@ -1,0 +1,208 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object then grasp_object",
+      "dst": "grasp_bowl",
+      "expected_effects": [
+        "红碗被稳固夹持",
+        "碗体脱离桌面支撑"
+      ],
+      "id": "e1_approach_grasp",
+      "preconditions": [
+        "红碗处于可触及范围",
+        "无动态障碍干扰"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold then transport_object",
+      "dst": "transport_to_plate",
+      "expected_effects": [
+        "红碗悬停于白盘上方预定高度",
+        "水平对准完成"
+      ],
+      "id": "e2_lift_transport",
+      "preconditions": [
+        "抓取稳定性已通过初步验证",
+        "白盘位置坐标已知"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "place_center",
+      "expected_effects": [
+        "红碗轻触盘面中心区域",
+        "垂直载荷由盘面承担"
+      ],
+      "id": "e3_lower_place",
+      "preconditions": [
+        "红碗正对盘心上方",
+        "下降路径无障碍"
+      ],
+      "src": "transport_to_plate",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "observe_scene",
+      "dst": "verify_alignment",
+      "expected_effects": [
+        "获得碗-盘相对位置的视觉反馈",
+        "生成中心对齐误差估计"
+      ],
+      "id": "e4_check_center",
+      "preconditions": [
+        "红碗已静止于盘面",
+        "光照条件适合视觉判断"
+      ],
+      "src": "place_center",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "release_and_confirm",
+      "expected_effects": [
+        "夹爪完全松开",
+        "红碗保持预期位置"
+      ],
+      "id": "e5_release_if_ok",
+      "preconditions": [
+        "视觉确认中心偏差小于阈值",
+        "碗体无倾斜风险"
+      ],
+      "src": "verify_alignment",
+      "status": "hypothesized",
+      "trigger": "alignment_verified == true"
+    },
+    {
+      "action": "grasp_object then transport_object",
+      "dst": "transport_to_plate",
+      "expected_effects": [
+        "重新调整红碗至盘心上方",
+        "进入二次放置流程"
+      ],
+      "id": "e6_recover_misalign",
+      "preconditions": [
+        "检测到显著中心偏移",
+        "红碗仍可安全抓取"
+      ],
+      "src": "verify_alignment",
+      "status": "hypothesized",
+      "trigger": "alignment_verified == false"
+    }
+  ],
+  "goal_interpretation": "将红色碗从当前位置移动并精确放置在白色盘子的几何中心，随后释放抓握。需验证放置后的相对位置关系是否符合'中央'定义。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：红碗在左，白盘在右，两者分离",
+      "id": "start_state",
+      "observable_conditions": [
+        "红碗与白盘均可见且无遮挡",
+        "两者之间存在明显水平距离"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红碗的确切重量与摩擦系数",
+        "白盘表面的平整度与防滑性"
+      ]
+    },
+    {
+      "description": "尝试抓取红色碗的上部边缘或侧壁",
+      "id": "grasp_bowl",
+      "observable_conditions": [
+        "机械臂已接近红碗上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取点是否会导致碗体滑动或倾倒",
+        "夹爪开合度是否适配碗径"
+      ]
+    },
+    {
+      "description": "将红碗水平移动至白盘正上方",
+      "id": "transport_to_plate",
+      "observable_conditions": [
+        "红碗悬停于白盘上方区域"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径中是否存在不可见障碍物",
+        "碗底与盘面之间的安全间隙"
+      ]
+    },
+    {
+      "description": "垂直下降红碗直至接触白盘表面中心",
+      "id": "place_center",
+      "observable_conditions": [
+        "碗底与盘面接触"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "实际落点是否偏离几何中心超过容忍阈值",
+        "放置后碗体是否稳定不滚动"
+      ]
+    },
+    {
+      "description": "视觉确认红碗位于白盘中央且姿态端正",
+      "id": "verify_alignment",
+      "observable_conditions": [
+        "红碗轮廓完全包含在白盘边界内",
+        "碗心与盘心重合度可估算"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "视觉估计的中心偏差是否在任务允许范围内"
+      ]
+    },
+    {
+      "description": "松开夹爪并确认红碗保持原位",
+      "id": "release_and_confirm",
+      "observable_conditions": [
+        "夹爪已张开",
+        "红碗未发生位移"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放瞬间是否引起微小扰动导致偏移"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的红色圆柱形碗状物体",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的白色扁平圆盘",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "红碗抓取时的抗滑移能力需通过力传感或微动测试验证",
+    "白盘表面材质可能影响放置后的静摩擦稳定性",
+    "红碗重心高度未知，快速移动可能导致摆动",
+    "释放动作的时序需避免惯性引起的位移",
+    "视觉中心判定依赖相机标定精度，可能存在系统误差"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

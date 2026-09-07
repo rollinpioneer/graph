@@ -1,0 +1,190 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object",
+      "dst": "approach_bowl",
+      "expected_effects": [
+        "机械臂到达抓取预备姿态"
+      ],
+      "id": "e1_approach",
+      "preconditions": [
+        "红色碗位置已知"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "holding_bowl",
+      "expected_effects": [
+        "红色碗被夹持",
+        "红色碗随机械臂运动"
+      ],
+      "id": "e2_grasp",
+      "preconditions": [
+        "末端执行器对准抓取点"
+      ],
+      "src": "approach_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "holding_bowl",
+      "expected_effects": [
+        "确认抓取稳固，无滑动迹象"
+      ],
+      "id": "e3_verify_hold",
+      "preconditions": [
+        "物体已被抓取"
+      ],
+      "src": "holding_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "position_over_plate",
+      "expected_effects": [
+        "红色碗移动至白色盘子上方"
+      ],
+      "id": "e4_transport",
+      "preconditions": [
+        "抓取稳定",
+        "白色盘子位置已知"
+      ],
+      "src": "holding_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "红色碗接触盘面",
+        "机械臂松开"
+      ],
+      "id": "e5_place",
+      "preconditions": [
+        "位于目标中心上方",
+        "高度适宜"
+      ],
+      "src": "position_over_plate",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "goal_state",
+      "expected_effects": [
+        "确认红色碗位于白色盘子中央"
+      ],
+      "id": "e6_verify_goal",
+      "preconditions": [
+        "物体已释放"
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将红色碗移动并放置在白色盘子的几何中心位置，然后释放抓取。需要验证放置后的相对位置关系。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景状态，红色碗和白色盘子位于桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗在视野中",
+        "白色盘子在视野中"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗的具体重心位置",
+        "白色盘子表面的摩擦系数",
+        "红色碗是否被其他物体遮挡或粘连"
+      ]
+    },
+    {
+      "description": "机械臂接近红色碗准备抓取",
+      "id": "approach_bowl",
+      "observable_conditions": [
+        "机械臂末端执行器位于红色碗上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取路径是否存在动态障碍物",
+        "最佳抓取点是否可达"
+      ]
+    },
+    {
+      "description": "成功抓取并提起红色碗",
+      "id": "holding_bowl",
+      "observable_conditions": [
+        "红色碗离开桌面",
+        "红色碗被稳定夹持"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取稳定性（是否打滑）",
+        "碗内是否有松散物品掉落风险"
+      ]
+    },
+    {
+      "description": "将红色碗移动至白色盘子中央上方",
+      "id": "position_over_plate",
+      "observable_conditions": [
+        "红色碗位于白色盘子几何中心正上方",
+        "高度适合放置"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "精确的中心坐标偏差",
+        "放置高度是否会导致碰撞或倾倒"
+      ]
+    },
+    {
+      "description": "红色碗放置在白色盘子中央并已释放",
+      "id": "goal_state",
+      "observable_conditions": [
+        "红色碗静止在白色盘子上",
+        "机械臂已脱离接触"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "放置位置是否严格满足'中央'的语义定义",
+        "放置后系统的整体稳定性"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "红色的碗，待操作物体",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "白色的盘子，目标放置区域",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证红色碗抓取时的形变或滑动风险",
+    "验证白色盘子在放置重物后是否会发生位移",
+    "验证'中央'位置的视觉判定误差容忍度",
+    "检查红色碗底部与白色盘子表面的接触稳定性"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

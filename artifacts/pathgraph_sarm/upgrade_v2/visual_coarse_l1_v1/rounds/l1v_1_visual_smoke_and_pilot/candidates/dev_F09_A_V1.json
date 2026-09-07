@@ -1,0 +1,159 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "grasp_object",
+      "dst": "cup_grasped",
+      "expected_effects": [
+        "杯子被机械臂夹持",
+        "杯子脱离桌面支撑"
+      ],
+      "id": "grasp_cup",
+      "preconditions": [
+        "绿色杯子在视野内且可达",
+        "机械臂处于空闲状态"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "cup_over_tray",
+      "expected_effects": [
+        "杯子水平移动至托盘上方",
+        "杯子高度调整至适合放入"
+      ],
+      "id": "transport_to_tray",
+      "preconditions": [
+        "杯子已被稳定抓取",
+        "托盘位置已知"
+      ],
+      "src": "cup_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "杯子落入托盘并静止",
+        "机械臂松开杯子"
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "杯子位于托盘空位正上方",
+        "杯子姿态垂直于托盘底面"
+      ],
+      "src": "cup_over_tray",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "goal_state",
+      "expected_effects": [
+        "确认杯子未倾倒",
+        "确认杯子位于托盘边界内"
+      ],
+      "id": "verify_stability",
+      "preconditions": [
+        "杯子已放置在托盘内",
+        "机械臂已完成释放动作"
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": "放置动作完成后立即触发"
+    }
+  ],
+  "goal_interpretation": "将绿色杯子从桌面当前位置移动并放置到灰色托盘内的空位中，随后释放抓握。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：绿色杯子在桌面上，灰色托盘在其右侧",
+      "id": "start_state",
+      "observable_conditions": [
+        "绿色杯子直立放置在桌面上",
+        "灰色托盘位于杯子右侧且内部无物体"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子的确切重量和重心位置",
+        "托盘内壁的摩擦系数"
+      ]
+    },
+    {
+      "description": "机械臂已稳定抓取绿色杯子并将其提起",
+      "id": "cup_grasped",
+      "observable_conditions": [
+        "杯子离开桌面表面",
+        "机械臂末端执行器闭合"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否牢固足以抵抗运输加速度",
+        "杯子是否发生倾斜或滑动"
+      ]
+    },
+    {
+      "description": "杯子被运输至灰色托盘正上方悬停",
+      "id": "cup_over_tray",
+      "observable_conditions": [
+        "杯子位于托盘边界投影范围内",
+        "杯子底部高于托盘底面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子与托盘边缘的安全距离",
+        "下方是否有不可见障碍物"
+      ]
+    },
+    {
+      "description": "绿色杯子放置在托盘内，机械臂已释放",
+      "id": "goal_state",
+      "observable_conditions": [
+        "杯子底部接触托盘内表面",
+        "机械臂末端执行器张开并远离杯子"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子在托盘内是否保持直立稳定",
+        "释放后杯子是否会滚动或倾倒"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的绿色圆柱形杯子，带有侧向把手",
+      "id": "green_cup",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的灰色矩形浅托盘，内部可见为空",
+      "id": "grey_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "承载物体的橙色平面工作台",
+      "id": "table_surface",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取点是否避开杯子把手以免干涉",
+    "检查托盘内部深度是否足以容纳杯子高度",
+    "确认杯子放入时不会撞击托盘侧壁",
+    "评估释放后杯子重心是否在托盘支撑多边形内"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

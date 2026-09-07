@@ -1,0 +1,195 @@
+{
+  "clarification_question": "场景中有两个外观相似的蓝色方块，请指定需要操作的是哪一个（例如：靠近相机的、远离相机的、左侧的或右侧的）？",
+  "edges": [
+    {
+      "action": "request_clarification",
+      "dst": "clarify_target",
+      "expected_effects": [
+        "获得明确的目标对象标识"
+      ],
+      "id": "edge_start_to_clarify",
+      "preconditions": [
+        "检测到多个候选目标对象"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "approach_object",
+      "dst": "grasp_cube",
+      "expected_effects": [
+        "机械臂到达抓取预备位置"
+      ],
+      "id": "edge_clarify_to_grasp",
+      "preconditions": [
+        "目标对象ID已确定",
+        "目标对象可见且可达"
+      ],
+      "src": "clarify_target",
+      "status": "hypothesized",
+      "trigger": "收到用户关于目标方块的反馈"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "transport_to_box",
+      "expected_effects": [
+        "方块被牢固抓取并提起"
+      ],
+      "id": "edge_grasp_to_transport",
+      "preconditions": [
+        "机械臂位于目标上方",
+        "无遮挡物"
+      ],
+      "src": "grasp_cube",
+      "status": "hypothesized",
+      "trigger": "verify_hold 返回成功"
+    },
+    {
+      "action": "transport_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "方块移动至盒子开口正上方"
+      ],
+      "id": "edge_transport_to_place",
+      "preconditions": [
+        "方块已抓取",
+        "盒子位置已知"
+      ],
+      "src": "transport_to_box",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "verify_goal",
+      "expected_effects": [
+        "方块留在盒内",
+        "机械臂脱离接触"
+      ],
+      "id": "edge_place_to_verify",
+      "preconditions": [
+        "方块位于盒内安全区域"
+      ],
+      "src": "place_and_release",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将场景中的蓝色方块（需确认具体目标）放入透明盒子内部并释放，确保方块稳定位于盒底。",
+  "needs_clarification": true,
+  "nodes": [
+    {
+      "description": "初始场景状态，包含两个蓝色方块和一个透明盒子",
+      "id": "start_state",
+      "observable_conditions": [
+        "两个蓝色方块位于桌面上",
+        "透明盒子位于桌面上且开口朝上"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "哪个蓝色方块是任务目标",
+        "方块与盒子的精确相对位姿"
+      ]
+    },
+    {
+      "description": "确认待操作的蓝色方块身份",
+      "id": "clarify_target",
+      "observable_conditions": [],
+      "role": "clarification",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "用户指定的目标方块ID"
+      ]
+    },
+    {
+      "description": "抓取选定的蓝色方块",
+      "id": "grasp_cube",
+      "observable_conditions": [
+        "机械臂接近目标方块"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳定",
+        "方块重量及摩擦系数"
+      ]
+    },
+    {
+      "description": "将方块移动至透明盒子正上方",
+      "id": "transport_to_box",
+      "observable_conditions": [
+        "方块悬空于盒口上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径是否存在碰撞风险",
+        "盒子边缘高度限制"
+      ]
+    },
+    {
+      "description": "将方块放入盒内并释放",
+      "id": "place_and_release",
+      "observable_conditions": [
+        "方块接触盒底或盒内空间"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放后方块是否倾倒",
+        "方块是否完全在盒子边界内"
+      ]
+    },
+    {
+      "description": "验证方块是否成功放入盒子",
+      "id": "verify_goal",
+      "observable_conditions": [
+        "视觉确认方块位于盒子内部"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块姿态是否符合预期"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于前景/左侧的蓝色立方体",
+      "id": "blue_cube_1",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于背景/右侧的蓝色立方体",
+      "id": "blue_cube_2",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "放置在桌面上的透明方形容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "橙色桌面工作区",
+      "id": "table_surface",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取蓝色方块时的稳定性，防止滑落",
+    "检查透明盒子内部空间是否足以容纳方块",
+    "确认运输过程中方块不会碰撞盒子边缘",
+    "验证释放后方块在盒内的静止状态"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}
