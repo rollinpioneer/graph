@@ -63,6 +63,19 @@ def code_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
 
+def test_repository_templates_are_complete_and_unapproved() -> None:
+    scenes = runner.read_jsonl(code_root() / "templates" / "scenes.template.jsonl")
+    references = runner.read_csv(code_root() / "templates" / "reference_rubric.csv")
+    assert len(scenes) == 24
+    assert len({row["root_family_id"] for row in scenes}) == 12
+    assert all(len(row["views"]) == 2 for row in scenes)
+    assert all(row["scene_verified"] is False for row in scenes)
+    assert all(row["upload_allowed"] is False for row in scenes)
+    assert all(row["same_initial_state_views"] is False for row in scenes)
+    assert len(references) == 24
+    assert all(row["ready_reference"] == "0" for row in references)
+
+
 def test_prepare_enforces_split_and_image_contract(tmp_path: Path) -> None:
     manifest, images = make_manifest(tmp_path)
     output = tmp_path / "prepared"

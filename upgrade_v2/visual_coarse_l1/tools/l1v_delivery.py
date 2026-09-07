@@ -169,7 +169,26 @@ def build_final(root: Path, code: Path, repo: Path) -> dict[str, Any]:
     write_tsv(final / "external_artifacts.tsv", external_rows)
 
     protocol = runner.read_json(root / "protocol.json")
-    usage_by_key: dict[tuple[str, str], dict[str, Any]] = defaultdict(lambda: {"requests": 0, "prompt_tokens": 0, "completion_tokens": 0, "http_success": 0, "structure_valid": 0})
+    usage_by_key: dict[tuple[str, str], dict[str, Any]] = defaultdict(
+        lambda: {
+            "requests": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "http_success": 0,
+            "structure_valid": 0,
+            "transport_uncertain": 0,
+            "latency_seconds": 0.0,
+        }
+    )
+    image_by_key: dict[tuple[str, str], dict[str, Any]] = defaultdict(
+        lambda: {
+            "requests": 0,
+            "planned_images": 0,
+            "sent_images": 0,
+            "count_match_requests": 0,
+            "hash_count_match_requests": 0,
+        }
+    )
     for state in states:
         key = (state["batch"], state["condition"])
         item = usage_by_key[key]
@@ -179,18 +198,68 @@ def build_final(root: Path, code: Path, repo: Path) -> dict[str, Any]:
         item["completion_tokens"] += int(usage.get("completion_tokens") or 0)
         item["http_success"] += int(bool(state.get("http_success")))
         item["structure_valid"] += int(bool(state.get("structure_valid")))
+        item["transport_uncertain"] += int(bool(state.get("transport_uncertain")))
+        item["latency_seconds"] += float(state.get("latency_seconds") or 0.0)
+        image_item = image_by_key[key]
+        planned = int(state.get("image_count_planned") or 0)
+        sent = int(state.get("image_count_sent") or 0)
+        hashes = state.get("image_sha256") or []
+        image_item["requests"] += 1
+        image_item["planned_images"] += planned
+        image_item["sent_images"] += sent
+        image_item["count_match_requests"] += int(planned == sent)
+        image_item["hash_count_match_requests"] += int(len(hashes) == sent)
     usage_rows = []
     for (batch, cond), item in sorted(usage_by_key.items()):
         cost = item["prompt_tokens"] * float(protocol["input_price_per_million"]) / 1_000_000 + item["completion_tokens"] * float(protocol["output_price_per_million"]) / 1_000_000
-        usage_rows.append({"batch": batch, "condition": cond, **item, "estimated_cost_cny": round(cost, 6)})
+        usage_rows.append(
+            {
+                "batch": batch,
+                "condition": cond,
+                **item,
+                "total_tokens": item["prompt_tokens"] + item["completion_tokens"],
+                "mean_latency_seconds": round(item["latency_seconds"] / item["requests"], 6),
+                "estimated_cost_cny": round(cost, 6),
+            }
+        )
     write_csv(final / "api_usage_and_cost.csv", usage_rows)
+    write_csv(final / "api_usage_summary.csv", usage_rows)
+    structure_rows = [
+        {
+            "batch": batch,
+            "condition": cond,
+            "requests": item["requests"],
+            "http_success": item["http_success"],
+            "structure_valid": item["structure_valid"],
+            "structure_valid_rate": round(item["structure_valid"] / item["requests"], 6),
+        }
+        for (batch, cond), item in sorted(usage_by_key.items())
+    ]
+    write_csv(final / "structure_valid_rate.csv", structure_rows)
+    image_transport_rows = []
+    for (batch, cond), item in sorted(image_by_key.items()):
+        image_transport_rows.append(
+            {
+                "batch": batch,
+                "condition": cond,
+                **item,
+                "expected_images_per_request": {"T": 0, "V1": 1, "V2": 2}[cond],
+                "mismatch_requests": item["requests"] - min(item["count_match_requests"], item["hash_count_match_requests"]),
+            }
+        )
+    write_csv(final / "image_transport_summary.csv", image_transport_rows)
 
     ratings = read_csv(root / "evaluation_private" / "confirm_review" / "ratings.csv")
     mapping = {row["blind_id"]: row for row in read_csv(root / "evaluation_private" / "confirm_review" / "blind_mapping.DO_NOT_SHOW_RATER.csv")}
+    unsupported_by_condition = Counter()
+    rated_by_condition = Counter()
     failures = []
     taxonomy = Counter()
     for rating in ratings:
         identity = mapping[rating["blind_id"]]
+        condition_name = identity["condition"]
+        rated_by_condition[condition_name] += 1
+        unsupported_by_condition[condition_name] += int(rating["unsupported_visual_assertion"])
         failed = [field for field in runner.RATING_FIELDS if rating[field] == "0"]
         if failed:
             for field in failed:
@@ -198,6 +267,21 @@ def build_final(root: Path, code: Path, repo: Path) -> dict[str, Any]:
             failures.append({"case_id": identity["case_id"], "root_family_id": identity["root_family_id"], "condition": identity["condition"], "failed_items": ";".join(failed), "unsupported_visual_assertion": rating["unsupported_visual_assertion"], "note": rating["note"]})
     write_csv(final / "case_failure_taxonomy.csv", failures)
     write_csv(final / "failure_type_summary.csv", [{"failure_type": key, "count": value} for key, value in sorted(taxonomy.items())])
+    write_csv(
+        final / "unsupported_assertions.csv",
+        [
+            {
+                "condition": condition_name,
+                "confirmation_cases": rated_by_condition[condition_name],
+                "unsupported_assertions": unsupported_by_condition[condition_name],
+                "unsupported_assertion_rate": round(unsupported_by_condition[condition_name] / rated_by_condition[condition_name], 6),
+            }
+            for condition_name in runner.CONDITIONS
+        ],
+    )
+    copy_file(metrics / "condition_summary.csv", final / "condition_summary.csv")
+    copy_file(metrics / "paired_effects.csv", final / "paired_effects.csv")
+    copy_file(metrics / "family_scores.csv", final / "family_scores.csv")
 
     open_questions = [
         {"question_id": "Q1", "question": "Does the selected V2 graph remain useful with real camera images and non-primitive objects?", "status": "open", "next_layer_action": "collect authorized real images without changing this confirmation result"},
@@ -241,6 +325,7 @@ def build_final(root: Path, code: Path, repo: Path) -> dict[str, Any]:
 - Model: `qwen3.7-plus`; DeepSeek calls: 0; training jobs: 0
 - External attempts: 74/80; HTTP success: 74/74; structure valid: 74/74
 - Prompt tokens: {total_prompt}; completion tokens: {total_completion}; estimated cost: CNY {total_cost:.6f}
+- Pilot lock audit: the sealed `reviewed_at` value remains `2026-09-07T00:00:00+00:00`; post-run lock verification was performed at `2026-09-07T22:36:47+08:00`
 
 ## Confirmation
 
@@ -307,6 +392,10 @@ def stage_rounds(root: Path, code: Path, commit: str) -> None:
             (root / "final_metrics/paired_effects.csv", "metrics/paired_effects.csv"),
             (root / "final_metrics/l1v_decision.json", "metrics/l1v_decision.json"),
             (root / "final/case_failure_taxonomy.csv", "tables/case_failure_taxonomy.csv"),
+            (root / "final/structure_valid_rate.csv", "metrics/structure_valid_rate.csv"),
+            (root / "final/unsupported_assertions.csv", "metrics/unsupported_assertions.csv"),
+            (root / "final/image_transport_summary.csv", "metrics/image_transport_summary.csv"),
+            (root / "final/api_usage_summary.csv", "metrics/api_usage_summary.csv"),
         ],
         ROUND_NAMES[5]: [
             (root / "final/l1v_decision.json", "reports/l1v_decision.json"),
@@ -317,6 +406,14 @@ def stage_rounds(root: Path, code: Path, commit: str) -> None:
             (root / "final/layer2_handoff.json", "reports/layer2_handoff.json"),
             (root / "final/source_and_permission_manifest.csv", "tables/source_and_permission_manifest.csv"),
             (root / "final/api_usage_and_cost.csv", "tables/api_usage_and_cost.csv"),
+            (root / "final/condition_summary.csv", "tables/condition_summary.csv"),
+            (root / "final/paired_effects.csv", "tables/paired_effects.csv"),
+            (root / "final/family_scores.csv", "tables/family_scores.csv"),
+            (root / "final/failure_type_summary.csv", "tables/failure_type_summary.csv"),
+            (root / "final/structure_valid_rate.csv", "tables/structure_valid_rate.csv"),
+            (root / "final/unsupported_assertions.csv", "tables/unsupported_assertions.csv"),
+            (root / "final/image_transport_summary.csv", "tables/image_transport_summary.csv"),
+            (root / "final/api_usage_summary.csv", "tables/api_usage_summary.csv"),
             (root / "final/external_artifacts.tsv", "manifests/external_artifacts.tsv"),
         ],
     }
@@ -402,6 +499,19 @@ def main() -> int:
     for round_name in ROUND_NAMES:
         result = runner.package(args.root / "rounds" / round_name, args.downloads / f"{round_name}.zip", 200)
         packages.append(result)
+    write_csv(
+        args.root / "final/round_package_sha256.csv",
+        [
+            {
+                "round_id": Path(item["zip"]).stem,
+                "filename": Path(item["zip"]).name,
+                "sha256": item["sha256"],
+                "files": item["files"],
+                "externalized_during_packaging": item["externalized"],
+            }
+            for item in packages
+        ],
+    )
     release = build_release(args.root, args.code)
     total = runner.package(release, args.downloads / "L1V_visual_coarse_graph_results.zip", 200)
     index = {

@@ -2,12 +2,13 @@
 
 - Decision: `L1V_READY_FOR_REFINEMENT_MULTIVIEW`
 - Selected coarse graph condition: `V2`
-- Source commit: `b1d33f3c83e99c914068f1fa3f4ab57fb473250b`
+- Source commit: `1b70672dc6631ff06b4510e0afd8aa9354642596`
 - Input: 24 simulator RGB cases, 12 root families, 48 same-state views
 - Development: 6 cases / 18 candidates; confirmation: 18 cases / 54 candidates
 - Model: `qwen3.7-plus`; DeepSeek calls: 0; training jobs: 0
 - External attempts: 74/80; HTTP success: 74/74; structure valid: 74/74
 - Prompt tokens: 119166; completion tokens: 106900; estimated cost: CNY 1.093532
+- Pilot lock audit: the sealed `reviewed_at` value remains `2026-09-07T00:00:00+00:00`; post-run lock verification was performed at `2026-09-07T22:36:47+08:00`
 
 ## Confirmation
 
