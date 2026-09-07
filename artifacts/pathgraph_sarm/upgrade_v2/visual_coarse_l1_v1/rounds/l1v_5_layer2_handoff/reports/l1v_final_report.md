@@ -2,7 +2,7 @@
 
 - Decision: `L1V_READY_FOR_REFINEMENT_MULTIVIEW`
 - Selected coarse graph condition: `V2`
-- Source commit: `1b70672dc6631ff06b4510e0afd8aa9354642596`
+- Source commit: `99adf125d3fbd92d65b57db62a7e034668bdbb48`
 - Input: 24 simulator RGB cases, 12 root families, 48 same-state views
 - Development: 6 cases / 18 candidates; confirmation: 18 cases / 54 candidates
 - Model: `qwen3.7-plus`; DeepSeek calls: 0; training jobs: 0
