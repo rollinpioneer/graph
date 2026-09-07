@@ -1,0 +1,11 @@
+predicate_id,category,arguments,online_evidence,allowed_values,oracle_only,notes
+object_bound,object_binding,manipulated_object,RGB/depth detection and identity confidence,true|false|unknown|not_observed,0,Do not replace ambiguity with a guessed identity.
+target_bound,object_binding,target_object,RGB/depth detection and task-role binding,true|false|unknown|not_observed,0,Target role is distinct from geometric coordinates.
+target_region_clear,target_relation,target_object,visible occupancy and clearance estimate,true|false|unknown|not_observed,0,A visible obstacle requires a branch before placement.
+goal_relation,target_relation,"manipulated_object,target_object,relation",post-observation spatial estimate,true|false|unknown|not_observed,0,"Relation is centered_on, inside, or in_empty_region."
+contact,interaction,"manipulated_object,target_object",visual contact estimate or force/tactile event,true|false|unknown|not_observed,0,Simulator contact truth must be labeled oracle when used.
+held_by_gripper,interaction,manipulated_object,gripper state plus object motion consistency,true|false|unknown|not_observed,0,Closed gripper alone does not prove a stable hold.
+released,interaction,manipulated_object,"open gripper, separation, and no co-motion",true|false|unknown|not_observed,0,Release is separate from stable support.
+support_after_release,postcondition,"manipulated_object,target_object",released object remains supported for an observation window,true|false|unknown|not_observed,0,Requires temporal evidence; a static render is insufficient.
+stable_after_release,postcondition,manipulated_object,bounded pose drift after release,true|false|unknown|not_observed,0,Threshold must be frozen on development scenes.
+sim_contact_truth,oracle_reference,"geom_a,geom_b",MuJoCo contact buffer,true|false,1,Evaluation reference only; never merge into a pure-vision method input.

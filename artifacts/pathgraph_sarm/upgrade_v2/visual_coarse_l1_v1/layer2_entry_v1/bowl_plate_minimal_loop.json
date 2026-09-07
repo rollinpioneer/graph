@@ -1,0 +1,74 @@
+{
+  "coarse_graph_condition": "V1",
+  "confirmation_inputs": "new families only; do not reuse F02-F04 as fresh confirmation",
+  "development_inputs": [
+    "F01_A",
+    "F01_B"
+  ],
+  "schema": "pathgraph_layer2_bowl_plate_loop_v1",
+  "scope": "red bowl to white plate only",
+  "steps": [
+    {
+      "id": "bind",
+      "on_unknown": "observe_or_clarify",
+      "requires": [
+        "object_bound",
+        "target_bound"
+      ]
+    },
+    {
+      "id": "check_current_goal",
+      "on_true": "verify_release_support",
+      "requires": [
+        "goal_relation"
+      ]
+    },
+    {
+      "id": "check_target",
+      "on_false": "clear_or_request_clarification",
+      "requires": [
+        "target_region_clear"
+      ]
+    },
+    {
+      "id": "grasp",
+      "produces": [
+        "held_by_gripper"
+      ],
+      "requires": [
+        "object_bound"
+      ]
+    },
+    {
+      "id": "place",
+      "produces": [
+        "contact"
+      ],
+      "requires": [
+        "held_by_gripper",
+        "target_region_clear"
+      ]
+    },
+    {
+      "id": "release",
+      "produces": [
+        "released"
+      ],
+      "requires": [
+        "contact"
+      ]
+    },
+    {
+      "id": "verify_release_support",
+      "produces": [
+        "support_after_release",
+        "stable_after_release",
+        "goal_relation"
+      ],
+      "requires": [
+        "released"
+      ]
+    }
+  ],
+  "threshold_policy": "freeze thresholds on development observations before any new confirmation run"
+}
