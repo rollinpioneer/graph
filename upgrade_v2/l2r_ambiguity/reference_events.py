@@ -42,6 +42,11 @@ def _actions(root: Path) -> list[dict[str, str]]:
     return read_csv(path) if path.is_file() else []
 
 
+def _termination(root: Path) -> dict[str, Any]:
+    path = root / "termination.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+
+
 def _metadata(root: Path) -> dict[str, Any]:
     path = root / "metadata.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
@@ -98,11 +103,14 @@ def _contact(row: dict[str, str] | None) -> str:
 
 
 def _release_before_or_at(actions: list[dict[str, str]], time: float) -> bool:
-    return any(
-        row["action"] in {"open_gripper", "release", "commanded_release"}
-        and _float(row["start_time"]) <= time + EPS
-        for row in actions
-    )
+    eligible = [
+        (index, row) for index, row in enumerate(actions)
+        if _float(row["start_time"]) <= time + EPS
+    ]
+    if not eligible:
+        return False
+    _, latest = max(eligible, key=lambda pair: (_float(pair[1]["start_time"]), pair[0]))
+    return latest.get("action") in {"open_gripper", "release", "commanded_release"} or latest.get("gripper_command") == "open"
 
 
 def _action_for_event(
@@ -193,6 +201,7 @@ def extract_probe_reference_events(rollout: dict[str, Any]) -> list[dict[str, An
     """Extract primary semantic events from a probe's recorded evidence."""
     root = Path(rollout["rollout_path"])
     actions, events, oracle = _actions(root), _event_rows(root), _oracle_rows(root)
+    termination = _termination(root)
     metadata = _metadata(root)
     intervention = bool(metadata.get("observation_intervention", False) or rollout.get("observation_intervention", False))
     history_complete = not intervention
@@ -267,6 +276,9 @@ def extract_probe_reference_events(rollout: dict[str, Any]) -> list[dict[str, An
                 "explicit_release_before_or_at_event": release_before,
                 "evidence_sufficient_for_type": evidence_ok,
                 "metadata_observation_intervention": intervention,
+                "termination_type": termination.get("termination_type"),
+                "termination_done": termination.get("done"),
+                "termination_horizon": termination.get("horizon"),
             },
         )
         records.append(record)
@@ -279,24 +291,21 @@ def extract_reference_events(rollout: dict[str, Any]) -> list[dict[str, Any]]:
     records = extract_probe_reference_events(rollout)
     if records:
         return records
-    # Some historical records contain only an event log and action intervals.
+    # Without oracle state, an event name alone cannot establish its semantic
+    # class. Keep only an action-proven release; all other cases are unresolved.
     root = Path(rollout["rollout_path"])
     actions, events = _actions(root), _event_rows(root)
-    event_map = {
-        "missed_grasp": ("missed_grasp_retry_required", "retry_grasp"),
-        "contact_lost": ("held_object_loss_recovery_required", "recover_object"),
-        "released": ("release_expected", "release"),
-        "recovery_achieved": ("recovery_achieved_observed", "none"),
-    }
     result = []
     counter = 0
     for index, event in enumerate(events):
         name = event.get("event")
-        if name not in event_map:
+        if name not in {"missed_grasp", "contact_lost", "released", "recovery_achieved"}:
             continue
         counter += 1
-        kind, action = event_map[name]
         action_index, start, end, action_name = _action_for_event(actions, str(name), _float(event["time"]))
+        release_proven = name == "released" and action_name in {"open_gripper", "release", "commanded_release"}
+        kind = "release_expected" if release_proven else "needs_observation"
+        action = "none" if release_proven else "needs_observation"
         result.append({
             "event_id": f"{rollout['rollout_id']}_event_{counter:02d}",
             "rollout_id": rollout["rollout_id"],
@@ -309,9 +318,9 @@ def extract_reference_events(rollout: dict[str, Any]) -> list[dict[str, Any]]:
             "reference_event_type": kind,
             "reference_action_class": action,
             "reference_source": "events.jsonl+actions.csv",
-            "reference_observable_at_decision": bool(event.get("observable_online", False)),
-            "reference_history_complete": True,
-            "reference_label_status": "reference_labeled",
+            "reference_observable_at_decision": bool(release_proven),
+            "reference_history_complete": False,
+            "reference_label_status": "reference_labeled" if release_proven else "reference_unresolved",
             "source_event_name": name,
             "source_action_name": action_name,
             "evidence_summary": {"source_event_index": index},

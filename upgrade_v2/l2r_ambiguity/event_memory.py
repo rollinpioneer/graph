@@ -97,6 +97,7 @@ class AttemptScopedMemory:
             self.state.attempt_id += 1
             self.state.pending_event = "none"
             self.state.hold_evidence_in_current_attempt = FALSE if self.history_complete else UNKNOWN
+            self.state.release_command_observed = FALSE
             self.state.hold_confirm_run_length = 0
             self.state.loss_confirm_run_length = 0
             self.state.resolved_event_id = None
@@ -110,6 +111,14 @@ class AttemptScopedMemory:
             self.state.hold_confirm_run_length = 0
         else:
             self.state.hold_confirm_run_length = 0
+
+        recovery = FALSE
+        # A retry is resolved by the first confirmed stable hold in the same
+        # attempt; it must not keep emitting retry forever after recovery.
+        if self.state.pending_event == "missed_grasp" and stable == TRUE and self.state.hold_evidence_in_current_attempt == TRUE:
+            recovery = TRUE
+            self.state.resolved_event_id = self.state.resolved_event_id or f"resolved_{self.state.event_counter:03d}"
+            self.state.pending_event = "none"
 
         if contact == TRUE and self.state.hold_evidence_in_current_attempt != TRUE:
             self.state.contact_seen_without_hold = TRUE
@@ -134,7 +143,6 @@ class AttemptScopedMemory:
                     self._new_event("missed_grasp", time)
                 self.state.pending_event = "missed_grasp"
 
-        recovery = FALSE
         if self.state.pending_event == "held_object_loss" and self.state.hold_evidence_in_current_attempt == TRUE and stable == TRUE:
             recovery = TRUE
             self.state.resolved_event_id = self.state.resolved_event_id or f"resolved_{self.state.event_counter:03d}"

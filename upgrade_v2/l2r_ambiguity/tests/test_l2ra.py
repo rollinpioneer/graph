@@ -6,7 +6,7 @@ from pathlib import Path
 
 from upgrade_v2.l2r_ambiguity.confirm import confirm
 from upgrade_v2.l2r_ambiguity.evaluate import candidate_sequence
-from upgrade_v2.l2r_ambiguity.reference_events import extract_probe_reference_events
+from upgrade_v2.l2r_ambiguity.reference_events import extract_probe_reference_events, extract_reference_events
 from upgrade_v2.l2r_ambiguity.event_memory import (
     FALSE,
     TRUE,
@@ -99,6 +99,33 @@ def test_long_gap_recovery_and_new_attempt_cleanup():
     assert new_attempt[-1]["selected_action"] == "retry_grasp"
 
 
+def test_missed_grasp_clears_after_confirmed_stable_hold():
+    rows = [
+        obs(0, contact="false", closed="false", stable="false"),
+        obs(1, contact="false", closed="true", stable="false"),
+        obs(2, contact="true", closed="true", stable="true"),
+        obs(3, contact="true", closed="true", stable="true"),
+    ]
+    outputs = run_memory(rows)
+    assert outputs[1]["selected_action"] == "retry_grasp"
+    assert outputs[2]["semantic_events"]["recovery_achieved_observed"] == TRUE
+    assert outputs[2]["selected_action"] == "none"
+    assert outputs[3]["selected_action"] == "none"
+
+
+def test_release_marker_is_scoped_to_the_current_attempt():
+    rows = [
+        obs(0, contact="true", closed="true", stable="true"),
+        obs(1, contact="false", closed="false", stable="false"),
+        obs(2, contact="false", closed="true", stable="false"),
+        obs(3, contact="true", closed="true", stable="true"),
+        obs(4, contact="false", closed="true", stable="false", slip="true"),
+    ]
+    outputs = run_memory(rows)
+    assert outputs[1]["semantic_events"]["release_expected"] == TRUE
+    assert outputs[4]["selected_action"] == "recover_object"
+
+
 def test_forbidden_metadata_and_action_names_do_not_change_online_output():
     base = [obs(0, contact="false", closed="false", stable="false"), obs(1, contact="false", closed="true", stable="false")]
     tainted = json.loads(json.dumps(base))
@@ -166,6 +193,17 @@ def test_reference_event_distinguishes_transient_touch_and_hidden_history(tmp_pa
     assert hidden_record["reference_event_type"] == "held_object_loss_recovery_required"
     assert hidden_record["reference_action_class"] == "needs_observation"
     assert hidden_record["reference_observable_at_decision"] is False
+
+
+def test_reference_event_without_oracle_is_unresolved(tmp_path: Path):
+    root = tmp_path / "no_oracle"
+    root.mkdir()
+    (root / "actions.csv").write_text("action_index,action,start_time,end_time\n0,recover,0,1\n", encoding="utf-8")
+    (root / "events.jsonl").write_text(json.dumps({"event": "contact_lost", "time": 1.0}) + "\n", encoding="utf-8")
+    record = extract_reference_events({"rollout_id": "r", "root_family_id": "f", "rollout_path": str(root)})[0]
+    assert record["reference_event_type"] == "needs_observation"
+    assert record["reference_action_class"] == "needs_observation"
+    assert record["reference_label_status"] == "reference_unresolved"
 
 
 def test_reference_event_uses_prefix_only_for_decision_frame(tmp_path: Path):

@@ -80,9 +80,6 @@ def deliver(repo: Path, run_root: Path, downloads: Path, code_root: Path, stagin
     _manifest(run_root, "l2ra_2_cause_diagnosis", diagnosis.get("status", "MISSING"), {"supported_hypotheses": diagnosis.get("supported_hypotheses", [])})
     _manifest(run_root, "l2ra_3_development_and_selection", route.get("status", "MISSING"), {"new_families": 24, "new_rollouts": 96, "selected_candidate_id": route.get("selected_candidate_id")})
     _manifest(run_root, "l2ra_4_fresh_confirmation", "NOT_RUN", {"consumption_status": consumption.get("status"), "started_once": consumption.get("started_once", False), "reason": consumption.get("reason")})
-    scan = _secret_scan([code_root, run_root / "rounds", final])
-    if scan["status"] != "PASS": raise RuntimeError("secret scan failed")
-    write_json(final / "secret_scan.json", scan)
     handoff_dir = run_root / "rounds/l2ra_5_handoff"
     shutil.copytree(final, handoff_dir / "final_v1", dirs_exist_ok=True)
     _manifest(run_root, "l2ra_5_handoff", _json(final / "next_stage_handoff.json", {}).get("new_status", "MISSING"), {"l3_entry_allowed": False})
@@ -109,13 +106,17 @@ def deliver(repo: Path, run_root: Path, downloads: Path, code_root: Path, stagin
     shutil.copytree(code_root, staging / "code/upgrade_v2/l2r_ambiguity", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     for round_id in ROUND_IDS:
         _copy(run_root / f"rounds/{round_id}/run_manifest.json", staging / f"round_manifests/{round_id}.json")
+    scan = _secret_scan([code_root, run_root / "configs", run_root / "locks", run_root / "manifests", run_root / "rounds", staging])
+    if scan["status"] != "PASS": raise RuntimeError("secret scan failed")
+    write_json(final / "secret_scan.json", scan)
+    _copy(final / "secret_scan.json", staging / "final_v1/secret_scan.json")
     round_index = {"schema": "pathgraph_l2ra_round_package_index_v1", "round_zip_entities_included": False,
                    "note": "The aggregate archive records round ZIP hashes but does not recursively embed ZIP bodies.", "packages": packages}
     write_json(staging / "round_package_index.json", round_index)
     total = downloads / "L2RA_results.zip"
     package_round(staging, total, 200)
     total_record = {**_verify_zip(total), "purpose": "L2RA aggregate lightweight handoff"}
-    index = {"schema": "pathgraph_l2ra_package_index_v1", "scientific_status": _json(final / "next_stage_handoff.json")["new_status"],
+    index = {"schema": "pathgraph_l2ra_package_index_v1", "revision_id": downloads.name, "supersedes": "downloads/l2ra", "scientific_status": _json(final / "next_stage_handoff.json")["new_status"],
              "round_packages": packages, "total_package": total_record, "round_zip_entities_in_total": False,
              "api_calls": 0, "training_jobs": 0, "api_key_read": False, "secret_scan": scan}
     write_json(downloads / "package_index.json", index)
