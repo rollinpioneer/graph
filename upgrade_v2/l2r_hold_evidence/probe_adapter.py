@@ -33,4 +33,8 @@ def program_for_stratum(stratum: str) -> list[str]:
 def perform(sim: Any, action: str) -> dict[str, Any]:
     if action not in {"touch_contact", "separate_touch"}:
         return sim.perform(action)
-    return _custom_perform(sim, action)
+    result = _custom_perform(sim, action)
+    callback = getattr(sim, "_r1_action_end_callback", None)
+    if callback is not None:
+        callback(sim, action, int(result["action_index"]), result)
+    return result

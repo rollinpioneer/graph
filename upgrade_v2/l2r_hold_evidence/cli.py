@@ -24,6 +24,28 @@ def _write_command(run_root: Path, argv: list[str], status: str) -> None:
         handle.write(f"status={status}\npython={' '.join(argv)}\npython_version={platform.python_version()}\n\n")
 
 
+def _run_root_for(args: argparse.Namespace) -> Path:
+    for name in ("output_root", "run_root"):
+        value = getattr(args, name, None)
+        if value is not None:
+            path = Path(value)
+            if name == "run_root":
+                return path
+            if path.name == "new_development":
+                return path.parent.parent
+            if path.parent.name == "rounds":
+                return path.parent.parent
+            if path.parent.name == "locks":
+                return path.parent.parent
+            if path.name == "final_v1":
+                return path.parent
+            return path.parent
+    development_root = getattr(args, "development_root", None)
+    if development_root is not None:
+        return Path(development_root).parent.parent
+    return Path.cwd()
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="PathGraph-SARM L2RA-R1 hold evidence protocol")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -46,6 +68,8 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("handoff")
     p.add_argument("--run-root", type=Path, required=True); p.add_argument("--protocol", type=Path, required=True); p.add_argument("--output-root", type=Path, required=True)
     args = parser.parse_args(argv)
+    run_root = _run_root_for(args)
+    _write_command(run_root, ["python", *sys.argv[1:]] if argv is None else ["python", *argv], "STARTED")
     try:
         if args.command == "prepare":
             result = inputs.prepare(args.source_repo, args.repo_root, args.old_l2ra, args.old_l2r, args.protocol, args.output_root)
@@ -61,7 +85,8 @@ def main(argv: list[str] | None = None) -> int:
             data = []
             for path in sorted((args.run_root / "data/new_development").rglob("metadata.json")):
                 data.append({"path": str(path.resolve()), "sha256": sha256_file(path)})
-            result = {"schema": "pathgraph_l2rar1_development_lock_v1", "status": "LOCKED_BEFORE_SELECT", "protocol_sha256": sha256_file(args.protocol), "metadata_files": data, "sampling": "control_tick_20hz", "reference_version": "timestamp_aligned_proxy_hold_v2", "metric_version": "prefix_event_v2", "api_calls": 0, "training_jobs": 0, "api_key_read": False}
+            code_files = sorted(Path(__file__).resolve().parent.glob("*.py"))
+            result = {"schema": "pathgraph_l2rar1_development_lock_v1", "status": "LOCKED_BEFORE_SELECT", "protocol_sha256": sha256_file(args.protocol), "metadata_files": data, "generator_lock_sha256": sha256_file(args.run_root / "data/new_development/generator_lock.json"), "reference_contract_sha256": sha256_file(args.run_root / "data/new_development/reference_contract.json"), "code_files": [{"path": str(path.resolve()), "sha256": sha256_file(path)} for path in code_files], "sampling": "control_tick_20hz", "comparison_sampling": "action_end", "reference_version": "timestamp_aligned_proxy_hold_v2", "metric_version": "prefix_event_v2", "candidate_grid": protocol.get("candidate_grid"), "new_seeds": protocol.get("new_seeds"), "api_calls": 0, "training_jobs": 0, "api_key_read": False}
             write_json(args.output, result)
         elif args.command == "evaluate-development":
             result = evaluate_development(args.data_root, _json(args.protocol), args.output_root)
@@ -72,11 +97,13 @@ def main(argv: list[str] | None = None) -> int:
         else:
             result = handoff.handoff(args.run_root, args.protocol, args.output_root)
         print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True, default=str))
+        _write_command(run_root, ["python", *sys.argv[1:]] if argv is None else ["python", *argv], "SUCCEEDED")
         return 0
     except Exception as exc:
+        _write_command(run_root, ["python", *sys.argv[1:]] if argv is None else ["python", *argv], "FAILED")
         print(json.dumps({"status": "EXECUTION_ERROR", "error": str(exc)}, ensure_ascii=False, indent=2), file=sys.stderr)
         return 2
 
 
 if __name__ == "__main__":
-raise SystemExit(main())
+    raise SystemExit(main())

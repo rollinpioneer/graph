@@ -11,7 +11,7 @@ class HoldEvidenceTests(unittest.TestCase):
         current = {"object_centroid": (10, 10), "gripper_centroid": (20, 20), "time": 0.05}
         geometry = adjacent_features(previous, current, diagonal=100.0)
         self.assertIsNone(geometry["direction_cosine"])
-        self.assertEqual(evaluate_candidate([{"time": 0.05, "predicates": {"contact_present": "true", "gripper_command_closed": "true"}}], [geometry], "C3_vector", {})[0]["hold_evidence"], "false")
+        self.assertNotEqual(evaluate_candidate([{"time": 0.05, "predicates": {"contact_present": "true", "gripper_command_closed": "true"}}], [geometry], "C3_vector", {})[0]["hold_evidence"], "true")
 
     def test_reverse_motion_is_not_same_direction(self):
         geometry = adjacent_features({"object_centroid": (10, 10), "gripper_centroid": (20, 20), "time": 0.0}, {"object_centroid": (20, 10), "gripper_centroid": (10, 20), "time": 0.05}, diagonal=100.0)

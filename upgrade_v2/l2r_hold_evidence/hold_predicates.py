@@ -18,9 +18,9 @@ def tri(value: Any) -> str:
 def evidence_from_interval(row: dict[str, Any], *, rho_max: float = 0.35, direction_min: float = 0.80, min_motion: float = 0.004) -> str:
     valid = row.get("effective_motion_interval") and row.get("identity_ok") and row.get("direction_cosine") is not None and row.get("relative_vector_error") is not None
     if not valid:
-        return UNKNOWN if row.get("identity_ok") is None else FALSE
+        return UNKNOWN
     if min(float(row["object_displacement_norm"]), float(row["gripper_displacement_norm"])) < min_motion:
-        return FALSE
+        return UNKNOWN
     return TRUE if float(row["direction_cosine"]) >= direction_min and float(row["relative_vector_error"]) <= rho_max else FALSE
 
 
@@ -29,6 +29,8 @@ def evaluate_candidate(observations: list[dict[str, Any]], geometry: list[dict[s
     hold = False
     supported_time = 0.0
     supported_displacement = 0.0
+    run_length = 0
+    previous_time = None
     rows = []
     previous_contact = UNKNOWN
     for obs, geo in zip(observations, geometry):
@@ -42,15 +44,22 @@ def evaluate_candidate(observations: list[dict[str, Any]], geometry: list[dict[s
             evidence = evidence_from_interval(geo, rho_max=float(config.get("relative_rho_max", 0.35)), min_motion=float(config.get("min_motion", 0.004)))
         if candidate_id == "B_count2":
             if evidence == TRUE:
-                config["_run"] = int(config.get("_run", 0)) + 1
-                evidence = TRUE if config["_run"] >= 2 else FALSE
+                run_length += 1
+                evidence = TRUE if run_length >= 2 else UNKNOWN
             else:
-                config["_run"] = 0
+                run_length = 0
         if candidate_id.startswith("C4") and evidence == TRUE:
             dt = float(geo.get("dt_seconds") or 0.0)
-            supported_time += dt
-            supported_displacement += min(float(geo.get("object_displacement_norm") or 0.0), float(geo.get("gripper_displacement_norm") or 0.0))
+            if closed == TRUE and contact == TRUE and geo.get("effective_motion_interval"):
+                supported_time += dt
+                supported_displacement += min(float(geo.get("object_displacement_norm") or 0.0), float(geo.get("gripper_displacement_norm") or 0.0))
+            else:
+                supported_time = 0.0
+                supported_displacement = 0.0
             evidence = TRUE if supported_time >= float(config.get("supported_time_min", 0.1)) and supported_displacement >= float(config.get("supported_displacement_min", 0.004)) else FALSE
+        elif candidate_id.startswith("C4") and geo.get("dt_seconds") is not None and previous_time is not None and float(geo["dt_seconds"]) > 0.25:
+            supported_time = 0.0
+            supported_displacement = 0.0
         if closed == TRUE and contact == TRUE and evidence == TRUE:
             hold = True
         if opened == TRUE or (contact == FALSE and previous_contact == TRUE and hold):
@@ -58,4 +67,5 @@ def evaluate_candidate(observations: list[dict[str, Any]], geometry: list[dict[s
             supported_displacement = 0.0
         rows.append({"frame_index": obs.get("frame_index"), "time": obs.get("time"), "hold_evidence": evidence, "hold_memory": TRUE if hold else FALSE, "supported_time": supported_time, "supported_displacement": supported_displacement, "contact": contact, "closed": closed, "open": opened, "geometry": geo})
         previous_contact = contact
+        previous_time = obs.get("time")
     return rows

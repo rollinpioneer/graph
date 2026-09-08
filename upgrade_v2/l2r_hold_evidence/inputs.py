@@ -139,12 +139,23 @@ def prepare(source_repo: Path, repo_root: Path, old_l2ra: Path, old_l2r: Path, p
         path = old_l2r / "final_v1" / name if not name.startswith("final_v1/") else old_l2r / name
         frozen.append(_resource(path, f"frozen:{name}", "historical_diagnosis_only", "frozen"))
     old_files = []
-    for name in ("final_v1/l2ra_final_report.md", "final_v1/candidate_registry.json", "final_v1/cause_attribution.csv", "final_v1/next_stage_handoff.json"):
+    old_names = (
+        "final_v1/l2ra_final_report.md", "final_v1/candidate_registry.json", "final_v1/cause_attribution.csv", "final_v1/next_stage_handoff.json",
+        "rounds/l2ra_1_replay_and_localization/legacy_dev_fit/legacy_reproduction.json",
+        "rounds/l2ra_1_replay_and_localization/legacy_dev_select/legacy_reproduction.json",
+        "rounds/l2ra_3_development_and_selection/decision_delay.csv",
+        "rounds/l2ra_3_development_and_selection/false_emergency_and_unknown.csv",
+        "rounds/l2ra_3_development_and_selection/legacy_dev_select_compatibility.csv",
+        "data/new_development/probe_records.jsonl", "data/new_development/probe_manifest.csv",
+        "data/new_development/probe_rollout_manifest.csv", "data/new_development/prediction_manifest.csv",
+        "data/new_development/content_duplicate_groups.csv",
+    )
+    for name in old_names:
         old_files.append(_resource(old_l2ra / name, f"old_l2ra:{name}", "historical_diagnosis_only", "old"))
     resolved = {
         "schema": "pathgraph_l2rar1_resolved_inputs_v1",
         "prepared_at": datetime.now(timezone.utc).isoformat(),
-        "repository": {"path": str(repo_root.resolve()), "current_commit": _git_commit(repo_root), "source_repository": str(source_repo.resolve()), "manual_base_commit": "10b3738b527b53a13e15be8b58ad5d1c174e49a4"},
+        "repository": {"path": str(repo_root.resolve()), "implementation_commit": _git_commit(repo_root), "source_repository": str(source_repo.resolve()), "source_repository_commit": _git_commit(source_repo), "manual_base_commit": "10b3738b527b53a13e15be8b58ad5d1c174e49a4"},
         "roles": {"runtime_allowed": ["front_rgb", "contact_sensor", "gripper_command", "online_predicates"], "reference_only": ["events", "oracle_timeline", "weld_state", "future_outcome", "scenario", "stratum"], "historical_diagnosis_only": ["legacy reports", "old confirmation"]},
         "datasets": {"legacy_l2ra_development": {"families": len({r["root_family_id"] for r in records}), "rollouts": len(records), "split_counts": {split: sum(r["split"] == split for r in records) for split in sorted({r["split"] for r in records})}}},
         "rollouts": records,
@@ -159,9 +170,9 @@ def prepare(source_repo: Path, repo_root: Path, old_l2ra: Path, old_l2r: Path, p
     }
     write_json(output_root / "manifests/resolved_inputs.json", resolved)
     lock_files = frozen + old_files + [{"logical_id": "protocol", "path": str(protocol.resolve()), "sha256": sha256_file(protocol)}]
-    write_json(output_root / "locks/source_lock.json", {"schema": "pathgraph_l2rar1_source_lock_v1", "status": "LOCKED", "source_commit": resolved["repository"]["current_commit"], "manual_base_commit": resolved["repository"]["manual_base_commit"], "files": lock_files, "api_calls": 0, "training_jobs": 0, "api_key_read": False})
+    write_json(output_root / "locks/source_lock.json", {"schema": "pathgraph_l2rar1_source_lock_v1", "status": "LOCKED", "source_commit": resolved["repository"]["manual_base_commit"], "source_repository_commit": resolved["repository"]["source_repository_commit"], "implementation_commit": resolved["repository"]["implementation_commit"], "manual_base_commit": resolved["repository"]["manual_base_commit"], "files": lock_files, "api_calls": 0, "training_jobs": 0, "api_key_read": False})
     write_json(output_root / "locks/old_confirmation_status.json", {"schema": "pathgraph_l2rar1_old_confirmation_status_v1", "historical_status": "L2RA_PARTIAL_KEEP_G1", "old_confirmation_status": "NOT_RUN", "source": str((old_l2ra / "final_v1/next_stage_handoff.json").resolve()), "consumed_by_r1": False})
-    source_note = f"""# Source resolution\n\n- Manual base commit: `{resolved['repository']['manual_base_commit']}`\n- R1 worktree commit: `{resolved['repository']['current_commit']}`\n- Source repository: `{source_repo.resolve()}`\n- Old L2RA development recordings are read-only external inputs.\n- The source worktree's unrelated uncommitted L1V changes were not touched.\n- The entry inventory contains action-end observations but no pre-existing 20 Hz paired stream; this is recorded as an execution limitation, not inferred as a scientific negative.\n"""
+    source_note = f"""# Source resolution\n\n- Manual base commit: `{resolved['repository']['manual_base_commit']}`\n- R1 implementation commit: `{resolved['repository']['implementation_commit']}`\n- Source repository commit at execution: `{resolved['repository']['source_repository_commit']}`\n- Source repository: `{source_repo.resolve()}`\n- Old L2RA development recordings are read-only external inputs.\n- The source worktree's unrelated uncommitted L1V changes were not touched.\n- The entry inventory contains action-end observations but no pre-existing 20 Hz paired stream; this is recorded as an execution limitation, not inferred as a scientific negative.\n"""
     note_path = output_root / "source_resolution.md"
     note_path.parent.mkdir(parents=True, exist_ok=True)
     note_path.write_text(source_note, encoding="utf-8")

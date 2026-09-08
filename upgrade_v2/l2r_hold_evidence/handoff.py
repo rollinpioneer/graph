@@ -51,5 +51,19 @@ def handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dict[str,
     write_json(final / "execution_manifest.json", {"schema": "pathgraph_l2rar1_execution_manifest_v1", "status": current_status, "run_root": str(run_root.resolve()), "protocol": str(protocol_path.resolve()), "commands": "see rounds/actual_commands.txt", "api_calls": 0, "training_jobs": 0, "api_key_read": False})
     external = final / "manifests/external_artifacts.tsv"
     external.parent.mkdir(parents=True, exist_ok=True)
-    external.write_text("path\tsize_bytes\tsha256\tuse\n" + "\t\n", encoding="utf-8")
+    external_rows = []
+    external_roots = (
+        (run_root / "data/new_development", "paired rollout observations and metadata"),
+        (run_root / "features", "derived feature cache; reproducible from paired observations"),
+        (run_root / "rounds/l2rar1_1_error_mechanism/case_trace.jsonl", "case-level diagnostic trace"),
+    )
+    for root, purpose in external_roots:
+        paths = sorted(root.rglob("*") if root.is_dir() else [root])
+        for path in paths:
+            if not path.is_file() or path.suffix.lower() not in {".jsonl", ".json", ".csv"}:
+                continue
+            external_rows.append(
+                f"{path.resolve()}\t{path.stat().st_size}\t{sha256_file(path)}\t{purpose}"
+            )
+    external.write_text("path\tsize_bytes\tsha256\tuse\n" + "\n".join(external_rows) + "\n", encoding="utf-8")
     return handoff_payload

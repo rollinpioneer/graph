@@ -34,6 +34,7 @@ class FamilySpec:
     target_x: float
     target_y: float
     rollout_seed_base: int
+    probe_variant: str = "default"
 
 
 def family_spec(
@@ -45,6 +46,7 @@ def family_spec(
     camera_jitter: bool = True,
     object_size_jitter: bool = True,
     friction_jitter: bool = True,
+    probe_variant: str = "default",
 ) -> FamilySpec:
     if scenario not in SCENARIOS:
         raise ValueError(scenario)
@@ -60,6 +62,7 @@ def family_spec(
         target_x=float(rng.uniform(0.27, 0.38)),
         target_y=float(rng.uniform(0.05, 0.17)),
         rollout_seed_base=rollout_seed_base,
+        probe_variant=probe_variant,
     )
 
 
@@ -136,6 +139,8 @@ class DynamicTabletop:
         # same five physics steps as the ordinary control loop and cannot
         # alter actions, state, or RNG.
         self._r1_control_callback = None
+        # Optional read-only hook invoked after the action's final state update.
+        self._r1_action_end_callback = None
         self._initialize_scenario()
         mujoco.mj_forward(self.model, self.data)
 
@@ -244,7 +249,8 @@ class DynamicTabletop:
             self._advance(self.data.mocap_pos[0] + np.array([0.0, 0.0, 0.22]))
         elif action == "transport_to_target":
             midway = (self.data.mocap_pos[0] + target) / 2
-            self._advance(midway)
+            midpoint_controls = 1 if self.spec.probe_variant == "brief_hold" else 4
+            self._advance(midway, controls=midpoint_controls)
             if self.spec.scenario == "slip_then_recover" and not self.failed_once:
                 self.failed_once = True
                 self._detach("contact_lost")
@@ -273,11 +279,14 @@ class DynamicTabletop:
         if self.contact_lost and self.contact_sensor():
             self._record_event("contact_reestablished")
             self.contact_lost = False
-        return {
+        result = {
             "action_index": self.action_index, "action": action, "start_time": round(before, 6), "end_time": round(float(self.data.time), 6),
             "gripper_command": "closed" if self.gripper_closed else "open", "contact_present": self.contact_sensor(),
             "termination_reason": None, "low_level_control_sequence": self._active_control_sequence,
         }
+        if self._r1_action_end_callback is not None:
+            self._r1_action_end_callback(self, action, self.action_index, result)
+        return result
 
     def oracle_snapshot(self) -> dict[str, Any]:
         delta = self.object_xyz[:2] - np.array([self.spec.target_x, self.spec.target_y])

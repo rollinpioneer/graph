@@ -38,7 +38,8 @@ def adjacent_features(previous: dict[str, Any] | None, current: dict[str, Any], 
         after = ((po1[0] - pg1[0]) / diagonal, (po1[1] - pg1[1]) / diagonal)
         relative_drift = math.hypot(after[0] - before[0], after[1] - before[1])
     valid_identity = all(v is not None for v in (po0, pg0, po1, pg1))
-    effective = bool(valid_identity and dt is not None and 0 < dt <= 0.25 and object_norm is not None and gripper_norm is not None)
+    same_geometry = bool(previous is None or (previous.get("width") == current.get("width") and previous.get("height") == current.get("height")))
+    effective = bool(valid_identity and same_geometry and dt is not None and 0 < dt <= 0.25 and object_norm is not None and gripper_norm is not None)
     return {
         "object_displacement_vector": object_vec,
         "gripper_displacement_vector": gripper_vec,
@@ -50,7 +51,7 @@ def adjacent_features(previous: dict[str, Any] | None, current: dict[str, Any], 
         "relative_position_drift": relative_drift,
         "identity_ok": valid_identity,
         "effective_motion_interval": effective,
-        "camera_geometry_valid": True,
+        "camera_geometry_valid": same_geometry,
     }
 
 
