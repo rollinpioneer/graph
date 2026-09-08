@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import shutil
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 from typing import Any
@@ -34,6 +36,27 @@ def write_json(path: Path, value: Any) -> None:
 
 def git_commit(repo: Path) -> str:
     return subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+
+def package_version(name: str) -> str | None:
+    try:
+        return importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+
+
+def runtime_capabilities() -> dict[str, Any]:
+    """Record availability separately from whether the protocol used it."""
+    return {
+        "python": sys.executable,
+        "python_version": sys.version.split()[0],
+        "torch_available": importlib.util.find_spec("torch") is not None,
+        "torch_version": package_version("torch"),
+        "torchvision_available": importlib.util.find_spec("torchvision") is not None,
+        "torchvision_version": package_version("torchvision"),
+        "mujoco_available": importlib.util.find_spec("mujoco") is not None,
+        "mujoco_version": package_version("mujoco"),
+    }
 
 
 def count_candidates(root: Path, batch: str) -> int:
@@ -83,9 +106,11 @@ def build_audit(repo: Path, root: Path, downloads: Path, pytest_status: str, com
         "protocol": "l1v_visual_coarse_v1",
         "model": "qwen3.7-plus",
         "environment": {
-            "python": "/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python",
+            **runtime_capabilities(),
             "pytorch_used": False,
             "local_gpu_used": False,
+            "fallback_used": False,
+            "fallback_reason": None,
             "note": "L1V image preparation, remote inference, scoring, and packaging do not require PyTorch training.",
         },
         "inputs": {
@@ -140,7 +165,9 @@ def build_audit(repo: Path, root: Path, downloads: Path, pytest_status: str, com
     report = """# L1V Completion Audit\n\n"""
     report += f"- Status: `{audit['status']}`\n"
     report += f"- Audit source commit: `{audit['audit_commit']}`\n"
-    report += "- PyTorch: not used; L1V is an image/API/CPU scoring workflow, not a local training workflow.\n"
+    env = audit["environment"]
+    report += f"- Runtime: `{env['python']}`; Torch available=`{env['torch_available']}` ({env['torch_version'] or 'not installed'}); MuJoCo available=`{env['mujoco_available']}` ({env['mujoco_version'] or 'not installed'}).\n"
+    report += "- PyTorch: available status is recorded separately; it was not used because L1V is an image/API/CPU scoring workflow, and no fallback path was taken.\n"
     report += "- API key read: `false`; new API calls: `0`; new training jobs: `0`.\n\n"
     report += "## Result Reconciliation\n\n"
     report += f"- Original preregistered result: `{primary['status']}` using `{primary['coarse_graph_source']}`; preserved unchanged.\n"
