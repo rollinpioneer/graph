@@ -1,0 +1,31 @@
+{
+  "events": {
+    "held_object_loss_recovery_required": "stable hold was observed before non-release contact loss",
+    "missed_grasp_retry_required": "complete current-attempt history shows no stable hold before closed/no-contact",
+    "needs_observation": "required prefix or current observation is unknown, or transient touch lacks stable-hold evidence",
+    "recovery_achieved_observed": "stable hold is observed again after a pending held-loss event",
+    "recovery_in_progress": "an unresolved missed-grasp or held-loss event remains pending",
+    "release_expected": "observed open command explains contact disappearance"
+  },
+  "future_labels_forbidden_online": true,
+  "materialization_note": "Definitions were implemented in event_memory.py/reference_events.py before probe collection; this explicit contract file was materialized during the same unsealed development run and was not changed after seeing confirmation data.",
+  "reference_only_inputs": [
+    "events.jsonl",
+    "oracle_timeline",
+    "termination",
+    "simulator weld/qpos/qvel"
+  ],
+  "runtime_inputs": [
+    "frozen observable predicate prefix",
+    "contact_sensor",
+    "gripper_command"
+  ],
+  "schema": "pathgraph_l2ra_event_reference_contract_v1",
+  "status": "LOCKED_FOR_DEVELOPMENT",
+  "three_valued_logic": {
+    "not_unknown": "unknown",
+    "unknown_and_false": "false",
+    "unknown_and_true": "unknown",
+    "unknown_or_true": "true"
+  }
+}
