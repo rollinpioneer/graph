@@ -1,7 +1,7 @@
 # L1V Completion Audit
 
 - Status: `COMPLETE_WITH_EXPLICIT_REVIEW_UPDATE`
-- Audit source commit: `e607131d7745d46745680bc9a6190a467b01dfa2`
+- Audit source commit: `4c98afa9863a5ecb454564f571e8f122aef252ac`
 - PyTorch: not used; L1V is an image/API/CPU scoring workflow, not a local training workflow.
 - API key read: `false`; new API calls: `0`; new training jobs: `0`.
 
