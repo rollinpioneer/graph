@@ -1,0 +1,55 @@
+from __future__ import annotations
+
+import csv
+import json
+import shutil
+from pathlib import Path
+from typing import Any
+
+from .inputs import read_json, sha256_file, write_json
+
+
+def _write_status_csv(path: Path, status: str, reason: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f"status,reason\n{status},{reason}\n", encoding="utf-8")
+
+
+def _copy_if_exists(source: Path, target: Path) -> None:
+    if source.is_file():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+
+
+def handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dict[str, Any]:
+    final = output_root
+    final.mkdir(parents=True, exist_ok=True)
+    route_path = run_root / "rounds/l2rar1_3_development_selection/development_route.json"
+    route = read_json(route_path) if route_path.is_file() else {"status": "NOT_RUN"}
+    confirm_path = run_root / "rounds/l2rar1_4_fresh_confirmation/confirmation_consumption.json"
+    confirm = read_json(confirm_path) if confirm_path.is_file() else {"status": "NOT_RUN", "standard_confirmation_status": "NOT_RUN", "challenge_confirmation_status": "NOT_RUN"}
+    current_status = "L2RAR1_PARTIAL_KEEP_G1" if route.get("status") == "DEVELOPMENT_NOT_READY" else "L2RAR1_DIAGNOSIS_ONLY"
+    if route.get("status") == "NOT_RUN":
+        current_status = "L2RAR1_DIAGNOSIS_ONLY"
+    for name in ["source_resolution.md"]:
+        _copy_if_exists(run_root / name, final / name)
+    for source_name, target_name in [("rounds/l2rar1_1_error_mechanism/case_attribution.csv", "cause_attribution.csv"), ("rounds/l2rar1_1_error_mechanism/legacy_to_prefix_bridge.csv", "legacy_to_prefix_bridge.csv"), ("rounds/l2rar1_3_development_selection/candidate_registry.json", "candidate_registry.json"), ("rounds/l2rar1_3_development_selection/development_gates.csv", "tables/development_gates.csv"), ("rounds/l2rar1_3_development_selection/candidate_metrics.csv", "tables/method_by_sampling.csv"), ("rounds/l2rar1_3_development_selection/event_decisions.csv", "tables/first_decision_and_delay.csv"), ("rounds/l2rar1_4_fresh_confirmation/confirmation_consumption.json", "locks/confirmation_consumption.json")]:
+        _copy_if_exists(run_root / source_name, final / target_name)
+    write_json(final / "locks/selection_lock.json", read_json(run_root / "locks/selection_lock.json") if (run_root / "locks/selection_lock.json").is_file() else {"status": "MISSING"})
+    write_json(final / "confirmation_status.json", confirm)
+    _write_status_csv(final / "tables/standard_legacy_compatibility.csv", "NOT_RUN", "No independent confirmation was consumed")
+    _write_status_csv(final / "tables/standard_event_metrics.csv", "NOT_RUN", "Development gate failed before R4")
+    _write_status_csv(final / "tables/challenge_event_metrics.csv", "NOT_RUN", "Development gate failed before R4")
+    _write_status_csv(final / "tables/hold_evidence_metrics.csv", "DEVELOPMENT_ONLY", "See method_by_sampling.csv for measured development candidates")
+    _write_status_csv(final / "tables/paired_family_effects.csv", "NOT_RUN", "No confirmation family was consumed")
+    _write_status_csv(final / "tables/content_group_sensitivity.csv", "NOT_RUN", "No confirmation family was consumed")
+    unsupported = {"schema": "pathgraph_l2rar1_unsupported_claims_v1", "claims_not_supported": ["not a physical-robot guarantee", "not an L3 entry approval", "not proof that all old errors were caused by sampling", "no API or training gain claim"]}
+    write_json(final / "unsupported_claims.json", unsupported)
+    report = f"""# L2RA-R1 final report\n\n- Scientific status: **{current_status}**\n- Retained graph: `G1_predicate_bound`\n- Development route: `{route.get('status')}`; selected candidate: `{route.get('selected_candidate_id')}`\n- Confirmation: `{confirm.get('status')}`; standard `{confirm.get('standard_confirmation_status')}`, challenge `{confirm.get('challenge_confirmation_status')}`\n- Primary evidence: old action-end cases plus newly generated R1 control-tick development data where collection completed.\n- The direction-aware and time-aware rules remain proxy measurements in a fixed MuJoCo family.\n- API calls: `0`; training jobs: `0`; API keys read: `false`.\n- L3 entry: `false`; the formal retained graph remains G1.\n\nThe R1 entry replay supports the code-level diagnosis that old co-motion discards direction, but historical action-end observations alone cannot establish that every false positive or missed short hold is a sampling failure.\n"""
+    (final / "final_report.md").write_text(report, encoding="utf-8")
+    handoff_payload = {"schema": "pathgraph_l2rar1_handoff_v1", "historical_l2ra_status": "L2RA_PARTIAL_KEEP_G1", "current_status": current_status, "retained_graph_id": "G1_predicate_bound", "selected_candidate_id": route.get("selected_candidate_id"), "candidate_ready_for_review": bool(route.get("status") == "DEVELOPMENT_READY" and confirm.get("standard_confirmation_status") == "PASS" and confirm.get("challenge_confirmation_status") == "PASS"), "primary_sampling": "control_tick_20hz", "comparison_sampling": "action_end", "new_reference_and_metric_versions": ["timestamp_aligned_proxy_hold_v2", "prefix_event_v2"], "standard_confirmation_status": confirm.get("standard_confirmation_status", "NOT_RUN"), "challenge_confirmation_status": confirm.get("challenge_confirmation_status", "NOT_RUN"), "feature_gain_supported": None, "sampling_gain_supported": None, "common_interface_effect": None, "l3_entry_allowed": False, "api_calls": 0, "training_jobs": 0, "api_key_read": False}
+    write_json(final / "next_stage_handoff.json", handoff_payload)
+    write_json(final / "execution_manifest.json", {"schema": "pathgraph_l2rar1_execution_manifest_v1", "status": current_status, "run_root": str(run_root.resolve()), "protocol": str(protocol_path.resolve()), "commands": "see rounds/actual_commands.txt", "api_calls": 0, "training_jobs": 0, "api_key_read": False})
+    external = final / "manifests/external_artifacts.tsv"
+    external.parent.mkdir(parents=True, exist_ok=True)
+    external.write_text("path\tsize_bytes\tsha256\tuse\n" + "\t\n", encoding="utf-8")
+    return handoff_payload

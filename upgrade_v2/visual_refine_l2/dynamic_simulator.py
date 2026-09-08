@@ -132,6 +132,10 @@ class DynamicTabletop:
         self.action_index = 0
         self.events: list[dict[str, Any]] = []
         self._active_control_sequence: list[dict[str, Any]] = []
+        # Optional read-only hook used by L2RA-R1.  It is invoked after the
+        # same five physics steps as the ordinary control loop and cannot
+        # alter actions, state, or RNG.
+        self._r1_control_callback = None
         self._initialize_scenario()
         mujoco.mj_forward(self.model, self.data)
 
@@ -204,6 +208,8 @@ class DynamicTabletop:
                 "gripper_command": "closed" if self.gripper_closed else "open",
                 "physics_steps": 5,
             })
+            if self._r1_control_callback is not None:
+                self._r1_control_callback(self, self._active_control_sequence[-1])
 
     def contact_sensor(self) -> bool:
         if self.spec.scenario == "missed_grasp_then_retry" and self.failed_once and not self.attached and not self.recovered:
