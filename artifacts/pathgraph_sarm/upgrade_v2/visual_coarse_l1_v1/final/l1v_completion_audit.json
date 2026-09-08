@@ -1,0 +1,116 @@
+{
+  "audit_commit": "e607131d7745d46745680bc9a6190a467b01dfa2",
+  "environment": {
+    "local_gpu_used": false,
+    "note": "L1V image preparation, remote inference, scoring, and packaging do not require PyTorch training.",
+    "python": "/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python",
+    "pytorch_used": false
+  },
+  "execution": {
+    "api_key_read": false,
+    "api_ledger": {
+      "attempts": 74,
+      "status": "PASS",
+      "statuses": {
+        "HTTP_SUCCESS": 74
+      }
+    },
+    "confirmation_candidates": 54,
+    "deepseek_calls": 0,
+    "development_candidates": 18,
+    "smoke_candidates": 2,
+    "training_jobs": 0
+  },
+  "explicit_review_update": {
+    "basis": "later explicit semantic rerating; no new generation calls",
+    "coarse_graph_source": "V1",
+    "decision": "L1V_READY_FOR_REFINEMENT_SINGLE_VIEW",
+    "new_api_calls": 0,
+    "new_training_jobs": 0,
+    "replaces_primary_result": false,
+    "resolution_status": "COMPLETE_EXPLICIT_INDEPENDENT_AGENT_RERATING"
+  },
+  "inputs": {
+    "cases": 24,
+    "prepared_jpeg_count": 48,
+    "root_families": 12,
+    "same_initial_state_views": true,
+    "source_jpeg_count": 48,
+    "source_kind": "simulator_rgb",
+    "upload_allowed": true
+  },
+  "limitations": [
+    "All scenes are locally generated MuJoCo primitive tabletop RGB renders.",
+    "One traceable Codex-agent semantic reviewer was used; no human inter-rater coefficient is available.",
+    "The rerating is a post-hoc review update and must not be presented as the original preregistered confirmation result.",
+    "No claim is made about physical execution, reward learning, policy improvement, real-camera performance, or robot generalization."
+  ],
+  "model": "qwen3.7-plus",
+  "primary_preregistered_result": {
+    "basis": "original confirmation ratings and predeclared thresholds",
+    "coarse_graph_source": "V2",
+    "decision": "L1V_READY_FOR_REFINEMENT_MULTIVIEW",
+    "preserved": true
+  },
+  "protocol": "l1v_visual_coarse_v1",
+  "schema": "l1v_completion_audit_v1",
+  "status": "COMPLETE_WITH_EXPLICIT_REVIEW_UPDATE",
+  "verification": {
+    "aggregate_zip_sha256": "recorded externally in package_index.json and L1V_visual_coarse_graph_results.zip.sha256",
+    "compileall": "PASS",
+    "pytest": "PASS",
+    "scope": "lightweight L1V completion audit; not a new scientific evaluation",
+    "secret_scan": "PASS_NO_CREDENTIALS_FOUND",
+    "zip_records": [
+      {
+        "filename": "L1V_semantic_review_update.zip",
+        "files": 122,
+        "sha256": "5320a6f5c1b2320a4a9c1a86445f6158e26161660b2c3bbe070f941d448b096e",
+        "size_bytes": 786154,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_0_scenes_and_protocol.zip",
+        "files": 11,
+        "sha256": "9ce4b95a268e330686385108b53519cdf44cb4100334cdbbfaa89bf91a1bee14",
+        "size_bytes": 286558,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_1_visual_smoke_and_pilot.zip",
+        "files": 28,
+        "sha256": "7d9e5cfb0952da1a87eb342858899680f8e188a62939786a79c55a8bb80ed56c",
+        "size_bytes": 38431,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_2_frozen_candidates.zip",
+        "files": 62,
+        "sha256": "78367cf7327e7dd103a8ed35c3c41feca107bb1f146fe314a6496de7d3e83590",
+        "size_bytes": 109243,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_3_semantic_review.zip",
+        "files": 8,
+        "sha256": "b6c3dd3d8ae7242d154bd92ceaefba732a659682f3b316ff474855440c959751",
+        "size_bytes": 54693,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_4_paired_results.zip",
+        "files": 14,
+        "sha256": "94b677c7e065da1305886a822e6514fe3f8ab3a4b6e4124c2eabb823b3adbcdd",
+        "size_bytes": 6340,
+        "unzip_test": "PASS"
+      },
+      {
+        "filename": "l1v_5_layer2_handoff.zip",
+        "files": 21,
+        "sha256": "12ddf3f8acee90b29d0ddddd355318ebcf84145e65144a5c352aa1d39ce7ac5a",
+        "size_bytes": 19855,
+        "unzip_test": "PASS"
+      }
+    ]
+  }
+}
