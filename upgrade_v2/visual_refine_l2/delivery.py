@@ -55,6 +55,7 @@ def record_zip(zip_path: Path, placeholder: Path, index: Path, purpose: str) -> 
     payload["packages"] = [row for row in payload["packages"] if row["filename"] != zip_path.name]
     payload["packages"].append({"filename": zip_path.name, "path": str(zip_path.resolve()), "size_bytes": zip_path.stat().st_size, "sha256": digest, "purpose": purpose})
     payload["packages"].sort(key=lambda row: row["filename"])
+    payload["package_count"] = len(payload["packages"])
     payload["updated_at"] = now_iso()
     write_json(index, payload)
     return {"status": "PASS", "zip": str(zip_path.resolve()), "sha256": digest}
@@ -63,7 +64,7 @@ def record_zip(zip_path: Path, placeholder: Path, index: Path, purpose: str) -> 
 def read_index(path: Path) -> dict[str, Any]:
     if path.is_file():
         return json.loads(path.read_text(encoding="utf-8"))
-    return {"schema": "pathgraph_l2r_package_index_v1", "packages": [], "new_api_calls": 0, "new_training_jobs": 0}
+    return {"schema": "pathgraph_l2r_package_index_v1", "package_count": 0, "packages": [], "new_api_calls": 0, "new_training_jobs": 0}
 
 
 def main() -> int:

@@ -33,3 +33,21 @@ def test_package_preserves_curated_external_artifact_manifest(tmp_path) -> None:
         "reason_omitted": "binary externalized",
         "recovery_method": "rerun locked seed",
     }]
+
+
+def test_package_excludes_self_referential_delivery_outputs(tmp_path) -> None:
+    source = tmp_path / "round"
+    (source / "checksums").mkdir(parents=True)
+    (source / "logs").mkdir(parents=True)
+    (source / "summary.md").write_text("ok\n", encoding="utf-8")
+    (source / "checksums/round.sha256").write_text("stale\n", encoding="utf-8")
+    (source / "logs/manual_completion_audit.json").write_text("stale\n", encoding="utf-8")
+    (source / "logs/zip_internal_verification.log").write_text("stale\n", encoding="utf-8")
+    output = tmp_path / "round.zip"
+    package_round(source, output, 200)
+    with zipfile.ZipFile(output) as archive:
+        names = set(archive.namelist())
+    assert "summary.md" in names
+    assert "checksums/round.sha256" not in names
+    assert "logs/manual_completion_audit.json" not in names
+    assert "logs/zip_internal_verification.log" not in names

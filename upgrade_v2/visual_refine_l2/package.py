@@ -18,6 +18,18 @@ EXTERNAL_FIELDS = [
     "artifact_type", "purpose", "reason_omitted", "recovery_method",
 ]
 
+# These files are generated after packaging or contain hashes of the package
+# being built. Keeping them out of the archive avoids a self-referential ZIP
+# whose contents can never agree with its recorded digest.
+DERIVED_DELIVERY_NAMES = {
+    "manual_completion_audit.json",
+    "manual_completion_audit.md",
+    "zip_internal_verification.json",
+    "zip_internal_verification.log",
+    "package_round_completion_audit.log",
+    "package_complete_completion_audit.log",
+}
+
 
 def _zip_info(name: str) -> zipfile.ZipInfo:
     info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
@@ -61,6 +73,8 @@ def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool =
             continue
         relative = path.relative_to(source).as_posix()
         if relative == "manifests/large_file_manifest.tsv":
+            continue
+        if "checksums" in path.relative_to(source).parts or path.name in DERIVED_DELIVERY_NAMES:
             continue
         lower_parts = {part.lower() for part in path.relative_to(source).parts}
         if path.name.startswith(".env") or lower_parts.intersection({"secret", "secrets"}):
