@@ -2,7 +2,8 @@
 
 - Status: `COMPLETE_WITH_EXPLICIT_REVIEW_UPDATE`
 - Audit source commit: `6e9af083605460f16b9517963d70449e4dc35b7e`
-- PyTorch: not used; L1V is an image/API/CPU scoring workflow, not a local training workflow.
+- Runtime: `/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python`; Torch available=`True` (2.7.1); MuJoCo available=`True` (3.4.0).
+- PyTorch: available status is recorded separately; it was not used because L1V is an image/API/CPU scoring workflow, and no fallback path was taken.
 - API key read: `false`; new API calls: `0`; new training jobs: `0`.
 
 ## Result Reconciliation
