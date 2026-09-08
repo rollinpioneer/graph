@@ -1,0 +1,7 @@
+python -m upgrade_v2.visual_refine_l2.cli fit-vision-thresholds --fit-split dev_fit --grid [2916 combinations]
+python -m upgrade_v2.visual_refine_l2.cli infer-observable-predicates --split dev_select --camera front
+python -m upgrade_v2.visual_refine_l2.cli evaluate-predicates --statistics-unit root_family_id
+python -m upgrade_v2.visual_refine_l2.cli fit-vision-thresholds --fit-split dev_fit [implementation-corrected full grid rerun]
+python -m upgrade_v2.visual_refine_l2.cli infer-observable-predicates --split dev_select [corrected frozen thresholds]
+python -m upgrade_v2.visual_refine_l2.cli evaluate-predicates --statistics-unit root_family_id [corrected one-shot rerun]
+python -m upgrade_v2.visual_refine_l2.cli fit-vision-thresholds --fit-split dev_fit [final corrected dataset, full 2916 grid]

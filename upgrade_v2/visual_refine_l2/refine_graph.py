@@ -85,6 +85,8 @@ def select_refined_graph(metrics_path: Path, per_family_path: Path, edit_log: Pa
         "family_generation_lock_path": str(family_generation_lock.resolve()), "family_generation_lock_sha256": sha256_file(family_generation_lock),
         "active_view_query_max": active_view_query_max, "evaluation_metrics": list(metrics[selected]),
         "selection_split": "dev_select", "fresh_confirmation_used": False, "accepted_edits": accepted,
+        "graph_source_path_by_id": {graph_id: str(path.resolve()) for graph_id, path in sorted(graph_paths.items())},
+        "graph_sha256_by_id": {graph_id: sha256_file(path) for graph_id, path in sorted(graph_paths.items())},
     }
     write_json(lock, lock_payload)
     write_report(report, "Refined Graph Selection", [("status", lock_payload["status"]), ("selected graph", selected), ("accepted edits", accepted), ("selection split", "dev_select"), ("fresh confirmation used", False)])

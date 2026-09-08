@@ -129,7 +129,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("select-refined-graph")
     p.add_argument("--metrics", type=Path, required=True); p.add_argument("--per-family", type=Path, required=True); p.add_argument("--edit-log", type=Path, required=True)
-    p.add_argument("--g1", type=Path, required=True); p.add_argument("--g2", type=Path, required=True); p.add_argument("--g3", type=Path, required=True)
+    p.add_argument("--g0", type=Path, required=True); p.add_argument("--g1", type=Path, required=True); p.add_argument("--g2", type=Path, required=True); p.add_argument("--g3", type=Path, required=True)
     p.add_argument("--predicate-thresholds", type=Path, required=True); p.add_argument("--camera-config", type=Path, required=True); p.add_argument("--family-generation-lock", type=Path, required=True)
     p.add_argument("--single-view-preferred", default="true"); p.add_argument("--active-view-query-max", type=float, default=.35)
     p.add_argument("--output", type=Path, required=True); p.add_argument("--lock", type=Path, required=True); p.add_argument("--report", type=Path, required=True)
@@ -183,7 +183,7 @@ def main() -> int:
             prediction_manifest = args.prediction_manifest or _prediction_manifest(args.predicate_root, args.metrics.parent / "prediction_manifest.reconstructed.csv")
             result = execute_graphs(args.graphs, dataset_manifest, prediction_manifest, args.family_split, args.split, args.output_root, args.metrics, args.errors, args.per_family)
         elif command == "propose-refinements": result = propose_refinements(args.base_graph, args.errors, set(args.allowed_edits.split(",")), args.max_edits, args.minimum_families, args.output, args.edit_log, args.report)
-        elif command == "select-refined-graph": result = select_refined_graph(args.metrics, args.per_family, args.edit_log, {"G1_predicate_bound": args.g1, "G2_evidence_refined": args.g2, "G3_active_second_view": args.g3}, args.predicate_thresholds, args.camera_config, args.family_generation_lock, args.active_view_query_max, args.output, args.lock, args.report)
+        elif command == "select-refined-graph": result = select_refined_graph(args.metrics, args.per_family, args.edit_log, {"G0_coarse_direct": args.g0, "G1_predicate_bound": args.g1, "G2_evidence_refined": args.g2, "G3_active_second_view": args.g3}, args.predicate_thresholds, args.camera_config, args.family_generation_lock, args.active_view_query_max, args.output, args.lock, args.report)
         elif command == "generate-fresh-families": result = generate_fresh(args.generation_lock, args.output_root, args.manifest, args.family_lock, args.workers)
         elif command == "evaluate-fresh-confirmation":
             dataset_manifest = args.dataset_manifest or _dataset_manifest(args.dataset, args.output.parent / "dataset_manifest.reconstructed.csv")

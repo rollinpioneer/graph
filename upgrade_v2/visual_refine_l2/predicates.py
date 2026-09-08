@@ -46,6 +46,7 @@ def _infer_from_features(detections: list[dict[str, Any]], contacts: list[dict[s
     rows = []
     contact_history: list[bool] = []
     previously_lost = False
+    previously_failed = False
     for index, (visual, motion) in enumerate(zip(detections, temporal)):
         confidence = float(thresholds["visual_confidence_threshold"])
         object_known = visual["object_confidence"] >= confidence
@@ -69,10 +70,13 @@ def _infer_from_features(detections: list[dict[str, Any]], contacts: list[dict[s
         contact_history.append(contact)
         window = int(thresholds["contact_loss_history_window"])
         recent = contact_history[max(0, index - window):index + 1]
-        recently_lost = len(recent) >= 2 and any(recent[:-1]) and not recent[-1]
+        recently_lost = len(recent) >= 2 and any(recent[:-1]) and not recent[-1] and closed
         if recently_lost:
             previously_lost = True
-        reestablished = previously_lost and contact
+        grasp_failed = closed and not contact
+        if grasp_failed:
+            previously_failed = True
+        reestablished = (previously_lost or previously_failed) and contact
         centered = center is not None and center <= float(thresholds["center_tolerance_ratio"])
         overlaps = target_known and object_known and overlap >= float(thresholds["overlap_ratio"])
         stable_target = centered and stationary
@@ -98,7 +102,7 @@ def _infer_from_features(detections: list[dict[str, Any]], contacts: list[dict[s
             "transport_observed": _tri(closed and contact and bool(moving), moving_known),
             "placement_candidate": _tri(centered and contact, center is not None),
             "goal_verified": _tri(stable_target and not closed, center is not None and motion["window_object_drift_px"] is not None),
-            "grasp_failed_observed": _tri(closed and not contact),
+            "grasp_failed_observed": _tri(grasp_failed),
             "slip_observed": _tri(recently_lost),
             "recovery_observed": _tri(reestablished and moves_with, co_motion is not None),
         }
@@ -166,6 +170,55 @@ def _rollout_summary(predictions: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _baseline_summary(predictions: list[dict[str, Any]], baseline: str) -> dict[str, Any]:
+    """Summarize a frozen ablation without inventing synthetic metric values."""
+    if baseline == "B0_text_coarse_assumption":
+        return {"goal": False, "stable_hold": False, "failure": False, "recovery": False, "unknown_rate": 1.0}
+    if baseline == "B3_single_view_temporal_contact_action":
+        return _rollout_summary(predictions)
+
+    values = {name: [row["predicates"][name] for row in predictions] for name in PREDICATE_NAMES}
+    if baseline == "B1_current_frame_rgb":
+        # A single RGB frame can suggest geometric placement, but cannot verify
+        # temporal stability, contact failure, or recovery.
+        return {
+            "goal": any(value == TRUE for value in values["object_centered_on_target"]),
+            "stable_hold": False,
+            "failure": False,
+            "recovery": False,
+            "unknown_rate": sum(
+                value == UNKNOWN
+                for name in ("object_visible", "target_visible", "object_centered_on_target", "visual_unknown")
+                for value in values[name]
+            ) / max(1, 4 * len(predictions)),
+        }
+    if baseline == "B2_single_view_temporal":
+        co_motion = values["object_moves_with_gripper"]
+        moving = values["object_moving"]
+        seen_hold = False
+        seen_visual_loss = False
+        recovered = False
+        for held, is_moving in zip(co_motion, moving):
+            if held == TRUE:
+                if seen_visual_loss:
+                    recovered = True
+                seen_hold = True
+            elif seen_hold and held == FALSE and is_moving == TRUE:
+                seen_visual_loss = True
+        visual_names = (
+            "object_visible", "target_visible", "object_centered_on_target", "object_stable_on_target",
+            "object_moves_with_gripper", "object_moving", "visual_unknown",
+        )
+        return {
+            "goal": any(value == TRUE for value in values["object_stable_on_target"]),
+            "stable_hold": seen_hold,
+            "failure": seen_visual_loss,
+            "recovery": recovered,
+            "unknown_rate": sum(value == UNKNOWN for name in visual_names for value in values[name]) / max(1, len(visual_names) * len(predictions)),
+        }
+    raise ValueError(f"unknown baseline: {baseline}")
+
+
 def _binary_metrics(pairs: list[tuple[bool, bool]]) -> tuple[float | None, float | None, float | None]:
     tp = sum(pred and truth for pred, truth in pairs); fp = sum(pred and not truth for pred, truth in pairs); fn = sum(not pred and truth for pred, truth in pairs)
     precision = tp / (tp + fp) if tp + fp else None
@@ -183,7 +236,31 @@ def evaluate_prediction_manifest(prediction_manifest: Path, dataset_manifest: Pa
         records.append({
             "rollout_id": row["rollout_id"], "root_family_id": row["root_family_id"],
             "pred_goal": summary["goal"], "true_goal": truth["final_goal_stable"] == "True",
-            "pred_stable_hold": summary["stable_hold"], "true_stable_hold": truth["scenario"] not in {"already_satisfied_stable", "distractor_object_ambiguity"},
+            "pred_stable_hold": summary["stable_hold"], "true_stable_hold": truth["scenario"] != "already_satisfied_stable" and truth["termination_type"] != "horizon",
+            "pred_failure": summary["failure"], "true_failure": truth["missed_grasp"] == "True" or truth["contact_loss"] == "True",
+            "pred_recovery": summary["recovery"], "true_recovery": truth["recovery_achieved"] == "True",
+            "unknown_rate": summary["unknown_rate"], "second_view_queried": row["second_view_queried"],
+        })
+    result: dict[str, Any] = {"records": records}
+    for name in ("goal", "stable_hold", "failure", "recovery"):
+        precision, recall, f1 = _binary_metrics([(record[f"pred_{name}"], record[f"true_{name}"]) for record in records])
+        result[name] = {"precision": precision, "recall": recall, "f1": f1, "positive_denominator": sum(record[f"true_{name}"] for record in records)}
+    result["false_ready_rate"] = sum(record["pred_goal"] and not record["true_goal"] for record in records) / max(1, sum(record["pred_goal"] for record in records))
+    result["unknown_rate"] = sum(record["unknown_rate"] for record in records) / max(1, len(records))
+    return result
+
+
+def evaluate_baseline_manifest(prediction_manifest: Path, dataset_manifest: Path, baseline: str) -> dict[str, Any]:
+    metadata = {row["rollout_id"]: row for row in read_csv(dataset_manifest)}
+    records = []
+    for row in read_csv(prediction_manifest):
+        truth = metadata[row["rollout_id"]]
+        predictions = __import__("upgrade_v2.visual_refine_l2.io", fromlist=["read_jsonl"]).read_jsonl(Path(row["prediction_path"]))
+        summary = _baseline_summary(predictions, baseline)
+        records.append({
+            "rollout_id": row["rollout_id"], "root_family_id": row["root_family_id"],
+            "pred_goal": summary["goal"], "true_goal": truth["final_goal_stable"] == "True",
+            "pred_stable_hold": summary["stable_hold"], "true_stable_hold": truth["scenario"] != "already_satisfied_stable" and truth["termination_type"] != "horizon",
             "pred_failure": summary["failure"], "true_failure": truth["missed_grasp"] == "True" or truth["contact_loss"] == "True",
             "pred_recovery": summary["recovery"], "true_recovery": truth["recovery_achieved"] == "True",
             "unknown_rate": summary["unknown_rate"], "second_view_queried": row["second_view_queried"],
@@ -223,7 +300,7 @@ def fit_thresholds(dataset: Path, dataset_manifest: Path, family_split: Path, fi
             records.append({
                 "rollout_id": rollout_id, "root_family_id": family_id,
                 "pred_goal": summary["goal"], "true_goal": truth["final_goal_stable"] == "True",
-                "pred_stable_hold": summary["stable_hold"], "true_stable_hold": truth["scenario"] not in {"already_satisfied_stable", "distractor_object_ambiguity"},
+                "pred_stable_hold": summary["stable_hold"], "true_stable_hold": truth["scenario"] != "already_satisfied_stable" and truth["termination_type"] != "horizon",
                 "pred_failure": summary["failure"], "true_failure": truth["missed_grasp"] == "True" or truth["contact_loss"] == "True",
                 "pred_recovery": summary["recovery"], "true_recovery": truth["recovery_achieved"] == "True",
                 "unknown_rate": summary["unknown_rate"], "second_view_queried": 0,
@@ -247,24 +324,25 @@ def fit_thresholds(dataset: Path, dataset_manifest: Path, family_split: Path, fi
 
 
 def evaluate_predicates(prediction_manifest: Path, dataset_manifest: Path, output: Path, per_predicate: Path, report: Path) -> dict[str, Any]:
-    metrics = evaluate_prediction_manifest(prediction_manifest, dataset_manifest)
-    main = {
-        "baseline": "B3_single_view_temporal_contact_action", "rollouts": len(metrics["records"]),
-        "goal_precision": metrics["goal"]["precision"], "goal_recall": metrics["goal"]["recall"], "goal_f1": metrics["goal"]["f1"],
-        "stable_hold_f1": metrics["stable_hold"]["f1"], "failure_f1": metrics["failure"]["f1"], "recovery_f1": metrics["recovery"]["f1"],
-        "false_ready_rate": metrics["false_ready_rate"], "unknown_rate": metrics["unknown_rate"],
-    }
+    evaluated = {}
+    for baseline in ("B0_text_coarse_assumption", "B1_current_frame_rgb", "B2_single_view_temporal", "B3_single_view_temporal_contact_action"):
+        metrics = evaluate_baseline_manifest(prediction_manifest, dataset_manifest, baseline)
+        evaluated[baseline] = {
+            "baseline": baseline, "rollouts": len(metrics["records"]),
+            "goal_precision": metrics["goal"]["precision"], "goal_recall": metrics["goal"]["recall"], "goal_f1": metrics["goal"]["f1"],
+            "stable_hold_f1": metrics["stable_hold"]["f1"], "failure_f1": metrics["failure"]["f1"], "recovery_f1": metrics["recovery"]["f1"],
+            "false_ready_rate": metrics["false_ready_rate"], "unknown_rate": metrics["unknown_rate"],
+        }
+    main = evaluated["B3_single_view_temporal_contact_action"]
     baselines = [
-        {**main, "baseline": "B0_text_coarse_assumption", "goal_f1": 0.55, "stable_hold_f1": 0.0, "failure_f1": 0.0, "recovery_f1": 0.0, "false_ready_rate": 0.40, "unknown_rate": 0.0},
-        {**main, "baseline": "B1_current_frame_rgb", "goal_f1": max(0.0, (main["goal_f1"] or 0) - 0.20), "stable_hold_f1": 0.0, "failure_f1": 0.25, "recovery_f1": 0.0, "unknown_rate": min(1.0, main["unknown_rate"] + 0.1)},
-        {**main, "baseline": "B2_single_view_temporal", "stable_hold_f1": max(0.0, (main["stable_hold_f1"] or 0) - 0.15), "failure_f1": max(0.0, (main["failure_f1"] or 0) - 0.2), "recovery_f1": max(0.0, (main["recovery_f1"] or 0) - 0.25)},
-        main,
-        {**main, "baseline": "Oracle_diagnostic_upper_bound", "goal_f1": 1.0, "stable_hold_f1": 1.0, "failure_f1": 1.0, "recovery_f1": 1.0, "false_ready_rate": 0.0, "unknown_rate": 0.0},
+        evaluated["B0_text_coarse_assumption"], evaluated["B1_current_frame_rgb"], evaluated["B2_single_view_temporal"], main,
+        {**main, "baseline": "Oracle_diagnostic_upper_bound", "goal_precision": 1.0, "goal_recall": 1.0, "goal_f1": 1.0, "stable_hold_f1": 1.0, "failure_f1": 1.0, "recovery_f1": 1.0, "false_ready_rate": 0.0, "unknown_rate": 0.0},
     ]
     write_csv(output, baselines)
     predicate_rows = []
+    b3_metrics = evaluate_baseline_manifest(prediction_manifest, dataset_manifest, "B3_single_view_temporal_contact_action")
     for name in ("goal", "stable_hold", "failure", "recovery"):
-        predicate_rows.append({"predicate": {"goal": "goal_verified", "stable_hold": "stable_hold_observed", "failure": "failure_predicate", "recovery": "recovery_observed"}[name], **metrics[name]})
+        predicate_rows.append({"predicate": {"goal": "goal_verified", "stable_hold": "stable_hold_observed", "failure": "failure_predicate", "recovery": "recovery_observed"}[name], **b3_metrics[name]})
     write_csv(per_predicate, predicate_rows)
     gate = "OBSERVABLE_PREDICATES_LOCKED" if (main["goal_f1"] or 0) >= 0.8 and (main["stable_hold_f1"] or 0) >= 0.7 and (main["failure_f1"] or 0) >= 0.6 and (main["recovery_f1"] or 0) >= 0.6 and main["false_ready_rate"] <= 0.15 and main["unknown_rate"] <= 0.30 else "PREDICATES_PARTIAL" if (main["goal_f1"] or 0) >= 0.65 else "OBSERVABILITY_INSUFFICIENT"
     write_report(report, "Observable Predicate Evaluation", [("status", gate), ("goal F1", main["goal_f1"]), ("stable hold F1", main["stable_hold_f1"]), ("failure F1", main["failure_f1"]), ("recovery F1", main["recovery_f1"]), ("false-ready", main["false_ready_rate"]), ("unknown", main["unknown_rate"])])

@@ -46,13 +46,19 @@ def detect_frame(path: Path) -> dict[str, Any]:
     height, width = image.shape[:2]
     object_parts = components["object"]
     target = components["target"][0] if components["target"] else None
+    target_pixels = cv2.findNonZero(masks["target"])
+    if target_pixels is not None:
+        x, y, w, h = cv2.boundingRect(target_pixels)
+        target = {"area": float(cv2.countNonZero(masks["target"])), "centroid": (x + (w - 1) / 2, y + (h - 1) / 2), "bbox": (x, y, w, h)}
     obj = object_parts[0] if object_parts else None
     gripper = components["gripper"][0] if components["gripper"] else None
     obstacle = components["obstacle"][0] if components["obstacle"] else None
     target_radius = max(target["bbox"][2:]) / 2 if target else None
     center_ratio = None
     if obj and target and target_radius:
-        center_ratio = float(np.linalg.norm(np.asarray(obj["centroid"]) - np.asarray(target["centroid"]))) / target_radius
+        # Front-camera perspective shifts the visible object's vertical centroid with height.
+        # Horizontal image displacement remains the calibrated tabletop centering signal.
+        center_ratio = abs(float(obj["centroid"][0]) - float(target["centroid"][0])) / target_radius
     overlap_ratio = 0.0
     if obj and target:
         intersection = cv2.countNonZero(cv2.bitwise_and(masks["object"], masks["target"]))
@@ -68,7 +74,7 @@ def detect_frame(path: Path) -> dict[str, Any]:
         "gripper_centroid": gripper["centroid"] if gripper else None, "gripper_area": gripper["area"] if gripper else 0.0,
         "obstacle_centroid": obstacle["centroid"] if obstacle else None, "obstacle_area": obstacle["area"] if obstacle else 0.0,
         "object_target_center_ratio": center_ratio, "object_target_overlap_ratio": overlap_ratio, "target_occupied_visual": occupied,
-        "object_confidence": min(1.0, (obj["area"] if obj else 0.0) / 180.0),
-        "target_confidence": min(1.0, (target["area"] if target else 0.0) / 500.0),
+        "object_confidence": min(1.0, (obj["area"] if obj else 0.0) / 60.0),
+        "target_confidence": min(1.0, (target["area"] if target else 0.0) / 180.0),
         "gripper_confidence": min(1.0, (gripper["area"] if gripper else 0.0) / 150.0),
     }

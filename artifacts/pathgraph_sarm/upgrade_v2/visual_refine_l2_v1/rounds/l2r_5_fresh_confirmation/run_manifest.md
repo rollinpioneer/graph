@@ -1,0 +1,31 @@
+# Run Manifest
+
+- schema: `pathgraph_l2r_run_manifest_v1`
+- round_id: `l2r_5_fresh_confirmation`
+- purpose: `Generate and consume one fresh 24-family confirmation set under the frozen graph, predicate, camera, and evaluation locks.`
+- status: `L2R_FRESH_CONFIRMATION_COMPLETE`
+- start_time: `2026-09-08T10:21:00+08:00`
+- end_time: `2026-09-08T10:27:00+08:00`
+- recorded_at: `2026-09-08T02:25:40.796808+00:00`
+- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- python: `/home/xushijie/.conda/envs/lerobot/bin/python`
+- commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_5_fresh_confirmation/commands/executed_commands.txt`
+- commands_sha256: `34d8b1dfcb455268a535e88f0781be18665c73765acde3a72d03f3caf4192f81`
+- gpu_used: `True`
+- gpu_ids: `MuJoCo EGL logical device 0; physical UUID mapping not claimed`
+- jobs_run: `4`
+- jobs_failed: `0`
+- new_api_calls: `0`
+- new_training_jobs: `0`
+- api_key_read: `False`
+- scientific_scope: `dynamic MuJoCo primitive tabletop refinement benchmark`
+- actual_denominators:
+  - fresh_families: `24`
+  - fresh_rollouts: `96`
+  - scenario_strata: `8`
+  - families_per_scenario: `3`
+  - unique_graphs_evaluated: `2`
+  - selected_graph: `G1_predicate_bound`
+  - second_view_queries: `0`
+  - bootstrap_resamples: `5000`
+  - post_confirmation_tuning: `False`

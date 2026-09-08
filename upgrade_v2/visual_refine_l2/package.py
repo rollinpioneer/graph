@@ -33,6 +33,8 @@ def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool =
         if not path.is_file() or ".git" in path.parts or "__pycache__" in path.parts:
             continue
         relative = path.relative_to(source).as_posix()
+        if relative == "manifests/large_file_manifest.tsv":
+            continue
         lower_parts = {part.lower() for part in path.relative_to(source).parts}
         if path.name.startswith(".env") or lower_parts.intersection({"secret", "secrets"}):
             raise RuntimeError(f"secret-like path rejected: {relative}")
@@ -59,27 +61,30 @@ def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool =
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_name(output.name + ".partial")
     sums = []
-    with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
-        for relative, path in entries:
-            content = path.read_bytes()
-            archive.writestr(_zip_info(relative), content)
-            sums.append(f"{sha256_bytes(content)}  {relative}")
-        table = io.StringIO()
-        fields = ["logical_path", "original_path", "original_filename", "size_bytes", "sha256", "artifact_type", "reason_omitted", "recovery_method"]
-        writer = csv.DictWriter(table, fieldnames=fields, delimiter="\t", lineterminator="\n")
-        writer.writeheader(); writer.writerows(omitted)
-        manifest = table.getvalue().encode("utf-8")
-        archive.writestr(_zip_info("manifests/large_file_manifest.tsv"), manifest)
-        sums.append(f"{sha256_bytes(manifest)}  manifests/large_file_manifest.tsv")
-        archive.writestr(_zip_info("PACKAGE_SHA256SUMS.txt"), "\n".join(sums) + "\n")
-    with zipfile.ZipFile(temporary) as archive:
-        if archive.testzip() is not None:
-            raise RuntimeError("ZIP CRC validation failed")
-        for line in archive.read("PACKAGE_SHA256SUMS.txt").decode("utf-8").splitlines():
-            digest, relative = line.split("  ", 1)
-            if sha256_bytes(archive.read(relative)) != digest:
-                raise RuntimeError(f"internal SHA mismatch: {relative}")
-    temporary.replace(output)
+    try:
+        with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+            for relative, path in entries:
+                content = path.read_bytes()
+                archive.writestr(_zip_info(relative), content)
+                sums.append(f"{sha256_bytes(content)}  {relative}")
+            table = io.StringIO()
+            fields = ["logical_path", "original_path", "original_filename", "size_bytes", "sha256", "artifact_type", "reason_omitted", "recovery_method"]
+            writer = csv.DictWriter(table, fieldnames=fields, delimiter="\t", lineterminator="\n")
+            writer.writeheader(); writer.writerows(omitted)
+            manifest = table.getvalue().encode("utf-8")
+            archive.writestr(_zip_info("manifests/large_file_manifest.tsv"), manifest)
+            sums.append(f"{sha256_bytes(manifest)}  manifests/large_file_manifest.tsv")
+            archive.writestr(_zip_info("PACKAGE_SHA256SUMS.txt"), "\n".join(sums) + "\n")
+        with zipfile.ZipFile(temporary) as archive:
+            if archive.testzip() is not None:
+                raise RuntimeError("ZIP CRC validation failed")
+            for line in archive.read("PACKAGE_SHA256SUMS.txt").decode("utf-8").splitlines():
+                digest, relative = line.split("  ", 1)
+                if sha256_bytes(archive.read(relative)) != digest:
+                    raise RuntimeError(f"internal SHA mismatch: {relative}")
+        temporary.replace(output)
+    finally:
+        temporary.unlink(missing_ok=True)
     digest = sha256_file(output)
     output.with_name(output.name + ".sha256").write_text(f"{digest}  {output.name}\n", encoding="utf-8")
     return {"status": "PASS", "zip": str(output), "sha256": digest, "packaged_files": len(entries), "externalized_files": len(omitted), "crc": "PASS", "internal_sha": "PASS"}
@@ -89,14 +94,50 @@ def package_round(round_dir: Path, output: Path, max_file_mb: float) -> dict[str
     return _pack(round_dir, output, max_file_mb, exclude_images=True)
 
 
+def _copy_if_present(source: Path, destination: Path) -> None:
+    if source.is_dir():
+        shutil.copytree(source, destination, dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    elif source.is_file():
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+
+
 def package_complete(root: Path, final_root: Path, round_zip_dir: Path, output: Path, max_file_mb: float) -> dict[str, Any]:
     stage = root / "complete_release"
     if stage.exists():
         shutil.rmtree(stage)
     stage.mkdir(parents=True)
-    for source, destination in ((final_root, stage / "final_v1"), (root / "protocol_v1", stage / "protocol_v1"), (root / "coarse_graph_v1", stage / "coarse_graph_v1"), (root / "observable_predicates_v1", stage / "observable_predicates_v1"), (root / "refined_graphs_v1", stage / "refined_graphs_v1"), (root / "fresh_confirmation_v1", stage / "fresh_confirmation_v1")):
-        if source.is_dir():
-            shutil.copytree(source, destination, dirs_exist_ok=True)
+    repo = root.parents[3]
+    selections = (
+        (repo / "upgrade_v2/visual_refine_l2", stage / "upgrade_v2/visual_refine_l2"),
+        (final_root, stage / "final_v1"),
+        (root / "protocol_v1", stage / "protocol_v1"),
+        (root / "coarse_graph_v1", stage / "coarse_graph_v1"),
+        (root / "dynamic_dataset_v1/configs", stage / "dynamic_dataset_v1/configs"),
+        (root / "dynamic_dataset_v1/manifests", stage / "dynamic_dataset_v1/manifests"),
+        (root / "dynamic_dataset_v1/reports", stage / "dynamic_dataset_v1/reports"),
+        (root / "observable_predicates_v1/configs", stage / "observable_predicates_v1/configs"),
+        (root / "observable_predicates_v1/locks", stage / "observable_predicates_v1/locks"),
+        (root / "observable_predicates_v1/reports", stage / "observable_predicates_v1/reports"),
+        (root / "refined_graphs_v1/compiled", stage / "refined_graphs_v1/compiled"),
+        (root / "refined_graphs_v1/candidates/G2_evidence_refined.json", stage / "refined_graphs_v1/candidates/G2_evidence_refined.json"),
+        (root / "refined_graphs_v1/candidates/G3_active_second_view.json", stage / "refined_graphs_v1/candidates/G3_active_second_view.json"),
+        (root / "refined_graphs_v1/edit_logs", stage / "refined_graphs_v1/edit_logs"),
+        (root / "refined_graphs_v1/reports", stage / "refined_graphs_v1/reports"),
+        (root / "refined_graphs_v1/selection", stage / "refined_graphs_v1/selection"),
+        (root / "fresh_confirmation_v1/data/rollout_manifest.csv", stage / "fresh_confirmation_v1/data/rollout_manifest.csv"),
+        (root / "fresh_confirmation_v1/predicates/prediction_manifest.csv", stage / "fresh_confirmation_v1/predicates/prediction_manifest.csv"),
+        (root / "fresh_confirmation_v1/evaluation", stage / "fresh_confirmation_v1/evaluation"),
+        (root / "fresh_confirmation_v1/locks", stage / "fresh_confirmation_v1/locks"),
+        (root / "fresh_confirmation_v1/reports", stage / "fresh_confirmation_v1/reports"),
+    )
+    for source, destination in selections:
+        _copy_if_present(source, destination)
+    for round_dir in sorted((root / "rounds").glob("l2r_*")):
+        for name in ("run_manifest.json", "run_manifest.md", "summary.md"):
+            _copy_if_present(round_dir / name, stage / "rounds" / round_dir.name / name)
+        for manifest in sorted((round_dir / "manifests").glob("*.tsv")):
+            _copy_if_present(manifest, stage / "rounds" / round_dir.name / "manifests" / manifest.name)
     packages = []
     for path in sorted(round_zip_dir.glob("l2r_*.zip")):
         if path.name == output.name:

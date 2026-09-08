@@ -1,0 +1,9 @@
+infer-observable-predicates --split dev_fit --camera front
+compile-coarse-graphs G0/G1
+execute-graphs G0/G1 --split dev_fit
+propose-refinements --max-edits 8 --minimum-families 3
+build G3_active_second_view --query-threshold 0.35
+infer-observable-predicates --split dev_select --selected-graph-lock G3_dev_active_view_lock.json
+execute-graphs G0/G1/G2 front-only --split dev_select
+execute-graphs G3 conditional-side-view --split dev_select
+select-refined-graph --active-view-query-max 0.35

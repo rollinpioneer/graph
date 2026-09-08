@@ -25,6 +25,11 @@ def predict_branch(graph: dict[str, Any], predictions: list[dict[str, Any]], sec
     capabilities = set(graph.get("capabilities", []))
     early = predictions[:max(2, len(predictions) // 3)]
     triggers = []
+    # The query is itself the graph's branch decision.  The returned side-view
+    # predicates may resolve the original unknown, so testing only the merged
+    # stream for visual_unknown would erase evidence that the query occurred.
+    if graph.get("active_second_view") and second_view_queried:
+        triggers.append("request_second_view")
     if "goal_verified_stop" in capabilities and _any(early, "goal_verified"):
         triggers.append("stop_no_action")
     if "target_blocked_branch" in capabilities and _any(predictions, "target_occupied"):
@@ -34,9 +39,7 @@ def predict_branch(graph: dict[str, Any], predictions: list[dict[str, Any]], sec
     if "contact_loss_recovery" in capabilities and _any(predictions, "slip_observed"):
         triggers.append("recover_object")
     if _any(early, "visual_unknown"):
-        if graph.get("active_second_view") and second_view_queried:
-            triggers.append("request_second_view")
-        elif "visual_unknown_clarification" in capabilities:
+        if "visual_unknown_clarification" in capabilities:
             triggers.append("request_clarification")
         elif "visual_unknown_observe" in capabilities:
             triggers.append("observe_scene")

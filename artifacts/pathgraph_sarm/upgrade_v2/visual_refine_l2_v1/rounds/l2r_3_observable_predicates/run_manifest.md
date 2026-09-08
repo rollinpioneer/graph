@@ -1,0 +1,26 @@
+# Run Manifest
+
+- schema: `pathgraph_l2r_run_manifest_v1`
+- round_id: `l2r_3_observable_predicates`
+- purpose: `Freeze observable single-view temporal/contact predicates from dev_fit and evaluate once on dev_select.`
+- status: `OBSERVABLE_PREDICATES_LOCKED`
+- start_time: `2026-09-08T00:57:00+08:00`
+- end_time: `2026-09-08T09:56:00+08:00`
+- recorded_at: `2026-09-08T02:17:49.898310+00:00`
+- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- python: `/home/xushijie/.conda/envs/lerobot/bin/python`
+- commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_3_observable_predicates/commands/executed_commands.txt`
+- commands_sha256: `b9e43adb8d016b1157c969107043f4068e31cefc88048f87d00d1c6f28541fc1`
+- gpu_used: `False`
+- gpu_ids: `none`
+- jobs_run: `3`
+- jobs_failed: `0`
+- new_api_calls: `0`
+- new_training_jobs: `0`
+- api_key_read: `False`
+- scientific_scope: `dynamic MuJoCo primitive tabletop refinement benchmark`
+- actual_denominators:
+  - threshold_grid_combinations: `2916`
+  - dev_fit_families: `32`
+  - dev_select_families: `16`
+  - dev_select_rollouts: `64`

@@ -1,0 +1,35 @@
+# Run Manifest
+
+- schema: `pathgraph_l2r_run_manifest_v1`
+- round_id: `l2r_6_final_handoff`
+- purpose: `Freeze the STOP decision, preserve all graph variants and locks, and provide an auditable L3-or-stop interface.`
+- status: `STOP_VISUAL_REFINEMENT`
+- start_time: `2026-09-08T10:26:00+08:00`
+- end_time: `2026-09-08T10:43:00+08:00`
+- recorded_at: `2026-09-08T02:41:58.051106+00:00`
+- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- python: `/home/xushijie/.conda/envs/lerobot/bin/python`
+- commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_6_final_handoff/commands/executed_commands.txt`
+- commands_sha256: `d0c7879e0a65376b93fadd09751a35907a2fe72429250c3b75537c4316f26dd1`
+- gpu_used: `False`
+- gpu_ids: `none`
+- jobs_run: `8`
+- jobs_failed: `0`
+- new_api_calls: `0`
+- new_training_jobs: `0`
+- api_key_read: `False`
+- scientific_scope: `dynamic MuJoCo primitive tabletop refinement benchmark`
+- actual_denominators:
+  - source_candidates: `18`
+  - pilot_rollouts: `16`
+  - development_families: `48`
+  - development_rollouts: `192`
+  - fresh_families: `24`
+  - fresh_rollouts: `96`
+  - predicate_dev_select_rollouts: `64`
+  - accepted_development_edits: `5`
+  - selected_graph: `G1_predicate_bound`
+  - fresh_failure_denominator: `24`
+  - fresh_recovery_denominator: `24`
+  - api_calls: `0`
+  - training_jobs: `0`

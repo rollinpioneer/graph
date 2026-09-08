@@ -1,0 +1,168 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "grasp_object",
+      "canonical_action": "grasp_object",
+      "dst": "grasp_cup",
+      "expected_effects": [
+        "杯子被机械臂牢固抓持",
+        "杯子脱离托盘表面"
+      ],
+      "id": "edge_grasp",
+      "preconditions": [
+        "绿色杯子可见且可达",
+        "托盘位置固定"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "canonical_action": "transport_object",
+      "dst": "transport_to_slot",
+      "expected_effects": [
+        "杯子水平移动至空位上方",
+        "杯子高度调整至适合放置"
+      ],
+      "id": "edge_transport",
+      "preconditions": [
+        "杯子已被抓取",
+        "目标空位已识别"
+      ],
+      "src": "grasp_cup",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "canonical_action": "place_object",
+      "dst": "release_and_verify",
+      "expected_effects": [
+        "杯子接触托盘空位表面",
+        "机械臂松开杯子"
+      ],
+      "id": "edge_release",
+      "preconditions": [
+        "杯子位于空位正上方",
+        "下方无遮挡物"
+      ],
+      "src": "transport_to_slot",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "canonical_action": "release_object",
+      "dst": "start_state",
+      "expected_effects": [
+        "杯子回到安全静止状态",
+        "系统重置准备重新尝试"
+      ],
+      "id": "edge_recovery_regrasp",
+      "preconditions": [
+        "抓取失败或检测到不稳定",
+        "杯子仍位于原处或轻微移位"
+      ],
+      "src": "grasp_cup",
+      "status": "hypothesized",
+      "trigger": "verify_hold 返回失败或超时"
+    }
+  ],
+  "goal_interpretation": "将绿色杯子从当前在灰色托盘内的位置取出，移动到托盘上的另一个空位（或确认其已处于目标空位），并执行释放操作。鉴于杯子已在托盘内，任务核心在于调整位置至指定空位并确认放置稳定。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "canonical_state": "goal_stability_candidate",
+      "description": "初始状态：绿色杯子位于灰色托盘内",
+      "id": "start_state",
+      "observable_conditions": [
+        "绿色杯子在灰色托盘范围内",
+        "托盘放置在桌面上"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子与托盘底部的接触稳定性",
+        "托盘内确切的可放置空位坐标"
+      ]
+    },
+    {
+      "canonical_state": "stable_hold_candidate",
+      "description": "抓取托盘内的绿色杯子",
+      "id": "grasp_cup",
+      "observable_conditions": [
+        "机械臂接近杯子",
+        "夹爪闭合包围杯身"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳固不滑落",
+        "移动过程中是否会碰撞托盘边缘"
+      ]
+    },
+    {
+      "canonical_state": "object_above_target",
+      "description": "将杯子移动至托盘内的目标空位上方",
+      "id": "transport_to_slot",
+      "observable_conditions": [
+        "杯子悬停于托盘空位正上方",
+        "杯底高于托盘平面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "空位是否足够容纳杯子底部",
+        "放置后杯子是否直立"
+      ]
+    },
+    {
+      "canonical_state": "object_released",
+      "description": "释放杯子并验证其位于空位且稳定",
+      "id": "release_and_verify",
+      "observable_conditions": [
+        "夹爪张开",
+        "杯子静止在托盘空位处"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放后杯子是否倾倒",
+        "杯子是否完全位于空位边界内"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于灰色托盘内部的绿色圆柱形杯子，带有把手",
+      "id": "green_cup",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "放置在橙色桌面上的深灰色矩形托盘",
+      "id": "gray_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "灰色托盘内除杯子当前位置外的可用空间区域",
+      "id": "tray_empty_slot",
+      "observability": "partially_observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取绿色杯子时的摩擦力是否足以支撑垂直提升",
+    "确认托盘内目标空位的几何尺寸大于杯子底部直径",
+    "检查杯子释放后重心是否在支撑多边形内以防倾倒",
+    "评估机械臂运动轨迹是否与托盘边缘发生干涉"
+  ],
+  "schema_version": "l2r_normalized_source_graph_v1",
+  "source_request_id": "confirm_F10_B_V1"
+}

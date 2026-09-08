@@ -212,13 +212,18 @@ def validate_dynamic_dataset(root: Path, manifest: Path, family_split: Path, out
             image_rows.append({"rollout_id": row["rollout_id"], "view": "front", "path": frame["front_path"], "sha256": frame["front_sha256"]})
             if frame["side_path"]:
                 image_rows.append({"rollout_id": row["rollout_id"], "view": "side", "path": frame["side_path"], "sha256": frame["side_sha256"]})
-        rollout_rows.append({"rollout_id": row["rollout_id"], "path": row["path"], "online_npz_sha256": sha256_file(path / "online_observation.npz"), "oracle_npz_sha256": sha256_file(path / "oracle_diagnostic.npz"), "purpose": "dynamic MuJoCo primitive rollout; raw payload externalized"})
+        rollout_rows.append({"rollout_id": row["rollout_id"], "path": row["path"], "size_bytes": sum(item.stat().st_size for item in path.rglob("*") if item.is_file()), "online_npz_sha256": sha256_file(path / "online_observation.npz"), "oracle_npz_sha256": sha256_file(path / "oracle_diagnostic.npz"), "purpose": "dynamic MuJoCo primitive rollout; raw payload externalized"})
     minimums = {"failure_occurrences": 20, "recovery_attempts": 20, "recovery_achievements": 15, "stable_goal_confirmations": 20}
     for key, minimum in minimums.items():
         if counts[key] < minimum:
             failures.append(f"{key}: expected >= {minimum}, got {counts[key]}")
     write_csv(output.parent.parent / "manifests/image_manifest.tsv", image_rows, delimiter="\t")
     write_csv(output.parent.parent / "manifests/rollout_manifest.tsv", rollout_rows, delimiter="\t")
+    write_csv(
+        output.parent.parent / "manifests/large_file_manifest.tsv",
+        [{"path": row["path"], "size_bytes": row["size_bytes"], "artifact_type": "raw_dynamic_rollout_directory", "reason_omitted": "per-frame RGB and NPZ payload externalized", "recovery_method": "rerun the locked family and rollout seeds"} for row in rollout_rows],
+        ["path", "size_bytes", "artifact_type", "reason_omitted", "recovery_method"], delimiter="\t",
+    )
     event_rows = [{"event": key, "count": value} for key, value in counts.items()]
     write_csv(event_counts, event_rows)
     result = {"schema": "pathgraph_l2r_dynamic_dataset_gate_v1", "status": "DYNAMIC_TABLETOP_DATASET_READY" if not failures else "DYNAMIC_DATASET_FAILED", "rollouts": len(rows), "families": len(families), "dev_fit_families": len(fit), "dev_select_families": len(select), "family_leakage": len(fit & select), "event_counts": counts, "failures": failures}

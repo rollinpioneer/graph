@@ -1,0 +1,5 @@
+python -m upgrade_v2.visual_refine_l2.cli verify-dynamic-simulator --scenarios [8 frozen scenarios] --families-per-scenario 1 --rollouts-per-family 2 --seed 220701 --workers 1
+python -m upgrade_v2.visual_refine_l2.cli collect-dynamic-dataset --split development --family-count 48 --rollouts-per-family 4 --family-seed 220710 --rollout-seed-base 2210000 --workers 1
+python -m upgrade_v2.visual_refine_l2.cli validate-dynamic-dataset --expected-rollouts 192 --expected-families 48
+python -m upgrade_v2.visual_refine_l2.cli verify-dynamic-simulator [five-frame verify correction]
+python -m upgrade_v2.visual_refine_l2.cli collect-dynamic-dataset [five-frame verify correction]
