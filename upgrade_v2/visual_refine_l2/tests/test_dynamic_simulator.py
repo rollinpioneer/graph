@@ -43,3 +43,29 @@ def test_stable_place_and_terminal_classes_are_distinct() -> None:
         sim.perform(action)
     assert sim.oracle_snapshot()["goal_stable"]
     assert "horizon" != "failure_terminal"
+
+
+def test_action_records_replayable_low_level_controls() -> None:
+    sim = simulator()
+    result = sim.perform("approach_object")
+    controls = result["low_level_control_sequence"]
+    assert len(controls) == 4
+    assert all(step["physics_steps"] == 5 for step in controls)
+    assert controls[0]["start_time"] == result["start_time"]
+    assert controls[-1]["end_time"] == result["end_time"]
+    assert all(len(step["mocap_position"]) == 3 for step in controls)
+
+
+def test_jitter_flags_are_respected() -> None:
+    spec = family_spec(
+        "fixed_family",
+        "normal_pick_place",
+        7,
+        100,
+        camera_jitter=False,
+        object_size_jitter=False,
+        friction_jitter=False,
+    )
+    assert spec.camera_jitter == 0.0
+    assert spec.object_radius == 0.069
+    assert spec.friction == 0.75

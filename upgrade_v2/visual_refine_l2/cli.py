@@ -11,7 +11,7 @@ from typing import Any
 from .canonicalize import canonicalize, review_canonicalization
 from .compile_graph import compile_graphs
 from .confirm import evaluate_fresh
-from .dataset import SCENARIOS, collect_dataset, generate_fresh, validate_dynamic_dataset, verify_dynamic_simulator
+from .dataset import SCENARIOS, backfill_low_level_controls, collect_dataset, generate_fresh, validate_dynamic_dataset, verify_dynamic_simulator
 from .execute_graph import execute_graphs
 from .handoff import decide_final
 from .io import bool_value, read_csv, read_json, write_csv
@@ -98,6 +98,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--output", type=Path, required=True); p.add_argument("--event-counts", type=Path, required=True); p.add_argument("--report", type=Path, required=True)
     p.add_argument("--expected-rollouts", type=int, default=192); p.add_argument("--expected-families", type=int, default=48)
 
+    p = sub.add_parser("backfill-low-level-controls")
+    p.add_argument("--dataset", type=Path, required=True); p.add_argument("--manifest", type=Path, required=True); p.add_argument("--report", type=Path, required=True)
+
     p = sub.add_parser("fit-vision-thresholds")
     p.add_argument("--dataset", type=Path, required=True); p.add_argument("--dataset-manifest", type=Path); p.add_argument("--family-split", type=Path, required=True)
     p.add_argument("--fit-split", required=True); p.add_argument("--grid", type=Path, required=True); p.add_argument("--online-inputs")
@@ -166,9 +169,16 @@ def main() -> int:
             evidence = args.evidence or args.canonical_graph.parent / "canonicalization_evidence.jsonl"
             result = canonicalize(_paths_file(args.candidate_list), args.rules, args.action_vocabulary, args.state_vocabulary, args.output_dir, args.canonical_graph, args.case_mapping, args.unmapped, evidence, args.report)
         elif command == "review-canonicalization": result = review_canonicalization(args.canonical_graph, args.mapping, args.evidence, args.output, args.report)
-        elif command == "verify-dynamic-simulator": result = verify_dynamic_simulator(args.output_root, args.metrics, args.seed, args.workers)
-        elif command == "collect-dynamic-dataset": result = collect_dataset(args.split, args.family_count, args.rollouts_per_family, args.scenarios, args.family_seed, args.rollout_seed_base, args.output_root, args.manifest, args.family_split, args.workers)
+        elif command == "verify-dynamic-simulator": result = verify_dynamic_simulator(args.output_root, args.metrics, args.seed, args.workers, args.scenarios, args.families_per_scenario, args.rollouts_per_family)
+        elif command == "collect-dynamic-dataset": result = collect_dataset(
+            args.split, args.family_count, args.rollouts_per_family, args.scenarios, args.family_seed, args.rollout_seed_base,
+            args.output_root, args.manifest, args.family_split, args.workers,
+            camera_jitter=True if args.camera_jitter is None else bool_value(args.camera_jitter),
+            object_size_jitter=True if args.object_size_jitter is None else bool_value(args.object_size_jitter),
+            friction_jitter=True if args.friction_jitter is None else bool_value(args.friction_jitter),
+        )
         elif command == "validate-dynamic-dataset": result = validate_dynamic_dataset(args.root, args.manifest, args.family_split, args.output, args.event_counts, args.report, args.expected_rollouts, args.expected_families)
+        elif command == "backfill-low-level-controls": result = backfill_low_level_controls(args.dataset, args.manifest, args.report)
         elif command == "fit-vision-thresholds":
             manifest = args.dataset_manifest or _dataset_manifest(args.dataset, args.grid_results.parent / "fit_dataset_manifest.reconstructed.csv")
             result = fit_thresholds(args.dataset, manifest, args.family_split, args.fit_split, args.grid, args.output, args.grid_results, args.feature_cache or args.grid_results.parent / "feature_cache")

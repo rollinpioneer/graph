@@ -7,6 +7,7 @@ from typing import Any
 
 from .evaluate import selection_score, summarize_executions
 from .io import read_csv, read_json, read_jsonl, write_csv, write_jsonl
+from .predicate_dsl import TRUE, evaluate
 
 
 def expected_branch(scenario: str) -> str:
@@ -21,31 +22,79 @@ def _any(predictions: list[dict[str, Any]], name: str, value: str = "true") -> b
     return any(frame["predicates"].get(name) == value for frame in predictions)
 
 
+def _graph_edges(graph: dict[str, Any]) -> list[dict[str, Any]]:
+    return graph.get("edges", graph.get("topology", {}).get("edges", []))
+
+
+def _edge_truth(graph: dict[str, Any], predictions: list[dict[str, Any]]) -> list[dict[str, str]]:
+    history = [frame["predicates"] for frame in predictions]
+    return [
+        {edge["id"]: evaluate(edge.get("condition", "UNKNOWN"), history, index) for edge in _graph_edges(graph)}
+        for index in range(len(history))
+    ]
+
+
 def predict_branch(graph: dict[str, Any], predictions: list[dict[str, Any]], second_view_queried: bool) -> tuple[str, bool]:
-    capabilities = set(graph.get("capabilities", []))
-    early = predictions[:max(2, len(predictions) // 3)]
-    triggers = []
-    # The query is itself the graph's branch decision.  The returned side-view
-    # predicates may resolve the original unknown, so testing only the merged
-    # stream for visual_unknown would erase evidence that the query occurred.
+    edges = _graph_edges(graph)
+    truths = _edge_truth(graph, predictions)
+    early_limit = max(2, len(predictions) // 3)
+    by_action: dict[str, list[int]] = {}
+    for index, values in enumerate(truths):
+        for edge in edges:
+            if values[edge["id"]] == TRUE:
+                by_action.setdefault(edge["action"], []).append(index)
+    if by_action.get("stop_no_action") and min(by_action["stop_no_action"]) < early_limit:
+        return "stop_no_action", False
+    if by_action.get("clear_target") and min(by_action["clear_target"]) < early_limit:
+        return "clear_target", False
+    event_actions = [action for action in ("retry_grasp", "recover_object") if by_action.get(action)]
+    if event_actions:
+        latest = max(max(by_action[action]) for action in event_actions)
+        active = [action for action in event_actions if latest in by_action[action]]
+        selected = "recover_object" if "recover_object" in active else active[0]
+        return selected, len(active) > 1
     if graph.get("active_second_view") and second_view_queried:
-        triggers.append("request_second_view")
-    if "goal_verified_stop" in capabilities and _any(early, "goal_verified"):
-        triggers.append("stop_no_action")
-    if "target_blocked_branch" in capabilities and _any(predictions, "target_occupied"):
-        triggers.append("clear_target")
-    if "missed_grasp_retry" in capabilities and _any(predictions, "grasp_failed_observed"):
-        triggers.append("retry_grasp")
-    if "contact_loss_recovery" in capabilities and _any(predictions, "slip_observed"):
-        triggers.append("recover_object")
-    if _any(early, "visual_unknown"):
-        if "visual_unknown_clarification" in capabilities:
-            triggers.append("request_clarification")
-        elif "visual_unknown_observe" in capabilities:
-            triggers.append("observe_scene")
-    priority = ["stop_no_action", "clear_target", "retry_grasp", "recover_object", "request_second_view", "request_clarification", "observe_scene"]
-    selected = next((branch for branch in priority if branch in triggers), "manipulate")
-    return selected, len(set(triggers)) > 1
+        return "request_second_view", False
+    if by_action.get("request_clarification"):
+        return "request_clarification", False
+    if by_action.get("observe_scene") and min(by_action["observe_scene"]) < early_limit:
+        return "observe_scene", False
+    return "manipulate", False
+
+
+ACTION_TO_GRAPH = {
+    "observe_scene": "observe_scene",
+    "approach_object": "grasp_object",
+    "close_gripper": "grasp_object",
+    "lift": "grasp_object",
+    "transport_to_target": "transport_object",
+    "align": "align_with_target",
+    "lower": "place_object",
+    "open_gripper": "release_object",
+    "verify": "verify_goal_relation",
+    "retry": "retry_grasp",
+    "recover": "recover_object",
+    "clear_target": "clear_target",
+    "stop": "stop_no_action",
+}
+
+
+def graph_coverage(graph: dict[str, Any], predictions: list[dict[str, Any]], actions: list[str]) -> float:
+    edges = _graph_edges(graph)
+    edge_actions = {edge["action"] for edge in edges}
+    if "fixed_manipulation_path" in graph.get("capabilities", []):
+        edge_actions.update({"observe_scene", "grasp_object", "transport_object", "align_with_target", "place_object", "release_object", "verify_goal_relation"})
+    truths = _edge_truth(graph, predictions)
+    explained = 0
+    for index, action in enumerate(actions):
+        canonical = ACTION_TO_GRAPH.get(action)
+        condition_true = any(
+            edge["action"] == canonical and truths[index].get(edge["id"]) == TRUE
+            for edge in edges
+        )
+        fixed_path = canonical in edge_actions and canonical not in {"retry_grasp", "recover_object", "clear_target", "stop_no_action"}
+        explained += int(condition_true or fixed_path)
+    return explained / len(actions) if actions else 0.0
 
 
 def _branch_correct(predicted: str, expected: str) -> bool:
@@ -73,6 +122,10 @@ def execute_graphs(graph_paths: list[Path], dataset_manifest: Path, prediction_m
                 continue
             truth = dataset[prediction_row["rollout_id"]]
             frames = read_jsonl(Path(prediction_row["prediction_path"]))
+            action_rows = read_csv(Path(truth["path"]) / "actions.csv")
+            actions = [row["action"] for row in action_rows]
+            if len(actions) != len(frames):
+                raise ValueError(f"action/predicate frame mismatch: {truth['rollout_id']}")
             second_view = prediction_row.get("second_view_queried") == "1"
             predicted, ambiguous = predict_branch(graph, frames, second_view)
             expected = expected_branch(truth["scenario"])
@@ -84,7 +137,7 @@ def execute_graphs(graph_paths: list[Path], dataset_manifest: Path, prediction_m
             recovery_handled = recovery_expected and predicted in {"retry_grasp", "recover_object"}
             unknown_rate = sum(value == "unknown" for frame in frames for value in frame["predicates"].values()) / max(1, sum(len(frame["predicates"]) for frame in frames))
             branch_ok = _branch_correct(predicted, expected)
-            coverage = 0.92 if branch_ok else 0.68 if graph["graph_id"] != "G0_coarse_direct" else 0.55
+            coverage = graph_coverage(graph, frames, actions)
             row = {
                 "graph_id": graph["graph_id"], "rollout_id": truth["rollout_id"], "root_family_id": family_id,
                 "predicted_branch": predicted, "expected_branch": expected, "branch_correct": branch_ok,
@@ -94,6 +147,8 @@ def execute_graphs(graph_paths: list[Path], dataset_manifest: Path, prediction_m
                 "recovery_expected": recovery_expected, "recovery_handled": recovery_handled,
                 "already_satisfied": truth["scenario"] == "already_satisfied_stable", "unknown_rate": unknown_rate,
                 "ambiguous": ambiguous, "coverage": coverage, "second_view_queried": second_view,
+                "front_unknown_frames": int(prediction_row.get("front_unknown_frames") or 0),
+                "resolved_unknown_frames": int(prediction_row.get("resolved_unknown_frames") or 0),
             }
             graph_rows.append(row); all_rows.append(row)
             if not branch_ok:

@@ -29,6 +29,7 @@ def _collect_rollout(payload: tuple[dict[str, Any], int, str, bool]) -> dict[str
     simulator = DynamicTabletop(spec, rollout_seed)
     actions = action_program(spec.scenario, rollout_index)
     action_rows = []
+    control_rows = []
     contact_rows = []
     command_rows = []
     oracle_rows = []
@@ -38,6 +39,8 @@ def _collect_rollout(payload: tuple[dict[str, Any], int, str, bool]) -> dict[str
     with TabletopRenderer(simulator.model) as renderer:
         for frame_index, action in enumerate(actions):
             result = simulator.perform(action)
+            controls = result.pop("low_level_control_sequence")
+            control_rows.append({"action_index": result["action_index"], "action": action, "controls": controls})
             action_rows.append(result)
             contact_rows.append({"frame_index": frame_index, "time": result["end_time"], "contact_present": int(result["contact_present"])})
             command_rows.append({"frame_index": frame_index, "time": result["end_time"], "gripper_command": result["gripper_command"]})
@@ -68,6 +71,7 @@ def _collect_rollout(payload: tuple[dict[str, Any], int, str, bool]) -> dict[str
         "terminal_failure": bool(not unresolved and not final_goal), "horizon": unresolved, "time": action_rows[-1]["end_time"],
     }
     write_csv(output / "actions.csv", action_rows)
+    write_jsonl(output / "low_level_controls.jsonl", control_rows)
     write_csv(output / "contact_sensor.csv", contact_rows)
     write_csv(output / "gripper_command.csv", command_rows)
     write_json(output / "termination.json", termination)
@@ -96,12 +100,23 @@ def _collect_rollout(payload: tuple[dict[str, Any], int, str, bool]) -> dict[str
         "target_blocked": spec.scenario == "target_occupied", "ambiguous_or_occluded": spec.scenario in {"distractor_object_ambiguity", "primary_view_occlusion"},
         "online_observation_keys": ["timestamps", "action_code", "gripper_command_closed", "contact_present"],
         "oracle_diagnostic_keys": ["qpos", "qvel", "weld_state", "future_outcome", "scenario"],
+        "low_level_control_steps": sum(len(row["controls"]) for row in control_rows),
     }
     write_json(output / "metadata.json", metadata)
     return {**metadata, "path": str(output.resolve()), "termination_type": termination["termination_type"]}
 
 
-def make_family_specs(family_count: int, scenarios: list[str], family_seed: int, rollout_seed_base: int, prefix: str) -> list[FamilySpec]:
+def make_family_specs(
+    family_count: int,
+    scenarios: list[str],
+    family_seed: int,
+    rollout_seed_base: int,
+    prefix: str,
+    *,
+    camera_jitter: bool = True,
+    object_size_jitter: bool = True,
+    friction_jitter: bool = True,
+) -> list[FamilySpec]:
     if family_count % len(scenarios):
         raise ValueError("family count must be balanced across scenarios")
     per_scenario = family_count // len(scenarios)
@@ -112,13 +127,45 @@ def make_family_specs(family_count: int, scenarios: list[str], family_seed: int,
         for local_index in range(per_scenario):
             family_id = f"{prefix}_{scenario_index:02d}_{local_index:02d}_{family_seed}"
             seed = family_seed + scenario_index * 100 + local_index
-            specs.append(family_spec(family_id, scenario, seed, rollout_seed_base + len(specs) * 100))
+            specs.append(family_spec(
+                family_id,
+                scenario,
+                seed,
+                rollout_seed_base + len(specs) * 100,
+                camera_jitter=camera_jitter,
+                object_size_jitter=object_size_jitter,
+                friction_jitter=friction_jitter,
+            ))
     return specs
 
 
-def collect_dataset(split: str, family_count: int, rollouts_per_family: int, scenarios: list[str], family_seed: int, rollout_seed_base: int, output_root: Path, manifest: Path, family_split: Path | None, workers: int = 1, render_side: bool = True) -> dict[str, Any]:
+def collect_dataset(
+    split: str,
+    family_count: int,
+    rollouts_per_family: int,
+    scenarios: list[str],
+    family_seed: int,
+    rollout_seed_base: int,
+    output_root: Path,
+    manifest: Path,
+    family_split: Path | None,
+    workers: int = 1,
+    render_side: bool = True,
+    camera_jitter: bool = True,
+    object_size_jitter: bool = True,
+    friction_jitter: bool = True,
+) -> dict[str, Any]:
     prefix = {"pilot": "L2P", "development": "L2D", "fresh_confirmation": "L2C"}.get(split, f"L2_{split}")
-    specs = make_family_specs(family_count, scenarios, family_seed, rollout_seed_base, prefix)
+    specs = make_family_specs(
+        family_count,
+        scenarios,
+        family_seed,
+        rollout_seed_base,
+        prefix,
+        camera_jitter=camera_jitter,
+        object_size_jitter=object_size_jitter,
+        friction_jitter=friction_jitter,
+    )
     tasks = []
     split_rows = []
     for scenario_index, scenario in enumerate(scenarios):
@@ -142,17 +189,27 @@ def collect_dataset(split: str, family_count: int, rollouts_per_family: int, sce
     split_by_family = {row["root_family_id"]: row["split"] for row in split_rows}
     for row in results:
         row["split"] = split_by_family[row["root_family_id"]]
-    fields = ["rollout_id", "root_family_id", "split", "scenario", "rollout_seed", "path", "active_object", "frames", "front_frames", "side_frames", "termination_type", "final_goal_stable", "missed_grasp", "contact_loss", "recovery_attempt", "recovery_achieved", "target_blocked", "ambiguous_or_occluded"]
+    fields = ["rollout_id", "root_family_id", "split", "scenario", "rollout_seed", "path", "active_object", "frames", "front_frames", "side_frames", "low_level_control_steps", "termination_type", "final_goal_stable", "missed_grasp", "contact_loss", "recovery_attempt", "recovery_achieved", "target_blocked", "ambiguous_or_occluded"]
     write_csv(manifest, results, fields)
     if family_split:
         write_csv(family_split, sorted(split_rows, key=lambda row: row["root_family_id"]))
     return {"status": "DYNAMIC_TABLETOP_DATASET_READY", "split": split, "families": len(specs), "rollouts": len(results), "manifest": str(manifest), "workers": workers}
 
 
-def verify_dynamic_simulator(output_root: Path, metrics: Path, seed: int, workers: int = 1) -> dict[str, Any]:
+def verify_dynamic_simulator(
+    output_root: Path,
+    metrics: Path,
+    seed: int,
+    workers: int = 1,
+    scenarios: list[str] | None = None,
+    families_per_scenario: int = 1,
+    rollouts_per_family: int = 2,
+) -> dict[str, Any]:
+    scenarios = list(scenarios or SCENARIOS)
+    family_count = len(scenarios) * families_per_scenario
     manifest = output_root / "pilot_rollout_manifest.csv"
     family_split = output_root / "pilot_family_split.csv"
-    collect_dataset("pilot", 8, 2, list(SCENARIOS), seed, seed * 10, output_root, manifest, family_split, workers)
+    collect_dataset("pilot", family_count, rollouts_per_family, scenarios, seed, seed * 10, output_root, manifest, family_split, workers)
     rows = read_csv(manifest)
     checks = {
         "successful_placement": any(row["final_goal_stable"] == "True" for row in rows),
@@ -163,7 +220,7 @@ def verify_dynamic_simulator(output_root: Path, metrics: Path, seed: int, worker
         "target_blocked": any(row["target_blocked"] == "True" for row in rows),
         "ambiguous_or_occluded": any(row["ambiguous_or_occluded"] == "True" for row in rows),
     }
-    result = {"schema": "pathgraph_l2r_dynamic_pilot_v1", "status": "DYNAMIC_TABLETOP_DATASET_READY" if all(checks.values()) else "DYNAMIC_SIMULATOR_FAILED", "families": 8, "rollouts": len(rows), "checks": checks}
+    result = {"schema": "pathgraph_l2r_dynamic_pilot_v1", "status": "DYNAMIC_TABLETOP_DATASET_READY" if all(checks.values()) else "DYNAMIC_SIMULATOR_FAILED", "families": family_count, "rollouts": len(rows), "checks": checks}
     write_json(metrics, result)
     return result
 
@@ -186,7 +243,7 @@ def validate_dynamic_dataset(root: Path, manifest: Path, family_split: Path, out
     rollout_rows = []
     for row in rows:
         path = Path(row["path"])
-        required = [path / name for name in ("actions.csv", "contact_sensor.csv", "gripper_command.csv", "termination.json", "online_observation.npz", "oracle_diagnostic.npz", "events.jsonl", "metadata.json", "frame_manifest.csv")]
+        required = [path / name for name in ("actions.csv", "low_level_controls.jsonl", "contact_sensor.csv", "gripper_command.csv", "termination.json", "online_observation.npz", "oracle_diagnostic.npz", "events.jsonl", "metadata.json", "frame_manifest.csv")]
         missing = [str(item) for item in required if not item.is_file()]
         if missing:
             failures.extend(missing); continue
@@ -229,6 +286,48 @@ def validate_dynamic_dataset(root: Path, manifest: Path, family_split: Path, out
     result = {"schema": "pathgraph_l2r_dynamic_dataset_gate_v1", "status": "DYNAMIC_TABLETOP_DATASET_READY" if not failures else "DYNAMIC_DATASET_FAILED", "rollouts": len(rows), "families": len(families), "dev_fit_families": len(fit), "dev_select_families": len(select), "family_leakage": len(fit & select), "event_counts": counts, "failures": failures}
     write_json(output, result)
     write_report(report, "Dynamic Dataset Summary", [("status", result["status"]), ("rollouts", len(rows)), ("families", len(families)), ("failure occurrences", counts["failure_occurrences"]), ("recovery achievements", counts["recovery_achievements"]), ("stable goals", counts["stable_goal_confirmations"])])
+    return result
+
+
+def backfill_low_level_controls(dataset_root: Path, manifest: Path, report: Path) -> dict[str, Any]:
+    rows = read_csv(manifest)
+    failures = []
+    written = 0
+    control_steps = 0
+    for row in rows:
+        rollout_dir = Path(row["path"])
+        metadata = read_json(rollout_dir / "metadata.json")
+        actions = read_csv(rollout_dir / "actions.csv")
+        family_parts = row["root_family_id"].split("_")
+        if len(family_parts) < 4:
+            failures.append(f"invalid family id: {row['root_family_id']}")
+            continue
+        scenario_index = int(family_parts[-3])
+        local_index = int(family_parts[-2])
+        family_seed = int(family_parts[-1])
+        rollout_index = int(row["rollout_id"].rsplit("_r", 1)[1])
+        spec_seed = family_seed + scenario_index * 100 + local_index
+        rollout_seed = int(metadata["rollout_seed"])
+        spec = family_spec(row["root_family_id"], row["scenario"], spec_seed, rollout_seed - rollout_index)
+        simulator = DynamicTabletop(spec, rollout_seed)
+        program = action_program(row["scenario"], rollout_index)
+        if program != [action["action"] for action in actions]:
+            failures.append(f"action program mismatch: {row['rollout_id']}")
+            continue
+        controls = []
+        for expected, action in zip(actions, program):
+            result = simulator.perform(action)
+            if abs(float(expected["end_time"]) - float(result["end_time"])) > 1e-9:
+                failures.append(f"replay time mismatch: {row['rollout_id']} action {action}")
+                break
+            sequence = result["low_level_control_sequence"]
+            controls.append({"action_index": result["action_index"], "action": action, "controls": sequence})
+            control_steps += len(sequence)
+        else:
+            write_jsonl(rollout_dir / "low_level_controls.jsonl", controls)
+            written += 1
+    result = {"status": "PASS" if not failures else "FAIL", "rollouts": len(rows), "written": written, "control_steps": control_steps, "failures": failures}
+    write_json(report, result)
     return result
 
 

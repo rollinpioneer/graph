@@ -145,16 +145,30 @@ def infer_dataset(dataset: Path, thresholds_path: Path, output_root: Path, manif
         if allowed_families is not None and family_id not in allowed_families:
             continue
         predictions = infer_rollout(rollout, thresholds, camera)
-        query = active and any(frame["predicates"]["visual_unknown"] == TRUE for frame in predictions)
+        front_unknown_frames = sum(frame["predicates"]["visual_unknown"] == TRUE for frame in predictions)
+        resolved_unknown_frames = 0
+        query = active and front_unknown_frames > 0
         if query:
             side = infer_rollout(rollout, thresholds, "side")
             for index, side_frame in enumerate(side):
                 if predictions[index]["predicates"]["visual_unknown"] == TRUE and side_frame["predicates"]["visual_unknown"] != TRUE:
                     side_frame["side_view_used"] = True
                     predictions[index] = side_frame
+                    resolved_unknown_frames += 1
         output = output_root / f"{rollout_id}.jsonl"
         write_jsonl(output, predictions)
-        rows.append({"rollout_id": rollout_id, "root_family_id": family_id, "prediction_path": str(output.resolve()), "frames": len(predictions), "camera": camera, "second_view_queried": int(query), "thresholds_sha256": sha256_file(thresholds_path)})
+        rows.append({
+            "rollout_id": rollout_id,
+            "root_family_id": family_id,
+            "prediction_path": str(output.resolve()),
+            "frames": len(predictions),
+            "camera": camera,
+            "second_view_queried": int(query),
+            "front_unknown_frames": front_unknown_frames,
+            "resolved_unknown_frames": resolved_unknown_frames,
+            "second_view_unknown_resolution_rate": resolved_unknown_frames / front_unknown_frames if front_unknown_frames else None,
+            "thresholds_sha256": sha256_file(thresholds_path),
+        })
     write_csv(manifest, rows)
     return {"status": "PASS", "rollouts": len(rows), "second_view_queries": sum(int(row["second_view_queried"]) for row in rows), "manifest": str(manifest)}
 

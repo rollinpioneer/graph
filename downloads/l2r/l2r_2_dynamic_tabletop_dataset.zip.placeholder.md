@@ -2,7 +2,7 @@
 
 - Original path: `/home/__compress_data/xushijie/graph_github_upload/downloads/l2r/l2r_2_dynamic_tabletop_dataset.zip`
 - Original filename: `l2r_2_dynamic_tabletop_dataset.zip`
-- Size: 97232 bytes
-- SHA256: `1423322c6c0031011fc47ede0f35b2ba8f7af940ef993dfea765ecf98334f64c`
-- Purpose: L2R.2 corrected dynamic MuJoCo tabletop dataset manifests and audit
+- Size: 112540 bytes
+- SHA256: `c05b764d52e2da7e1cecca63b6b7e092b9e70db0e90a1022bb186c215538a632`
+- Purpose: L2R.2 corrected dynamic dataset audit
 - Restore: rerun the corresponding locked L2R command sequence.

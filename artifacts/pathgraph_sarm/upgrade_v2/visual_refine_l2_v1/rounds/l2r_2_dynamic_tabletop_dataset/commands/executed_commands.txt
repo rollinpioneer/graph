@@ -3,3 +3,9 @@ python -m upgrade_v2.visual_refine_l2.cli collect-dynamic-dataset --split develo
 python -m upgrade_v2.visual_refine_l2.cli validate-dynamic-dataset --expected-rollouts 192 --expected-families 48
 python -m upgrade_v2.visual_refine_l2.cli verify-dynamic-simulator [five-frame verify correction]
 python -m upgrade_v2.visual_refine_l2.cli collect-dynamic-dataset [five-frame verify correction]
+
+# Completion audit correction, 2026-09-08
+python -m upgrade_v2.visual_refine_l2.cli backfill-low-level-controls --dataset dynamic_dataset_v1/pilot --manifest pilot_rollout_manifest.csv --report low_level_control_backfill_pilot.json
+python -m upgrade_v2.visual_refine_l2.cli backfill-low-level-controls --dataset dynamic_dataset_v1/development --manifest development_rollout_manifest.csv --report low_level_control_backfill_development.json
+python -m upgrade_v2.visual_refine_l2.cli validate-dynamic-dataset --expected-rollouts 192 --expected-families 48 [low-level controls required]
+generate low_level_control_manifest.tsv with per-file size, SHA256, control-step count, purpose, and recovery path

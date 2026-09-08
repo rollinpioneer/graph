@@ -12,6 +12,7 @@ METRIC_NAMES = (
     "branch_accuracy", "state_readiness_accuracy", "transition_precondition_precision", "transition_effect_precision",
     "goal_precision", "goal_recall", "false_ready_rate", "unnecessary_manipulation_rate", "failure_recall",
     "recovery_recall", "unknown_rate", "ambiguous_edge_rate", "graph_completion_coverage", "second_view_query_rate",
+    "second_view_unknown_resolution_rate",
 )
 
 
@@ -41,6 +42,10 @@ def summarize_executions(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "ambiguous_edge_rate": ratio(sum(row["ambiguous"] for row in rows), len(rows)),
         "graph_completion_coverage": sum(row["coverage"] for row in rows) / max(1, len(rows)),
         "second_view_query_rate": ratio(sum(row["second_view_queried"] for row in rows), len(rows)),
+        "second_view_unknown_resolution_rate": ratio(
+            sum(row.get("resolved_unknown_frames", 0) for row in rows),
+            sum(row.get("front_unknown_frames", 0) for row in rows),
+        ),
     }
 
 

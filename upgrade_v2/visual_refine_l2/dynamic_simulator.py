@@ -36,16 +36,25 @@ class FamilySpec:
     rollout_seed_base: int
 
 
-def family_spec(root_family_id: str, scenario: str, seed: int, rollout_seed_base: int) -> FamilySpec:
+def family_spec(
+    root_family_id: str,
+    scenario: str,
+    seed: int,
+    rollout_seed_base: int,
+    *,
+    camera_jitter: bool = True,
+    object_size_jitter: bool = True,
+    friction_jitter: bool = True,
+) -> FamilySpec:
     if scenario not in SCENARIOS:
         raise ValueError(scenario)
     rng = np.random.default_rng(seed)
     return FamilySpec(
         root_family_id=root_family_id,
         scenario=scenario,
-        object_radius=float(rng.uniform(0.060, 0.078)),
-        friction=float(rng.uniform(0.55, 0.95)),
-        camera_jitter=float(rng.uniform(-1.8, 1.8)),
+        object_radius=float(rng.uniform(0.060, 0.078)) if object_size_jitter else 0.069,
+        friction=float(rng.uniform(0.55, 0.95)) if friction_jitter else 0.75,
+        camera_jitter=float(rng.uniform(-1.8, 1.8)) if camera_jitter else 0.0,
         object_x=float(rng.uniform(-0.38, -0.25)),
         object_y=float(rng.uniform(-0.10, 0.04)),
         target_x=float(rng.uniform(0.27, 0.38)),
@@ -122,6 +131,7 @@ class DynamicTabletop:
         self.contact_lost = False
         self.action_index = 0
         self.events: list[dict[str, Any]] = []
+        self._active_control_sequence: list[dict[str, Any]] = []
         self._initialize_scenario()
         mujoco.mj_forward(self.model, self.data)
 
@@ -177,13 +187,23 @@ class DynamicTabletop:
     def _advance(self, target: np.ndarray | None = None, controls: int = 4) -> None:
         start = self.data.mocap_pos[0].copy()
         for control in range(controls):
+            control_start = float(self.data.time)
             alpha = (control + 1) / controls
             if target is not None:
                 self.data.mocap_pos[0] = start * (1 - alpha) + target * alpha
+            commanded_position = self.data.mocap_pos[0].copy()
             for _ in range(5):
                 if self.attached:
                     self._set_object_xyz(self.data.mocap_pos[0] + np.array([0.0, 0.0, -0.13]))
                 self.mujoco.mj_step(self.model, self.data)
+            self._active_control_sequence.append({
+                "control_step": len(self._active_control_sequence),
+                "start_time": round(control_start, 6),
+                "end_time": round(float(self.data.time), 6),
+                "mocap_position": [round(float(value), 9) for value in commanded_position],
+                "gripper_command": "closed" if self.gripper_closed else "open",
+                "physics_steps": 5,
+            })
 
     def contact_sensor(self) -> bool:
         if self.spec.scenario == "missed_grasp_then_retry" and self.failed_once and not self.attached and not self.recovered:
@@ -193,6 +213,7 @@ class DynamicTabletop:
 
     def perform(self, action: str) -> dict[str, Any]:
         self.action_index += 1
+        self._active_control_sequence = []
         before = float(self.data.time)
         obj = self.object_xyz
         target = np.array([self.spec.target_x, self.spec.target_y, 0.80])
@@ -249,7 +270,7 @@ class DynamicTabletop:
         return {
             "action_index": self.action_index, "action": action, "start_time": round(before, 6), "end_time": round(float(self.data.time), 6),
             "gripper_command": "closed" if self.gripper_closed else "open", "contact_present": self.contact_sensor(),
-            "termination_reason": None,
+            "termination_reason": None, "low_level_control_sequence": self._active_control_sequence,
         }
 
     def oracle_snapshot(self) -> dict[str, Any]:

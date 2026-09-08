@@ -2,18 +2,18 @@
 
 - schema: `pathgraph_l2r_run_manifest_v1`
 - round_id: `l2r_2_dynamic_tabletop_dataset`
-- purpose: `Collect and validate dynamic MuJoCo primitive tabletop pilot and development data`
+- purpose: `Validate dynamic MuJoCo pilot/development data and preserve exact low-level control sequences.`
 - status: `DYNAMIC_TABLETOP_DATASET_READY`
 - start_time: `2026-09-08T08:27:08+08:00`
-- end_time: `2026-09-08T08:46:54+08:00`
-- recorded_at: `2026-09-08T00:46:54.743995+00:00`
-- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- end_time: `2026-09-08T12:20:00+08:00`
+- recorded_at: `2026-09-08T04:23:05.841823+00:00`
+- git_commit: `75bca93877e3de02c398bc72447681d8ea7ea8aa`
 - python: `/home/xushijie/.conda/envs/lerobot/bin/python`
 - commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_2_dynamic_tabletop_dataset/commands/executed_commands.txt`
-- commands_sha256: `43539cf56a0ff7f08b4f8a9f28175fbc44994b7000068ef9357935aeef7a2426`
+- commands_sha256: `70affd8fb722187070f55ab73a2181c224a8af2acc65af50535ba1bfc74d0709`
 - gpu_used: `True`
-- gpu_ids: `EGL logical device 0; physical UUID unavailable in Python namespace`
-- jobs_run: `6`
+- gpu_ids: `MuJoCo EGL logical device 0; physical UUID mapping not claimed`
+- jobs_run: `10`
 - jobs_failed: `0`
 - new_api_calls: `0`
 - new_training_jobs: `0`
@@ -31,7 +31,8 @@
   - recovery_achievements: `48`
   - stable_goal_confirmations: `186`
   - horizon_terminations: `6`
-  - pre_lock_dataset_regenerations: `1`
-  - environment_probe_failures_before_valid_EGL_mapping: `2`
-  - api_calls: `0`
+  - low_level_control_rollouts: `208`
+  - low_level_control_steps: `10806`
+  - external_artifact_records: `416`
   - training_jobs: `0`
+  - api_calls: `0`

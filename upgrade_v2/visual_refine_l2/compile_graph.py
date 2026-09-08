@@ -32,16 +32,19 @@ def compile_graphs(canonical_graph: Path, thresholds: Path, predicate_schema: Pa
     missing = sorted({row["predicate"] for row in bindings} - known)
     if missing:
         raise ValueError(f"predicate schema missing bindings: {missing}")
+    nodes = list(canonical["nodes"])
+    if not any(node["id"] == "goal_verified" for node in nodes):
+        nodes.append({"id": "goal_verified", "state": "goal_verified", "status": "observable"})
     g1 = {
         "schema": "pathgraph_l2r_executable_graph_v1", "graph_id": "G1_predicate_bound", "status": "development_frozen",
         "source_sha256": sha256_file(canonical_graph), "predicate_thresholds_path": str(thresholds.resolve()),
         "predicate_thresholds_sha256": sha256_file(thresholds), "capabilities": ["fixed_manipulation_path", "goal_verified_stop", "visual_unknown_observe"],
         "online_predicates": sorted({row["predicate"] for row in bindings}), "active_second_view": False,
-        "nodes": canonical["nodes"],
+        "nodes": nodes,
         "edges": [
-            {"id": "already_done", "action": "stop_no_action", "condition": "goal_verified"},
-            {"id": "observe_unknown", "action": "observe_scene", "condition": "visual_unknown"},
-            {"id": "manipulate", "action": "grasp_object", "condition": {"op": "AND", "args": ["object_visible", "target_visible", {"op": "NOT", "arg": "goal_verified"}]}},
+            {"id": "already_done", "src": "scene_unverified", "dst": "goal_verified", "action": "stop_no_action", "condition": "goal_verified"},
+            {"id": "observe_unknown", "src": "scene_unverified", "dst": "scene_unverified", "action": "observe_scene", "condition": "visual_unknown"},
+            {"id": "manipulate", "src": "scene_unverified", "dst": "grasp_candidate", "action": "grasp_object", "condition": {"op": "AND", "args": ["object_visible", "target_visible", {"op": "NOT", "arg": "goal_verified"}]}},
         ],
         "selection_data": "predicate bindings only; no dynamic structural edits", "numeric_reward_or_cost": None,
     }

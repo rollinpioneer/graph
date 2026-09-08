@@ -5,3 +5,8 @@ python -m upgrade_v2.visual_refine_l2.cli fit-vision-thresholds --fit-split dev_
 python -m upgrade_v2.visual_refine_l2.cli infer-observable-predicates --split dev_select [corrected frozen thresholds]
 python -m upgrade_v2.visual_refine_l2.cli evaluate-predicates --statistics-unit root_family_id [corrected one-shot rerun]
 python -m upgrade_v2.visual_refine_l2.cli fit-vision-thresholds --fit-split dev_fit [final corrected dataset, full 2916 grid]
+
+# Completion audit correction, 2026-09-08
+python -m upgrade_v2.visual_refine_l2.cli infer-observable-predicates --split dev_select --camera front [manifest includes front/resolved unknown counts]
+python -m upgrade_v2.visual_refine_l2.cli evaluate-predicates --statistics-unit root_family_id [unchanged frozen thresholds]
+record reconstructed dev_select predicate streams in the curated external-artifact manifest

@@ -26,6 +26,8 @@ def decide_final(l1v_decision: Path, source_lock: Path, predicate_metrics: Path,
     confirmation_rows = {row["graph_id"]: row for row in read_csv(confirmation)}
     selected_metrics = confirmation_rows[selection["selected_graph_id"]]
     effects = {row["comparison"]: row for row in read_csv(paired_effects)}
+    refinement_supported = decision.startswith("GO_L3_")
+    retained_graph_id = selection["selected_graph_id"] if refinement_supported else "G1_predicate_bound"
     selected_graph = Path(selection["selected_graph_path"])
     graphs_dir = final_root / "graphs"; graphs_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(selected_graph, graphs_dir / selected_graph.name)
@@ -34,7 +36,14 @@ def decide_final(l1v_decision: Path, source_lock: Path, predicate_metrics: Path,
         "reasons": reasons, "source": {"l1v_decision": l1v["status"], "coarse_graph_source": "V1", "source_candidates": source["candidate_count"], "source_lock_sha256": sha256_file(source_lock)},
         "dynamic_benchmark": {"kind": "dynamic MuJoCo primitive tabletop refinement benchmark", "active_objects": True, "real_robot": False},
         "predicate_interface": {"metrics": predicate, "threshold_lock_path": selection["predicate_thresholds_path"], "threshold_lock_sha256": selection["predicate_thresholds_sha256"]},
-        "graph": {"selected_graph_id": selection["selected_graph_id"], "selected_graph_sha256": selection["selected_graph_sha256"], "accepted_edits": selection["accepted_edits"], "fresh_confirmation_metrics": selected_metrics},
+        "graph": {
+            "development_selected_graph_id": selection["selected_graph_id"],
+            "development_selected_graph_sha256": selection["selected_graph_sha256"],
+            "retained_graph_id": retained_graph_id,
+            "refinement_claim_supported": refinement_supported,
+            "accepted_edits": selection["accepted_edits"],
+            "fresh_confirmation_metrics": selected_metrics,
+        },
         "l3_interface": {
             "entry_allowed": decision.startswith("GO_L3_"),
             "allowed_if_go": ["learn q/D/remaining cost on the frozen graph", "construct potential reward from frozen state transitions", "compare coarse, predicate-bound, and refined graph rewards"],
@@ -52,7 +61,7 @@ def decide_final(l1v_decision: Path, source_lock: Path, predicate_metrics: Path,
         "# L2R Final Report\n\n"
         f"- Decision: `{decision}`\n- L1V visual contribution: preserved from the explicit V1 rerating; not re-estimated here.\n"
         f"- Predicate binding contribution: B3 observable interface was frozen on development data and reused unchanged on fresh families.\n"
-        f"- Structural edit contribution: {selection['accepted_edits']} development edits were accepted as G2 proposals, but the selected graph was `{selection['selected_graph_id']}` and therefore did not use them in confirmation.\n"
+        f"- Structural edit contribution: {selection['accepted_edits']} development edits were accepted; `{selection['selected_graph_id']}` was selected on development and evaluated on fresh families. Refinement support is `{str(refinement_supported).lower()}`, so the retained graph is `{retained_graph_id}`.\n"
         f"- Active second-view contribution: {'selected' if selection['selected_graph_id'] == 'G3_active_second_view' else 'not selected'}.\n"
         f"- Predicate metrics: goal F1={predicate['goal_f1']}, stable-hold F1={predicate['stable_hold_f1']}, failure F1={predicate['failure_f1']}, recovery F1={predicate['recovery_f1']}, unknown={predicate['unknown_rate']}.\n"
         f"- Fresh selected metrics: branch accuracy={selected_metrics['branch_accuracy']}, goal precision={selected_metrics['goal_precision']}, failure recall={selected_metrics['failure_recall']}/{selected_metrics['failure_denominator']}, recovery recall={selected_metrics['recovery_recall']}/{selected_metrics['recovery_denominator']}, coverage={selected_metrics['graph_completion_coverage']}.\n"

@@ -98,9 +98,35 @@ def decide_status(selection_lock: Path, confirmation: Path, paired_effects: Path
         return "STOP_VISUAL_REFINEMENT", stop_reasons
     g0_effect = float(effects["G0_coarse_direct"]["mean_effect"])
     g1_effect = float(effects["G1_predicate_bound"]["mean_effect"])
-    go = numeric["branch_accuracy"] >= .80 and numeric["goal_precision"] >= .85 and numeric["false_ready_rate"] <= .10 and numeric["unnecessary_manipulation_rate"] <= .15 and numeric["failure_denominator"] >= 20 and numeric["failure_recall"] >= .65 and numeric["recovery_denominator"] >= 20 and numeric["recovery_recall"] >= .65 and numeric["unknown_rate"] <= .25 and numeric["ambiguous_edge_rate"] <= .10 and numeric["graph_completion_coverage"] >= .80 and g0_effect >= .15 and g1_effect >= .05 and noninferior >= 6
+    go_checks = {
+        "branch_accuracy>=0.80": numeric["branch_accuracy"] >= .80,
+        "goal_precision>=0.85": numeric["goal_precision"] >= .85,
+        "false_ready_rate<=0.10": numeric["false_ready_rate"] <= .10,
+        "unnecessary_manipulation_rate<=0.15": numeric["unnecessary_manipulation_rate"] <= .15,
+        "failure_denominator>=20": numeric["failure_denominator"] >= 20,
+        "failure_recall>=0.65": numeric["failure_recall"] >= .65,
+        "recovery_denominator>=20": numeric["recovery_denominator"] >= 20,
+        "recovery_recall>=0.65": numeric["recovery_recall"] >= .65,
+        "unknown_rate<=0.25": numeric["unknown_rate"] <= .25,
+        "ambiguous_edge_rate<=0.10": numeric["ambiguous_edge_rate"] <= .10,
+        "graph_completion_coverage>=0.80": numeric["graph_completion_coverage"] >= .80,
+        "selected_minus_g0>=0.15": g0_effect >= .15,
+        "selected_minus_g1>=0.05": g1_effect >= .05,
+        "scenario_noninferiority>=6/8": noninferior >= 6,
+    }
+    go = all(go_checks.values())
     if go and selected != "G3_active_second_view":
         return "GO_L3_REWARD_GROUNDING_SINGLE_VIEW", [f"all GO thresholds passed; scenario noninferiority={noninferior}/8"]
-    if go and selected == "G3_active_second_view" and numeric["second_view_query_rate"] <= .35:
+    if go and selected == "G3_active_second_view" and numeric["second_view_query_rate"] <= .35 and numeric.get("second_view_unknown_resolution_rate") is not None and numeric["second_view_unknown_resolution_rate"] >= .50:
         return "GO_L3_REWARD_GROUNDING_ACTIVE_MULTIVIEW", [f"all active-view GO thresholds passed; query rate={numeric['second_view_query_rate']}"]
-    return "L2R_PARTIAL_KEEP_COARSE_GRAPH", [f"GO structural gain gate not met; selected-G0={g0_effect:.6f}, selected-G1={g1_effect:.6f}, noninferior={noninferior}/8"]
+    failed_checks = [name for name, passed in go_checks.items() if not passed]
+    if selected == "G3_active_second_view":
+        if numeric["second_view_query_rate"] > .35:
+            failed_checks.append("second_view_query_rate<=0.35")
+        if numeric.get("second_view_unknown_resolution_rate") is None or numeric["second_view_unknown_resolution_rate"] < .50:
+            failed_checks.append("second_view_unknown_resolution_rate>=0.50")
+    failed = ", ".join(failed_checks)
+    return "L2R_PARTIAL_KEEP_COARSE_GRAPH", [
+        f"GO gate not met ({failed}); selected-G0={g0_effect:.6f}, "
+        f"selected-G1={g1_effect:.6f}, noninferior={noninferior}/8"
+    ]

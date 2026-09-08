@@ -3,3 +3,11 @@ audit fresh family balance, development overlap, and family-lock hashes
 infer-observable-predicates --camera front --selected-graph-lock selection_lock.json
 evaluate-fresh-confirmation G0/G1/selected --bootstrap 5000 --seed 230501
 no threshold, graph, camera, family, or metric changes after confirmation
+
+# Completion audit correction, 2026-09-08
+archive pre-correction selection, confirmation, and final evidence under implementation_correction/pre_correction
+reuse unchanged frozen 24-family/96-rollout dataset; do not regenerate families
+infer-observable-predicates --camera front --selected-graph-lock corrected_selection_lock.json
+evaluate-fresh-confirmation G0/G1/G2 --bootstrap 5000 --seed 230501
+record implementation-correction reexecution with no fresh-metric-driven tuning
+record fresh low-level controls, predicate streams, and graph execution streams in curated external manifests

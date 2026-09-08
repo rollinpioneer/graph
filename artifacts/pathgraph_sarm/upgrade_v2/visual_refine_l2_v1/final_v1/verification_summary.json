@@ -1,79 +1,171 @@
 {
-  "api_calls": 0,
-  "api_key_read": false,
   "compileall": "PASS",
-  "confirmation_lock": "PASS",
-  "fresh_dataset": {
-    "families": 24,
+  "completion_audit": {
+    "action_frame_control_mismatches": 0,
+    "confirmation_lock": {
+      "failures": [],
+      "fresh_families": 24,
+      "selected_graph_id": "G2_evidence_refined",
+      "status": "PASS"
+    },
+    "control_counts": {
+      "development": {
+        "control_steps": 9954,
+        "rollouts": 192,
+        "with_controls": 192
+      },
+      "fresh": {
+        "control_steps": 4977,
+        "rollouts": 96,
+        "with_controls": 96
+      },
+      "pilot": {
+        "control_steps": 852,
+        "rollouts": 16,
+        "with_controls": 16
+      }
+    },
+    "dev_metric_graph_ids": [
+      "G0_coarse_direct",
+      "G1_predicate_bound",
+      "G2_evidence_refined",
+      "G3_active_second_view"
+    ],
+    "development_families": 48,
+    "development_selected_graph": "G2_evidence_refined",
+    "failures": [],
     "family_overlap": 0,
-    "online_oracle_leakage": 0,
-    "rollouts": 96,
+    "fresh_families": 24,
+    "fresh_rollouts": 96,
+    "g1_unknown_observation_condition": "visual_unknown",
+    "g2_accepted_edits": [
+      "E5",
+      "E4",
+      "E1",
+      "E6",
+      "E7"
+    ],
+    "legacy_u0_u1_zip": {
+      "path": "/home/__compress_data/xushijie/graph_github_upload/downloads/upgrade_v2/U0_U1_complete.zip",
+      "sha256": "dab481dde49a470eb7b1ebc312600111176e18cd022cd5532732cf9c78d98b50"
+    },
+    "online_oracle_leakage_findings": 0,
+    "retained_graph": "G1_predicate_bound",
+    "schema": "pathgraph_l2r_completion_audit_v1",
+    "source_lock": {
+      "failures": [],
+      "files": 40,
+      "status": "PASS"
+    },
     "status": "PASS"
   },
+  "development_selected_graph": "G2_evidence_refined",
+  "environment": {
+    "cuda_visible_in_current_audit_session": false,
+    "l2r_execution_mode": "deterministic CPU vision predicates and graph DSL; MuJoCo data were rendered through EGL logical device 0",
+    "physical_gpu_uuid_claimed": false,
+    "python": "/home/xushijie/.conda/envs/lerobot/bin/python",
+    "pytorch_missing_fallback": false,
+    "torch": "2.7.1+cu126"
+  },
+  "execution": {
+    "api_calls": 0,
+    "api_key_read": false,
+    "training_jobs": 0
+  },
+  "fresh_metrics": {
+    "ambiguous_edge_rate": 0.125,
+    "branch_accuracy": 0.9583333333333334,
+    "failure_recall": 1.0,
+    "families": 24,
+    "g2_minus_g0": 0.7083333333333334,
+    "g2_minus_g1": 0.5833333333333334,
+    "goal_precision": 1.0,
+    "graph_completion_coverage": 0.9639136904761911,
+    "recovery_recall": 1.0,
+    "rollouts": 96
+  },
   "git_diff_check": "PASS",
+  "implementation_correction": {
+    "fresh_families_regenerated": false,
+    "post_confirmation_metric_tuning": false,
+    "pre_correction_evidence_preserved": true,
+    "status": "CORRECTED_AND_RECOMPUTED"
+  },
   "legacy_u0_u1_zip": {
     "path": "/home/__compress_data/xushijie/graph_github_upload/downloads/upgrade_v2/U0_U1_complete.zip",
     "sha256": "dab481dde49a470eb7b1ebc312600111176e18cd022cd5532732cf9c78d98b50"
   },
   "pytest": {
     "status": "PASS",
-    "tests": 11
+    "tests": 19
   },
-  "round_packages": [
+  "refinement_claim_supported": false,
+  "retained_graph": "G1_predicate_bound",
+  "round_packages_pre_final": [
     {
+      "failures": [],
       "filename": "l2r_0_entry_and_source_lock.zip",
       "internal_sha": "PASS",
-      "sha256": "e6ee547fd8778f67b40e4f743c49c11dfdec576b79fa322f536883a49bbe63e6",
-      "size_bytes": 13571,
+      "sha256": "00270d38441723db0c7a23e294b9133aa242ee91c318e80ea8f49825490921d1",
+      "sidecar_sha": "PASS",
+      "size_bytes": 14504,
       "unzip_crc": "PASS"
     },
     {
+      "failures": [],
       "filename": "l2r_1_coarse_graph_canonicalization.zip",
       "internal_sha": "PASS",
-      "sha256": "91931c4482060a98d2d3793569b6e52df1a02af274a841d3f2fb8cc509b5a9ce",
-      "size_bytes": 11691,
+      "sha256": "f05de44ebde0b21317d2614e45f0caac420cdafc8ec1dc4fefb820a9b474ab5e",
+      "sidecar_sha": "PASS",
+      "size_bytes": 12708,
       "unzip_crc": "PASS"
     },
     {
+      "failures": [],
       "filename": "l2r_2_dynamic_tabletop_dataset.zip",
       "internal_sha": "PASS",
-      "sha256": "1423322c6c0031011fc47ede0f35b2ba8f7af940ef993dfea765ecf98334f64c",
-      "size_bytes": 97232,
+      "sha256": "c05b764d52e2da7e1cecca63b6b7e092b9e70db0e90a1022bb186c215538a632",
+      "sidecar_sha": "PASS",
+      "size_bytes": 112540,
       "unzip_crc": "PASS"
     },
     {
+      "failures": [],
       "filename": "l2r_3_observable_predicates.zip",
       "internal_sha": "PASS",
-      "sha256": "b59bef70599161ff1e5007ca3d5c4d5aa12e871b122ed75b933ee0955259c415",
-      "size_bytes": 32905,
+      "sha256": "4afd9e6dcab833b85c907d2c7f387dd647e16e609b94c42e1442053587543144",
+      "sidecar_sha": "PASS",
+      "size_bytes": 36311,
       "unzip_crc": "PASS"
     },
     {
+      "failures": [],
       "filename": "l2r_4_graph_binding_and_refinement.zip",
       "internal_sha": "PASS",
-      "sha256": "b02da947e16fb7ee1de530c33c706b122d50cdad93727ff39cbf5a34da7a8671",
-      "size_bytes": 34248,
+      "sha256": "fdf28e51f5c67eb679660589be1cbfdd99b7244e4a3dfdb1eefa8b2ae380574e",
+      "sidecar_sha": "PASS",
+      "size_bytes": 47945,
       "unzip_crc": "PASS"
     },
     {
+      "failures": [],
       "filename": "l2r_5_fresh_confirmation.zip",
       "internal_sha": "PASS",
-      "sha256": "ef59a5463367ef2d165f31002bfb51edbc9c90b593359a620f540ae27e784076",
-      "size_bytes": 56573,
+      "sha256": "5ea0a0388a14d6434ed334356bfdaa93ae2f1354494f0db80394e176814162c8",
+      "sidecar_sha": "PASS",
+      "size_bytes": 69033,
       "unzip_crc": "PASS"
     }
   ],
   "schema": "pathgraph_l2r_verification_summary_v1",
+  "scientific_status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
   "secret_scan": {
-    "files": 10787,
-    "findings": 0,
-    "status": "PASS"
-  },
-  "source_lock": {
-    "files": 40,
+    "files": 11331,
+    "findings": [],
+    "scanned_at": "2026-09-08T04:35:21.604190+00:00",
     "status": "PASS"
   },
   "status": "PASS",
-  "training_jobs": 0,
-  "verified_at": "2026-09-08T03:01:45.905837+00:00"
+  "verified_at": "2026-09-08T04:41:09.532851+00:00"
 }

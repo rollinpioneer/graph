@@ -13,6 +13,10 @@ from .io import SECRET_RE, now_iso, sha256_bytes, sha256_file, write_json
 
 
 EXTERNAL_SUFFIXES = {".npz", ".npy", ".pt", ".pth", ".ckpt", ".bin", ".safetensors", ".mp4", ".avi", ".mov", ".zip"}
+EXTERNAL_FIELDS = [
+    "logical_path", "original_path", "original_filename", "size_bytes", "sha256",
+    "artifact_type", "purpose", "reason_omitted", "recovery_method",
+]
 
 
 def _zip_info(name: str) -> zipfile.ZipInfo:
@@ -22,13 +26,36 @@ def _zip_info(name: str) -> zipfile.ZipInfo:
     return info
 
 
+def _normalized_external_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle, delimiter="\t"))
+    normalized = []
+    for row in rows:
+        original = row.get("original_path") or row.get("path") or row.get("logical_path") or ""
+        normalized.append({
+            "logical_path": row.get("logical_path") or original,
+            "original_path": original,
+            "original_filename": row.get("original_filename") or Path(original).name,
+            "size_bytes": row.get("size_bytes") or "",
+            "sha256": row.get("sha256") or "directory_manifested_by_component_files",
+            "artifact_type": row.get("artifact_type") or "external_runtime_artifact",
+            "purpose": row.get("purpose") or row.get("artifact_type") or "external runtime artifact",
+            "reason_omitted": row.get("reason_omitted") or "externalized_by_protocol",
+            "recovery_method": row.get("recovery_method") or "restore at the original path",
+        })
+    return normalized
+
+
 def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool = True) -> dict[str, Any]:
     source, output = source.resolve(), output.resolve()
     if not source.is_dir() or source in output.parents:
         raise ValueError("invalid package source/output")
     limit = int(max_file_mb * 1024 * 1024)
     entries: list[tuple[str, Path]] = []
-    omitted = []
+    external_manifest = source / "manifests/large_file_manifest.tsv"
+    omitted = _normalized_external_rows(external_manifest)
     for path in sorted(source.rglob("*")):
         if not path.is_file() or ".git" in path.parts or "__pycache__" in path.parts:
             continue
@@ -49,7 +76,8 @@ def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool =
             omitted.append({
                 "logical_path": relative, "original_path": str(path), "original_filename": path.name,
                 "size_bytes": path.stat().st_size, "sha256": sha256_file(path), "artifact_type": "L2R runtime artifact",
-                "reason_omitted": reason, "recovery_method": "restore at the exact original path or rerun the locked deterministic command",
+                "purpose": "source artifact omitted from this ZIP", "reason_omitted": reason,
+                "recovery_method": "restore at the exact original path or rerun the locked deterministic command",
             })
         else:
             data = path.read_bytes()
@@ -68,8 +96,7 @@ def _pack(source: Path, output: Path, max_file_mb: float, exclude_images: bool =
                 archive.writestr(_zip_info(relative), content)
                 sums.append(f"{sha256_bytes(content)}  {relative}")
             table = io.StringIO()
-            fields = ["logical_path", "original_path", "original_filename", "size_bytes", "sha256", "artifact_type", "reason_omitted", "recovery_method"]
-            writer = csv.DictWriter(table, fieldnames=fields, delimiter="\t", lineterminator="\n")
+            writer = csv.DictWriter(table, fieldnames=EXTERNAL_FIELDS, delimiter="\t", lineterminator="\n")
             writer.writeheader(); writer.writerows(omitted)
             manifest = table.getvalue().encode("utf-8")
             archive.writestr(_zip_info("manifests/large_file_manifest.tsv"), manifest)
@@ -130,6 +157,7 @@ def package_complete(root: Path, final_root: Path, round_zip_dir: Path, output: 
         (root / "fresh_confirmation_v1/evaluation", stage / "fresh_confirmation_v1/evaluation"),
         (root / "fresh_confirmation_v1/locks", stage / "fresh_confirmation_v1/locks"),
         (root / "fresh_confirmation_v1/reports", stage / "fresh_confirmation_v1/reports"),
+        (root / "implementation_correction", stage / "implementation_correction"),
     )
     for source, destination in selections:
         _copy_if_present(source, destination)

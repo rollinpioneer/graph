@@ -1,38 +1,112 @@
 {
+  "accepted_edits": [
+    "E5",
+    "E4",
+    "E1",
+    "E6",
+    "E7"
+  ],
   "active_second_view": false,
+  "base_graph_sha256": "26c49f0803ae7d2b88e4b491cfe1dab729db815a5f2ce3a0271a8682e33f2810",
   "capabilities": [
     "fixed_manipulation_path",
     "goal_verified_stop",
-    "visual_unknown_observe"
+    "visual_unknown_observe",
+    "contact_loss_recovery",
+    "missed_grasp_retry",
+    "visual_unknown_clarification",
+    "target_blocked_branch"
   ],
   "edges": [
     {
       "action": "stop_no_action",
       "condition": "goal_verified",
-      "id": "already_done"
+      "dst": "goal_verified",
+      "id": "already_done",
+      "src": "scene_unverified"
     },
     {
       "action": "observe_scene",
-      "condition": "visual_unknown",
-      "id": "observe_unknown"
-    },
-    {
-      "action": "grasp_object",
       "condition": {
         "args": [
-          "object_visible",
-          "target_visible",
+          "visual_unknown",
           {
-            "arg": "goal_verified",
+            "arg": {
+              "arg": "visual_unknown",
+              "n": 2,
+              "op": "CONSECUTIVE"
+            },
             "op": "NOT"
           }
         ],
         "op": "AND"
       },
-      "id": "manipulate"
+      "dst": "visual_unknown",
+      "id": "observe_unknown",
+      "src": "scene_unverified"
+    },
+    {
+      "action": "grasp_object",
+      "condition": {
+        "args": [
+          {
+            "args": [
+              "object_visible",
+              "target_visible",
+              {
+                "arg": "goal_verified",
+                "op": "NOT"
+              }
+            ],
+            "op": "AND"
+          },
+          {
+            "arg": "visual_unknown",
+            "op": "NOT"
+          }
+        ],
+        "op": "AND"
+      },
+      "dst": "grasp_candidate",
+      "id": "manipulate",
+      "src": "scene_unverified"
+    },
+    {
+      "action": "recover_object",
+      "condition": "slip_observed",
+      "dst": "grasp_candidate",
+      "id": "recover_after_contact_loss",
+      "src": "recovery_required"
+    },
+    {
+      "action": "retry_grasp",
+      "condition": "grasp_failed_observed",
+      "dst": "grasp_candidate",
+      "id": "retry_after_missed_grasp",
+      "src": "grasp_failed"
+    },
+    {
+      "action": "clear_target",
+      "condition": "target_occupied",
+      "dst": "scene_unverified",
+      "id": "clear_blocked_target",
+      "src": "target_blocked"
+    },
+    {
+      "action": "request_clarification",
+      "condition": {
+        "arg": "visual_unknown",
+        "n": 2,
+        "op": "CONSECUTIVE"
+      },
+      "dst": "scene_unverified",
+      "id": "clarify_persistent_unknown",
+      "src": "visual_unknown"
     }
   ],
-  "graph_id": "G1_predicate_bound",
+  "edit_selection_split": "dev_fit",
+  "graph_id": "G2_evidence_refined",
+  "max_edits": 8,
   "nodes": [
     {
       "id": "scene_unverified",
@@ -73,6 +147,31 @@
       "id": "goal_stability_candidate",
       "state": "goal_stability_candidate",
       "status": "hypothesized"
+    },
+    {
+      "id": "goal_verified",
+      "state": "goal_verified",
+      "status": "observable"
+    },
+    {
+      "id": "recovery_required",
+      "state": "recovery_required",
+      "status": "development_evidence"
+    },
+    {
+      "id": "grasp_failed",
+      "state": "grasp_failed",
+      "status": "development_evidence"
+    },
+    {
+      "id": "visual_unknown",
+      "state": "visual_unknown",
+      "status": "development_evidence"
+    },
+    {
+      "id": "target_blocked",
+      "state": "target_blocked",
+      "status": "development_evidence"
     }
   ],
   "numeric_reward_or_cost": null,
@@ -90,5 +189,5 @@
   "schema": "pathgraph_l2r_executable_graph_v1",
   "selection_data": "predicate bindings only; no dynamic structural edits",
   "source_sha256": "8d3c1c93c1026960649528f6bf73785cdfd5827f291be0b3a517e5be1833c603",
-  "status": "development_frozen"
+  "status": "development_candidate"
 }

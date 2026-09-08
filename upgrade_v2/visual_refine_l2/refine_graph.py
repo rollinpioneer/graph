@@ -21,6 +21,26 @@ EDIT_DEFINITIONS = {
 }
 
 
+EDIT_NODES = {
+    "E1": {"id": "visual_unknown", "state": "visual_unknown", "status": "development_evidence"},
+    "E4": {"id": "grasp_failed", "state": "grasp_failed", "status": "development_evidence"},
+    "E5": {"id": "recovery_required", "state": "recovery_required", "status": "development_evidence"},
+    "E6": {"id": "target_blocked", "state": "target_blocked", "status": "development_evidence"},
+}
+
+
+VISUAL_UNKNOWN_NODE = EDIT_NODES["E1"]
+PERSISTENT_UNKNOWN = {"op": "CONSECUTIVE", "n": 2, "arg": "visual_unknown"}
+
+
+EDIT_EDGES = {
+    "E4": {"id": "retry_after_missed_grasp", "src": "grasp_failed", "dst": "grasp_candidate", "action": "retry_grasp", "condition": "grasp_failed_observed"},
+    "E5": {"id": "recover_after_contact_loss", "src": "recovery_required", "dst": "grasp_candidate", "action": "recover_object", "condition": "slip_observed"},
+    "E6": {"id": "clear_blocked_target", "src": "target_blocked", "dst": "scene_unverified", "action": "clear_target", "condition": "target_occupied"},
+    "E7": {"id": "clarify_persistent_unknown", "src": "visual_unknown", "dst": "scene_unverified", "action": "request_clarification", "condition": PERSISTENT_UNKNOWN},
+}
+
+
 def propose_refinements(base_graph: Path, errors_path: Path, allowed_edits: set[str], max_edits: int, minimum_families: int, output: Path, edit_log: Path, report: Path) -> dict[str, Any]:
     graph = read_json(base_graph)
     errors = [row for row in read_csv(errors_path) if row["graph_id"] == graph["graph_id"]]
@@ -46,7 +66,42 @@ def propose_refinements(base_graph: Path, errors_path: Path, allowed_edits: set[
         })
         if accepted and capability not in capabilities:
             capabilities.append(capability)
-    refined = {**graph, "graph_id": "G2_evidence_refined", "status": "development_candidate", "base_graph_sha256": sha256_file(base_graph), "capabilities": capabilities, "accepted_edits": [row["edit_id"] for row in proposals if row["accepted"]], "edit_selection_split": "dev_fit", "max_edits": max_edits}
+    accepted_edits = [row["edit_id"] for row in proposals if row["accepted"]]
+    nodes = list(graph.get("nodes", []))
+    edges = [dict(edge) for edge in graph.get("edges", [])]
+    for edit_id in accepted_edits:
+        node = EDIT_NODES.get(edit_id)
+        if node and not any(existing["id"] == node["id"] for existing in nodes):
+            nodes.append(node)
+        edge = EDIT_EDGES.get(edit_id)
+        if edge and not any(existing["id"] == edge["id"] for existing in edges):
+            edges.append(edge)
+    if {"E1", "E7"}.intersection(accepted_edits):
+        if not any(existing["id"] == VISUAL_UNKNOWN_NODE["id"] for existing in nodes):
+            nodes.append(VISUAL_UNKNOWN_NODE)
+        for edge in edges:
+            if edge["id"] == "observe_unknown":
+                edge["dst"] = "visual_unknown"
+                edge["condition"] = {
+                    "op": "AND",
+                    "args": ["visual_unknown", {"op": "NOT", "arg": PERSISTENT_UNKNOWN}],
+                }
+    if "E7" in accepted_edits:
+        for edge in edges:
+            if edge["id"] == "manipulate":
+                edge["condition"] = {"op": "AND", "args": [edge["condition"], {"op": "NOT", "arg": "visual_unknown"}]}
+    refined = {
+        **graph,
+        "graph_id": "G2_evidence_refined",
+        "status": "development_candidate",
+        "base_graph_sha256": sha256_file(base_graph),
+        "capabilities": capabilities,
+        "nodes": nodes,
+        "edges": edges,
+        "accepted_edits": accepted_edits,
+        "edit_selection_split": "dev_fit",
+        "max_edits": max_edits,
+    }
     write_json(output, refined); write_csv(edit_log, proposals)
     write_report(report, "G2 Evidence Refinement", [("status", "PASS"), ("proposals", len(proposals)), ("accepted edits", len(refined["accepted_edits"])), ("selection split", "dev_fit")])
     return {"status": "PASS", "proposals": len(proposals), "accepted_edits": len(refined["accepted_edits"]), "output": str(output)}

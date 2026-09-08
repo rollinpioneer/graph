@@ -9,12 +9,16 @@
     {
       "action": "stop_no_action",
       "condition": "goal_verified",
-      "id": "already_done"
+      "dst": "goal_verified",
+      "id": "already_done",
+      "src": "scene_unverified"
     },
     {
       "action": "observe_scene",
       "condition": "visual_unknown",
-      "id": "observe_unknown"
+      "dst": "scene_unverified",
+      "id": "observe_unknown",
+      "src": "scene_unverified"
     },
     {
       "action": "grasp_object",
@@ -29,7 +33,9 @@
         ],
         "op": "AND"
       },
-      "id": "manipulate"
+      "dst": "grasp_candidate",
+      "id": "manipulate",
+      "src": "scene_unverified"
     }
   ],
   "graph_id": "G1_predicate_bound",
@@ -73,6 +79,11 @@
       "id": "goal_stability_candidate",
       "state": "goal_stability_candidate",
       "status": "hypothesized"
+    },
+    {
+      "id": "goal_verified",
+      "state": "goal_verified",
+      "status": "observable"
     }
   ],
   "numeric_reward_or_cost": null,

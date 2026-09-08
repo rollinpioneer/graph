@@ -2,18 +2,18 @@
 
 - schema: `pathgraph_l2r_run_manifest_v1`
 - round_id: `l2r_5_fresh_confirmation`
-- purpose: `Generate and consume one fresh 24-family confirmation set under the frozen graph, predicate, camera, and evaluation locks.`
+- purpose: `Reexecute the corrected frozen graph pipeline on the unchanged one-shot fresh family set without metric-driven tuning.`
 - status: `L2R_FRESH_CONFIRMATION_COMPLETE`
 - start_time: `2026-09-08T10:21:00+08:00`
-- end_time: `2026-09-08T10:27:00+08:00`
-- recorded_at: `2026-09-08T02:25:40.796808+00:00`
-- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- end_time: `2026-09-08T12:20:00+08:00`
+- recorded_at: `2026-09-08T04:23:05.952970+00:00`
+- git_commit: `75bca93877e3de02c398bc72447681d8ea7ea8aa`
 - python: `/home/xushijie/.conda/envs/lerobot/bin/python`
 - commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_5_fresh_confirmation/commands/executed_commands.txt`
-- commands_sha256: `34d8b1dfcb455268a535e88f0781be18665c73765acde3a72d03f3caf4192f81`
+- commands_sha256: `d79d838f0a31667736308c9cff8dea2eb8d4b2cc082f352e4d5e36cb47ff0aa5`
 - gpu_used: `True`
-- gpu_ids: `MuJoCo EGL logical device 0; physical UUID mapping not claimed`
-- jobs_run: `4`
+- gpu_ids: `MuJoCo EGL logical device 0 during original family rendering; no physical UUID claim`
+- jobs_run: `10`
 - jobs_failed: `0`
 - new_api_calls: `0`
 - new_training_jobs: `0`
@@ -22,10 +22,14 @@
 - actual_denominators:
   - fresh_families: `24`
   - fresh_rollouts: `96`
-  - scenario_strata: `8`
   - families_per_scenario: `3`
-  - unique_graphs_evaluated: `2`
-  - selected_graph: `G1_predicate_bound`
+  - scenario_strata: `8`
+  - unique_graphs_evaluated: `3`
+  - selected_graph: `G2_evidence_refined`
   - second_view_queries: `0`
   - bootstrap_resamples: `5000`
+  - low_level_control_rollouts: `96`
+  - low_level_control_steps: `4977`
+  - external_artifact_records: `291`
+  - families_regenerated_for_correction: `False`
   - post_confirmation_tuning: `False`

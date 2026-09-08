@@ -1,4 +1,5 @@
 {
+  "development_selected_graph_id": "G2_evidence_refined",
   "entry_allowed": false,
   "frozen_inputs_available_for_diagnosis": [
     "G0_coarse_direct",
@@ -9,14 +10,15 @@
     "state_and_edge_execution_logs"
   ],
   "next_allowed_work": [
-    "open a new graph-structure protocol that binds observed failure/recovery predicates to executable branches",
-    "retain the frozen confirmation unchanged as negative evidence"
+    "retain G1_predicate_bound as the supported coarse interface",
+    "open a new protocol to resolve retry/recovery edge ambiguity before reward grounding",
+    "use the archived pre-correction evidence only for implementation audit, not scientific claims"
   ],
   "not_allowed": [
-    "reward grounding under this failed L2R gate",
+    "reward grounding under this partial L2R gate",
     "policy training",
     "post-confirmation tuning of this run",
-    "physical robot or generalization claims"
+    "physical robot, real-image, reward-gain, policy-gain, or new-task generalization claims"
   ],
   "online_observation_schema": [
     "front_rgb",
@@ -24,7 +26,8 @@
     "gripper_command",
     "contact_sensor"
   ],
-  "reason": "Fresh-family failure and recovery branch recalls both remained below 0.40 under the selected G1 graph.",
+  "reason": "GO gate not met (ambiguous_edge_rate<=0.10); selected-G0=0.708333, selected-G1=0.583333, noninferior=8/8",
+  "retained_graph_id": "G1_predicate_bound",
   "schema": "pathgraph_l2r_third_layer_interface_v1",
-  "status": "STOPPED"
+  "status": "PARTIAL_NOT_ADMITTED"
 }
