@@ -18,7 +18,9 @@ def _norm(vector: tuple[float, float] | None) -> float | None:
 
 
 def adjacent_features(previous: dict[str, Any] | None, current: dict[str, Any], diagonal: float | None = None, noise_floor: float = 0.001) -> dict[str, Any]:
-    diagonal = float(diagonal or math.hypot(float(current.get("width", 640)), float(current.get("height", 480))))
+    width = current.get("width") or (previous.get("width") if previous else None) or 640
+    height = current.get("height") or (previous.get("height") if previous else None) or 480
+    diagonal = float(diagonal or math.hypot(float(width), float(height)))
     po0, pg0 = _point(previous.get("object_centroid")) if previous else None, _point(previous.get("gripper_centroid")) if previous else None
     po1, pg1 = _point(current.get("object_centroid")), _point(current.get("gripper_centroid"))
     object_vec = None if po0 is None or po1 is None else ((po1[0] - po0[0]) / diagonal, (po1[1] - po0[1]) / diagonal)
@@ -33,12 +35,24 @@ def adjacent_features(previous: dict[str, Any] | None, current: dict[str, Any], 
         cosine = (object_vec[0] * gripper_vec[0] + object_vec[1] * gripper_vec[1]) / (object_norm * gripper_norm)
         rho = math.hypot(object_vec[0] - gripper_vec[0], object_vec[1] - gripper_vec[1]) / (object_norm + gripper_norm + 1e-12)
     relative_drift = None
+    relative_before = None
+    relative_current = None
     if po0 is not None and pg0 is not None and po1 is not None and pg1 is not None:
-        before = ((po0[0] - pg0[0]) / diagonal, (po0[1] - pg0[1]) / diagonal)
-        after = ((po1[0] - pg1[0]) / diagonal, (po1[1] - pg1[1]) / diagonal)
-        relative_drift = math.hypot(after[0] - before[0], after[1] - before[1])
+        relative_before = ((po0[0] - pg0[0]) / diagonal, (po0[1] - pg0[1]) / diagonal)
+        relative_current = ((po1[0] - pg1[0]) / diagonal, (po1[1] - pg1[1]) / diagonal)
+        relative_drift = math.hypot(relative_current[0] - relative_before[0], relative_current[1] - relative_before[1])
     valid_identity = all(v is not None for v in (po0, pg0, po1, pg1))
-    same_geometry = bool(previous is None or (previous.get("width") == current.get("width") and previous.get("height") == current.get("height")))
+    same_geometry = bool(
+        previous is None
+        or (
+            previous.get("width") is not None
+            and previous.get("height") is not None
+            and current.get("width") is not None
+            and current.get("height") is not None
+            and previous.get("width") == current.get("width")
+            and previous.get("height") == current.get("height")
+        )
+    )
     effective = bool(valid_identity and same_geometry and dt is not None and 0 < dt <= 0.25 and object_norm is not None and gripper_norm is not None)
     return {
         "object_displacement_vector": object_vec,
@@ -49,6 +63,8 @@ def adjacent_features(previous: dict[str, Any] | None, current: dict[str, Any], 
         "direction_cosine": cosine,
         "relative_vector_error": rho,
         "relative_position_drift": relative_drift,
+        "relative_position_previous": relative_before,
+        "relative_position_current": relative_current,
         "identity_ok": valid_identity,
         "effective_motion_interval": effective,
         "camera_geometry_valid": same_geometry,

@@ -4,9 +4,6 @@ from typing import Any
 
 import numpy as np
 
-from upgrade_v2.l2r_ambiguity.probes import _custom_perform
-
-
 STRATA = (
     "miss_without_prior_hold", "loss_after_observed_hold", "brief_true_hold_then_loss",
     "touch_without_hold_then_loss", "commanded_release", "long_gap_after_loss",
@@ -30,11 +27,56 @@ def program_for_stratum(stratum: str) -> list[str]:
     raise ValueError(f"unknown R1 stratum: {stratum}")
 
 
-def perform(sim: Any, action: str) -> dict[str, Any]:
-    if action not in {"touch_contact", "separate_touch"}:
-        return sim.perform(action)
-    result = _custom_perform(sim, action)
+CONTROL_VARIANTS = (
+    {"variant_id": "v0_short", "lift_delta_z": 0.18, "lift_controls": 3, "touch_controls": 1, "separation_y": -0.20, "separation_controls": 2},
+    {"variant_id": "v1_medium", "lift_delta_z": 0.20, "lift_controls": 4, "touch_controls": 2, "separation_y": -0.24, "separation_controls": 3},
+    {"variant_id": "v2_long", "lift_delta_z": 0.22, "lift_controls": 5, "touch_controls": 3, "separation_y": -0.28, "separation_controls": 4},
+    {"variant_id": "v3_wide", "lift_delta_z": 0.24, "lift_controls": 4, "touch_controls": 4, "separation_y": -0.32, "separation_controls": 5},
+)
+
+
+def control_variant(index: int) -> dict[str, Any]:
+    return dict(CONTROL_VARIANTS[index % len(CONTROL_VARIANTS)])
+
+
+def _finish_custom(sim: Any, action: str, before: float) -> dict[str, Any]:
+    result = {"action_index": sim.action_index, "action": action, "start_time": round(before, 6),
+              "end_time": round(float(sim.data.time), 6), "gripper_command": "closed" if sim.gripper_closed else "open",
+              "contact_present": sim.contact_sensor(), "termination_reason": None,
+              "low_level_control_sequence": sim._active_control_sequence}
     callback = getattr(sim, "_r1_action_end_callback", None)
     if callback is not None:
         callback(sim, action, int(result["action_index"]), result)
     return result
+
+
+def perform(sim: Any, action: str, variant_index: int = 0) -> dict[str, Any]:
+    variant = control_variant(variant_index)
+    if action not in {"touch_contact", "separate_touch", "lift"}:
+        return sim.perform(action)
+    if action == "lift":
+        sim.action_index += 1
+        sim._active_control_sequence = []
+        before = float(sim.data.time)
+        sim._advance(
+            sim.data.mocap_pos[0] + np.array([0.0, 0.0, float(variant["lift_delta_z"])]),
+            controls=int(variant["lift_controls"]),
+        )
+        return _finish_custom(sim, action, before)
+    sim.action_index += 1
+    sim._active_control_sequence = []
+    before = float(sim.data.time)
+    if action == "touch_contact":
+        sim.gripper_closed = True
+        sim._advance(
+            sim.object_xyz + np.array([0.0, 0.0, 0.13]),
+            controls=int(variant["touch_controls"]),
+        )
+        sim._record_event("transient_contact", observable=True)
+    else:
+        sim._advance(
+            sim.data.mocap_pos[0] + np.array([0.0, float(variant["separation_y"]), 0.0]),
+            controls=int(variant["separation_controls"]),
+        )
+        sim._record_event("transient_contact_lost", observable=True)
+    return _finish_custom(sim, action, before)

@@ -5,6 +5,28 @@ from typing import Any
 from upgrade_v2.l2r_ambiguity.event_memory import AttemptScopedMemory, tri, tri_and, tri_not, tri_or
 
 
+def infer_history_complete(observations: list[dict[str, Any]]) -> bool:
+    """Infer prefix completeness from the stream, never from answer metadata."""
+    if not observations:
+        return False
+    first_visible = None
+    for row in observations:
+        if row.get("observation_masked") or row.get("observation_missing"):
+            if first_visible is None:
+                return False
+            continue
+        first_visible = row
+        break
+    if first_visible is None:
+        return False
+    required = ("contact_present", "gripper_command")
+    if any(first_visible.get(key) is None for key in required):
+        return False
+    # A complete attempt starts with the gripper open.  Starting closed is
+    # compatible with a held object, but its prior history is unobserved.
+    return first_visible.get("gripper_command") == "open"
+
+
 def run_event_interface(observations: list[dict[str, Any]], evidence_rows: list[dict[str, Any]], history_complete: bool = True) -> list[dict[str, Any]]:
     memory = AttemptScopedMemory(1, 1, history_complete)
     output = []
