@@ -40,10 +40,13 @@ def handoff(run_root: Path, resolved: dict[str, Any], protocol_path: Path, outpu
     selection = _read_json(run_root / "locks/selection_lock.json", {})
     probe_lock = _read_json(run_root / "data/new_development/probe_lock.json", {})
     duplicate_groups = _read_csv(run_root / "data/new_development/content_duplicate_groups.csv")
+    candidate_metrics = _read_csv(run_root / "rounds/l2ra_3_development_and_selection/candidate_metrics.csv")
     a4_complete = consumption.get("status") == "COMPLETE" and (run_root / "rounds/l2ra_4_fresh_confirmation/standard_confirmation.csv").is_file()
     selected = selection.get("selected_candidate_id")
-    if not route or route.get("status") == "DEVELOPMENT_NOT_READY":
+    if not route:
         status = "L2RA_DIAGNOSIS_ONLY" if diagnosis.get("status") else "EXECUTION_BLOCKED"
+    elif route.get("status") == "DEVELOPMENT_NOT_READY":
+        status = "L2RA_PARTIAL_KEEP_G1" if diagnosis.get("status") else "EXECUTION_BLOCKED"
     elif a4_complete and consumption.get("challenge_confirmation") != "NOT_RUN":
         status = "L2RA_PARTIAL_KEEP_G1"
     else:
@@ -89,15 +92,18 @@ def handoff(run_root: Path, resolved: dict[str, Any], protocol_path: Path, outpu
     external.append({"logical_path": "upstream/final_v1/manifests/external_artifacts.tsv", "original_path": str(upstream_manifest), "original_filename": upstream_manifest.name,
                      "size_bytes": upstream_manifest.stat().st_size, "sha256": digest(upstream_manifest), "artifact_type": "upstream_external_manifest",
                      "purpose": "authoritative frozen L2R external payload inventory", "recovery_method": "restore the frozen file at the recorded path and verify this SHA256"})
-    data_root = run_root / "data/new_development"
-    rollout_root = data_root / "rollouts"
-    for path in sorted(rollout_root.rglob("*")):
-        if not path.is_file():
-            continue
-        artifact_type = "new_probe_rgb_or_array" if path.suffix in {".jpg", ".npz"} else "new_probe_raw_trajectory"
-        external.append({"logical_path": f"new_development/{path.relative_to(data_root).as_posix()}", "original_path": str(path.resolve()), "original_filename": path.name,
-                         "size_bytes": path.stat().st_size, "sha256": digest(path), "artifact_type": artifact_type,
-                         "purpose": "new L2RA raw dynamic probe trajectory, observation, or oracle diagnostic payload", "recovery_method": "restore the retained local file or rerun the locked probe family and seed"})
+    data_roots = [("new_development", run_root / "data/new_development"),
+                  ("standard_confirmation", run_root / "data/standard_confirmation"),
+                  ("challenge_confirmation", run_root / "data/challenge_confirmation")]
+    for logical_root, data_root in data_roots:
+        rollout_root = data_root / "rollouts"
+        for path in sorted(rollout_root.rglob("*")):
+            if not path.is_file():
+                continue
+            artifact_type = "new_probe_rgb_or_array" if path.suffix in {".jpg", ".npz"} else "new_probe_raw_trajectory"
+            external.append({"logical_path": f"{logical_root}/{path.relative_to(data_root).as_posix()}", "original_path": str(path.resolve()), "original_filename": path.name,
+                             "size_bytes": path.stat().st_size, "sha256": digest(path), "artifact_type": artifact_type,
+                             "purpose": "new L2RA raw dynamic probe trajectory, observation, or oracle diagnostic payload", "recovery_method": "restore the retained local file or rerun the locked family and seed"})
     (final / "manifests").mkdir(parents=True, exist_ok=True)
     with (final / "manifests/external_artifacts.tsv").open("w", encoding="utf-8", newline="") as handle:
         fields = ["logical_path", "original_path", "original_filename", "size_bytes", "sha256", "artifact_type", "purpose", "recovery_method"]
@@ -114,14 +120,28 @@ def handoff(run_root: Path, resolved: dict[str, Any], protocol_path: Path, outpu
                  "a1_replay_completed": all(value.get("raw_prediction_replayed") is True for value in legacy["splits"].values()), "a3_route": route.get("status"), "a4_standard_completed": a4_complete,
                  "a4_challenge_completed": a4_complete and (a4root / "challenge_confirmation.csv").is_file(), "l3_entry_allowed": False}
     _write_json(final / "execution_manifest.json", execution)
+    confirmation_gate = _read_json(a4root / "confirmation_gate.json", {})
+    confirmation_status = confirmation_gate.get("status") or ("NOT_RUN" if not a4_complete else "UNKNOWN")
+    control_metrics = next((row for row in candidate_metrics if row.get("candidate_id") == "D_priority_only"), {})
+    selected_metrics = next((row for row in candidate_metrics if row.get("candidate_id") == selected), {}) if selected else {}
     handoff_payload = {"schema": "pathgraph_l2ra_handoff_v1", "historical_l2r_status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
                        "historical_retained_graph": "G1_predicate_bound", "new_status": status,
                        "cause_supported_by": diagnosis.get("supported_hypotheses", []), "selected_candidate_id": selected,
-                       "candidate_sha256": None, "event_memory_sha256": selection.get("event_memory_code_sha256"),
+                       "candidate_sha256": selection.get("candidate_sha256"), "event_memory_sha256": next((item["sha256"] for item in selection.get("locked_files", []) if item["logical_id"] == "event_memory_code"), selection.get("event_memory_code_sha256")),
+                       "confirmation_status": confirmation_status,
                        "standard_confirmation_completed": a4_complete, "challenge_confirmation_completed": a4_complete and (a4root / "challenge_confirmation.csv").is_file(),
+                       "development_denominators": {
+                           "decidable_physical_event_count": int(float(control_metrics.get("decidable_physical_event_count", 0) or 0)),
+                           "undecidable_physical_event_count": int(float(control_metrics.get("undecidable_physical_event_count", 0) or 0)),
+                           "miss_events": int(float(control_metrics.get("miss_events", 0) or 0)),
+                           "loss_events": int(float(control_metrics.get("loss_events", 0) or 0)),
+                           "false_emergency": int(float(control_metrics.get("false_emergency", 0) or 0)),
+                           "unjustified_definite": int(float(control_metrics.get("unjustified_definite", 0) or 0)),
+                       },
+                       "selected_candidate_metrics": selected_metrics,
                        "metric_definition_changed": True, "legacy_metric_also_reported": True, "l3_entry_allowed": False,
                        "reward_or_policy_gain_claimed": False}
     _write_json(final / "next_stage_handoff.json", handoff_payload)
-    report = [f"# L2RA Final Report", "", f"- Status: `{status}`", "- Historical L2R status: `L2R_PARTIAL_KEEP_COARSE_GRAPH`", "- Retained graph: `G1_predicate_bound`", f"- New candidate: `{selected}`", "- API calls: `0`; training jobs: `0`; API key read: `false`", "", "## Scope", "", "The evidence is limited to offline replay and the bounded dynamic tabletop proxy. It does not establish real-robot execution, reward improvement, policy improvement, or task generalization.", "", "The new development set contains 24 root families and 96 rollouts. Repeated deterministic predicate streams collapse to 19 content groups; root family, not rollout or frame, is the statistical unit, and repeated content is not treated as independent evidence.", "", "## Diagnosis", "", "Frozen G2 replay reproduced 12 ambiguous rollouts among 96 legacy confirmation rollouts (0.125), all in `slip_then_recover`. The frozen rules make observed slip a subset of generic grasp failure, while the whole-sequence executor reports both guards even when priority selects recovery.", "", "## Gate", "", f"- Diagnosis route: `{diagnosis.get('status')}`", f"- Development route: `{route.get('status')}`", "- Five selectable configurations were evaluated; none passed all predeclared development gates.", f"- Standard confirmation: `{ 'COMPLETE' if a4_complete else 'NOT_RUN' }`", f"- Challenge confirmation: `{ 'INTERVENTION_ONLY' if a4_complete else 'NOT_RUN' }`", "- L3 entry allowed: `false`"]
+    report = [f"# L2RA Final Report", "", f"- Status: `{status}`", "- Historical L2R status: `L2R_PARTIAL_KEEP_COARSE_GRAPH`", "- Retained graph: `G1_predicate_bound`", f"- New candidate: `{selected}`", "- API calls: `0`; training jobs: `0`; API key read: `false`", "", "## Scope", "", "The evidence is limited to offline replay and the bounded dynamic tabletop proxy. It does not establish real-robot execution, reward improvement, policy improvement, or task generalization.", "", f"The new development set contains {probe_lock.get('family_count', 0)} root families and {probe_lock.get('rollouts', 0)} rollouts. Repeated deterministic predicate streams collapse to {len(duplicate_groups)} content groups; root family, not rollout or frame, is the statistical unit, and repeated content is not treated as independent evidence.", "", "## Diagnosis", "", "Frozen G2 replay reproduced 12 ambiguous rollouts among 96 legacy confirmation rollouts (0.125), all in `slip_then_recover`. The frozen rules make observed slip a subset of generic grasp failure, while the whole-sequence executor reports both guards even when priority selects recovery.", "", "## Gate", "", f"- Diagnosis route: `{diagnosis.get('status')}`", f"- Development route: `{route.get('status')}`", "- Five selectable configurations were evaluated; none passed all predeclared development gates.", f"- Development physical-event denominator: `{control_metrics.get('decidable_physical_event_count', 0)}` decidable, `{control_metrics.get('undecidable_physical_event_count', 0)}` not decidable.", f"- Standard confirmation: `{ 'COMPLETE' if a4_complete else 'NOT_RUN' }`", f"- Challenge confirmation: `{ 'COMPLETE' if a4_complete and (a4root / 'challenge_confirmation.csv').is_file() else 'NOT_RUN' }`", f"- Confirmation gate: `{confirmation_status}`", "- L3 entry allowed: `false`"]
     (final / "l2ra_final_report.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     return {"status": status, "selected_candidate_id": selected, "standard_confirmation_completed": a4_complete, "challenge_intervention_only": a4_complete}

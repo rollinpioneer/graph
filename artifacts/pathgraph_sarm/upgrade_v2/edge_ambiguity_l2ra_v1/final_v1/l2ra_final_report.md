@@ -1,6 +1,6 @@
 # L2RA Final Report
 
-- Status: `L2RA_DIAGNOSIS_ONLY`
+- Status: `L2RA_PARTIAL_KEEP_G1`
 - Historical L2R status: `L2R_PARTIAL_KEEP_COARSE_GRAPH`
 - Retained graph: `G1_predicate_bound`
 - New candidate: `None`
@@ -21,6 +21,8 @@ Frozen G2 replay reproduced 12 ambiguous rollouts among 96 legacy confirmation r
 - Diagnosis route: `GUARD_SEMANTICS_REPAIR`
 - Development route: `DEVELOPMENT_NOT_READY`
 - Five selectable configurations were evaluated; none passed all predeclared development gates.
+- Development physical-event denominator: `24` decidable, `8` not decidable.
 - Standard confirmation: `NOT_RUN`
 - Challenge confirmation: `NOT_RUN`
+- Confirmation gate: `NOT_RUN`
 - L3 entry allowed: `false`

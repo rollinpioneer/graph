@@ -30,6 +30,17 @@ def _observations(item: dict[str, Any]) -> list[dict[str, Any]]:
     return item["observations"]
 
 
+def _quantile(values: list[float], probability: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * probability
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    fraction = position - lower
+    return ordered[lower] * (1.0 - fraction) + ordered[upper] * fraction
+
+
 def _actions_from_guards(guards: list[dict[str, str]]) -> tuple[str, int | None, bool]:
     retry = [i for i, row in enumerate(guards) if row.get("retry_grasp") == "true"]
     recover = [i for i, row in enumerate(guards) if row.get("recover_object") == "true"]
@@ -81,13 +92,15 @@ def _event_metrics(items: list[dict[str, Any]], candidate_id: str, hold_confirm:
         else:
             correct = selected == expected
         physical_event = reference["event_type"] in {"missed_grasp_retry_required", "held_object_loss_recovery_required"}
+        decidable_physical = physical_event and reference.get("label_status") == "reference_labeled" and bool(reference.get("observable_at_decision", False))
         negative = reference["event_type"] in {"release_expected", "needs_observation"}
         records.append({"probe_id": item["probe_id"], "root_family_id": item["root_family_id"], "stratum": item["stratum"],
                         "reference_event_type": reference["event_type"], "reference_action_class": expected,
                         "selected_action": selected, "selected_frame": sequence["selected_frame"], "correct": correct,
                         "effective_conflict": sequence["effective_conflict"], "any_conflict": sequence["any_conflict"],
-                        "label_status": reference["label_status"], "physical_event": physical_event, "negative_opportunity": negative})
-        if physical_event:
+                        "label_status": reference["label_status"], "physical_event": physical_event,
+                        "decidable_physical_event": decidable_physical, "negative_opportunity": negative})
+        if decidable_physical:
             decision_frame = reference.get("decision_frame_index")
             expected_guard = "retry_grasp" if reference["event_type"] == "missed_grasp_retry_required" else "recover_object"
             first_correct_frame = next((index for index, guard in enumerate(sequence["guards"]) if guard.get(expected_guard) == "true"), None)
@@ -96,7 +109,9 @@ def _event_metrics(items: list[dict[str, Any]], candidate_id: str, hold_confirm:
                            "decision_frame_index": decision_frame, "first_correct_frame": first_correct_frame if correct else None,
                            "delay_observation_steps": delay, "delay_seconds": (float(item["observations"][first_correct_frame]["time"]) - float(item["observations"][decision_frame]["time"])) if delay is not None else None,
                            "detected": correct})
-    emergency = [row for row in records if row["physical_event"]]
+    emergency = [row for row in records if row["decidable_physical_event"]]
+    physical = [row for row in records if row["physical_event"]]
+    undecidable_physical = [row for row in physical if not row["decidable_physical_event"]]
     miss = [row for row in emergency if row["reference_event_type"] == "missed_grasp_retry_required"]
     loss = [row for row in emergency if row["reference_event_type"] == "held_object_loss_recovery_required"]
     negatives = [row for row in records if row["negative_opportunity"]]
@@ -110,19 +125,39 @@ def _event_metrics(items: list[dict[str, Any]], candidate_id: str, hold_confirm:
                                     "false_emergency_rate": sum(row["selected_action"] in {"retry_grasp", "recover_object"} for row in rows) / len(rows) if rows else None})
     history_rows = [row for row in records if row["stratum"] == "history_or_visual_unavailable"]
     unjustified = sum(row["selected_action"] in {"retry_grasp", "recover_object"} for row in history_rows)
+    detected_delays = [row for row in delays if row["delay_observation_steps"] is not None]
+    delay_steps = [float(row["delay_observation_steps"]) for row in detected_delays]
+    delay_seconds = [float(row["delay_seconds"]) for row in detected_delays]
+    raw_overlap = sum(
+        any(
+            observation["predicates"].get("grasp_failed_observed") == "true"
+            and observation["predicates"].get("slip_observed") == "true"
+            for observation in item["observations"]
+        )
+        for item in items
+    )
     metrics = {"candidate_id": candidate_id, "miss_events": len(miss), "miss_correct": sum(row["correct"] for row in miss),
                "miss_families": len({row["root_family_id"] for row in miss}),
                "miss_type_recall": sum(row["correct"] for row in miss) / len(miss) if miss else None,
                "loss_events": len(loss), "loss_correct": sum(row["correct"] for row in loss),
                "loss_families": len({row["root_family_id"] for row in loss}),
                "loss_type_recall": sum(row["correct"] for row in loss) / len(loss) if loss else None,
-               "physical_event_count": len(emergency), "wrong_or_unknown_rate": sum(not row["correct"] for row in emergency) / len(emergency) if emergency else None,
+               "physical_event_count": len(emergency), "decidable_physical_event_count": len(emergency),
+               "undecidable_physical_event_count": len(undecidable_physical),
+               "wrong_or_unknown_rate": sum(not row["correct"] for row in emergency) / len(emergency) if emergency else None,
+               "raw_rule_overlap_rollout_rate": raw_overlap / len(records) if records else None,
                "effective_conflict_rollout_rate": sum(row["any_conflict"] for row in records) / len(records) if records else None,
                "event_window_conflict_rate": sum(row["effective_conflict"] for row in emergency) / len(emergency) if emergency else None,
                "unjustified_definite_rate": unjustified / len(history_rows) if history_rows else None,
-               "mean_delay_observation_steps": sum(row["delay_observation_steps"] for row in delays if row["delay_observation_steps"] is not None) / sum(row["delay_observation_steps"] is not None for row in delays) if any(row["delay_observation_steps"] is not None for row in delays) else None,
+               "mean_delay_observation_steps": sum(delay_steps) / len(delay_steps) if delay_steps else None,
+               "delay_observation_steps_p95": _quantile(delay_steps, .95),
+               "mean_delay_seconds": sum(delay_seconds) / len(delay_seconds) if delay_seconds else None,
+               "delay_seconds_p95": _quantile(delay_seconds, .95),
                "detected_events": sum(row["detected"] for row in delays), "delay_opportunities": len(delays),
-               "negative_opportunities": len(negatives)}
+               "undetected_events": sum(not row["detected"] for row in delays),
+               "negative_opportunities": len(negatives),
+               "false_emergency": sum(row["selected_action"] in {"retry_grasp", "recover_object"} for row in records if row["stratum"] in {"touch_without_hold_then_loss", "commanded_release"}),
+               "unjustified_definite": unjustified}
     return metrics, false_emergency, delays
 
 
@@ -148,7 +183,7 @@ def _compatibility(resolved: dict[str, Any], graph_path: Path, candidate_id: str
             "rows": rows}
 
 
-def evaluate_development(resolved: dict[str, Any], probe_root: Path, output_root: Path, frozen_graph: Path) -> dict[str, Any]:
+def evaluate_development(resolved: dict[str, Any], protocol: dict[str, Any], probe_root: Path, output_root: Path, frozen_graph: Path) -> dict[str, Any]:
     items = [json.loads(line) for line in (probe_root / "probe_records.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
     fit_items = [item for item in items if item["split"] == "dev_fit"]
     select_items = [item for item in items if item["split"] == "dev_select"]
@@ -169,21 +204,22 @@ def evaluate_development(resolved: dict[str, Any], probe_root: Path, output_root
     _write_csv(output_root / "legacy_dev_select_compatibility.csv", compatibility)
     compatibility_by_id = {row["candidate_id"]: row for row in compatibility}
     baseline = compatibility_by_id["D_priority_only"]
+    thresholds = protocol["new_diagnostic_thresholds"]
     gate_rows = []
     eligible = []
     for row in metrics:
         if row["candidate_id"] == "D_priority_only": continue
         false_by = [item for item in false_rows if item["candidate_id"] == row["candidate_id"]]
         values_present = all(row[name] is not None for name in ("wrong_or_unknown_rate", "event_window_conflict_rate", "unjustified_definite_rate"))
-        false_ok = bool(false_by) and all(item["false_emergency_rate"] is not None and item["false_emergency_rate"] <= .10 for item in false_by)
+        false_ok = bool(false_by) and all(item["false_emergency_rate"] is not None and item["false_emergency_rate"] <= thresholds["false_emergency_rate_max"] for item in false_by)
         compat = compatibility_by_id[row["candidate_id"]]
         checks = {
             "support_minimum": row["miss_events"] >= 8 and row["loss_events"] >= 8 and row["miss_families"] >= 2 and row["loss_families"] >= 2,
-            "event_type_recall": row["miss_type_recall"] is not None and row["loss_type_recall"] is not None and row["miss_type_recall"] >= .85 and row["loss_type_recall"] >= .85,
-            "wrong_or_unknown": values_present and row["wrong_or_unknown_rate"] <= .15,
-            "effective_conflict": values_present and row["event_window_conflict_rate"] <= .10,
+            "event_type_recall": row["miss_type_recall"] is not None and row["loss_type_recall"] is not None and row["miss_type_recall"] >= thresholds["event_type_recall_min"] and row["loss_type_recall"] >= thresholds["event_type_recall_min"],
+            "wrong_or_unknown": values_present and row["wrong_or_unknown_rate"] <= thresholds["wrong_or_unknown_fraction_max"],
+            "effective_conflict": values_present and row["event_window_conflict_rate"] <= thresholds["event_window_conflict_rate_max"],
             "negative_false_emergency": false_ok,
-            "insufficient_history": values_present and row["unjustified_definite_rate"] <= .10,
+            "insufficient_history": values_present and row["unjustified_definite_rate"] <= thresholds["unjustified_definite_rate_max"],
             "legacy_branch_noninferiority": compat["branch_accuracy"] + 1e-12 >= baseline["branch_accuracy"] - .02,
             "legacy_coverage_noninferiority": compat["coverage"] + 1e-12 >= baseline["coverage"] - .02,
         }
@@ -191,7 +227,17 @@ def evaluate_development(resolved: dict[str, Any], probe_root: Path, output_root
         if all(checks.values()):
             eligible.append(row["candidate_id"])
     _write_csv(output_root / "candidate_gate_checks.csv", gate_rows)
-    selected = eligible[0] if eligible else None
+    metrics_by_id = {row["candidate_id"]: row for row in metrics}
+    selected = min(
+        eligible,
+        key=lambda candidate: (
+            metrics_by_id[candidate]["wrong_or_unknown_rate"],
+            metrics_by_id[candidate]["event_window_conflict_rate"],
+            metrics_by_id[candidate]["mean_delay_observation_steps"] if metrics_by_id[candidate]["mean_delay_observation_steps"] is not None else float("inf"),
+            0 if candidate == "C1_current_event_exclusion" else 2,
+            candidate,
+        ),
+    ) if eligible else None
     decision = {"schema": "pathgraph_l2ra_development_decision_v1", "status": "DEVELOPMENT_READY" if selected else "DEVELOPMENT_NOT_READY",
                 "selected_candidate_id": selected, "eligible_candidates": eligible, "registered_controls_and_candidates": len(candidates), "selectable_candidate_count": 5,
                 "selection_rule": "fewest errors/unknown on decidable events, then fewer conflicts, lower delay, fewer parameters",

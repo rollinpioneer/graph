@@ -1,16 +1,40 @@
 {
   "api_calls": 0,
   "api_key_read": false,
-  "candidate_registry_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_3_development_and_selection/candidate_metrics.csv",
-  "confirmation_consumption": "one-shot; no resampling after STARTED",
+  "candidate_sha256": null,
+  "confirmation_consumption": "one-shot; only the same lock and pre-registered families may resume after STARTED",
   "confirmation_plan": {
-    "challenge_families": 12,
-    "challenge_rollouts": 48,
-    "standard_families": 24,
-    "standard_rollouts": 96
+    "challenge": {
+      "family_count": 12,
+      "family_seed": 450000,
+      "pool_with_standard": false,
+      "rollout_seed_base": 45100000,
+      "rollouts_per_family": 4,
+      "strata": [
+        "touch_without_hold_then_loss",
+        "commanded_release",
+        "long_gap_after_loss",
+        "history_or_visual_unavailable"
+      ]
+    },
+    "standard": {
+      "family_count": 24,
+      "family_seed": 440000,
+      "open_only_after_development_pass": true,
+      "rollout_seed_base": 44100000,
+      "rollouts_per_family": 4,
+      "scenarios": [
+        "normal_pick_place",
+        "already_satisfied_stable",
+        "already_on_target_offcenter",
+        "missed_grasp_then_retry",
+        "slip_then_recover",
+        "target_occupied",
+        "distractor_object_ambiguity",
+        "primary_view_occlusion"
+      ]
+    }
   },
-  "event_memory_code_path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/event_memory.py",
-  "event_memory_code_sha256": "063f8c3e8fa186221d65714f562b2c287c51b3247a1ab5119f7d209323d6b616",
   "graph_sha256_by_id": {
     "G0_coarse_direct": "7f20e91a7c44af079f5c3b19827b3141a5494c674688397f49685cc35326c4f9",
     "G1_predicate_bound": "26c49f0803ae7d2b88e4b491cfe1dab729db815a5f2ce3a0271a8682e33f2810",
@@ -18,14 +42,167 @@
   },
   "historical_l2r_status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
   "historical_retained_graph": "G1_predicate_bound",
-  "predicate_thresholds_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/locks/predicate_thresholds.json",
-  "predicate_thresholds_sha256": "f1af7101121d62d4739e4a735b79a0fb9d3b080934089ff7f705540c1956d570",
+  "interpreter": {
+    "executable": "/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python",
+    "python_version": "3.10.19"
+  },
+  "locked_files": [
+    {
+      "logical_id": "development_route",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_3_development_and_selection/development_route.json",
+      "sha256": "3c0809d813590b4a6394e3ecb0ad483086df08db4828887b1408144c9d538766",
+      "size_bytes": 646
+    },
+    {
+      "logical_id": "candidate_registry",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_3_development_and_selection/candidate_registry.json",
+      "sha256": "bd37dea258c41467fbff1ac79267f6e74f235e94996c9b4edd748eefa35aa9e0",
+      "size_bytes": 9149
+    },
+    {
+      "logical_id": "candidate_metrics",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_3_development_and_selection/candidate_metrics.csv",
+      "sha256": "f4c4e2fb096dda8a1db1aa0e7e3254e322bcf83e4377968ba8aaab6794780a1e",
+      "size_bytes": 1530
+    },
+    {
+      "logical_id": "candidate_gate_checks",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_3_development_and_selection/candidate_gate_checks.csv",
+      "sha256": "9a173b48af1d5e742b819d1a4631e4958ed358d5ef328122709d1d983cfe14af",
+      "size_bytes": 613
+    },
+    {
+      "logical_id": "probe_lock",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/data/new_development/probe_lock.json",
+      "sha256": "80f3831dd98e775d4b83c4b0378ffdd85ee5462e3b0941f40de196d2778011cb",
+      "size_bytes": 822
+    },
+    {
+      "logical_id": "probe_manifest",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/data/new_development/probe_manifest.csv",
+      "sha256": "09115c17fe78b68f0d1de5f524667e6612faba5ce47849655ab6c8af8ce50ce3",
+      "size_bytes": 17223
+    },
+    {
+      "logical_id": "event_reference_contract",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/rounds/l2ra_2_cause_diagnosis/event_reference_contract.json",
+      "sha256": "57fb76e2cdbe89c600dc2e37949990066539a431aa19494366c3e983f9e03f03",
+      "size_bytes": 1435
+    },
+    {
+      "logical_id": "event_reference_contract_lock",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/locks/event_reference_contract.lock.json",
+      "sha256": "83fe636da7ec71411ac6367e4194fe6b55b690f6c7aae90788b32562042c3ae9",
+      "size_bytes": 761
+    },
+    {
+      "logical_id": "event_memory_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/event_memory.py",
+      "sha256": "063f8c3e8fa186221d65714f562b2c287c51b3247a1ab5119f7d209323d6b616",
+      "size_bytes": 8840
+    },
+    {
+      "logical_id": "reference_events_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/reference_events.py",
+      "sha256": "3c1104d5ba996c278eda4728a06fd421596017be3b75f77192550f8cf552ae3a",
+      "size_bytes": 13449
+    },
+    {
+      "logical_id": "evaluation_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/evaluate.py",
+      "sha256": "832a01c3cfa5ec1903a3bbd04f28f7281f706b3544daf8fae3054463813d52b0",
+      "size_bytes": 18439
+    },
+    {
+      "logical_id": "probe_adapter_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/probes.py",
+      "sha256": "c0490b909254d911809c1d96d94d6c0a5f171a1b942e07bafd23835941711e7a",
+      "size_bytes": 16436
+    },
+    {
+      "logical_id": "confirmation_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/confirm.py",
+      "sha256": "0e95e8e0349f29155e59157a4eead0bfabcb3c63612a1d7dcabb238206d9b40e",
+      "size_bytes": 21113
+    },
+    {
+      "logical_id": "selection_code",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/l2r_ambiguity/select.py",
+      "sha256": "783213f4906cf87d80478767f1dad69683e284ca0d3a38cc401295732af68145",
+      "size_bytes": 5903
+    },
+    {
+      "logical_id": "predicate_thresholds",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/locks/predicate_thresholds.json",
+      "sha256": "f1af7101121d62d4739e4a735b79a0fb9d3b080934089ff7f705540c1956d570",
+      "size_bytes": 1512
+    },
+    {
+      "logical_id": "graph:G0_coarse_direct",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/graphs/G0_coarse_direct.json",
+      "sha256": "7f20e91a7c44af079f5c3b19827b3141a5494c674688397f49685cc35326c4f9",
+      "size_bytes": 4687
+    },
+    {
+      "logical_id": "graph:G1_predicate_bound",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/graphs/G1_predicate_bound.json",
+      "sha256": "26c49f0803ae7d2b88e4b491cfe1dab729db815a5f2ce3a0271a8682e33f2810",
+      "size_bytes": 2753
+    },
+    {
+      "logical_id": "graph:G2_evidence_refined",
+      "path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/graphs/G2_evidence_refined.json",
+      "sha256": "9c8869b0b68529ec259035e70dd00f51e2c284aa9d82f856a0c01e78d962c863",
+      "size_bytes": 4829
+    }
+  ],
+  "metric_contract": {
+    "development_noninferiority": {
+      "branch_accuracy_drop_max": 0.02,
+      "coverage_drop_max": 0.02
+    },
+    "new_diagnostic_thresholds": {
+      "detection_delay_observation_steps_p95_max": 2,
+      "event_type_recall_min": 0.85,
+      "event_window_conflict_rate_max": 0.1,
+      "false_emergency_rate_max": 0.1,
+      "long_gap_recovery_recall_min": 0.85,
+      "standard_any_conflict_rollout_rate_max": 0.1,
+      "unjustified_definite_rate_max": 0.1,
+      "wrong_or_unknown_fraction_max": 0.15
+    },
+    "old_standard_thresholds": {
+      "ambiguous_edge_rate_max": 0.1,
+      "branch_accuracy_min": 0.8,
+      "failure_denominator_min": 20,
+      "failure_recall_min": 0.65,
+      "false_ready_rate_max": 0.1,
+      "goal_precision_min": 0.85,
+      "graph_completion_coverage_min": 0.8,
+      "noninferior_scenarios_min": 6,
+      "recovery_denominator_min": 20,
+      "recovery_recall_min": 0.65,
+      "scenario_count": 8,
+      "selected_minus_g0_branch_min": 0.15,
+      "selected_minus_g1_branch_min": 0.05,
+      "unknown_rate_max": 0.25,
+      "unnecessary_manipulation_rate_max": 0.15
+    },
+    "statistics": {
+      "bootstrap_seed": 460008,
+      "denominator_zero": "NOT_ESTIMABLE_NOT_PASS",
+      "independent_unit": "root_family_id",
+      "no_frame_independence": true,
+      "paired_bootstrap_resamples": 5000
+    }
+  },
   "protocol_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/edge_ambiguity_l2ra_v1/configs/l2ra_protocol.json",
   "protocol_sha256": "81d94b6c2fc0f7f4e40f0d643583cee0bd2d4dd19a8503a0e3650de7de51f657",
-  "schema": "pathgraph_l2ra_selection_lock_v1",
+  "reference_label_version": "pathgraph_l2ra_event_reference_contract_v1",
+  "schema": "pathgraph_l2ra_selection_lock_v2",
   "selected_candidate_config": null,
   "selected_candidate_id": null,
-  "selection_data": "new development fit/select only",
+  "selection_data": "new development fit/select and legacy dev_select only; legacy confirmation excluded",
   "status": "DEVELOPMENT_NOT_READY",
   "training_jobs": 0
 }

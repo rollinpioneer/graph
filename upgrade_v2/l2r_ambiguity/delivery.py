@@ -70,7 +70,7 @@ def _verify_zip(path: Path) -> dict[str, Any]:
             "unzip_test": "PASS" if bad is None else f"FAIL:{bad}", "internal_sha": "PASS" if internal else "FAIL"}
 
 
-def deliver(repo: Path, run_root: Path, downloads: Path, code_root: Path) -> dict[str, Any]:
+def deliver(repo: Path, run_root: Path, downloads: Path, code_root: Path, staging_root: Path | None = None) -> dict[str, Any]:
     final = run_root / "final_v1"
     route = _json(run_root / "rounds/l2ra_3_development_and_selection/development_route.json", {})
     diagnosis = _json(run_root / "rounds/l2ra_2_cause_diagnosis/diagnosis_gate.json", {})
@@ -92,7 +92,7 @@ def deliver(repo: Path, run_root: Path, downloads: Path, code_root: Path) -> dic
         target = downloads / f"{round_id}.zip"
         package_round(run_root / f"rounds/{round_id}", target, 200)
         packages.append({**_verify_zip(target), "purpose": f"L2RA round {round_id}"})
-    staging = run_root / "delivery_staging"
+    staging = staging_root or (run_root / "delivery_staging")
     if staging.exists(): raise FileExistsError(f"delivery staging already exists: {staging}")
     _copy(run_root / "configs/l2ra_protocol.json", staging / "configs/l2ra_protocol.json")
     _copy(run_root / "locks/protocol_lock.json", staging / "locks/protocol_lock.json")

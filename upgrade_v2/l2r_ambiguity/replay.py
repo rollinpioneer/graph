@@ -88,7 +88,8 @@ def trace_rollout(record: dict[str, Any], graph: dict[str, Any]) -> tuple[list[d
 
 def trace_split(resolved: dict[str, Any], split: str, graph_path: Path, output_root: Path) -> dict[str, Any]:
     graph = read_json(graph_path)
-    records = [row for row in resolved["rollouts"] if row["split"] == split]
+    resolved_split = {"legacy_dev_fit": "dev_fit", "legacy_dev_select": "dev_select"}.get(split, split)
+    records = [row for row in resolved["rollouts"] if row["split"] == resolved_split]
     all_trace, summaries = [], []
     event_windows = []
     for record in records:
@@ -121,7 +122,7 @@ def trace_split(resolved: dict[str, Any], split: str, graph_path: Path, output_r
                              "any_raw_overlap_rollout_rate": sum(v["any_raw_overlap"] for v in values) / denom if denom else None})
     _write_csv(output_root / "overlap_by_scenario.csv", overlap_rows)
     denominator = {
-        "split": split, "rollouts": len(summaries), "families": len({row["root_family_id"] for row in summaries}),
+        "split": split, "resolved_split": resolved_split, "rollouts": len(summaries), "families": len({row["root_family_id"] for row in summaries}),
         "valid_observation_frames": len(all_trace), "legacy_ambiguous_rollout_count": sum(row["legacy_ambiguous"] for row in summaries),
         "any_raw_overlap_rollout_count": sum(row["any_raw_overlap"] for row in summaries),
         "raw_overlap_frame_count": sum(row["overlap_frames"] for row in summaries),

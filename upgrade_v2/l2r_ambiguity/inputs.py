@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Any
 
 
-ONLINE_FILES = ("frame_manifest.csv", "contact_sensor.csv", "gripper_command.csv", "low_level_controls.jsonl", "actions.csv")
+ONLINE_FILES = ("frame_manifest.csv", "contact_sensor.csv", "gripper_command.csv")
+ALIGNMENT_ONLY_FILES = ("actions.csv", "low_level_controls.jsonl")
 REFERENCE_FILES = ("events.jsonl", "oracle_timeline.csv", "oracle_diagnostic.npz", "termination.json", "metadata.json")
 
 
@@ -60,15 +61,27 @@ def _resource(path: Path, logical: str, usage: str, split: str, *, hash_file: bo
 def _rollout_record(row: dict[str, str], split: str, role: str, prediction: dict[str, Any] | None) -> dict[str, Any]:
     root = Path(row["path"])
     resources = []
+    historical = role == "historical_diagnosis_only"
     for name in ONLINE_FILES:
-        resources.append(_resource(root / name, f"{row['rollout_id']}:{name}", "runtime_allowed", split))
-    for name in REFERENCE_FILES:
-        resources.append(_resource(root / name, f"{row['rollout_id']}:{name}", "reference_only", split))
+        usage = "historical_diagnosis_only" if historical else "runtime_allowed"
+        resources.append(_resource(root / name, f"{row['rollout_id']}:{name}", usage, split))
+    for name in ALIGNMENT_ONLY_FILES + REFERENCE_FILES:
+        usage = "historical_diagnosis_only" if historical else "reference_only"
+        resources.append(_resource(root / name, f"{row['rollout_id']}:{name}", usage, split))
+    rgb_resources = []
+    for frame in read_csv(root / "frame_manifest.csv"):
+        for camera in ("front", "side"):
+            value = frame.get(f"{camera}_path")
+            if not value:
+                continue
+            usage = "historical_diagnosis_only" if historical else "runtime_allowed"
+            rgb_resources.append(_resource(Path(value), f"{row['rollout_id']}:rgb:{camera}:{frame['frame_index']}", usage, split))
     if prediction:
-        resources.append(_resource(Path(prediction["prediction_path"]), f"{row['rollout_id']}:predictions", "runtime_allowed", split))
+        usage = "historical_diagnosis_only" if historical else "runtime_allowed"
+        resources.append(_resource(Path(prediction["prediction_path"]), f"{row['rollout_id']}:predictions", usage, split))
     return {"rollout_id": row["rollout_id"], "root_family_id": row["root_family_id"], "scenario_reference_only": row["scenario"],
             "data_role": role, "split": split, "rollout_path": str(root.resolve()), "prediction": prediction,
-            "resources": resources}
+            "resources": resources, "rgb_resources": rgb_resources}
 
 
 def resolve_inputs(repo_root: Path, frozen_root: Path, output_root: Path, protocol_path: Path) -> dict[str, Any]:

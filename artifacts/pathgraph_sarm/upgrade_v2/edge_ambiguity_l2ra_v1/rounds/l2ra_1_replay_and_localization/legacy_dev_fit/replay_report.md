@@ -1,4 +1,4 @@
-# Replay report: dev_fit
+# Replay report: legacy_dev_fit
 
 - Rollouts: `128`
 - Families: `32`

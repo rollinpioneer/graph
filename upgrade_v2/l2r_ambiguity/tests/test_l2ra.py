@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import csv
 from pathlib import Path
 
 from upgrade_v2.l2r_ambiguity.confirm import confirm
 from upgrade_v2.l2r_ambiguity.evaluate import candidate_sequence
+from upgrade_v2.l2r_ambiguity.reference_events import extract_probe_reference_events
 from upgrade_v2.l2r_ambiguity.event_memory import (
     FALSE,
     TRUE,
@@ -30,6 +32,23 @@ def obs(index, *, contact, closed, stable, slip="false", failed=None, **extra):
     }
     predicates.update(extra)
     return {"frame_index": index, "time": index * 0.1, "predicates": predicates}
+
+
+def write_reference_rollout(root: Path, *, event: str, event_time: float, weld_before: int, intervention: bool = False, commanded_release: bool = True):
+    root.mkdir(parents=True)
+    with (root / "actions.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["action_index", "action", "start_time", "end_time", "gripper_command", "contact_present", "termination_reason"])
+        writer.writeheader()
+        writer.writerow({"action_index": 0, "action": "close_gripper", "start_time": 0.0, "end_time": 0.8, "gripper_command": "closed", "contact_present": 1, "termination_reason": ""})
+        writer.writerow({"action_index": 1, "action": "open_gripper" if event == "contact_lost" and weld_before and commanded_release else "recover", "start_time": 0.8, "end_time": 1.2, "gripper_command": "open" if event == "contact_lost" and weld_before and commanded_release else "closed", "contact_present": 0, "termination_reason": ""})
+    with (root / "oracle_timeline.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["frame_index", "time", "weld_state", "contact_present"])
+        writer.writeheader()
+        writer.writerow({"frame_index": 0, "time": 0.8, "weld_state": weld_before, "contact_present": 1})
+        writer.writerow({"frame_index": 1, "time": 1.2, "weld_state": 0, "contact_present": 0})
+    (root / "events.jsonl").write_text(json.dumps({"event": event, "time": event_time, "observable_online": True}) + "\n", encoding="utf-8")
+    (root / "termination.json").write_text(json.dumps({"done": True, "termination_type": "diagnostic_complete"}), encoding="utf-8")
+    (root / "metadata.json").write_text(json.dumps({"observation_intervention": intervention}), encoding="utf-8")
 
 
 def test_frozen_rule_overlap_and_priority_control_preserves_it():
@@ -117,3 +136,42 @@ def test_online_module_has_no_reference_event_dependency():
     assert "reference_events" not in source
     for forbidden in ("scenario", "future_outcome", "action_code", "qpos", "qvel", "weld_state"):
         assert forbidden not in source
+
+
+def test_reference_event_label_does_not_depend_on_stratum(tmp_path: Path):
+    root = tmp_path / "release"
+    write_reference_rollout(root, event="contact_lost", event_time=1.0, weld_before=1)
+    base = {"rollout_id": "r0", "root_family_id": "f0", "rollout_path": str(root), "stratum": "commanded_release"}
+    first = extract_probe_reference_events(base)[0]
+    base["stratum"] = "loss_after_observed_hold"
+    second = extract_probe_reference_events(base)[0]
+    assert first["reference_event_type"] == second["reference_event_type"] == "release_expected"
+    assert first["reference_action_class"] == second["reference_action_class"] == "none"
+
+
+def test_reference_event_distinguishes_transient_touch_and_hidden_history(tmp_path: Path):
+    touch = tmp_path / "touch"
+    touch.mkdir()
+    (touch / "actions.csv").write_text("action_index,action,start_time,end_time\n0,touch_contact,0,1\n", encoding="utf-8")
+    (touch / "oracle_timeline.csv").write_text("frame_index,time,weld_state,contact_present\n0,1,0,1\n", encoding="utf-8")
+    (touch / "events.jsonl").write_text(json.dumps({"event": "transient_contact", "time": 1.0}) + "\n", encoding="utf-8")
+    (touch / "metadata.json").write_text(json.dumps({"observation_intervention": False}), encoding="utf-8")
+    touch_record = extract_probe_reference_events({"rollout_id": "touch", "root_family_id": "f", "rollout_path": str(touch)})[0]
+    assert touch_record["reference_event_type"] == "touch_without_stable_hold"
+    assert touch_record["reference_action_class"] == "none"
+
+    hidden = tmp_path / "hidden"
+    write_reference_rollout(hidden, event="contact_lost", event_time=1.0, weld_before=1, intervention=True, commanded_release=False)
+    hidden_record = extract_probe_reference_events({"rollout_id": "hidden", "root_family_id": "f", "rollout_path": str(hidden)})[0]
+    assert hidden_record["reference_event_type"] == "held_object_loss_recovery_required"
+    assert hidden_record["reference_action_class"] == "needs_observation"
+    assert hidden_record["reference_observable_at_decision"] is False
+
+
+def test_reference_event_uses_prefix_only_for_decision_frame(tmp_path: Path):
+    root = tmp_path / "prefix"
+    write_reference_rollout(root, event="contact_lost", event_time=1.0, weld_before=1)
+    record = extract_probe_reference_events({"rollout_id": "r", "root_family_id": "f", "rollout_path": str(root)})[0]
+    assert record["decision_frame_index"] == 0
+    assert record["onset_interval_start"] == 0.8
+    assert record["onset_interval_end"] == 1.2

@@ -1,4 +1,4 @@
-# Replay report: dev_select
+# Replay report: legacy_dev_select
 
 - Rollouts: `64`
 - Families: `16`
