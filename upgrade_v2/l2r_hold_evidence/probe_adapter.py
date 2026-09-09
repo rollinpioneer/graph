@@ -43,7 +43,8 @@ def _finish_custom(sim: Any, action: str, before: float) -> dict[str, Any]:
     result = {"action_index": sim.action_index, "action": action, "start_time": round(before, 6),
               "end_time": round(float(sim.data.time), 6), "gripper_command": "closed" if sim.gripper_closed else "open",
               "contact_present": sim.contact_sensor(), "termination_reason": None,
-              "low_level_control_sequence": sim._active_control_sequence}
+              "low_level_control_sequence": sim._active_control_sequence,
+              "attempt_lifecycle": sim.attempt_lifecycle.snapshot()}
     callback = getattr(sim, "_r1_action_end_callback", None)
     if callback is not None:
         callback(sim, action, int(result["action_index"]), result)
@@ -57,14 +58,17 @@ def perform(sim: Any, action: str, variant_index: int = 0) -> dict[str, Any]:
     if action == "lift":
         sim.action_index += 1
         sim._active_control_sequence = []
+        sim.lifecycle_before_action(action)
         before = float(sim.data.time)
         sim._advance(
             sim.data.mocap_pos[0] + np.array([0.0, 0.0, float(variant["lift_delta_z"])]),
             controls=int(variant["lift_controls"]),
         )
+        sim.lifecycle_after_action(action)
         return _finish_custom(sim, action, before)
     sim.action_index += 1
     sim._active_control_sequence = []
+    sim.lifecycle_before_action(action)
     before = float(sim.data.time)
     if action == "touch_contact":
         sim.gripper_closed = True
@@ -79,4 +83,5 @@ def perform(sim: Any, action: str, variant_index: int = 0) -> dict[str, Any]:
             controls=int(variant["separation_controls"]),
         )
         sim._record_event("transient_contact_lost", observable=True)
+    sim.lifecycle_after_action(action)
     return _finish_custom(sim, action, before)

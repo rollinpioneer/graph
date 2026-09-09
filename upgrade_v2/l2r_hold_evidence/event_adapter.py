@@ -32,6 +32,12 @@ def run_event_interface(observations: list[dict[str, Any]], evidence_rows: list[
     output = []
     for obs, evidence in zip(observations, evidence_rows):
         predicates = dict(obs.get("predicates", obs))
+        # Lifecycle markers are controller-owned online context.  They are
+        # copied from the post-update observation and are never reconstructed
+        # from event labels, action names, or future rows.
+        for key in ("attempt_id", "attempt_phase", "attempt_active", "attempt_end", "attempt_end_reason"):
+            if key in obs:
+                predicates[key] = obs[key]
         predicates["stable_hold_observed"] = evidence["hold_evidence"]
         row = memory.observe(predicates, obs.get("time"), obs.get("frame_index"))
         row["hold_evidence"] = evidence["hold_evidence"]

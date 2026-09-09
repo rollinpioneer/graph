@@ -9,6 +9,8 @@ from typing import Any
 
 import numpy as np
 
+from upgrade_v2.l2r_hold_evidence.attempt_lifecycle import AttemptLifecycle
+
 
 SCENARIOS = (
     "normal_pick_place",
@@ -134,6 +136,7 @@ class DynamicTabletop:
         self.contact_lost = False
         self.action_index = 0
         self.events: list[dict[str, Any]] = []
+        self.attempt_lifecycle = AttemptLifecycle()
         self._active_control_sequence: list[dict[str, Any]] = []
         # Optional read-only hook used by L2RA-R1.  It is invoked after the
         # same five physics steps as the ordinary control loop and cannot
@@ -165,6 +168,7 @@ class DynamicTabletop:
             "mocap_quat": self.data.mocap_quat.copy(), "eq_active": self.data.eq_active.copy(), "time": float(self.data.time),
             "gripper_closed": self.gripper_closed, "attached": self.attached, "failed_once": self.failed_once,
             "recovered": self.recovered, "contact_lost": self.contact_lost, "action_index": self.action_index,
+            "attempt_lifecycle": self.attempt_lifecycle.snapshot(),
             "rng_state": copy.deepcopy(self.rng.bit_generator.state), "events": copy.deepcopy(self.events),
         }
 
@@ -174,6 +178,10 @@ class DynamicTabletop:
         self.data.time = snapshot["time"]
         for key in ("gripper_closed", "attached", "failed_once", "recovered", "contact_lost", "action_index"):
             setattr(self, key, snapshot[key])
+        lifecycle = snapshot.get("attempt_lifecycle")
+        if lifecycle is not None:
+            for key, value in lifecycle.items():
+                setattr(self.attempt_lifecycle.state, key, copy.deepcopy(value))
         self.rng.bit_generator.state = copy.deepcopy(snapshot["rng_state"])
         self.events = copy.deepcopy(snapshot["events"])
         self.mujoco.mj_forward(self.model, self.data)
@@ -222,9 +230,44 @@ class DynamicTabletop:
         distance = float(np.linalg.norm(self.object_xyz - (self.data.mocap_pos[0] + np.array([0.0, 0.0, -0.13]))))
         return bool(self.attached or (self.gripper_closed and distance < self.spec.object_radius + 0.045))
 
+    def lifecycle_before_action(self, action: str) -> None:
+        """Advance controller lifecycle without consulting physical outcome."""
+        self.attempt_lifecycle.begin_next_cycle()
+        if action in {"approach_object", "touch_contact"}:
+            if not self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.begin("acquiring")
+            else:
+                self.attempt_lifecycle.set_phase("acquiring")
+        elif action in {"close_gripper"}:
+            if not self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.begin("settling")
+            else:
+                self.attempt_lifecycle.set_phase("settling")
+        elif action == "separate_touch":
+            if self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.set_phase("post_contact_motion")
+        elif action in {"retry", "recover"}:
+            if not self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.begin("acquiring")
+            else:
+                self.attempt_lifecycle.set_phase("acquiring")
+        elif action in {"lift", "transport_to_target", "align", "lower"}:
+            if self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.set_phase("post_contact_motion")
+
+    def lifecycle_after_action(self, action: str) -> None:
+        """Emit a one-cycle lifecycle edge at a controller boundary."""
+        if action in {"close_gripper", "verify", "retry", "recover"}:
+            if self.attempt_lifecycle.state.attempt_active:
+                self.attempt_lifecycle.end("segment_complete")
+        elif action == "open_gripper":
+            if self.attempt_lifecycle.state.attempt_id > 0 and not self.attempt_lifecycle.state.attempt_end:
+                self.attempt_lifecycle.end("release")
+
     def perform(self, action: str) -> dict[str, Any]:
         self.action_index += 1
         self._active_control_sequence = []
+        self.lifecycle_before_action(action)
         before = float(self.data.time)
         obj = self.object_xyz
         target = np.array([self.spec.target_x, self.spec.target_y, 0.80])
@@ -279,10 +322,12 @@ class DynamicTabletop:
         if self.contact_lost and self.contact_sensor():
             self._record_event("contact_reestablished")
             self.contact_lost = False
+        self.lifecycle_after_action(action)
         result = {
             "action_index": self.action_index, "action": action, "start_time": round(before, 6), "end_time": round(float(self.data.time), 6),
             "gripper_command": "closed" if self.gripper_closed else "open", "contact_present": self.contact_sensor(),
             "termination_reason": None, "low_level_control_sequence": self._active_control_sequence,
+            "attempt_lifecycle": self.attempt_lifecycle.snapshot(),
         }
         if self._r1_action_end_callback is not None:
             self._r1_action_end_callback(self, action, self.action_index, result)

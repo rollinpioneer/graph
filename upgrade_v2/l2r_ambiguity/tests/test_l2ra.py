@@ -19,7 +19,7 @@ from upgrade_v2.l2r_ambiguity.event_memory import (
 )
 
 
-def obs(index, *, contact, closed, stable, slip="false", failed=None, **extra):
+def obs(index, *, contact, closed, stable, slip="false", failed=None, attempt_id=1, attempt_phase="inactive", attempt_active="unknown", attempt_end="unknown", attempt_end_reason=None, **extra):
     failed = ("true" if closed == "true" and contact == "false" else "false") if failed is None else failed
     predicates = {
         "contact_present": contact,
@@ -29,6 +29,11 @@ def obs(index, *, contact, closed, stable, slip="false", failed=None, **extra):
         "contact_recently_lost": slip,
         "slip_observed": slip,
         "grasp_failed_observed": failed,
+        "attempt_id": attempt_id,
+        "attempt_phase": attempt_phase,
+        "attempt_active": attempt_active,
+        "attempt_end": attempt_end,
+        "attempt_end_reason": attempt_end_reason,
     }
     predicates.update(extra)
     return {"frame_index": index, "time": index * 0.1, "predicates": predicates}
@@ -76,11 +81,11 @@ def test_unknown_three_valued_logic():
 
 
 def test_miss_loss_touch_and_release_are_distinct():
-    miss = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="false", closed="true", stable="false")])
+    miss = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="false", closed="true", stable="false", attempt_phase="ended", attempt_end="true")])
     assert miss[-1]["selected_action"] == "retry_grasp"
     loss = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="true", closed="true", stable="true"), obs(2, contact="false", closed="true", stable="false", slip="true")])
     assert loss[-1]["selected_action"] == "recover_object"
-    touch = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="true", closed="true", stable="false"), obs(2, contact="false", closed="true", stable="false", slip="true")])
+    touch = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="true", closed="true", stable="false"), obs(2, contact="false", closed="true", stable="false", slip="true", attempt_end="false")])
     assert touch[-1]["selected_action"] == "needs_observation"
     release = run_memory([obs(0, contact="false", closed="false", stable="false"), obs(1, contact="true", closed="true", stable="true"), obs(2, contact="false", closed="false", stable="false")])
     assert release[-1]["semantic_events"]["release_expected"] == TRUE
@@ -95,14 +100,14 @@ def test_long_gap_recovery_and_new_attempt_cleanup():
     recovered = run_memory(rows + [obs(9, contact="true", closed="true", stable="true")])
     assert recovered[-1]["semantic_events"]["recovery_achieved_observed"] == TRUE
     assert recovered[-1]["selected_action"] == "none"
-    new_attempt = run_memory(rows + [obs(9, contact="false", closed="false", stable="false"), obs(10, contact="false", closed="true", stable="false")])
+    new_attempt = run_memory(rows + [obs(9, contact="false", closed="false", stable="false"), obs(10, contact="false", closed="true", stable="false", attempt_id=2, attempt_phase="ended", attempt_end="true")])
     assert new_attempt[-1]["selected_action"] == "retry_grasp"
 
 
 def test_missed_grasp_clears_after_confirmed_stable_hold():
     rows = [
         obs(0, contact="false", closed="false", stable="false"),
-        obs(1, contact="false", closed="true", stable="false"),
+        obs(1, contact="false", closed="true", stable="false", attempt_phase="ended", attempt_end="true"),
         obs(2, contact="true", closed="true", stable="true"),
         obs(3, contact="true", closed="true", stable="true"),
     ]

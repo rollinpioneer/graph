@@ -23,10 +23,10 @@ class ControlTickRecorder:
         self.controls: list[dict[str, Any]] = []
 
     def capture_control_tick(self, sim: Any, phase: str, capture_order: int) -> None:
-        self.dense.append({"sim_time": float(sim.data.time), "phase": phase, "capture_order": capture_order, "mocap_position": copy.deepcopy(sim.data.mocap_pos[0].tolist()), "contact_present": bool(sim.contact_sensor()), "gripper_command": "closed" if sim.gripper_closed else "open"})
+        self.dense.append({"sim_time": float(sim.data.time), "phase": phase, "capture_order": capture_order, "mocap_position": copy.deepcopy(sim.data.mocap_pos[0].tolist()), "contact_present": bool(sim.contact_sensor()), "gripper_command": "closed" if sim.gripper_closed else "open", **sim.attempt_lifecycle.snapshot()})
 
     def capture_action_end(self, sim: Any, action: str, capture_order: int) -> None:
-        self.action_end.append({"sim_time": float(sim.data.time), "action": action, "capture_order": capture_order, "contact_present": bool(sim.contact_sensor()), "gripper_command": "closed" if sim.gripper_closed else "open"})
+        self.action_end.append({"sim_time": float(sim.data.time), "action": action, "capture_order": capture_order, "contact_present": bool(sim.contact_sensor()), "gripper_command": "closed" if sim.gripper_closed else "open", **sim.attempt_lifecycle.snapshot()})
 
 
 def _jsonable(value: Any) -> Any:
@@ -196,6 +196,7 @@ def collect_one(stratum: str, family_index: int, rollout_index: int, split: str,
                 "contact_present": bool(current.contact_sensor()),
                 "gripper_command": "closed" if current.gripper_closed else "open",
             }
+            row.update(current.attempt_lifecycle.snapshot())
             if action is not None:
                 row.update({"action": action, "action_index": action_index})
             (dense_rows if phase == "control_tick" else action_end_rows).append(row)
@@ -224,7 +225,8 @@ def collect_one(stratum: str, family_index: int, rollout_index: int, split: str,
         for action in program_for_stratum(stratum):
             result = perform(sim, action, rollout_index)
             low = result.pop("low_level_control_sequence", [])
-            actions.append({"action_index": result.get("action_index"), "action": action, "start_time": result.get("start_time"), "end_time": result.get("end_time"), "gripper_command": result.get("gripper_command"), "contact_present": result.get("contact_present"), "termination_reason": result.get("termination_reason")})
+            lifecycle = result.get("attempt_lifecycle", {})
+            actions.append({"action_index": result.get("action_index"), "action": action, "start_time": result.get("start_time"), "end_time": result.get("end_time"), "gripper_command": result.get("gripper_command"), "contact_present": result.get("contact_present"), "termination_reason": result.get("termination_reason"), **lifecycle})
             controls.append({"action_index": result.get("action_index"), "action": action, "controls": low})
     for row in dense_rows + action_end_rows:
         detection = detect_frame(Path(row["front_path"]))
@@ -264,7 +266,7 @@ def collect_one(stratum: str, family_index: int, rollout_index: int, split: str,
         })
     write_csv(out / "stream_alignment.csv", alignment)
     write_json(out / "termination.json", {"schema": "pathgraph_l2rar1_termination_v1", "done": True, "termination_type": "diagnostic_complete", "horizon": False, "time": float(sim.data.time)})
-    meta = {"schema": "pathgraph_l2rar1_rollout_v2", "rollout_id": f"{family_id}_r{rollout_index:02d}", "root_family_id": family_id, "stratum": stratum, "split": split, "path": str(out.resolve()), "source_kind": "new_dynamic_mujoco_r1", "observation_intervention": stratum == "history_or_visual_unavailable", "dense_observation_count": len(dense_rows), "action_end_observation_count": len(action_end_rows), "control_hz": 20, "api_calls": 0, "training_jobs": 0, "probe_variant": spec.probe_variant, "control_variant": control_variant(rollout_index)}
+    meta = {"schema": "pathgraph_l2rar1_rollout_v3", "rollout_id": f"{family_id}_r{rollout_index:02d}", "root_family_id": family_id, "stratum": stratum, "split": split, "path": str(out.resolve()), "source_kind": "new_dynamic_mujoco_r1", "observation_intervention": stratum == "history_or_visual_unavailable", "dense_observation_count": len(dense_rows), "action_end_observation_count": len(action_end_rows), "control_hz": 20, "api_calls": 0, "training_jobs": 0, "probe_variant": spec.probe_variant, "control_variant": control_variant(rollout_index), "controller_lifecycle_contract": "attempt_id/attempt_phase/attempt_active/attempt_end/attempt_end_reason; post-update aligned; one-cycle attempt_end edge", "controller_lifecycle_fields": ["attempt_id", "attempt_phase", "attempt_active", "attempt_end", "attempt_end_reason"]}
     write_json(out / "metadata.json", meta)
     return meta
 

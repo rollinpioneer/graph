@@ -51,6 +51,11 @@ def _predicates(observation: dict[str, Any], geometry: dict[str, Any], previous:
         "gripper_command_open": "unknown" if closed == "unknown" else "false" if closed else "true",
         "stable_hold_observed": "true" if stable else "false" if closed != "unknown" and contact != "unknown" else "unknown",
         "contact_recently_lost": "true" if recently_lost else "false" if contact != "unknown" else "unknown",
+        "attempt_id": observation.get("attempt_id"),
+        "attempt_phase": observation.get("attempt_phase", "unknown"),
+        "attempt_active": observation.get("attempt_active", "unknown"),
+        "attempt_end": observation.get("attempt_end", "unknown"),
+        "attempt_end_reason": observation.get("attempt_end_reason"),
     }
 
 
@@ -206,6 +211,7 @@ def _content_group_key(meta: dict[str, Any]) -> str:
             "time", "frame_index", "capture_order", "contact_present", "gripper_command",
             "object_centroid", "gripper_centroid", "object_confidence", "gripper_confidence",
             "width", "height", "observation_masked", "observation_missing",
+            "attempt_id", "attempt_phase", "attempt_active", "attempt_end", "attempt_end_reason",
         )})
     payload = json.dumps(online, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
     return hashlib.sha256(payload).hexdigest()

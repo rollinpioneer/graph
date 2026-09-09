@@ -48,6 +48,10 @@ def tri_or(*values: Any) -> str:
 @dataclass
 class MemoryState:
     attempt_id: int = 1
+    attempt_phase: str = "inactive"
+    attempt_active: str = UNKNOWN
+    attempt_end: str = UNKNOWN
+    attempt_end_reason: str | None = None
     hold_evidence_in_current_attempt: str = UNKNOWN
     pending_event: str = "none"
     last_contact_state: str = UNKNOWN
@@ -70,6 +74,19 @@ class AttemptScopedMemory:
         self.history_complete = history_complete
         self.state = MemoryState(hold_evidence_in_current_attempt=FALSE if history_complete else UNKNOWN)
 
+    def _reset_attempt(self, attempt_id: int) -> None:
+        self.state.attempt_id = attempt_id
+        self.state.pending_event = "none"
+        self.state.hold_evidence_in_current_attempt = FALSE if self.history_complete else UNKNOWN
+        self.state.release_command_observed = FALSE
+        self.state.hold_confirm_run_length = 0
+        self.state.loss_confirm_run_length = 0
+        self.state.last_event_onset_time = None
+        self.state.resolved_event_id = None
+        self.state.previous_closed = UNKNOWN
+        self.state.last_contact_state = UNKNOWN
+        self.state.contact_seen_without_hold = FALSE
+
     def _new_event(self, kind: str, time: float | None) -> str:
         self.state.event_counter += 1
         self.state.last_event_onset_time = time
@@ -77,7 +94,22 @@ class AttemptScopedMemory:
         return f"event_{self.state.event_counter:03d}_{kind}"
 
     def observe(self, predicates: dict[str, Any], time: float | None = None, frame_index: int | None = None) -> dict[str, Any]:
-        p = {key: tri(value) for key, value in predicates.items()}
+        raw = dict(predicates)
+        p = {key: tri(value) for key, value in raw.items()}
+        incoming_attempt_id = raw.get("attempt_id")
+        if isinstance(incoming_attempt_id, bool):
+            incoming_attempt_id = None
+        try:
+            incoming_attempt_id = int(incoming_attempt_id) if incoming_attempt_id is not None else None
+        except (TypeError, ValueError):
+            incoming_attempt_id = None
+        if incoming_attempt_id is not None and incoming_attempt_id > 0:
+            if self.state.attempt_id != incoming_attempt_id:
+                self._reset_attempt(incoming_attempt_id)
+        self.state.attempt_phase = str(raw.get("attempt_phase", self.state.attempt_phase))
+        self.state.attempt_active = tri(raw.get("attempt_active", UNKNOWN))
+        self.state.attempt_end = tri(raw.get("attempt_end", UNKNOWN))
+        self.state.attempt_end_reason = raw.get("attempt_end_reason")
         contact = p.get("contact_present", UNKNOWN)
         closed = p.get("gripper_command_closed", UNKNOWN)
         opened = p.get("gripper_command_open", UNKNOWN)
@@ -93,15 +125,8 @@ class AttemptScopedMemory:
             self.state.release_command_observed = FALSE
         # A new closed interval after an observed open starts a new attempt;
         # this depends only on the command transition, never on action names.
-        if closed == TRUE and prior_closed == FALSE:
-            self.state.attempt_id += 1
-            self.state.pending_event = "none"
-            self.state.hold_evidence_in_current_attempt = FALSE if self.history_complete else UNKNOWN
-            self.state.release_command_observed = FALSE
-            self.state.hold_confirm_run_length = 0
-            self.state.loss_confirm_run_length = 0
-            self.state.resolved_event_id = None
-            self.state.contact_seen_without_hold = FALSE
+        if incoming_attempt_id is None and closed == TRUE and prior_closed == FALSE:
+            self._reset_attempt(self.state.attempt_id + 1)
 
         if stable == TRUE:
             self.state.hold_confirm_run_length += 1
@@ -136,12 +161,16 @@ class AttemptScopedMemory:
             self.state.loss_confirm_run_length = 0
 
         if failed_observed == TRUE and self.state.hold_evidence_in_current_attempt == FALSE:
-            if self.state.contact_seen_without_hold == TRUE:
-                self.state.pending_event = "unknown"
-            else:
+            # Contact loss before the controller closes the attempt is still
+            # ambiguous.  Only the controller-owned lifecycle edge can turn
+            # this into a retryable missed grasp; never infer it from contact
+            # or from a future action.
+            if self.state.attempt_end == TRUE and self.history_complete:
                 if self.state.pending_event not in {"missed_grasp", "held_object_loss"}:
                     self._new_event("missed_grasp", time)
                 self.state.pending_event = "missed_grasp"
+            else:
+                self.state.pending_event = "unknown"
 
         if self.state.pending_event == "held_object_loss" and self.state.hold_evidence_in_current_attempt == TRUE and stable == TRUE:
             recovery = TRUE
@@ -186,6 +215,10 @@ class AttemptScopedMemory:
             },
             "effective_guards": {"retry_grasp": retry, "recover_object": recover},
             "pending_event": self.state.pending_event,
+            "attempt_phase": self.state.attempt_phase,
+            "attempt_active": self.state.attempt_active,
+            "attempt_end": self.state.attempt_end,
+            "attempt_end_reason": self.state.attempt_end_reason,
             "hold_evidence_in_current_attempt": self.state.hold_evidence_in_current_attempt,
             "state": asdict(self.state),
             "selected_action": "retry_grasp" if retry == TRUE else "recover_object" if recover == TRUE else "needs_observation" if needs == TRUE else "none",

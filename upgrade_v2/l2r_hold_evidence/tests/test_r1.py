@@ -11,7 +11,7 @@ from upgrade_v2.l2r_hold_evidence.inputs import write_json
 from upgrade_v2.l2r_hold_evidence.recorder import merge_final_action_observations
 
 
-def observation(index, *, time=None, closed=True, contact=True, stable="unknown", masked=False):
+def observation(index, *, time=None, closed=True, contact=True, stable="unknown", masked=False, attempt_id=1, attempt_phase="inactive", attempt_active="unknown", attempt_end="unknown", attempt_end_reason=None):
     return {
         "frame_index": index,
         "time": index * 0.05 if time is None else time,
@@ -21,6 +21,11 @@ def observation(index, *, time=None, closed=True, contact=True, stable="unknown"
         "gripper_centroid": (20 + index, 20),
         "contact_present": contact,
         "gripper_command": "closed" if closed else "open",
+        "attempt_id": attempt_id,
+        "attempt_phase": attempt_phase,
+        "attempt_active": attempt_active,
+        "attempt_end": attempt_end,
+        "attempt_end_reason": attempt_end_reason,
         "observation_masked": masked,
         "predicates": {
             "contact_present": "true" if contact else "false",
@@ -132,8 +137,27 @@ class RecorderTests(unittest.TestCase):
 class EventLifecycleTests(unittest.TestCase):
     def test_missed_grasp_emits_retry(self):
         observations = [observation(0, closed=False, contact=False, stable="false"), observation(1, closed=True, contact=False, stable="false")]
+        observations[1].update({"attempt_phase": "ended", "attempt_active": "false", "attempt_end": "true", "attempt_end_reason": "segment_complete"})
         evidence = [{"hold_evidence": "false", "hold_memory": "false"}] * 2
         self.assertEqual(run_event_interface(observations, evidence)[-1]["selected_action"], "retry_grasp")
+
+    def test_short_touch_waits_for_attempt_end(self):
+        observations = [
+            observation(0, closed=False, contact=False, stable="false"),
+            observation(1, closed=True, contact=True, stable="false", attempt_phase="settling", attempt_active="true"),
+            observation(2, closed=True, contact=False, stable="false", attempt_phase="post_contact_motion", attempt_active="true", attempt_end="false"),
+            observation(3, closed=True, contact=False, stable="false", attempt_phase="ended", attempt_active="false", attempt_end="true", attempt_end_reason="segment_complete"),
+        ]
+        evidence = [{"hold_evidence": "false", "hold_memory": "false"}] * len(observations)
+        rows = run_event_interface(observations, evidence)
+        self.assertEqual(rows[2]["selected_action"], "needs_observation")
+        self.assertEqual(rows[3]["selected_action"], "retry_grasp")
+
+    def test_missing_attempt_end_does_not_reconstruct_retry(self):
+        observations = [observation(0, closed=False, contact=False, stable="false"), observation(1, closed=True, contact=False, stable="false")]
+        evidence = [{"hold_evidence": "false", "hold_memory": "false"}] * 2
+        row = run_event_interface(observations, evidence)[-1]
+        self.assertEqual(row["selected_action"], "needs_observation")
 
     def test_held_loss_emits_recover_but_release_does_not(self):
         observations = [observation(0, closed=False, contact=False), observation(1, stable="true"), observation(2, contact=False)]
@@ -167,6 +191,16 @@ class EventLifecycleTests(unittest.TestCase):
         rows = run_event_interface(observations, evidence)
         self.assertEqual(rows[2]["selected_action"], "recover_object")
         self.assertEqual(rows[4]["selected_action"], "recover_object")
+
+    def test_attempt_id_resets_memory_without_gripper_edge(self):
+        observations = [
+            observation(0, closed=True, contact=True, stable="true", attempt_phase="settling", attempt_active="true"),
+            observation(1, closed=True, contact=False, stable="false", attempt_id=2, attempt_phase="ended", attempt_active="false", attempt_end="true"),
+        ]
+        evidence = [{"hold_evidence": "true", "hold_memory": "true"}, {"hold_evidence": "false", "hold_memory": "false"}]
+        row = run_event_interface(observations, evidence)[-1]
+        self.assertEqual(row["attempt_id"], 2)
+        self.assertEqual(row["selected_action"], "retry_grasp")
 
     def test_unknown_does_not_fallback_to_emergency(self):
         observations = [{"time": 0.0, "predicates": {"contact_present": "unknown", "gripper_command_closed": "unknown", "gripper_command_open": "unknown"}}]
