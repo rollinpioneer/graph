@@ -17,6 +17,19 @@ def _directory_size(path: Path) -> int:
     return sum(item.stat().st_size for item in path.rglob("*") if item.is_file()) if path.exists() else 0
 
 
+def _git_head(path: Path) -> str | None:
+    try:
+        return subprocess.run(
+            ["git", "-C", str(path), "rev-parse", "HEAD"],
+            check=True,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
 def build_handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dict[str, Any]:
     protocol = read_json(protocol_path)
     inputs = read_json(run_root / "manifests/resolved_inputs.json")
@@ -49,6 +62,7 @@ def build_handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dic
         new_status = "L2RAR2_DIAGNOSIS_ONLY"
 
     output_root.mkdir(parents=True, exist_ok=True)
+    experiment_commit = _git_head(run_root)
     copies = {
         run_root / "rounds/l2rar2_0_entry/source_resolution.csv": output_root / "source_resolution.csv",
         run_root / "rounds/l2rar2_1_negative_attribution/negative_attribution.csv": output_root / "negative_attribution.csv",
@@ -114,6 +128,7 @@ def build_handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dic
         "formal_main_commit": inputs["formal_main_commit"],
         "maintenance_source_commit": inputs["maintenance_source_commit"],
         "research_branch": "research/l2ra-r2-task-context-v1",
+        "new_experiment_commit": experiment_commit,
         "fit_root_families": len({row["root_family_id"] for row in fit_rows}),
         "fit_physical_rollouts": len(fit_rows),
         "select_root_families": len({row["root_family_id"] for row in select_rows}),
@@ -177,8 +192,8 @@ def build_handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dic
         "schema": "pathgraph_l2rar2_next_stage_handoff_v1",
         "formal_main_commit": inputs["formal_main_commit"],
         "maintenance_source_commit": inputs["maintenance_source_commit"],
-        "new_experiment_commit": None,
-        "new_experiment_commit_status": "assigned by Git after artifact freeze; see delivery package index",
+        "new_experiment_commit": experiment_commit,
+        "new_experiment_commit_status": "verified in the research worktree; full SHA recorded",
         "historical_status": "L2RAR1_PARTIAL_KEEP_G1",
         "new_status": new_status,
         "retained_graph": "G1_predicate_bound",
