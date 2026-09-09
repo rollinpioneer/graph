@@ -138,6 +138,22 @@ def _recall(rows: list[dict[str, Any]]) -> float | None:
     return sum(bool(row["correct"]) for row in rows) / len(rows) if rows else None
 
 
+def _estimable(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [row for row in rows if row.get("reference_status") == "reference_labeled"]
+
+
+def _estimable_rate(rows: list[dict[str, Any]], key: str) -> float | None:
+    if not rows or len(_estimable(rows)) != len(rows):
+        return None
+    return _rate(rows, key)
+
+
+def _estimable_recall(rows: list[dict[str, Any]]) -> float | None:
+    if not rows or len(_estimable(rows)) != len(rows):
+        return None
+    return _recall(rows)
+
+
 def _p95(values: list[float]) -> float | None:
     if not values:
         return None
@@ -177,7 +193,9 @@ def _metrics(method: str, decisions: list[dict[str, Any]], masked: list[dict[str
     own = [row for row in decisions if row["method"] == method]
     by_case = {case: [row for row in own if row["case_id"] == case] for case in POSITIVE_CASES + NEGATIVE_CASES}
     positives = [row for row in own if row["case_id"] in POSITIVE_CASES]
-    delays = [float(row["delay_seconds"]) for row in positives if row["delay_seconds"] is not None]
+    estimable_positives = _estimable(positives)
+    delays = [float(row["delay_seconds"]) for row in estimable_positives if row["delay_seconds"] is not None]
+    unresolved_count = sum(row.get("reference_status") != "reference_labeled" for row in own)
     missing_history = [row for row in masked if row["view"] == "history_missing"] if method.startswith("M1") else []
     missing_context = [row for row in masked if row["view"] == "context_missing"] if method.startswith("M1") else []
     row: dict[str, Any] = {
@@ -185,31 +203,80 @@ def _metrics(method: str, decisions: list[dict[str, Any]], masked: list[dict[str
         "events": len(own),
         "root_families": len({item["root_family_id"] for item in own}),
         "positive_events": len(positives),
-        "positive_correct": sum(bool(item["correct"]) for item in positives),
-        "K1_recall": _recall(by_case[POSITIVE_CASES[0]]),
-        "K4_recall": _recall(by_case[POSITIVE_CASES[1]]),
-        "K5_recall": _recall(by_case[POSITIVE_CASES[2]]),
-        "K6_recall": _recall(by_case[POSITIVE_CASES[3]]),
-        "wrong_or_unknown_positive_rate": _rate(positives, "missed"),
-        "K2_false_emergency_rate": _rate(by_case[NEGATIVE_CASES[0]], "false_emergency"),
-        "K3_false_emergency_rate": _rate(by_case[NEGATIVE_CASES[1]], "false_emergency"),
-        "K7_false_emergency_rate": _rate(by_case[NEGATIVE_CASES[2]], "false_emergency"),
-        "K8_false_emergency_rate": _rate(by_case[NEGATIVE_CASES[3]], "false_emergency"),
-        "premature_emergency_rate": _rate(positives, "premature_emergency"),
+        "estimable_positive_events": len(estimable_positives),
+        "positive_correct": sum(bool(item["correct"]) for item in estimable_positives),
+        "K1_recall": _estimable_recall(by_case[POSITIVE_CASES[0]]),
+        "K4_recall": _estimable_recall(by_case[POSITIVE_CASES[1]]),
+        "K5_recall": _estimable_recall(by_case[POSITIVE_CASES[2]]),
+        "K6_recall": _estimable_recall(by_case[POSITIVE_CASES[3]]),
+        "wrong_or_unknown_positive_rate": _estimable_rate(positives, "missed"),
+        "K2_false_emergency_rate": _estimable_rate(by_case[NEGATIVE_CASES[0]], "false_emergency"),
+        "K3_false_emergency_rate": _estimable_rate(by_case[NEGATIVE_CASES[1]], "false_emergency"),
+        "K7_false_emergency_rate": _estimable_rate(by_case[NEGATIVE_CASES[2]], "false_emergency"),
+        "K8_false_emergency_rate": _estimable_rate(by_case[NEGATIVE_CASES[3]], "false_emergency"),
+        "premature_emergency_rate": _estimable_rate(positives, "premature_emergency"),
         "any_conflict_rollout_rate": len({item["rollout_id"] for item in own if item["rollout_conflict"]}) / len({item["rollout_id"] for item in own}) if own else None,
-        "event_window_conflict_rate": _rate(own, "event_window_conflict"),
+        "event_window_conflict_rate": _estimable_rate(own, "event_window_conflict"),
         "unjustified_definite_on_missing_history_rate": sum(row["retry"] or row["recover"] for row in missing_history) / len(missing_history) if missing_history else None,
         "unjustified_retry_on_missing_context_rate": sum(row["retry"] for row in missing_context) / len(missing_context) if missing_context else None,
-        "regular_hold_evidence_rate": _rate(by_case[POSITIVE_CASES[1]], "hold_evidence_before_event"),
-        "brief_hold_evidence_rate": _rate(by_case[POSITIVE_CASES[2]], "hold_evidence_before_event"),
-        "touch_false_hold_evidence_rate": _rate(by_case[NEGATIVE_CASES[0]], "hold_evidence_before_event"),
-        "pause_hold_retention_rate": sum(item["hold_memory_at_last_closed_observation"] == "true" for item in by_case[NEGATIVE_CASES[1]]) / len(by_case[NEGATIVE_CASES[1]]) if by_case[NEGATIVE_CASES[1]] else None,
+        "regular_hold_evidence_rate": _estimable_rate(by_case[POSITIVE_CASES[1]], "hold_evidence_before_event"),
+        "brief_hold_evidence_rate": _estimable_rate(by_case[POSITIVE_CASES[2]], "hold_evidence_before_event"),
+        "touch_false_hold_evidence_rate": _estimable_rate(by_case[NEGATIVE_CASES[0]], "hold_evidence_before_event"),
+        "pause_hold_retention_rate": _estimable_rate(
+            [{**item, "pause_hold_retention": item["hold_memory_at_last_closed_observation"] == "true"} for item in by_case[NEGATIVE_CASES[1]]],
+            "pause_hold_retention",
+        ),
         "correct_detection_delay_p95_seconds": _p95(delays),
         "delay_observed_count": len(delays),
-        "positive_missed_count": sum(bool(item["missed"]) for item in positives),
-        "per_case_support": {case: {"events": len(rows), "root_families": len({item["root_family_id"] for item in rows})} for case, rows in by_case.items()},
+        "positive_missed_count": sum(bool(item["missed"]) for item in estimable_positives),
+        "positive_unresolved_count": sum(row.get("reference_status") != "reference_labeled" for row in positives),
+        "reference_unresolved": unresolved_count,
+        "per_case_support": {
+            case: {
+                "events": len(rows),
+                "estimable_events": len(_estimable(rows)),
+                "reference_unresolved": sum(item.get("reference_status") != "reference_labeled" for item in rows),
+                "root_families": len({item["root_family_id"] for item in rows}),
+            }
+            for case, rows in by_case.items()
+        },
     }
     return row
+
+
+def _unresolved_decision(
+    meta: dict[str, Any],
+    method: str,
+    rows: list[dict[str, Any]],
+    reference: dict[str, Any],
+) -> dict[str, Any]:
+    emergencies = _emergencies(rows)
+    selected_row, selected_action = emergencies[0] if emergencies else (None, "none")
+    return {
+        "method": method,
+        "rollout_id": meta["rollout_id"],
+        "root_family_id": meta["root_family_id"],
+        "case_id": meta["case_id"],
+        "event_id": f"{meta['rollout_id']}:primary",
+        "reference_type": "reference_unresolved",
+        "expected_action": None,
+        "selected_action": selected_action,
+        "selected_time": selected_row.get("time") if selected_row else None,
+        "window_start": None,
+        "window_end": None,
+        "correct": None,
+        "missed": None,
+        "false_emergency": None,
+        "premature_emergency": None,
+        "event_window_conflict": None,
+        "rollout_conflict": any(action == "conflict" for _, action in _emergencies(rows)),
+        "hold_evidence_before_event": None,
+        "hold_memory_at_last_closed_observation": "unknown",
+        "delay_seconds": None,
+        "reference_status": "reference_unresolved",
+        "reference_reason": reference["reason"],
+        "request_source": "controller_dispatch_pre_action",
+    }
 
 
 def gate_metrics(metrics: dict[str, Any], protocol: dict[str, Any]) -> dict[str, Any]:
@@ -256,6 +323,10 @@ def evaluate(data_root: Path, methods: list[str], protocol_path: Path, contract_
         reference = build_reference(meta)
         if reference["status"] != "reference_labeled":
             unresolved.append({"rollout_id": meta["rollout_id"], "case_id": meta["case_id"], "reason": reference["reason"]})
+            history = infer_history_complete(observations)
+            for method in methods:
+                rows = _method_rows(method, observations, evidence, requests, history)
+                decisions.append(_unresolved_decision(meta, method, rows, reference))
             continue
         history = infer_history_complete(observations)
         for method in methods:
@@ -279,9 +350,11 @@ def evaluate(data_root: Path, methods: list[str], protocol_path: Path, contract_
             per_case.append({
                 "method": method, "case_id": case, "events": len(rows),
                 "root_families": len({row["root_family_id"] for row in rows}),
-                "correct": sum(bool(row["correct"]) for row in rows),
-                "recall_or_specificity": sum(bool(row["correct"]) for row in rows) / len(rows) if rows else None,
-                "false_emergency": sum(bool(row["false_emergency"]) for row in rows),
+                "estimable_events": len(_estimable(rows)),
+                "reference_unresolved": sum(row.get("reference_status") != "reference_labeled" for row in rows),
+                "correct": sum(bool(row["correct"]) for row in rows if row.get("correct") is not None),
+                "recall_or_specificity": _estimable_recall(rows),
+                "false_emergency": sum(bool(row["false_emergency"]) for row in rows if row.get("false_emergency") is not None),
             })
     write_csv(output_root / "per_case_metrics.csv", per_case)
     selected_metrics = next(row for row in metric_rows if row["method"] == "M1_requested_effect_gate")

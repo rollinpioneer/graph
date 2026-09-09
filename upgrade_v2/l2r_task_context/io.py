@@ -56,7 +56,7 @@ def write_csv(path: Path, rows: Iterable[dict[str, Any]], fields: list[str] | No
                     fields.append(key)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(materialized)
 

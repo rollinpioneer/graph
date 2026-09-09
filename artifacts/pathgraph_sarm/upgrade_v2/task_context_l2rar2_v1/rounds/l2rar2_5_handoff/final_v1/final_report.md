@@ -8,4 +8,4 @@
 - Historical R1.7 requested effect was missing and was not reconstructed. Historical replay remains diagnosis only.
 - Standard L2R confirmation and old R4 remain not run; this round cannot authorize L3.
 - API calls: 0; training jobs: 0; API key reads: false; total new physical rollouts: 96.
-- Failed or non-estimable development gates: K5_recall, K2_false_emergency_rate, K8_false_emergency_rate, brief_hold_evidence_rate, touch_false_hold_evidence_rate, per_case_support, reference_contract, reference_unresolved.
+- Failed or non-estimable development gates: K4_recall, K5_recall, K6_recall, wrong_or_unknown_positive_rate, K2_false_emergency_rate, K3_false_emergency_rate, K8_false_emergency_rate, premature_emergency_rate, event_window_conflict_rate, regular_hold_evidence_rate, brief_hold_evidence_rate, touch_false_hold_evidence_rate, pause_hold_retention_rate, reference_contract, reference_unresolved.

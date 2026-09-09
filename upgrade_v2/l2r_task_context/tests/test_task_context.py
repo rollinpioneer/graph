@@ -6,7 +6,8 @@ import unittest
 from pathlib import Path
 
 from upgrade_v2.l2r_task_context.contract import ControllerRequest, RequestedEffect
-from upgrade_v2.l2r_task_context.evaluate import _event_decision
+from upgrade_v2.l2r_task_context.collector import CASES, _lifecycle
+from upgrade_v2.l2r_task_context.evaluate import _event_decision, _metrics, _unresolved_decision
 from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
 
@@ -41,6 +42,16 @@ def request(effect: RequestedEffect = RequestedEffect.HOLD_OBJECT, *, attempt_id
 
 
 class EventInterfaceTests(unittest.TestCase):
+    def test_k8_keeps_attempt_active_after_lift_until_final_verify(self):
+        case = CASES["K8_acquisition_touch_then_continue"]
+        self.assertEqual(case["end_action"], "verify")
+        lift_end = _lifecycle("lift", case["end_action"], "segment_complete", "action_end")
+        verify_end = _lifecycle("verify", case["end_action"], "segment_complete", "action_end")
+        self.assertFalse(lift_end["attempt_end"])
+        self.assertTrue(lift_end["attempt_active"])
+        self.assertTrue(verify_end["attempt_end"])
+        self.assertFalse(verify_end["attempt_active"])
+
     def test_hold_and_touch_end_differ_with_same_physics(self):
         rows = [observation(0), observation(1, active=False, end=True, reason="segment_complete")]
         ev = [evidence(), evidence()]
@@ -111,6 +122,20 @@ class EventInterfaceTests(unittest.TestCase):
 
 
 class EvaluationTests(unittest.TestCase):
+    def test_unresolved_reference_stays_in_event_denominator(self):
+        meta = {"rollout_id": "r", "root_family_id": "f", "case_id": "K1_hold_request_ends_without_hold"}
+        rows = [{
+            "time": 0.1,
+            "effective_guards": {"retry_grasp": "true", "recover_object": "false"},
+            "rollout_conflict": False,
+        }]
+        unresolved = _unresolved_decision(meta, "M1_requested_effect_gate", rows, {"reason": "missing frozen proxy"})
+        metrics = _metrics("M1_requested_effect_gate", [unresolved], [])
+        self.assertEqual(metrics["events"], 1)
+        self.assertEqual(metrics["positive_events"], 1)
+        self.assertEqual(metrics["reference_unresolved"], 1)
+        self.assertIsNone(metrics["K1_recall"])
+
     def test_negative_any_time_emergency_is_failure(self):
         meta = {"rollout_id": "r", "root_family_id": "f", "case_id": "K2_touch_request_completes_without_hold"}
         rows = [

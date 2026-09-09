@@ -61,6 +61,9 @@ def build_handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dic
         "event_decisions.csv": "event_decisions.csv",
         "per_case_metrics.csv": "per_case_metrics.csv",
         "development_gates.json": "development_gates.json",
+        "reference_unresolved.csv": "reference_unresolved.csv",
+        "context_provenance.csv": "context_provenance.csv",
+        "masked_context_diagnostics.csv": "masked_context_diagnostics.csv",
     }
     for name, destination in development_files.items():
         source = run_root / "rounds/l2rar2_3_development/select" / name

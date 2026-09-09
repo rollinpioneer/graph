@@ -45,7 +45,7 @@ CASES: dict[str, dict[str, Any]] = {
     },
     "K8_acquisition_touch_then_continue": {
         "effect": "HOLD_OBJECT", "scenario": "normal_pick_place",
-        "program": ["observe_scene", "approach_object", "touch_contact", "separate_touch", "approach_object", "close_gripper", "lift", "verify"], "end_action": "lift",
+        "program": ["observe_scene", "approach_object", "touch_contact", "separate_touch", "approach_object", "close_gripper", "lift", "verify"], "end_action": "verify",
     },
 }
 
