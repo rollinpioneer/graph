@@ -22,6 +22,7 @@ from upgrade_v2.l2r_task_context.followup_resolution import (
     _c3_gate_reason,
     _candidate_segment_summary,
 )
+from upgrade_v2.l2r_task_context.repair_validation import LOCKED_CANDIDATES
 from upgrade_v2.l2r_hold_evidence.hold_features import build_features
 from upgrade_v2.l2r_hold_evidence.hold_predicates import evaluate_candidate
 from upgrade_v2.l2r_task_context.evaluate import _online_observation, _predicates
@@ -358,6 +359,9 @@ class FollowupResolutionTests(unittest.TestCase):
             _c3_gate_reason(prediction, previous, geometry, 0.35),
             _c3_gate_reason(contaminated, previous, geometry, 0.35),
         )
+
+    def test_attach_relpose_validation_keeps_only_frozen_candidates(self):
+        self.assertEqual(LOCKED_CANDIDATES, ("B_count2", "C3_vector_rho035"))
 
 
 if __name__ == "__main__":

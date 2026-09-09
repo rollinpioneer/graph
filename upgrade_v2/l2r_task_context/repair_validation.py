@@ -17,6 +17,7 @@ EXPECTED_FAMILY_COUNT = 4
 EXPECTED_ROLLOUT_COUNT = EXPECTED_CASE_COUNT * EXPECTED_FAMILY_COUNT
 REPAIR_VERSION = "l2rar2_attach_relpose_v1"
 COLLECTION_VERSION = "l2rar2_attach_relpose_collection_v1"
+LOCKED_CANDIDATES = ("B_count2", "C3_vector_rho035")
 
 
 def _reference_rows(metadata: list[dict[str, Any]], contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -98,8 +99,13 @@ def evaluate_repair_collection(data_root: Path, lock_path: Path, reference_contr
     unresolved = [row for row in reference_rows if row["reference_status"] != "reference_labeled"]
     unresolved_reasons = Counter(row["reference_reason"] for row in unresolved)
     meta_by_id = {row["rollout_id"]: row for row in metadata}
-    segments = _comparison_segments(meta_by_id, {row["rollout_id"] for row in unresolved})
+    segments = [
+        row for row in _comparison_segments(meta_by_id, {row["rollout_id"] for row in unresolved})
+        if row["candidate_id"] in LOCKED_CANDIDATES
+    ]
     decisions, metrics = _fixed_m1_rows(meta_by_id)
+    decisions = [row for row in decisions if row["candidate_id"] in LOCKED_CANDIDATES]
+    metrics = [row for row in metrics if row["candidate_id"] in LOCKED_CANDIDATES]
     write_csv(output_root / "fixed_predicate_comparison.csv", segments)
     write_csv(output_root / "fixed_m1_comparison.csv", decisions)
     write_csv(output_root / "fixed_m1_metrics.csv", metrics)
@@ -121,7 +127,7 @@ def evaluate_repair_collection(data_root: Path, lock_path: Path, reference_contr
         "reference_contract_unchanged": True,
         "all_events_labeled": all_events_labeled,
         "candidate_comparison": {
-            "candidates": ["B_count2", "C3_vector_rho035"],
+            "candidates": list(LOCKED_CANDIDATES),
             "same_m1_interface": "M1_requested_effect_gate",
             "parameter_search": False,
             "metrics": metrics,
