@@ -160,12 +160,12 @@ class AttemptScopedMemory:
         elif loss_observed == FALSE:
             self.state.loss_confirm_run_length = 0
 
-        if failed_observed == TRUE and self.state.hold_evidence_in_current_attempt == FALSE:
+        if failed_observed == TRUE and self.state.hold_evidence_in_current_attempt != TRUE:
             # Contact loss before the controller closes the attempt is still
             # ambiguous.  Only the controller-owned lifecycle edge can turn
             # this into a retryable missed grasp; never infer it from contact
             # or from a future action.
-            if self.state.attempt_end == TRUE and self.history_complete:
+            if self.state.attempt_end == TRUE and self.history_complete and self.state.hold_evidence_in_current_attempt == FALSE:
                 if self.state.pending_event not in {"missed_grasp", "held_object_loss"}:
                     self._new_event("missed_grasp", time)
                 self.state.pending_event = "missed_grasp"

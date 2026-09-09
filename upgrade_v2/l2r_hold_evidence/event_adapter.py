@@ -27,7 +27,13 @@ def infer_history_complete(observations: list[dict[str, Any]]) -> bool:
     return first_visible.get("gripper_command") == "open"
 
 
-def run_event_interface(observations: list[dict[str, Any]], evidence_rows: list[dict[str, Any]], history_complete: bool = True) -> list[dict[str, Any]]:
+def run_event_interface(
+    observations: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    history_complete: bool | None = None,
+) -> list[dict[str, Any]]:
+    if history_complete is None:
+        history_complete = infer_history_complete(observations)
     memory = AttemptScopedMemory(1, 1, history_complete)
     output = []
     for obs, evidence in zip(observations, evidence_rows):

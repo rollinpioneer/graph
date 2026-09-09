@@ -92,6 +92,13 @@ def test_miss_loss_touch_and_release_are_distinct():
     assert release[-1]["selected_action"] == "none"
 
 
+def test_incomplete_history_keeps_closed_no_contact_unknown():
+    rows = [obs(0, contact="false", closed="true", stable="false", attempt_phase="ended", attempt_end="true")]
+    outputs = run_memory(rows, history_complete=False)
+    assert outputs[-1]["pending_event"] == "unknown"
+    assert outputs[-1]["selected_action"] == "needs_observation"
+
+
 def test_long_gap_recovery_and_new_attempt_cleanup():
     rows = [obs(0, contact="false", closed="false", stable="false"), obs(1, contact="true", closed="true", stable="true"), obs(2, contact="false", closed="true", stable="false", slip="true")]
     rows.extend(obs(i, contact="false", closed="true", stable="false", slip="false") for i in range(3, 9))

@@ -199,6 +199,15 @@ class EventLifecycleTests(unittest.TestCase):
         row = run_event_interface(observations, evidence)[-1]
         self.assertEqual(row["selected_action"], "needs_observation")
 
+    def test_incomplete_history_does_not_reconstruct_retry(self):
+        observations = [
+            observation(0, closed=True, contact=False, stable="false", attempt_phase="ended", attempt_active="false", attempt_end="true"),
+        ]
+        evidence = [{"hold_evidence": "false", "hold_memory": "false"}]
+        row = run_event_interface(observations, evidence)[-1]
+        self.assertEqual(row["selected_action"], "needs_observation")
+        self.assertEqual(row["pending_event"], "unknown")
+
     def test_held_loss_emits_recover_but_release_does_not(self):
         observations = [observation(0, closed=False, contact=False), observation(1, stable="true"), observation(2, contact=False)]
         observations[2]["predicates"]["contact_recently_lost"] = "true"
@@ -238,7 +247,7 @@ class EventLifecycleTests(unittest.TestCase):
             observation(1, closed=True, contact=False, stable="false", attempt_id=2, attempt_phase="ended", attempt_active="false", attempt_end="true"),
         ]
         evidence = [{"hold_evidence": "true", "hold_memory": "true"}, {"hold_evidence": "false", "hold_memory": "false"}]
-        row = run_event_interface(observations, evidence)[-1]
+        row = run_event_interface(observations, evidence, history_complete=True)[-1]
         self.assertEqual(row["attempt_id"], 2)
         self.assertEqual(row["selected_action"], "retry_grasp")
 

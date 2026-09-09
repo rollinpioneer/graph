@@ -5,7 +5,7 @@
 - Valid development execution: 16 fit families / 64 rollouts and 16 select families / 64 rollouts, with 128 distinct online content groups.
 - Invalid earlier batch: rejected for duplicate control programs, retained only as generator-contract audit evidence, and counted as 0 scientific rollouts.
 - Development route: `DEVELOPMENT_NOT_READY`; 0/8 candidates eligible; selected candidate: `None`.
-- Best dense-stream result by preregistered ordering: `B_count1`: miss 1.0 (0/8 correct), regular/brief/long-gap loss 1.0/1.0/1.0, wrong-or-unknown 0.0.
+- Best dense-stream result by preregistered ordering: `B_count1`: miss 1.0 (8/8 correct), regular/brief/long-gap loss 1.0/1.0/1.0, wrong-or-unknown 0.0.
 - Confirmation: `NOT_RUN_DEVELOPMENT_FAILED`; standard `NOT_RUN`, challenge `NOT_RUN`. R4 consumed no family because development failed.
 - Failed development gate fields observed across candidates: `hold_evidence_and_retention, per_negative_stratum`. Legacy compatibility was not evaluated because every candidate had already failed primary event gates.
 - Callback equivalence and dense-stream timestamp normalization passed; normalization reexecuted 0 physical rollouts.

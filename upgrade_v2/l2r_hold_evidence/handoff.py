@@ -29,8 +29,10 @@ def handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dict[str,
     confirm = read_json(confirm_path) if confirm_path.is_file() else {"status": "NOT_RUN", "standard_confirmation_status": "NOT_RUN", "challenge_confirmation_status": "NOT_RUN"}
     metrics_path = run_root / "rounds/l2rar1_3_development_selection/candidate_metrics.csv"
     gates_path = run_root / "rounds/l2rar1_3_development_selection/development_gates.csv"
+    decisions_path = run_root / "rounds/l2rar1_3_development_selection/event_decisions.csv"
     metrics = list(csv.DictReader(metrics_path.open(encoding="utf-8"))) if metrics_path.is_file() else []
     gates = list(csv.DictReader(gates_path.open(encoding="utf-8"))) if gates_path.is_file() else []
+    decisions = list(csv.DictReader(decisions_path.open(encoding="utf-8"))) if decisions_path.is_file() else []
     dense = [row for row in metrics if row.get("sampling") == "control_tick_20hz"]
     best = min(dense, key=lambda row: (float(row["wrong_or_unknown_rate"]), float(row["negative_false_emergency_rate"]), row["candidate_id"])) if dense else None
     failed_gate_names = sorted({
@@ -56,8 +58,17 @@ def handoff(run_root: Path, protocol_path: Path, output_root: Path) -> dict[str,
     write_json(final / "unsupported_claims.json", unsupported)
     best_text = "not available"
     if best:
+        miss_rows = [
+            row for row in decisions
+            if row.get("candidate_id") == best["candidate_id"]
+            and row.get("sampling") == "control_tick_20hz"
+            and row.get("reference_event_type") == "missed_grasp_retry_required"
+            and row.get("physical_label_status") == "reference_labeled"
+        ]
+        miss_correct = sum(row.get("correct") == "True" for row in miss_rows)
         best_text = (
-            f"`{best['candidate_id']}`: miss {best['miss_recall']} (0/8 correct), "
+            f"`{best['candidate_id']}`: miss {best['miss_recall']} "
+            f"({miss_correct}/{len(miss_rows)} correct), "
             f"regular/brief/long-gap loss {best['regular_loss_recall']}/{best['brief_loss_recall']}/{best['long_gap_recall']}, "
             f"wrong-or-unknown {best['wrong_or_unknown_rate']}"
         )
