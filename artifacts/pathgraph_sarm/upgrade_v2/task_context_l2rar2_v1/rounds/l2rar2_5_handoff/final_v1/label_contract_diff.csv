@@ -1,0 +1,5 @@
+context,historical_generic_action,r2_action,change
+"HOLD_OBJECT normal end, closed/no-contact, no prior hold",retry_grasp,retry_grasp,none
+"TOUCH_OBJECT normal end, closed/no-contact, no prior hold",retry_grasp,none,task-conditioned end interpretation
+confirmed hold then non-release contact loss,recover_object,recover_object,none; recovery cannot be masked by purpose
+missing/stale/cross-attempt purpose at otherwise retryable end,retry_grasp,needs_observation,unsupported retry blocked
