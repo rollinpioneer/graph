@@ -1,0 +1,51 @@
+{
+  "api_calls": 0,
+  "candidate_grid_expanded": false,
+  "confirmation_run": false,
+  "current_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "decision": "SIMULATOR_REFERENCE_REPAIR_FIRST",
+  "decision_count": 1,
+  "historical_status": "L2RAR1_PARTIAL_KEEP_G1",
+  "l3_entry_allowed": false,
+  "old_reference_limit_changed": false,
+  "old_reference_rows_reclassified": 0,
+  "online_diagnostic": {
+    "candidate_selected": false,
+    "existing_C3_vector_rho035": {
+      "initial_false_hold_segments_total": 4,
+      "initial_false_hold_segments_with_evidence": 0,
+      "later_k8_segments_total": 2,
+      "later_k8_segments_with_evidence": 2,
+      "reference_labeled_k5_total": 4,
+      "reference_labeled_k5_with_evidence": 4
+    },
+    "interpretation": "The existing fixed C3 rho=0.35 rule suppresses the four targeted initial false holds, retains both later K8 holds, and supplies evidence for all four reference-labeled K5 cases. Through the unchanged M1 interface, however, it changes no-contact endpoint evidence to unknown, so K1 recall is 0/8. It is not a complete candidate and is not renamed, tuned, selected, or independently confirmed here.",
+    "same_m1_metrics": {
+      "K1_recall": 0.0,
+      "K2_false_emergency_rate": 0.0,
+      "K3_false_emergency_rate": 0.0,
+      "K3_pause_hold_retention_rate": 1.0,
+      "K4_recall": 1.0,
+      "K5_hold_evidence_rate": 1.0,
+      "K5_recall": 1.0,
+      "K6_recall": 1.0,
+      "K7_false_emergency_rate": 0.0,
+      "K8_false_emergency_rate": 0.0,
+      "all_labeled_event_accuracy": 0.8222222222222222,
+      "candidate_id": "C3_vector_rho035",
+      "fixed_parameters": "{\"relative_rho_max\": 0.35}",
+      "independent_confirmation": false,
+      "reference_labeled_events": 45,
+      "reference_unresolved_events_preserved": 19,
+      "same_m1_interface": "M1_requested_effect_gate",
+      "same_r2_cache": true
+    },
+    "why_not_selected": "C3 rho=0.35 is mechanism-informative but incomplete under the same M1 interface because K1 becomes needs_observation rather than retry; reference/collection self-consistency is repaired first"
+  },
+  "proposed_change_not_applied": "Before activating grasp_weld in a separately versioned simulator, set the weld relative translation/quaternion to the actual attach pose; retain the scripted writeback and frozen 0.02 m limit, then recollect new independent development roots under a new collection/reference version.",
+  "reason": "The current compiled weld target is the initial XML body relation, while every attached physics step writes a different relation. The family-matched current probe reproduces 47/48 cached first-tick relative positions exactly; the sole K8 deviation is 1.66e-5 m with the same drift direction. The bounded relpose-at-attach counterfactual remains below 0.02 m for all eight development families.",
+  "retained_graph": "G1_predicate_bound",
+  "schema": "pathgraph_l2rar2_followup_repair_decision_v1",
+  "single_repair_scope": "collection_and_reference_geometry",
+  "training_jobs": 0
+}

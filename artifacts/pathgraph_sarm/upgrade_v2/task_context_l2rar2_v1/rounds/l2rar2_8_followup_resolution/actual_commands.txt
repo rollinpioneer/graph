@@ -1,0 +1,9 @@
+git fetch origin --prune
+python -m upgrade_v2.l2r_task_context.cli complete-cache-followup --data-root <frozen-dev-select> --unresolved <frozen-unresolved> --reference-contract <frozen-contract> --output-root <round-8>
+/home/xushijie/.conda/envs/lerobot/bin/python -m unittest discover -s upgrade_v2/l2r_task_context/tests -p test_*.py
+/home/xushijie/.conda/envs/lerobot/bin/python -m unittest discover -s upgrade_v2/l2r_hold_evidence/tests -p test_*.py
+/home/xushijie/.conda/envs/lerobot/bin/python -m pytest -q upgrade_v2/visual_refine_l2/tests/test_dynamic_simulator.py upgrade_v2/visual_refine_l2/tests/test_no_oracle_leakage.py
+/home/xushijie/.conda/envs/lerobot/bin/python -m compileall -q upgrade_v2/l2r_task_context upgrade_v2/l2r_hold_evidence upgrade_v2/visual_refine_l2
+git diff --check
+unzip -t downloads/l2ra_r2_v1/L2RA_R2_results_rev3.zip
+sha256sum downloads/l2ra_r2_v1/L2RA_R2_results_rev3.zip

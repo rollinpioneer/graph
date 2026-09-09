@@ -16,6 +16,11 @@ from upgrade_v2.l2r_task_context.mechanism_localization import (
     _evidence_onsets,
     _oracle_peak_intervals,
 )
+from upgrade_v2.l2r_task_context.followup_resolution import (
+    _b_gate_reason,
+    _c3_gate_reason,
+    _candidate_segment_summary,
+)
 from upgrade_v2.l2r_hold_evidence.hold_features import build_features
 from upgrade_v2.l2r_hold_evidence.hold_predicates import evaluate_candidate
 from upgrade_v2.l2r_task_context.evaluate import _online_observation, _predicates
@@ -267,6 +272,53 @@ class MechanismLocalizationTests(unittest.TestCase):
         self.assertAlmostEqual(intervals[0]["maximum_drift"], 0.03)
         self.assertEqual(intervals[0]["peaks"][0]["stage"], "constraint_establishment")
         self.assertEqual(intervals[0]["peaks"][-1]["stage"], "loss_boundary")
+
+
+class FollowupResolutionTests(unittest.TestCase):
+    def test_k5_interval_reasons_separate_magnitude_and_direction(self):
+        prediction = {"predicates": {"gripper_command_closed": "true", "contact_present": "true"}}
+        previous = {"predicates": {"gripper_command_closed": "true", "contact_present": "true"}}
+        geometry = {
+            "effective_motion_interval": True,
+            "object_displacement_norm": 0.005,
+            "gripper_displacement_norm": 0.010,
+            "direction_cosine": 0.99,
+            "relative_vector_error": 0.20,
+        }
+        self.assertEqual(_b_gate_reason(prediction, geometry), "magnitude_co_motion_below_0.8")
+        self.assertEqual(_c3_gate_reason(prediction, previous, geometry, 0.35), "directional_interval_pass")
+
+    def test_fixed_candidate_summary_does_not_rename_c3(self):
+        rows = [
+            {"candidate_id": candidate, "segment_kind": kind, "hold_evidence_observed": observed}
+            for candidate, kind, observed in (
+                ("B_count2", "initial_transient_contact", True),
+                ("C3_vector_rho035", "initial_transient_contact", False),
+                ("C3_vector_rho035", "same_k8_later_hold", True),
+                ("C3_vector_rho035", "reference_labeled_k5", True),
+                ("C3_vector_rho055", "initial_transient_contact", True),
+            )
+        ]
+        summary = _candidate_segment_summary(rows)
+        self.assertEqual(set(summary), {"B_count2", "C3_vector_rho035", "C3_vector_rho055"})
+        self.assertEqual(summary["C3_vector_rho035"]["initial_false_hold_segments_with_evidence"], 0)
+        self.assertEqual(summary["C3_vector_rho035"]["later_k8_segments_with_evidence"], 1)
+
+    def test_reference_fields_do_not_change_c3_gate_reason(self):
+        prediction = {"predicates": {"gripper_command_closed": "true", "contact_present": "true"}}
+        previous = {"predicates": {"gripper_command_closed": "true", "contact_present": "true"}}
+        geometry = {
+            "effective_motion_interval": True,
+            "object_displacement_norm": 0.01,
+            "gripper_displacement_norm": 0.01,
+            "direction_cosine": 1.0,
+            "relative_vector_error": 0.0,
+        }
+        contaminated = {**prediction, "scenario": "future", "weld_state": True, "expected_action": "recover_object"}
+        self.assertEqual(
+            _c3_gate_reason(prediction, previous, geometry, 0.35),
+            _c3_gate_reason(contaminated, previous, geometry, 0.35),
+        )
 
 
 if __name__ == "__main__":
