@@ -311,6 +311,21 @@ def collect_development(output_root: Path, protocol: dict[str, Any], partition: 
     else:
         metadata = [collect_one(*task) for task in tasks]
     write_csv(output_root / f"{partition}_rollout_manifest.csv", metadata)
+    if partition == "dev_fit":
+        run_root = output_root.parent.parent
+        collection_lock = run_root / "locks/development_collection_lock.json"
+        write_json(collection_lock, {
+            "schema": "pathgraph_l2rar1_development_collection_lock_v1",
+            "status": "LOCKED_AFTER_COLLECTION_BEFORE_SELECT",
+            "partition": "development",
+            "families": len({row["root_family_id"] for row in metadata}),
+            "rollouts": len(metadata),
+            "rollout_manifest": {"path": str((output_root / "dev_fit_rollout_manifest.csv").resolve()), "sha256": sha256_file(output_root / "dev_fit_rollout_manifest.csv")},
+            "generator_lock": {"path": str((output_root / "generator_lock.json").resolve()), "sha256": sha256_file(output_root / "generator_lock.json")},
+            "reference_contract": {"path": str((output_root / "reference_contract.json").resolve()), "sha256": sha256_file(output_root / "reference_contract.json")},
+            "api_calls": 0,
+            "training_jobs": 0,
+        })
     return {"status": "COLLECTION_COMPLETE", "partition": partition, "families": len({row["root_family_id"] for row in metadata}), "rollouts": len(metadata), "dense_observations": sum(row["dense_observation_count"] for row in metadata), "api_calls": 0, "training_jobs": 0}
 
 

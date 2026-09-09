@@ -1,6 +1,9 @@
+import hashlib
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from upgrade_v2.l2r_hold_evidence.confirmation import confirm
 from upgrade_v2.l2r_hold_evidence.evaluate_v2 import _first_action, _online_observation
@@ -8,7 +11,7 @@ from upgrade_v2.l2r_hold_evidence.event_adapter import infer_history_complete, r
 from upgrade_v2.l2r_hold_evidence.hold_features import adjacent_features, build_features
 from upgrade_v2.l2r_hold_evidence.hold_predicates import evaluate_candidate
 from upgrade_v2.l2r_hold_evidence.inputs import write_json
-from upgrade_v2.l2r_hold_evidence.recorder import merge_final_action_observations
+from upgrade_v2.l2r_hold_evidence.recorder import collect_development, merge_final_action_observations
 
 
 def observation(index, *, time=None, closed=True, contact=True, stable="unknown", masked=False, attempt_id=1, attempt_phase="inactive", attempt_active="unknown", attempt_end="unknown", attempt_end_reason=None):
@@ -132,6 +135,43 @@ class RecorderTests(unittest.TestCase):
         self.assertEqual([row["time"] for row in merged], [0.0, 0.05])
         self.assertFalse(merged[-1]["contact_present"])
         self.assertEqual(merged[-1]["source_phase"], "action_end")
+
+    def test_development_fit_writes_collection_lock(self):
+        protocol = {
+            "development": {
+                "strata": ["miss_without_prior_hold"],
+                "families_per_stratum": 4,
+                "rollouts_per_family": 1,
+            },
+            "new_seeds": {"development_family": 10, "development_rollout": 20},
+            "response_window_seconds": 0.5,
+            "max_gap_seconds": 0.2,
+        }
+
+        def fake_collect_one(stratum, family_index, rollout_index, partition, output_root, family_seed, rollout_seed):
+            return {
+                "root_family_id": f"F{family_index}",
+                "rollout_id": f"F{family_index}_r{rollout_index}",
+                "dense_observation_count": 2,
+            }
+
+        with tempfile.TemporaryDirectory() as temp:
+            run_root = Path(temp) / "run"
+            output_root = run_root / "data" / "new_development"
+            with patch("upgrade_v2.l2r_hold_evidence.recorder.collect_one", fake_collect_one):
+                result = collect_development(output_root, protocol, "dev_fit")
+
+            lock = run_root / "locks" / "development_collection_lock.json"
+            self.assertEqual(result["status"], "COLLECTION_COMPLETE")
+            self.assertTrue(lock.is_file())
+            payload = json.loads(lock.read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "LOCKED_AFTER_COLLECTION_BEFORE_SELECT")
+            self.assertEqual(payload["families"], 2)
+            self.assertEqual(payload["rollouts"], 2)
+            self.assertEqual(
+                payload["rollout_manifest"]["sha256"],
+                hashlib.sha256((output_root / "dev_fit_rollout_manifest.csv").read_bytes()).hexdigest(),
+            )
 
 
 class EventLifecycleTests(unittest.TestCase):
