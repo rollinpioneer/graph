@@ -10,7 +10,7 @@ from upgrade_v2.l2r_task_context.collector import CASES, _lifecycle
 from upgrade_v2.l2r_task_context.evaluate import _event_decision, _metrics, _unresolved_decision
 from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
-from upgrade_v2.l2r_task_context.online_interface_repair import run_repaired_interface
+from upgrade_v2.l2r_task_context.online_interface_repair import _decompose_time, run_repaired_interface
 from upgrade_v2.l2r_task_context.cache_fault_split import _audit_action_end_alignment, _oracle_intervals
 from upgrade_v2.l2r_task_context.mechanism_localization import (
     _classify_interval,
@@ -173,6 +173,18 @@ class OnlineInterfaceRepairTests(unittest.TestCase):
         out = run_repaired_interface(rows, [evidence(), evidence()], [request()])
         self.assertEqual(out[-1]["data_status"], "data_missing_or_invalid")
         self.assertEqual(out[-1]["selected_action"], "needs_observation")
+
+    def test_time_audit_decomposes_causal_latency(self):
+        result = _decompose_time(0.65, 0.75, 0.80)
+        self.assertAlmostEqual(result["physical_to_observable_seconds"], 0.10)
+        self.assertAlmostEqual(result["observable_to_decision_seconds"], 0.05)
+        self.assertAlmostEqual(result["physical_to_decision_seconds"], 0.15)
+
+    def test_time_audit_preserves_missing_online_observation(self):
+        result = _decompose_time(0.65, None, None)
+        self.assertIsNone(result["physical_to_observable_seconds"])
+        self.assertIsNone(result["observable_to_decision_seconds"])
+        self.assertIsNone(result["physical_to_decision_seconds"])
 
 
 class EvaluationTests(unittest.TestCase):

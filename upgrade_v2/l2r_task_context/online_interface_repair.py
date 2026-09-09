@@ -262,19 +262,156 @@ def _runtime_environment() -> dict[str, Any]:
     return result
 
 
-def _external_artifact_record(data_root: Path) -> dict[str, Any]:
+def _external_artifact_record(
+    data_root: Path,
+    *,
+    logical_path: str = "data_attach_relpose_repair_v1",
+    purpose: str = "offline replay input retained outside the lightweight delivery",
+) -> dict[str, Any]:
     size = sum(path.stat().st_size for path in data_root.rglob("*") if path.is_file())
     return {
-        "logical_path": "data_attach_relpose_repair_v1",
+        "logical_path": logical_path,
         "original_path": str(data_root.resolve()),
         "original_filename": data_root.name,
         "size_bytes": size,
         "sha256": "NOT_COMPUTED_DIRECTORY_TREE",
         "artifact_type": "raw_dynamic_rollout_directory",
-        "purpose": "offline replay input retained outside the lightweight delivery",
+        "purpose": purpose,
         "reason_omitted": "per-frame RGB and raw rollout payload externalized",
         "recovery_method": "restore the exact directory, then rerun the locked cache evaluation command",
     }
+
+
+def _first_contact_loss(observations: list[dict[str, Any]]) -> float | None:
+    for previous, current in zip(observations, observations[1:]):
+        if previous.get("contact_present") is True and current.get("contact_present") is False:
+            return float(current["time"])
+    return None
+
+
+def _first_event(path: Path, event_name: str) -> float | None:
+    for row in read_jsonl(path / "events.jsonl"):
+        if row.get("event") == event_name:
+            return float(row["time"])
+    return None
+
+
+def _decompose_time(t_physical: float | None, t_observable: float | None, t_decision: float | None) -> dict[str, Any]:
+    return {
+        "physical_to_observable_seconds": None if t_physical is None or t_observable is None else t_observable - t_physical,
+        "observable_to_decision_seconds": None if t_observable is None or t_decision is None else t_decision - t_observable,
+        "physical_to_decision_seconds": None if t_physical is None or t_decision is None else t_decision - t_physical,
+    }
+
+
+def _time_audit_row(
+    *,
+    meta: dict[str, Any],
+    candidate_id: str,
+    path: Path,
+    observations: list[dict[str, Any]],
+    decision_rows: list[dict[str, Any]],
+    event_name: str,
+    event_start: float | None,
+    event_end: float | None,
+    source_role: str,
+) -> dict[str, Any]:
+    t_physical = _first_event(path, event_name)
+    t_observable = _first_contact_loss(observations)
+    selected = _first_emergency(decision_rows, event_start if event_start is not None else -float("inf"), event_end if event_end is not None else float("inf"))
+    t_decision = float(selected["time"]) if selected is not None else None
+    decomposition = _decompose_time(t_physical, t_observable, t_decision)
+    if t_observable is None:
+        timing_status = "physical_event_not_observed_online"
+    elif t_decision is None:
+        timing_status = "observable_event_without_emergency_decision"
+    else:
+        timing_status = "physical_observable_decision_chain_recorded"
+    return {
+        "schema": "l2rar2_time_definition_audit_v1",
+        "candidate_id": candidate_id,
+        "rollout_id": meta["rollout_id"],
+        "root_family_id": meta["root_family_id"],
+        "case_id": meta["case_id"],
+        "source_role": source_role,
+        "event_name": event_name,
+        "t_physical": t_physical,
+        "t_observable": t_observable,
+        "t_decision": t_decision,
+        **decomposition,
+        "timing_status": timing_status,
+        "online_interface_version": INTERFACE_REPAIR_VERSION,
+        "offline_event_used_for": "timing_audit_only",
+        "oracle_or_future_used_online": False,
+    }
+
+
+def _build_time_audit(data_root: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    current_metadata = read_csv(data_root / "rollout_manifest.csv")
+    for meta in sorted(current_metadata, key=lambda row: row["rollout_id"]):
+        if meta["case_id"] not in {"K4_regular_hold_loss", "K5_brief_hold_loss", "K6_long_gap_after_loss"}:
+            continue
+        path = Path(meta["path"])
+        reference = build_reference(meta)
+        event = reference["events"][0] if reference.get("events") else {}
+        for candidate_id in FIXED_CANDIDATES:
+            observations, evidence, requests = _load_candidate(meta, candidate_id)
+            decisions = run_repaired_interface(observations, evidence, requests, history_complete=True)
+            rows.append(_time_audit_row(
+                meta=meta,
+                candidate_id=candidate_id,
+                path=path,
+                observations=observations,
+                decision_rows=decisions,
+                event_name="contact_lost",
+                event_start=float(event["decision_window_start"]) if event else None,
+                event_end=float(event["decision_window_end"]) if event else None,
+                source_role="attach_relpose_repair_collection",
+            ))
+
+    # The earlier 05/07 K5 records are retained as historical timing context;
+    # they are not merged into the new 32-rollout evaluation denominator.
+    historical_root = data_root.parent / "data_pre_correction_k8_lifecycle_20260909" / "dev_select" / "rollouts"
+    for family_id in ("L2RAR2_SELECT_05_820005", "L2RAR2_SELECT_07_820007"):
+        path = historical_root / family_id / "K5_brief_hold_loss"
+        if not path.is_dir():
+            continue
+        requests = read_jsonl(path / "controller_requests.jsonl")
+        if not requests:
+            continue
+        meta = {
+            "rollout_id": f"{family_id}:K5_brief_hold_loss",
+            "root_family_id": family_id,
+            "case_id": "K5_brief_hold_loss",
+            "path": str(path),
+            "requested_effect": requests[0]["requested_effect"],
+        }
+        reference = build_reference(meta)
+        event = reference["events"][0] if reference.get("events") else {}
+        raw = read_jsonl(path / "observations_dense.jsonl")
+        observations = [_online_observation(row) for row in raw]
+        geometries = build_features(observations)
+        predictions: list[dict[str, Any]] = []
+        previous = None
+        for observation, geometry in zip(observations, geometries):
+            predictions.append({**observation, "predicates": _predicates(observation, geometry, previous)})
+            previous = observation
+        for candidate_id, (base, config) in FIXED_CANDIDATES.items():
+            evidence = evaluate_candidate(predictions, geometries, base, config)
+            decisions = run_repaired_interface(predictions, evidence, requests, history_complete=True)
+            rows.append(_time_audit_row(
+                meta=meta,
+                candidate_id=candidate_id,
+                path=path,
+                observations=observations,
+                decision_rows=decisions,
+                event_name="contact_lost",
+                event_start=float(event["decision_window_start"]) if event else None,
+                event_end=float(event["decision_window_end"]) if event else None,
+                source_role="historical_pre_correction_context_only",
+            ))
+    return rows
 
 
 def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, Any]:
@@ -348,6 +485,30 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
     write_csv(output_root / "interface_repair_comparison.csv", comparison)
     write_csv(output_root / "interface_repair_metrics.csv", metrics)
     write_jsonl(output_root / "interface_repair_trace.jsonl", trace_rows)
+    time_audit = _build_time_audit(data_root)
+    write_csv(output_root / "time_definition_audit.csv", time_audit)
+    write_json(output_root / "time_definition_audit.json", {
+        "schema": "l2rar2_time_definition_audit_summary_v1",
+        "definition": {
+            "t_physical": "first offline contact_lost event in the rollout event log",
+            "t_observable": "first online contact_present true-to-false transition",
+            "t_decision": "first online retry_grasp or recover_object decision in the frozen reference window",
+            "identity": "t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)",
+        },
+        "rows": len(time_audit),
+        "source_roles": {
+            role: sum(row["source_role"] == role for row in time_audit)
+            for role in sorted({row["source_role"] for row in time_audit})
+        },
+        "timing_status_counts": {
+            status: sum(row["timing_status"] == status for row in time_audit)
+            for status in sorted({row["timing_status"] for row in time_audit})
+        },
+        "offline_event_used_for": "timing_audit_only",
+        "online_input_used": False,
+        "current_evaluation_rows": sum(row["source_role"] == "attach_relpose_repair_collection" for row in time_audit),
+        "historical_context_rows_excluded_from_metrics": sum(row["source_role"] == "historical_pre_correction_context_only" for row in time_audit),
+    })
     result = {
         "schema": "pathgraph_l2rar2_online_interface_repair_v1",
         "status": "ONLINE_INTERFACE_REPAIR_DIAGNOSTIC_COMPLETE",
@@ -371,13 +532,23 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
     }
     write_json(output_root / "online_interface_repair.json", result)
     write_json(output_root / "runtime_environment.json", _runtime_environment())
-    external = _external_artifact_record(data_root)
+    external_records = [_external_artifact_record(data_root)]
+    historical_root = data_root.parent / "data_pre_correction_k8_lifecycle_20260909"
+    if historical_root.is_dir():
+        external_records.append(_external_artifact_record(
+            historical_root,
+            logical_path="data_pre_correction_k8_lifecycle_20260909",
+            purpose="historical pre-correction K5 timing context retained outside the lightweight delivery",
+        ))
     (output_root / "external_artifacts.tsv").write_text(
         "logical_path\toriginal_path\toriginal_filename\tsize_bytes\tsha256\tartifact_type\tpurpose\treason_omitted\trecovery_method\n"
-        + "\t".join(str(external[key]) for key in (
-            "logical_path", "original_path", "original_filename", "size_bytes", "sha256",
-            "artifact_type", "purpose", "reason_omitted", "recovery_method",
-        )) + "\n",
+        + "\n".join(
+            "\t".join(str(external[key]) for key in (
+                "logical_path", "original_path", "original_filename", "size_bytes", "sha256",
+                "artifact_type", "purpose", "reason_omitted", "recovery_method",
+            ))
+            for external in external_records
+        ) + "\n",
         encoding="utf-8",
     )
     (output_root / "actual_commands.txt").write_text(
@@ -396,6 +567,9 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
         "- Retry is permitted only for a valid, complete `HOLD_OBJECT` attempt ending without current hold evidence.",
         "- Active touch/acquisition does not retry. A non-release contact loss recovers only after a historical hold was established and the loss is actually observed online.",
         "- In this cache, K4/K5/K6 contain offline contact-loss events but no corresponding online contact-loss transition; the interface therefore does not claim recovery for them.",
+        "- Timing audit definitions: `t_physical` is the first offline `contact_lost` event, `t_observable` is the first online contact true-to-false transition, and `t_decision` is the first online emergency decision in the frozen window.",
+        "- The recorded latency identity is `t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)`; offline events are used for timing audit only and never as online input.",
+        f"- Timing audit rows: `{sum(row['source_role'] == 'attach_relpose_repair_collection' for row in time_audit)}` current attach-relpose rows plus `{sum(row['source_role'] == 'historical_pre_correction_context_only' for row in time_audit)}` historical context rows; historical rows are excluded from current metrics.",
         "- This is a diagnostic interface repair, not a passing candidate or confirmation result. `G1` remains retained and L3 remains closed.",
         "",
         "## Metrics",
@@ -409,7 +583,7 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
     if scan["status"] != "PASS":
         raise RuntimeError("secret scan failed")
     write_json(output_root / "secret_scan.json", scan)
-    artifact_names = ["interface_repair_comparison.csv", "interface_repair_metrics.csv", "interface_repair_trace.jsonl", "online_interface_repair.json", "online_interface_repair.md", "runtime_environment.json", "actual_commands.txt", "external_artifacts.tsv", "secret_scan.json"]
+    artifact_names = ["interface_repair_comparison.csv", "interface_repair_metrics.csv", "interface_repair_trace.jsonl", "time_definition_audit.csv", "time_definition_audit.json", "online_interface_repair.json", "online_interface_repair.md", "runtime_environment.json", "actual_commands.txt", "external_artifacts.tsv", "secret_scan.json"]
     write_json(output_root / "run_manifest.json", {
         "schema": "pathgraph_l2rar2_online_interface_repair_manifest_v1",
         "interface_repair_version": INTERFACE_REPAIR_VERSION,

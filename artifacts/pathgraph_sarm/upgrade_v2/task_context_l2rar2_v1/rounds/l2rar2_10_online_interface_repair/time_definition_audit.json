@@ -1,0 +1,22 @@
+{
+  "current_evaluation_rows": 24,
+  "definition": {
+    "identity": "t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)",
+    "t_decision": "first online retry_grasp or recover_object decision in the frozen reference window",
+    "t_observable": "first online contact_present true-to-false transition",
+    "t_physical": "first offline contact_lost event in the rollout event log"
+  },
+  "historical_context_rows_excluded_from_metrics": 4,
+  "offline_event_used_for": "timing_audit_only",
+  "online_input_used": false,
+  "rows": 28,
+  "schema": "l2rar2_time_definition_audit_summary_v1",
+  "source_roles": {
+    "attach_relpose_repair_collection": 24,
+    "historical_pre_correction_context_only": 4
+  },
+  "timing_status_counts": {
+    "physical_event_not_observed_online": 24,
+    "physical_observable_decision_chain_recorded": 4
+  }
+}
