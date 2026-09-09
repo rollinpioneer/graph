@@ -1,0 +1,32 @@
+{
+  "decision_window_seconds": 0.5,
+  "hold_proxy": {
+    "maximum_relative_position_drift_m": 0.02,
+    "minimum_object_displacement_m": 0.01,
+    "source": "frozen R1 proxy"
+  },
+  "online_forbidden": [
+    "case_id",
+    "scenario",
+    "oracle",
+    "future_outcome",
+    "expected_action"
+  ],
+  "reference_only_inputs": [
+    "case_id",
+    "events.jsonl",
+    "oracle_timeline.csv",
+    "weld_state"
+  ],
+  "rules": {
+    "active_acquisition_after_transient_contact": "none",
+    "cancel_or_release_end_only": "none",
+    "held_loss_not_release": "recover_object",
+    "hold_normal_end_without_hold": "retry_grasp",
+    "missing_required_history_or_context": "needs_observation",
+    "touch_normal_end_without_hold": "none"
+  },
+  "schema": "l2rar2_reference_contract_v1",
+  "status": "LOCKED_FOR_NEW_ONLINE_COLLECTION",
+  "version": "l2rar2_task_physical_reference_v1"
+}
