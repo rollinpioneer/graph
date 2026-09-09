@@ -10,6 +10,10 @@ from upgrade_v2.l2r_task_context.collector import CASES, _lifecycle
 from upgrade_v2.l2r_task_context.evaluate import _event_decision, _metrics, _unresolved_decision
 from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
+from upgrade_v2.l2r_task_context.cache_fault_split import _audit_action_end_alignment, _oracle_intervals
+from upgrade_v2.l2r_hold_evidence.hold_features import build_features
+from upgrade_v2.l2r_hold_evidence.hold_predicates import evaluate_candidate
+from upgrade_v2.l2r_task_context.evaluate import _online_observation, _predicates
 
 
 def observation(index: int, *, contact: bool = False, closed: bool = True, active: bool = True, end: bool = False, reason: str | None = None, attempt_id: int = 1, stable: str = "false") -> dict:
@@ -172,6 +176,54 @@ class EvaluationTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 lock_candidate(development, root / "protocol.json", root / "generation.json", root / "selection.json")
             self.assertFalse((root / "selection.json").exists())
+
+
+class CacheFaultSplitTests(unittest.TestCase):
+    def test_action_end_alignment_requires_same_capture_order(self):
+        dense = [
+            {"time": 0.1, "capture_order": 2, "contact_present": False, "gripper_command": "open"},
+        ]
+        action_end = [
+            {"time": 0.1, "capture_order": 3, "contact_present": False, "gripper_command": "open"},
+        ]
+        self.assertIn("action_end_row_0_missing_dense_match", _audit_action_end_alignment(dense, action_end))
+
+    def test_oracle_interval_reports_drift_boundary_without_relabeling(self):
+        rows = [
+            {"time": "0.0", "capture_order": "0", "weld_state": "1", "object_xyz": "[0,0,0]", "gripper_xyz": "[0,0,0]"},
+            {"time": "0.1", "capture_order": "1", "weld_state": "1", "object_xyz": "[0.1,0,0]", "gripper_xyz": "[0.0,0.03,0]"},
+            {"time": "0.2", "capture_order": "2", "weld_state": "0", "object_xyz": "[0.1,0,0]", "gripper_xyz": "[0.0,0.03,0]"},
+        ]
+        intervals = _oracle_intervals(rows, 0.02)
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0]["status"], "reference_unresolved")
+        self.assertFalse(intervals[0]["relative_drift_pass"])
+
+    def test_future_and_reference_fields_do_not_change_online_evidence(self):
+        base = [
+            {"time": 0.0, "capture_order": 0, "contact_present": True, "gripper_command": "closed", "object_centroid": [0, 0], "gripper_centroid": [0, 0], "width": 100, "height": 100},
+            {"time": 0.1, "capture_order": 1, "contact_present": True, "gripper_command": "closed", "object_centroid": [2, 0], "gripper_centroid": [2, 0], "width": 100, "height": 100},
+            {"time": 0.2, "capture_order": 2, "contact_present": True, "gripper_command": "closed", "object_centroid": [4, 0], "gripper_centroid": [4, 0], "width": 100, "height": 100},
+        ]
+
+        def signature(rows):
+            online = [_online_observation(row) for row in rows]
+            geometry = build_features(online)
+            predictions = []
+            previous = None
+            for row, features in zip(online, geometry):
+                predictions.append({**row, "predicates": _predicates(row, features, previous)})
+                previous = row
+            return [
+                (row["hold_evidence"], row["hold_memory"])
+                for row in evaluate_candidate(predictions, geometry, "B_count2")
+            ]
+
+        contaminated = [
+            {**row, "scenario": "future_case", "weld_state": True, "future_outcome": "success", "expected_action": "recover_object"}
+            for row in base
+        ]
+        self.assertEqual(signature(base), signature(contaminated))
 
 
 if __name__ == "__main__":

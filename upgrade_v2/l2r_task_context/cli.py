@@ -12,6 +12,7 @@ from .evaluate import evaluate, lock_candidate, replay_development
 from .handoff import build_handoff
 from .inputs import prepare
 from .trace import trace_historical
+from .cache_fault_split import run_diagnostic
 
 
 def _methods(parser: argparse.ArgumentParser) -> None:
@@ -59,6 +60,11 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--protocol", type=Path, required=True)
     p.add_argument("--contract-root", type=Path, required=True)
     p.add_argument("--output-root", type=Path, required=True)
+    p = commands.add_parser("cache-fault-split")
+    p.add_argument("--data-root", type=Path, required=True)
+    p.add_argument("--unresolved", type=Path, required=True)
+    p.add_argument("--reference-contract", type=Path, required=True)
+    p.add_argument("--output-root", type=Path, required=True)
     p = commands.add_parser("lock-candidate")
     p.add_argument("--development-root", type=Path, required=True)
     p.add_argument("--protocol", type=Path, required=True)
@@ -92,6 +98,8 @@ def main(argv: list[str] | None = None) -> int:
         result = collect(args.generation_lock, args.partition, args.workers, args.output_root)
     elif args.command == "evaluate":
         result = evaluate(args.data_root, args.methods, args.protocol, args.contract_root, args.output_root)
+    elif args.command == "cache-fault-split":
+        result = run_diagnostic(args.data_root, args.unresolved, args.reference_contract, args.output_root)
     elif args.command == "lock-candidate":
         result = lock_candidate(args.development_root, args.protocol, args.generation_lock, args.output)
     elif args.command == "confirm":

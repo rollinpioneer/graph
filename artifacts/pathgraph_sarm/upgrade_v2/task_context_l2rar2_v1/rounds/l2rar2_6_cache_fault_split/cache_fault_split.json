@@ -1,0 +1,61 @@
+{
+  "decision": {
+    "confirmation_authorized": false,
+    "l3_entry_allowed": false,
+    "new_sampling_authorized": false,
+    "next_owner": "split_online_hold_predicate_and_reference_proxy_interfaces",
+    "online_hold_predicate_change_authorized": false,
+    "online_hold_predicate_diagnostic": "K2/K8 initial transient contact is accepted as B_count2 hold evidence",
+    "reference_interface_diagnostic": "19 unresolved rows have intact alignment and online hold evidence but exceed the locked physical drift limit",
+    "retained_graph": "G1_predicate_bound",
+    "training_authorized": false
+  },
+  "provenance": {
+    "api_calls": 0,
+    "api_key_read": false,
+    "physical_rollouts_reexecuted": 0,
+    "reference_events_and_oracle_used_for": "offline alignment and proxy audit only",
+    "reference_split_hash": "10714e5d4b2bbc2d007a6a33a9a1bb0498c2d06380a3002b625c22c5791e03ef",
+    "target_trace_hash": "f487717931f246016c2b8fbe5deaca0085a9ff5af91310f4f17b2803f8803041",
+    "training_jobs": 0
+  },
+  "reference_conclusion": {
+    "diagnostic_category_counts": {
+      "physical_proxy_present_but_outside_frozen_condition": 19
+    },
+    "integrity_issue_counts": {},
+    "interpretation": "The unresolved rows with an oracle weld interval but relative drift above the locked limit are reference-proxy/collection-geometry boundary cases, not evidence that the online hold predicate never observed a hold.",
+    "online_hold_state_counts": {
+      "online_evidence_and_memory": 19
+    },
+    "original_unresolved_denominator_preserved": 19,
+    "relative_drift_excess_range_m": {
+      "max": 0.0018253415516378407,
+      "min": 0.00030481629322971424
+    }
+  },
+  "schema": "pathgraph_l2rar2_cache_fault_split_v1",
+  "scientific_status": "L2RAR1_PARTIAL_KEEP_G1",
+  "scope": {
+    "data_root": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data/dev_select",
+    "reference_unresolved_input": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/final_v1/reference_unresolved.csv",
+    "reference_unresolved_rows": 19,
+    "target_cases": [
+      "K2_touch_request_completes_without_hold",
+      "K8_acquisition_touch_then_continue"
+    ],
+    "target_families": [
+      "L2RAR2_SELECT_05_820005",
+      "L2RAR2_SELECT_07_820007"
+    ],
+    "target_rollouts": 4
+  },
+  "status": "CACHE_DIAGNOSTIC_COMPLETE",
+  "target_conclusion": {
+    "first_hold_evidence_and_memory_are_recomputed_from_frozen_b_count2": true,
+    "interpretation": "Frozen B_count2 marks the initial transient-contact prefix as hold evidence in both K2 and K8. K2 then clears memory at contact loss and never re-establishes it; K8 later re-establishes hold after the second contact while the attempt remains active. This is a short-contact false-hold boundary in the online predicate, while contact loss during active acquisition still cannot announce retry by itself.",
+    "k2_and_k8_are_reported_separately": true,
+    "no_confirmation_started": true,
+    "no_online_rule_changed": true
+  }
+}
