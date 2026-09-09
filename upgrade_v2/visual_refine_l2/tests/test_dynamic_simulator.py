@@ -83,3 +83,20 @@ def test_attach_relpose_variant_updates_weld_and_restores_it() -> None:
     sim.restore(snapshot)
     np.testing.assert_allclose(sim.model.eq_data, snapshot["model_eq_data"], rtol=0.0, atol=0.0)
     assert sim.repair_version == "l2rar2_attach_relpose_v1"
+
+
+def test_attach_relpose_variant_uses_body2_in_body1_frame() -> None:
+    spec = family_spec("pose_family", "normal_pick_place", 7, 100)
+    sim = AttachRelposeDynamicTabletop(spec, 101)
+    sim.perform("approach_object")
+    half_turn = np.sqrt(0.5)
+    sim.data.mocap_quat[0] = np.asarray((half_turn, 0.0, 0.0, half_turn))
+    sim.data.qpos[sim.object_qpos + 3:sim.object_qpos + 7] = np.asarray((1.0, 0.0, 0.0, 0.0))
+    sim.mujoco.mj_forward(sim.model, sim.data)
+    gripper = sim.data.mocap_quat[0]
+    inverse = np.asarray((gripper[0], -gripper[1], -gripper[2], -gripper[3]))
+    world_delta = sim.object_xyz - sim.data.mocap_pos[0]
+    expected_position = np.asarray((world_delta[1], -world_delta[0], world_delta[2]))
+    sim._attach()
+    np.testing.assert_allclose(sim.model.eq_data[sim.weld_id, 3:6], expected_position, rtol=0.0, atol=1e-12)
+    np.testing.assert_allclose(sim.model.eq_data[sim.weld_id, 6:10], inverse, rtol=0.0, atol=1e-12)

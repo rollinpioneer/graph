@@ -337,11 +337,13 @@ def _time_audit_row(
         "event_name": event_name,
         "t_physical": t_physical,
         "t_observable": t_observable,
+        "observable_source": "online_contact_present_transition" if t_observable is not None else "none_observed_in_online_stream",
         "t_decision": t_decision,
         **decomposition,
         "timing_status": timing_status,
         "online_interface_version": INTERFACE_REPAIR_VERSION,
         "offline_event_used_for": "timing_audit_only",
+        "observable_evidence_used_for": "timing_audit_only",
         "oracle_or_future_used_online": False,
     }
 
@@ -491,7 +493,7 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
         "schema": "l2rar2_time_definition_audit_summary_v1",
         "definition": {
             "t_physical": "first offline contact_lost event in the rollout event log",
-            "t_observable": "first online contact_present true-to-false transition",
+            "t_observable": "earliest permitted online evidence sufficient to indicate the physical event; operational proxy in this cache: first online contact_present true-to-false transition",
             "t_decision": "first online retry_grasp or recover_object decision in the frozen reference window",
             "identity": "t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)",
         },
@@ -505,7 +507,8 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
             for status in sorted({row["timing_status"] for row in time_audit})
         },
         "offline_event_used_for": "timing_audit_only",
-        "online_input_used": False,
+        "online_observations_used_for_audit": True,
+        "offline_oracle_used_as_online_input": False,
         "current_evaluation_rows": sum(row["source_role"] == "attach_relpose_repair_collection" for row in time_audit),
         "historical_context_rows_excluded_from_metrics": sum(row["source_role"] == "historical_pre_correction_context_only" for row in time_audit),
     })
@@ -567,7 +570,7 @@ def evaluate_interface_repair(data_root: Path, output_root: Path) -> dict[str, A
         "- Retry is permitted only for a valid, complete `HOLD_OBJECT` attempt ending without current hold evidence.",
         "- Active touch/acquisition does not retry. A non-release contact loss recovers only after a historical hold was established and the loss is actually observed online.",
         "- In this cache, K4/K5/K6 contain offline contact-loss events but no corresponding online contact-loss transition; the interface therefore does not claim recovery for them.",
-        "- Timing audit definitions: `t_physical` is the first offline `contact_lost` event, `t_observable` is the first online contact true-to-false transition, and `t_decision` is the first online emergency decision in the frozen window.",
+        "- Timing audit definitions: `t_physical` is the first offline `contact_lost` event; `t_observable` is the earliest permitted online evidence sufficient to indicate that event, operationalized in this cache as the first online contact true-to-false transition; `t_decision` is the first online emergency decision in the frozen window.",
         "- The recorded latency identity is `t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)`; offline events are used for timing audit only and never as online input.",
         f"- Timing audit rows: `{sum(row['source_role'] == 'attach_relpose_repair_collection' for row in time_audit)}` current attach-relpose rows plus `{sum(row['source_role'] == 'historical_pre_correction_context_only' for row in time_audit)}` historical context rows; historical rows are excluded from current metrics.",
         "- This is a diagnostic interface repair, not a passing candidate or confirmation result. `G1` remains retained and L3 remains closed.",

@@ -125,6 +125,13 @@ def evaluate_repair_collection(data_root: Path, lock_path: Path, reference_contr
         "reference_unresolved": len(unresolved),
         "reference_unresolved_reason_counts": dict(sorted(unresolved_reasons.items())),
         "reference_contract_unchanged": True,
+        "attach_pose_contract": {
+            "body1": "gripper",
+            "body2": "object",
+            "relative_position": "R_gripper_world.T @ (p_object_world - p_gripper_world)",
+            "relative_quaternion": "q_gripper_world^-1 * q_object_world",
+            "snapshot_restores_model_eq_data": True,
+        },
         "all_events_labeled": all_events_labeled,
         "candidate_comparison": {
             "candidates": list(LOCKED_CANDIDATES),
@@ -157,7 +164,7 @@ def evaluate_repair_collection(data_root: Path, lock_path: Path, reference_contr
         f"- Collection: `{len({row['root_family_id'] for row in metadata})}` new root families x `{len({row['case_id'] for row in metadata})}` frozen cases = `{len(metadata)}` rollouts.",
         f"- Reference result: `{len(reference_rows) - len(unresolved)}/{len(reference_rows)}` labeled; unresolved rows retained: `{len(unresolved)}`.",
         f"- Frozen reference limit remains `{contract['hold_proxy']['maximum_relative_position_drift_m']} m`; no label or threshold change was applied.",
-        "- The only simulator change is attach-time weld relative pose initialization; observation, controller, M1, and reference implementations remain version-frozen.",
+        "- The only simulator change is attach-time weld relative pose initialization: body2=`object` is stored in body1=`gripper`'s local frame as `R_gripper_world.T @ (p_object_world - p_gripper_world)` and `q_gripper_world^-1 * q_object_world`; snapshots restore `model.eq_data`.",
         "",
         "## Fixed candidate comparison",
         "",

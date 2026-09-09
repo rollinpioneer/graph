@@ -2,6 +2,13 @@
   "all_events_labeled": true,
   "api_calls": 0,
   "api_key_read": false,
+  "attach_pose_contract": {
+    "body1": "gripper",
+    "body2": "object",
+    "relative_position": "R_gripper_world.T @ (p_object_world - p_gripper_world)",
+    "relative_quaternion": "q_gripper_world^-1 * q_object_world",
+    "snapshot_restores_model_eq_data": true
+  },
   "candidate_comparison": {
     "candidates": [
       "B_count2",

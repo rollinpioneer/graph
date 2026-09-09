@@ -9,7 +9,7 @@
 - Collection: `4` new root families x `8` frozen cases = `32` rollouts.
 - Reference result: `32/32` labeled; unresolved rows retained: `0`.
 - Frozen reference limit remains `0.02 m`; no label or threshold change was applied.
-- The only simulator change is attach-time weld relative pose initialization; observation, controller, M1, and reference implementations remain version-frozen.
+- The only simulator change is attach-time weld relative pose initialization: body2=`object` is stored in body1=`gripper`'s local frame as `R_gripper_world.T @ (p_object_world - p_gripper_world)` and `q_gripper_world^-1 * q_object_world`; snapshots restore `model.eq_data`.
 
 ## Fixed candidate comparison
 

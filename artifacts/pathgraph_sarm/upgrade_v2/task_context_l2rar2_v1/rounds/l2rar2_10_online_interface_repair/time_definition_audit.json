@@ -3,12 +3,13 @@
   "definition": {
     "identity": "t_decision - t_physical = (t_observable - t_physical) + (t_decision - t_observable)",
     "t_decision": "first online retry_grasp or recover_object decision in the frozen reference window",
-    "t_observable": "first online contact_present true-to-false transition",
+    "t_observable": "earliest permitted online evidence sufficient to indicate the physical event; operational proxy in this cache: first online contact_present true-to-false transition",
     "t_physical": "first offline contact_lost event in the rollout event log"
   },
   "historical_context_rows_excluded_from_metrics": 4,
   "offline_event_used_for": "timing_audit_only",
-  "online_input_used": false,
+  "offline_oracle_used_as_online_input": false,
+  "online_observations_used_for_audit": true,
   "rows": 28,
   "schema": "l2rar2_time_definition_audit_summary_v1",
   "source_roles": {

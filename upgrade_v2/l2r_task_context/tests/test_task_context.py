@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,7 @@ from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
 from upgrade_v2.l2r_task_context.online_interface_repair import _decompose_time, run_repaired_interface
 from upgrade_v2.l2r_task_context.cache_fault_split import _audit_action_end_alignment, _oracle_intervals
+from upgrade_v2.l2r_task_context.repair_collection import collect_repair
 from upgrade_v2.l2r_task_context.mechanism_localization import (
     _classify_interval,
     _evidence_onsets,
@@ -185,6 +187,28 @@ class OnlineInterfaceRepairTests(unittest.TestCase):
         self.assertIsNone(result["physical_to_observable_seconds"])
         self.assertIsNone(result["observable_to_decision_seconds"])
         self.assertIsNone(result["physical_to_decision_seconds"])
+
+
+class RepairCollectionTests(unittest.TestCase):
+    def test_existing_manifest_is_resume_safe(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            data_root = root / "data"
+            data_root.mkdir()
+            family_id = "resume_family"
+            lock_path = root / "lock.json"
+            lock_path.write_text(json.dumps({
+                "status": "LOCKED_BEFORE_REPAIR_COLLECTION",
+                "families": [{"root_family_id": family_id}],
+            }))
+            rollout_ids = [f"{family_id}:{case_id}" for case_id in CASES]
+            (data_root / "rollout_manifest.csv").write_text(
+                "rollout_id\n" + "\n".join(rollout_ids) + "\n"
+            )
+            result = collect_repair(lock_path, data_root)
+            self.assertEqual(result["status"], "REPAIR_COLLECTION_ALREADY_COMPLETE")
+            self.assertEqual(result["newly_executed_jobs"], 0)
+            self.assertEqual(result["physical_rollouts"], len(CASES))
 
 
 class EvaluationTests(unittest.TestCase):

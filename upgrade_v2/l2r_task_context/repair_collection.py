@@ -13,7 +13,7 @@ from upgrade_v2.visual_refine_l2.renderer import TabletopRenderer
 from upgrade_v2.visual_refine_l2.vision import detect_frame
 
 from .collector import CASES, _lifecycle
-from .io import canonical_hash, read_json, read_jsonl, sha256, write_csv, write_json, write_jsonl
+from .io import canonical_hash, read_csv, read_json, read_jsonl, sha256, write_csv, write_json, write_jsonl
 
 
 REPAIR_COLLECTION_VERSION = "l2rar2_attach_relpose_collection_v1"
