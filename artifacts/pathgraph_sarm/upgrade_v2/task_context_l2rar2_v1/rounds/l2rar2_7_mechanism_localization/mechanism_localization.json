@@ -1,0 +1,91 @@
+{
+  "decision": {
+    "candidate_grid_expanded": false,
+    "confirmation_authorized": false,
+    "l3_entry_allowed": false,
+    "new_sampling_authorized": false,
+    "next_step": "inspect the reference-labeled K5 case without a B_count2 onset before formulating one separately versioned online hypothesis; validate reference geometry independently",
+    "online_hold_predicate_change_authorized": false,
+    "physical_reference_relaxed": false,
+    "reference_version_changed": false,
+    "retained_graph": "G1_predicate_bound",
+    "training_authorized": false,
+    "unresolved_rows_removed": 0
+  },
+  "historical_status": "L2RAR1_PARTIAL_KEEP_G1",
+  "new_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "online_mechanism": {
+    "brief_hold_reference_labeled_total": 4,
+    "brief_hold_with_bcount2_onset": 3,
+    "brief_hold_without_bcount2_onset": 1,
+    "cached_contrast_establishes_complete_replacement_rule": false,
+    "diagnostic_boundary": "The merged dense stream contains one row per timestamp, so same-timestamp control/action-end captures are not counted twice. The observed valid onsets contain directional motion, but one reference-labeled brief hold has no B_count2 onset. The cache therefore localizes the false-positive mechanism without establishing a complete replacement rule.",
+    "early_false_all_have_sub_noise_interval": true,
+    "early_false_all_use_action_end_row": true,
+    "early_false_any_direction_disagreement": false,
+    "early_false_same_timestamp_duplicate_double_counted": false,
+    "early_false_segments": 4,
+    "observed_valid_onset_segments": 5,
+    "observed_valid_onsets_all_have_directional_interval": true,
+    "segment_counts": {
+      "brief_hold_positive": 3,
+      "brief_hold_positive_no_bcount2_onset": 1,
+      "same_k8_later_hold": 2,
+      "target_initial_false_hold": 4
+    }
+  },
+  "provenance": {
+    "api_calls": 0,
+    "api_key_read": false,
+    "online_actions_used_as_features": false,
+    "online_interval_hash": "3249f985494564a2746d3f4c6a165fb5e3bb7cd82f1bc97feb4faa714d323d6b",
+    "online_segment_hash": "d487ccd33407c42283e9ef4ab08be2b2dc031991f3800665d407f99dfdd459a6",
+    "oracle_and_action_names_used_for": "offline reference-stage localization and raw-capture multiplicity audit only",
+    "physical_rollouts_reexecuted": 0,
+    "reference_peak_hash": "8571fddf1a72c4ab8f0ed789f786361d2119cf2fc8d9bc3755c33153ebb02e88",
+    "training_jobs": 0
+  },
+  "reference_mechanism": {
+    "frozen_relative_drift_limit_m": 0.02,
+    "interpretation": "Peak localization is an offline audit of the existing world-frame proxy. First attainment and later persistence are reported separately. It does not turn any unresolved event into a pass or attribute reference changes to online algorithm gain.",
+    "original_unresolved_denominator_preserved": 19,
+    "peak_first_action_counts": {
+      "lift": 12,
+      "transport_to_target": 7
+    },
+    "peak_first_stage_counts": {
+      "constraint_establishment": 12,
+      "loss_boundary": 1,
+      "sustained_hold": 6
+    },
+    "peak_persists_after_first_attainment_count": 16,
+    "peak_stage_set_counts": {
+      "constraint_establishment,loss_boundary,sustained_hold": 6,
+      "constraint_establishment,sustained_hold": 6,
+      "loss_boundary": 1,
+      "loss_boundary,sustained_hold": 2,
+      "sustained_hold": 4
+    },
+    "reference_label_changes": 0,
+    "reference_version_changes": 0,
+    "relative_position_definition": "relative_position_world_m = object_xyz_world_m - gripper_xyz_world_m; drift_m = L2(relative_position_world_m[t] - relative_position_world_m[first_weld_row])",
+    "rows": 19,
+    "schema": "pathgraph_l2rar2_reference_drift_stage_summary_v1",
+    "single_attainment_peak_count": 3,
+    "status": "REFERENCE_MECHANISM_LOCALIZED"
+  },
+  "schema": "pathgraph_l2rar2_mechanism_localization_v1",
+  "scope": {
+    "brief_hold_reference_labeled_rollouts": 4,
+    "brief_hold_rollouts_with_bcount2_onset": 3,
+    "data_root": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data/dev_select",
+    "online_comparison_segments": 10,
+    "reference_unresolved_rows": 19,
+    "target_families": [
+      "L2RAR2_SELECT_05_820005",
+      "L2RAR2_SELECT_07_820007"
+    ],
+    "target_k2_k8_rollouts": 4
+  },
+  "status": "MECHANISM_LOCALIZATION_COMPLETE"
+}

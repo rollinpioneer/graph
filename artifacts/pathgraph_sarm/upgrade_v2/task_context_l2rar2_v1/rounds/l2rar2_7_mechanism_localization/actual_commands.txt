@@ -1,0 +1,10 @@
+git fetch origin --prune
+/home/xushijie/.conda/envs/lerobot/bin/python -m upgrade_v2.l2r_task_context.cli localize-cache-mechanisms --data-root artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data/dev_select --unresolved artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/final_v1/reference_unresolved.csv --reference-contract artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_2_task_contract/reference_contract.json --output-root artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_7_mechanism_localization
+/home/xushijie/.conda/envs/lerobot/bin/python -m unittest discover -s upgrade_v2/l2r_task_context/tests -p test_*.py
+/home/xushijie/.conda/envs/lerobot/bin/python -m unittest discover -s upgrade_v2/l2r_hold_evidence/tests -p test_*.py
+/home/xushijie/.conda/envs/lerobot/bin/python -m compileall -q upgrade_v2/l2r_task_context upgrade_v2/l2r_hold_evidence
+/home/xushijie/.conda/envs/lerobot/bin/python -c "run the repository secret scanner over this round and changed source files; write secret_scan.json"
+/home/xushijie/.conda/envs/lerobot/bin/python -c "verify run_manifest.json input, code, and output SHA256 values"
+git diff --check
+unzip -t downloads/l2ra_r2_v1/L2RA_R2_results_rev3.zip
+sha256sum downloads/l2ra_r2_v1/L2RA_R2_results_rev3.zip

@@ -11,6 +11,11 @@ from upgrade_v2.l2r_task_context.evaluate import _event_decision, _metrics, _unr
 from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
 from upgrade_v2.l2r_task_context.cache_fault_split import _audit_action_end_alignment, _oracle_intervals
+from upgrade_v2.l2r_task_context.mechanism_localization import (
+    _classify_interval,
+    _evidence_onsets,
+    _oracle_peak_intervals,
+)
 from upgrade_v2.l2r_hold_evidence.hold_features import build_features
 from upgrade_v2.l2r_hold_evidence.hold_predicates import evaluate_candidate
 from upgrade_v2.l2r_task_context.evaluate import _online_observation, _predicates
@@ -224,6 +229,44 @@ class CacheFaultSplitTests(unittest.TestCase):
             for row in base
         ]
         self.assertEqual(signature(base), signature(contaminated))
+
+
+class MechanismLocalizationTests(unittest.TestCase):
+    def test_static_interval_is_identified_without_changing_predicate(self):
+        geometry = {
+            "object_displacement_norm": 0.0,
+            "gripper_displacement_norm": 0.0,
+            "effective_motion_interval": True,
+            "direction_cosine": None,
+            "relative_vector_error": None,
+        }
+        self.assertEqual(
+            _classify_interval(geometry, exact_repeat=True),
+            "exact_static_repeat_accepted_by_magnitude_score",
+        )
+
+    def test_bcount2_onset_requires_transition_into_true(self):
+        rows = [
+            {"hold_evidence": "unknown"},
+            {"hold_evidence": "true"},
+            {"hold_evidence": "true"},
+            {"hold_evidence": "false"},
+            {"hold_evidence": "true"},
+        ]
+        self.assertEqual(_evidence_onsets(rows), [1, 4])
+
+    def test_reference_peak_uses_first_weld_relative_vector(self):
+        rows = [
+            {"time": "0.0", "capture_order": "0", "phase": "action_end", "weld_state": "1", "object_xyz": "[1,2,3]", "gripper_xyz": "[0,0,0]"},
+            {"time": "0.1", "capture_order": "1", "phase": "control_tick", "weld_state": "1", "object_xyz": "[1.03,2,3]", "gripper_xyz": "[0,0,0]"},
+            {"time": "0.2", "capture_order": "2", "phase": "control_tick", "weld_state": "1", "object_xyz": "[1.03,2,3]", "gripper_xyz": "[0,0,0]"},
+            {"time": "0.3", "capture_order": "3", "phase": "control_tick", "weld_state": "0", "object_xyz": "[1.03,2,3]", "gripper_xyz": "[0,0,0]"},
+        ]
+        intervals = _oracle_peak_intervals(rows)
+        self.assertEqual(len(intervals), 1)
+        self.assertAlmostEqual(intervals[0]["maximum_drift"], 0.03)
+        self.assertEqual(intervals[0]["peaks"][0]["stage"], "constraint_establishment")
+        self.assertEqual(intervals[0]["peaks"][-1]["stage"], "loss_boundary")
 
 
 if __name__ == "__main__":

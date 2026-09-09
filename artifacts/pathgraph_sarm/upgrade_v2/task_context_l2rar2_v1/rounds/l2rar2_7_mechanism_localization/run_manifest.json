@@ -1,0 +1,87 @@
+{
+  "code_hashes": {
+    "upgrade_v2/l2r_task_context/cli.py": "00e3a83c9fd080890c6a073801c2bce3b2822ca5238d5d1339c4d45285b598ba",
+    "upgrade_v2/l2r_task_context/mechanism_localization.py": "b6f49f52ce1df0dadf1f226d537f133c804bb948d46318ba569fd5915037abb1",
+    "upgrade_v2/l2r_task_context/tests/test_task_context.py": "435e2ce09a5a106116e0a1e59631ed42d534f673a031abe21aac61c645251399"
+  },
+  "date": "2026-09-09",
+  "decision": {
+    "candidate_grid_expanded": false,
+    "confirmation_authorized": false,
+    "l3_entry_allowed": false,
+    "new_sampling_authorized": false,
+    "new_zip_created": false,
+    "online_threshold_changed": false,
+    "physical_reference_relaxed": false,
+    "reference_version_changed": false,
+    "retained_graph": "G1_predicate_bound",
+    "training_authorized": false,
+    "unresolved_rows_removed": 0
+  },
+  "findings": {
+    "brief_hold_positive_with_onset": 3,
+    "brief_hold_positive_without_onset": 1,
+    "complete_replacement_rule_established": false,
+    "initial_false_all_contain_action_end_row": true,
+    "initial_false_all_contain_sub_noise_interval": true,
+    "initial_false_direction_disagreement_observed": false,
+    "initial_false_hold_segments": 4,
+    "later_k8_hold_segments": 2,
+    "reference_peak_first_action_counts": {
+      "lift": 12,
+      "transport_to_target": 7
+    },
+    "reference_peak_first_stage_counts": {
+      "constraint_establishment": 12,
+      "loss_boundary": 1,
+      "sustained_hold": 6
+    },
+    "reference_peak_persistence_count": 16,
+    "same_timestamp_control_action_end_double_counted_in_merged_dense": false
+  },
+  "formal_main_commit": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "historical_status": "L2RAR1_PARTIAL_KEEP_G1",
+  "input_hashes": {
+    "data/dev_select/rollout_manifest.csv": "95cb12791d8efe8c768ace5b1f80ec5f2ee96f4ebb81dceae5e57c3af6775e7d",
+    "final_v1/reference_unresolved.csv": "0a68770473212a964cf76ed2efc59f0703d7c99fbb838abc570d9a2addeea52a",
+    "rounds/l2rar2_2_task_contract/reference_contract.json": "95f2e8d4648b111b4b25632c13376ae2ae1e6d66f1dc861765765673542b79dc"
+  },
+  "output_hashes": {
+    "actual_commands.txt": "1efd1ce22b9cc0a73e4e6725f90f4b27656477506ce4d7fe11e61105cdbfd7be",
+    "mechanism_localization.json": "033f23c9fc0c1948beb8c29fcaa95ab9520c89cff22441bc3216bb7ad7f9d822",
+    "mechanism_localization.md": "546d536b170cd71480a366f2cd625c2468079c964a3b2dadf9cc1f7b51761e84",
+    "online_bcount2_interval_mechanisms.csv": "3249f985494564a2746d3f4c6a165fb5e3bb7cd82f1bc97feb4faa714d323d6b",
+    "online_segment_comparison.csv": "d487ccd33407c42283e9ef4ab08be2b2dc031991f3800665d407f99dfdd459a6",
+    "reference_drift_peaks.csv": "8571fddf1a72c4ab8f0ed789f786361d2119cf2fc8d9bc3755c33153ebb02e88",
+    "reference_drift_stage_summary.json": "4105df2c2de58b787e55b4aa9f8afbfec34e464b01b0cebfbdab185f456d07af",
+    "secret_scan.json": "77bd11f8fbf5314d44e8790b8baf1910d8644d4494ae91a4d3cd4e84e76ab405"
+  },
+  "round_id": "l2rar2_7_mechanism_localization",
+  "schema": "pathgraph_l2rar2_round_manifest_v1",
+  "scientific_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "scope": {
+    "api_calls": 0,
+    "api_key_read": false,
+    "brief_hold_reference_labeled_rollouts": 4,
+    "brief_hold_rollouts_with_bcount2_onset": 3,
+    "confirmation_rollouts": 0,
+    "physical_rollouts_reexecuted": 0,
+    "reference_unresolved_rows": 19,
+    "target_k2_k8_rollouts": 4,
+    "target_root_families": 2,
+    "training_jobs": 0
+  },
+  "source_branch": "research/l2ra-r2-task-context-v1",
+  "source_commit_before_round": "dd6f5a8490681a9d6875e886df82e3b4475c5d86",
+  "status": "MECHANISM_LOCALIZATION_COMPLETE",
+  "validation": {
+    "compileall": "PASS",
+    "existing_rev3_sha256": "aa9378af73fe3cfdb8260740e80e7aca06a0edd90b399bd20998db060dd41614",
+    "existing_rev3_unzip_test": "PASS",
+    "git_diff_check": "PASS",
+    "hold_evidence_tests": "31/31 PASS",
+    "manifest_hashes": "PASS",
+    "secret_scan": "PASS; 11 files scanned; 0 findings",
+    "task_context_tests": "23/23 PASS"
+  }
+}
