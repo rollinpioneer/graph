@@ -2,5 +2,6 @@
 
 from .contract import ControllerRequest, RequestedEffect
 from .event_interface import TaskConditionedEventInterface
+from .online_interface_repair import RepairedOnlineInterface
 
-__all__ = ["ControllerRequest", "RequestedEffect", "TaskConditionedEventInterface"]
+__all__ = ["ControllerRequest", "RequestedEffect", "TaskConditionedEventInterface", "RepairedOnlineInterface"]

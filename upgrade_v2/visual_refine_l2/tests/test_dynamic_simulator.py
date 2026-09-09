@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from upgrade_v2.visual_refine_l2.dynamic_simulator import DynamicTabletop, family_spec
+from upgrade_v2.visual_refine_l2.repaired_simulator import AttachRelposeDynamicTabletop
 
 
 def simulator(scenario: str = "normal_pick_place") -> DynamicTabletop:
@@ -69,3 +70,16 @@ def test_jitter_flags_are_respected() -> None:
     assert spec.camera_jitter == 0.0
     assert spec.object_radius == 0.069
     assert spec.friction == 0.75
+
+
+def test_attach_relpose_variant_updates_weld_and_restores_it() -> None:
+    spec = family_spec("repair_family", "normal_pick_place", 7, 100)
+    sim = AttachRelposeDynamicTabletop(spec, 101)
+    sim.perform("approach_object")
+    snapshot = sim.snapshot()
+    sim.perform("close_gripper")
+    relative = sim.object_xyz - sim.data.mocap_pos[0]
+    np.testing.assert_allclose(sim.model.eq_data[sim.weld_id, 3:6], relative, rtol=0.0, atol=1e-12)
+    sim.restore(snapshot)
+    np.testing.assert_allclose(sim.model.eq_data, snapshot["model_eq_data"], rtol=0.0, atol=0.0)
+    assert sim.repair_version == "l2rar2_attach_relpose_v1"

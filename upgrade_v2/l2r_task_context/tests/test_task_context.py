@@ -10,6 +10,7 @@ from upgrade_v2.l2r_task_context.collector import CASES, _lifecycle
 from upgrade_v2.l2r_task_context.evaluate import _event_decision, _metrics, _unresolved_decision
 from upgrade_v2.l2r_task_context.evaluate import lock_candidate
 from upgrade_v2.l2r_task_context.event_interface import run_m1
+from upgrade_v2.l2r_task_context.online_interface_repair import run_repaired_interface
 from upgrade_v2.l2r_task_context.cache_fault_split import _audit_action_end_alignment, _oracle_intervals
 from upgrade_v2.l2r_task_context.mechanism_localization import (
     _classify_interval,
@@ -133,6 +134,44 @@ class EventInterfaceTests(unittest.TestCase):
         failure = request(RequestedEffect.HOLD_OBJECT)
         self.assertEqual(success["requested_effect"], failure["requested_effect"])
         self.assertNotIn("outcome", success)
+
+
+class OnlineInterfaceRepairTests(unittest.TestCase):
+    def test_repairs_hold_end_without_treating_unknown_evidence_as_bad_sensor_data(self):
+        rows = [observation(0), observation(1, active=False, end=True, reason="segment_complete")]
+        out = run_repaired_interface(rows, [evidence("unknown"), evidence("unknown")], [request()])
+        self.assertEqual(out[-1]["data_status"], "valid")
+        self.assertEqual(out[-1]["hold_state"], "valid_no_current_hold_evidence")
+        self.assertEqual(out[-1]["selected_action"], "retry_grasp")
+
+    def test_active_touch_remains_no_action_and_reports_current_state(self):
+        rows = [observation(0, contact=True), observation(1, contact=False, active=True)]
+        out = run_repaired_interface(rows, [evidence("unknown"), evidence("unknown")], [request()])
+        self.assertEqual(out[-1]["hold_state"], "valid_no_current_hold_evidence")
+        self.assertEqual(out[-1]["selected_action"], "none")
+        self.assertFalse(any(row["selected_action"] == "retry_grasp" for row in out))
+
+    def test_historical_hold_requires_an_observed_loss_for_recovery(self):
+        rows = [observation(0, contact=True, stable="true"), observation(1, contact=True)]
+        out = run_repaired_interface(rows, [evidence("true"), evidence("unknown")], [request()])
+        self.assertTrue(out[-1]["historical_hold_established"])
+        self.assertEqual(out[-1]["hold_state"], "historical_hold_established")
+        self.assertEqual(out[-1]["selected_action"], "none")
+        self.assertEqual(out[-1]["reason_code"], "historical_hold_established_no_current_loss_observed")
+
+    def test_observed_non_release_loss_recovers_and_release_does_not(self):
+        rows = [observation(0, contact=True, stable="true"), observation(1, contact=False)]
+        out = run_repaired_interface(rows, [evidence("true"), evidence("false")], [request()])
+        self.assertEqual(out[-1]["selected_action"], "recover_object")
+        release_rows = [observation(0, contact=True, stable="true"), observation(1, contact=False, closed=False, active=False, end=True, reason="release")]
+        release = run_repaired_interface(release_rows, [evidence("true"), evidence("false")], [request(RequestedEffect.RELEASE_OBJECT)])
+        self.assertEqual(release[-1]["selected_action"], "none")
+
+    def test_invalid_observation_is_needs_observation_not_retry(self):
+        rows = [observation(0), {**observation(1, active=False, end=True, reason="segment_complete"), "predicates": {"contact_present": "unknown", "gripper_command_closed": "true", "gripper_command_open": "false"}}]
+        out = run_repaired_interface(rows, [evidence(), evidence()], [request()])
+        self.assertEqual(out[-1]["data_status"], "data_missing_or_invalid")
+        self.assertEqual(out[-1]["selected_action"], "needs_observation")
 
 
 class EvaluationTests(unittest.TestCase):

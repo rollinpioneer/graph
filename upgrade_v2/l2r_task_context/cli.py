@@ -15,6 +15,9 @@ from .trace import trace_historical
 from .cache_fault_split import run_diagnostic
 from .mechanism_localization import run_localization
 from .followup_resolution import run_followup
+from .repair_collection import plan_repair_collection, collect_repair
+from .repair_validation import evaluate_repair_collection
+from .online_interface_repair import evaluate_interface_repair
 
 
 def _methods(parser: argparse.ArgumentParser) -> None:
@@ -77,6 +80,23 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--unresolved", type=Path, required=True)
     p.add_argument("--reference-contract", type=Path, required=True)
     p.add_argument("--output-root", type=Path, required=True)
+    p = commands.add_parser("plan-attach-relpose-repair")
+    p.add_argument("--source-commit", required=True)
+    p.add_argument("--protocol", type=Path, required=True)
+    p.add_argument("--reference-contract", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p = commands.add_parser("collect-attach-relpose-repair")
+    p.add_argument("--lock", type=Path, required=True)
+    p.add_argument("--output-root", type=Path, required=True)
+    p.add_argument("--workers", type=int, default=1)
+    p = commands.add_parser("evaluate-attach-relpose-repair")
+    p.add_argument("--data-root", type=Path, required=True)
+    p.add_argument("--lock", type=Path, required=True)
+    p.add_argument("--reference-contract", type=Path, required=True)
+    p.add_argument("--output-root", type=Path, required=True)
+    p = commands.add_parser("evaluate-online-interface-repair")
+    p.add_argument("--data-root", type=Path, required=True)
+    p.add_argument("--output-root", type=Path, required=True)
     p = commands.add_parser("lock-candidate")
     p.add_argument("--development-root", type=Path, required=True)
     p.add_argument("--protocol", type=Path, required=True)
@@ -116,6 +136,14 @@ def main(argv: list[str] | None = None) -> int:
         result = run_localization(args.data_root, args.unresolved, args.reference_contract, args.output_root)
     elif args.command == "complete-cache-followup":
         result = run_followup(args.data_root, args.unresolved, args.reference_contract, args.output_root)
+    elif args.command == "plan-attach-relpose-repair":
+        result = plan_repair_collection(args.output, args.source_commit, args.protocol, args.reference_contract)
+    elif args.command == "collect-attach-relpose-repair":
+        result = collect_repair(args.lock, args.output_root, args.workers)
+    elif args.command == "evaluate-attach-relpose-repair":
+        result = evaluate_repair_collection(args.data_root, args.lock, args.reference_contract, args.output_root)
+    elif args.command == "evaluate-online-interface-repair":
+        result = evaluate_interface_repair(args.data_root, args.output_root)
     elif args.command == "lock-candidate":
         result = lock_candidate(args.development_root, args.protocol, args.generation_lock, args.output)
     elif args.command == "confirm":
