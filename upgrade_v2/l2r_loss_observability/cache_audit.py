@@ -232,6 +232,93 @@ def _method_decisions(meta: Rollout, candidate_id: str) -> tuple[list[dict[str, 
     return observations, evidence, decisions
 
 
+def _build_regression_audit(rollouts: list[Rollout], output_root: Path) -> dict[str, Any]:
+    """Re-score all 32 cached opportunities without changing the frozen gate."""
+    rows: list[dict[str, Any]] = []
+    for meta in rollouts:
+        reference = build_reference({
+            "path": str(meta.path), "rollout_id": meta.rollout_id,
+            "root_family_id": meta.root_family_id, "case_id": meta.case_id,
+            "requested_effect": meta.requested_effect,
+        })
+        for candidate_id in AUDIT_CANDIDATES:
+            _, evidence, decisions = _method_decisions(meta, candidate_id)
+            labeled = reference.get("status") == "reference_labeled"
+            event = reference["events"][0] if labeled else {}
+            start = float(event["decision_window_start"]) if labeled else None
+            end = float(event["decision_window_end"]) if labeled else None
+            selected = _first_emergency(decisions, start, end) if labeled else None
+            selected_action = selected.get("selected_action") if selected else "none"
+            expected = event.get("expected_action") if labeled else None
+            evidence_before = [
+                row for row in evidence
+                if labeled and row.get("time") is not None and float(row["time"]) <= start + 1e-9
+            ]
+            rows.append({
+                "rollout_id": meta.rollout_id,
+                "root_family_id": meta.root_family_id,
+                "case_id": meta.case_id,
+                "candidate_id": candidate_id,
+                "reference_status": "reference_labeled" if labeled else "reference_unresolved",
+                "reference_reason": None if labeled else reference.get("reason"),
+                "expected_action": expected,
+                "selected_action": selected_action,
+                "selected_time": selected.get("time") if selected else None,
+                "wrong_action": selected_action if labeled and selected_action != expected else "none",
+                "emergency_any": selected_action != "none",
+                "correct": selected_action == expected if labeled else None,
+                "hold_evidence_before_event": any(row.get("hold_memory") == "true" for row in evidence_before),
+                "pending_event_at_selection": selected.get("pending_event") if selected else "none",
+                "online_oracle_used": False,
+                "data_role": "repair_dev_cache_only",
+            })
+
+    metrics: list[dict[str, Any]] = []
+    for candidate_id in AUDIT_CANDIDATES:
+        own = [row for row in rows if row["candidate_id"] == candidate_id]
+        labeled = [row for row in own if row["reference_status"] == "reference_labeled"]
+
+        def case(case_id: str) -> list[dict[str, Any]]:
+            return [row for row in labeled if row["case_id"] == case_id]
+
+        def rate(values: list[dict[str, Any]], key: str) -> float | None:
+            return sum(bool(row[key]) for row in values) / len(values) if values else None
+
+        item: dict[str, Any] = {
+            "candidate_id": candidate_id,
+            "opportunity_rows": len(own),
+            "reference_labeled_rows": len(labeled),
+            "reference_unresolved_rows": len(own) - len(labeled),
+            "all_labeled_event_accuracy": rate(labeled, "correct"),
+            "wrong_action_rows": sum(row["wrong_action"] != "none" for row in labeled),
+            "unknown_or_needs_observation_rows": sum(row["selected_action"] == "needs_observation" for row in labeled),
+        }
+        for case_id in CASES:
+            short = case_id.split("_", 1)[0]
+            values = case(case_id)
+            if case_id in LOSS_CASES or case_id == "K1_hold_request_ends_without_hold":
+                item[f"{short}_recall"] = rate(values, "correct")
+            else:
+                item[f"{short}_false_emergency_rate"] = rate(values, "emergency_any")
+            item[f"{short}_n"] = len(values)
+        metrics.append(item)
+
+    write_csv(output_root / "regression_audit.csv", rows)
+    payload = {
+        "schema": "l2rar2_r11_regression_metrics_v1",
+        "status": "REGRESSION_REPLAY_COMPLETE",
+        "unique_rollouts": len(rollouts),
+        "method_rows": len(rows),
+        "current_unique_physical_events": len(rollouts),
+        "candidates": metrics,
+        "historical_context_included": False,
+        "candidate_set_changed": False,
+        "reference_contract_changed": False,
+    }
+    write_json(output_root / "regression_metrics.json", payload)
+    return payload
+
+
 def build_cache_audit(data_root: Path, lock_path: Path, output_root: Path, baseline_root: Path | None = None) -> dict[str, Any]:
     rollouts = load_rollouts(data_root)
     radii = _family_radii(lock_path)
@@ -245,6 +332,7 @@ def build_cache_audit(data_root: Path, lock_path: Path, output_root: Path, basel
     visual_audit: list[dict[str, Any]] = []
     timing_audit: list[dict[str, Any]] = []
     method_stage_counts: dict[str, Counter[str]] = {candidate: Counter() for candidate in AUDIT_CANDIDATES}
+    regression = _build_regression_audit(rollouts, output_root)
 
     for meta in loss_rollouts:
         events = read_jsonl(meta.path / "events.jsonl")
@@ -416,6 +504,7 @@ def build_cache_audit(data_root: Path, lock_path: Path, output_root: Path, basel
         "raw_rgb_hashes_preserved": True,
         "oracle_or_future_used_online": False,
         "diagnostic_physical_executions": 0,
+        "regression_metrics": regression,
     })
     return {
         "status": "CACHE_AUDIT_COMPLETE",

@@ -2,9 +2,9 @@
 
 - Entry/source commit: `668e581b0de9e60373f64107aa15b7e3b8c92b3a`
 - Cache: 32 rollouts, 12 unique K4/K5/K6 loss events; baseline replay is in `artifacts/pathgraph_sarm/upgrade_v2/loss_observability_l2rar2_r11_v1/baseline_replay`.
-- Physical diagnostic executions: `8`; no training and no API calls.
+- Physical diagnostic executions: `8` in the last probe invocation; cumulative executions recorded: `40`; budget `8`; status `BUDGET_EXCEEDED_BLOCKED`.
 - Reference labels: legacy labels remain unchanged; physical loss semantics are not inferred from `contact_lost` alone.
-- Primary route: `LOSS_REALIZATION_REPAIR_FIRST`
+- Primary route: `INSUFFICIENT_EVIDENCE_STOP`; audit status: `BLOCKED_DIAGNOSTIC_BUDGET_EXCEEDED`.
 
 ## Verified facts
 
@@ -14,13 +14,14 @@
 
 ## Mechanism inference
 
-The route is selected only from the bounded probe when its ordinary and instrumented replays are equivalent. The probe is diagnostic evidence, not a new family, training sample, confirmation run, or online candidate score.
-For the probed root, K4/K5/K6 all retained object-to-`finger_left`/`finger_right` contact force after weld-off, with no post-detach writeback increase; they are therefore `not_verified` as task-level losses, despite the legacy `contact_lost` event.
+No physical mechanism claim is authorized. The ordinary/instrumented probe had matching action, control, and event streams, but all four probe cases failed the cached action-end geometry equivalence check. In addition, the cumulative physical diagnostic count exceeded the hard budget. The probe is therefore retained as an audit trail only; it is not used to relabel legacy events, select a repair route, or claim that K4/K5/K6 were or were not physical losses.
 
 ## Remaining gaps
 
 - Existing reference labels were not rewritten and the frozen `0.02 m` / `0.01 m` contract was not tuned.
 - Any unresolved physical or sensor ambiguity remains explicitly unresolved; no null was converted to false or zero.
+- The 32 cached rollouts and 12 unique K4/K5/K6 events remain the scientific cache evidence. No training, API calls, confirmation run, candidate selection, or L3 entry occurred.
+- Physical execution accounting is `40` used against a maximum of `8`; this is a blocked execution record, not a scientific gain.
 
 historical_status = L2RAR1_PARTIAL_KEEP_G1
 scientific_status = L2RAR2_PARTIAL_KEEP_G1

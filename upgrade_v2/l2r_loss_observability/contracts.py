@@ -105,11 +105,17 @@ def control_variant_text(value: Any) -> str:
 def required_artifacts() -> tuple[str, ...]:
     return (
         "entry_audit.json",
+        "cache_audit_summary.json",
         "event_chain_trace.csv",
         "loss_event_audit.csv",
+        "regression_audit.csv",
+        "regression_metrics.json",
         "sensor_proxy_audit.csv",
         "visual_loss_evidence_audit.csv",
         "physics_probe_manifest.json",
+        "physical_execution_accounting.json",
+        "probe_cached_equivalence.json",
+        "probe_execution_ledger.csv",
         "time_audit_v2.csv",
         "source_contract_audit.json",
         "repair_route_decision.json",
@@ -119,5 +125,6 @@ def required_artifacts() -> tuple[str, ...]:
         "external_artifacts.tsv",
         "secret_scan.json",
         "legacy_zip_verification.json",
+        "validation_results.json",
         "final_report.md",
     )

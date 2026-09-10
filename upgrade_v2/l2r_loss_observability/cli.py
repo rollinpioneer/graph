@@ -31,7 +31,7 @@ def parser() -> argparse.ArgumentParser:
     report.add_argument("--cache-summary", type=Path, required=True)
     report.add_argument("--source-commit", required=True)
     report.add_argument("--physical-manifest", type=Path)
-    report.add_argument("--command", action="append", default=[])
+    report.add_argument("--command", dest="recorded_command", action="append", default=[])
     return root
 
 
@@ -43,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
         result = run_physics_probe(args.data_root, args.output_root, args.budget, args.allow_physical_replay, args.generation_lock, args.root_family_id)
     else:
         result = build_report(args.output_root, args.baseline_root, args.cache_summary, args.source_commit, args.physical_manifest)
-        finalize_manifest(args.output_root, args.source_commit, args.command)
+        finalize_manifest(args.output_root, args.source_commit, args.recorded_command)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

@@ -13,9 +13,27 @@ from .contracts import required_artifacts
 def build_report(output_root: Path, baseline_root: Path, cache_summary: Path, source_commit: str, physical_manifest: Path | None = None) -> dict[str, Any]:
     cache = json.loads(cache_summary.read_text(encoding="utf-8"))
     probe = json.loads(physical_manifest.read_text(encoding="utf-8")) if physical_manifest and physical_manifest.is_file() else None
-    if probe and probe.get("equivalence", {}).get("all_pairs_equal"):
+    accounting_path = output_root / "physical_execution_accounting.json"
+    accounting = json.loads(accounting_path.read_text(encoding="utf-8")) if accounting_path.is_file() else {}
+    cached_equivalence_path = output_root / "probe_cached_equivalence.json"
+    cached_equivalence = json.loads(cached_equivalence_path.read_text(encoding="utf-8")) if cached_equivalence_path.is_file() else {}
+    budget_exceeded = accounting.get("budget_status") == "BUDGET_EXCEEDED_BLOCKED"
+    probe_equivalence_failed = bool(
+        probe
+        and (
+            probe.get("status") == "PROBE_EQUIVALENCE_FAILED"
+            or probe.get("equivalence", {}).get("all_pairs_equal") is False
+            or cached_equivalence.get("all_pairs_equal") is False
+        )
+    )
+    # Never merge physical mechanism fields when cached replay equivalence is
+    # absent: the probe then cannot be used to relabel legacy events.
+    if probe and probe.get("equivalence", {}).get("all_pairs_equal") and cached_equivalence.get("all_pairs_equal"):
         _merge_probe_audit_rows(output_root, probe)
-    if probe and probe.get("status") == "PROBE_EQUIVALENCE_FAILED":
+    if budget_exceeded:
+        route = "INSUFFICIENT_EVIDENCE_STOP"
+        audit_status = "BLOCKED_DIAGNOSTIC_BUDGET_EXCEEDED"
+    elif probe_equivalence_failed:
         route = "INSUFFICIENT_EVIDENCE_STOP"
         audit_status = "BLOCKED_PROBE_EQUIVALENCE_FAILED"
     elif probe and probe.get("equivalence", {}).get("all_pairs_equal"):
@@ -36,8 +54,14 @@ def build_report(output_root: Path, baseline_root: Path, cache_summary: Path, so
         "source_commit": source_commit,
         "unique_loss_events": cache.get("unique_loss_events", 12),
         "diagnostic_physical_executions": probe.get("executions_used", 0) if probe else 0,
+        "cumulative_physical_executions": accounting.get("instances_used"),
+        "maximum_physical_executions": accounting.get("maximum_instances"),
+        "budget_status": accounting.get("budget_status"),
+        "probe_cached_equivalence": cached_equivalence.get("all_pairs_equal"),
         "next_repair_route": route,
-        "selection_basis": "bounded physical evidence only; no candidate or threshold was changed",
+        "selection_basis": "cache audit only; physical mechanism evidence blocked by probe/cache non-equivalence or budget",
+        "mechanism_claims_allowed": False,
+        "legacy_events_relabelled": False,
         "candidate_selected": None,
         "confirmation": False,
         "l3_entry_allowed": False,
@@ -63,9 +87,9 @@ def build_report(output_root: Path, baseline_root: Path, cache_summary: Path, so
 
 - Entry/source commit: `{source_commit}`
 - Cache: 32 rollouts, 12 unique K4/K5/K6 loss events; baseline replay is in `{baseline_root}`.
-- Physical diagnostic executions: `{decision['diagnostic_physical_executions']}`; no training and no API calls.
+- Physical diagnostic executions: `{decision['diagnostic_physical_executions']}` in the last probe invocation; cumulative executions recorded: `{decision['cumulative_physical_executions']}`; budget `{decision['maximum_physical_executions']}`; status `{decision['budget_status']}`.
 - Reference labels: legacy labels remain unchanged; physical loss semantics are not inferred from `contact_lost` alone.
-- Primary route: `{route}`
+- Primary route: `{route}`; audit status: `{audit_status}`.
 
 ## Verified facts
 
@@ -75,13 +99,14 @@ def build_report(output_root: Path, baseline_root: Path, cache_summary: Path, so
 
 ## Mechanism inference
 
-The route is selected only from the bounded probe when its ordinary and instrumented replays are equivalent. The probe is diagnostic evidence, not a new family, training sample, confirmation run, or online candidate score.
-For the probed root, K4/K5/K6 all retained object-to-`finger_left`/`finger_right` contact force after weld-off, with no post-detach writeback increase; they are therefore `not_verified` as task-level losses, despite the legacy `contact_lost` event.
+No physical mechanism claim is authorized. The ordinary/instrumented probe had matching action, control, and event streams, but all four probe cases failed the cached action-end geometry equivalence check. In addition, the cumulative physical diagnostic count exceeded the hard budget. The probe is therefore retained as an audit trail only; it is not used to relabel legacy events, select a repair route, or claim that K4/K5/K6 were or were not physical losses.
 
 ## Remaining gaps
 
 - Existing reference labels were not rewritten and the frozen `0.02 m` / `0.01 m` contract was not tuned.
 - Any unresolved physical or sensor ambiguity remains explicitly unresolved; no null was converted to false or zero.
+- The 32 cached rollouts and 12 unique K4/K5/K6 events remain the scientific cache evidence. No training, API calls, confirmation run, candidate selection, or L3 entry occurred.
+- Physical execution accounting is `{decision['cumulative_physical_executions']}` used against a maximum of `{decision['maximum_physical_executions']}`; this is a blocked execution record, not a scientific gain.
 
 historical_status = L2RAR1_PARTIAL_KEEP_G1
 scientific_status = L2RAR2_PARTIAL_KEEP_G1

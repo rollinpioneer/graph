@@ -17,8 +17,9 @@ import numpy as np
 
 from upgrade_v2.l2r_hold_evidence.probe_adapter import perform
 from upgrade_v2.l2r_task_context.collector import CASES
-from upgrade_v2.l2r_task_context.io import read_json, write_csv, write_json
+from upgrade_v2.l2r_task_context.io import read_csv, read_json, read_jsonl, write_csv, write_json
 from upgrade_v2.visual_refine_l2.dynamic_simulator import family_spec
+from upgrade_v2.visual_refine_l2.renderer import TabletopRenderer
 from upgrade_v2.visual_refine_l2.repaired_simulator import AttachRelposeDynamicTabletop
 
 from .contracts import MAX_PHYSICAL_EXECUTIONS, PHYSICS_PROBE_CASES, PHYSICS_PROBE_VERSION
@@ -99,21 +100,32 @@ def _state(sim: Any, object_geom_ids: set[int], writeback_count: int) -> dict[st
     }
 
 
-def _ordinary_replay(spec: Any, seed: int, program: list[str], variant_index: int) -> dict[str, Any]:
+def _ordinary_replay(spec: Any, seed: int, program: list[str], variant_index: int, render_callbacks: bool = False) -> dict[str, Any]:
     sim = AttachRelposeDynamicTabletop(spec, seed)
     action_rows: list[dict[str, Any]] = []
-    for action in program:
-        result = perform(sim, action, variant_index)
-        action_rows.append({
-            "action": action,
-            "action_index": int(result["action_index"]),
-            "start_time": float(result["start_time"]),
-            "end_time": float(result["end_time"]),
-            "contact_present": bool(result["contact_present"]),
-            "events": copy.deepcopy(sim.events),
-            "qpos": [float(value) for value in sim.data.qpos],
-            "qvel": [float(value) for value in sim.data.qvel],
-        })
+    renderer = TabletopRenderer(sim.model) if render_callbacks else None
+    if renderer is not None:
+        sim._r1_control_callback = lambda current, control: renderer.render(current.data, "front", spec.camera_jitter)
+        sim._r1_action_end_callback = lambda current, action, index, result: renderer.render(current.data, "front", spec.camera_jitter)
+    try:
+        for action in program:
+            result = perform(sim, action, variant_index)
+            action_rows.append({
+                "action": action,
+                "action_index": int(result["action_index"]),
+                "start_time": float(result["start_time"]),
+                "end_time": float(result["end_time"]),
+                "contact_present": bool(result["contact_present"]),
+                "controls": copy.deepcopy(result.get("low_level_control_sequence", [])),
+                "events": copy.deepcopy(sim.events),
+                "qpos": [float(value) for value in sim.data.qpos],
+                "qvel": [float(value) for value in sim.data.qvel],
+                "object_xyz": [float(value) for value in sim.object_xyz],
+                "gripper_xyz": [float(value) for value in sim.data.mocap_pos[0]],
+            })
+    finally:
+        if renderer is not None:
+            renderer.close()
     return {"actions": action_rows, "events": copy.deepcopy(sim.events), "final_qpos": [float(value) for value in sim.data.qpos], "final_qvel": [float(value) for value in sim.data.qvel]}
 
 
@@ -147,9 +159,12 @@ def _instrumented_replay(spec: Any, seed: int, program: list[str], variant_index
             "start_time": float(result["start_time"]),
             "end_time": float(result["end_time"]),
             "contact_present": bool(result["contact_present"]),
+            "controls": copy.deepcopy(result.get("low_level_control_sequence", [])),
             "events": copy.deepcopy(sim.events),
             "qpos": [float(value) for value in sim.data.qpos],
             "qvel": [float(value) for value in sim.data.qvel],
+            "object_xyz": [float(value) for value in sim.object_xyz],
+            "gripper_xyz": [float(value) for value in sim.data.mocap_pos[0]],
         })
     return ({"actions": action_rows, "events": copy.deepcopy(sim.events), "final_qpos": [float(value) for value in sim.data.qpos], "final_qvel": [float(value) for value in sim.data.qvel]}, trace)
 
@@ -167,6 +182,77 @@ def _compare(ordinary: dict[str, Any], instrumented: dict[str, Any]) -> dict[str
             action_equal = action_equal and left["action"] == right["action"] and left["contact_present"] == right["contact_present"] and left["start_time"] == right["start_time"] and left["end_time"] == right["end_time"]
             state_equal = state_equal and _same_numbers(left["qpos"], right["qpos"]) and _same_numbers(left["qvel"], right["qvel"])
     return {"actions_equal": action_equal, "events_equal": event_equal, "states_equal": state_equal, "equivalent": bool(action_equal and event_equal and state_equal)}
+
+
+def _float_equal(left: Any, right: Any, atol: float = 1e-12) -> bool:
+    try:
+        return bool(np.allclose(np.asarray(left, dtype=float), np.asarray(right, dtype=float), rtol=0.0, atol=atol))
+    except (TypeError, ValueError):
+        return left == right
+
+
+def _control_equal(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    scalar_keys = ("control_step", "physics_steps", "gripper_command")
+    if any(left.get(key) != right.get(key) for key in scalar_keys):
+        return False
+    return (
+        _float_equal(left.get("start_time"), right.get("start_time"))
+        and _float_equal(left.get("end_time"), right.get("end_time"))
+        and _float_equal(left.get("mocap_position"), right.get("mocap_position"), atol=2e-9)
+    )
+
+
+def _cached_replay_equivalence(data_root: Path, rollout_id: str, case_id: str, ordinary: dict[str, Any], render_callbacks: bool = False) -> dict[str, Any]:
+    """Compare the reconstructed ordinary run to the exact cached action stream."""
+    manifest_rows = read_csv(data_root / "rollout_manifest.csv")
+    meta = next(row for row in manifest_rows if row["rollout_id"] == rollout_id)
+    path = Path(meta["path"])
+    cached_actions = read_csv(path / "actions.csv")
+    cached_controls = read_jsonl(path / "low_level_controls.jsonl")
+    cached_events = read_jsonl(path / "events.jsonl")
+    cached_oracle = read_csv(path / "oracle_timeline.csv")
+    action_equal = len(cached_actions) == len(ordinary["actions"])
+    controls_equal = len(cached_controls) == len(ordinary["actions"])
+    geometry_equal = True
+    if action_equal:
+        for generated, cached in zip(ordinary["actions"], cached_actions):
+            action_equal = action_equal and (
+                generated["action"] == cached["action"]
+                and generated["action_index"] == int(cached["action_index"])
+                and _float_equal(generated["start_time"], float(cached["start_time"]))
+                and _float_equal(generated["end_time"], float(cached["end_time"]))
+            )
+    if controls_equal:
+        for generated, cached in zip(ordinary["actions"], cached_controls):
+            generated_controls = generated.get("controls", [])
+            cached_controls_for_action = cached.get("controls", [])
+            controls_equal = controls_equal and len(generated_controls) == len(cached_controls_for_action)
+            if controls_equal:
+                controls_equal = all(_control_equal(left, right) for left, right in zip(generated_controls, cached_controls_for_action))
+    cached_action_end = [row for row in cached_oracle if row.get("phase") == "action_end"]
+    geometry_equal = len(cached_action_end) == len(ordinary["actions"])
+    if geometry_equal:
+        for generated, cached in zip(ordinary["actions"], cached_action_end):
+            object_xyz = json.loads(cached["object_xyz"])
+            gripper_xyz = json.loads(cached["gripper_xyz"])
+            geometry_equal = geometry_equal and _float_equal(generated["object_xyz"], object_xyz) and _float_equal(generated["gripper_xyz"], gripper_xyz)
+    events_equal = cached_events == ordinary["events"]
+    result = {
+        "rollout_id": rollout_id,
+        "case_id": case_id,
+        "cached_action_rows": len(cached_actions),
+        "generated_action_rows": len(ordinary["actions"]),
+        "cached_control_rows": len(cached_controls),
+        "action_stream_equal": action_equal,
+        "low_level_controls_equal": controls_equal,
+        "action_end_geometry_equal": geometry_equal,
+        "event_stream_equal": events_equal,
+        "equivalent": bool(action_equal and controls_equal and geometry_equal and events_equal),
+        "comparison_tolerance": {"scalar_seconds": 1e-12, "mocap_position": 2e-9, "geometry": 1e-12},
+        "source_path": str(path.resolve()),
+        "render_callbacks": render_callbacks,
+    }
+    return result
 
 
 def _mechanism_summary(trace: list[dict[str, Any]], loss_time: float | None) -> dict[str, Any]:
@@ -222,19 +308,24 @@ def run_physics_probe(data_root: Path, output_root: Path, budget: int, allow_phy
     all_traces: list[dict[str, Any]] = []
     ledger: list[dict[str, Any]] = []
     summaries: list[dict[str, Any]] = []
+    cached_comparisons: list[dict[str, Any]] = []
     executions = 0
     for case_id in PHYSICS_PROBE_CASES:
         case = CASES[case_id]
         seed = int(family["rollout_seed_base"]) + list(CASES).index(case_id)
         spec = family_spec(selected_root, case["scenario"], int(family["family_seed"]), seed, probe_variant=case.get("probe_variant", "default"))
-        ordinary = _ordinary_replay(spec, seed, case["program"], int(family["family_index"]))
+        ordinary = _ordinary_replay(spec, seed, case["program"], int(family["family_index"]), render_callbacks=True)
         executions += 1
         instrumented, trace = _instrumented_replay(spec, seed, case["program"], int(family["family_index"]))
         executions += 1
         comparison = _compare(ordinary, instrumented)
+        cached_comparison = _cached_replay_equivalence(
+            data_root, f"{selected_root}:{case_id}", case_id, ordinary,
+        )
         loss_time = next((float(row["time"]) for row in instrumented["events"] if row.get("event") == "contact_lost"), None)
         mechanism = _mechanism_summary(trace, loss_time)
-        summaries.append({"root_family_id": selected_root, "case_id": case_id, "loss_time": loss_time, **comparison, **mechanism})
+        summaries.append({"root_family_id": selected_root, "case_id": case_id, "loss_time": loss_time, **comparison, "cached_replay_equivalence": cached_comparison["equivalent"], **mechanism})
+        cached_comparisons.append(cached_comparison)
         all_traces.extend({"root_family_id": selected_root, "case_id": case_id, **row} for row in trace)
         ledger.append({"execution_index": executions - 1, "root_family_id": selected_root, "case_id": case_id, "mode": "ordinary", "status": "COMPLETE"})
         ledger.append({"execution_index": executions, "root_family_id": selected_root, "case_id": case_id, "mode": "instrumented_read_only", "status": "COMPLETE", "equivalence": comparison["equivalent"]})
@@ -247,9 +338,17 @@ def run_physics_probe(data_root: Path, output_root: Path, budget: int, allow_phy
     write_csv(output_root / "physics_probe_trace.csv", serialised_traces)
     write_csv(output_root / "probe_execution_ledger.csv", ledger)
     equivalence = all(row["equivalent"] for row in summaries)
+    cached_equivalence = all(row["equivalent"] for row in cached_comparisons)
+    write_json(output_root / "probe_cached_equivalence.json", {
+        "schema": "l2rar2_r11_probe_cached_equivalence_v1",
+        "all_pairs_equal": cached_equivalence,
+        "pairs": cached_comparisons,
+        "mechanism_claims_require": "ordinary_vs_instrumented_and_instrumented_vs_cached_equal",
+    })
+    probe_status = "PHYSICS_PROBE_COMPLETE" if equivalence and cached_equivalence else "PROBE_EQUIVALENCE_FAILED"
     write_json(output_root / "physics_probe_manifest.json", {
         "schema": PHYSICS_PROBE_VERSION,
-        "status": "PHYSICS_PROBE_COMPLETE" if equivalence else "PROBE_EQUIVALENCE_FAILED",
+        "status": probe_status,
         "root_family_id": selected_root,
         "cases": list(PHYSICS_PROBE_CASES),
         "budget": budget,
@@ -261,6 +360,7 @@ def run_physics_probe(data_root: Path, output_root: Path, budget: int, allow_phy
         "api_key_read": False,
         "equivalence": {"all_pairs_equal": equivalence, "pairs": summaries},
         "source_rollout_manifest": str((data_root / "rollout_manifest.csv").resolve()),
-        "mechanism_claims_allowed": equivalence,
+        "cached_replay_equivalence": cached_equivalence,
+        "mechanism_claims_allowed": False,
     })
-    return {"status": "PHYSICS_PROBE_COMPLETE" if equivalence else "PROBE_EQUIVALENCE_FAILED", "executions_used": executions, "equivalence": equivalence, "summaries": summaries}
+    return {"status": probe_status, "executions_used": executions, "equivalence": equivalence, "cached_replay_equivalence": cached_equivalence, "summaries": summaries}
