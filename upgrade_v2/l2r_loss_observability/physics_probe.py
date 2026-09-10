@@ -13,16 +13,8 @@ import types
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
-from upgrade_v2.l2r_hold_evidence.probe_adapter import perform
-from upgrade_v2.l2r_task_context.collector import CASES
-from upgrade_v2.l2r_task_context.io import read_csv, read_json, read_jsonl, write_csv, write_json
-from upgrade_v2.visual_refine_l2.dynamic_simulator import family_spec
-from upgrade_v2.visual_refine_l2.renderer import TabletopRenderer
-from upgrade_v2.visual_refine_l2.repaired_simulator import AttachRelposeDynamicTabletop
-
 from .contracts import MAX_PHYSICAL_EXECUTIONS, PHYSICS_PROBE_CASES, PHYSICS_PROBE_VERSION
+from upgrade_v2.l2r_execution_audit.policy import reject_physics_now
 
 
 class _MujocoProxy:
@@ -57,6 +49,8 @@ def _object_geom_ids(sim: Any) -> set[int]:
 
 
 def _contact_rows(sim: Any, object_geom_ids: set[int]) -> list[dict[str, Any]]:
+    import numpy as np
+
     mujoco = sim.mujoco._module if isinstance(sim.mujoco, _MujocoProxy) else sim.mujoco
     rows: list[dict[str, Any]] = []
     force = np.zeros(6, dtype=np.float64)
@@ -101,6 +95,11 @@ def _state(sim: Any, object_geom_ids: set[int], writeback_count: int) -> dict[st
 
 
 def _ordinary_replay(spec: Any, seed: int, program: list[str], variant_index: int, render_callbacks: bool = False) -> dict[str, Any]:
+    reject_physics_now("R12 ordinary replay entry denied")
+    from upgrade_v2.l2r_hold_evidence.probe_adapter import perform
+    from upgrade_v2.visual_refine_l2.renderer import TabletopRenderer
+    from upgrade_v2.visual_refine_l2.repaired_simulator import AttachRelposeDynamicTabletop
+
     sim = AttachRelposeDynamicTabletop(spec, seed)
     action_rows: list[dict[str, Any]] = []
     renderer = TabletopRenderer(sim.model) if render_callbacks else None
@@ -130,6 +129,10 @@ def _ordinary_replay(spec: Any, seed: int, program: list[str], variant_index: in
 
 
 def _instrumented_replay(spec: Any, seed: int, program: list[str], variant_index: int) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    reject_physics_now("R12 instrumented replay entry denied")
+    from upgrade_v2.l2r_hold_evidence.probe_adapter import perform
+    from upgrade_v2.visual_refine_l2.repaired_simulator import AttachRelposeDynamicTabletop
+
     sim = AttachRelposeDynamicTabletop(spec, seed)
     object_geom_ids = _object_geom_ids(sim)
     trace: list[dict[str, Any]] = []
@@ -170,6 +173,8 @@ def _instrumented_replay(spec: Any, seed: int, program: list[str], variant_index
 
 
 def _same_numbers(left: list[float], right: list[float], atol: float = 1e-12) -> bool:
+    import numpy as np
+
     return bool(np.array_equal(np.asarray(left), np.asarray(right)) or np.allclose(left, right, rtol=0.0, atol=atol))
 
 
@@ -186,6 +191,8 @@ def _compare(ordinary: dict[str, Any], instrumented: dict[str, Any]) -> dict[str
 
 def _float_equal(left: Any, right: Any, atol: float = 1e-12) -> bool:
     try:
+        import numpy as np
+
         return bool(np.allclose(np.asarray(left, dtype=float), np.asarray(right, dtype=float), rtol=0.0, atol=atol))
     except (TypeError, ValueError):
         return left == right
@@ -204,6 +211,8 @@ def _control_equal(left: dict[str, Any], right: dict[str, Any]) -> bool:
 
 def _cached_replay_equivalence(data_root: Path, rollout_id: str, case_id: str, ordinary: dict[str, Any], render_callbacks: bool = False) -> dict[str, Any]:
     """Compare the reconstructed ordinary run to the exact cached action stream."""
+    from upgrade_v2.l2r_task_context.io import read_csv, read_jsonl
+
     manifest_rows = read_csv(data_root / "rollout_manifest.csv")
     meta = next(row for row in manifest_rows if row["rollout_id"] == rollout_id)
     path = Path(meta["path"])
@@ -256,6 +265,8 @@ def _cached_replay_equivalence(data_root: Path, rollout_id: str, case_id: str, o
 
 
 def _mechanism_summary(trace: list[dict[str, Any]], loss_time: float | None) -> dict[str, Any]:
+    import math
+
     if not trace:
         return {"physical_loss_status": "insufficient_data", "reason": "empty_probe_trace"}
     if loss_time is None:
@@ -265,7 +276,8 @@ def _mechanism_summary(trace: list[dict[str, Any]], loss_time: float | None) -> 
     external = [contact for row in post for contact in row["contacts"] if contact["is_external_support"]]
     writes_at_boundary = max((row["post_detach_writeback_count"] for row in trace if row["time"] <= loss_time + 1e-9), default=0)
     writes_after = max((row["post_detach_writeback_count"] for row in trace if row["time"] > loss_time + 1e-9), default=writes_at_boundary) - writes_at_boundary
-    separated = any(not row["weld_active"] and np.linalg.norm(np.asarray(row["object_qvel"][:3])) > 1e-6 for row in post)
+    speeds = [math.sqrt(sum(float(value) ** 2 for value in row["object_qvel"][:3])) for row in post]
+    separated = any(not row["weld_active"] and speed > 1e-6 for row, speed in zip(post, speeds))
     # Contact force is stronger evidence of continued support than a small
     # velocity spike.  A weld-off event with persistent finger/palm support
     # is therefore not accepted as a task-level loss.
@@ -285,11 +297,16 @@ def _mechanism_summary(trace: list[dict[str, Any]], loss_time: float | None) -> 
         "post_detach_external_contact_samples": len(external),
         "post_detach_writeback_delta": writes_after,
         "post_detach_separation_dynamics_observed": separated,
-        "max_post_detach_object_speed_mps": max((float(np.linalg.norm(np.asarray(row["object_qvel"][:3]))) for row in post), default=None),
+        "max_post_detach_object_speed_mps": max(speeds, default=None),
     }
 
 
 def run_physics_probe(data_root: Path, output_root: Path, budget: int, allow_physical_replay: bool, generation_lock: Path, root_family_id: str | None = None) -> dict[str, Any]:
+    reject_physics_now("R12 zero-physics scope: probe entry denied")
+    from upgrade_v2.l2r_task_context.collector import CASES
+    from upgrade_v2.l2r_task_context.io import read_csv, read_json, read_jsonl, write_csv, write_json
+    from upgrade_v2.visual_refine_l2.dynamic_simulator import family_spec
+
     if not allow_physical_replay:
         raise PermissionError("physical replay requires --allow-physical-replay")
     if budget <= 0 or budget > MAX_PHYSICAL_EXECUTIONS:

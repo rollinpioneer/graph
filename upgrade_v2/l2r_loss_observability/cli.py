@@ -5,10 +5,6 @@ import argparse
 import json
 from pathlib import Path
 
-from .cache_audit import build_cache_audit
-from .physics_probe import run_physics_probe
-from .report import build_report, finalize_manifest
-
 
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(description="L2RA-R2 R11 loss observability diagnostics")
@@ -25,6 +21,7 @@ def parser() -> argparse.ArgumentParser:
     probe.add_argument("--budget", type=int, required=True)
     probe.add_argument("--allow-physical-replay", action="store_true")
     probe.add_argument("--root-family-id")
+    probe.add_argument("--request-id", default="r12_cli_physics_probe")
     report = sub.add_parser("build-report", help="write decision, handoff and report")
     report.add_argument("--output-root", type=Path, required=True)
     report.add_argument("--baseline-root", type=Path, required=True)
@@ -38,10 +35,25 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     if args.command == "cache-audit":
+        from .cache_audit import build_cache_audit
+
         result = build_cache_audit(args.data_root, args.generation_lock, args.output_root, args.baseline_root)
     elif args.command == "physics-probe":
-        result = run_physics_probe(args.data_root, args.output_root, args.budget, args.allow_physical_replay, args.generation_lock, args.root_family_id)
+        from upgrade_v2.l2r_execution_audit.policy import PhysicalExecutionDenied, SafetyError, deny_physical_request
+
+        try:
+            deny_physical_request(Path.cwd(), args.request_id, args.budget)
+        except PhysicalExecutionDenied as exc:
+            result = {"status": "PHYSICAL_EXECUTION_DENIED", "reason": str(exc), "actual_physical_executions": 0}
+            print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+            return 3
+        except SafetyError as exc:
+            result = {"status": "R12_SAFETY_ERROR", "reason": str(exc), "actual_physical_executions": 0}
+            print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+            return 2
     else:
+        from .report import build_report, finalize_manifest
+
         result = build_report(args.output_root, args.baseline_root, args.cache_summary, args.source_commit, args.physical_manifest)
         finalize_manifest(args.output_root, args.source_commit, args.recorded_command)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
