@@ -1,0 +1,60 @@
+{
+  "o_tier_allowlist": [
+    "time",
+    "capture_order",
+    "object_xyz",
+    "gripper_xyz",
+    "contact_present",
+    "gripper_command",
+    "request_provenance",
+    "requested_effect",
+    "attempt_id",
+    "attempt_phase",
+    "attempt_active",
+    "attempt_end",
+    "attempt_end_reason",
+    "attempt_end_sequence",
+    "data_quality"
+  ],
+  "s_tier_fields": [
+    "time",
+    "capture_order",
+    "object_xyz",
+    "gripper_xyz",
+    "contact_present",
+    "gripper_command",
+    "attempt_id",
+    "attempt_phase",
+    "attempt_active",
+    "attempt_end",
+    "attempt_end_reason",
+    "attempt_end_sequence",
+    "requested_effect",
+    "data_quality"
+  ],
+  "forbidden_candidate_inputs": [
+    "weld_state",
+    "attached",
+    "events",
+    "event_name",
+    "case_id",
+    "scenario",
+    "expected_action",
+    "future_outcome",
+    "object_target_distance",
+    "future_frame"
+  ],
+  "required_rollout_files": [
+    "metadata.json",
+    "observations_dense.jsonl",
+    "observations_action_end.jsonl",
+    "controller_requests.jsonl",
+    "actions.csv",
+    "low_level_controls.jsonl",
+    "oracle_timeline.csv",
+    "events.jsonl",
+    "termination.json"
+  ],
+  "coordinate_contract": "CURRENT_CACHE_WORLD_RELATIVE_TRANSLATION_ONLY_NO_FABRICATED_ORIENTATION",
+  "label_join": "reporting_layer_only_after_method_traces"
+}
