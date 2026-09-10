@@ -1,0 +1,41 @@
+{
+  "audit_only_recomputed_sensor": "weld_state OR (closed AND distance(object, gripper + [0,0,-0.13]) < object_radius + 0.045 m)",
+  "audit_scope": "diagnostic regression; not a candidate selection or confirmation result",
+  "candidate_set_frozen": [
+    "B_count2",
+    "C3_vector_rho035"
+  ],
+  "contact_present_implementation_note": "DynamicTabletop.contact_sensor combines attached state and gripper/object distance; it is not an object-specific force sensor.",
+  "offline_only_inputs": [
+    "events.jsonl",
+    "oracle_timeline.csv",
+    "weld_state",
+    "reference labels",
+    "object qpos-like positions"
+  ],
+  "online_allowed_inputs": [
+    "adapted observation prefix",
+    "contact_present",
+    "gripper_command",
+    "attempt lifecycle",
+    "controller request provenance",
+    "candidate hold evidence"
+  ],
+  "online_forbidden_inputs": [
+    "case_id",
+    "scenario",
+    "events.jsonl",
+    "oracle_timeline.csv",
+    "weld_state",
+    "future_outcome",
+    "reference expected_action"
+  ],
+  "online_future_used": false,
+  "online_oracle_used": false,
+  "reference_labels_rewritten": false,
+  "reference_thresholds_frozen": {
+    "maximum_relative_position_drift_m": 0.02,
+    "minimum_object_displacement_m": 0.01
+  },
+  "schema": "l2rar2_r11_source_contract_audit_v1"
+}

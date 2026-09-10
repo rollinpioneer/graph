@@ -1,0 +1,100 @@
+{
+  "api_calls": 0,
+  "api_key_read": false,
+  "artifacts": [
+    {
+      "path": "entry_audit.json",
+      "sha256": "cb2acabd9498878145381504ac19a6009a825d58e0dd736fb7da9dbbae063301",
+      "size_bytes": 247402
+    },
+    {
+      "path": "event_chain_trace.csv",
+      "sha256": "0cc3277f2f3e93c3f79e4d6f81959f645a660179b3b21644d4836e684871ec0c",
+      "size_bytes": 11987
+    },
+    {
+      "path": "loss_event_audit.csv",
+      "sha256": "126179beccd9a2edd3ec2203f0cfb66a6bf34aa93795808efaa3a5503c662d3d",
+      "size_bytes": 8496
+    },
+    {
+      "path": "sensor_proxy_audit.csv",
+      "sha256": "8019277d2b4adb164641c001d14a9d0964ac780ff34b9f42110d64678a5a2677",
+      "size_bytes": 52884
+    },
+    {
+      "path": "visual_loss_evidence_audit.csv",
+      "sha256": "7b074a84a66544e770abb280c9de7220346a9c0100f7c1acbd363acd334e52d8",
+      "size_bytes": 102154
+    },
+    {
+      "path": "physics_probe_manifest.json",
+      "sha256": "b8855deb55f66b86713e2b08fa3fcb8aae55ff031907711ff8ea04f0fb5f1956",
+      "size_bytes": 3383
+    },
+    {
+      "path": "time_audit_v2.csv",
+      "sha256": "e0c180c2523073d803b24726aba06e29bd19b129eb8f8151f5fdef62edd97408",
+      "size_bytes": 10376
+    },
+    {
+      "path": "source_contract_audit.json",
+      "sha256": "69ede2b38252782e251eb7c011eb0c6c4b7fc6d63cf15925dbc6f6fd741d0d45",
+      "size_bytes": 1295
+    },
+    {
+      "path": "repair_route_decision.json",
+      "sha256": "2f20cdd6c3dc9026222114ad62b0dc82a5ebdb5ac36d5d5be35096ad835aee23",
+      "size_bytes": 468
+    },
+    {
+      "path": "next_stage_handoff.json",
+      "sha256": "d7d06da4cb5f426046625e047ed4bcc93c3cccbcf97464a56fbb2471e014e3b1",
+      "size_bytes": 546
+    },
+    {
+      "path": "run_manifest.json",
+      "sha256": "a8ab237d7636101880ec751e711588a43b906bef0c04d88f90c13dddd197241f",
+      "size_bytes": 3024
+    },
+    {
+      "path": "actual_commands.txt",
+      "sha256": "1e9b52e339c6c21aab46a393699e160ca685602f37ec9ab8aa9522b475ad24ed",
+      "size_bytes": 257
+    },
+    {
+      "path": "external_artifacts.tsv",
+      "sha256": "64da3ca7ed11f0dfe7124d0d542c75ad326596800886c150a78fef48c95416ab",
+      "size_bytes": 1094
+    },
+    {
+      "path": "secret_scan.json",
+      "sha256": "049564a822ef68740feb6d38abfb4d4906dfc7d41b9914fe331876fa3701dae2",
+      "size_bytes": 214
+    },
+    {
+      "path": "legacy_zip_verification.json",
+      "sha256": "55c6651d596cfa5d588b3ad69fcc40f2ee04f5a491e509992a7d48e427dffc7e",
+      "size_bytes": 299
+    },
+    {
+      "path": "final_report.md",
+      "sha256": "74abe1287476b08908937cc8c557b932755968f20d4b3bf2da1b4cd07571e3ba",
+      "size_bytes": 1882
+    }
+  ],
+  "commands": [
+    "git fetch origin --prune",
+    "evaluate-online-interface-repair (32 cached rollouts)",
+    "cache-audit (32 cached rollouts)",
+    "physics-probe (8 bounded diagnostic executions)",
+    "build-report",
+    "secret-scan; unittest (38 tests); compileall; git diff --check; unzip -t; sha256sum"
+  ],
+  "confirmation_run": false,
+  "l3_entry_allowed": false,
+  "schema": "l2rar2_r11_run_manifest_v1",
+  "selected_candidate_id": null,
+  "source_commit": "668e581b0de9e60373f64107aa15b7e3b8c92b3a",
+  "training_jobs": 0
+}
