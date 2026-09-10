@@ -123,10 +123,15 @@ def finalize_manifest(output_root: Path, source_commit: str, commands: list[str]
     (output_root / "actual_commands.txt").write_text("\n".join(commands) + "\n", encoding="utf-8")
     records = []
     for name in required_artifacts():
+        # A manifest cannot contain a stable hash of itself.  Keep the
+        # manifest in the required-artifact list, but explicitly exclude it
+        # from the content hash records and declare that policy below.
+        if name == "run_manifest.json":
+            continue
         path = output_root / name
         if path.is_file():
             records.append({"path": name, "size_bytes": path.stat().st_size, "sha256": sha256(path)})
-    payload = {"schema": "l2rar2_r11_run_manifest_v1", "source_commit": source_commit, "artifacts": records, "commands": commands, "training_jobs": 0, "api_calls": 0, "api_key_read": False, "selected_candidate_id": None, "confirmation_run": False, "l3_entry_allowed": False}
+    payload = {"schema": "l2rar2_r11_run_manifest_v1", "source_commit": source_commit, "artifacts": records, "self_excluded": True, "self_exclusion_reason": "run_manifest.json cannot contain a stable hash of itself", "commands": commands, "training_jobs": 0, "api_calls": 0, "api_key_read": False, "selected_candidate_id": None, "confirmation_run": False, "l3_entry_allowed": False}
     write_json(output_root / "run_manifest.json", payload)
     return payload
 

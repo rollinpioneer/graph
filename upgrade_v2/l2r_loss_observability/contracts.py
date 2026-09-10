@@ -126,5 +126,6 @@ def required_artifacts() -> tuple[str, ...]:
         "secret_scan.json",
         "legacy_zip_verification.json",
         "validation_results.json",
+        "operation_package_completion.md",
         "final_report.md",
     )
