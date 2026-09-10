@@ -1,1 +1,14 @@
-R12 final metadata update; source and result commit e8d5721a370fa9060b6ca10d779c5cb16dbb92de
+git fetch origin --prune
+entry_audit.py --repo WORK --output RUN/entry_audit.json
+r12_safety.py initialize/status/check (denial-only; no runner)
+old R11 CLI physics-probe repeated 5 times with --allow and distinct output paths; all returned 3
+R12 deny-physical invoked from two worktrees concurrently; both returned 3
+package verify_package.py --root PKG
+package unittest discovery: 48 tests
+repository l2r_execution_audit pure tests: 3 tests
+repository l2r_loss_observability R11 pure tests: 3 tests
+repository l2r_task_context tests: 35 tests
+compileall selected R12/R11 guard modules
+static audit CLI audit; no physical execution
+unzip -t result ZIP and internal PACKAGE_MANIFEST SHA256 validation
+sha256sum result ZIP; secret scan; git diff --check

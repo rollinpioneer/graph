@@ -468,6 +468,7 @@ R11 保存了仪表版 `after_mj_step` trace，以及缓存等价性摘要；没
 
 
 def _write_manifest(output_root: Path, repo: Path, commands: list[str]) -> None:
+    (output_root / "actual_commands.txt").write_text("\n".join(commands) + "\n", encoding="utf-8")
     records = []
     for name in REQUIRED:
         if name == "run_manifest.json":
@@ -492,7 +493,6 @@ def _write_manifest(output_root: Path, repo: Path, commands: list[str]) -> None:
         "future_physical_replay_authorized": False, "missing_evidence": ["ordinary action-end state", "four historical invocation logs", "historical runtime/model metadata"],
         "artifact_records": records, "self_excluded": True,
     })
-    (output_root / "actual_commands.txt").write_text("\n".join(commands) + "\n", encoding="utf-8")
 
 
 def generate_static_audit(repo: Path, output_root: Path, guard_test_results: dict[str, Any] | None = None) -> dict[str, Any]:
