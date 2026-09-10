@@ -1,5 +1,13 @@
 {
   "R14_minimum_environment_contract_satisfied": false,
+  "adjacent_runtime_evidence": [
+    {
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_10_online_interface_repair/runtime_environment.json",
+      "sha256": "856f5ce4dbcdd2bc0d1bc3d379d17750ada8bdebbc58535f23eb769c5b157ba3",
+      "status": "RECORDED_ADJACENT_RUNTIME"
+    }
+  ],
+  "adjacent_runtime_not_collection_proof": true,
   "case_id": "K3_normal_hold_pause_resume",
   "current_environment_not_substituted_for_history": true,
   "field_provenance": {
@@ -8,28 +16,50 @@
       "value": "egl requested by current simulator source; historical effective value not recorded"
     },
     "case_id": {
-      "status": "VERIFIED_PROTOCOL_DRAFT",
+      "status": "VERIFIED_HASHED_ARTIFACT",
       "value": "K3_normal_hold_pause_resume"
     },
+    "case_order": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": [
+        "K1_hold_request_ends_without_hold",
+        "K2_touch_request_completes_without_hold",
+        "K3_normal_hold_pause_resume",
+        "K4_regular_hold_loss",
+        "K5_brief_hold_loss",
+        "K6_long_gap_after_loss",
+        "K7_commanded_release",
+        "K8_acquisition_touch_then_continue"
+      ]
+    },
     "collection_version": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "l2rar2_attach_relpose_collection_v1"
     },
     "control_variant": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "{'variant_id': 'v0_short', 'lift_delta_z': 0.18, 'lift_controls': 3, 'touch_controls': 1, 'separation_y': -0.2, 'separation_controls': 2}"
     },
     "eq_data_source": {
       "status": "VERIFIED_GIT_SOURCE",
       "value": "R12 source class includes eq_data in snapshot implementation; historical saved counterpart absent"
     },
     "family_seed": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": 840000
+    },
+    "family_seeds_by_root": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": {
+        "L2RAR2_REPAIR_00_840000": 840000,
+        "L2RAR2_REPAIR_01_840001": 840001,
+        "L2RAR2_REPAIR_02_840002": 840002,
+        "L2RAR2_REPAIR_03_840003": 840003
+      }
     },
     "generation_lock_sha256": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "74b6accfc12b3865b53531ef02b1a0e4ad28cd8d54e5f7ea86c3be47797a059f"
     },
     "initial_state_source": {
       "status": "UNKNOWN_NOT_RECORDED",
@@ -44,32 +74,40 @@
       "value": null
     },
     "mujoco_version": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": "3.4.0"
     },
     "numpy_version": {
       "status": "UNKNOWN_NOT_RECORDED",
       "value": null
     },
     "opencv_version": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": "4.13.0"
     },
     "platform": {
       "status": "UNKNOWN_NOT_RECORDED",
       "value": null
     },
     "program_sha256": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "8d82a7e946317c393d2024be6159e0c12337a63e00a7877a1855beb369b6ca30"
+    },
+    "protocol_sha256": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "99e283577c03d0ed468fba258200cfd8e70abb2babcbf84ebf8a26b4249ee87b"
     },
     "python_executable": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": "/home/xushijie/.conda/envs/lerobot/bin/python"
     },
     "python_version": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": "3.10.19"
+    },
+    "reference_contract_sha256": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "95f2e8d4648b111b4b25632c13376ae2ae1e6d66f1dc861765765673542b79dc"
     },
     "render_callback_mode": {
       "status": "CONFLICTING_SOURCES",
@@ -80,8 +118,8 @@
       "value": null
     },
     "repair_version": {
-      "status": "VERIFIED_GIT_SOURCE",
-      "value": "ATTACH_RELPOSE_VERSION is source-defined but historical artifact value is not retained"
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "l2rar2_attach_relpose_v1"
     },
     "repository_commit": {
       "status": "VERIFIED_GIT_SOURCE",
@@ -92,28 +130,132 @@
       "value": null
     },
     "rollout_manifest_sha256": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b"
     },
     "rollout_seed": {
-      "status": "UNKNOWN_NOT_RECORDED",
-      "value": null
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "84100002"
+    },
+    "rollout_seed_base": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": 84100000
+    },
+    "rollout_seed_bases_by_root": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": {
+        "L2RAR2_REPAIR_00_840000": 84100000,
+        "L2RAR2_REPAIR_01_840001": 84100100,
+        "L2RAR2_REPAIR_02_840002": 84100200,
+        "L2RAR2_REPAIR_03_840003": 84100300
+      }
     },
     "root_family_id": {
-      "status": "VERIFIED_PROTOCOL_DRAFT",
+      "status": "VERIFIED_HASHED_ARTIFACT",
       "value": "L2RAR2_REPAIR_00_840000"
     },
     "simulator_class": {
       "status": "VERIFIED_GIT_SOURCE",
       "value": "upgrade_v2.visual_refine_l2.repaired_simulator.AttachRelposeDynamicTabletop"
     },
+    "source_collection_commit": {
+      "status": "VERIFIED_HASHED_ARTIFACT",
+      "value": "f5e16da903bb7d64a26eac6163d41030a2fbcee7"
+    },
     "thread_env_allowlist": {
       "status": "UNKNOWN_NOT_RECORDED",
       "value": {}
     },
+    "torch_cuda_available": {
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": false
+    },
+    "torch_version": {
+      "status": "RECORDED_ADJACENT_RUNTIME",
+      "value": "2.7.1+cu126"
+    },
     "warmstart_state_source": {
       "status": "UNKNOWN_NOT_RECORDED",
       "value": null
+    }
+  },
+  "generation_provenance": {
+    "collection_contract": {
+      "case_order": [
+        "K1_hold_request_ends_without_hold",
+        "K2_touch_request_completes_without_hold",
+        "K3_normal_hold_pause_resume",
+        "K4_regular_hold_loss",
+        "K5_brief_hold_loss",
+        "K6_long_gap_after_loss",
+        "K7_commanded_release",
+        "K8_acquisition_touch_then_continue"
+      ],
+      "collection_version": "l2rar2_attach_relpose_collection_v1",
+      "protocol_sha256": "99e283577c03d0ed468fba258200cfd8e70abb2babcbf84ebf8a26b4249ee87b",
+      "reference_contract_sha256": "95f2e8d4648b111b4b25632c13376ae2ae1e6d66f1dc861765765673542b79dc",
+      "repair_version": "l2rar2_attach_relpose_v1",
+      "root_families": [
+        {
+          "family_index": 0,
+          "family_seed": 840000,
+          "rollout_seed_base": 84100000,
+          "root_family_id": "L2RAR2_REPAIR_00_840000"
+        },
+        {
+          "family_index": 1,
+          "family_seed": 840001,
+          "rollout_seed_base": 84100100,
+          "root_family_id": "L2RAR2_REPAIR_01_840001"
+        },
+        {
+          "family_index": 2,
+          "family_seed": 840002,
+          "rollout_seed_base": 84100200,
+          "root_family_id": "L2RAR2_REPAIR_02_840002"
+        },
+        {
+          "family_index": 3,
+          "family_seed": 840003,
+          "rollout_seed_base": 84100300,
+          "root_family_id": "L2RAR2_REPAIR_03_840003"
+        }
+      ],
+      "source_collection_commit": "f5e16da903bb7d64a26eac6163d41030a2fbcee7"
+    },
+    "generation_lock": {
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_9_attach_relpose_repair/repair_generation_lock.json",
+      "sha256": "74b6accfc12b3865b53531ef02b1a0e4ad28cd8d54e5f7ea86c3be47797a059f",
+      "source_commit": "f5e16da903bb7d64a26eac6163d41030a2fbcee7",
+      "status": "VERIFIED_HASHED_ARTIFACT"
+    },
+    "physical_execution_performed_by_r13": 0,
+    "rollout_manifest": {
+      "expected_sha256": "0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b",
+      "path": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data_attach_relpose_repair_v1/rollout_manifest.csv",
+      "retained_as_external_artifact": true,
+      "sha256": "0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b",
+      "size_bytes": 26210,
+      "status": "VERIFIED_HASHED_ARTIFACT"
+    },
+    "round9_validation_manifest": {
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_9_attach_relpose_repair/run_manifest.json",
+      "recorded_rollout_manifest_sha256": "0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b",
+      "sha256": "0684fe22d4834c96a1ed7f8cfd56a2800ac2f561512dc140cde60171b51a5868",
+      "status": "VERIFIED_HASHED_ARTIFACT"
+    },
+    "schema": "l2rar2_r13_generation_provenance_v1",
+    "scientific_claim": false,
+    "selected_r14_case_static_metadata": {
+      "case_id": "K3_normal_hold_pause_resume",
+      "control_variant": "{'variant_id': 'v0_short', 'lift_delta_z': 0.18, 'lift_controls': 3, 'touch_controls': 1, 'separation_y': -0.2, 'separation_controls': 2}",
+      "family_seed": 840000,
+      "program_sha256": "8d82a7e946317c393d2024be6159e0c12337a63e00a7877a1855beb369b6ca30",
+      "rollout_seed": "84100002",
+      "rollout_seed_base": 84100000,
+      "root_family_id": "L2RAR2_REPAIR_00_840000",
+      "source_collection": "new_dynamic_mujoco_r2_attach_relpose_repair",
+      "status": "VERIFIED_HASHED_ARTIFACT"
     }
   },
   "repository_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
@@ -153,22 +295,11 @@
   },
   "source_status": "PARTIAL_SOURCE_CONTRACT_ONLY",
   "unknown_fields": [
-    "generation_lock_sha256",
-    "rollout_manifest_sha256",
-    "collection_version",
-    "python_executable",
-    "python_version",
     "platform",
     "machine_arch",
-    "mujoco_version",
     "numpy_version",
-    "opencv_version",
     "renderer_backend",
     "model_xml_sha256",
-    "family_seed",
-    "rollout_seed",
-    "control_variant",
-    "program_sha256",
     "render_callback_mode",
     "initial_state_source",
     "rng_state_source",

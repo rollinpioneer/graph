@@ -4,13 +4,13 @@
   "artifacts": [
     {
       "path": "actual_commands.txt",
-      "sha256": "9bb5b8bb303b83cfaa9f7aca3bbc8acb8a568d687ccff6b0be4e6f1e41a3aecd",
-      "size_bytes": 872
+      "sha256": "2948e5706140b76ad1faa1eb9678b68ec8a8bb720365f3b2131a3ca7d3017317",
+      "size_bytes": 736
     },
     {
       "path": "claim_review.csv",
-      "sha256": "c064ec9c5072203401e339330595d9f727134577df352950f2cd3502cb334344",
-      "size_bytes": 1537
+      "sha256": "73c7a3576dc7d9b08a4d10858f31be34674f9c1732122e0a33d68d5927da0462",
+      "size_bytes": 1412
     },
     {
       "path": "entry_review.json",
@@ -19,13 +19,18 @@
     },
     {
       "path": "external_artifacts.tsv",
-      "sha256": "4224b5501624d5db53558fc8b2295feba35af1b5a10dd7eb5a2fb90ec2b4c256",
-      "size_bytes": 1114
+      "sha256": "8162a79b805047e1226eab05fe9c859d482e4bef4f62a0c119e4a15fd6928a6b",
+      "size_bytes": 2444
     },
     {
       "path": "final_report.md",
-      "sha256": "43d2792cba28762bd0eeec246bf4a702d2df4a5a6eba57515fd2afc72686b497",
-      "size_bytes": 2967
+      "sha256": "44f291774b29dd2de0b43747b683194efcad36f257b6c4fddc23c505d7d734ca",
+      "size_bytes": 4497
+    },
+    {
+      "path": "generation_provenance.json",
+      "sha256": "bdf7c2d05d0d7d45c0bbb7ce89e7e2a1ef1b4d8ee7463a4ce8611870f1766996",
+      "size_bytes": 3401
     },
     {
       "path": "historical_invocation_recovery.csv",
@@ -54,18 +59,18 @@
     },
     {
       "path": "reflog_search_summary.json",
-      "sha256": "13693b99597cf01591102519ae12ddafa3e227d0b2ccc86f0a7b1d4efdf522fd",
+      "sha256": "06dfed4b84ee953d8587a5448862f86bdb841fc81ffff6dae47872946cd0ea3f",
       "size_bytes": 2037
     },
     {
       "path": "replay_environment_contract.json",
-      "sha256": "22071afc6dfa3570d456a7826a14bfd31920a9320609d06450fa16e7029e501a",
-      "size_bytes": 5552
+      "sha256": "518117f85112981f5fad79a8954569a99e25a452df1da1f21da5153fa39faa12",
+      "size_bytes": 11404
     },
     {
       "path": "replay_readiness.json",
-      "sha256": "19b17cda96901e4058808945495f437d1476617223167a163af1ab8c1e752b0a",
-      "size_bytes": 1461
+      "sha256": "7edee031e9d8463701b7e022088786cce8ac8c4577051bb963d4bcc2401efb88",
+      "size_bytes": 1892
     },
     {
       "path": "sampling_point_crosswalk.csv",
@@ -94,8 +99,8 @@
     },
     {
       "path": "validation_results.json",
-      "sha256": "37b7be168655dbb0d6c346c56259c536b071184e6baa1b7c6b95fc3a56640d00",
-      "size_bytes": 770
+      "sha256": "b06c577d6fa35dbca8391ee0f8e27a7b5c9d8a3c31f82a3b91d491a3158d618f",
+      "size_bytes": 574
     },
     {
       "path": "zip_content_inventory.csv",
@@ -113,16 +118,14 @@
     "source call-order and sampling-point static audit; no simulator import",
     "copy human_review_decision template; leave reviewer and decision fields null",
     "copy and constrain R14 micro-replay draft; authorized_budget=0",
-    "R13 pure tests: 3 passed; R12/R11 tests: 6 passed; task-context tests: 35 passed in conda:gsp; total repository pure tests: 44",
-    "compileall selected static/readiness/guard modules: PASS",
-    "secret scan for credential formats/private keys: PASS; source api_key parameter match was not a credential",
-    "git diff --check: PASS",
-    "build lightweight R13 result ZIP; unzip -t and internal SHA validation: PASS"
+    "recover Round-9 generation lock, validation manifest, external rollout-manifest SHA, versions, case order and seed provenance",
+    "R13 pure tests, compileall, secret scan, git diff --check",
+    "build lightweight R13 result ZIP; unzip -t and internal SHA validation"
   ],
   "confirmation": false,
   "entry_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
   "formal_main_commit": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
-  "implementation_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
+  "implementation_commit": "2360caaf910b55eddc82d08fab04964b91c3ba67",
   "l3_entry_allowed": false,
   "physics_imported": false,
   "r11_historical_budget": 8,

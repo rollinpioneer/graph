@@ -1,4 +1,5 @@
 {
+  "adjacent_runtime": "RECORDED_ADJACENT_RUNTIME_NOT_COLLECTION_PROOF",
   "allowed_statuses": [
     "READY_FOR_HUMAN_R14_AUTHORIZATION_REQUEST",
     "NOT_READY_SOURCE_PROVENANCE_GAP",
@@ -10,8 +11,8 @@
   ],
   "blocking_gaps": [
     "human_review_decision fields are intentionally null; Agent cannot approve R14",
-    "generation lock and rollout manifest hashes are not present in retained lightweight evidence",
-    "historical Python/MuJoCo/NumPy/OpenCV/runtime and model XML hashes are not recorded",
+    "Round-9 generation lock and rollout-manifest hash are recovered, but the historical collection runtime is not proven by adjacent cache-diagnostic runtime records",
+    "historical Python/NumPy/platform/renderer/model XML hashes and effective render configuration are not recorded for collection",
     "ordinary action-end state and verified sampling-point crosswalk are missing",
     "R11 first four invocation details remain aggregate-only"
   ],
@@ -20,6 +21,12 @@
   "environment_contract": "NOT_READY_RUNTIME_ENVIRONMENT_GAP",
   "execution_1_stop_gate": "DEFINED",
   "execution_2_condition_gate": "DEFINED",
+  "generation_provenance": {
+    "collection_contract": "PARTIALLY_RECOVERED",
+    "generation_lock": "VERIFIED_HASHED_ARTIFACT",
+    "rollout_manifest": "VERIFIED_HASHED_ARTIFACT",
+    "round9_validation_manifest": "VERIFIED_HASHED_ARTIFACT"
+  },
   "human_review": "NOT_COMPLETE_REQUIRED",
   "l3_entry_allowed": false,
   "ordinary_state_save_plan": "DEFINED_IN_R14_DRAFT_ONLY",

@@ -18,6 +18,18 @@ ENTRY = "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df"
 MAIN = "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2"
 R11 = Path("artifacts/pathgraph_sarm/upgrade_v2/loss_observability_l2rar2_r11_v1")
 R12 = Path("artifacts/pathgraph_sarm/upgrade_v2/execution_audit_l2rar2_r12_v1")
+R9 = Path("artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_9_attach_relpose_repair")
+R9_LOCK = R9 / "repair_generation_lock.json"
+R9_MANIFEST = R9 / "run_manifest.json"
+R9_ROLLOUT_MANIFEST = Path(
+    "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/"
+    "upgrade_v2/task_context_l2rar2_v1/data_attach_relpose_repair_v1/rollout_manifest.csv"
+)
+R10_RUNTIME = Path(
+    "artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/"
+    "l2rar2_10_online_interface_repair/runtime_environment.json"
+)
+R11_RUNTIME = R11 / "baseline_replay/runtime_environment.json"
 R12_ZIP = Path("downloads/l2ra_r2_v1/L2RAR2_R12_Execution_Audit_results_v1.zip")
 R12_SIDE = Path("downloads/l2ra_r2_v1/L2RAR2_R12_Execution_Audit_results_v1.zip.sha256")
 SOURCE_FILES = (
@@ -107,40 +119,47 @@ def build_r12_integrity(repo: Path, out: Path) -> dict[str, Any]:
 
 
 def build_claim_review(repo: Path, out: Path) -> None:
-    fields = ["claim_id", "source_path", "source_sha256", "human_decision", "decision_basis", "requested_static_clarification", "scientific_use_allowed", "reviewer_id", "reviewed_at_utc"]
+    fields = [
+        "claim_id", "source_path", "source_sha256", "agent_review_recommendation",
+        "human_decision", "decision_basis", "requested_static_clarification",
+        "scientific_use_allowed", "human_reviewer_id", "human_reviewed_at_utc",
+    ]
     rows = [
         {
             "claim_id": "R11_MECHANISM_POST_DETACH_HAND_SUPPORT",
             "source_path": str(R11 / "physics_probe_manifest.json"),
             "source_sha256": sha256(repo / R11 / "physics_probe_manifest.json"),
-            "human_decision": "ACCEPT_QUARANTINE",
+            "agent_review_recommendation": "ACCEPT_QUARANTINE",
+            "human_decision": "",
             "decision_basis": "Retain the historical field, but R12 equivalence failed and no task-level loss proof exists.",
             "requested_static_clarification": "None beyond preserving sampling-point and provenance gaps.",
             "scientific_use_allowed": "false; engineering audit fact only",
-            "reviewer_id": "AGENT_STATIC_REVIEW_NOT_HUMAN_APPROVAL",
-            "reviewed_at_utc": "NOT_HUMAN_REVIEWED",
+            "human_reviewer_id": "",
+            "human_reviewed_at_utc": "",
         },
         {
             "claim_id": "R11_MECHANISM_OBJECT_SPEED",
             "source_path": str(R11 / "physics_probe_manifest.json"),
             "source_sha256": sha256(repo / R11 / "physics_probe_manifest.json"),
-            "human_decision": "ACCEPT_QUARANTINE",
+            "agent_review_recommendation": "ACCEPT_QUARANTINE",
+            "human_decision": "",
             "decision_basis": "Absolute speed is not relative separation and the ordinary counterpart is absent.",
             "requested_static_clarification": "None; do not convert speed into verified loss.",
             "scientific_use_allowed": "false; engineering audit fact only",
-            "reviewer_id": "AGENT_STATIC_REVIEW_NOT_HUMAN_APPROVAL",
-            "reviewed_at_utc": "NOT_HUMAN_REVIEWED",
+            "human_reviewer_id": "",
+            "human_reviewed_at_utc": "",
         },
         {
             "claim_id": "R11_CACHED_GEOMETRY_MISMATCH",
             "source_path": str(R11 / "probe_cached_equivalence.json"),
             "source_sha256": sha256(repo / R11 / "probe_cached_equivalence.json"),
-            "human_decision": "ACCEPT_QUARANTINE",
+            "agent_review_recommendation": "ACCEPT_QUARANTINE",
+            "human_decision": "",
             "decision_basis": "The saved summary is an audit fact, not first-cause localization or a mechanism result.",
             "requested_static_clarification": "Recover ordinary action-end state and a verified cross-source mapping before R14.",
             "scientific_use_allowed": "false; may block replay or motivate human review only",
-            "reviewer_id": "AGENT_STATIC_REVIEW_NOT_HUMAN_APPROVAL",
-            "reviewed_at_utc": "NOT_HUMAN_REVIEWED",
+            "human_reviewer_id": "",
+            "human_reviewed_at_utc": "",
         },
     ]
     write_csv(out, fields, rows)
@@ -191,6 +210,91 @@ def build_saved_inventory(repo: Path, out: Path) -> None:
         {"evidence_id": "r11_ordinary_missing", "source_path": str((repo / R11).resolve()), "source_sha256": "DIRECTORY_TREE_NOT_COMPUTED", "source_revision": "dc51582b99759a6e5a7427e1965a5110c5944ed4", "rollout_id": "four probe cases", "case_id": "K3/K4/K5/K6", "mode": "ordinary", "sampling_point": "ordinary_after_perform_return", "fields_saved": "NOT_FOUND", "callback_order_source": "NOT_RECORDED", "row_key_available": "NOT_FOUND", "ordinary_counterpart_available": "self-described missing", "eligibility_for_comparison": "NOT_COMPARABLE", "recovery_status": "NOT_FOUND", "notes": "R12 explicitly reports ordinary action-end state was not saved."},
     ]
     write_csv(out, fields, rows)
+
+
+def _rollout_row(path: Path, root_family_id: str, case_id: str) -> dict[str, str]:
+    if not path.is_file():
+        return {}
+    with path.open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            if row.get("root_family_id") == root_family_id and row.get("case_id") == case_id:
+                return row
+    return {}
+
+
+def build_generation_provenance(repo: Path, out: Path) -> dict[str, Any]:
+    lock_path = repo / R9_LOCK
+    manifest_path = repo / R9_MANIFEST
+    rollout_path = R9_ROLLOUT_MANIFEST
+    lock = read_json(lock_path) if lock_path.is_file() else {}
+    manifest = read_json(manifest_path) if manifest_path.is_file() else {}
+    expected_rollout_sha = manifest.get("input_hashes", {}).get("repair_rollout_manifest")
+    actual_rollout_sha = sha256(rollout_path)
+    rollout_status = (
+        "VERIFIED_HASHED_ARTIFACT"
+        if actual_rollout_sha and expected_rollout_sha == actual_rollout_sha
+        else "UNKNOWN_NOT_RECORDED"
+    )
+    families = lock.get("families", [])
+    root_family_id = "L2RAR2_REPAIR_00_840000"
+    case_id = "K3_normal_hold_pause_resume"
+    row = _rollout_row(rollout_path, root_family_id, case_id)
+    family = next((item for item in families if item.get("root_family_id") == root_family_id), {})
+    result = {
+        "schema": "l2rar2_r13_generation_provenance_v1",
+        "generation_lock": {
+            "path": str(lock_path),
+            "sha256": sha256(lock_path),
+            "source_commit": lock.get("source_commit"),
+            "status": "VERIFIED_HASHED_ARTIFACT" if lock_path.is_file() else "UNKNOWN_NOT_RECORDED",
+        },
+        "round9_validation_manifest": {
+            "path": str(manifest_path),
+            "sha256": sha256(manifest_path),
+            "status": "VERIFIED_HASHED_ARTIFACT" if manifest_path.is_file() else "UNKNOWN_NOT_RECORDED",
+            "recorded_rollout_manifest_sha256": expected_rollout_sha,
+        },
+        "rollout_manifest": {
+            "path": str(rollout_path),
+            "size_bytes": rollout_path.stat().st_size if rollout_path.is_file() else None,
+            "sha256": actual_rollout_sha or expected_rollout_sha,
+            "expected_sha256": expected_rollout_sha,
+            "status": rollout_status,
+            "retained_as_external_artifact": True,
+        },
+        "collection_contract": {
+            "repair_version": lock.get("repair_version"),
+            "collection_version": lock.get("collection_version"),
+            "source_collection_commit": lock.get("source_commit"),
+            "protocol_sha256": lock.get("protocol_sha256"),
+            "reference_contract_sha256": lock.get("reference_contract_sha256"),
+            "case_order": lock.get("case_order", []),
+            "root_families": [
+                {
+                    "root_family_id": item.get("root_family_id"),
+                    "family_index": item.get("family_index"),
+                    "family_seed": item.get("family_seed"),
+                    "rollout_seed_base": item.get("rollout_seed_base"),
+                }
+                for item in families
+            ],
+        },
+        "selected_r14_case_static_metadata": {
+            "root_family_id": root_family_id,
+            "case_id": case_id,
+            "family_seed": family.get("family_seed"),
+            "rollout_seed_base": family.get("rollout_seed_base"),
+            "rollout_seed": row.get("rollout_seed"),
+            "control_variant": row.get("control_variant"),
+            "program_sha256": row.get("program_sha256"),
+            "source_collection": row.get("source_kind"),
+            "status": "VERIFIED_HASHED_ARTIFACT" if row else "UNKNOWN_NOT_RECORDED",
+        },
+        "physical_execution_performed_by_r13": 0,
+        "scientific_claim": False,
+    }
+    write_json(out / "generation_provenance.json", result)
+    return result
 
 
 def build_source_contract(repo: Path, out: Path) -> None:
@@ -244,32 +348,62 @@ def build_crosswalk(repo: Path, out: Path) -> None:
     write_csv(out, fields, rows)
 
 
-def build_environment(repo: Path, out: Path) -> None:
+def build_environment(repo: Path, out: Path, generation: dict[str, Any]) -> None:
     source = {relative: {"sha256": sha256(repo / relative), "git_blob_sha1": git_blob(repo, relative), "status": "VERIFIED_GIT_SOURCE"} for relative in SOURCE_FILES}
     provenance = {}
+    contract = generation["collection_contract"]
+    selected = generation["selected_r14_case_static_metadata"]
+    lock = generation["generation_lock"]
+    rollout = generation["rollout_manifest"]
+    adjacent_runtime = []
+    runtime = None
+    runtime_path = None
+    for candidate in (repo / R10_RUNTIME, repo / R11_RUNTIME):
+        if candidate.is_file():
+            runtime_path = candidate
+            runtime = read_json(candidate)
+            break
+    if runtime is not None:
+        adjacent_runtime.append({"path": str(runtime_path), "sha256": sha256(runtime_path), "status": "RECORDED_ADJACENT_RUNTIME"})
+
+    def adjacent(key: str, value: Any) -> tuple[Any, str]:
+        return (value, "RECORDED_ADJACENT_RUNTIME") if runtime is not None else (None, "UNKNOWN_NOT_RECORDED")
+
+    runtime_mujoco = runtime.get("mujoco", {}) if runtime else {}
+    runtime_cv2 = runtime.get("cv2", {}) if runtime else {}
+    runtime_torch = runtime.get("torch", {}) if runtime else {}
     values = {
         "repository_commit": (ENTRY, "VERIFIED_GIT_SOURCE"),
-        "generation_lock_sha256": (None, "UNKNOWN_NOT_RECORDED"),
-        "rollout_manifest_sha256": (None, "UNKNOWN_NOT_RECORDED"),
-        "repair_version": ("ATTACH_RELPOSE_VERSION is source-defined but historical artifact value is not retained", "VERIFIED_GIT_SOURCE"),
-        "collection_version": (None, "UNKNOWN_NOT_RECORDED"),
+        "generation_lock_sha256": (lock.get("sha256"), lock.get("status")),
+        "rollout_manifest_sha256": (rollout.get("sha256"), rollout.get("status")),
+        "repair_version": (contract.get("repair_version"), "VERIFIED_HASHED_ARTIFACT"),
+        "collection_version": (contract.get("collection_version"), "VERIFIED_HASHED_ARTIFACT"),
+        "source_collection_commit": (contract.get("source_collection_commit"), "VERIFIED_HASHED_ARTIFACT"),
+        "protocol_sha256": (contract.get("protocol_sha256"), "VERIFIED_HASHED_ARTIFACT"),
+        "reference_contract_sha256": (contract.get("reference_contract_sha256"), "VERIFIED_HASHED_ARTIFACT"),
+        "case_order": (contract.get("case_order", []), "VERIFIED_HASHED_ARTIFACT"),
+        "family_seeds_by_root": ({item["root_family_id"]: item["family_seed"] for item in contract.get("root_families", [])}, "VERIFIED_HASHED_ARTIFACT"),
+        "rollout_seed_bases_by_root": ({item["root_family_id"]: item["rollout_seed_base"] for item in contract.get("root_families", [])}, "VERIFIED_HASHED_ARTIFACT"),
         "simulator_class": ("upgrade_v2.visual_refine_l2.repaired_simulator.AttachRelposeDynamicTabletop", "VERIFIED_GIT_SOURCE"),
-        "python_executable": (None, "UNKNOWN_NOT_RECORDED"),
-        "python_version": (None, "UNKNOWN_NOT_RECORDED"),
+        "python_executable": adjacent("python_executable", runtime.get("python") if runtime else None),
+        "python_version": adjacent("python_version", runtime.get("python_version") if runtime else None),
         "platform": (None, "UNKNOWN_NOT_RECORDED"),
         "machine_arch": (None, "UNKNOWN_NOT_RECORDED"),
-        "mujoco_version": (None, "UNKNOWN_NOT_RECORDED"),
+        "mujoco_version": adjacent("mujoco_version", runtime_mujoco.get("version")),
         "numpy_version": (None, "UNKNOWN_NOT_RECORDED"),
-        "opencv_version": (None, "UNKNOWN_NOT_RECORDED"),
+        "opencv_version": adjacent("opencv_version", runtime_cv2.get("version")),
+        "torch_version": adjacent("torch_version", runtime_torch.get("version")),
+        "torch_cuda_available": adjacent("torch_cuda_available", runtime.get("torch_cuda_available") if runtime else None),
         "renderer_backend": (None, "UNKNOWN_NOT_RECORDED"),
         "MUJOCO_GL": ("egl requested by current simulator source; historical effective value not recorded", "VERIFIED_GIT_SOURCE"),
         "model_xml_sha256": (None, "UNKNOWN_NOT_RECORDED"),
-        "family_seed": (None, "UNKNOWN_NOT_RECORDED"),
-        "rollout_seed": (None, "UNKNOWN_NOT_RECORDED"),
-        "control_variant": (None, "UNKNOWN_NOT_RECORDED"),
-        "program_sha256": (None, "UNKNOWN_NOT_RECORDED"),
-        "root_family_id": ("L2RAR2_REPAIR_00_840000", "VERIFIED_PROTOCOL_DRAFT"),
-        "case_id": ("K3_normal_hold_pause_resume", "VERIFIED_PROTOCOL_DRAFT"),
+        "family_seed": (selected.get("family_seed"), selected.get("status")),
+        "rollout_seed_base": (selected.get("rollout_seed_base"), selected.get("status")),
+        "rollout_seed": (selected.get("rollout_seed"), selected.get("status")),
+        "control_variant": (selected.get("control_variant"), selected.get("status")),
+        "program_sha256": (selected.get("program_sha256"), selected.get("status")),
+        "root_family_id": (selected.get("root_family_id"), selected.get("status")),
+        "case_id": (selected.get("case_id"), selected.get("status")),
         "render_callback_mode": ("source requests renderer callbacks; historical effective mode unknown", "CONFLICTING_SOURCES"),
         "initial_state_source": (None, "UNKNOWN_NOT_RECORDED"),
         "rng_state_source": (None, "UNKNOWN_NOT_RECORDED"),
@@ -284,7 +418,10 @@ def build_environment(repo: Path, out: Path) -> None:
         "source_status": "PARTIAL_SOURCE_CONTRACT_ONLY",
         "repository_commit": ENTRY, "root_family_id": "L2RAR2_REPAIR_00_840000", "case_id": "K3_normal_hold_pause_resume",
         "field_provenance": provenance, "source_file_sha256": source,
+        "generation_provenance": generation,
+        "adjacent_runtime_evidence": adjacent_runtime,
         "unknown_fields": [key for key, item in provenance.items() if item["status"] in {"UNKNOWN_NOT_RECORDED", "CONFLICTING_SOURCES"}],
+        "adjacent_runtime_not_collection_proof": True,
         "current_environment_not_substituted_for_history": True,
         "R14_minimum_environment_contract_satisfied": False,
     })
@@ -300,15 +437,15 @@ def build_review_and_draft(repo: Path, out: Path) -> None:
     write_json(out / "r14_micro_replay_protocol_draft.json", draft)
 
 
-def build_readiness(out: Path, integrity: dict[str, Any]) -> dict[str, Any]:
+def build_readiness(out: Path, integrity: dict[str, Any], generation: dict[str, Any]) -> dict[str, Any]:
     result = {
         "schema": "l2rar2_r13_replay_readiness_v1",
         "status": "WAITING_FOR_HUMAN_REVIEW",
         "allowed_statuses": ["READY_FOR_HUMAN_R14_AUTHORIZATION_REQUEST", "NOT_READY_SOURCE_PROVENANCE_GAP", "NOT_READY_RUNTIME_ENVIRONMENT_GAP", "NOT_READY_DATA_INTEGRITY_GAP", "NOT_READY_SAMPLING_POINT_CONTRACT_GAP", "WAITING_FOR_HUMAN_REVIEW", "STOP_AND_ARCHIVE"],
         "blocking_gaps": [
             "human_review_decision fields are intentionally null; Agent cannot approve R14",
-            "generation lock and rollout manifest hashes are not present in retained lightweight evidence",
-            "historical Python/MuJoCo/NumPy/OpenCV/runtime and model XML hashes are not recorded",
+            "Round-9 generation lock and rollout-manifest hash are recovered, but the historical collection runtime is not proven by adjacent cache-diagnostic runtime records",
+            "historical Python/NumPy/platform/renderer/model XML hashes and effective render configuration are not recorded for collection",
             "ordinary action-end state and verified sampling-point crosswalk are missing",
             "R11 first four invocation details remain aggregate-only",
         ],
@@ -318,6 +455,13 @@ def build_readiness(out: Path, integrity: dict[str, Any]) -> dict[str, Any]:
         "source_contract": "PARTIAL_SOURCE_CONTRACT_ONLY",
         "sampling_point_contract": "NOT_READY_SAMPLING_POINT_CONTRACT_GAP",
         "environment_contract": "NOT_READY_RUNTIME_ENVIRONMENT_GAP",
+        "generation_provenance": {
+            "generation_lock": generation["generation_lock"]["status"],
+            "round9_validation_manifest": generation["round9_validation_manifest"]["status"],
+            "rollout_manifest": generation["rollout_manifest"]["status"],
+            "collection_contract": "PARTIALLY_RECOVERED",
+        },
+        "adjacent_runtime": "RECORDED_ADJACENT_RUNTIME_NOT_COLLECTION_PROOF",
         "ordinary_state_save_plan": "DEFINED_IN_R14_DRAFT_ONLY",
         "execution_1_stop_gate": "DEFINED",
         "execution_2_condition_gate": "DEFINED",
@@ -327,10 +471,27 @@ def build_readiness(out: Path, integrity: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def build_external(repo: Path, out: Path) -> None:
+def build_external(repo: Path, out: Path, generation: dict[str, Any]) -> None:
     fields = ["logical_path", "original_path", "size_bytes", "sha256", "artifact_type", "reason_omitted", "recovery_method", "verification_scope"]
+
+    def record(logical_path: str, path: Path, artifact_type: str, reason: str, recovery: str, scope: str) -> dict[str, Any]:
+        absolute = path if path.is_absolute() else repo / path
+        return {
+            "logical_path": logical_path,
+            "original_path": str(absolute),
+            "size_bytes": absolute.stat().st_size if absolute.is_file() else "NOT_FOUND",
+            "sha256": sha256(absolute) or "NOT_FOUND",
+            "artifact_type": artifact_type,
+            "reason_omitted": reason,
+            "recovery_method": recovery,
+            "verification_scope": scope,
+        }
+
     rows = [
-        {"logical_path": "r12_result_zip", "original_path": str((repo / R12_ZIP).resolve()), "size_bytes": (repo / R12_ZIP).stat().st_size, "sha256": sha256(repo / R12_ZIP), "artifact_type": "prior_result_zip", "reason_omitted": "R13 result package must not duplicate prior ZIP entity", "recovery_method": "retain verified external ZIP beside R13 worktree", "verification_scope": "sidecar, CRC and SHA256"},
+        record("r9_generation_lock", Path(generation["generation_lock"]["path"]), "generation_lock", "retained in the repository source tree; package records provenance without duplicating the source artifact", "restore the exact repository path and verify the recorded SHA256", "file SHA256 and JSON fields"),
+        record("r9_validation_manifest", Path(generation["round9_validation_manifest"]["path"]), "validation_manifest", "retained in the repository source tree; package records validation input hashes without duplicating the source artifact", "restore the exact repository path and verify the recorded SHA256", "file SHA256 and input hash fields"),
+        record("r9_repair_rollout_manifest", Path(generation["rollout_manifest"]["path"]), "rollout_manifest", "external manifest is not copied into the lightweight package; raw rollouts and RGB remain external", "restore the exact registered external path and verify the expected SHA256", "file size, file SHA256, and Round-9 manifest cross-check"),
+        record("r12_result_zip", R12_ZIP, "prior_result_zip", "R13 result package must not duplicate prior ZIP entity", "retain verified external ZIP beside R13 worktree", "sidecar, CRC and SHA256"),
         {"logical_path": "r11_raw_rollout_directory", "original_path": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data_attach_relpose_repair_v1", "size_bytes": "4438315 registered", "sha256": "NOT_COMPUTED_DIRECTORY_TREE", "artifact_type": "raw_rollout_and_RGB", "reason_omitted": "raw data externalized", "recovery_method": "restore exact registered directory", "verification_scope": "R11 manifest path only"},
         {"logical_path": "r11_pre_correction_directory", "original_path": "/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data_pre_correction_k8_lifecycle_20260909", "size_bytes": "13423149 registered", "sha256": "NOT_COMPUTED_DIRECTORY_TREE", "artifact_type": "historical_raw_rollout", "reason_omitted": "raw data externalized", "recovery_method": "restore exact registered directory", "verification_scope": "R11 manifest path only"},
     ]
@@ -362,7 +523,10 @@ def build_optional_indexes(repo: Path, out: Path) -> None:
     })
 
 
-def build_report(out: Path, readiness: dict[str, Any], integrity: dict[str, Any]) -> None:
+def build_report(out: Path, readiness: dict[str, Any], integrity: dict[str, Any], generation: dict[str, Any]) -> None:
+    lock = generation["generation_lock"]
+    r9_manifest = generation["round9_validation_manifest"]
+    rollout = generation["rollout_manifest"]
     report = f"""# L2RAR2 R13 静态恢复与 R14 准备度审计
 
 ## 工程状态
@@ -383,9 +547,11 @@ R13 新增物理执行严格为 `0`。本轮没有 import 或构造 MuJoCo model
 
 已复核 R12 入口、R12 结果 ZIP、R11/R12 固定审计文件，并对受控目录生成静态证据清单。R12 ZIP 完整性结果为 `{integrity['status']}`，实际 SHA256 为 `{integrity['actual_sha256']}`。历史调用恢复为一条 40/8 aggregate 记录、一条保留的 last-batch ledger 记录和一条 R12 零物理静态审计记录；没有伪造 40 条明细。R11 三个机制字段均保留为 quarantine，不用于科学机制或旧事件重标。
 
+Round-9 generation lock 已恢复：`{lock['path']}`，SHA256 `{lock['sha256']}`；Round-9 validation manifest 为 `{r9_manifest['path']}`，SHA256 `{r9_manifest['sha256']}`。其记录的外置 rollout manifest SHA256 为 `{rollout['expected_sha256']}`，当前注册路径 `{rollout['path']}` 的实际 SHA256 为 `{rollout['sha256']}`，状态为 `{rollout['status']}`。因此 generation lock、rollout manifest hash、collection/repair version、source collection commit、case order、family seed 和 rollout seed base 已纳入 R13 证据范围。
+
 ## 未恢复证据
 
-仍缺少前四次 R11 调用的独立日志、ordinary action-end 状态、跨来源 callback/order 一一映射、generation lock、rollout manifest、历史运行时版本、模型 XML 哈希和完整 seed/program 记录。R11 的缓存 geometry mismatch 仍是已保存摘要事实，不是首个物理差异或根因。
+仍缺少前四次 R11 调用的独立日志、ordinary action-end 状态、跨来源 callback/order 一一映射、Round-9 采集时的 Python/NumPy/platform/renderer 有效配置、模型 XML 哈希以及不能从现有 manifest 证明的完整采样记录。R11 的缓存 geometry mismatch 仍是已保存摘要事实，不是首个物理差异或根因。相邻 runtime 文件只说明 R10/R11 cache-only interface diagnostic 的依赖盘点，不能冒充 Round-9 collection runtime。
 
 ## 采样点合同
 
@@ -393,7 +559,7 @@ R13 新增物理执行严格为 `0`。本轮没有 import 或构造 MuJoCo model
 
 ## 环境合同
 
-simulator class 和当前入口源码可由 Git 验证；历史 Python/MuJoCo/NumPy/OpenCV、模型 XML、generation lock、rollout manifest、seed 和有效 renderer 配置不完整。因此环境合同不是 R14 执行授权，也未达到可直接复现级别。
+simulator class 和当前入口源码可由 Git 验证；Round-9 generation provenance、case order、family seed 和 rollout seed base 已恢复，但历史 collection runtime、NumPy/platform、模型 XML、有效 renderer 配置及普通 action-end 采样合同仍不完整。因此环境合同不是 R14 执行授权，也未达到可直接复现级别。相邻记录中的 Python 3.10.19、MuJoCo 3.4.0、OpenCV 4.13.0、PyTorch 2.7.1+cu126 和 CUDA unavailable 均标记为 `RECORDED_ADJACENT_RUNTIME`，不是 `VERIFIED_COLLECTION_RUNTIME`。
 
 ## 人工复核与 R14 申请
 
@@ -444,15 +610,16 @@ def build_manifest(out: Path, repo: Path, commands: list[str]) -> None:
 def generate(repo: Path, out: Path) -> dict[str, Any]:
     out.mkdir(parents=True, exist_ok=True)
     integrity = build_r12_integrity(repo, out / "r12_integrity_review.json")
+    generation = build_generation_provenance(repo, out)
     build_claim_review(repo, out / "claim_review.csv")
     build_history(repo, out / "historical_invocation_recovery.csv")
     build_saved_inventory(repo, out / "saved_state_recovery_inventory.csv")
     build_source_contract(repo, out / "source_call_order_contract.json")
     build_crosswalk(repo, out / "sampling_point_crosswalk.csv")
-    build_environment(repo, out / "replay_environment_contract.json")
+    build_environment(repo, out / "replay_environment_contract.json", generation)
     build_review_and_draft(repo, out)
-    readiness = build_readiness(out, integrity)
-    build_external(repo, out / "external_artifacts.tsv")
+    readiness = build_readiness(out, integrity, generation)
+    build_external(repo, out / "external_artifacts.tsv", generation)
     build_optional_indexes(repo, out)
     validation = {
         "schema": "l2rar2_r13_validation_results_v1", "status": "PASS_WITH_HUMAN_REVIEW_PENDING",
@@ -463,7 +630,7 @@ def generate(repo: Path, out: Path) -> dict[str, Any]:
         "scientific_validation_claimed": False,
     }
     write_json(out / "validation_results.json", validation)
-    build_report(out, readiness, integrity)
+    build_report(out, readiness, integrity, generation)
     build_handoff(out, readiness, repo)
     commands = [
         "git fetch origin --prune",
@@ -474,6 +641,7 @@ def generate(repo: Path, out: Path) -> dict[str, Any]:
         "source call-order and sampling-point static audit; no simulator import",
         "copy human_review_decision template; leave reviewer and decision fields null",
         "copy and constrain R14 micro-replay draft; authorized_budget=0",
+        "recover Round-9 generation lock, validation manifest, external rollout-manifest SHA, versions, case order and seed provenance",
         "R13 pure tests, compileall, secret scan, git diff --check",
         "build lightweight R13 result ZIP; unzip -t and internal SHA validation",
     ]

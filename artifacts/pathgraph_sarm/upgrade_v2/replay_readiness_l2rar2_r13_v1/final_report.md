@@ -18,9 +18,11 @@ R13 新增物理执行严格为 `0`。本轮没有 import 或构造 MuJoCo model
 
 已复核 R12 入口、R12 结果 ZIP、R11/R12 固定审计文件，并对受控目录生成静态证据清单。R12 ZIP 完整性结果为 `PASS`，实际 SHA256 为 `eb555e663efa45c572a4bcf0971201c81a73757c2bed4c020e2d1421e70727f8`。历史调用恢复为一条 40/8 aggregate 记录、一条保留的 last-batch ledger 记录和一条 R12 零物理静态审计记录；没有伪造 40 条明细。R11 三个机制字段均保留为 quarantine，不用于科学机制或旧事件重标。
 
+Round-9 generation lock 已恢复：`artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_9_attach_relpose_repair/repair_generation_lock.json`，SHA256 `74b6accfc12b3865b53531ef02b1a0e4ad28cd8d54e5f7ea86c3be47797a059f`；Round-9 validation manifest 为 `artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/rounds/l2rar2_9_attach_relpose_repair/run_manifest.json`，SHA256 `0684fe22d4834c96a1ed7f8cfd56a2800ac2f561512dc140cde60171b51a5868`。其记录的外置 rollout manifest SHA256 为 `0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b`，当前注册路径 `/home/__compress_data/xushijie/graph_l2ra_r2_worktree/artifacts/pathgraph_sarm/upgrade_v2/task_context_l2rar2_v1/data_attach_relpose_repair_v1/rollout_manifest.csv` 的实际 SHA256 为 `0708e6408aa95a83c42b8fcd9269577442b62e093ff008e3aab1597a3eb3e50b`，状态为 `VERIFIED_HASHED_ARTIFACT`。因此 generation lock、rollout manifest hash、collection/repair version、source collection commit、case order、family seed 和 rollout seed base 已纳入 R13 证据范围。
+
 ## 未恢复证据
 
-仍缺少前四次 R11 调用的独立日志、ordinary action-end 状态、跨来源 callback/order 一一映射、generation lock、rollout manifest、历史运行时版本、模型 XML 哈希和完整 seed/program 记录。R11 的缓存 geometry mismatch 仍是已保存摘要事实，不是首个物理差异或根因。
+仍缺少前四次 R11 调用的独立日志、ordinary action-end 状态、跨来源 callback/order 一一映射、Round-9 采集时的 Python/NumPy/platform/renderer 有效配置、模型 XML 哈希以及不能从现有 manifest 证明的完整采样记录。R11 的缓存 geometry mismatch 仍是已保存摘要事实，不是首个物理差异或根因。相邻 runtime 文件只说明 R10/R11 cache-only interface diagnostic 的依赖盘点，不能冒充 Round-9 collection runtime。
 
 ## 采样点合同
 
@@ -28,7 +30,7 @@ R13 新增物理执行严格为 `0`。本轮没有 import 或构造 MuJoCo model
 
 ## 环境合同
 
-simulator class 和当前入口源码可由 Git 验证；历史 Python/MuJoCo/NumPy/OpenCV、模型 XML、generation lock、rollout manifest、seed 和有效 renderer 配置不完整。因此环境合同不是 R14 执行授权，也未达到可直接复现级别。
+simulator class 和当前入口源码可由 Git 验证；Round-9 generation provenance、case order、family seed 和 rollout seed base 已恢复，但历史 collection runtime、NumPy/platform、模型 XML、有效 renderer 配置及普通 action-end 采样合同仍不完整。因此环境合同不是 R14 执行授权，也未达到可直接复现级别。相邻记录中的 Python 3.10.19、MuJoCo 3.4.0、OpenCV 4.13.0、PyTorch 2.7.1+cu126 和 CUDA unavailable 均标记为 `RECORDED_ADJACENT_RUNTIME`，不是 `VERIFIED_COLLECTION_RUNTIME`。
 
 ## 人工复核与 R14 申请
 
