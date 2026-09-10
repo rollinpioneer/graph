@@ -6,7 +6,8 @@
 
 - Protocol entry: `668e581b0de9e60373f64107aa15b7e3b8c92b3a`
 - Formal main baseline: `234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2`
-- Completion commit: `2a929babb9963952f24a58d65fc3d428cc05bac9`
+- Prior results commit: `2a929babb9963952f24a58d65fc3d428cc05bac9`
+- Final audit/package commit: recorded by the pushed research branch HEAD at handoff
 - Research branch: `research/l2ra-r2-loss-observability-v1`
 
 ## Actual scope
