@@ -1,0 +1,191 @@
+{
+  "api_calls": 0,
+  "api_key_reads": 0,
+  "artifacts": [
+    {
+      "path": "actual_commands.txt",
+      "sha256": "9bb5b8bb303b83cfaa9f7aca3bbc8acb8a568d687ccff6b0be4e6f1e41a3aecd",
+      "size_bytes": 872
+    },
+    {
+      "path": "claim_review.csv",
+      "sha256": "c064ec9c5072203401e339330595d9f727134577df352950f2cd3502cb334344",
+      "size_bytes": 1537
+    },
+    {
+      "path": "entry_review.json",
+      "sha256": "c42bfac4fd7c00655f714d2805fb51ed97ccdfa766ff2a27aefa8eb8459a56e1",
+      "size_bytes": 937
+    },
+    {
+      "path": "external_artifacts.tsv",
+      "sha256": "4224b5501624d5db53558fc8b2295feba35af1b5a10dd7eb5a2fb90ec2b4c256",
+      "size_bytes": 1114
+    },
+    {
+      "path": "final_report.md",
+      "sha256": "43d2792cba28762bd0eeec246bf4a702d2df4a5a6eba57515fd2afc72686b497",
+      "size_bytes": 2967
+    },
+    {
+      "path": "historical_invocation_recovery.csv",
+      "sha256": "25cdb2df7585499be1328cb605fbfa3795a2791821c58092b9b1606435eba2f0",
+      "size_bytes": 2455
+    },
+    {
+      "path": "human_review_decision.json",
+      "sha256": "b87526b164691927935282f35a39a4b6457c9a119d21a4bf80a8d3351da7c4c9",
+      "size_bytes": 505
+    },
+    {
+      "path": "next_stage_handoff.json",
+      "sha256": "b3b079432c510ce6b1e824eb2f8543cb6d3c544a02f212e6aad55cbf1e361367",
+      "size_bytes": 1026
+    },
+    {
+      "path": "r12_integrity_review.json",
+      "sha256": "9f24062e3085e0e9625606fd3d17a06b40c82070512d31d23b133275b20c8f80",
+      "size_bytes": 609
+    },
+    {
+      "path": "r14_micro_replay_protocol_draft.json",
+      "sha256": "8694df17186cf709f54bbb2780c25a167dc5b596d521d0c4071f9f2974077a13",
+      "size_bytes": 1644
+    },
+    {
+      "path": "reflog_search_summary.json",
+      "sha256": "13693b99597cf01591102519ae12ddafa3e227d0b2ccc86f0a7b1d4efdf522fd",
+      "size_bytes": 2037
+    },
+    {
+      "path": "replay_environment_contract.json",
+      "sha256": "22071afc6dfa3570d456a7826a14bfd31920a9320609d06450fa16e7029e501a",
+      "size_bytes": 5552
+    },
+    {
+      "path": "replay_readiness.json",
+      "sha256": "19b17cda96901e4058808945495f437d1476617223167a163af1ab8c1e752b0a",
+      "size_bytes": 1461
+    },
+    {
+      "path": "sampling_point_crosswalk.csv",
+      "sha256": "6d1055d9c68a4fa7bbf05b4440495a6fab95cfaa136d0a19b4b9836d24e4870f",
+      "size_bytes": 5166
+    },
+    {
+      "path": "saved_state_recovery_inventory.csv",
+      "sha256": "ed314fa400325a3747c06bbc8ff49e55df65a1274a9c1a30442c8180a84d0a10",
+      "size_bytes": 1771
+    },
+    {
+      "path": "source_call_order_contract.json",
+      "sha256": "968b532b6f6af33c5bb1e68025ef2e75988f30d579375387763e1e25b08e7a3b",
+      "size_bytes": 3897
+    },
+    {
+      "path": "source_hash_inventory.csv",
+      "sha256": "fa5feffc1dd626c8991949d778b53d8e59f00c93f1381281cb83c1042e83fff9",
+      "size_bytes": 1119
+    },
+    {
+      "path": "static_evidence_inventory.csv",
+      "sha256": "c42983cc53d62dae2b480e324474533741761dea6a794dcadc6a224b02463eaf",
+      "size_bytes": 6611
+    },
+    {
+      "path": "validation_results.json",
+      "sha256": "37b7be168655dbb0d6c346c56259c536b071184e6baa1b7c6b95fc3a56640d00",
+      "size_bytes": 770
+    },
+    {
+      "path": "zip_content_inventory.csv",
+      "sha256": "a2f90ae2a8167b2c4ebe4a6a7ec37352460cf7404d1da1655cc4207ac5f6a920",
+      "size_bytes": 8030
+    }
+  ],
+  "candidate": null,
+  "commands": [
+    "git fetch origin --prune",
+    "r13_preflight.py --repo WORK --output OUT/entry_review.json",
+    "sha256sum -c R12 ZIP sidecar; unzip -t R12 ZIP",
+    "static_evidence_inventory.py over explicit R11/R12/download roots",
+    "git log/reflog controlled source review; no raw history or secrets read",
+    "source call-order and sampling-point static audit; no simulator import",
+    "copy human_review_decision template; leave reviewer and decision fields null",
+    "copy and constrain R14 micro-replay draft; authorized_budget=0",
+    "R13 pure tests: 3 passed; R12/R11 tests: 6 passed; task-context tests: 35 passed in conda:gsp; total repository pure tests: 44",
+    "compileall selected static/readiness/guard modules: PASS",
+    "secret scan for credential formats/private keys: PASS; source api_key parameter match was not a credential",
+    "git diff --check: PASS",
+    "build lightweight R13 result ZIP; unzip -t and internal SHA validation: PASS"
+  ],
+  "confirmation": false,
+  "entry_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
+  "formal_main_commit": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "implementation_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
+  "l3_entry_allowed": false,
+  "physics_imported": false,
+  "r11_historical_budget": 8,
+  "r11_historical_executions": 40,
+  "r13_actual_physical_executions": 0,
+  "r13_physical_budget": 0,
+  "r14_authorized_budget": 0,
+  "r14_requested_budget": 2,
+  "raw_rollout_read": false,
+  "schema": "l2rar2_r13_run_manifest_v1",
+  "scientific_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "self_excluded": true,
+  "sensitive_paths_read": [],
+  "source_files": {
+    "upgrade_v2/l2r_execution_audit/policy.py": {
+      "exists": true,
+      "git_blob_sha1": "a144048ec4ce1abcfb24da46ff0625a0ce0dbe84",
+      "path": "upgrade_v2/l2r_execution_audit/policy.py",
+      "sha256": "2d91e248b148fb1c493897643597e7c2c671f40cd027149d53e0c4931072a4c7",
+      "size_bytes": 8043,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_hold_evidence/probe_adapter.py": {
+      "exists": true,
+      "git_blob_sha1": "7ddac0053c531b28893a1a2fc1a629bafb7c03f0",
+      "path": "upgrade_v2/l2r_hold_evidence/probe_adapter.py",
+      "sha256": "b388b694ae7faea4225ff595c45e21ca463060663c83e476cf8daf9309027404",
+      "size_bytes": 4394,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_loss_observability/physics_probe.py": {
+      "exists": true,
+      "git_blob_sha1": "c3428f2307dae4ef9bd94c4588c3fdb0af1455d1",
+      "path": "upgrade_v2/l2r_loss_observability/physics_probe.py",
+      "sha256": "6173d7873459f910b5ad21d0556b391973d48a90f3f2571dd5468a115a1162e2",
+      "size_bytes": 20914,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_task_context/repair_collection.py": {
+      "exists": true,
+      "git_blob_sha1": "8566ddc23e55e05058992394d47bebdea639957d",
+      "path": "upgrade_v2/l2r_task_context/repair_collection.py",
+      "sha256": "6c1d5858c2802623c05625385851bca763495be29f80d5d904e18282a39df6fb",
+      "size_bytes": 12184,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/visual_refine_l2/dynamic_simulator.py": {
+      "exists": true,
+      "git_blob_sha1": "b044e9a8e79f1d718defcf965d6a3535877a5d94",
+      "path": "upgrade_v2/visual_refine_l2/dynamic_simulator.py",
+      "sha256": "01ae494a802d5b62bda5bc077c9034608cc334ff7febe1e7279ecd33847fd70b",
+      "size_bytes": 16861,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/visual_refine_l2/repaired_simulator.py": {
+      "exists": true,
+      "git_blob_sha1": "fed3b80456a9c21b167dbed83d65915ea818cf9d",
+      "path": "upgrade_v2/visual_refine_l2/repaired_simulator.py",
+      "sha256": "bd1fa3538661cc6fe08eb07df88223f54cf6c4729d4973fb34b31183d3f4ab53",
+      "size_bytes": 3157,
+      "status": "VERIFIED_GIT_SOURCE"
+    }
+  },
+  "status": "R13_WAITING_FOR_HUMAN_REVIEW",
+  "training_jobs": 0
+}

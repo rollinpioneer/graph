@@ -1,0 +1,60 @@
+{
+  "approved_at_utc": null,
+  "authorization_id": null,
+  "authorized_budget": 0,
+  "case_id": "K3_normal_hold_pause_resume",
+  "execution_plan": [
+    {
+      "allowed": false,
+      "conditional_on": "separate human authorization",
+      "execution_index": 1,
+      "mode": "collection_faithful_ordinary_replay",
+      "stop_on_failure": true
+    },
+    {
+      "allowed": false,
+      "conditional_on": "execution_1_all_registered_equivalence_checks_pass",
+      "execution_index": 2,
+      "mode": "instrumented_replay",
+      "stop_on_failure": true
+    }
+  ],
+  "expiry_utc": null,
+  "fixed_tolerances": {
+    "geometry_atol": 1e-12,
+    "mocap_atol": 2e-09,
+    "rtol": 0.0,
+    "time_atol": 1e-12
+  },
+  "human_reviewer": null,
+  "prepared_by_r13": true,
+  "prohibited_claims": [
+    "physical loss mechanism",
+    "candidate selection",
+    "legacy relabeling",
+    "confirmation success",
+    "L3 entry"
+  ],
+  "rationale": "K3 has no planned contact_lost event and isolates base replay equivalence before loss semantics.",
+  "requested_budget": 2,
+  "required_saved_state": [
+    "qpos",
+    "qvel",
+    "qacc_warmstart",
+    "mocap_pos",
+    "mocap_quat",
+    "eq_active",
+    "eq_data",
+    "rng_state",
+    "contact_pair_summary",
+    "renderer_callback_count",
+    "action_end_callback_state",
+    "after_perform_return_state"
+  ],
+  "root_family_id": "L2RAR2_REPAIR_00_840000",
+  "schema": "l2rar2_r14_micro_replay_protocol_draft_v1",
+  "scientific_status_before_run": "L2RAR2_PARTIAL_KEEP_G1",
+  "single_use_nonce": null,
+  "source_r12_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
+  "status": "DRAFT_NOT_AUTHORIZED"
+}

@@ -1,0 +1,78 @@
+{
+  "historical_runtime_only_claims": [
+    "R11 ordinary/instrumented action and event equality from saved report summaries",
+    "R11 renderer callback effective behavior during each historical invocation",
+    "historical package/runtime/model versions not present in retained lightweight evidence"
+  ],
+  "physical_execution_performed_by_r13": 0,
+  "renderer_status": {
+    "historical_effective_renderer": "NOT_RECORDED",
+    "r12_note": "source/report mismatch is not evidence that rendering changed physics",
+    "source_requests_renderer": true
+  },
+  "schema": "l2rar2_r13_source_call_order_contract_v1",
+  "source_commit": "e2b1fb906533a74f5d224a2fdd4aea7e2faf88df",
+  "source_files": {
+    "upgrade_v2/l2r_execution_audit/policy.py": {
+      "exists": true,
+      "git_blob_sha1": "a144048ec4ce1abcfb24da46ff0625a0ce0dbe84",
+      "path": "upgrade_v2/l2r_execution_audit/policy.py",
+      "sha256": "2d91e248b148fb1c493897643597e7c2c671f40cd027149d53e0c4931072a4c7",
+      "size_bytes": 8043,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_hold_evidence/probe_adapter.py": {
+      "exists": true,
+      "git_blob_sha1": "7ddac0053c531b28893a1a2fc1a629bafb7c03f0",
+      "path": "upgrade_v2/l2r_hold_evidence/probe_adapter.py",
+      "sha256": "b388b694ae7faea4225ff595c45e21ca463060663c83e476cf8daf9309027404",
+      "size_bytes": 4394,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_loss_observability/physics_probe.py": {
+      "exists": true,
+      "git_blob_sha1": "c3428f2307dae4ef9bd94c4588c3fdb0af1455d1",
+      "path": "upgrade_v2/l2r_loss_observability/physics_probe.py",
+      "sha256": "6173d7873459f910b5ad21d0556b391973d48a90f3f2571dd5468a115a1162e2",
+      "size_bytes": 20914,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/l2r_task_context/repair_collection.py": {
+      "exists": true,
+      "git_blob_sha1": "8566ddc23e55e05058992394d47bebdea639957d",
+      "path": "upgrade_v2/l2r_task_context/repair_collection.py",
+      "sha256": "6c1d5858c2802623c05625385851bca763495be29f80d5d904e18282a39df6fb",
+      "size_bytes": 12184,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/visual_refine_l2/dynamic_simulator.py": {
+      "exists": true,
+      "git_blob_sha1": "b044e9a8e79f1d718defcf965d6a3535877a5d94",
+      "path": "upgrade_v2/visual_refine_l2/dynamic_simulator.py",
+      "sha256": "01ae494a802d5b62bda5bc077c9034608cc334ff7febe1e7279ecd33847fd70b",
+      "size_bytes": 16861,
+      "status": "VERIFIED_GIT_SOURCE"
+    },
+    "upgrade_v2/visual_refine_l2/repaired_simulator.py": {
+      "exists": true,
+      "git_blob_sha1": "fed3b80456a9c21b167dbed83d65915ea818cf9d",
+      "path": "upgrade_v2/visual_refine_l2/repaired_simulator.py",
+      "sha256": "bd1fa3538661cc6fe08eb07df88223f54cf6c4729d4973fb34b31183d3f4ab53",
+      "size_bytes": 3157,
+      "status": "VERIFIED_GIT_SOURCE"
+    }
+  },
+  "source_proven_order": [
+    "DynamicTabletop.__init__ initializes callbacks before scenario setup and calls mj_forward after model/data construction.",
+    "DynamicTabletop._advance performs five mj_step calls per control segment, then invokes _r1_control_callback.",
+    "DynamicTabletop.perform runs lifecycle_before_action, advances the action, lifecycle_after_action, invokes _r1_action_end_callback, then returns result.",
+    "repair_collection capture callback renders first, then records oracle_snapshot fields; action callback is registered on the simulator.",
+    "R12 policy rejects physical probe entry before physical dependency imports or factory calls."
+  ],
+  "state_difference_localization": "NOT_LOCALIZABLE_FROM_SAVED_ARTIFACTS",
+  "unverified_runtime_order": [
+    "instrumented_after_mj_step to cached_action_end one-to-one mapping",
+    "ordinary_after_perform_return to collection_action_end_callback numerical identity",
+    "same timestamp implies same update order"
+  ]
+}

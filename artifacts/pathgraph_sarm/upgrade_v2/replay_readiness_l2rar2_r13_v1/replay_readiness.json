@@ -1,0 +1,35 @@
+{
+  "allowed_statuses": [
+    "READY_FOR_HUMAN_R14_AUTHORIZATION_REQUEST",
+    "NOT_READY_SOURCE_PROVENANCE_GAP",
+    "NOT_READY_RUNTIME_ENVIRONMENT_GAP",
+    "NOT_READY_DATA_INTEGRITY_GAP",
+    "NOT_READY_SAMPLING_POINT_CONTRACT_GAP",
+    "WAITING_FOR_HUMAN_REVIEW",
+    "STOP_AND_ARCHIVE"
+  ],
+  "blocking_gaps": [
+    "human_review_decision fields are intentionally null; Agent cannot approve R14",
+    "generation lock and rollout manifest hashes are not present in retained lightweight evidence",
+    "historical Python/MuJoCo/NumPy/OpenCV/runtime and model XML hashes are not recorded",
+    "ordinary action-end state and verified sampling-point crosswalk are missing",
+    "R11 first four invocation details remain aggregate-only"
+  ],
+  "candidate": null,
+  "confirmation": false,
+  "environment_contract": "NOT_READY_RUNTIME_ENVIRONMENT_GAP",
+  "execution_1_stop_gate": "DEFINED",
+  "execution_2_condition_gate": "DEFINED",
+  "human_review": "NOT_COMPLETE_REQUIRED",
+  "l3_entry_allowed": false,
+  "ordinary_state_save_plan": "DEFINED_IN_R14_DRAFT_ONLY",
+  "r11_accounting_preserved": "40/8 BUDGET_EXCEEDED_BLOCKED",
+  "r12_integrity": "PASS",
+  "r13_actual_physical_executions": 0,
+  "r14_authorized_budget": 0,
+  "r14_requested_budget": 2,
+  "sampling_point_contract": "NOT_READY_SAMPLING_POINT_CONTRACT_GAP",
+  "schema": "l2rar2_r13_replay_readiness_v1",
+  "source_contract": "PARTIAL_SOURCE_CONTRACT_ONLY",
+  "status": "WAITING_FOR_HUMAN_REVIEW"
+}
