@@ -1,0 +1,103 @@
+{
+  "base_commit": "54d3e95ff84cbab0e9305b08378ae7190a8e6c71",
+  "calibration_levels": {
+    "duration_s": 0.05,
+    "levels": [
+      {
+        "id": "I1",
+        "target_delta_v_local_mps": [
+          0.0,
+          0.35,
+          -0.1
+        ]
+      },
+      {
+        "id": "I2",
+        "target_delta_v_local_mps": [
+          0.0,
+          0.7,
+          -0.2
+        ]
+      },
+      {
+        "id": "I3",
+        "target_delta_v_local_mps": [
+          0.0,
+          1.05,
+          -0.3
+        ]
+      }
+    ],
+    "selection_rule": "lowest_level_with_confirmed_loss_and_numerical_sanity"
+  },
+  "confirmation_run": false,
+  "current_physical_authorization": 0,
+  "development": {
+    "cases_per_family": 8,
+    "confirmation_role": false,
+    "families": 4,
+    "family_seeds": [
+      860000,
+      860001,
+      860002,
+      860003
+    ],
+    "generator_gate_forced_drop": "12/12_PHYSICAL_LOSS_CONFIRMED",
+    "rollout_seed_bases": [
+      86100000,
+      86100100,
+      86100200,
+      86100300
+    ],
+    "rollouts": 32
+  },
+  "formal_main_commit": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "key_reads_allowed": 0,
+  "l3_entry_allowed": false,
+  "methods": [
+    "O_B2",
+    "O_C3",
+    "S_G_H",
+    "S_G_R",
+    "S_G_HR"
+  ],
+  "model_api_calls_allowed": 0,
+  "parameter_search_allowed": false,
+  "physical_reference": {
+    "capture_clearance_m": 0.005,
+    "outside_capture_sustain_s": 0.1,
+    "prehold_height_rise_m": 0.03,
+    "prehold_relative_drift_m": 0.01,
+    "prehold_sustain_s": 0.1,
+    "support_absent_sustain_s": 0.05,
+    "support_force_ratio_mg": 0.05
+  },
+  "protocol_id": "L2RAR2_R16_CONTROLLED_FORCED_DROP_V1",
+  "r14_prerequisite": {
+    "current_status": "NOT_RUN_AUTHORIZATION_ABSENT",
+    "instrumented_vs_ordinary": "REQUIRED_PASS",
+    "ordinary_vs_cache": "REQUIRED_PASS"
+  },
+  "repository": "rollinpioneer/graph",
+  "retained_graph": "G1_predicate_bound",
+  "schema": "l2rar2_r16_controlled_forced_drop_protocol_draft_v1",
+  "scientific_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "selected_candidate_id": null,
+  "stages": {
+    "calibration": {
+      "authorized_instances": 0,
+      "requested_max_instances": 5
+    },
+    "development": {
+      "authorized_instances": 0,
+      "requested_instances": 32
+    },
+    "static": {
+      "authorized_instances": 0,
+      "physical": false
+    }
+  },
+  "status": "DRAFT_NOT_AUTHORIZED",
+  "target_branch": "research/l2rar2-controlled-forced-drop-v1",
+  "training_jobs_allowed": 0
+}

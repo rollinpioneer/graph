@@ -1,0 +1,43 @@
+{
+  "capture_volume": {
+    "clearance_margin_m": 0.005,
+    "inflate_by_object_half_extents": true,
+    "source": "finger_left_and_finger_right_local_box_corner_envelope"
+  },
+  "loss": {
+    "force_start_is_not_loss": true,
+    "outside_capture_sustain_s": 0.1,
+    "requires_not_commanded_release": true,
+    "requires_prehold": true,
+    "support_absent_sustain_s": 0.05,
+    "weld_off_is_not_loss": true
+  },
+  "prehold": {
+    "height_rise_m_min": 0.03,
+    "relative_translation_drift_m_max": 0.01,
+    "sustain_s": 0.1,
+    "weld_active": true
+  },
+  "schema": "l2rar2_physical_loss_reference_v1",
+  "states": [
+    "PREHOLD_UNVERIFIED",
+    "WELD_SUPPORTED_HOLD",
+    "WELD_OFF_CONTACT_SUPPORTED",
+    "INCIPIENT_OR_UNRESOLVED",
+    "PHYSICAL_LOSS_CONFIRMED",
+    "COMMANDED_RELEASE",
+    "NUMERICAL_INVALID",
+    "TRACE_INCOMPLETE"
+  ],
+  "status": "PROPOSED_FROZEN_BEFORE_PHYSICS",
+  "support": {
+    "active_contact_requires_efc_address_nonnegative": true,
+    "contact_pairs": [
+      "object_geom:finger_left",
+      "object_geom:finger_right"
+    ],
+    "force_source": "mj_contactForce_normal_component",
+    "support_absent_ratio_mg": 0.05,
+    "sustain_s": 0.05
+  }
+}

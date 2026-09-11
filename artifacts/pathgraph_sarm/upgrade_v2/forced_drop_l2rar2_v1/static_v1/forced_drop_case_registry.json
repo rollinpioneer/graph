@@ -1,0 +1,59 @@
+{
+  "case_order": [
+    "F1_hold_request_ends_without_hold",
+    "F2_touch_request_completes_without_hold",
+    "F3_stable_hold_no_intervention",
+    "F4_weld_off_no_force_outcome_control",
+    "F5_forced_drop_regular",
+    "F6_forced_drop_brief_hold",
+    "F7_commanded_release",
+    "F8_forced_drop_during_transport_long_observe"
+  ],
+  "cases": {
+    "F1_hold_request_ends_without_hold": {
+      "intervention": "none",
+      "reference_action": "retry_grasp",
+      "requested_effect": "HOLD_OBJECT"
+    },
+    "F2_touch_request_completes_without_hold": {
+      "intervention": "none",
+      "reference_action": "none",
+      "requested_effect": "TOUCH_OBJECT"
+    },
+    "F3_stable_hold_no_intervention": {
+      "intervention": "weld_remains_on",
+      "reference_action": "none",
+      "requested_effect": "HOLD_OBJECT"
+    },
+    "F4_weld_off_no_force_outcome_control": {
+      "intervention": "weld_off_no_force",
+      "observation_s": 1.5,
+      "reference_action": "outcome_conditioned",
+      "requested_effect": "HOLD_OBJECT"
+    },
+    "F5_forced_drop_regular": {
+      "intervention": "weld_off_plus_selected_force",
+      "observation_s": 0.75,
+      "reference_action": "recover_if_physical_loss_confirmed",
+      "requested_effect": "HOLD_OBJECT"
+    },
+    "F6_forced_drop_brief_hold": {
+      "intervention": "weld_off_plus_selected_force_after_minimum_prehold",
+      "observation_s": 0.75,
+      "reference_action": "recover_if_physical_loss_confirmed",
+      "requested_effect": "HOLD_OBJECT"
+    },
+    "F7_commanded_release": {
+      "intervention": "commanded_open_no_force",
+      "reference_action": "none",
+      "requested_effect": "RELEASE_OBJECT"
+    },
+    "F8_forced_drop_during_transport_long_observe": {
+      "intervention": "weld_off_plus_selected_force_during_transport",
+      "observation_s": 1.5,
+      "reference_action": "recover_if_physical_loss_confirmed",
+      "requested_effect": "HOLD_OBJECT"
+    }
+  },
+  "schema": "l2rar2_r16_forced_drop_case_registry_v1"
+}

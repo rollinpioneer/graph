@@ -1,0 +1,6 @@
+git worktree add -b research/l2rar2-controlled-forced-drop-v1 /home/__compress_data/xushijie/graph_l2ra_r2_forced_drop_v1_worktree 54d3e95ff84cbab0e9305b08378ae7190a8e6c71
+/home/__compress_data/xushijie/.conda/envs/lerobot/bin/python /tmp/r16_pkg/L2RAR2_R16_Controlled_Forced_Drop_Agent_Package_V1.0/tools/preflight.py --repo /home/__compress_data/xushijie/graph_l2ra_r2_forced_drop_v1_worktree --output artifacts/pathgraph_sarm/upgrade_v2/forced_drop_l2rar2_v1/static_v1/preflight.json
+PYTHONPATH=. /home/__compress_data/xushijie/.conda/envs/lerobot/bin/python -B -m unittest discover -s upgrade_v2/l2r_forced_drop/tests -p 'test_*.py' -v
+PYTHONPATH=. /home/__compress_data/xushijie/.conda/envs/lerobot/bin/python -B -m compileall -q upgrade_v2/l2r_forced_drop
+git diff --check
+R16 physical commands: NOT RUN; authorization status DRAFT_NOT_AUTHORIZED / authorized_instances=0
