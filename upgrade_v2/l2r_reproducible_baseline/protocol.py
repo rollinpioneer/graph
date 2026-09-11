@@ -77,7 +77,8 @@ def physical_spec(repo: Path | None = None) -> dict[str, Any]:
 def make_protocol() -> dict[str, Any]:
     physical = physical_spec()
     return {
-        "schema": "l2rar2_r14b_protocol_lock_v1",
+        "schema": "l2rar2_r14b_protocol_lock_v2",
+        "static_contract_version": "l2rar2_r14b_pre_execution_contract_v2",
         "protocol_id": PROTOCOL_ID,
         "status": "DRAFT_NOT_AUTHORIZED",
         "route": "B_NEW_REPRODUCIBLE_BASELINE_REQUIRED",
@@ -135,6 +136,8 @@ def load_protocol(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict) or value.get("protocol_id") != PROTOCOL_ID:
         raise ValueError("invalid R14-B protocol")
+    if value.get("schema") != "l2rar2_r14b_protocol_lock_v2" or value.get("static_contract_version") != "l2rar2_r14b_pre_execution_contract_v2":
+        raise ValueError("protocol is not bound to the v2 pre-execution contract")
     if value.get("comparison", {}).get("numeric_atol") != 0.0 or value.get("comparison", {}).get("numeric_rtol") != 0.0:
         raise ValueError("numeric tolerances must be exact zero")
     if value.get("status") != "DRAFT_NOT_AUTHORIZED":

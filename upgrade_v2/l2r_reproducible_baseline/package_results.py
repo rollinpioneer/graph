@@ -51,7 +51,10 @@ def finalize_chain(*, repo: Path, baseline_a: Path, repeat_b: Path, instrumented
     integrity = bc.get("instrumentation", {})
     if not integrity.get("passed"):
         failures.append("instrumentation_integrity")
-    for field in ("runner_commit", "protocol_sha256", "environment_fingerprint_sha256", "model_fingerprint_sha256"):
+    for field in (
+        "runner_commit", "protocol_sha256", "environment_fingerprint_sha256", "model_fingerprint_sha256",
+        "source_lock_sha256", "environment_contract_sha256", "generated_model_xml_sha256", "family_seed",
+    ):
         if not (a.get(field) == b.get(field) == c.get(field)):
             failures.append(f"consistency.{field}")
     status = "R14B_REPRODUCIBLE_BASELINE_CHAIN_PASS" if not failures else "R14B_CHAIN_BLOCKED"
@@ -102,6 +105,8 @@ def finalize_chain(*, repo: Path, baseline_a: Path, repeat_b: Path, instrumented
         certificate = {
             "schema": "l2rar2_r14b_reproducibility_certificate_v1", "status": status,
             "protocol_sha256": a["protocol_sha256"], "runner_commit": a["runner_commit"], "runner_file_hashes": a["runner_file_hashes"],
+            "source_lock_sha256": a["source_lock_sha256"], "environment_contract_sha256": a["environment_contract_sha256"],
+            "generated_model_xml_sha256": a["generated_model_xml_sha256"], "family_seed": a["family_seed"],
             "environment_fingerprint_sha256": a["environment_fingerprint_sha256"], "model_fingerprint_sha256": a["model_fingerprint_sha256"],
             "baseline_A_result_sha256": _sha(baseline_a / "result.json"), "baseline_A_manifest_sha256": a["artifact_manifest_sha256"],
             "repeat_B_result_sha256": _sha(repeat_b / "result.json"), "repeat_B_manifest_sha256": b["artifact_manifest_sha256"],

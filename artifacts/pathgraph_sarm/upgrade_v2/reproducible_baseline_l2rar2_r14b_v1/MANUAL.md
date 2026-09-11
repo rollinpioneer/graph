@@ -921,6 +921,20 @@ r14b_baseline_A_<nonce-prefix>.json
 
 只有有效授权后：
 
+A授权必须同时绑定静态合同文件：
+
+```bash
+"$PY" -B -m upgrade_v2.l2r_reproducible_baseline.cli prepare-static-lock \
+  --repo "$EXEC_WT" \
+  --protocol "$CONTROL/protocol_lock.json" \
+  --environment-contract "$STATIC/environment_contract.json" \
+  --output "$CONTROL/pre_execution_source_lock.json"
+```
+
+授权校验要求 `source_lock_sha256`、`environment_contract_sha256`、
+`generated_model_xml_sha256` 和 `family_seed` 全部精确匹配；校验和单次实例消费
+发生在任何 MuJoCo 导入、model construction 或 renderer construction 之前。
+
 ```bash
 export A_AUTH=/exact/path/to/r14b_baseline_A_<nonce>.json
 export A_OUT=$DATA/executions/baseline_A_<nonce-prefix>
@@ -940,6 +954,8 @@ env \
     --stage R14B_ORDINARY_BASELINE_A \
     --protocol "$CONTROL/protocol_lock.json" \
     --authorization "$A_AUTH" \
+    --source-lock "$CONTROL/pre_execution_source_lock.json" \
+    --environment-contract "$STATIC/environment_contract.json" \
     --output-root "$A_OUT"
 ```
 
@@ -1063,6 +1079,8 @@ env \
     --stage R14B_ORDINARY_REPEAT_B \
     --protocol "$CONTROL/protocol_lock.json" \
     --authorization "$B_AUTH" \
+    --source-lock "$CONTROL/pre_execution_source_lock.json" \
+    --environment-contract "$STATIC/environment_contract.json" \
     --baseline-A "$A_OUT" \
     --output-root "$B_OUT"
 ```
@@ -1279,6 +1297,8 @@ env \
     --stage R14B_INSTRUMENTED_C \
     --protocol "$CONTROL/protocol_lock.json" \
     --authorization "$C_AUTH" \
+    --source-lock "$CONTROL/pre_execution_source_lock.json" \
+    --environment-contract "$STATIC/environment_contract.json" \
     --ordinary-B "$B_OUT" \
     --ordinary-A-B-comparison \
       "$COMPARISONS/ordinary_A_vs_B_v1/comparison_summary.json" \

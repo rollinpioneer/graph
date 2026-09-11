@@ -8,10 +8,9 @@ from typing import Any
 
 from .authorization import AuthorizationDenied, consume_authorization, validate_authorization
 from .comparison import compare
-from .instrumented import run_instrumented
-from .ordinary import run_ordinary
 from .package_results import finalize_chain
 from .protocol import make_protocol, load_protocol, sha256
+from .source_lock import make_pre_execution_source_lock
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -33,10 +32,17 @@ def _parser() -> argparse.ArgumentParser:
     plan.add_argument("--root-family-id", required=True); plan.add_argument("--family-index", type=int, required=True)
     plan.add_argument("--family-seed", type=int, required=True); plan.add_argument("--rollout-seed", type=int, required=True)
     plan.add_argument("--case-id", required=True); plan.add_argument("--output", type=Path, required=True)
+    lock = subs.add_parser("prepare-static-lock")
+    lock.add_argument("--repo", type=Path, required=True)
+    lock.add_argument("--protocol", type=Path, required=True)
+    lock.add_argument("--environment-contract", type=Path, required=True)
+    lock.add_argument("--output", type=Path, required=True)
     for name in ("run-ordinary", "run-instrumented"):
         run = subs.add_parser(name)
         run.add_argument("--repo", type=Path, required=True); run.add_argument("--stage", required=True)
         run.add_argument("--protocol", type=Path, required=True); run.add_argument("--authorization", type=Path, required=True)
+        run.add_argument("--source-lock", type=Path, required=True)
+        run.add_argument("--environment-contract", type=Path, required=True)
         run.add_argument("--output-root", type=Path, required=True)
         run.add_argument("--baseline-A", type=Path); run.add_argument("--ordinary-B", type=Path)
         run.add_argument("--ordinary-A-B-comparison", type=Path)
@@ -64,6 +70,16 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(f"fixed protocol mismatch: {actual!r}")
         _write_json(args.output, protocol)
         print(json.dumps({"status": "DRAFT_NOT_AUTHORIZED", "protocol_sha256": sha256(args.output)}, sort_keys=True))
+        return 0
+    if args.command == "prepare-static-lock":
+        protocol_path = args.protocol.resolve()
+        protocol = load_protocol(protocol_path)
+        protocol_sha256 = sha256(protocol_path)
+        lock = make_pre_execution_source_lock(
+            args.repo.resolve(), protocol, protocol_sha256, args.environment_contract.resolve()
+        )
+        _write_json(args.output.resolve(), lock)
+        print(json.dumps({"status": "STATIC_LOCK_READY", "source_lock_sha256": lock["source_lock_sha256"]}, sort_keys=True))
         return 0
     if args.command == "compare":
         summary = compare(args.left.resolve(), args.right.resolve(), args.output_root.resolve(), args.comparison)
@@ -93,12 +109,28 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": "A/B comparison is not PASS"})); return 3
         baseline = {"ordinary_A_vs_B_comparison_sha256": sha256(args.ordinary_A_B_comparison), "ordinary_A_vs_B_status": "PASS", "repeat_B_artifact_manifest_sha256": b_manifest["artifact_manifest_sha256"], "repeat_B_result_sha256": sha256(args.ordinary_B / "result.json")}
     try:
-        auth = validate_authorization(args.authorization, repo=repo, protocol=protocol, protocol_sha256=protocol["protocol_sha256"], requested_output_root=args.output_root, stage=stage, baseline=baseline)
+        auth = validate_authorization(
+            args.authorization,
+            repo=repo,
+            protocol=protocol,
+            protocol_sha256=protocol["protocol_sha256"],
+            requested_output_root=args.output_root,
+            stage=stage,
+            source_lock_path=args.source_lock.resolve(),
+            environment_contract_path=args.environment_contract.resolve(),
+            baseline=baseline,
+        )
         consume_authorization(args.output_root, auth, args.authorization, repo=repo)
+        # Preserve the exact pre-execution lock consumed by this instance.
+        _write_json(args.output_root / "pre_execution_source_lock.json", auth.source_lock)
     except (AuthorizationDenied, OSError, ValueError) as exc:
         print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": str(exc)}, sort_keys=True)); return 3
     try:
-        result = run_instrumented(repo=repo, protocol=protocol, output_root=args.output_root) if args.command == "run-instrumented" else run_ordinary(repo=repo, protocol=protocol, output_root=args.output_root, stage=stage)
+        # Keep all execution-only imports after contract validation and nonce consumption.
+        from .instrumented import run_instrumented
+        from .ordinary import run_ordinary
+
+        result = run_instrumented(repo=repo, protocol=protocol, output_root=args.output_root, source_lock=auth.source_lock) if args.command == "run-instrumented" else run_ordinary(repo=repo, protocol=protocol, output_root=args.output_root, stage=stage, source_lock=auth.source_lock)
     except Exception as exc:
         _failure(args.output_root, f"execution failed after authorization consumption: {type(exc).__name__}: {exc}")
         print(json.dumps({"status": "STOP_AFTER_EXECUTION_1", "reason": str(exc)}, sort_keys=True)); return 4

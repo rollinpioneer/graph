@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import importlib
 import os
 import platform
 import sys
@@ -15,6 +14,7 @@ MAIN_GATE_FIELDS = (
     "numpy_version", "numpy_native_hashes", "mujoco_version", "mujoco_native_hashes",
     "opencv_version", "opencv_native_hashes", "critical_environment", "renderer_backend",
 )
+ENVIRONMENT_CONTRACT_SCHEMA = "l2rar2_r14b_environment_contract_v2"
 
 
 def validate_process_environment() -> None:

@@ -3,6 +3,9 @@ from __future__ import annotations
 import copy
 import json
 import os
+import hashlib
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,11 +14,12 @@ from unittest.mock import patch
 from upgrade_v2.l2r_reproducible_baseline.capture import ReadOnlyPhysicsRecorder
 from upgrade_v2.l2r_reproducible_baseline.authorization import AuthorizationDenied, validate_authorization
 from upgrade_v2.l2r_reproducible_baseline.comparison import compare
-from upgrade_v2.l2r_reproducible_baseline.environment import MAIN_GATE_FIELDS, compare_main_gate_fields
+from upgrade_v2.l2r_reproducible_baseline.environment import ENVIRONMENT_CONTRACT_SCHEMA, MAIN_GATE_FIELDS, REQUIRED_ENVIRONMENT, compare_main_gate_fields
 from upgrade_v2.l2r_reproducible_baseline.fingerprint import array_hash
 from upgrade_v2.l2r_reproducible_baseline.package_results import finalize_chain
 from upgrade_v2.l2r_reproducible_baseline.protocol import EXPECTED_COUNTS, PROGRAM, canonical_hash, make_protocol
 from upgrade_v2.l2r_reproducible_baseline.simulator import ReproducibleBaselineTabletop
+from upgrade_v2.l2r_reproducible_baseline.source_lock import make_pre_execution_source_lock, pre_execution_model_xml
 
 
 class R14BStaticTests(unittest.TestCase):
@@ -38,6 +42,40 @@ class R14BStaticTests(unittest.TestCase):
     def test_wrong_runner_commit_denied(self): self.assertNotEqual(self.protocol["base_commit"], "")
     def test_wrong_runner_hash_denied(self): self.assertTrue(self.protocol["status"].startswith("DRAFT"))
     def test_wrong_protocol_hash_denied(self): self.assertIsNone(self.protocol.get("protocol_sha256"))
+    def test_missing_source_lock_hash_denied(self):
+        self._assert_contract_field_denied("source_lock_sha256", None)
+    def test_wrong_source_lock_hash_denied(self):
+        self._assert_contract_field_denied("source_lock_sha256", "0" * 64)
+    def test_wrong_environment_contract_hash_denied(self):
+        self._assert_contract_field_denied("environment_contract_sha256", "0" * 64)
+    def test_wrong_model_xml_hash_denied(self):
+        self._assert_contract_field_denied("generated_model_xml_sha256", hashlib.sha256(b"wrong").hexdigest())
+    def test_all_contracts_checked_before_model_import(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, value in (("authorization.json", {}), ("source_lock.json", {}), ("environment.json", {})):
+                (root / name).write_text(json.dumps(value), encoding="utf-8")
+            (root / "protocol.json").write_text(json.dumps(self.protocol), encoding="utf-8")
+            script = """
+import json
+import sys
+from upgrade_v2.l2r_reproducible_baseline.cli import main
+args = [
+    "run-ordinary", "--repo", sys.argv[1], "--stage", "R14B_ORDINARY_BASELINE_A",
+    "--protocol", sys.argv[2], "--authorization", sys.argv[3], "--source-lock", sys.argv[4],
+    "--environment-contract", sys.argv[5], "--output-root", sys.argv[6],
+]
+rc = main(args)
+print(json.dumps({"rc": rc, "mujoco_imported": "mujoco" in sys.modules}))
+raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
+"""
+            process = subprocess.run(
+                [sys.executable, "-c", script, str(Path.cwd()), str(root / "protocol.json"),
+                 str(root / "authorization.json"), str(root / "source_lock.json"),
+                 str(root / "environment.json"), str(root / "out")],
+                capture_output=True, text=True, cwd=Path.cwd(), check=False,
+            )
+            self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
     def test_wrong_output_root_denied(self): self.assertEqual(self.protocol["physical_authorization_total"], 0)
     def test_expired_authorization_denied(self): self.assertEqual(self.protocol["stages"]["A"]["authorized_instances"], 0)
     def test_nonce_reuse_denied(self): self.assertTrue(self.protocol["comparison"]["tolerance_adjustment_allowed"] is False)
@@ -102,10 +140,12 @@ class R14BStaticTests(unittest.TestCase):
         result = {
             "runner_commit": "runner", "protocol_sha256": "protocol",
             "environment_fingerprint_sha256": "environment", "model_fingerprint_sha256": "model",
+            "source_lock_sha256": "source-lock", "environment_contract_sha256": "environment-contract",
+            "generated_model_xml_sha256": "xml", "family_seed": 870000,
             "all_main_gates_passed": True, "runner_file_hashes": {"runner.py": "hash"}, "artifact_manifest_sha256": "manifest",
         }
         lock = {
-            "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_files": {"runner.py": "hash"},
+            "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_file_hashes": {"runner.py": "hash"}, "static_contract_version": "l2rar2_r14b_pre_execution_contract_v2",
             "program_sha256": "program", "physical_spec_sha256": "physical", "generated_model_xml_sha256": "xml",
         }
         environment = {field: "same" for field in MAIN_GATE_FIELDS}
@@ -121,6 +161,56 @@ class R14BStaticTests(unittest.TestCase):
             (root / name).write_text(json.dumps({"row": 1}) + "\n", encoding="utf-8")
         if instrumented:
             (root / "instrumentation_integrity.json").write_text(json.dumps({"passed": True, "before_after_rows": 290, "mutation_failures": 0}), encoding="utf-8")
+
+    def _contract_fixture(self) -> dict:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            contract = root / "environment_contract.json"
+            contract.write_text(json.dumps({"schema": ENVIRONMENT_CONTRACT_SCHEMA, "status": "FROZEN_ZERO_PHYSICS", "static_contract_version": self.protocol["static_contract_version"], "required": self.protocol["required_environment"]}, sort_keys=True), encoding="utf-8")
+            xml_sha = hashlib.sha256(pre_execution_model_xml(self.protocol).encode("utf-8")).hexdigest()
+            lock = make_pre_execution_source_lock(Path.cwd(), self.protocol, "protocol", contract)
+            return {"source_lock": lock, "environment_sha256": hashlib.sha256(contract.read_bytes()).hexdigest(), "xml_sha256": xml_sha}
+
+    def _valid_authorization_fixture(self, root: Path) -> tuple[Path, Path, Path]:
+        contract = root / "environment_contract.json"
+        contract.write_text(json.dumps({"schema": ENVIRONMENT_CONTRACT_SCHEMA, "status": "FROZEN_ZERO_PHYSICS", "static_contract_version": self.protocol["static_contract_version"], "required": REQUIRED_ENVIRONMENT}, sort_keys=True), encoding="utf-8")
+        protocol_path = root / "protocol.json"
+        protocol_path.write_text(json.dumps(self.protocol, sort_keys=True), encoding="utf-8")
+        protocol_hash = hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+        lock = make_pre_execution_source_lock(Path.cwd(), self.protocol, protocol_hash, contract)
+        lock_path = root / "source_lock.json"
+        lock_path.write_text(json.dumps(lock), encoding="utf-8")
+        auth = {
+            "schema": "l2rar2_r14b_execution_authorization_v2", "status": "AUTHORIZED",
+            "protocol_id": self.protocol["protocol_id"], "stage": self.protocol["stages"]["A"]["stage"],
+            "authorized_instances": 1, "requested_instances": 1, "case_id": self.protocol["case_id"],
+            "root_family_id": self.protocol["root_family_id"], "rollout_seed": self.protocol["rollout_seed"],
+            "family_seed": self.protocol["family_seed"], "program_sha256": self.protocol["program_sha256"],
+            "physical_spec_sha256": self.protocol["physical_spec_sha256"], "automatic_retry": False,
+            "on_any_main_gate_mismatch": "STOP_AFTER_EXECUTION_1", "agent_self_authorization_prohibited": True,
+            "instrumented_replay_authorized_instances": 0, "r16_calibration_authorized_instances": 0,
+            "r16_development_authorized_instances": 0, "runner_commit": lock["runner_commit"],
+            "generation_runner_file_hashes": lock["generation_runner_file_hashes"], "protocol_sha256": protocol_hash,
+            "static_contract_version": self.protocol["static_contract_version"],
+            "source_lock_sha256": lock["source_lock_sha256"], "environment_contract_sha256": hashlib.sha256(contract.read_bytes()).hexdigest(),
+            "generated_model_xml_sha256": lock["generated_model_xml_sha256"], "output_root": str((root / "out").resolve()),
+            "single_use_nonce": "n" * 32, "expires_at_utc": "2999-01-01T00:00:00+00:00",
+            "approved_at_utc": "2026-09-12T00:00:00+00:00", "authorization_id": "auth", "reviewer_id": "reviewer",
+        }
+        auth_path = root / "authorization.json"
+        auth_path.write_text(json.dumps(auth), encoding="utf-8")
+        return auth_path, lock_path, contract
+
+    def _assert_contract_field_denied(self, field: str, value: str | None) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch("upgrade_v2.l2r_reproducible_baseline.source_lock.working_tree_clean", return_value=True), patch("upgrade_v2.l2r_reproducible_baseline.authorization.working_tree_clean", return_value=True):
+                auth_path, lock_path, contract_path = self._valid_authorization_fixture(root)
+                data = json.loads(auth_path.read_text(encoding="utf-8"))
+                data[field] = value
+                auth_path.write_text(json.dumps(data), encoding="utf-8")
+                with self.assertRaises(AuthorizationDenied):
+                    validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
 
     def test_comparison_fixture_identical_runs_pass(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -152,7 +242,40 @@ class R14BStaticTests(unittest.TestCase):
             auth_path = Path(directory) / "auth.json"
             auth_path.write_text("{}", encoding="utf-8")
             with self.assertRaises(AuthorizationDenied):
-                validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256="protocol", requested_output_root=Path(directory) / "out", stage="R16_DEVELOPMENT")
+                validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256="protocol", requested_output_root=Path(directory) / "out", stage="R16_DEVELOPMENT", source_lock_path=Path(directory) / "lock.json", environment_contract_path=Path(directory) / "environment.json")
+
+    def test_contract_hash_mismatches_are_denied(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch("upgrade_v2.l2r_reproducible_baseline.source_lock.working_tree_clean", return_value=True), patch("upgrade_v2.l2r_reproducible_baseline.authorization.working_tree_clean", return_value=True):
+                auth_path, lock_path, contract_path = self._valid_authorization_fixture(root)
+                data = json.loads(auth_path.read_text())
+                for field in ("source_lock_sha256", "environment_contract_sha256", "generated_model_xml_sha256"):
+                    changed = dict(data); changed[field] = "0" * 64
+                    auth_path.write_text(json.dumps(changed), encoding="utf-8")
+                    with self.assertRaises(AuthorizationDenied):
+                        validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
+
+    def test_source_lock_contains_pre_execution_contracts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch("upgrade_v2.l2r_reproducible_baseline.source_lock.working_tree_clean", return_value=True):
+                _, lock_path, _ = self._valid_authorization_fixture(root)
+                lock = json.loads(lock_path.read_text())
+                self.assertIn("runner_commit", lock)
+                self.assertIn("generation_runner_file_hashes", lock)
+                self.assertIn("generated_model_xml_sha256", lock)
+                self.assertTrue(lock["git_status_clean"])
+
+    def test_protocol_uses_v2_static_contract(self):
+        self.assertEqual(self.protocol["schema"], "l2rar2_r14b_protocol_lock_v2")
+        self.assertEqual(self.protocol["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v2")
+
+    def test_authorization_templates_use_v2_contract(self):
+        root = Path(__file__).parents[3] / "artifacts/pathgraph_sarm/upgrade_v2/reproducible_baseline_l2rar2_r14b_v1/applications_v1"
+        for path in root.glob("*_authorization.template.json"):
+            data = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(data["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v2")
 
     def test_finalize_chain_issues_certificate_only_for_all_pass(self):
         with tempfile.TemporaryDirectory() as directory:

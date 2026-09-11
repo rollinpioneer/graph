@@ -10,9 +10,16 @@ from pathlib import Path
 from typing import Any
 
 from .protocol import PROTOCOL_ID, canonical_hash, sha256
-from .source_lock import runner_file_hashes
+from .environment import ENVIRONMENT_CONTRACT_SCHEMA, REQUIRED_ENVIRONMENT
+from .source_lock import (
+    current_commit,
+    pre_execution_model_xml,
+    runner_file_hashes,
+    sha256_bytes,
+    working_tree_clean,
+)
 
-AUTH_SCHEMA = "l2rar2_r14b_execution_authorization_v1"
+AUTH_SCHEMA = "l2rar2_r14b_execution_authorization_v2"
 
 
 class AuthorizationDenied(RuntimeError):
@@ -26,14 +33,14 @@ class Authorization:
     runner_commit: str
     runner_file_hashes: dict[str, str]
     protocol_sha256: str
+    source_lock_sha256: str
+    environment_contract_sha256: str
+    generated_model_xml_sha256: str
+    source_lock: dict[str, Any]
     output_root: str
     single_use_nonce: str
     expires_at_utc: str
     data: dict[str, Any]
-
-
-def current_commit(repo: Path) -> str:
-    return subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], check=True, text=True, stdout=subprocess.PIPE).stdout.strip()
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -46,23 +53,38 @@ def _load(path: Path) -> dict[str, Any]:
     return value
 
 
-def validate_authorization(path: Path, *, repo: Path, protocol: dict[str, Any], protocol_sha256: str, requested_output_root: Path, stage: str, baseline: dict[str, Any] | None = None) -> Authorization:
+def validate_authorization(
+    path: Path,
+    *,
+    repo: Path,
+    protocol: dict[str, Any],
+    protocol_sha256: str,
+    requested_output_root: Path,
+    stage: str,
+    source_lock_path: Path,
+    environment_contract_path: Path,
+    baseline: dict[str, Any] | None = None,
+) -> Authorization:
     data = _load(path)
     stage_key = {"R14B_ORDINARY_BASELINE_A": "A", "R14B_ORDINARY_REPEAT_B": "B", "R14B_INSTRUMENTED_C": "C"}.get(stage)
     if stage_key is None:
         raise AuthorizationDenied(f"unsupported execution stage: {stage}")
+    source_lock = _load(source_lock_path)
+    environment_contract = _load(environment_contract_path)
     expected_stage = protocol["stages"][stage_key]["stage"]
     errors: list[str] = []
     exact = {
         "schema": AUTH_SCHEMA,
         "status": "AUTHORIZED",
         "protocol_id": PROTOCOL_ID,
+        "static_contract_version": protocol["static_contract_version"],
         "stage": expected_stage,
         "authorized_instances": 1,
         "requested_instances": 1,
         "case_id": protocol["case_id"],
         "root_family_id": protocol["root_family_id"],
         "rollout_seed": protocol["rollout_seed"],
+        "family_seed": protocol["family_seed"],
         "program_sha256": protocol["program_sha256"],
         "physical_spec_sha256": protocol["physical_spec_sha256"],
         "automatic_retry": False,
@@ -83,6 +105,50 @@ def validate_authorization(path: Path, *, repo: Path, protocol: dict[str, Any], 
         errors.append("runner_file_hashes")
     if data.get("protocol_sha256") != protocol_sha256:
         errors.append("protocol_sha256")
+    expected_xml_sha256 = sha256_bytes(pre_execution_model_xml(protocol).encode("utf-8"))
+    expected_environment_sha256 = sha256(environment_contract_path)
+    expected_source_lock_sha256 = canonical_hash({key: source_lock[key] for key in source_lock if key != "source_lock_sha256"}) if source_lock.get("source_lock_sha256") is not None else None
+    source_lock_errors = []
+    if source_lock.get("schema") != "l2rar2_r14b_pre_execution_source_lock_v2":
+        source_lock_errors.append("schema")
+    source_lock_exact = {
+        "runner_commit": current_commit(repo),
+        "generation_runner_file_hashes": runner_file_hashes(repo),
+        "static_contract_version": protocol["static_contract_version"],
+        "protocol_sha256": protocol_sha256,
+        "program_sha256": protocol["program_sha256"],
+        "physical_spec_sha256": protocol["physical_spec_sha256"],
+        "generated_model_xml_sha256": expected_xml_sha256,
+        "environment_contract_sha256": expected_environment_sha256,
+        "family_seed": protocol["family_seed"],
+        "git_status_clean": True,
+    }
+    for key, wanted in source_lock_exact.items():
+        if source_lock.get(key) != wanted:
+            source_lock_errors.append(key)
+    if source_lock.get("git_status_clean") is not True or not working_tree_clean(repo):
+        source_lock_errors.append("git_status_clean")
+    if source_lock.get("source_lock_sha256") != expected_source_lock_sha256:
+        source_lock_errors.append("source_lock_sha256")
+    if source_lock_errors:
+        errors.extend(f"source_lock.{key}" for key in sorted(set(source_lock_errors)))
+    if environment_contract.get("schema") != ENVIRONMENT_CONTRACT_SCHEMA:
+        errors.append("environment_contract_schema")
+    if environment_contract.get("status") != "FROZEN_ZERO_PHYSICS":
+        errors.append("environment_contract_status")
+    if environment_contract.get("static_contract_version") != protocol["static_contract_version"]:
+        errors.append("environment_contract_version")
+    required_environment = environment_contract.get("required")
+    if required_environment != REQUIRED_ENVIRONMENT:
+        errors.append("environment_contract_contents")
+    for key, wanted in {
+        "source_lock_sha256": source_lock.get("source_lock_sha256"),
+        "environment_contract_sha256": expected_environment_sha256,
+        "generated_model_xml_sha256": expected_xml_sha256,
+        "family_seed": protocol["family_seed"],
+    }.items():
+        if data.get(key) != wanted:
+            errors.append(key)
     if str(requested_output_root.resolve(strict=False)) != data.get("output_root"):
         errors.append("output_root")
     if not isinstance(data.get("single_use_nonce"), str) or len(data["single_use_nonce"]) < 32:
@@ -111,6 +177,10 @@ def validate_authorization(path: Path, *, repo: Path, protocol: dict[str, Any], 
         authorization_id=str(data["authorization_id"]), stage=stage,
         runner_commit=str(data["runner_commit"]), runner_file_hashes=actual_hashes,
         protocol_sha256=protocol_sha256, output_root=str(requested_output_root.resolve(strict=False)),
+        source_lock_sha256=str(source_lock["source_lock_sha256"]),
+        environment_contract_sha256=expected_environment_sha256,
+        generated_model_xml_sha256=expected_xml_sha256,
+        source_lock=source_lock,
         single_use_nonce=str(data["single_use_nonce"]), expires_at_utc=str(data["expires_at_utc"]), data=data,
     )
 
@@ -152,7 +222,7 @@ def consume_authorization(output_root: Path, authorization: Authorization, autho
     except FileExistsError as exc:
         raise AuthorizationDenied("output_root already exists; single-use authorization denied") from exc
     record = {
-        "schema": "l2rar2_r14b_authorization_consumption_v1",
+        "schema": "l2rar2_r14b_authorization_consumption_v2",
         "status": "CONSUMED_BEFORE_MODEL_CONSTRUCTION",
         "consumed_at_utc": datetime.now(timezone.utc).isoformat(),
         "authorization_id": authorization.authorization_id,
@@ -161,6 +231,10 @@ def consume_authorization(output_root: Path, authorization: Authorization, autho
         "runner_commit": authorization.runner_commit,
         "runner_file_hashes": authorization.runner_file_hashes,
         "protocol_sha256": authorization.protocol_sha256,
+        "source_lock_sha256": authorization.source_lock_sha256,
+        "environment_contract_sha256": authorization.environment_contract_sha256,
+        "generated_model_xml_sha256": authorization.generated_model_xml_sha256,
+        "family_seed": authorization.data["family_seed"],
         "single_use_nonce": authorization.single_use_nonce,
         "authorized_instances": 1,
         "instance_index": 1,

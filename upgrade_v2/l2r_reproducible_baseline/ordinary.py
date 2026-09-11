@@ -15,7 +15,6 @@ from .environment import compare_main_gate_fields, finalize_fingerprint, runtime
 from .fingerprint import model_fingerprint
 from .protocol import canonical_hash, sha256
 from .simulator import ReproducibleBaselineTabletop
-from .source_lock import finalize_source_lock, make_source_lock
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -65,7 +64,7 @@ def _numeric_health(recorder: CaptureRecorder) -> dict[str, Any]:
     return {"schema": "l2rar2_r14b_numeric_health_v1", "passed": not failures, "state_count": len(recorder.states), "failures": failures}
 
 
-def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, stage: str, instrumented: bool = False) -> dict[str, Any]:
+def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, stage: str, source_lock: dict[str, Any], instrumented: bool = False) -> dict[str, Any]:
     validate_process_environment()
     import cv2
     import mujoco
@@ -100,9 +99,8 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, sta
     _write_text(output_root / "generated_model.xml", xml)
     sim = ReproducibleBaselineTabletop(spec, int(protocol["rollout_seed"]), physics_observer=ReadOnlyPhysicsRecorder() if instrumented else None)
     model_fp = model_fingerprint(sim.model, mujoco, xml)
-    source_lock = make_source_lock(repo, protocol["protocol_sha256"])
-    source_lock.update({"program_sha256": protocol["program_sha256"], "physical_spec_sha256": protocol["physical_spec_sha256"], "generated_model_xml_sha256": sha256(output_root / "generated_model.xml")})
-    source_lock = finalize_source_lock(source_lock)
+    if source_lock.get("generated_model_xml_sha256") != sha256(output_root / "generated_model.xml"):
+        raise RuntimeError("pre-execution model XML hash changed")
     _write_json(output_root / "runtime_environment_fingerprint.json", env_fp)
     _write_json(output_root / "model_fingerprint.json", model_fp)
     _write_json(output_root / "source_lock.json", source_lock)
@@ -174,8 +172,10 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, sta
     result = {
         "schema": "l2rar2_r14b_execution_result_v1", "status": "R14B_INSTRUMENTED_C_COMPLETE" if instrumented and all_passed else "R14B_BASELINE_A_COMPLETE_WAITING_HUMAN_REVIEW" if stage == "R14B_ORDINARY_BASELINE_A" and all_passed else "R14B_ORDINARY_REPEAT_B_COMPLETE" if stage == "R14B_ORDINARY_REPEAT_B" and all_passed else "STOP_AFTER_EXECUTION_1",
         "stage": stage, "executions_used": 1, "authorized_instances": 1, "automatic_retry": False,
-        "started_at_utc": started.isoformat(), "completed_at_utc": datetime.now(timezone.utc).isoformat(), "runner_commit": source_lock["runner_commit"], "runner_file_hashes": source_lock["generation_runner_files"],
+        "started_at_utc": started.isoformat(), "completed_at_utc": datetime.now(timezone.utc).isoformat(), "runner_commit": source_lock["runner_commit"], "runner_file_hashes": source_lock["generation_runner_file_hashes"],
         "protocol_sha256": protocol["protocol_sha256"], "environment_fingerprint_sha256": env_fp["fingerprint_sha256"], "model_fingerprint_sha256": model_fp["model_fingerprint_sha256"],
+        "source_lock_sha256": source_lock["source_lock_sha256"], "environment_contract_sha256": source_lock["environment_contract_sha256"],
+        "generated_model_xml_sha256": source_lock["generated_model_xml_sha256"], "family_seed": source_lock["family_seed"],
         "main_gate_count": len(gates), "main_gate_pass_count": sum(bool(v) for v in gates.values()), "all_main_gates_passed": all_passed, "artifact_manifest_sha256": manifest["artifact_manifest_sha256"],
         "instrumented_replay_executions": 1 if instrumented else 0, "r16_calibration_executions": 0, "r16_development_executions": 0,
     }

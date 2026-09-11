@@ -54,10 +54,13 @@ def _state_mismatch(left: dict[str, Any], right: dict[str, Any], index: int) -> 
 def compare(left: Path, right: Path, output_root: Path, comparison_name: str) -> dict[str, Any]:
     output_root.mkdir(parents=False, exist_ok=False)
     left_result, right_result = _json(left / "result.json"), _json(right / "result.json")
-    source_fields = ("runner_commit", "protocol_sha256", "environment_fingerprint_sha256", "model_fingerprint_sha256")
+    source_fields = (
+        "runner_commit", "protocol_sha256", "environment_fingerprint_sha256", "model_fingerprint_sha256",
+        "source_lock_sha256", "environment_contract_sha256", "generated_model_xml_sha256", "family_seed",
+    )
     source_mismatches = [{"field": key, "left": left_result.get(key), "right": right_result.get(key)} for key in source_fields if left_result.get(key) != right_result.get(key)]
     left_lock, right_lock = _json(left / "source_lock.json"), _json(right / "source_lock.json")
-    for field in ("runner_commit", "protocol_sha256", "generation_runner_files", "program_sha256", "physical_spec_sha256", "generated_model_xml_sha256"):
+    for field in ("runner_commit", "protocol_sha256", "generation_runner_file_hashes", "static_contract_version", "source_lock_sha256", "program_sha256", "physical_spec_sha256", "generated_model_xml_sha256", "environment_contract_sha256", "family_seed", "git_status_clean"):
         if left_lock.get(field) != right_lock.get(field):
             source_mismatches.append({"field": f"source_lock.{field}", "left": left_lock.get(field), "right": right_lock.get(field)})
     left_env, right_env = _json(left / "runtime_environment_fingerprint.json"), _json(right / "runtime_environment_fingerprint.json")
