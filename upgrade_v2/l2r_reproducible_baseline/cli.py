@@ -10,6 +10,7 @@ from .authorization import AuthorizationDenied, consume_authorization, validate_
 from .comparison import compare
 from .instrumented import run_instrumented
 from .ordinary import run_ordinary
+from .package_results import finalize_chain
 from .protocol import make_protocol, load_protocol, sha256
 
 
@@ -42,6 +43,14 @@ def _parser() -> argparse.ArgumentParser:
     cmp = subs.add_parser("compare")
     cmp.add_argument("--left", type=Path, required=True); cmp.add_argument("--right", type=Path, required=True)
     cmp.add_argument("--comparison", required=True); cmp.add_argument("--output-root", type=Path, required=True)
+    final = subs.add_parser("finalize-chain")
+    final.add_argument("--repo", type=Path, required=True)
+    final.add_argument("--baseline-A", type=Path, required=True)
+    final.add_argument("--repeat-B", type=Path, required=True)
+    final.add_argument("--instrumented-C", type=Path, required=True)
+    final.add_argument("--comparison-AB", type=Path, required=True)
+    final.add_argument("--comparison-BC", type=Path, required=True)
+    final.add_argument("--output-root", type=Path, required=True)
     return parser
 
 
@@ -59,6 +68,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "compare":
         summary = compare(args.left.resolve(), args.right.resolve(), args.output_root.resolve(), args.comparison)
         print(json.dumps(summary, sort_keys=True)); return 0 if summary["all_main_gates_passed"] else 5
+    if args.command == "finalize-chain":
+        decision = finalize_chain(repo=args.repo.resolve(), baseline_a=args.baseline_A.resolve(), repeat_b=args.repeat_B.resolve(), instrumented_c=args.instrumented_C.resolve(), comparison_ab=args.comparison_AB.resolve(), comparison_bc=args.comparison_BC.resolve(), output_root=args.output_root.resolve())
+        print(json.dumps(decision, sort_keys=True)); return 0 if decision["status"] == "R14B_REPRODUCIBLE_BASELINE_CHAIN_PASS" else 5
 
     repo = args.repo.resolve(); protocol_path = args.protocol.resolve(); protocol = load_protocol(protocol_path)
     protocol["protocol_sha256"] = sha256(protocol_path)

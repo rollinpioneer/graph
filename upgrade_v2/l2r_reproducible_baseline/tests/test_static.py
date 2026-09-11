@@ -13,6 +13,7 @@ from upgrade_v2.l2r_reproducible_baseline.authorization import AuthorizationDeni
 from upgrade_v2.l2r_reproducible_baseline.comparison import compare
 from upgrade_v2.l2r_reproducible_baseline.environment import MAIN_GATE_FIELDS, compare_main_gate_fields
 from upgrade_v2.l2r_reproducible_baseline.fingerprint import array_hash
+from upgrade_v2.l2r_reproducible_baseline.package_results import finalize_chain
 from upgrade_v2.l2r_reproducible_baseline.protocol import EXPECTED_COUNTS, PROGRAM, canonical_hash, make_protocol
 from upgrade_v2.l2r_reproducible_baseline.simulator import ReproducibleBaselineTabletop
 
@@ -101,7 +102,7 @@ class R14BStaticTests(unittest.TestCase):
         result = {
             "runner_commit": "runner", "protocol_sha256": "protocol",
             "environment_fingerprint_sha256": "environment", "model_fingerprint_sha256": "model",
-            "all_main_gates_passed": True,
+            "all_main_gates_passed": True, "runner_file_hashes": {"runner.py": "hash"}, "artifact_manifest_sha256": "manifest",
         }
         lock = {
             "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_files": {"runner.py": "hash"},
@@ -152,6 +153,33 @@ class R14BStaticTests(unittest.TestCase):
             auth_path.write_text("{}", encoding="utf-8")
             with self.assertRaises(AuthorizationDenied):
                 validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256="protocol", requested_output_root=Path(directory) / "out", stage="R16_DEVELOPMENT")
+
+    def test_finalize_chain_issues_certificate_only_for_all_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            a, b, c, ab, bc, final = (root / name for name in ("A", "B", "C", "AB", "BC", "final"))
+            for path in (a, b, c):
+                path.mkdir(); self._write_fixture(path, instrumented=path == c)
+            ab.mkdir(); bc.mkdir()
+            summary = {"all_main_gates_passed": True, "instrumentation": {"passed": True, "before_after_rows": 290, "mutation_failures": 0}}
+            (ab / "comparison_summary.json").write_text(json.dumps({"all_main_gates_passed": True}), encoding="utf-8")
+            (bc / "comparison_summary.json").write_text(json.dumps(summary), encoding="utf-8")
+            decision = finalize_chain(repo=Path.cwd(), baseline_a=a, repeat_b=b, instrumented_c=c, comparison_ab=ab, comparison_bc=bc, output_root=final)
+            self.assertEqual(decision["status"], "R14B_REPRODUCIBLE_BASELINE_CHAIN_PASS")
+            self.assertTrue((final / "r14b_reproducibility_certificate.json").is_file())
+
+    def test_finalize_chain_blocks_without_all_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            a, b, c, ab, bc, final = (root / name for name in ("A", "B", "C", "AB", "BC", "final"))
+            for path in (a, b, c):
+                path.mkdir(); self._write_fixture(path)
+            ab.mkdir(); bc.mkdir()
+            (ab / "comparison_summary.json").write_text(json.dumps({"all_main_gates_passed": False}), encoding="utf-8")
+            (bc / "comparison_summary.json").write_text(json.dumps({"all_main_gates_passed": False, "instrumentation": {"passed": False}}), encoding="utf-8")
+            decision = finalize_chain(repo=Path.cwd(), baseline_a=a, repeat_b=b, instrumented_c=c, comparison_ab=ab, comparison_bc=bc, output_root=final)
+            self.assertEqual(decision["status"], "R14B_CHAIN_BLOCKED")
+            self.assertFalse((final / "r14b_reproducibility_certificate.json").exists())
 
 
 if __name__ == "__main__":
