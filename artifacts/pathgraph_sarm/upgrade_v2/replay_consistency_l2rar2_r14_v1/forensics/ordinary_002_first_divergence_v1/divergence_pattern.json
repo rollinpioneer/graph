@@ -1,10 +1,122 @@
 {
+  "action_or_phase_boundaries": [
+    {
+      "from_action": "lift",
+      "from_capture_order": 14,
+      "from_phase": "control_tick",
+      "to_action": "lift",
+      "to_capture_order": 15,
+      "to_object_l2": 1.2249352439119271e-05,
+      "to_phase": "action_end",
+      "to_relative_l2": 1.2249352439119271e-05
+    },
+    {
+      "from_action": "lift",
+      "from_capture_order": 15,
+      "from_phase": "action_end",
+      "to_action": "verify",
+      "to_capture_order": 16,
+      "to_object_l2": 1.2249352439119271e-05,
+      "to_phase": "control_tick",
+      "to_relative_l2": 1.2249352439119271e-05
+    },
+    {
+      "from_action": "verify",
+      "from_capture_order": 18,
+      "from_phase": "control_tick",
+      "to_action": "verify",
+      "to_capture_order": 19,
+      "to_object_l2": 1.2249352439119271e-05,
+      "to_phase": "action_end",
+      "to_relative_l2": 1.2249352439119271e-05
+    },
+    {
+      "from_action": "verify",
+      "from_capture_order": 19,
+      "from_phase": "action_end",
+      "to_action": "verify",
+      "to_capture_order": 20,
+      "to_object_l2": 1.2249352439119055e-05,
+      "to_phase": "control_tick",
+      "to_relative_l2": 1.2249352439119055e-05
+    },
+    {
+      "from_action": "verify",
+      "from_capture_order": 22,
+      "from_phase": "control_tick",
+      "to_action": "verify",
+      "to_capture_order": 23,
+      "to_object_l2": 1.2249352439119055e-05,
+      "to_phase": "action_end",
+      "to_relative_l2": 1.2249352439119055e-05
+    },
+    {
+      "from_action": "verify",
+      "from_capture_order": 23,
+      "from_phase": "action_end",
+      "to_action": "transport_to_target",
+      "to_capture_order": 24,
+      "to_object_l2": 3.291920575227912e-06,
+      "to_phase": "control_tick",
+      "to_relative_l2": 3.291920575227912e-06
+    },
+    {
+      "from_action": "transport_to_target",
+      "from_capture_order": 31,
+      "from_phase": "control_tick",
+      "to_action": "transport_to_target",
+      "to_capture_order": 32,
+      "to_object_l2": 1.2249276643650874e-05,
+      "to_phase": "action_end",
+      "to_relative_l2": 1.2249276643650874e-05
+    },
+    {
+      "from_action": "transport_to_target",
+      "from_capture_order": 32,
+      "from_phase": "action_end",
+      "to_action": "verify",
+      "to_capture_order": 33,
+      "to_object_l2": 1.2249276643650874e-05,
+      "to_phase": "control_tick",
+      "to_relative_l2": 1.2249276643650874e-05
+    },
+    {
+      "from_action": "verify",
+      "from_capture_order": 35,
+      "from_phase": "control_tick",
+      "to_action": "verify",
+      "to_capture_order": 36,
+      "to_object_l2": 1.2249276643650874e-05,
+      "to_phase": "action_end",
+      "to_relative_l2": 1.2249276643650874e-05
+    }
+  ],
+  "action_or_phase_boundary_count": 9,
   "classification_is_descriptive_not_causal": true,
+  "end_to_start_ratio": 1.0000000000003177,
+  "monotonic_non_decreasing_fraction": 0.7916666666666666,
+  "numerical_basis": "Computed from divergence_curve.csv rows at and after first_mismatch_capture_order; no causal inference is encoded.",
+  "object_axis_signs": [
+    "negative",
+    "mixed",
+    "mixed"
+  ],
+  "object_axis_signs_stable": false,
   "object_l2_max": 1.2249352439119271e-05,
   "object_l2_median": 1.2249276643650874e-05,
   "object_l2_min": 3.291920575227912e-06,
   "pattern": "PERSISTENT_VARIABLE_OFFSET",
   "post_first_all_over_tolerance": true,
   "post_first_count": 25,
+  "post_first_trend": "NOT_MONOTONIC_GROWING",
+  "relative_axis_signs": [
+    "negative",
+    "mixed",
+    "mixed"
+  ],
+  "relative_axis_signs_stable": false,
+  "relative_l2_max": 1.2249352439119271e-05,
+  "relative_l2_median": 1.2249276643650874e-05,
+  "relative_l2_min": 3.291920575227912e-06,
   "schema": "l2rar2_r14_divergence_pattern_v1"
 }

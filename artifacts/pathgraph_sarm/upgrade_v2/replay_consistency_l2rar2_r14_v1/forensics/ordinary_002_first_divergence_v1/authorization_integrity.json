@@ -1,5 +1,16 @@
 {
   "authorization_file_sha256": "1806580b656c828e7b8936488ed14fd4321f2cb92d418ba57fddfb1e27bd8d64",
+  "authorization_id": "R14-ORDINARY-20260911-002-e8027aed85c2233b",
+  "authorization_id_match": true,
+  "authorization_only_assertions": {
+    "case": true,
+    "on_any_main_gate_mismatch": true,
+    "output_root": true,
+    "rollout_seed": true,
+    "root_family_id": true,
+    "stage": true
+  },
+  "consumption_authorization_id": "R14-ORDINARY-20260911-002-e8027aed85c2233b",
   "consumption_file_sha256": "53b87abd24a2cf7a67195c802386082cacb93dd18246a4cac7078574bab2ba33",
   "field_comparisons": {
     "authorized_instances": {
@@ -12,35 +23,10 @@
       "consumption": false,
       "match": true
     },
-    "case": {
-      "authorization": "K3_normal_hold_pause_resume",
-      "consumption": null,
-      "match": false
-    },
-    "on_any_main_gate_mismatch": {
-      "authorization": "STOP_AFTER_EXECUTION_1",
-      "consumption": null,
-      "match": false
-    },
-    "output_root": {
-      "authorization": "/home/__compress_data/xushijie/graph_l2ra_r2_forced_drop_v1_worktree/artifacts/pathgraph_sarm/upgrade_v2/replay_consistency_l2rar2_r14_v1/executions/ordinary_002_e8027aed85c2233b",
-      "consumption": null,
-      "match": false
-    },
     "protocol_sha256": {
       "authorization": "effc4137447803c3b684e5d60373b1faddf0d2d8de03428008a97ed62c9c134a",
       "consumption": "effc4137447803c3b684e5d60373b1faddf0d2d8de03428008a97ed62c9c134a",
       "match": true
-    },
-    "rollout_seed": {
-      "authorization": 84100002,
-      "consumption": null,
-      "match": false
-    },
-    "root_family_id": {
-      "authorization": "L2RAR2_REPAIR_00_840000",
-      "consumption": null,
-      "match": false
     },
     "runner_commit": {
       "authorization": "ab342f8a5a04871b7d535c7b9190574cfce2cb94",
@@ -51,11 +37,6 @@
       "authorization": "e8027aed85c2233b173af332524b288339ddcb2866d0626d",
       "consumption": "e8027aed85c2233b173af332524b288339ddcb2866d0626d",
       "match": true
-    },
-    "stage": {
-      "authorization": "R14_ORDINARY_REPLAY",
-      "consumption": null,
-      "match": false
     }
   },
   "nonce_is_single_use": true,
@@ -68,6 +49,7 @@
   "protocol_path": "/home/__compress_data/xushijie/graph_l2ra_r2_r14_forensics_v1_worktree/artifacts/pathgraph_sarm/upgrade_v2/replay_consistency_l2rar2_r14_v1/application_v1/r14_ordinary_replay_protocol.json",
   "protocol_sha256_expected": "effc4137447803c3b684e5d60373b1faddf0d2d8de03428008a97ed62c9c134a",
   "protocol_sha256_observed": "effc4137447803c3b684e5d60373b1faddf0d2d8de03428008a97ed62c9c134a",
+  "runner_file_hashes_match": true,
   "schema": "l2rar2_r14_authorization_integrity_v1",
-  "status": "FAIL"
+  "status": "PASS_CONSUMED_SINGLE_USE"
 }
