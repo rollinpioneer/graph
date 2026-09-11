@@ -1,0 +1,61 @@
+{
+  "schema": "l2rar2_r14_ordinary_replay_protocol_v1",
+  "stage": "R14_ORDINARY_REPLAY",
+  "entry_commit": "62bd073597a13a74af5b5e30818337c3dbe13433",
+  "authorized_instances_per_authorization": 1,
+  "case_id": "K3_normal_hold_pause_resume",
+  "root_family_id": "L2RAR2_REPAIR_00_840000",
+  "family_index": 0,
+  "family_seed": 840000,
+  "rollout_seed": 84100002,
+  "control_variant": "v0_short",
+  "program_sha256": "8d82a7e946317c393d2024be6159e0c12337a63e00a7877a1855beb369b6ca30",
+  "physical_spec_sha256": "b5504cacf8ede01cf43ec54c74bde55edd1c8ef543798bf859c0e6aa6b9ab46d",
+  "repair_version": "l2rar2_attach_relpose_v1",
+  "collection_version": "l2rar2_attach_relpose_collection_v1",
+  "expected_action_count": 8,
+  "expected_control_callback_count": 29,
+  "expected_action_end_callback_count": 8,
+  "expected_renderer_callback_count": 37,
+  "automatic_retry": false,
+  "ordinary_failure_action": "STOP_AFTER_EXECUTION_1",
+  "other_stage_authorized_instances": {
+    "R14_INSTRUMENTED_REPLAY": 0,
+    "R16_CALIBRATION": 0,
+    "R16_DEVELOPMENT": 0
+  },
+  "tolerances": {
+    "rtol": 0,
+    "time_atol": 1e-12,
+    "geometry_atol": 1e-12,
+    "mocap_atol": 2e-09
+  },
+  "cache_file_hashes": {
+    "actions.csv": "f0b2fe876eedb49240bdaba0654545683e6e17493bac949b2b56ca0278ad87a9",
+    "controller_requests.jsonl": "0791463e871d396914f2857689cc0968890487cfd61b865e83c891006acb8a2f",
+    "events.jsonl": "e3b8863550153e3d0a3950350e5ba62b0af1bff64766560b7ec4be94e21a1588",
+    "low_level_controls.jsonl": "7c65a24f953ffb598e1ffb77f00e584b24182f1b6ba596df85c3f794fab8b3e7",
+    "metadata.json": "19e39c4a21337ea35c902e3b565a4b7c2e1b27b373908e1503149f6ce555f7b0",
+    "observations_action_end.jsonl": "e73857c473e16a95cda1fa1522abc31b1e66b2b38026bab943fc6dfc427a2656",
+    "observations_dense.jsonl": "0b4d7a806602143cada4639dd8b81124b809ee44587f9baef0fd9d6f8b1df047",
+    "oracle_timeline.csv": "0500e362ef2933bee56caad955ed15368b643f638bfdd8c3f71fea081426a942",
+    "termination.json": "f83b5f86b6d75aa5b22c4d65b55dd515750c1fe22f522dbc3a7bbef5a5c53897"
+  },
+  "source_file_hashes": {
+    "upgrade_v2/l2r_task_context/collector.py": "27123bf580d0fcd4901b681fb9099ba57bfa1f151886272ac822754833d2c146",
+    "upgrade_v2/l2r_task_context/io.py": "7611bcd8e49fda77c321140f829ff3d9f453a3f103ca949521bd6e242fa6cda9",
+    "upgrade_v2/l2r_task_context/repair_collection.py": "6c1d5858c2802623c05625385851bca763495be29f80d5d904e18282a39df6fb",
+    "upgrade_v2/l2r_hold_evidence/probe_adapter.py": "b388b694ae7faea4225ff595c45e21ca463060663c83e476cf8daf9309027404",
+    "upgrade_v2/visual_refine_l2/dynamic_simulator.py": "01ae494a802d5b62bda5bc077c9034608cc334ff7febe1e7279ecd33847fd70b",
+    "upgrade_v2/visual_refine_l2/repaired_simulator.py": "bd1fa3538661cc6fe08eb07df88223f54cf6c4729d4973fb34b31183d3f4ab53",
+    "upgrade_v2/visual_refine_l2/renderer.py": "bef1ad3464e293b11a037be72becb976bf3345dfcded533ab8b32fd107c03ee3",
+    "upgrade_v2/visual_refine_l2/vision.py": "d1c5fcf2b17682f5dc15da9f15d1945df71dba3bab779baa8d6c1067e043f9ec"
+  },
+  "required_environment": {
+    "python": "3.10.19",
+    "mujoco": "3.4.0",
+    "opencv": "4.13.0",
+    "numpy": "2.2.6"
+  },
+  "scientific_scope": "replay consistency only; no physical-loss or recovery-method claim"
+}
