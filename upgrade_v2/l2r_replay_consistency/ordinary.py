@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import platform
 import sys
 from datetime import datetime, timezone
@@ -73,6 +74,9 @@ def _snapshot(sim: Any, *, sampling_point: str, sequence: int, action: str | Non
 
 
 def run_ordinary(protocol: dict[str, Any], cache_root: Path, output_root: Path) -> dict[str, Any]:
+    # MuJoCo selects its rendering backend during import; the protocol requires
+    # EGL and the environment must be fixed before that import occurs.
+    os.environ["MUJOCO_GL"] = "egl"
     import cv2
     import mujoco
 
