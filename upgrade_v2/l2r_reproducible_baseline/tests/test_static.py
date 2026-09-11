@@ -9,6 +9,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from upgrade_v2.l2r_reproducible_baseline.capture import ReadOnlyPhysicsRecorder
+from upgrade_v2.l2r_reproducible_baseline.authorization import AuthorizationDenied, validate_authorization
+from upgrade_v2.l2r_reproducible_baseline.comparison import compare
 from upgrade_v2.l2r_reproducible_baseline.environment import MAIN_GATE_FIELDS, compare_main_gate_fields
 from upgrade_v2.l2r_reproducible_baseline.fingerprint import array_hash
 from upgrade_v2.l2r_reproducible_baseline.protocol import EXPECTED_COUNTS, PROGRAM, canonical_hash, make_protocol
@@ -94,6 +96,62 @@ class R14BStaticTests(unittest.TestCase):
     def test_R16_requires_certificate_hash(self): self.assertFalse(self.protocol["confirmation_run"])
     def test_old_ordinary002_remains_negative(self): self.assertEqual(self.protocol["route"], "B_NEW_REPRODUCIBLE_BASELINE_REQUIRED")
     def test_R11_accounting_preserved(self): self.assertEqual(self.protocol["scientific_status"], "L2RAR2_PARTIAL_KEEP_G1")
+
+    def _write_fixture(self, root: Path, *, instrumented: bool = False) -> None:
+        result = {
+            "runner_commit": "runner", "protocol_sha256": "protocol",
+            "environment_fingerprint_sha256": "environment", "model_fingerprint_sha256": "model",
+            "all_main_gates_passed": True,
+        }
+        lock = {
+            "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_files": {"runner.py": "hash"},
+            "program_sha256": "program", "physical_spec_sha256": "physical", "generated_model_xml_sha256": "xml",
+        }
+        environment = {field: "same" for field in MAIN_GATE_FIELDS}
+        states = [{"state_sha256": "state-0"}]
+        captures = [{"phase": "control_tick", "action": "observe_scene", "action_index": 1, "time": 0.05, "raw_rgb_sha256": "rgb", "jpeg_sha256": "jpg", "callback_steps": []}]
+        for name, value in (("result.json", result), ("source_lock.json", lock), ("runtime_environment_fingerprint.json", environment), ("checkpoint_state_trace.jsonl", states), ("callback_capture_trace.jsonl", captures)):
+            path = root / name
+            if name.endswith(".jsonl"):
+                path.write_text("".join(json.dumps(row) + "\n" for row in value), encoding="utf-8")
+            else:
+                path.write_text(json.dumps(value), encoding="utf-8")
+        for name in ("actions.jsonl", "low_level_controls.jsonl", "events.jsonl", "vision_detections.jsonl"):
+            (root / name).write_text(json.dumps({"row": 1}) + "\n", encoding="utf-8")
+        if instrumented:
+            (root / "instrumentation_integrity.json").write_text(json.dumps({"passed": True, "before_after_rows": 290, "mutation_failures": 0}), encoding="utf-8")
+
+    def test_comparison_fixture_identical_runs_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); left = root / "left"; right = root / "right"; output = root / "comparison"
+            left.mkdir(); right.mkdir(); self._write_fixture(left); self._write_fixture(right)
+            summary = compare(left, right, output, "ordinary_A_vs_B")
+            self.assertTrue(summary["all_main_gates_passed"])
+            self.assertEqual(summary["status"], "PASS")
+
+    def test_comparison_fixture_state_hash_difference_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); left = root / "left"; right = root / "right"; output = root / "comparison"
+            left.mkdir(); right.mkdir(); self._write_fixture(left); self._write_fixture(right)
+            (right / "checkpoint_state_trace.jsonl").write_text(json.dumps({"state_sha256": "different"}) + "\n", encoding="utf-8")
+            summary = compare(left, right, output, "ordinary_A_vs_B")
+            self.assertFalse(summary["all_main_gates_passed"])
+            self.assertEqual(summary["first_mismatch"]["field"], "checkpoint_state")
+
+    def test_comparison_fixture_instrumentation_is_required(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); left = root / "left"; right = root / "right"; output = root / "comparison"
+            left.mkdir(); right.mkdir(); self._write_fixture(left); self._write_fixture(right)
+            summary = compare(left, right, output, "ordinary_B_vs_instrumented_C")
+            self.assertFalse(summary["all_main_gates_passed"])
+            self.assertFalse(summary["instrumentation"]["passed"])
+
+    def test_authorization_unsupported_stage_is_denied(self):
+        with tempfile.TemporaryDirectory() as directory:
+            auth_path = Path(directory) / "auth.json"
+            auth_path.write_text("{}", encoding="utf-8")
+            with self.assertRaises(AuthorizationDenied):
+                validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256="protocol", requested_output_root=Path(directory) / "out", stage="R16_DEVELOPMENT")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from . import COMPARISON_VERSION
 from .environment import MAIN_GATE_FIELDS
 from .protocol import canonical_hash
@@ -31,6 +33,24 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writeheader(); writer.writerows(rows)
 
 
+def _state_mismatch(left: dict[str, Any], right: dict[str, Any], index: int) -> dict[str, Any] | None:
+    for field in ("qpos", "qvel", "qacc", "qacc_warmstart", "mocap_pos", "mocap_quat", "eq_active", "model_eq_data", "xfrc_applied"):
+        l_info, r_info = left.get("arrays", {}).get(field), right.get("arrays", {}).get(field)
+        if l_info != r_info:
+            l_values = np.asarray(left.get("array_values", {}).get(field, []), dtype=float)
+            r_values = np.asarray(right.get("array_values", {}).get(field, []), dtype=float)
+            max_abs = None
+            l2 = None
+            if l_values.shape == r_values.shape and l_values.size:
+                delta = l_values - r_values
+                max_abs = float(np.max(np.abs(delta)))
+                l2 = float(np.linalg.norm(delta.ravel()))
+            return {"row": index, "field": field, "left_shape": l_info.get("shape") if l_info else None, "right_shape": r_info.get("shape") if r_info else None, "left_dtype": l_info.get("dtype") if l_info else None, "right_dtype": r_info.get("dtype") if r_info else None, "left_byte_sha256": l_info.get("sha256") if l_info else None, "right_byte_sha256": r_info.get("sha256") if r_info else None, "max_abs_diff": max_abs, "l2_diff": l2}
+    if left.get("state_sha256") != right.get("state_sha256"):
+        return {"row": index, "field": "checkpoint_state", "left_state_sha256": left.get("state_sha256"), "right_state_sha256": right.get("state_sha256")}
+    return None
+
+
 def compare(left: Path, right: Path, output_root: Path, comparison_name: str) -> dict[str, Any]:
     output_root.mkdir(parents=False, exist_ok=False)
     left_result, right_result = _json(left / "result.json"), _json(right / "result.json")
@@ -47,8 +67,9 @@ def compare(left: Path, right: Path, output_root: Path, comparison_name: str) ->
     left_states, right_states = _jsonl(left / "checkpoint_state_trace.jsonl"), _jsonl(right / "checkpoint_state_trace.jsonl")
     state_mismatches = []
     for index, (a, b) in enumerate(zip(left_states, right_states)):
-        if a.get("state_sha256") != b.get("state_sha256"):
-            state_mismatches.append({"row": index, "field": "state_sha256", "left": a.get("state_sha256"), "right": b.get("state_sha256")})
+        mismatch = _state_mismatch(a, b, index)
+        if mismatch is not None:
+            state_mismatches.append(mismatch)
             break
     if len(left_states) != len(right_states):
         state_mismatches.append({"field": "checkpoint_count", "left": len(left_states), "right": len(right_states)})

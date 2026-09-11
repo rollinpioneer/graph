@@ -61,6 +61,17 @@ def checkpoint_state(sim: Any, *, sequence: int, sampling_point: str, action: st
         "model_eq_data": array_hash(sim.model.eq_data),
         "xfrc_applied": array_hash(sim.data.xfrc_applied),
     }
+    array_values = {
+        "qpos": np.asarray(sim.data.qpos).tolist(),
+        "qvel": np.asarray(sim.data.qvel).tolist(),
+        "qacc": np.asarray(sim.data.qacc).tolist(),
+        "qacc_warmstart": np.asarray(sim.data.qacc_warmstart).tolist(),
+        "mocap_pos": np.asarray(sim.data.mocap_pos).tolist(),
+        "mocap_quat": np.asarray(sim.data.mocap_quat).tolist(),
+        "eq_active": np.asarray(sim.data.eq_active).tolist(),
+        "model_eq_data": np.asarray(sim.model.eq_data).tolist(),
+        "xfrc_applied": np.asarray(sim.data.xfrc_applied).tolist(),
+    }
     visible = {
         "sequence": sequence,
         "sampling_point": sampling_point,
@@ -70,6 +81,7 @@ def checkpoint_state(sim: Any, *, sequence: int, sampling_point: str, action: st
         "time": float(sim.data.time),
         "time_hex": float(sim.data.time).hex(),
         "arrays": arrays,
+        "array_values": array_values,
         "object_xyz": [float(x) for x in sim.object_xyz],
         "gripper_xyz": [float(x) for x in sim.data.mocap_pos[0]],
         "object_qpos": [float(x) for x in sim.data.qpos[sim.object_qpos:sim.object_qpos + 7]],
