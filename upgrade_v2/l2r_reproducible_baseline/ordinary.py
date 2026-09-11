@@ -65,7 +65,7 @@ def _numeric_health(recorder: CaptureRecorder) -> dict[str, Any]:
     return {"schema": "l2rar2_r14b_numeric_health_v1", "passed": not failures, "state_count": len(recorder.states), "failures": failures}
 
 
-def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, instrumented: bool = False) -> dict[str, Any]:
+def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, stage: str, instrumented: bool = False) -> dict[str, Any]:
     validate_process_environment()
     import cv2
     import mujoco
@@ -156,6 +156,14 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, ins
         "numeric_health": numeric["passed"], "capture_files_complete": all(Path(row["image_path"]).is_file() for row in recorder.captures),
         "detection_count": len(detections) == expected["render_callbacks"], "instrumentation_trace": (not instrumented) or len(sim.physics_observer.rows) == expected["instrumented_before_after_rows"],
     }
+    action_end_states = [row for row in recorder.states if row["sampling_point"] == "action_end_callback"]
+    return_states = [row for row in recorder.states if row["sampling_point"] == "after_perform_return"]
+    gates["action_end_geometry"] = len(action_end_states) == expected["action_end_callbacks"] and all(
+        len(row["object_xyz"]) == 3 and len(row["gripper_xyz"]) == 3 for row in action_end_states
+    )
+    gates["callback_to_return_exact"] = len(action_end_states) == len(return_states) and all(
+        left["state_sha256"] == right["state_sha256"] for left, right in zip(action_end_states, return_states)
+    )
     if instrumented:
         integrity = {"schema": "l2rar2_r14b_instrumentation_integrity_v1", "before_after_rows": len(sim.physics_observer.rows), "mutation_checks": len(sim.physics_observer.rows), "mutation_failures": 0, "passed": len(sim.physics_observer.rows) == expected["instrumented_before_after_rows"]}
         _write_jsonl(output_root / "physics_step_trace.jsonl", sim.physics_observer.rows)
@@ -164,8 +172,8 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, ins
     _write_json(output_root / "baseline_quality_gates.json", {"schema": "l2rar2_r14b_quality_gates_v1", "gates": gates, "all_main_gates_passed": all_passed})
     manifest = _manifest(output_root)
     result = {
-        "schema": "l2rar2_r14b_execution_result_v1", "status": "R14B_INSTRUMENTED_C_COMPLETE" if instrumented and all_passed else "R14B_BASELINE_A_COMPLETE_WAITING_HUMAN_REVIEW" if all_passed else "STOP_AFTER_EXECUTION_1",
-        "stage": "R14B_INSTRUMENTED_C" if instrumented else "R14B_ORDINARY_BASELINE_A", "executions_used": 1, "authorized_instances": 1, "automatic_retry": False,
+        "schema": "l2rar2_r14b_execution_result_v1", "status": "R14B_INSTRUMENTED_C_COMPLETE" if instrumented and all_passed else "R14B_BASELINE_A_COMPLETE_WAITING_HUMAN_REVIEW" if stage == "R14B_ORDINARY_BASELINE_A" and all_passed else "R14B_ORDINARY_REPEAT_B_COMPLETE" if stage == "R14B_ORDINARY_REPEAT_B" and all_passed else "STOP_AFTER_EXECUTION_1",
+        "stage": stage, "executions_used": 1, "authorized_instances": 1, "automatic_retry": False,
         "started_at_utc": started.isoformat(), "completed_at_utc": datetime.now(timezone.utc).isoformat(), "runner_commit": source_lock["runner_commit"], "runner_file_hashes": source_lock["generation_runner_files"],
         "protocol_sha256": protocol["protocol_sha256"], "environment_fingerprint_sha256": env_fp["fingerprint_sha256"], "model_fingerprint_sha256": model_fp["model_fingerprint_sha256"],
         "main_gate_count": len(gates), "main_gate_pass_count": sum(bool(v) for v in gates.values()), "all_main_gates_passed": all_passed, "artifact_manifest_sha256": manifest["artifact_manifest_sha256"],

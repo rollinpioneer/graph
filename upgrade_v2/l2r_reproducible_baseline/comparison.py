@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from . import COMPARISON_VERSION
+from .environment import MAIN_GATE_FIELDS
 from .protocol import canonical_hash
 
 
@@ -35,6 +36,14 @@ def compare(left: Path, right: Path, output_root: Path, comparison_name: str) ->
     left_result, right_result = _json(left / "result.json"), _json(right / "result.json")
     source_fields = ("runner_commit", "protocol_sha256", "environment_fingerprint_sha256", "model_fingerprint_sha256")
     source_mismatches = [{"field": key, "left": left_result.get(key), "right": right_result.get(key)} for key in source_fields if left_result.get(key) != right_result.get(key)]
+    left_lock, right_lock = _json(left / "source_lock.json"), _json(right / "source_lock.json")
+    for field in ("runner_commit", "protocol_sha256", "generation_runner_files", "program_sha256", "physical_spec_sha256", "generated_model_xml_sha256"):
+        if left_lock.get(field) != right_lock.get(field):
+            source_mismatches.append({"field": f"source_lock.{field}", "left": left_lock.get(field), "right": right_lock.get(field)})
+    left_env, right_env = _json(left / "runtime_environment_fingerprint.json"), _json(right / "runtime_environment_fingerprint.json")
+    for field in MAIN_GATE_FIELDS:
+        if left_env.get(field) != right_env.get(field):
+            source_mismatches.append({"field": f"environment.{field}", "left": left_env.get(field), "right": right_env.get(field)})
     left_states, right_states = _jsonl(left / "checkpoint_state_trace.jsonl"), _jsonl(right / "checkpoint_state_trace.jsonl")
     state_mismatches = []
     for index, (a, b) in enumerate(zip(left_states, right_states)):
@@ -64,7 +73,12 @@ def compare(left: Path, right: Path, output_root: Path, comparison_name: str) ->
     discrete_pass = all(row["passed"] for row in discrete.values())
     all_passed = bool(left_result.get("all_main_gates_passed") and right_result.get("all_main_gates_passed") and source["passed"] and physics["passed"] and render["passed"] and discrete_pass)
     first = (source_mismatches + state_mismatches + capture_mismatches)[:1]
-    summary = {"schema": "l2rar2_r14b_comparison_summary_v1", "comparison_version": COMPARISON_VERSION, "comparison": comparison_name, "status": "PASS" if all_passed else "FAIL", "all_main_gates_passed": all_passed, "source": source, "physics": physics, "render": render, "discrete": discrete, "first_mismatch": first[0] if first else None}
+    instrumentation = {"passed": True, "reason": "not_applicable"}
+    if comparison_name.endswith("instrumented_C"):
+        integrity_path = right / "instrumentation_integrity.json"
+        instrumentation = _json(integrity_path) if integrity_path.is_file() else {"passed": False, "reason": "missing"}
+        all_passed = all_passed and bool(instrumentation.get("passed")) and int(instrumentation.get("before_after_rows", -1)) == 290 and int(instrumentation.get("mutation_failures", -1)) == 0
+    summary = {"schema": "l2rar2_r14b_comparison_summary_v1", "comparison_version": COMPARISON_VERSION, "comparison": comparison_name, "status": "PASS" if all_passed else "FAIL", "all_main_gates_passed": all_passed, "source": source, "physics": physics, "render": render, "discrete": discrete, "instrumentation": instrumentation, "first_mismatch": first[0] if first else None}
     _write(output_root / "comparison_summary.json", summary)
     _write(output_root / "first_mismatch.json", first[0] if first else {"first_mismatch": None})
     _write(output_root / "discrete_sequence_comparison.json", discrete)
@@ -74,7 +88,6 @@ def compare(left: Path, right: Path, output_root: Path, comparison_name: str) ->
     _write_csv(output_root / "render_comparison.csv", [{"row": i, "passed": a.get("raw_rgb_sha256") == b.get("raw_rgb_sha256") and a.get("jpeg_sha256") == b.get("jpeg_sha256"), "left": a.get("raw_rgb_sha256"), "right": b.get("raw_rgb_sha256")} for i, (a, b) in enumerate(zip(left_caps, right_caps))])
     _write_csv(output_root / "detection_comparison.csv", [{"row": i, "passed": a == b, "left": canonical_hash(a), "right": canonical_hash(b)} for i, (a, b) in enumerate(zip(_jsonl(left / "vision_detections.jsonl"), _jsonl(right / "vision_detections.jsonl")))])
     if comparison_name.endswith("instrumented_C"):
-        integrity_path = right / "instrumentation_integrity.json"
-        _write(output_root / "instrumentation_integrity.json", _json(integrity_path) if integrity_path.is_file() else {"passed": False, "reason": "missing"})
+        _write(output_root / "instrumentation_integrity.json", instrumentation)
     _write(output_root / "run_manifest.json", {"comparison": comparison_name, "left": str(left.resolve()), "right": str(right.resolve()), "summary_sha256": canonical_hash(summary)})
     return summary

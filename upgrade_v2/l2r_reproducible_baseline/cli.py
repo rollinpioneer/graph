@@ -63,6 +63,9 @@ def main(argv: list[str] | None = None) -> int:
     repo = args.repo.resolve(); protocol_path = args.protocol.resolve(); protocol = load_protocol(protocol_path)
     protocol["protocol_sha256"] = sha256(protocol_path)
     stage = args.stage
+    ordinary_stages = {"R14B_ORDINARY_BASELINE_A", "R14B_ORDINARY_REPEAT_B"}
+    if (args.command == "run-instrumented" and stage != "R14B_INSTRUMENTED_C") or (args.command == "run-ordinary" and stage not in ordinary_stages):
+        print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": "command and stage mismatch"})); return 3
     baseline: dict[str, Any] | None = None
     if stage == "R14B_ORDINARY_REPEAT_B":
         if not args.baseline_A or not (args.baseline_A / "result.json").is_file():
@@ -83,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
     except (AuthorizationDenied, OSError, ValueError) as exc:
         print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": str(exc)}, sort_keys=True)); return 3
     try:
-        result = run_instrumented(repo=repo, protocol=protocol, output_root=args.output_root) if args.command == "run-instrumented" else run_ordinary(repo=repo, protocol=protocol, output_root=args.output_root)
+        result = run_instrumented(repo=repo, protocol=protocol, output_root=args.output_root) if args.command == "run-instrumented" else run_ordinary(repo=repo, protocol=protocol, output_root=args.output_root, stage=stage)
     except Exception as exc:
         _failure(args.output_root, f"execution failed after authorization consumption: {type(exc).__name__}: {exc}")
         print(json.dumps({"status": "STOP_AFTER_EXECUTION_1", "reason": str(exc)}, sort_keys=True)); return 4

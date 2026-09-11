@@ -12,6 +12,8 @@ RUNNER_GLOBS = (
 )
 DEPENDENCY_FILES = (
     "upgrade_v2/l2r_task_context/collector.py",
+    "upgrade_v2/l2r_task_context/io.py",
+    "upgrade_v2/l2r_task_context/repair_collection.py",
     "upgrade_v2/l2r_hold_evidence/probe_adapter.py",
     "upgrade_v2/visual_refine_l2/dynamic_simulator.py",
     "upgrade_v2/visual_refine_l2/repaired_simulator.py",

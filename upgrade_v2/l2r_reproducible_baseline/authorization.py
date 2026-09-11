@@ -48,7 +48,10 @@ def _load(path: Path) -> dict[str, Any]:
 
 def validate_authorization(path: Path, *, repo: Path, protocol: dict[str, Any], protocol_sha256: str, requested_output_root: Path, stage: str, baseline: dict[str, Any] | None = None) -> Authorization:
     data = _load(path)
-    expected_stage = protocol["stages"].get({"R14B_ORDINARY_BASELINE_A": "A", "R14B_ORDINARY_REPEAT_B": "B", "R14B_INSTRUMENTED_C": "C"}.get(stage, ""), {}).get("stage")
+    stage_key = {"R14B_ORDINARY_BASELINE_A": "A", "R14B_ORDINARY_REPEAT_B": "B", "R14B_INSTRUMENTED_C": "C"}.get(stage)
+    if stage_key is None:
+        raise AuthorizationDenied(f"unsupported execution stage: {stage}")
+    expected_stage = protocol["stages"][stage_key]["stage"]
     errors: list[str] = []
     exact = {
         "schema": AUTH_SCHEMA,
@@ -57,20 +60,26 @@ def validate_authorization(path: Path, *, repo: Path, protocol: dict[str, Any], 
         "stage": expected_stage,
         "authorized_instances": 1,
         "requested_instances": 1,
+        "case_id": protocol["case_id"],
+        "root_family_id": protocol["root_family_id"],
+        "rollout_seed": protocol["rollout_seed"],
+        "program_sha256": protocol["program_sha256"],
+        "physical_spec_sha256": protocol["physical_spec_sha256"],
         "automatic_retry": False,
+        "on_any_main_gate_mismatch": "STOP_AFTER_EXECUTION_1",
         "agent_self_authorization_prohibited": True,
+        "instrumented_replay_authorized_instances": 0,
         "r16_calibration_authorized_instances": 0,
         "r16_development_authorized_instances": 0,
     }
     for key, wanted in exact.items():
         if data.get(key) != wanted:
             errors.append(key)
-    if stage == "R14B_ORDINARY_BASELINE_A" and data.get("instrumented_replay_authorized_instances") != 0:
-        errors.append("instrumented_replay_authorized_instances")
     if data.get("runner_commit") != current_commit(repo):
         errors.append("runner_commit")
     actual_hashes = runner_file_hashes(repo)
-    if data.get("runner_file_hashes") != actual_hashes:
+    supplied_hashes = data.get("generation_runner_file_hashes", data.get("runner_file_hashes"))
+    if supplied_hashes != actual_hashes:
         errors.append("runner_file_hashes")
     if data.get("protocol_sha256") != protocol_sha256:
         errors.append("protocol_sha256")
