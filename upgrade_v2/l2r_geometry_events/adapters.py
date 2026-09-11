@@ -244,28 +244,51 @@ def build_s_samples(
 
 
 def attach_request_provenance(samples: list[dict[str, Any]], requests: list[dict[str, Any]]) -> None:
-    """Attach the arrived request provenance to each sample (no future intent)."""
-    ordered = sorted(
-        requests,
-        key=lambda item: (
-            float(item.get("received_time", 0.0) or 0.0),
-            str(item.get("request_id", "")),
-        ),
-    )
+    """Attach only requests that had already arrived for *this* attempt.
+
+    A request qualifies when it belongs to the same attempt, its received time
+    is not in the future, and (for an identical timestamp) its issued
+    capture_order is not ahead of the sample.  Samples without time or
+    capture_order get no request and ``context_valid = False``.
+    """
+    parsed = []
+    for request in requests:
+        parsed.append(
+            {
+                "attempt_id": request.get("attempt_id"),
+                "received_time": float(request.get("received_time", 0.0) or 0.0),
+                "issued_capture_order": int(float(request.get("issued_capture_order", -1) or -1)),
+                "requested_effect": request.get("requested_effect"),
+                "request_id": request.get("request_id"),
+                "source": request.get("source"),
+            }
+        )
     for sample in samples:
         sample_time = sample.get("time")
         sample_time = float(sample_time) if sample_time is not None else None
-        active = None
-        for request in ordered:
-            received = float(request.get("received_time", 0.0) or 0.0)
-            if sample_time is None or received <= sample_time + 1e-9:
-                active = request
-        if active is None:
-            sample["requested_effect"] = None
-            sample["request_provenance"] = "none"
-        else:
-            sample["requested_effect"] = active.get("requested_effect")
-            sample["request_provenance"] = active.get("source")
+        capture_order = sample.get("capture_order")
+        attempt_id = sample.get("attempt_id")
+        sample["request_id"] = None
+        sample["requested_effect"] = None
+        sample["request_provenance"] = "none"
+        sample["context_valid"] = False
+        if sample_time is None or capture_order is None or attempt_id is None:
+            continue
+        eligible = []
+        for request in parsed:
+            if request["attempt_id"] is not None and request["attempt_id"] != attempt_id:
+                continue
+            if request["received_time"] < sample_time - 1e-9:
+                eligible.append(request)
+            elif abs(request["received_time"] - sample_time) <= 1e-9 and request["issued_capture_order"] <= int(capture_order):
+                eligible.append(request)
+        if not eligible:
+            continue
+        active = max(eligible, key=lambda item: (item["received_time"], item["issued_capture_order"]))
+        sample["request_id"] = active["request_id"]
+        sample["requested_effect"] = active["requested_effect"]
+        sample["request_provenance"] = active["source"]
+        sample["context_valid"] = True
 
 
 def assert_no_forbidden_inputs(sample: dict[str, Any]) -> None:

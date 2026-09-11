@@ -1,0 +1,47 @@
+{
+  "schema": "l2rar2_r15b_method_contract_v1",
+  "methods": {
+    "O_B2": {
+      "input_tier": "O",
+      "hold_feature": "B_count2",
+      "interface": "l2rar2_online_interface_repair_v1"
+    },
+    "O_C3": {
+      "input_tier": "O",
+      "hold_feature": "C3_vector_rho035",
+      "interface": "l2rar2_online_interface_repair_v1"
+    },
+    "S_G_H": {
+      "input_tier": "S",
+      "entry": [
+        "HEIGHT_THRESHOLD"
+      ],
+      "exit": [
+        "height_return_loss_signal"
+      ]
+    },
+    "S_G_R": {
+      "input_tier": "S",
+      "entry": [
+        "RELATIVE_CO_MOTION"
+      ],
+      "exit": [
+        "contact_true_to_false",
+        "relative_detach_sustained"
+      ]
+    },
+    "S_G_HR": {
+      "input_tier": "S",
+      "entry": [
+        "LIFT_COUPLED",
+        "LOW_HEIGHT_CO_MOTION"
+      ],
+      "exit": [
+        "contact_true_to_false",
+        "relative_detach_sustained"
+      ]
+    }
+  },
+  "parameters_unchanged_from_r15a": true,
+  "s_tier_label": "STATE_ASSISTED_DIAGNOSTIC"
+}
