@@ -9,8 +9,8 @@ ALLOWED = {
     "time", "capture_order", "object_centroid", "gripper_centroid",
     "object_confidence", "gripper_confidence", "width", "height",
     "contact_present", "gripper_command", "attempt_id", "attempt_phase",
-    "attempt_active", "attempt_end", "attempt_end_reason", "attempt_end_sequence",
-    "requested_effect", "context_valid", "frame_missing", "detector_error",
+    "attempt_active", "attempt_end", "attempt_end_reason",
+    "requested_effect", "context_valid",
 }
 FORBIDDEN = {
     "object_world_position", "gripper_world_position", "object_xyz", "gripper_xyz",

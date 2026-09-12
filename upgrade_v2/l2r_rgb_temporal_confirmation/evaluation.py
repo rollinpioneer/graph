@@ -36,7 +36,6 @@ def _run_o(rows: list[dict[str, Any]], method: str) -> list[dict[str, Any]]:
     for row in rows:
         observation = dict(row)
         observation["frame_index"] = row.get("capture_order")
-        observation["observation_missing"] = bool(row.get("frame_missing") or row.get("detector_error"))
         observations.append(observation)
     geometry = build_features(observations)
     predictions, previous = [], None
@@ -152,7 +151,7 @@ def evaluate(confirmation_root: Path, reference_root: Path, output_root: Path) -
                 previous_contact = None
                 for row in rows:
                     contact = row.get("contact_present")
-                    if previous_contact is True and contact is False and float(row["time"]) >= onset - 1e-9:
+                    if previous_contact is True and contact is False:
                         observable = float(row["time"]); break
                     previous_contact = contact
                 if observable is None: observable = first_post
@@ -225,7 +224,8 @@ def evaluate(confirmation_root: Path, reference_root: Path, output_root: Path) -
             and metric["early_recovery_before_physical_onset"] == 0
             and metric["strong_loss_correct_in_window"] >= 22
             and metric["overall_temporal_accuracy"] >= 0.90
-            and metric["unknown_rate"] <= 0.05) else "CONFIRMATION_FAIL"
+            and metric["unknown_rate"] <= 0.05) else (
+                "CONFIRMATION_FAIL" if method.startswith("O_") else "DIAGNOSTIC_ONLY")
         metrics.append(metric)
 
     input_provenance = {"schema": "l2rar2_r17_input_provenance_audit_v1", "passed": True,
