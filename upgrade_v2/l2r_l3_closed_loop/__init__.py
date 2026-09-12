@@ -1,0 +1,7 @@
+"""R23 closed-loop recovery integration with the frozen CLP3 candidate."""
+
+BASE_COMMIT = "cb6ed23f88e44336f17197c300bc72c7fe19df49"
+PROTOCOL_ID = "L2RAR2_R23_L3_CLOSED_LOOP_INTEGRATION_V1"
+CLP3_ID = "O_C3_CLP3_CANONICAL_TIME"
+METHODS = (CLP3_ID, "O_C3_RAW", "RECOVERY_DISABLED")
+
