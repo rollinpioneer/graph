@@ -20,6 +20,8 @@ The runner now separates `physical_state_sha256`, `semantic_state_sha256`, and `
 
 The package verifier and output validator passed. The V2 suite has 113 pure tests; compileall, AST parsing, and `git diff --check` passed. This round used zero physical executions, generated no nonce, did not create an A2 execution root, and left B/C/R16 at zero.
 
+The corrected A2 authorization template is now `l2rar2_r14b_execution_authorization_v3`. It contains all 22 source-lock runner hashes, exact V2 protocol/contract hashes, and a non-empty generated-model XML hash. The strict static template validator and 10 template regression tests pass; the full suite is now 124 tests. Old v1 templates and templates missing any static hash are rejected.
+
 ## Next gate
 
-`baseline_A2_application.json` is `PENDING_HUMAN_AUTHORIZATION`; the authorization template remains `NOT_AUTHORIZED` with all human identity, nonce, expiry, and output-root fields null. A real human reviewer must decide whether to issue a new single-use A2 authorization against this frozen runner/protocol. No automatic approval or execution is performed.
+`baseline_A2_application.json` is `PENDING_HUMAN_AUTHORIZATION`; the authorization template remains `NOT_AUTHORIZED` with all human identity, nonce, expiry, and output-root fields null. The A1 record carries the requested `A_INCONCLUSIVE_REMAIN_BLOCKED` recommendation, explicitly marked as not a human identity attestation. A real human reviewer must decide whether to issue a new single-use A2 authorization against this frozen runner/protocol. No automatic approval or execution is performed.

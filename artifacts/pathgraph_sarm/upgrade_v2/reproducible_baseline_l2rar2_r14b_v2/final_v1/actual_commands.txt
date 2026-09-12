@@ -4,3 +4,5 @@ PYTHONNOUSERSITE=1 /home/xushijie/.conda/envs/lerobot/bin/python -B -m unittest 
 PYTHONNOUSERSITE=1 /home/xushijie/.conda/envs/lerobot/bin/python -B -m compileall -q upgrade_v2/l2r_reproducible_baseline
 git diff --check
 python -B tools/validate_gatefix_outputs.py --forensics-root .../a1_gate_forensics_v1 --static-root .../static_v1 --applications-root .../applications_v1 --report .../static_v1/output_validation.json
+python -B tools/finalize_A2_authorization_template.py --protocol .../static_v1/protocol_draft.json --source-lock .../static_v1/source_lock.json --output .../applications_v1/baseline_A2_authorization.template.json
+python -B tools/validate_A2_authorization_template.py --template .../applications_v1/baseline_A2_authorization.template.json --protocol .../static_v1/protocol_draft.json --source-lock .../static_v1/source_lock.json
