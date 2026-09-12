@@ -1,0 +1,136 @@
+{
+  "methods": {
+    "O_B2_RAW": {
+      "eligible_for_selection": false,
+      "fields_read": [
+        "attempt_active",
+        "attempt_end",
+        "attempt_end_reason",
+        "attempt_id",
+        "attempt_phase",
+        "capture_order",
+        "contact_present",
+        "context_valid",
+        "gripper_centroid",
+        "gripper_command",
+        "gripper_confidence",
+        "height",
+        "object_centroid",
+        "object_confidence",
+        "requested_effect",
+        "time",
+        "width"
+      ],
+      "files_read": [
+        "candidate_input/detections_rgb.jsonl",
+        "candidate_input/contact_proxy.jsonl",
+        "candidate_input/attempt_lifecycle.jsonl",
+        "candidate_input/gripper_commands.jsonl",
+        "candidate_input/request_context.jsonl"
+      ],
+      "forbidden_online_reads": 0,
+      "input_tier": "ONLINE_TRUE_RGB"
+    },
+    "O_C3_CLP2_LOGICAL_CLOCK": {
+      "eligible_for_selection": true,
+      "fields_read": [
+        "attempt_active",
+        "attempt_end",
+        "attempt_end_reason",
+        "attempt_id",
+        "attempt_phase",
+        "capture_order",
+        "contact_present",
+        "context_valid",
+        "gripper_centroid",
+        "gripper_command",
+        "gripper_confidence",
+        "height",
+        "object_centroid",
+        "object_confidence",
+        "requested_effect",
+        "time",
+        "width"
+      ],
+      "files_read": [
+        "candidate_input/detections_rgb.jsonl",
+        "candidate_input/contact_proxy.jsonl",
+        "candidate_input/attempt_lifecycle.jsonl",
+        "candidate_input/gripper_commands.jsonl",
+        "candidate_input/request_context.jsonl"
+      ],
+      "forbidden_online_reads": 0,
+      "input_tier": "ONLINE_TRUE_RGB"
+    },
+    "O_C3_RAW": {
+      "eligible_for_selection": false,
+      "fields_read": [
+        "attempt_active",
+        "attempt_end",
+        "attempt_end_reason",
+        "attempt_id",
+        "attempt_phase",
+        "capture_order",
+        "contact_present",
+        "context_valid",
+        "gripper_centroid",
+        "gripper_command",
+        "gripper_confidence",
+        "height",
+        "object_centroid",
+        "object_confidence",
+        "requested_effect",
+        "time",
+        "width"
+      ],
+      "files_read": [
+        "candidate_input/detections_rgb.jsonl",
+        "candidate_input/contact_proxy.jsonl",
+        "candidate_input/attempt_lifecycle.jsonl",
+        "candidate_input/gripper_commands.jsonl",
+        "candidate_input/request_context.jsonl"
+      ],
+      "forbidden_online_reads": 0,
+      "input_tier": "ONLINE_TRUE_RGB"
+    },
+    "S_G_H": {
+      "eligible_for_selection": false,
+      "fields_read": [
+        "object_world_position",
+        "gripper_world_position"
+      ],
+      "files_read": [
+        "candidate_input/detections_rgb.jsonl",
+        "candidate_input/contact_proxy.jsonl",
+        "candidate_input/attempt_lifecycle.jsonl",
+        "candidate_input/gripper_commands.jsonl",
+        "candidate_input/request_context.jsonl",
+        "reference/physics_trace.jsonl"
+      ],
+      "forbidden_online_reads": 0,
+      "input_tier": "STATE_ASSISTED_DIAGNOSTIC"
+    }
+  },
+  "online_forbidden_fields": [
+    "case_id",
+    "eq_active",
+    "eq_data",
+    "family_id",
+    "force_level",
+    "future_outcome",
+    "gripper_world_position",
+    "gripper_xyz",
+    "intervention_phase",
+    "loss_confirmed_time",
+    "loss_onset_time",
+    "object_world_position",
+    "object_xyz",
+    "physical_loss_confirmed",
+    "reference_action",
+    "weld_active",
+    "xfrc_applied"
+  ],
+  "passed": true,
+  "prediction_completed_before_reference_join": true,
+  "schema": "l2rar2_r20_input_provenance_audit_v1"
+}
