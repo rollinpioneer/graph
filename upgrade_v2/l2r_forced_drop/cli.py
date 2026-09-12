@@ -32,7 +32,14 @@ def main(argv: list[str] | None = None) -> int:
         return 3
     args.output_root.mkdir(parents=True, exist_ok=False)
     (args.output_root / "authorization_snapshot.json").write_text(json.dumps({"stage": auth.stage, "authorized_instances": auth.authorized_instances}, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"status": "AUTHORIZED_READY", "stage": auth.stage, "output_root": str(args.output_root)}, sort_keys=True))
+    # Execution modules are imported only after authorization and output-root creation.
+    if args.command == "calibrate":
+        from .calibration_runner import run_calibration
+        result = run_calibration(output_root=args.output_root, authorized=True)
+    else:
+        from .development_runner import run_development
+        result = run_development(output_root=args.output_root, authorized=True)
+    print(json.dumps({"status": "COMPLETED", "stage": auth.stage, "output_root": str(args.output_root), "result": result}, sort_keys=True))
     return 0
 
 
