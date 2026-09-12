@@ -41,12 +41,20 @@ def make_force_pulse(mass_kg: float, gripper_rotation, level: PulseLevel, durati
     return ForcePulse(level.level_id, duration_s, level.target_delta_v_local_mps, tuple(local), tuple(world))
 
 
-def run_force_pulse(sim: Any, pulse: ForcePulse, trace: Callable[[Any, str], None] | None = None) -> list[dict[str, Any]]:
-    """Apply exactly five 100 Hz steps and always clear the six-vector force."""
+def run_force_pulse(sim: Any, pulse: ForcePulse, trace: Callable[[Any, str], None] | None = None,
+                    *, steps: int | None = None) -> list[dict[str, Any]]:
+    """Apply a pulse and always clear the six-vector force.
+
+    The frozen calibration path uses the default five 100 Hz steps.  Explicit
+    ``steps`` is reserved for a separately labelled intervention-design probe.
+    """
     if not getattr(sim, "pre_hold_verified", False):
         raise RuntimeError("PREHOLD_UNVERIFIED")
-    if int(round(pulse.duration_s * sim.physics_hz)) != 5:
-        raise ValueError("R16 pulse must contain exactly five physics steps")
+    expected_steps = int(round(pulse.duration_s * sim.physics_hz))
+    if steps is None:
+        steps = expected_steps
+    if steps <= 0 or expected_steps != steps:
+        raise ValueError("pulse duration and physics-step count mismatch")
     rows: list[dict[str, Any]] = []
     sim.disable_weld_for_intervention()
     if trace:
@@ -55,7 +63,7 @@ def run_force_pulse(sim: Any, pulse: ForcePulse, trace: Callable[[Any, str], Non
         sim.set_object_force(np.asarray(pulse.force_world_n, dtype=float))
         if trace:
             trace(sim, "force_pulse_started")
-        for step in range(5):
+        for step in range(steps):
             sim.physics_step()
             row = sim.reference_snapshot("force_pulse")
             row["pulse_step"] = step + 1
