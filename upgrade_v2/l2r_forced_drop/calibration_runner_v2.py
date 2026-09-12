@@ -11,7 +11,7 @@ from upgrade_v2.visual_refine_l2.dynamic_simulator import family_spec
 
 def _prehold(sim, family, seed):
     z0=float(sim.object_xyz[2]); sim.perform('approach_object'); sim.perform('close_gripper'); sim.perform('lift')
-    anchor=None; rows=[]; z0=float(sim.object_xyz[2])
+    anchor=None; rows=[]
     for i in range(10):
         sim.physics_step(); row=snapshot(sim,step=i,phase='pre_hold',family_id=family,seed=seed)
         if anchor is None: anchor=np.asarray(row['object_in_gripper_position'])
