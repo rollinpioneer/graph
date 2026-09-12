@@ -1,0 +1,16 @@
+{
+  "candidate_record_time": "copied from online observation by repaired interface observe()",
+  "contact_proxy_time": "same capture_frame instant; contact_sensor sampled with identical capture_order/time",
+  "detector_row_time": "copied verbatim from frame_manifest by detector_adapter.detect_rollout",
+  "frame_manifest_time": "capture instant after a completed physics step; capture_frame reads sim.data.time before render",
+  "physics_row_time": "post-step: R17Tabletop.physics_step calls mj_step, then after_physics_step; snapshot reads data.time",
+  "reference_onset_time": "saved physics row.time at frozen evaluate_loss_trace loss_start index",
+  "schema": "l2rar2_r18_timestamp_semantics_v1",
+  "source_chain_verified": [
+    "upgrade_v2/l2r_rgb_temporal_confirmation/rgb_capture.py:R17Tabletop.physics_step/_after_step/capture_frame",
+    "upgrade_v2/l2r_rgb_temporal_confirmation/detector_adapter.py:detect_rollout",
+    "upgrade_v2/l2r_task_context/online_interface_repair.py:RepairedOnlineInterface.observe",
+    "upgrade_v2/l2r_forced_drop/physical_reference.py:evaluate_loss_trace"
+  ],
+  "timestamp_semantics_bug": false
+}

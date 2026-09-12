@@ -1,0 +1,5 @@
+"""R18 contact-loss persistence confirmation."""
+
+PROTOCOL_ID = "L2RAR2_R18_CONTACT_LOSS_PERSISTENCE_CONFIRMATION_V1"
+CANDIDATE_ID = "O_C3_CLP1"
+PROBLEM_ROLLOUT_ID = "L2RAR2_RGB_CONF_04_882004__C11_transport_strong_loss"
