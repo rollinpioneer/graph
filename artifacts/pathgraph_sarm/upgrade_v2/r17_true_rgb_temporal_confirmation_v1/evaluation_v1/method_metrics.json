@@ -1,0 +1,845 @@
+{
+  "input_provenance": {
+    "methods": {
+      "O_B2": {
+        "eligible_for_online_selection": true,
+        "fields_read": [
+          "attempt_active",
+          "attempt_end",
+          "attempt_end_reason",
+          "attempt_id",
+          "attempt_phase",
+          "capture_order",
+          "contact_present",
+          "context_valid",
+          "gripper_centroid",
+          "gripper_command",
+          "gripper_confidence",
+          "height",
+          "object_centroid",
+          "object_confidence",
+          "requested_effect",
+          "time",
+          "width"
+        ],
+        "files_read": [
+          "candidate_input/detections_rgb.jsonl",
+          "candidate_input/contact_proxy.jsonl",
+          "candidate_input/attempt_lifecycle.jsonl",
+          "candidate_input/gripper_commands.jsonl",
+          "candidate_input/request_context.jsonl"
+        ],
+        "forbidden_online_reads": 0,
+        "input_tier": "ONLINE_TRUE_RGB"
+      },
+      "O_C3": {
+        "eligible_for_online_selection": true,
+        "fields_read": [
+          "attempt_active",
+          "attempt_end",
+          "attempt_end_reason",
+          "attempt_id",
+          "attempt_phase",
+          "capture_order",
+          "contact_present",
+          "context_valid",
+          "gripper_centroid",
+          "gripper_command",
+          "gripper_confidence",
+          "height",
+          "object_centroid",
+          "object_confidence",
+          "requested_effect",
+          "time",
+          "width"
+        ],
+        "files_read": [
+          "candidate_input/detections_rgb.jsonl",
+          "candidate_input/contact_proxy.jsonl",
+          "candidate_input/attempt_lifecycle.jsonl",
+          "candidate_input/gripper_commands.jsonl",
+          "candidate_input/request_context.jsonl"
+        ],
+        "forbidden_online_reads": 0,
+        "input_tier": "ONLINE_TRUE_RGB"
+      },
+      "S_G_H": {
+        "eligible_for_online_selection": false,
+        "fields_read": [
+          "object_world_position",
+          "gripper_world_position"
+        ],
+        "files_read": [
+          "candidate_input/detections_rgb.jsonl",
+          "candidate_input/contact_proxy.jsonl",
+          "candidate_input/attempt_lifecycle.jsonl",
+          "candidate_input/gripper_commands.jsonl",
+          "candidate_input/request_context.jsonl",
+          "reference/physics_trace.jsonl"
+        ],
+        "forbidden_online_reads": 0,
+        "input_tier": "STATE_ASSISTED_DIAGNOSTIC"
+      },
+      "S_G_HR": {
+        "eligible_for_online_selection": false,
+        "fields_read": [
+          "object_world_position",
+          "gripper_world_position"
+        ],
+        "files_read": [
+          "candidate_input/detections_rgb.jsonl",
+          "candidate_input/contact_proxy.jsonl",
+          "candidate_input/attempt_lifecycle.jsonl",
+          "candidate_input/gripper_commands.jsonl",
+          "candidate_input/request_context.jsonl",
+          "reference/physics_trace.jsonl"
+        ],
+        "forbidden_online_reads": 0,
+        "input_tier": "STATE_ASSISTED_DIAGNOSTIC"
+      },
+      "S_G_R": {
+        "eligible_for_online_selection": false,
+        "fields_read": [
+          "object_world_position",
+          "gripper_world_position"
+        ],
+        "files_read": [
+          "candidate_input/detections_rgb.jsonl",
+          "candidate_input/contact_proxy.jsonl",
+          "candidate_input/attempt_lifecycle.jsonl",
+          "candidate_input/gripper_commands.jsonl",
+          "candidate_input/request_context.jsonl",
+          "reference/physics_trace.jsonl"
+        ],
+        "forbidden_online_reads": 0,
+        "input_tier": "STATE_ASSISTED_DIAGNOSTIC"
+      }
+    },
+    "o_tier_forbidden_fields": [
+      "case_id",
+      "eq_active",
+      "eq_data",
+      "family_id",
+      "force_level",
+      "future_outcome",
+      "gripper_world_position",
+      "gripper_xyz",
+      "intervention_phase",
+      "loss_confirmed_time",
+      "loss_onset_time",
+      "object_world_position",
+      "object_xyz",
+      "physical_loss_confirmed",
+      "reference_action",
+      "weld_active",
+      "xfrc_applied"
+    ],
+    "passed": true,
+    "reference_join_after_prediction": true,
+    "schema": "l2rar2_r17_input_provenance_audit_v1"
+  },
+  "methods": [
+    {
+      "C1_retry_correct": 6,
+      "case_metrics": {
+        "C1": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C10": {
+          "accuracy": 0.8333333333333334,
+          "correct": 5,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 5,
+            "MISSED_REQUIRED_ACTION": 1
+          },
+          "total": 6
+        },
+        "C11": {
+          "accuracy": 0.8333333333333334,
+          "correct": 5,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 5,
+            "EARLY_ACTION": 1
+          },
+          "total": 6
+        },
+        "C12": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C2": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C3": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C4": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C5": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "CORRECT_NONE": 5
+          },
+          "total": 6
+        },
+        "C6": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 3,
+            "CORRECT_NONE": 3
+          },
+          "total": 6
+        },
+        "C7": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 4,
+            "CORRECT_NONE": 2
+          },
+          "total": 6
+        },
+        "C8": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C9": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        }
+      },
+      "confirmation_status": "CONFIRMATION_FAIL",
+      "correct": 70,
+      "early_action_rate": 0.013888888888888888,
+      "early_recovery_before_physical_onset": 1,
+      "eligible_for_online_selection": true,
+      "false_actions_C2_C3_C4_C12": 0,
+      "false_recovery_rate": 0.0,
+      "false_retry_rate": 0.0,
+      "input_tier": "ONLINE_TRUE_RGB",
+      "late_action_rate": 0.0,
+      "latency_median_s": 0.03500000000000003,
+      "latency_p90_s": 0.1100000000000001,
+      "method": "O_B2",
+      "miss_rate": 0.013888888888888888,
+      "outcome_counts": {
+        "CORRECT_IN_WINDOW": 36,
+        "CORRECT_NONE": 34,
+        "EARLY_ACTION": 1,
+        "FALSE_RECOVERY": 0,
+        "FALSE_RETRY": 0,
+        "LATE_ACTION": 0,
+        "MISSED_REQUIRED_ACTION": 1
+      },
+      "overall_temporal_accuracy": 0.9722222222222222,
+      "resolved": 72,
+      "strong_loss_correct_in_window": 22,
+      "total": 72,
+      "unknown_rate": 0.0
+    },
+    {
+      "C1_retry_correct": 6,
+      "case_metrics": {
+        "C1": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C10": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C11": {
+          "accuracy": 0.8333333333333334,
+          "correct": 5,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 5,
+            "EARLY_ACTION": 1
+          },
+          "total": 6
+        },
+        "C12": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C2": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C3": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C4": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C5": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "CORRECT_NONE": 5
+          },
+          "total": 6
+        },
+        "C6": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 3,
+            "CORRECT_NONE": 3
+          },
+          "total": 6
+        },
+        "C7": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 4,
+            "CORRECT_NONE": 2
+          },
+          "total": 6
+        },
+        "C8": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C9": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        }
+      },
+      "confirmation_status": "CONFIRMATION_FAIL",
+      "correct": 71,
+      "early_action_rate": 0.013888888888888888,
+      "early_recovery_before_physical_onset": 1,
+      "eligible_for_online_selection": true,
+      "false_actions_C2_C3_C4_C12": 0,
+      "false_recovery_rate": 0.0,
+      "false_retry_rate": 0.0,
+      "input_tier": "ONLINE_TRUE_RGB",
+      "late_action_rate": 0.0,
+      "latency_median_s": 0.030000000000000027,
+      "latency_p90_s": 0.1100000000000001,
+      "method": "O_C3",
+      "miss_rate": 0.0,
+      "outcome_counts": {
+        "CORRECT_IN_WINDOW": 37,
+        "CORRECT_NONE": 34,
+        "EARLY_ACTION": 1,
+        "FALSE_RECOVERY": 0,
+        "FALSE_RETRY": 0,
+        "LATE_ACTION": 0,
+        "MISSED_REQUIRED_ACTION": 0
+      },
+      "overall_temporal_accuracy": 0.9861111111111112,
+      "resolved": 72,
+      "strong_loss_correct_in_window": 23,
+      "total": 72,
+      "unknown_rate": 0.0
+    },
+    {
+      "C1_retry_correct": 6,
+      "case_metrics": {
+        "C1": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C10": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C11": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C12": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C2": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C3": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C4": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C5": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "CORRECT_NONE": 5
+          },
+          "total": 6
+        },
+        "C6": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 3,
+            "CORRECT_NONE": 3
+          },
+          "total": 6
+        },
+        "C7": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 4,
+            "CORRECT_NONE": 2
+          },
+          "total": 6
+        },
+        "C8": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C9": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        }
+      },
+      "confirmation_status": "DIAGNOSTIC_ONLY",
+      "correct": 72,
+      "early_action_rate": 0.0,
+      "early_recovery_before_physical_onset": 0,
+      "eligible_for_online_selection": false,
+      "false_actions_C2_C3_C4_C12": 0,
+      "false_recovery_rate": 0.0,
+      "false_retry_rate": 0.0,
+      "input_tier": "STATE_ASSISTED_DIAGNOSTIC",
+      "late_action_rate": 0.0,
+      "latency_median_s": 0.14500000000000013,
+      "latency_p90_s": 0.2200000000000002,
+      "method": "S_G_H",
+      "miss_rate": 0.0,
+      "outcome_counts": {
+        "CORRECT_IN_WINDOW": 38,
+        "CORRECT_NONE": 34,
+        "EARLY_ACTION": 0,
+        "FALSE_RECOVERY": 0,
+        "FALSE_RETRY": 0,
+        "LATE_ACTION": 0,
+        "MISSED_REQUIRED_ACTION": 0
+      },
+      "overall_temporal_accuracy": 1.0,
+      "resolved": 72,
+      "strong_loss_correct_in_window": 24,
+      "total": 72,
+      "unknown_rate": 0.0
+    },
+    {
+      "C1_retry_correct": 6,
+      "case_metrics": {
+        "C1": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C10": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C11": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C12": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C2": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C3": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C4": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C5": {
+          "accuracy": 0.5,
+          "correct": 3,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "CORRECT_NONE": 2,
+            "FALSE_RECOVERY": 3
+          },
+          "total": 6
+        },
+        "C6": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 2,
+            "FALSE_RECOVERY": 3
+          },
+          "total": 6
+        },
+        "C7": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 3,
+            "FALSE_RECOVERY": 2
+          },
+          "total": 6
+        },
+        "C8": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C9": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        }
+      },
+      "confirmation_status": "DIAGNOSTIC_ONLY",
+      "correct": 39,
+      "early_action_rate": 0.3472222222222222,
+      "early_recovery_before_physical_onset": 25,
+      "eligible_for_online_selection": false,
+      "false_actions_C2_C3_C4_C12": 0,
+      "false_recovery_rate": 0.1111111111111111,
+      "false_retry_rate": 0.0,
+      "input_tier": "STATE_ASSISTED_DIAGNOSTIC",
+      "late_action_rate": 0.0,
+      "latency_median_s": 0.010000000000000009,
+      "latency_p90_s": 0.010000000000000009,
+      "method": "S_G_R",
+      "miss_rate": 0.0,
+      "outcome_counts": {
+        "CORRECT_IN_WINDOW": 13,
+        "CORRECT_NONE": 26,
+        "EARLY_ACTION": 25,
+        "FALSE_RECOVERY": 8,
+        "FALSE_RETRY": 0,
+        "LATE_ACTION": 0,
+        "MISSED_REQUIRED_ACTION": 0
+      },
+      "overall_temporal_accuracy": 0.5416666666666666,
+      "resolved": 72,
+      "strong_loss_correct_in_window": 4,
+      "total": 72,
+      "unknown_rate": 0.0
+    },
+    {
+      "C1_retry_correct": 6,
+      "case_metrics": {
+        "C1": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 6
+          },
+          "total": 6
+        },
+        "C10": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C11": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C12": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C2": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C3": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C4": {
+          "accuracy": 1.0,
+          "correct": 6,
+          "outcomes": {
+            "CORRECT_NONE": 6
+          },
+          "total": 6
+        },
+        "C5": {
+          "accuracy": 0.5,
+          "correct": 3,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "CORRECT_NONE": 2,
+            "FALSE_RECOVERY": 3
+          },
+          "total": 6
+        },
+        "C6": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 2,
+            "FALSE_RECOVERY": 3
+          },
+          "total": 6
+        },
+        "C7": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 3,
+            "FALSE_RECOVERY": 2
+          },
+          "total": 6
+        },
+        "C8": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        },
+        "C9": {
+          "accuracy": 0.16666666666666666,
+          "correct": 1,
+          "outcomes": {
+            "CORRECT_IN_WINDOW": 1,
+            "EARLY_ACTION": 5
+          },
+          "total": 6
+        }
+      },
+      "confirmation_status": "DIAGNOSTIC_ONLY",
+      "correct": 39,
+      "early_action_rate": 0.3472222222222222,
+      "early_recovery_before_physical_onset": 25,
+      "eligible_for_online_selection": false,
+      "false_actions_C2_C3_C4_C12": 0,
+      "false_recovery_rate": 0.1111111111111111,
+      "false_retry_rate": 0.0,
+      "input_tier": "STATE_ASSISTED_DIAGNOSTIC",
+      "late_action_rate": 0.0,
+      "latency_median_s": 0.010000000000000009,
+      "latency_p90_s": 0.010000000000000009,
+      "method": "S_G_HR",
+      "miss_rate": 0.0,
+      "outcome_counts": {
+        "CORRECT_IN_WINDOW": 13,
+        "CORRECT_NONE": 26,
+        "EARLY_ACTION": 25,
+        "FALSE_RECOVERY": 8,
+        "FALSE_RETRY": 0,
+        "LATE_ACTION": 0,
+        "MISSED_REQUIRED_ACTION": 0
+      },
+      "overall_temporal_accuracy": 0.5416666666666666,
+      "resolved": 72,
+      "strong_loss_correct_in_window": 4,
+      "total": 72,
+      "unknown_rate": 0.0
+    }
+  ],
+  "parameter_audit": {
+    "family_specific_parameters": false,
+    "parameter_search_allowed": false,
+    "parameters": {
+      "direction_cosine_min": 0.8,
+      "evidence_duration_s": 0.05,
+      "height_off_m": 0.01,
+      "height_on_m": 0.02,
+      "max_gap_s": 0.25,
+      "min_motion_3d_m": 0.004,
+      "relative_hold_drift_m": 0.01,
+      "relative_loss_drift_m": 0.02,
+      "relative_rho_max": 0.35
+    },
+    "passed": true,
+    "schema": "l2rar2_r17_parameter_audit_v1"
+  },
+  "prefix_causality": {
+    "checked": 1440,
+    "mismatches": [],
+    "passed": true,
+    "schema": "l2rar2_r17_prefix_causality_audit_v1"
+  },
+  "schema": "l2rar2_r17_method_metrics_v1",
+  "selected_candidate_id": null
+}
