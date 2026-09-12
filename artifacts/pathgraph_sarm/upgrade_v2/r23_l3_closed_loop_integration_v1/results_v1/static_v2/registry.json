@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "case_id": "L3C1_missed_grasp_retry",
+      "commanded_release": false,
+      "contact_dropout": false,
+      "expected_action": "retry_grasp",
+      "force_loss": false,
+      "scenario": "missed_grasp_then_retry"
+    },
+    {
+      "case_id": "L3C2_transport_loss_recover",
+      "commanded_release": false,
+      "contact_dropout": false,
+      "expected_action": "recover_object",
+      "force_loss": true,
+      "scenario": "normal_pick_place"
+    },
+    {
+      "case_id": "L3C3_stable_transport",
+      "commanded_release": false,
+      "contact_dropout": false,
+      "expected_action": "none",
+      "force_loss": false,
+      "scenario": "normal_pick_place"
+    },
+    {
+      "case_id": "L3C4_single_frame_contact_fault",
+      "commanded_release": false,
+      "contact_dropout": true,
+      "expected_action": "none",
+      "force_loss": false,
+      "scenario": "normal_pick_place"
+    },
+    {
+      "case_id": "L3C5_commanded_release",
+      "commanded_release": true,
+      "contact_dropout": false,
+      "expected_action": "none",
+      "force_loss": false,
+      "scenario": "normal_pick_place"
+    }
+  ],
+  "families": [
+    {
+      "family_id": "L2RAR2_R23R1_L3_00_894000",
+      "family_seed": 894000,
+      "rollout_seed_base": 89500000
+    },
+    {
+      "family_id": "L2RAR2_R23R1_L3_01_894001",
+      "family_seed": 894001,
+      "rollout_seed_base": 89500100
+    },
+    {
+      "family_id": "L2RAR2_R23R1_L3_02_894002",
+      "family_seed": 894002,
+      "rollout_seed_base": 89500200
+    },
+    {
+      "family_id": "L2RAR2_R23R1_L3_03_894003",
+      "family_seed": 894003,
+      "rollout_seed_base": 89500300
+    }
+  ],
+  "methods": [
+    "O_C3_CLP3_CANONICAL_TIME",
+    "O_C3_RAW",
+    "RECOVERY_DISABLED"
+  ],
+  "paired_groups": 20,
+  "parameter_search_allowed": false,
+  "physical_rollouts": 60,
+  "schema": "l2rar2_r23_l3_registry_v1",
+  "seed_replacement_allowed": false
+}
