@@ -45,7 +45,11 @@ def build_reference(confirmation_root: Path, output_root: Path) -> dict[str, Any
     write_csv(output_root / "frame_manifest.csv", frames)
     write_csv(output_root / "detection_manifest.csv", detections)
     write_csv(output_root / "logical_observation_manifest.csv", logical)
-    write_csv(output_root / "fault_injection_manifest.csv", faults)
+    fault_fields = ("rollout_id", "case_id", "fault_type", "target_capture_order",
+                    "source_capture_order", "source_contact", "injected_contact", "source_time",
+                    "next_later_source_time", "duplicate_capture_order", "same_jpeg_sha256",
+                    "reference_unchanged")
+    write_csv(output_root / "fault_injection_manifest.csv", faults, fault_fields)
     write_json(output_root / "physical_reference_index.json",
                {"schema": "l2rar2_r20_physical_reference_index_v1", "rows": references})
     return {"schema": "l2rar2_r20_reference_build_v1", "status": "PASS" if len(references) == 72 else "FAIL",

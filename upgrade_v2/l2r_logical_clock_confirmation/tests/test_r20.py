@@ -127,6 +127,9 @@ class GeneratorTests(unittest.TestCase):
     def test_18_planned_rgb_missing(self): self.assertIn("T11_SUCCESSOR_PERIODIC_RGB_DROPOUT",self.source)
     def test_same_time_false_true_6_of_6(self): self.assertIn("T4_same_time_false_true_6_of_6",self.source)
     def test_positive_same_time_confirmation_coverage(self): self.assertIn("same_time_false_false_positive_count",self.source)
+    def test_fault_csv_preserves_T3_and_T4_fields(self):
+        source=(ROOT/"upgrade_v2/l2r_logical_clock_confirmation/reference_builder.py").read_text()
+        self.assertIn('"next_later_source_time"',source); self.assertIn('"same_jpeg_sha256"',source)
 
 
 class EvaluationTests(unittest.TestCase):
