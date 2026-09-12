@@ -22,7 +22,7 @@ CASES = (
 )
 
 FAMILIES = tuple(
-    (f"L2RAR2_R23_L3_{index:02d}_{892000 + index}", 892000 + index, 89300000 + index * 100)
+    (f"L2RAR2_R23R1_L3_{index:02d}_{894000 + index}", 894000 + index, 89500000 + index * 100)
     for index in range(4)
 )
 

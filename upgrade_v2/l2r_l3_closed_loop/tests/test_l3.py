@@ -17,7 +17,7 @@ class L3Tests(unittest.TestCase):
     def test_candidate_frozen(self): self.assertEqual(CLP3_ID, "O_C3_CLP3_CANONICAL_TIME")
     def test_three_arms(self): self.assertEqual(METHODS, (CLP3_ID, "O_C3_RAW", "RECOVERY_DISABLED"))
     def test_registry_is_60(self): self.assertEqual(len(CASES) * len(FAMILIES) * len(METHODS), 60)
-    def test_new_seeds(self): self.assertEqual([row[1] for row in FAMILIES], [892000, 892001, 892002, 892003])
+    def test_new_seeds(self): self.assertEqual([row[1] for row in FAMILIES], [894000, 894001, 894002, 894003])
     def test_paired_seed_design(self): self.assertEqual(registry()["paired_groups"], 20)
     def test_failure_taxonomy(self):
         self.assertEqual(protocol_lock()["failure_stages"], ["TRIGGERING_ERROR", "RELOCATION_ERROR", "REGRASP_ERROR", "TASK_RECOVERY_ERROR"])

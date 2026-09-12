@@ -218,7 +218,7 @@ def _transport(capture: L3Capture, case: L3Case) -> None:
         capture.phase_grid_time = float(sim.data.time)
         capture.set_phase("transport_contact_loss", "transport_to_target")
         sim.disable_weld_for_intervention(); capture.add_event_reference("post_weld_off_pre_force")
-        for _ in range(20):
+        for _ in range(100):
             sim.physics_step()
             if capture.first_requested_action is not None: break
         if capture.first_requested_action is not None:
