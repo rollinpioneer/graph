@@ -1,0 +1,83 @@
+{
+  "clp3_modified": false,
+  "confirmation_parameter_search": false,
+  "gates": {
+    "baseline_goal_success_0_of_8": true,
+    "baseline_observability_signal_0_of_16": true,
+    "baseline_relocation_success_0_of_8": true,
+    "baseline_secondary_success_0_of_8": true,
+    "control_false_actions_0": true,
+    "full_factor_cell_success_28_of_28": false,
+    "fusion_observability_signal_16_of_16": false,
+    "rollouts_112": true,
+    "signal_not_observed_never_candidate_error": true,
+    "supervisor_goal_success_8_of_8": true,
+    "supervisor_relocation_success_8_of_8": true,
+    "supervisor_secondary_success_8_of_8": true
+  },
+  "method_metrics": [
+    {
+      "actual_recovery_success": 8,
+      "arm_id": "F0_S0_CLP3_BASELINE",
+      "failure_stages": "{\"RELOCATION_ERROR\": 4, \"SIGNAL_NOT_OBSERVED\": 8, \"TASK_RECOVERY_ERROR\": 8}",
+      "false_executed_actions": 0,
+      "final_task_success": 8,
+      "fusion_enabled": false,
+      "inner_recovery_loops": 16,
+      "outer_recovery_cycles": 12,
+      "rollouts": 28,
+      "signal_exposure": 12,
+      "signal_exposure_denominator": 20,
+      "supervisor_v2_enabled": false,
+      "task_duration_median_s": 6.599999999999904
+    },
+    {
+      "actual_recovery_success": 14,
+      "arm_id": "F1_S0_FUSION_ONLY",
+      "failure_stages": "{\"RELOCATION_ERROR\": 4, \"SIGNAL_NOT_OBSERVED\": 2, \"TASK_RECOVERY_ERROR\": 10}",
+      "false_executed_actions": 0,
+      "final_task_success": 12,
+      "fusion_enabled": true,
+      "inner_recovery_loops": 22,
+      "outer_recovery_cycles": 18,
+      "rollouts": 28,
+      "signal_exposure": 18,
+      "signal_exposure_denominator": 20,
+      "supervisor_v2_enabled": false,
+      "task_duration_median_s": 8.374999999999865
+    },
+    {
+      "actual_recovery_success": 12,
+      "arm_id": "F0_S1_SUPERVISOR_ONLY",
+      "failure_stages": "{\"SIGNAL_NOT_OBSERVED\": 8}",
+      "false_executed_actions": 0,
+      "final_task_success": 20,
+      "fusion_enabled": false,
+      "inner_recovery_loops": 29,
+      "outer_recovery_cycles": 25,
+      "rollouts": 28,
+      "signal_exposure": 12,
+      "signal_exposure_denominator": 20,
+      "supervisor_v2_enabled": true,
+      "task_duration_median_s": 7.799999999999878
+    },
+    {
+      "actual_recovery_success": 18,
+      "arm_id": "F1_S1_FUSION_SUPERVISOR",
+      "failure_stages": "{\"SIGNAL_NOT_OBSERVED\": 2}",
+      "false_executed_actions": 0,
+      "final_task_success": 26,
+      "fusion_enabled": true,
+      "inner_recovery_loops": 40,
+      "outer_recovery_cycles": 36,
+      "rollouts": 28,
+      "signal_exposure": 18,
+      "signal_exposure_denominator": 20,
+      "supervisor_v2_enabled": true,
+      "task_duration_median_s": 10.99999999999981
+    }
+  ],
+  "r24_development_only": true,
+  "schema": "l2rar2_r25_factorial_evaluation_v1",
+  "status": "FAIL"
+}

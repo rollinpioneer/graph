@@ -1,0 +1,96 @@
+{
+  "arms": [
+    {
+      "arm_id": "F0_S0_CLP3_BASELINE",
+      "fusion_enabled": false,
+      "supervisor_v2_enabled": false
+    },
+    {
+      "arm_id": "F1_S0_FUSION_ONLY",
+      "fusion_enabled": true,
+      "supervisor_v2_enabled": false
+    },
+    {
+      "arm_id": "F0_S1_SUPERVISOR_ONLY",
+      "fusion_enabled": false,
+      "supervisor_v2_enabled": true
+    },
+    {
+      "arm_id": "F1_S1_FUSION_SUPERVISOR",
+      "fusion_enabled": true,
+      "supervisor_v2_enabled": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "R25C1_contact_absence_edge_missing",
+      "commanded_release": false,
+      "fault": "contact_absence",
+      "recovery_required": true
+    },
+    {
+      "case_id": "R25C2_rgb_detach_contact_masked",
+      "commanded_release": false,
+      "fault": "rgb_detach",
+      "recovery_required": true
+    },
+    {
+      "case_id": "R25C3_transient_relocation_error",
+      "commanded_release": false,
+      "fault": "transient_relocation",
+      "recovery_required": true
+    },
+    {
+      "case_id": "R25C4_goal_verification_retry",
+      "commanded_release": false,
+      "fault": "goal_error",
+      "recovery_required": true
+    },
+    {
+      "case_id": "R25C5_secondary_loss_rearm",
+      "commanded_release": false,
+      "fault": "secondary_loss",
+      "recovery_required": true
+    },
+    {
+      "case_id": "R25C6_partial_slip_control",
+      "commanded_release": false,
+      "fault": "partial_slip",
+      "recovery_required": false
+    },
+    {
+      "case_id": "R25C7_commanded_release_control",
+      "commanded_release": true,
+      "fault": "release",
+      "recovery_required": false
+    }
+  ],
+  "families": [
+    {
+      "family_id": "L2RAR2_R25_FACTORIAL_00_898000",
+      "family_seed": 898000,
+      "rollout_seed_base": 89900000
+    },
+    {
+      "family_id": "L2RAR2_R25_FACTORIAL_01_898001",
+      "family_seed": 898001,
+      "rollout_seed_base": 89900100
+    },
+    {
+      "family_id": "L2RAR2_R25_FACTORIAL_02_898002",
+      "family_seed": 898002,
+      "rollout_seed_base": 89900200
+    },
+    {
+      "family_id": "L2RAR2_R25_FACTORIAL_03_898003",
+      "family_seed": 898003,
+      "rollout_seed_base": 89900300
+    }
+  ],
+  "new_families": true,
+  "paired_groups": 28,
+  "parameter_search": false,
+  "physical_rollouts": 112,
+  "schema": "l2rar2_r25_factorial_registry_v1",
+  "seed_replacement": false
+}
