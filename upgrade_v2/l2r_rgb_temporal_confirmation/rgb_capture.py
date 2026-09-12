@@ -345,13 +345,21 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
 
 
 def collect_confirmation(output_root: Path, difficulty: dict[str, Any]) -> list[dict[str, Any]]:
-    output_root.mkdir(parents=True, exist_ok=False)
+    output_root.mkdir(parents=True, exist_ok=True)
     rows = []
     for family_id, family_seed, rollout_seed_base in CONFIRMATION_FAMILIES:
         for index, case in enumerate(CASES):
             rollout_seed = rollout_seed_base + index
             rollout_id = f"{family_id}__{case.case_id}"
-            rows.append(collect_rollout(output_root / rollout_id, family_id=family_id,
+            rollout_root = output_root / rollout_id
+            completed = rollout_root / "reference/physical_reference.json"
+            termination = rollout_root / "termination.json"
+            if completed.is_file() and termination.is_file():
+                rows.append(json.loads(completed.read_text(encoding="utf-8")))
+                continue
+            if rollout_root.exists():
+                raise RuntimeError(f"INCOMPLETE_ROLLOUT_REQUIRES_QUARANTINE:{rollout_root}")
+            rows.append(collect_rollout(rollout_root, family_id=family_id,
                                         family_seed=family_seed, rollout_seed=rollout_seed,
                                         case=case, difficulty=difficulty))
     return rows
