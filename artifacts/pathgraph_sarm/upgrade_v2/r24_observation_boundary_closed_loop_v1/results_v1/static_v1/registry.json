@@ -1,0 +1,92 @@
+{
+  "cases": [
+    {
+      "case_id": "R24C1_delayed_contact_loss",
+      "controller_fault": null,
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "delayed"
+    },
+    {
+      "case_id": "R24C2_loss_signal_missing",
+      "controller_fault": null,
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "missing"
+    },
+    {
+      "case_id": "R24C3_partial_slip",
+      "controller_fault": null,
+      "recovery_required": false,
+      "release": false,
+      "signal_mode": "partial"
+    },
+    {
+      "case_id": "R24C4_multisource_missing_then_loss",
+      "controller_fault": null,
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "multisource"
+    },
+    {
+      "case_id": "R24C5_active_release_conflict",
+      "controller_fault": null,
+      "recovery_required": false,
+      "release": true,
+      "signal_mode": "release"
+    },
+    {
+      "case_id": "R24C6_relocation_error",
+      "controller_fault": "relocation_error",
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "normal"
+    },
+    {
+      "case_id": "R24C7_regrasp_disturbance",
+      "controller_fault": "regrasp_disturbance",
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "normal"
+    },
+    {
+      "case_id": "R24C8_secondary_loss",
+      "controller_fault": "secondary_loss",
+      "recovery_required": true,
+      "release": false,
+      "signal_mode": "normal"
+    }
+  ],
+  "families": [
+    {
+      "family_id": "L2RAR2_R24_BOUNDARY_00_896000",
+      "family_seed": 896000,
+      "rollout_seed_base": 89700000
+    },
+    {
+      "family_id": "L2RAR2_R24_BOUNDARY_01_896001",
+      "family_seed": 896001,
+      "rollout_seed_base": 89700100
+    },
+    {
+      "family_id": "L2RAR2_R24_BOUNDARY_02_896002",
+      "family_seed": 896002,
+      "rollout_seed_base": 89700200
+    },
+    {
+      "family_id": "L2RAR2_R24_BOUNDARY_03_896003",
+      "family_seed": 896003,
+      "rollout_seed_base": 89700300
+    }
+  ],
+  "methods": [
+    "O_C3_CLP3_CANONICAL_TIME",
+    "O_C3_RAW",
+    "RECOVERY_DISABLED"
+  ],
+  "paired_groups": 32,
+  "parameter_search": false,
+  "physical_rollouts": 96,
+  "schema": "l2rar2_r24_registry_v1",
+  "seed_replacement": false
+}

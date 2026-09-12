@@ -1,0 +1,113 @@
+{
+  "failed_gates": [
+    "clp3_delayed_recovery_4",
+    "clp3_secondary_recovered_4"
+  ],
+  "interpretation": [
+    "C1 family 896002 completed relocation, regrasp, hold verification, and task release but the final oracle goal-stable predicate was false; this remains TASK_RECOVERY_ERROR.",
+    "C8 families 896001 and 896002 executed one successful recovery, then the secondary loss occurred during resumed transport. The frozen online stream did not form a second recovery action before task release, so final task success was false.",
+    "C8 families 896000 and 896003 formed and executed a second recovery cycle and reached final task success.",
+    "No frozen candidate, threshold, adapter, detector, contact proxy, controller, R22 result, or R23 result was changed."
+  ],
+  "official_status": "FAIL",
+  "schema": "l2rar2_r24_failure_localization_v1",
+  "signal_boundary": {
+    "candidate_error": false,
+    "classification": "SIGNAL_NOT_OBSERVED",
+    "clp3_count": 8,
+    "loss_signal_missing": "C2: physical loss exists but the online trigger signal is intentionally absent.",
+    "multisource_missing": "C4: contact eventually becomes false, but the masked multi-source interval removes the raw O_C3 true-to-false trigger edge."
+  },
+  "task_recovery_failures": [
+    {
+      "case_id": "R24C8_secondary_loss",
+      "executed_recovery_cycles": 1,
+      "failure_stage": "TASK_RECOVERY_ERROR",
+      "family_id": "L2RAR2_R24_BOUNDARY_01_896001",
+      "final_task_success": false,
+      "recovery_executions": [
+        {
+          "duration_s": 6.799999999999855,
+          "failure_stage": null,
+          "loop_count": 1,
+          "loops": [
+            {
+              "hold_verification": {
+                "duration_s": 0.5,
+                "max_relative_drift_m": 4.6476636687544904e-05,
+                "passed": true,
+                "samples": 50
+              },
+              "loop": 1,
+              "relocation_error_m": 0.0,
+              "relocation_ok": true
+            }
+          ],
+          "success": true
+        }
+      ],
+      "rollout_dir": "L2RAR2_R24_BOUNDARY_01_896001__R24C8_secondary_loss__O_C3_CLP3_CANONICAL_TIME",
+      "signal_observed": true
+    },
+    {
+      "case_id": "R24C1_delayed_contact_loss",
+      "executed_recovery_cycles": 1,
+      "failure_stage": "TASK_RECOVERY_ERROR",
+      "family_id": "L2RAR2_R24_BOUNDARY_02_896002",
+      "final_task_success": false,
+      "recovery_executions": [
+        {
+          "duration_s": 6.699999999999857,
+          "failure_stage": null,
+          "loop_count": 1,
+          "loops": [
+            {
+              "hold_verification": {
+                "duration_s": 0.5,
+                "max_relative_drift_m": 6.581061923194298e-08,
+                "passed": true,
+                "samples": 50
+              },
+              "loop": 1,
+              "relocation_error_m": 0.0,
+              "relocation_ok": true
+            }
+          ],
+          "success": true
+        }
+      ],
+      "rollout_dir": "L2RAR2_R24_BOUNDARY_02_896002__R24C1_delayed_contact_loss__O_C3_CLP3_CANONICAL_TIME",
+      "signal_observed": true
+    },
+    {
+      "case_id": "R24C8_secondary_loss",
+      "executed_recovery_cycles": 1,
+      "failure_stage": "TASK_RECOVERY_ERROR",
+      "family_id": "L2RAR2_R24_BOUNDARY_02_896002",
+      "final_task_success": false,
+      "recovery_executions": [
+        {
+          "duration_s": 6.699999999999857,
+          "failure_stage": null,
+          "loop_count": 1,
+          "loops": [
+            {
+              "hold_verification": {
+                "duration_s": 0.5,
+                "max_relative_drift_m": 0.0002445647808835912,
+                "passed": true,
+                "samples": 50
+              },
+              "loop": 1,
+              "relocation_error_m": 0.0,
+              "relocation_ok": true
+            }
+          ],
+          "success": true
+        }
+      ],
+      "rollout_dir": "L2RAR2_R24_BOUNDARY_02_896002__R24C8_secondary_loss__O_C3_CLP3_CANONICAL_TIME",
+      "signal_observed": true
+    }
+  ]
+}
