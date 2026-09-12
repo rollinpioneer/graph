@@ -1,0 +1,6 @@
+"""R19 logical-observation-clock development after the frozen R18 result."""
+
+PROTOCOL_ID = "L2RAR2_R19_LOGICAL_OBSERVATION_CLOCK_DEVELOPMENT_V1"
+CANDIDATE_ID = "O_C3_CLP2_LOGICAL_CLOCK"
+PARENT_COMMIT = "ac00554b1633ce05ade58bbcb36f1b3850eb2b38"
+
