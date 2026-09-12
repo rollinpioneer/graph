@@ -1,0 +1,38 @@
+{
+  "schema": "l2rar2_r16_v2r1_continuous_mode_status_v1",
+  "campaign_id": "L2RAR2_FAST_EXPERIMENT_CAMPAIGN_V1.2",
+  "continuation_id": "L2RAR2_FAST_EXPERIMENT_CAMPAIGN_V1.2-R1",
+  "status": "BLOCKED_WAITING_FRESH_APPROVAL",
+  "scientific_protocol_changed": false,
+  "baseline_runner_changed": false,
+  "parent_campaign_stop_preserved": true,
+  "accounting": {
+    "grant_attempts": 1,
+    "prephysics_failures": 1,
+    "physical_instances_started": 0,
+    "physical_budget_used": 0,
+    "physical_budget_remaining": 40
+  },
+  "recovery_policy": {
+    "preflight_before_grant": true,
+    "explicit_frozen_runner_environment": true,
+    "recoverable_prephysics_states": [
+      "BLOCKED_PREPHYSICS_ENVIRONMENT",
+      "BLOCKED_PREPHYSICS_PATH",
+      "BLOCKED_PREPHYSICS_VALIDATION"
+    ],
+    "fresh_nonce_per_retry": true,
+    "fresh_output_root_per_retry": true,
+    "additional_human_approval_for_recovery": false
+  },
+  "approval": {
+    "required": true,
+    "provided": false,
+    "reason": "R16 V2R1 fresh calibration is a new physical continuation and cannot reuse the parent grant, nonce, or output root."
+  },
+  "mujoco_imported": false,
+  "physical_execution_started": false,
+  "selected_candidate_id": null,
+  "confirmation_run": false,
+  "l3_entry_allowed": false
+}
