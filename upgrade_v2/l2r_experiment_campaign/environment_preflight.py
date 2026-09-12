@@ -29,8 +29,9 @@ def frozen_environment() -> dict[str, str]:
     return env
 
 
-def preflight(*, python_executable: str | None = None) -> Preflight:
+def preflight(*, python_executable: str | None = None, environ: dict[str, str] | None = None) -> Preflight:
     executable = python_executable or sys.executable
+    observed = dict(os.environ if environ is None else environ)
     errors: list[str] = []
     version = subprocess.run(
         [executable, "-c", "import sys; print('.'.join(map(str, sys.version_info[:3])))"],
@@ -39,7 +40,7 @@ def preflight(*, python_executable: str | None = None) -> Preflight:
     if version.returncode != 0 or version.stdout.strip() != "3.10.19":
         errors.append("python_version")
     for key, value in FROZEN_ENVIRONMENT.items():
-        if frozen_environment().get(key) != value:
+        if observed.get(key) != value:
             errors.append(key)
     # Make the contract active for subsequent setup operations in this process.
     os.environ.update(FROZEN_ENVIRONMENT)

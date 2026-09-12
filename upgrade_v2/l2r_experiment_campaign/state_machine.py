@@ -4,6 +4,7 @@ from .protocol import STAGES, RECOVERABLE_PREPHYSICS
 @dataclass
 class CampaignState:
     state: str = "PREPARING"; current_stage: str|None = None; completed_stages: list[str]=field(default_factory=list); physical_budget_used: int=0; stop_reason: str|None=None
+    grant_attempts: int = 0; prephysics_failures: int = 0
 def transition(s: CampaignState, event: str) -> CampaignState:
     if s.state.startswith("STOPPED_") or s.state in {"COMPLETED","READY_WAITING_SINGLE_APPROVAL"}: return s
     if event == "ready": s.state="READY_WAITING_SINGLE_APPROVAL"
@@ -16,6 +17,10 @@ def transition(s: CampaignState, event: str) -> CampaignState:
     elif event == "recover_prephysics":
         if s.state not in RECOVERABLE_PREPHYSICS: raise ValueError("not recoverable")
         s.state="RUNNING"
+    elif event == "attempt_prephysics_failed":
+        s.grant_attempts += 1; s.prephysics_failures += 1
+    elif event == "attempt_physics_started":
+        s.grant_attempts += 1; s.physical_budget_used += 1
     elif event.startswith("stop:"): s.state=event.split(":",1)[1]; s.stop_reason=s.state
     else: raise ValueError(event)
     return s

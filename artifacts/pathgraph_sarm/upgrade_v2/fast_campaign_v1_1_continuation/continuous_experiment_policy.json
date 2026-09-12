@@ -1,0 +1,43 @@
+{
+  "schema": "l2rar2_fast_campaign_continuous_experiment_v1",
+  "campaign_id": "L2RAR2_FAST_EXPERIMENT_CAMPAIGN_V1.1",
+  "parent_campaign": "L2RAR2_FAST_EXPERIMENT_CAMPAIGN_V1",
+  "parent_stop_commit": "f39b69c94",
+  "continuation_reason": "PREPHYSICS_ORCHESTRATION_FIX",
+  "scientific_protocol_changed": false,
+  "baseline_runner_changed": false,
+  "accounting": {
+    "grant_attempts": 1,
+    "prephysics_failures": 1,
+    "physical_instances_started": 0,
+    "physical_budget_used": 0,
+    "physical_budget_remaining": 40,
+    "historical_authorization_accounting_physical_used": 1
+  },
+  "recovery": {
+    "preflight_before_grant": true,
+    "explicit_runner_environment": true,
+    "recoverable_states": [
+      "BLOCKED_PREPHYSICS_ENVIRONMENT",
+      "BLOCKED_PREPHYSICS_PATH",
+      "BLOCKED_PREPHYSICS_VALIDATION"
+    ],
+    "fresh_nonce_and_output_root_on_retry": true,
+    "additional_human_approval_required": false
+  },
+  "hard_stop_after_physics": [
+    "A2_PHYSICS_FAILURE",
+    "AB_MISMATCH",
+    "BC_MISMATCH",
+    "CALIBRATION_SCIENTIFIC_GATE",
+    "DEVELOPMENT_PHYSICS_FAILURE",
+    "GENERATOR_GATE",
+    "BUDGET_EXHAUSTED",
+    "SCIENTIFIC_PROTOCOL_CHANGED"
+  ],
+  "a1_manual_decision": "A_INCONCLUSIVE_REMAIN_BLOCKED",
+  "a1_note": "Original STOP result and consumed grant are preserved; no physical model construction or physics step occurred, and A1 does not enter the V2 certificate.",
+  "selected_candidate_id": null,
+  "confirmation_run": false,
+  "l3_entry_allowed": false
+}

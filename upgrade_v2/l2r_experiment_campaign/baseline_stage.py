@@ -5,7 +5,10 @@ from .environment_preflight import frozen_environment, preflight
 
 
 def classify_attempt(output_root: Path) -> dict[str, object]:
-    started = (output_root / "model_construction_started.json").is_file()
+    # model_construction_started is the conservative boundary; a runner may also
+    # emit physics_started/mj_step_started when available.
+    started = any((output_root / marker).is_file() for marker in (
+        "model_construction_started.json", "physics_started.json", "mj_step_started.json"))
     return {
         "setup_attempt": True,
         "grant_consumed": True,
