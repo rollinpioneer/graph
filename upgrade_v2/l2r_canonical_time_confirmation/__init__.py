@@ -1,0 +1,5 @@
+"""Canonical integer-time logical-clock confirmation."""
+
+CANDIDATE_ID = "O_C3_CLP3_CANONICAL_TIME"
+PROTOCOL_ID = "L2RAR2_R22_CANONICAL_TIME_PHYSICAL_CONFIRMATION_V1"
+PARENT_COMMIT = "e7ea1d8bbc9f248d4de0155cc9bfdfe45cefd822"

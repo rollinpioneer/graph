@@ -1,0 +1,584 @@
+{
+  "cases": [
+    {
+      "actual": [
+        "PENDING",
+        "none"
+      ],
+      "case_id": "C01_same_time_false_false_stays_pending",
+      "expected": [
+        "PENDING",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_SAME_PHYSICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "case_id": "C02_same_time_then_one_ns_confirms",
+      "expected": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_SAME_PHYSICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 12,
+          "contact_loss_pending": false,
+          "guard_state": "CONFIRMED",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1000000001,
+          "reason_code": "NON_RELEASE_CONTACT_LOSS_PERSISTENCE_CONFIRMED_CANONICAL_TIME",
+          "selected_action": "recover_object",
+          "time": 1.000000001
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C03_same_time_false_true_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME_CLEARED",
+          "selected_action": "none",
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "case_id": "C04_one_ns_confirms",
+      "expected": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CONFIRMED",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1000000001,
+          "reason_code": "NON_RELEASE_CONTACT_LOSS_PERSISTENCE_CONFIRMED_CANONICAL_TIME",
+          "selected_action": "recover_object",
+          "time": 1.000000001
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "case_id": "C05_exact_100ms_confirms",
+      "expected": [
+        "CONFIRMED",
+        "recover_object"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CONFIRMED",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1100000000,
+          "reason_code": "NON_RELEASE_CONTACT_LOSS_PERSISTENCE_CONFIRMED_CANONICAL_TIME",
+          "selected_action": "recover_object",
+          "time": 1.1
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C06_100ms_plus_one_ns_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1100000001,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME_CLEARED",
+          "selected_action": "none",
+          "time": 1.100000001
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C07_open_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1050000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C08_release_request_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1050000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C09_attempt_end_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1050000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C10_attempt_change_clears",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1050000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME_CLEARED",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C11_equal_order_invalid",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 10,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1050000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C12_backwards_time_invalid",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 999999999,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 0.999999999
+        }
+      ]
+    },
+    {
+      "actual": [
+        "CLEAR",
+        "none"
+      ],
+      "case_id": "C13_missing_ns_invalid",
+      "expected": [
+        "CLEAR",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": true,
+          "guard_state": "PENDING",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": 1,
+          "pending_capture_order": 10,
+          "pending_physical_time_ns": 1000000000,
+          "physical_time_ns": 1000000000,
+          "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "CLEAR",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": null,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.05
+        }
+      ]
+    },
+    {
+      "actual": [
+        "PASS_THROUGH",
+        "none"
+      ],
+      "case_id": "C14_nontrigger_no_pending",
+      "expected": [
+        "PASS_THROUGH",
+        "none"
+      ],
+      "passed": true,
+      "records": [
+        {
+          "capture_order": 10,
+          "contact_loss_pending": false,
+          "guard_state": "PASS_THROUGH",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1000000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.0
+        },
+        {
+          "capture_order": 11,
+          "contact_loss_pending": false,
+          "guard_state": "PASS_THROUGH",
+          "hold_state": "historical_hold_established",
+          "pending_attempt_id": null,
+          "pending_capture_order": null,
+          "pending_physical_time_ns": null,
+          "physical_time_ns": 1000000000,
+          "reason_code": "no_action",
+          "selected_action": "none",
+          "time": 1.0
+        }
+      ]
+    }
+  ],
+  "cases_passed": 14,
+  "cases_total": 14,
+  "guard_blob": "03b428e2f0fdd215ce31c4149674781bf10129a2",
+  "mujoco_imported": false,
+  "physical_executions": 0,
+  "schema": "l2rar2_clp3_canonical_time_conformance_v1",
+  "status": "PASS"
+}
