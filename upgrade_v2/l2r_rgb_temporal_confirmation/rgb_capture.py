@@ -244,6 +244,26 @@ def _pulse(capture: RolloutCapture, level: dict[str, Any]) -> dict[str, Any]:
             "force_start_time": capture.force_start_time}
 
 
+def _transport_with_pulse(capture: RolloutCapture, level: dict[str, Any]) -> dict[str, Any]:
+    """Apply the intervention at a fixed midpoint control boundary, then continue transport."""
+    sim = capture.sim
+    sim.action_index += 1
+    sim._active_control_sequence = []
+    sim.lifecycle_before_action("transport_to_target")
+    capture.set_phase("transport_pre_force", "transport_to_target")
+    target = np.array([sim.spec.target_x, sim.spec.target_y, 0.80])
+    midway = (sim.data.mocap_pos[0] + target) / 2.0
+    sim._advance(midway, controls=4)
+    capture.capture_frame(action_end=False)
+    intervention = _pulse(capture, level)
+    capture.set_phase("transport_post_force", "transport_to_target")
+    sim._advance(target, controls=4)
+    sim.lifecycle_after_action("transport_to_target")
+    capture.capture_frame(action_end=True)
+    intervention["transport_pulse_boundary"] = "after_midpoint_control_4_before_continuation"
+    return intervention
+
+
 def _observe(capture: RolloutCapture, steps: int = 100) -> None:
     capture.set_phase("observation", "observe")
     for _ in range(steps):
@@ -291,8 +311,7 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
             elif case.case_id.startswith(("C8_", "C9_", "C10_")):
                 intervention = _pulse(capture, difficulty["strong"])
             elif case.case_id.startswith("C11_"):
-                capture.perform("transport_to_target", "transport")
-                intervention = _pulse(capture, difficulty["strong"])
+                intervention = _transport_with_pulse(capture, difficulty["strong"])
             elif case.case_id.startswith("C12_"):
                 capture.commanded_release = True
                 capture.perform("open_gripper", "commanded_release")
@@ -326,9 +345,10 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
     prehold_rows = [row for row in capture.physics_rows if row.get("phase") == "pre_hold"]
     separation_anchor = (np.asarray(prehold_rows[-1]["object_in_gripper_position"], dtype=float)
                          if prehold_rows else None)
+    post_prehold_rows = capture.physics_rows[last_prehold + 1:] if last_prehold >= 0 else capture.physics_rows
     separations = [float(np.linalg.norm(np.asarray(row["object_in_gripper_position"], dtype=float) - separation_anchor))
-                   for row in capture.physics_rows if separation_anchor is not None
-                   and row.get("phase") != "pre_hold" and row.get("object_in_gripper_position") is not None]
+                   for row in post_prehold_rows if separation_anchor is not None
+                   and row.get("object_in_gripper_position") is not None]
     reference = {
         "schema": "l2rar2_r17_physical_reference_v1", "family_id": family_id,
         "family_seed": family_seed, "rollout_seed": rollout_seed, "case_id": case.case_id,

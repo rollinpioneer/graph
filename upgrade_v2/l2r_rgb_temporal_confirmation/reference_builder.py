@@ -5,6 +5,8 @@ import statistics
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from .io_utils import read_csv, read_json, write_csv, write_json
 from .io_utils import read_jsonl
 from upgrade_v2.l2r_forced_drop.physical_reference import evaluate_loss_trace
@@ -25,6 +27,12 @@ def rebuild_physical_references(confirmation_root: Path) -> dict[str, Any]:
         last_prehold = max((index for index, row in enumerate(physics)
                             if row.get("phase") == "pre_hold"), default=-1)
         tail = physics[last_prehold + 1:] if last_prehold >= 0 else physics
+        prehold_rows = [row for row in physics if row.get("phase") == "pre_hold"]
+        anchor = (np.asarray(prehold_rows[-1]["object_in_gripper_position"], dtype=float)
+                  if prehold_rows else None)
+        separations = [float(np.linalg.norm(np.asarray(row["object_in_gripper_position"], dtype=float) - anchor))
+                       for row in tail if anchor is not None and row.get("object_in_gripper_position") is not None]
+        reference["peak_relative_separation_m"] = max(separations, default=None)
         if case == "C1":
             outcome = {"state": "MISSED_HOLD_RESOLVED", "physical_loss_confirmed": False,
                        "reference_action": "retry_grasp", "resolvable": True}
