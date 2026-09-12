@@ -1,0 +1,5 @@
+"""R17 true-RGB temporal confirmation experiment."""
+
+PROTOCOL_ID = "L2RAR2_R17_TRUE_RGB_TEMPORAL_CONFIRMATION_V1"
+RENDERER_BLOB = "a026c3723b469b1eaf1ce8fc34a9c210e625de45"
+DETECTOR_BLOB = "efe789eb3fe7f3b5d851ccd317aa40ca20bdead5"
