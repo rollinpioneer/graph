@@ -1,0 +1,115 @@
+{
+  "base_commit": "45a3544c68c666ac09796407ae4aee31717bd453",
+  "case": {
+    "case_id": "K3_normal_hold_pause_resume",
+    "control_variant": "v0_short",
+    "family_index": 0,
+    "family_seed": 870000,
+    "program": [
+      "observe_scene",
+      "approach_object",
+      "close_gripper",
+      "lift",
+      "verify",
+      "verify",
+      "transport_to_target",
+      "verify"
+    ],
+    "rollout_seed": 87100002,
+    "root_family_id": "L2RAR2_REPRO_BASE_00_870000",
+    "scenario": "normal_pick_place"
+  },
+  "case_id": "K3_normal_hold_pause_resume",
+  "comparison": {
+    "array_raw_bytes_sha256_exact": true,
+    "detection_canonical_sha256_exact": true,
+    "jpeg_sha256_exact": true,
+    "numeric_atol": 0.0,
+    "numeric_rtol": 0.0,
+    "raw_rgb_sha256_exact": true,
+    "tolerance_adjustment_allowed": false
+  },
+  "confirmation_run": false,
+  "control_variant": "v0_short",
+  "expected_counts": {
+    "action_end_callbacks": 8,
+    "actions": 8,
+    "control_callbacks": 29,
+    "instrumented_before_after_rows": 290,
+    "ordinary_checkpoint_rows": 54,
+    "physics_steps": 145,
+    "render_callbacks": 37
+  },
+  "expected_main_gate_count": 16,
+  "family_index": 0,
+  "family_seed": 870000,
+  "formal_main_commit": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "l3_entry_allowed": false,
+  "old_cache_role": "HISTORICAL_NON_GATING_ONLY",
+  "physical_authorization_total": 0,
+  "physical_spec": {
+    "camera_jitter": -0.864137523072222,
+    "friction": 0.6515269164986248,
+    "object_radius": 0.0655065666013472,
+    "object_x": -0.2976640333667629,
+    "object_y": 0.031869703336358995,
+    "target_x": 0.3280206588960539,
+    "target_y": 0.15532131429771634
+  },
+  "physical_spec_sha256": "3a2c53602c6f8122551980524f8cb73e7dcab87fb5dccaf1a2e54dfe9d18c244",
+  "program": [
+    "observe_scene",
+    "approach_object",
+    "close_gripper",
+    "lift",
+    "verify",
+    "verify",
+    "transport_to_target",
+    "verify"
+  ],
+  "program_sha256": "8d82a7e946317c393d2024be6159e0c12337a63e00a7877a1855beb369b6ca30",
+  "protocol_id": "L2RAR2_R14B_NEW_REPRODUCIBLE_BASELINE_V2",
+  "repository": "rollinpioneer/graph",
+  "required_environment": {
+    "MKL_NUM_THREADS": "1",
+    "MUJOCO_GL": "egl",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+    "mujoco": "3.4.0",
+    "numpy": "2.2.6",
+    "opencv": "4.13.0",
+    "python": "3.10.19"
+  },
+  "retained_graph": "G1_predicate_bound",
+  "rollout_seed": 87100002,
+  "root_family_id": "L2RAR2_REPRO_BASE_00_870000",
+  "route": "B_NEW_REPRODUCIBLE_BASELINE_REQUIRED",
+  "scenario": "normal_pick_place",
+  "schema": "l2rar2_r14b_protocol_lock_v3",
+  "scientific_status": "L2RAR2_PARTIAL_KEEP_G1",
+  "selected_candidate_id": null,
+  "stages": {
+    "A": {
+      "authorized_instances": 0,
+      "requested_instances": 1,
+      "stage": "R14B_V2_ORDINARY_BASELINE_A"
+    },
+    "B": {
+      "authorized_instances": 0,
+      "requested_instances": 1,
+      "requires": "A_HUMAN_REVIEW_PASS",
+      "stage": "R14B_V2_ORDINARY_REPEAT_B"
+    },
+    "C": {
+      "authorized_instances": 0,
+      "requested_instances": 1,
+      "requires": "A_VS_B_ALL_MAIN_GATES_PASS",
+      "stage": "R14B_V2_INSTRUMENTED_C"
+    }
+  },
+  "static_contract_version": "l2rar2_r14b_pre_execution_contract_v3",
+  "status": "DRAFT_NOT_AUTHORIZED"
+}

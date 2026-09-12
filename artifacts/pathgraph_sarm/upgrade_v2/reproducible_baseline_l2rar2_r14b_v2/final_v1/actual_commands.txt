@@ -1,0 +1,6 @@
+unzip -q /home/xushijie/L2RAR2_R14B_A1_Gate_Forensics_State_Hash_V2_Agent_Package_V1.0.zip -d /home/xushijie
+/home/xushijie/.conda/envs/lerobot/bin/python -B tools/analyze_consumed_A.py --execution-root /home/__compress_data/xushijie/graph_l2ra_r2_r14b_baseline_v1_data/executions/baseline_A_8e5b7408fad2ea66 --output-root artifacts/pathgraph_sarm/upgrade_v2/reproducible_baseline_l2rar2_r14b_v2/a1_gate_forensics_v1
+PYTHONNOUSERSITE=1 /home/xushijie/.conda/envs/lerobot/bin/python -B -m unittest discover -s upgrade_v2/l2r_reproducible_baseline/tests -p 'test_*.py' -v
+PYTHONNOUSERSITE=1 /home/xushijie/.conda/envs/lerobot/bin/python -B -m compileall -q upgrade_v2/l2r_reproducible_baseline
+git diff --check
+python -B tools/validate_gatefix_outputs.py --forensics-root .../a1_gate_forensics_v1 --static-root .../static_v1 --applications-root .../applications_v1 --report .../static_v1/output_validation.json

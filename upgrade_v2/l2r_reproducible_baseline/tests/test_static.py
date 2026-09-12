@@ -38,7 +38,7 @@ class R14BStaticTests(unittest.TestCase):
 
     # Authorization policy (9-20)
     def test_missing_authorization_denied_before_import(self): self.assertNotIn("mujoco", __import__("sys").modules)
-    def test_wrong_stage_denied(self): self.assertNotEqual(self.protocol["stages"]["A"]["stage"], "R14B_ORDINARY_REPEAT_B")
+    def test_wrong_stage_denied(self): self.assertNotEqual(self.protocol["stages"]["A"]["stage"], "R14B_V2_ORDINARY_REPEAT_B")
     def test_wrong_runner_commit_denied(self): self.assertNotEqual(self.protocol["base_commit"], "")
     def test_wrong_runner_hash_denied(self): self.assertTrue(self.protocol["status"].startswith("DRAFT"))
     def test_wrong_protocol_hash_denied(self): self.assertIsNone(self.protocol.get("protocol_sha256"))
@@ -61,7 +61,7 @@ import json
 import sys
 from upgrade_v2.l2r_reproducible_baseline.cli import main
 args = [
-    "run-ordinary", "--repo", sys.argv[1], "--stage", "R14B_ORDINARY_BASELINE_A",
+    "run-ordinary", "--repo", sys.argv[1], "--stage", "R14B_V2_ORDINARY_BASELINE_A",
     "--protocol", sys.argv[2], "--authorization", sys.argv[3], "--source-lock", sys.argv[4],
     "--environment-contract", sys.argv[5], "--output-root", sys.argv[6],
 ]
@@ -145,7 +145,7 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
             "all_main_gates_passed": True, "runner_file_hashes": {"runner.py": "hash"}, "artifact_manifest_sha256": "manifest",
         }
         lock = {
-            "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_file_hashes": {"runner.py": "hash"}, "static_contract_version": "l2rar2_r14b_pre_execution_contract_v2",
+            "runner_commit": "runner", "protocol_sha256": "protocol", "generation_runner_file_hashes": {"runner.py": "hash"}, "static_contract_version": "l2rar2_r14b_pre_execution_contract_v3",
             "program_sha256": "program", "physical_spec_sha256": "physical", "generated_model_xml_sha256": "xml",
         }
         environment = {field: "same" for field in MAIN_GATE_FIELDS}
@@ -181,7 +181,7 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
         lock_path = root / "source_lock.json"
         lock_path.write_text(json.dumps(lock), encoding="utf-8")
         auth = {
-            "schema": "l2rar2_r14b_execution_authorization_v2", "status": "AUTHORIZED",
+            "schema": "l2rar2_r14b_execution_authorization_v3", "status": "AUTHORIZED",
             "protocol_id": self.protocol["protocol_id"], "stage": self.protocol["stages"]["A"]["stage"],
             "authorized_instances": 1, "requested_instances": 1, "case_id": self.protocol["case_id"],
             "root_family_id": self.protocol["root_family_id"], "rollout_seed": self.protocol["rollout_seed"],
@@ -210,7 +210,7 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
                 data[field] = value
                 auth_path.write_text(json.dumps(data), encoding="utf-8")
                 with self.assertRaises(AuthorizationDenied):
-                    validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
+                    validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_V2_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
 
     def test_comparison_fixture_identical_runs_pass(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -255,7 +255,7 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
                     changed = dict(data); changed[field] = "0" * 64
                     auth_path.write_text(json.dumps(changed), encoding="utf-8")
                     with self.assertRaises(AuthorizationDenied):
-                        validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
+                        validate_authorization(auth_path, repo=Path.cwd(), protocol=self.protocol, protocol_sha256=data["protocol_sha256"], requested_output_root=root / "out", stage="R14B_V2_ORDINARY_BASELINE_A", source_lock_path=lock_path, environment_contract_path=contract_path)
 
     def test_source_lock_contains_pre_execution_contracts(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -273,10 +273,10 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
         self.assertEqual(self.protocol["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v3")
 
     def test_authorization_templates_use_v2_contract(self):
-        root = Path(__file__).parents[3] / "artifacts/pathgraph_sarm/upgrade_v2/reproducible_baseline_l2rar2_r14b_v1/applications_v1"
+        root = Path(__file__).parents[3] / "artifacts/pathgraph_sarm/upgrade_v2/reproducible_baseline_l2rar2_r14b_v2/applications_v1"
         for path in root.glob("*_authorization.template.json"):
             data = json.loads(path.read_text(encoding="utf-8"))
-            self.assertEqual(data["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v2")
+            self.assertEqual(data["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v3")
 
     def test_finalize_chain_issues_certificate_only_for_all_pass(self):
         with tempfile.TemporaryDirectory() as directory:
