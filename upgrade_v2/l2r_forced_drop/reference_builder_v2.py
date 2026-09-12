@@ -63,7 +63,7 @@ def build_reference_v2(development_root: Path, output_root: Path):
     fields = ("family_id", "case_id", "trace_complete", "numeric_health_pass",
               "pre_hold_verified", "physical_loss_confirmed", "commanded_release")
     with (output_root / "physical_reference_events.csv").open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows({key: row.get(key, False) for key in fields} for row in rows)
     (output_root / "generator_gate.json").write_text(json.dumps(gate, indent=2) + "\n", encoding="utf-8")

@@ -106,7 +106,7 @@ def _run_case(root: Path, family: str, family_seed: int, rollout_seed: int,
                   "resolvable": True, "resolution": "touch_only"}
     else:
         verified = _prehold(sim, trace, family, case_id, rollout_seed,
-                            10 if not case_id.startswith("F6_") else 10)
+                            10 if case_id.startswith("F6_") else 50)
         if verified:
             if case_id.startswith("F3_"):
                 pass
@@ -204,7 +204,7 @@ def run_development_v2(output_root: Path, *, selected_level: str | None, authori
               "pre_hold_verified", "commanded_release")
     for filename in ("rollout_manifest.csv", "per_rollout_status.csv"):
         with (output_root / filename).open("w", newline="", encoding="utf-8") as stream:
-            writer = csv.DictWriter(stream, fieldnames=fields)
+            writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
             writer.writeheader(); writer.writerows(manifest)
     return {"schema": "l2rar2_r16_development_v2_result", "status": "DEVELOPMENT_COMPLETE",
             "rollouts": len(rows), "rows": rows}

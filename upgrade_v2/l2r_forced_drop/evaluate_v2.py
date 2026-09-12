@@ -184,14 +184,14 @@ def evaluate_v2(reference_root: Path, output_root: Path):
                "time_provenance": "online row.time; reference labels never enter candidates"}
     with (output_root / "per_event_decisions.csv").open("w", newline="", encoding="utf-8") as stream:
         fields = tuple(decisions[0]) if decisions else ("method",)
-        writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader(); writer.writerows(decisions)
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n"); writer.writeheader(); writer.writerows(decisions)
     with (output_root / "method_metrics.csv").open("w", newline="", encoding="utf-8") as stream:
         fields = ("method", "overall_accuracy", "unknown_rate", "correct", "total")
-        writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader()
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n"); writer.writeheader()
         writer.writerows({key: row[key] for key in fields} for row in metrics)
     with (output_root / "time_audit.csv").open("w", newline="", encoding="utf-8") as stream:
         fields = tuple(time_rows[0]) if time_rows else ("method",)
-        writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader(); writer.writerows(time_rows)
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n"); writer.writeheader(); writer.writerows(time_rows)
     (output_root / "method_metrics.json").write_text(json.dumps(payload, indent=2) + "\n")
     (output_root / "input_leakage_audit.json").write_text(json.dumps(leakage, indent=2) + "\n")
     (output_root / "prefix_causality_audit.json").write_text(json.dumps(causality, indent=2) + "\n")
