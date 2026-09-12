@@ -4,6 +4,8 @@ from .protocol import CAMPAIGN_ID, budget_for
 def derive_nonce(campaign_nonce: str, stage: str, index: int) -> str:
     return hashlib.sha256(f"{campaign_nonce}|{stage}|{index}".encode()).hexdigest()
 def grants(approval: dict) -> list[dict]:
+    if approval.get("status") != "APPROVED":
+        raise PermissionError("campaign approval required")
     out=[]
     for stage in ("A2","B","C","CALIBRATION","DEVELOPMENT"):
         for i in range(budget_for(stage)):
