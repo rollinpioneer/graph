@@ -13,6 +13,7 @@ from . import CAPTURE_VERSION
 from .capture import CaptureRecorder, ReadOnlyPhysicsRecorder, detection_record
 from .environment import compare_main_gate_fields, finalize_fingerprint, runtime_fingerprint, validate_process_environment
 from .fingerprint import model_fingerprint
+from .hash_domains import compare_callback_return_pair, pair_callback_return_states
 from .protocol import canonical_hash, sha256
 from .simulator import ReproducibleBaselineTabletop
 
@@ -159,9 +160,44 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, sta
     gates["action_end_geometry"] = len(action_end_states) == expected["action_end_callbacks"] and all(
         len(row["object_xyz"]) == 3 and len(row["gripper_xyz"]) == 3 for row in action_end_states
     )
-    gates["callback_to_return_exact"] = len(action_end_states) == len(return_states) and all(
-        left["state_sha256"] == right["state_sha256"] for left, right in zip(action_end_states, return_states)
-    )
+    pairing = pair_callback_return_states(recorder.states)
+    pair_results = [compare_callback_return_pair(left, right) for left, right in pairing["pairs"]]
+    pairing_complete = bool(pairing["pairing_complete"])
+    physical_exact = pairing_complete and len(pair_results) == len(action_end_states) and all(item["physical_exact"] for item in pair_results)
+    semantic_exact = pairing_complete and len(pair_results) == len(action_end_states) and all(item["semantic_exact"] for item in pair_results)
+    equivalence = {
+        "schema": "l2rar2_r14b_callback_return_equivalence_v3",
+        "pairing_complete": pairing_complete,
+        "callback_count": len(action_end_states),
+        "return_count": len(return_states),
+        "pair_count": len(pair_results),
+        "physical_exact": physical_exact,
+        "semantic_exact": semantic_exact,
+        "record_exact_required": False,
+        "callback_to_return_exact": pairing_complete and physical_exact and semantic_exact,
+        "pairing_errors": pairing["errors"],
+        "pairs": pair_results,
+    }
+    _write_json(output_root / "callback_return_equivalence.json", equivalence)
+    _write_csv(output_root / "callback_return_equivalence.csv", [
+        {"pair": index + 1, "action_index": left.get("action_index"), "action": left.get("action"),
+         "callback_sequence": left.get("sequence"), "return_sequence": right.get("sequence"),
+         "identity_expected": item["identity_expected"], "physical_exact": item["physical_exact"],
+         "semantic_exact": item["semantic_exact"], "record_exact": item["record_exact"],
+         "physical_state_sha256_callback": item["physical_state_sha256_callback"],
+         "physical_state_sha256_return": item["physical_state_sha256_return"],
+         "semantic_state_sha256_callback": item["semantic_state_sha256_callback"],
+         "semantic_state_sha256_return": item["semantic_state_sha256_return"],
+         "record_sha256_callback": item["record_sha256_callback"],
+         "record_sha256_return": item["record_sha256_return"]}
+        for index, ((left, right), item) in enumerate(zip(pairing["pairs"], pair_results))
+    ], ["pair", "action_index", "action", "callback_sequence", "return_sequence", "identity_expected",
+        "physical_exact", "semantic_exact", "record_exact", "physical_state_sha256_callback",
+        "physical_state_sha256_return", "semantic_state_sha256_callback", "semantic_state_sha256_return",
+        "record_sha256_callback", "record_sha256_return"])
+    gates["callback_return_pairing_complete"] = pairing_complete
+    gates["callback_return_physical_exact"] = physical_exact
+    gates["callback_return_semantic_exact"] = semantic_exact
     if instrumented:
         integrity = {"schema": "l2rar2_r14b_instrumentation_integrity_v1", "before_after_rows": len(sim.physics_observer.rows), "mutation_checks": len(sim.physics_observer.rows), "mutation_failures": 0, "passed": len(sim.physics_observer.rows) == expected["instrumented_before_after_rows"]}
         _write_jsonl(output_root / "physics_step_trace.jsonl", sim.physics_observer.rows)
@@ -170,7 +206,7 @@ def run_ordinary(*, repo: Path, protocol: dict[str, Any], output_root: Path, sta
     _write_json(output_root / "baseline_quality_gates.json", {"schema": "l2rar2_r14b_quality_gates_v1", "gates": gates, "all_main_gates_passed": all_passed})
     manifest = _manifest(output_root)
     result = {
-        "schema": "l2rar2_r14b_execution_result_v1", "status": "R14B_INSTRUMENTED_C_COMPLETE" if instrumented and all_passed else "R14B_BASELINE_A_COMPLETE_WAITING_HUMAN_REVIEW" if stage == "R14B_ORDINARY_BASELINE_A" and all_passed else "R14B_ORDINARY_REPEAT_B_COMPLETE" if stage == "R14B_ORDINARY_REPEAT_B" and all_passed else "STOP_AFTER_EXECUTION_1",
+        "schema": "l2rar2_r14b_execution_result_v3", "status": "R14B_INSTRUMENTED_C_COMPLETE" if instrumented and all_passed else "R14B_BASELINE_A_COMPLETE_WAITING_HUMAN_REVIEW" if stage == "R14B_V2_ORDINARY_BASELINE_A" and all_passed else "R14B_ORDINARY_REPEAT_B_COMPLETE" if stage == "R14B_V2_ORDINARY_REPEAT_B" and all_passed else "STOP_AFTER_EXECUTION_1",
         "stage": stage, "executions_used": 1, "authorized_instances": 1, "automatic_retry": False,
         "started_at_utc": started.isoformat(), "completed_at_utc": datetime.now(timezone.utc).isoformat(), "runner_commit": source_lock["runner_commit"], "runner_file_hashes": source_lock["generation_runner_file_hashes"],
         "protocol_sha256": protocol["protocol_sha256"], "environment_fingerprint_sha256": env_fp["fingerprint_sha256"], "model_fingerprint_sha256": model_fp["model_fingerprint_sha256"],

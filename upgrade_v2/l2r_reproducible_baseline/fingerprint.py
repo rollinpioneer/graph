@@ -7,6 +7,11 @@ from typing import Any
 import numpy as np
 
 from .protocol import canonical_hash
+from .hash_domains import (
+    physical_state_sha256,
+    record_sha256,
+    semantic_state_sha256,
+)
 
 
 def array_hash(value: Any) -> dict[str, Any]:
@@ -91,5 +96,9 @@ def checkpoint_state(sim: Any, *, sequence: int, sampling_point: str, action: st
         "attempt_lifecycle": sim.attempt_lifecycle.snapshot(),
         "simulator_flags": {key: bool(getattr(sim, key)) for key in ("gripper_closed", "attached", "failed_once", "recovered", "contact_lost")},
     }
-    visible["state_sha256"] = state_hash(visible)
+    visible["physical_state_sha256"] = physical_state_sha256(visible)
+    visible["semantic_state_sha256"] = semantic_state_sha256(visible)
+    visible["record_sha256"] = record_sha256(visible)
+    visible["state_sha256"] = visible["record_sha256"]
+    visible["state_sha256_role"] = "DEPRECATED_RECORD_INTEGRITY_ONLY"
     return visible

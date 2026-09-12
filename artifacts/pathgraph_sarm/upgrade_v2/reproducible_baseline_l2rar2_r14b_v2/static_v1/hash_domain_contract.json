@@ -1,0 +1,10 @@
+{
+  "schema": "l2rar2_r14b_hash_domain_contract_v2",
+  "status": "FROZEN_ZERO_PHYSICS",
+  "record_identity_fields": ["sequence", "sampling_point"],
+  "physical_payload_fields": ["time_hex", "arrays", "object_xyz", "gripper_xyz", "object_qpos", "object_qvel", "rng_state"],
+  "semantic_payload_fields": ["action", "action_index", "control_index", "events", "attempt_lifecycle", "simulator_flags"],
+  "hashes": {"physical_state_sha256": "canonical_hash(physical_payload)", "semantic_state_sha256": "canonical_hash(semantic_payload)", "record_sha256": "canonical_hash(record_identity + physical_hash + semantic_hash)", "state_sha256": "legacy alias of record_sha256 only"},
+  "callback_return_gate": {"pairing_complete": true, "physical_hash_equal": true, "semantic_hash_equal": true, "record_hash_equal_required": false},
+  "cross_run_gate": {"identity_equal": true, "physical_hash_equal": true, "semantic_hash_equal": true, "record_hash_equal": true, "numeric_atol": 0.0, "numeric_rtol": 0.0}
+}

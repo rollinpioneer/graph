@@ -20,7 +20,7 @@ def _write_json(path: Path, value: Any) -> None:
 
 def _failure(path: Path, reason: str) -> None:
     if path.is_dir():
-        _write_json(path / "result.json", {"schema": "l2rar2_r14b_execution_result_v1", "status": "STOP_AFTER_EXECUTION_1", "reason": reason, "executions_used": 1, "automatic_retry": False, "recorded_at_utc": datetime.now(timezone.utc).isoformat()})
+        _write_json(path / "result.json", {"schema": "l2rar2_r14b_execution_result_v3", "status": "STOP_AFTER_EXECUTION_1", "reason": reason, "executions_used": 1, "automatic_retry": False, "recorded_at_utc": datetime.now(timezone.utc).isoformat()})
         (path / "STOP_AFTER_EXECUTION_1").write_text(reason + "\n", encoding="utf-8")
 
 
@@ -91,17 +91,17 @@ def main(argv: list[str] | None = None) -> int:
     repo = args.repo.resolve(); protocol_path = args.protocol.resolve(); protocol = load_protocol(protocol_path)
     protocol["protocol_sha256"] = sha256(protocol_path)
     stage = args.stage
-    ordinary_stages = {"R14B_ORDINARY_BASELINE_A", "R14B_ORDINARY_REPEAT_B"}
-    if (args.command == "run-instrumented" and stage != "R14B_INSTRUMENTED_C") or (args.command == "run-ordinary" and stage not in ordinary_stages):
+    ordinary_stages = {"R14B_V2_ORDINARY_BASELINE_A", "R14B_V2_ORDINARY_REPEAT_B"}
+    if (args.command == "run-instrumented" and stage != "R14B_V2_INSTRUMENTED_C") or (args.command == "run-ordinary" and stage not in ordinary_stages):
         print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": "command and stage mismatch"})); return 3
     baseline: dict[str, Any] | None = None
-    if stage == "R14B_ORDINARY_REPEAT_B":
+    if stage == "R14B_V2_ORDINARY_REPEAT_B":
         if not args.baseline_A or not (args.baseline_A / "result.json").is_file():
             print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": "baseline A required"})); return 3
         result = json.loads((args.baseline_A / "result.json").read_text(encoding="utf-8"))
         manifest = json.loads((args.baseline_A / "artifact_manifest.json").read_text(encoding="utf-8"))
         baseline = {"baseline_A_artifact_manifest_sha256": manifest["artifact_manifest_sha256"], "baseline_A_result_sha256": sha256(args.baseline_A / "result.json"), "baseline_A_environment_fingerprint_sha256": result.get("environment_fingerprint_sha256"), "baseline_A_model_fingerprint_sha256": result.get("model_fingerprint_sha256"), "baseline_A_review_status": "PASS"}
-    if stage == "R14B_INSTRUMENTED_C":
+    if stage == "R14B_V2_INSTRUMENTED_C":
         if not args.ordinary_B or not args.ordinary_A_B_comparison or not (args.ordinary_A_B_comparison).is_file():
             print(json.dumps({"status": "DENIED_BEFORE_MODEL_CONSTRUCTION", "reason": "ordinary B and A/B PASS comparison required"})); return 3
         b_result = json.loads((args.ordinary_B / "result.json").read_text(encoding="utf-8")); b_manifest = json.loads((args.ordinary_B / "artifact_manifest.json").read_text(encoding="utf-8")); ab = json.loads(args.ordinary_A_B_comparison.read_text(encoding="utf-8"))

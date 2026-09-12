@@ -228,6 +228,7 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
             summary = compare(left, right, output, "ordinary_A_vs_B")
             self.assertFalse(summary["all_main_gates_passed"])
             self.assertEqual(summary["first_mismatch"]["field"], "checkpoint_state")
+            self.assertEqual(summary["first_mismatch"]["domain"], "RECORD")
 
     def test_comparison_fixture_instrumentation_is_required(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -268,8 +269,8 @@ raise SystemExit(0 if rc == 3 and "mujoco" not in sys.modules else 1)
                 self.assertTrue(lock["git_status_clean"])
 
     def test_protocol_uses_v2_static_contract(self):
-        self.assertEqual(self.protocol["schema"], "l2rar2_r14b_protocol_lock_v2")
-        self.assertEqual(self.protocol["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v2")
+        self.assertEqual(self.protocol["schema"], "l2rar2_r14b_protocol_lock_v3")
+        self.assertEqual(self.protocol["static_contract_version"], "l2rar2_r14b_pre_execution_contract_v3")
 
     def test_authorization_templates_use_v2_contract(self):
         root = Path(__file__).parents[3] / "artifacts/pathgraph_sarm/upgrade_v2/reproducible_baseline_l2rar2_r14b_v1/applications_v1"

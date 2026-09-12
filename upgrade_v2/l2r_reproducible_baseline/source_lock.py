@@ -88,7 +88,7 @@ def make_pre_execution_source_lock(
         raise ValueError("environment contract is not the frozen v2 contract")
     xml = pre_execution_model_xml(protocol)
     lock: dict[str, Any] = {
-        "schema": "l2rar2_r14b_pre_execution_source_lock_v2",
+        "schema": "l2rar2_r14b_pre_execution_source_lock_v3",
         "static_contract_version": protocol["static_contract_version"],
         "runner_commit": current_commit(repo),
         "generation_runner_file_hashes": runner_file_hashes(repo),

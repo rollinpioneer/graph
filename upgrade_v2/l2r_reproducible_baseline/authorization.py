@@ -19,7 +19,7 @@ from .source_lock import (
     working_tree_clean,
 )
 
-AUTH_SCHEMA = "l2rar2_r14b_execution_authorization_v2"
+AUTH_SCHEMA = "l2rar2_r14b_execution_authorization_v3"
 
 
 class AuthorizationDenied(RuntimeError):
@@ -66,7 +66,7 @@ def validate_authorization(
     baseline: dict[str, Any] | None = None,
 ) -> Authorization:
     data = _load(path)
-    stage_key = {"R14B_ORDINARY_BASELINE_A": "A", "R14B_ORDINARY_REPEAT_B": "B", "R14B_INSTRUMENTED_C": "C"}.get(stage)
+    stage_key = {"R14B_V2_ORDINARY_BASELINE_A": "A", "R14B_V2_ORDINARY_REPEAT_B": "B", "R14B_V2_INSTRUMENTED_C": "C"}.get(stage)
     if stage_key is None:
         raise AuthorizationDenied(f"unsupported execution stage: {stage}")
     source_lock = _load(source_lock_path)
@@ -109,7 +109,7 @@ def validate_authorization(
     expected_environment_sha256 = sha256(environment_contract_path)
     expected_source_lock_sha256 = canonical_hash({key: source_lock[key] for key in source_lock if key != "source_lock_sha256"}) if source_lock.get("source_lock_sha256") is not None else None
     source_lock_errors = []
-    if source_lock.get("schema") != "l2rar2_r14b_pre_execution_source_lock_v2":
+    if source_lock.get("schema") != "l2rar2_r14b_pre_execution_source_lock_v3":
         source_lock_errors.append("schema")
     source_lock_exact = {
         "runner_commit": current_commit(repo),
@@ -222,7 +222,7 @@ def consume_authorization(output_root: Path, authorization: Authorization, autho
     except FileExistsError as exc:
         raise AuthorizationDenied("output_root already exists; single-use authorization denied") from exc
     record = {
-        "schema": "l2rar2_r14b_authorization_consumption_v2",
+        "schema": "l2rar2_r14b_authorization_consumption_v3",
         "status": "CONSUMED_BEFORE_MODEL_CONSTRUCTION",
         "consumed_at_utc": datetime.now(timezone.utc).isoformat(),
         "authorization_id": authorization.authorization_id,
