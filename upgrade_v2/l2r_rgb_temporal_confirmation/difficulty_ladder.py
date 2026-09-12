@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import json
 import statistics
 from pathlib import Path
 
-from upgrade_v2.l2r_forced_drop.calibration_runner_v2 import _run_instance
+import numpy as np
+
+from upgrade_v2.l2r_forced_drop.intervention import make_force_pulse, run_force_pulse
+from upgrade_v2.l2r_forced_drop.physical_reference import evaluate_loss_trace
 from upgrade_v2.l2r_forced_drop.protocol import PulseLevel
+from upgrade_v2.l2r_forced_drop.simulator import ControlledForcedDropTabletop
+from upgrade_v2.l2r_forced_drop.trace_recorder_v2 import snapshot
+from upgrade_v2.visual_refine_l2.dynamic_simulator import family_spec
 
 from .case_registry import CALIBRATION_FAMILIES
 from .io_utils import read_json, sha256_file, write_csv, write_json
@@ -17,6 +24,75 @@ def level_id(scale: float) -> str:
 
 def pulse_for_scale(scale: float) -> PulseLevel:
     return PulseLevel(level_id(scale), tuple(float(scale) * value for value in BASE_DELTA_V))
+
+
+def _run_instance(root: Path, family: str, family_seed: int, rollout_seed: int,
+                  level: PulseLevel) -> dict:
+    """R17 calibration with a separate settling interval before verification."""
+    root.mkdir(parents=True, exist_ok=False)
+    sim = ControlledForcedDropTabletop(
+        family_spec(family, "normal_pick_place", family_seed, rollout_seed,
+                    probe_variant="default"), rollout_seed)
+    sim.perform("approach_object"); sim.perform("close_gripper"); sim.perform("lift")
+    trace = []
+    for _ in range(10):
+        sim.physics_step()
+        trace.append(snapshot(sim, step=len(trace), phase="pre_hold_settle", family_id=family,
+                              seed=rollout_seed, pre_hold_verified=False))
+    verification = []
+    anchor = None
+    for _ in range(50):
+        sim.physics_step()
+        row = snapshot(sim, step=len(trace), phase="pre_hold", family_id=family,
+                       seed=rollout_seed, pre_hold_verified=False)
+        if anchor is None: anchor = np.asarray(row["object_in_gripper_position"], dtype=float)
+        row["relative_drift_m"] = float(np.linalg.norm(
+            np.asarray(row["object_in_gripper_position"], dtype=float) - anchor))
+        trace.append(row); verification.append(row)
+    drift = max((row["relative_drift_m"] for row in verification), default=float("inf"))
+    verified = bool(len(verification) == 50 and drift <= 0.01 and
+                    all(row["weld_active"] and row["numeric_health"]["passed"] for row in verification))
+    sim.pre_hold_verified = verified
+    force_start_time = None
+    if verified:
+        object_body = int(sim.mujoco.mj_name2id(sim.model, sim.mujoco.mjtObj.mjOBJ_BODY, "object"))
+        gripper_body = int(sim.mujoco.mj_name2id(sim.model, sim.mujoco.mjtObj.mjOBJ_BODY, "gripper"))
+        pulse = make_force_pulse(float(sim.model.body_mass[object_body]),
+                                 sim.data.xmat[gripper_body].reshape(3, 3), level,
+                                 duration_s=PULSE_DURATION_S)
+
+        def event(current, name):
+            nonlocal force_start_time
+            if name == "force_pulse_started": force_start_time = float(current.data.time)
+            phase = "force_pulse_step" if name == "physics_step" else name
+            if name in {"post_weld_off_pre_force", "force_pulse_started", "physics_step", "force_pulse_ended"}:
+                trace.append(snapshot(current, step=len(trace), phase=phase, family_id=family,
+                                      seed=rollout_seed, pre_hold_verified=verified))
+        run_force_pulse(sim, pulse, trace=event)
+        for _ in range(100):
+            sim.physics_step()
+            trace.append(snapshot(sim, step=len(trace), phase="observation", family_id=family,
+                                  seed=rollout_seed, pre_hold_verified=verified))
+    outcome = evaluate_loss_trace(trace, pre_hold_verified=verified, force_start_time=force_start_time)
+    numeric = all(row["numeric_health"]["passed"] for row in trace)
+    result = {"family_id": family, "family_seed": family_seed, "rollout_seed": rollout_seed,
+              "level_id": level.level_id, "execution_valid": bool(verified and numeric),
+              "pre_hold_verified": verified, "numeric_health_pass": numeric,
+              "physical_loss_confirmed": bool(outcome.get("physical_loss_confirmed")),
+              "force_start_time": force_start_time,
+              "loss_onset_time_abs": outcome.get("loss_onset_time_abs"),
+              "loss_confirmed_time_abs": outcome.get("loss_confirmed_time_abs"),
+              "loss_confirmed_delay_from_force_s": outcome.get("loss_confirmed_delay_from_force_s"),
+              "outcome": outcome, "trace_rows": len(trace)}
+    text = "".join(json.dumps(row, sort_keys=True) + "\n" for row in trace)
+    for name in ("physics_trace.jsonl", "contact_trace.jsonl", "capture_volume_trace.jsonl", "force_trace.jsonl"):
+        (root / name).write_text(text, encoding="utf-8")
+    write_json(root / "pre_hold_summary.json", {"pre_hold_verified": verified,
+                                                  "settling_duration_s": 0.10,
+                                                  "verification_duration_s": 0.50,
+                                                  "max_relative_drift_m": drift})
+    write_json(root / "physical_reference.json", result)
+    return result
 
 
 def choose_ladder(levels: list[dict]) -> dict:
@@ -43,8 +119,7 @@ def _run_level(output_root: Path, scale: float, ordinal: int) -> tuple[dict, lis
     for family, family_seed, rollout_seed_base in CALIBRATION_FAMILIES:
         rollout_seed = rollout_seed_base + ordinal
         root = output_root / pulse.level_id / family
-        result = _run_instance(root, family, family_seed, rollout_seed, pulse, pulse.level_id,
-                               pulse_duration_s=PULSE_DURATION_S)
+        result = _run_instance(root, family, family_seed, rollout_seed, pulse)
         rows.append(result)
     delays = [float(row["loss_confirmed_delay_from_force_s"]) for row in rows
               if row.get("loss_confirmed_delay_from_force_s") is not None]

@@ -190,6 +190,9 @@ def _prehold(capture: RolloutCapture, steps: int) -> dict[str, Any]:
     capture.perform("approach_object")
     capture.perform("close_gripper")
     capture.perform("lift")
+    capture.set_phase("pre_hold_settle", "hold")
+    for _ in range(10):
+        capture.sim.physics_step()
     capture.set_phase("pre_hold", "hold")
     start = len(capture.physics_rows)
     for _ in range(steps):
@@ -313,8 +316,12 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
     else:
         outcome["reference_action"] = "recover_object" if outcome.get("physical_loss_confirmed") else "none"
         outcome["resolvable"] = outcome.get("state") not in {"TRACE_INCOMPLETE", "NUMERICAL_INVALID", "PREHOLD_UNVERIFIED"}
-    separations = [float(np.linalg.norm(np.asarray(row["object_in_gripper_position"], dtype=float)))
-                   for row in capture.physics_rows if row.get("object_in_gripper_position") is not None]
+    prehold_rows = [row for row in capture.physics_rows if row.get("phase") == "pre_hold"]
+    separation_anchor = (np.asarray(prehold_rows[-1]["object_in_gripper_position"], dtype=float)
+                         if prehold_rows else None)
+    separations = [float(np.linalg.norm(np.asarray(row["object_in_gripper_position"], dtype=float) - separation_anchor))
+                   for row in capture.physics_rows if separation_anchor is not None
+                   and row.get("phase") != "pre_hold" and row.get("object_in_gripper_position") is not None]
     reference = {
         "schema": "l2rar2_r17_physical_reference_v1", "family_id": family_id,
         "family_seed": family_seed, "rollout_seed": rollout_seed, "case_id": case.case_id,
