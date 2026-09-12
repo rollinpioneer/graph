@@ -6,10 +6,55 @@ from pathlib import Path
 from typing import Any
 
 from .io_utils import read_csv, read_json, write_csv, write_json
+from .io_utils import read_jsonl
+from upgrade_v2.l2r_forced_drop.physical_reference import evaluate_loss_trace
 
 
 def case_number(case_id: str) -> str:
     return str(case_id).split("_", 1)[0]
+
+
+def rebuild_physical_references(confirmation_root: Path) -> dict[str, Any]:
+    """Recompute labels from saved physics only; never re-run a rollout."""
+    updated = 0
+    counts: dict[str, int] = {}
+    for path in sorted(confirmation_root.glob("*/reference/physical_reference.json")):
+        reference = read_json(path)
+        case = case_number(reference["case_id"])
+        physics = read_jsonl(path.parent / "physics_trace.jsonl")
+        last_prehold = max((index for index, row in enumerate(physics)
+                            if row.get("phase") == "pre_hold"), default=-1)
+        tail = physics[last_prehold + 1:] if last_prehold >= 0 else physics
+        if case == "C1":
+            outcome = {"state": "MISSED_HOLD_RESOLVED", "physical_loss_confirmed": False,
+                       "reference_action": "retry_grasp", "resolvable": True}
+        elif case == "C2":
+            outcome = {"state": "TOUCH_ONLY_RESOLVED", "physical_loss_confirmed": False,
+                       "reference_action": "none", "resolvable": True}
+        elif case == "C12":
+            outcome = {"state": "COMMANDED_RELEASE", "physical_loss_confirmed": False,
+                       "reference_action": "none", "resolvable": True}
+        elif case in {"C3", "C4"} and tail and all(
+                row.get("weld_active") and row.get("inside_capture") for row in tail):
+            outcome = {"state": "WELD_SUPPORTED_HOLD", "physical_loss_confirmed": False,
+                       "reference_action": "none", "resolvable": True}
+        else:
+            outcome = evaluate_loss_trace(tail, pre_hold_verified=reference.get("pre_hold_verified"),
+                                          force_start_time=reference.get("force_start_time"))
+            outcome["reference_action"] = "recover_object" if outcome.get("physical_loss_confirmed") else "none"
+            outcome["resolvable"] = outcome.get("state") not in {
+                "TRACE_INCOMPLETE", "NUMERICAL_INVALID", "PREHOLD_UNVERIFIED"}
+        for key in ("state", "physical_loss_confirmed", "reference_action", "resolvable",
+                    "loss_onset_index", "loss_confirmed_index", "loss_onset_time_abs",
+                    "loss_confirmed_time_abs", "loss_onset_time_s", "loss_confirmed_time_s",
+                    "loss_confirmed_delay_from_force_s"):
+            reference.pop(key, None)
+        reference.update(outcome)
+        write_json(path, reference)
+        updated += 1
+        counts[reference["state"]] = counts.get(reference["state"], 0) + 1
+    return {"schema": "l2rar2_r17_reference_rebuild_v1", "status": "PASS",
+            "physical_reruns": 0, "updated": updated, "state_counts": counts}
 
 
 def build_reference(confirmation_root: Path, output_root: Path) -> dict[str, Any]:

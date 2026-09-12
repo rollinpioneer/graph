@@ -11,7 +11,7 @@ from .evaluation import evaluate
 from .io_utils import read_json, write_json
 from .package_results import summarize
 from .protocol import protocol_lock
-from .reference_builder import build_reference, validate_generator
+from .reference_builder import build_reference, rebuild_physical_references, validate_generator
 from .rgb_capture import collect_confirmation
 
 
@@ -24,6 +24,7 @@ def main() -> int:
     p = sub.add_parser("collect-confirmation"); p.add_argument("--repo", type=Path); p.add_argument("--difficulty-lock", type=Path, required=True); p.add_argument("--output-root", type=Path, required=True); p.add_argument("--workers", type=int, default=1)
     p = sub.add_parser("detect-rgb"); p.add_argument("--confirmation-root", type=Path, required=True); p.add_argument("--workers", type=int, default=1)
     p = sub.add_parser("build-reference"); p.add_argument("--confirmation-root", type=Path, required=True); p.add_argument("--output-root", type=Path, required=True)
+    p = sub.add_parser("rebuild-physical-reference"); p.add_argument("--confirmation-root", type=Path, required=True); p.add_argument("--output", type=Path, required=True)
     p = sub.add_parser("validate-generator"); p.add_argument("--reference-root", type=Path, required=True); p.add_argument("--output", type=Path, required=True)
     p = sub.add_parser("evaluate"); p.add_argument("--confirmation-root", type=Path, required=True); p.add_argument("--reference-root", type=Path, required=True); p.add_argument("--output-root", type=Path, required=True)
     p = sub.add_parser("summarize"); p.add_argument("--artifact-root", type=Path, required=True); p.add_argument("--output-root", type=Path, required=True); p.add_argument("--external-data-root", type=Path)
@@ -36,6 +37,7 @@ def main() -> int:
     elif args.command == "collect-confirmation": result = {"rollouts": len(collect_confirmation(args.output_root, read_json(args.difficulty_lock)))}
     elif args.command == "detect-rgb": result = {"results": detect_confirmation(args.confirmation_root)}
     elif args.command == "build-reference": result = build_reference(args.confirmation_root, args.output_root)
+    elif args.command == "rebuild-physical-reference": result = rebuild_physical_references(args.confirmation_root); write_json(args.output, result)
     elif args.command == "validate-generator": result = validate_generator(args.reference_root); write_json(args.output, result)
     elif args.command == "evaluate": result = evaluate(args.confirmation_root, args.reference_root, args.output_root)
     elif args.command == "summarize": result = summarize(args.artifact_root, args.output_root, args.external_data_root)

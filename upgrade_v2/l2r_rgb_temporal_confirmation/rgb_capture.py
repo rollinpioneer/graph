@@ -302,7 +302,10 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
         capture.close()
 
     numeric_pass = all(row.get("numeric_health", {}).get("passed", False) for row in capture.physics_rows)
-    outcome = evaluate_loss_trace(capture.physics_rows, pre_hold_verified=pre["pre_hold_verified"],
+    last_prehold = max((index for index, row in enumerate(capture.physics_rows)
+                        if row.get("phase") == "pre_hold"), default=-1)
+    reference_rows = capture.physics_rows[last_prehold + 1:] if last_prehold >= 0 else capture.physics_rows
+    outcome = evaluate_loss_trace(reference_rows, pre_hold_verified=pre["pre_hold_verified"],
                                   force_start_time=capture.force_start_time)
     if case.case_id.startswith("C1_"):
         outcome = {"state": "MISSED_HOLD_RESOLVED", "physical_loss_confirmed": False,
@@ -312,6 +315,10 @@ def collect_rollout(root: Path, *, family_id: str, family_seed: int, rollout_see
                    "reference_action": "none", "resolvable": True}
     elif case.case_id.startswith("C12_"):
         outcome = {"state": "COMMANDED_RELEASE", "physical_loss_confirmed": False,
+                   "reference_action": "none", "resolvable": True}
+    elif case.case_id.startswith(("C3_", "C4_")) and reference_rows and all(
+            row.get("weld_active") and row.get("inside_capture") for row in reference_rows):
+        outcome = {"state": "WELD_SUPPORTED_HOLD", "physical_loss_confirmed": False,
                    "reference_action": "none", "resolvable": True}
     else:
         outcome["reference_action"] = "recover_object" if outcome.get("physical_loss_confirmed") else "none"
