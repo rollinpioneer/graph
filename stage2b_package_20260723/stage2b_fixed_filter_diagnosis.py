@@ -29,7 +29,7 @@ SCORE_COLUMNS = (
 )
 ID_COLUMNS = (
     "original_demo_index", "demo_index", "demo_idx",
-    "original_index", "train_demo_index", "index",
+    "original_index", "train_demo_index", "dataset_demo_index", "index",
 )
 
 
