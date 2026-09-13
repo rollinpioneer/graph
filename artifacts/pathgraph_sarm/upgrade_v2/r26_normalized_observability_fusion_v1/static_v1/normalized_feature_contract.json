@@ -1,0 +1,16 @@
+{
+  "duplicate_evidence_id_is_new_visual_evidence": false,
+  "evidence_id": [
+    "physical_time_ns",
+    "jpeg_sha256"
+  ],
+  "object_scale": "sqrt(median_prehold_object_area / pi)",
+  "oracle_fallback_allowed": false,
+  "prehold_anchor": "coordinatewise median relative centroid",
+  "relative_centroid": "object_centroid - gripper_centroid",
+  "robust_center": "median(prehold scale-normalized displacement)",
+  "robust_noise": "max(1.4826 * MAD(prehold scale-normalized displacement), 1e-4)",
+  "scale_normalized_displacement": "norm(relative_centroid - prehold_anchor) / max(object_scale, 1e-6)",
+  "schema": "l2rar2_r26_normalized_feature_contract_v1",
+  "z_evidence": "(u_t - robust_center) / robust_noise"
+}
