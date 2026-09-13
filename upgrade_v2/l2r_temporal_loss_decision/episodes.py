@@ -18,6 +18,46 @@ def _trace(path: Path) -> list[dict[str, Any]]:
     return _jsonl(path) if path.is_file() else []
 
 
+def _event_key(row: dict[str, Any]) -> tuple[int, int]:
+    return (int(row.get("physical_time_ns", 0)), int(row.get("capture_order", -1)))
+
+
+def _logged_recovery_execution(outcome: dict[str, Any]) -> bool:
+    executions = outcome.get("recovery_executions")
+    if isinstance(executions, list) and executions:
+        return True
+    for field in ("executed_recovery_cycles", "outer_recovery_cycles", "inner_recovery_loops"):
+        try:
+            if int(outcome.get(field, 0) or 0) > 0:
+                return True
+        except (TypeError, ValueError):
+            pass
+    return False
+
+
+def _attempt_at(
+    observations: list[dict[str, Any]],
+    lifecycle: list[dict[str, Any]],
+    key: tuple[int, int] | None,
+) -> int | None:
+    if key is None:
+        return None
+    candidates = [
+        row for row in (*observations, *lifecycle)
+        if _event_key(row) <= key and row.get("attempt_id") is not None
+    ]
+    if not candidates:
+        return None
+    return int(max(candidates, key=_event_key)["attempt_id"])
+
+
+def _last_observation_before(
+    observations: list[dict[str, Any]], boundary: tuple[int, int] | None,
+) -> dict[str, Any] | None:
+    eligible = [row for row in observations if boundary is None or _event_key(row) < boundary]
+    return max(eligible, key=_event_key) if eligible else None
+
+
 def _detector(path: Path) -> dict[str, Any]:
     from .visual_separation import detect_frame_boxes
     try:
@@ -101,23 +141,74 @@ def _rollout(path: Path) -> dict[str, Any]:
     hold_ready_ns = int(closed[1]["physical_time_ns"]) if len(closed) >= 2 else None
     baseline_rows = [row for row in closed if hold_ready_ns is not None and int(row["physical_time_ns"]) <= hold_ready_ns + 500_000_000]
     baseline_ready_ns = int(baseline_rows[-1]["physical_time_ns"]) if baseline_rows else None
-    action_ns = None
+    proposal_ns = None
+    proposal_order = None
     decisions: list[dict[str, Any]] = []
     output_path = path / "candidate_output/live_decisions.jsonl"
     if not output_path.is_file():
         output_path = path / "candidate_output/factor_decisions.jsonl"
     if output_path.is_file():
         decisions = _jsonl(output_path)
-        actions = [int(d.get("physical_time_ns")) for d in decisions if d.get("selected_action") == "recover_object"]
-        action_ns = min(actions) if actions else None
+        action_rows = [d for d in decisions if d.get("selected_action") == "recover_object" and d.get("physical_time_ns") is not None]
+        if action_rows:
+            first_action = min(action_rows, key=_event_key)
+            proposal_ns, proposal_order = _event_key(first_action)
     trace = _trace(path / "reference/physics_trace.jsonl")
     reference = _reference(trace, outcome, case_id)
     last_ns = max(times) if times else 0
-    evidence_end = min(last_ns, action_ns) if action_ns is not None else last_ns
+    lifecycle = _jsonl(path / "online_raw/attempt_lifecycle.jsonl")
+    proposal_key = ((proposal_ns, proposal_order)
+                    if proposal_ns is not None and proposal_order is not None else None)
+    proposal_attempt_id = _attempt_at(observations, lifecycle, proposal_key)
+    control_rows = [
+        row for row in lifecycle
+        if bool(row.get("attempt_active"))
+        and str(row.get("attempt_phase", "")) in {"acquiring", "settling", "executing"}
+        and proposal_key is not None
+        and _event_key(row) > proposal_key
+        and proposal_attempt_id is not None
+        and int(row.get("attempt_id", -1)) > proposal_attempt_id
+    ]
+    first_control = (min(control_rows, key=_event_key)
+                     if control_rows and _logged_recovery_execution(outcome) else None)
+    control_key = _event_key(first_control) if first_control is not None else None
+
+    baseline_key = (int(baseline_ready_ns), 10**18) if baseline_ready_ns is not None else None
+    baseline_attempt_id = _attempt_at(observations, lifecycle, baseline_key)
+    release_rows = [
+        row for row in observations
+        if baseline_ready_ns is not None
+        and int(row.get("physical_time_ns", 0)) >= int(baseline_ready_ns)
+        and (row.get("gripper_command") == "open" or row.get("attempt_end_reason") == "release")
+    ]
+    first_release = min(release_rows, key=_event_key) if release_rows else None
+    release_key = _event_key(first_release) if first_release is not None else None
+    attempt_change_rows = [
+        row for row in lifecycle
+        if baseline_key is not None
+        and _event_key(row) > baseline_key
+        and baseline_attempt_id is not None
+        and int(row.get("attempt_id", baseline_attempt_id)) != baseline_attempt_id
+    ]
+    first_attempt_change = min(attempt_change_rows, key=_event_key) if attempt_change_rows else None
+    attempt_change_key = _event_key(first_attempt_change) if first_attempt_change is not None else None
+
+    boundary_candidates = [
+        (key, kind) for key, kind in (
+            (control_key, "RECOVERY_CONTROL_STARTED"),
+            (release_key, "RELEASE_STARTED"),
+            (attempt_change_key, "ATTEMPT_CHANGED"),
+        ) if key is not None
+    ]
+    boundary_key, boundary_reason = (min(boundary_candidates, key=lambda item: item[0])
+                                     if boundary_candidates else (None, "RAW_OBSERVATION_ENDED"))
+    last_evidence = _last_observation_before(observations, boundary_key)
+    evidence_end = int(last_evidence.get("physical_time_ns", 0)) if last_evidence else 0
+    evidence_end_order = int(last_evidence.get("capture_order", -1)) if last_evidence else -1
     root_family = str(meta.get("family_id", ""))
     arm = str(meta.get("arm_id", meta.get("method", "")))
     target_subset = (case_id in {"R24C2_loss_signal_missing", "R24C4_multisource_missing_then_loss"} and arm == "O_C3_CLP3_CANONICAL_TIME") or (case_id.startswith(("R25C1", "R25C2")) and arm.startswith("F1"))
-    return {"episode_id": path.name, "root_family_id": root_family, "paired_condition_id": f"{root_family}::{case_id}", "family_id": root_family, "arm_id": arm, "case_id": case_id, "rollout_seed": meta.get("rollout_seed", outcome.get("rollout_seed")), "reference_state": reference["reference_state"], "is_target_observability_subset": target_subset, "physical_loss_onset_ns": reference.get("onset_ns"), "physical_loss_confirmed_ns": reference.get("confirmed_ns"), "online_hold_ready_ns": hold_ready_ns, "baseline_ready_ns": baseline_ready_ns, "first_recovery_command_ns": action_ns, "episode_start_ns": int(times[0]) if times else None, "last_raw_physics_ns": int(max((float(row.get("time", 0.0)) for row in trace), default=0.0) * 1_000_000_000), "last_candidate_observation_ns": last_ns, "evidence_end_ns": evidence_end, "outcome": outcome, "candidate_decisions": decisions if output_path.is_file() else [], "observations": observations, "reference_trace_rows": len(trace)}
+    return {"episode_id": path.name, "root_family_id": root_family, "paired_condition_id": f"{root_family}::{case_id}", "family_id": root_family, "arm_id": arm, "case_id": case_id, "rollout_seed": meta.get("rollout_seed", outcome.get("rollout_seed")), "reference_state": reference["reference_state"], "is_target_observability_subset": target_subset, "physical_loss_onset_ns": reference.get("onset_ns"), "physical_loss_confirmed_ns": reference.get("confirmed_ns"), "online_hold_ready_ns": hold_ready_ns, "baseline_ready_ns": baseline_ready_ns, "first_proposal_ns": proposal_ns, "first_proposal_capture_order": proposal_order, "first_proposal_attempt_id": proposal_attempt_id, "first_recovery_command_ns": control_key[0] if control_key else None, "first_recovery_command_capture_order": control_key[1] if control_key else None, "recovery_physics_start_ns": control_key[0] if control_key else None, "recovery_control_executed": control_key is not None, "release_intent_ns": release_key[0] if release_key else None, "attempt_change_ns": attempt_change_key[0] if attempt_change_key else None, "observation_boundary_ns": boundary_key[0] if boundary_key else None, "observation_boundary_capture_order": boundary_key[1] if boundary_key else None, "observation_boundary_reason": boundary_reason, "episode_start_ns": int(times[0]) if times else None, "last_raw_physics_ns": int(max((float(row.get("time", 0.0)) for row in trace), default=0.0) * 1_000_000_000), "last_candidate_observation_ns": last_ns, "evidence_end_ns": evidence_end, "evidence_end_capture_order": evidence_end_order, "outcome": outcome, "candidate_decisions": decisions if output_path.is_file() else [], "observations": observations, "reference_trace_rows": len(trace)}
 
 
 def build(resources: dict[str, Any], output: Path) -> dict[str, Any]:
@@ -136,5 +227,6 @@ def build(resources: dict[str, Any], output: Path) -> dict[str, Any]:
     with (output / "arm_episode_pairing.csv").open("w", newline="", encoding="utf-8") as stream:
         fields = ["episode_id", "paired_condition_id", "root_family_id", "arm_id"]; writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader(); writer.writerows({key: row.get(key) for key in fields} for row in records)
     with (output / "action_censoring.csv").open("w", newline="", encoding="utf-8") as stream:
-        fields = ["episode_id", "evidence_end_ns", "first_recovery_command_ns", "last_candidate_observation_ns"]; writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader(); writer.writerows({key: row.get(key) for key in fields} for row in records)
+        fields = ["episode_id", "evidence_end_ns", "evidence_end_capture_order", "first_proposal_ns", "first_proposal_capture_order", "first_proposal_attempt_id", "first_recovery_command_ns", "first_recovery_command_capture_order", "recovery_physics_start_ns", "recovery_control_executed", "release_intent_ns", "attempt_change_ns", "observation_boundary_ns", "observation_boundary_capture_order", "observation_boundary_reason", "last_candidate_observation_ns"]
+        writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader(); writer.writerows({key: row.get(key) for key in fields} for row in records)
     return {"schema": "l2rar2_r27_episode_audit_v1", "episodes": len(records), "families": len({row["root_family_id"] for row in records}), "physical_executions": 0, "mujoco_imported": False}

@@ -15,7 +15,14 @@ def _baseline_prefix(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def replay(record: dict[str, Any], method: str, *, window_ns: int = 500_000_000, theta_motion: float = 0.35, theta_sep: float = 0.10) -> dict[str, Any]:
-    rows = [row for row in record.get("observations", []) if int(row.get("physical_time_ns", 0)) <= int(record.get("evidence_end_ns") or 0)]
+    end_key = (
+        int(record.get("evidence_end_ns") or 0),
+        int(record.get("evidence_end_capture_order", 10**18)),
+    )
+    rows = [
+        row for row in record.get("observations", [])
+        if (int(row.get("physical_time_ns", 0)), int(row.get("capture_order", -1))) <= end_key
+    ]
     baseline = {"ready": False, "prefix_index": None, "anchor_xy": None, "scale_px": None}
     decision = TemporalDecision(method, window_ns, theta_motion, theta_sep, True, None, None)
     outputs: list[dict[str, Any]] = []
