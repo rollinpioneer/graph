@@ -1,0 +1,67 @@
+{
+  "engineering_status": "PASS",
+  "reports": [
+    {
+      "source_path": "artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/graphs/G1_predicate_bound.json",
+      "role": "CURRENT_GENERATED_GRAPH",
+      "graph_id": "G1_predicate_bound",
+      "node_count": 9,
+      "edge_count": 3,
+      "issues": [
+        "NODES_WITHOUT_SUCCESS_PATH",
+        "EDGE_COST_NOT_BOUND",
+        "EDGE_SEMANTICS_NOT_BOUND",
+        "NUMERIC_REWARD_OR_COST_NULL",
+        "START_SUCCESS_INFERRED_FOR_AUDIT_ONLY"
+      ],
+      "nodes_without_success_path": [
+        "goal_stability_candidate",
+        "grasp_candidate",
+        "object_above_target",
+        "object_in_transport",
+        "object_on_target_candidate",
+        "object_released",
+        "stable_hold_candidate"
+      ],
+      "missing_edge_cost": [
+        "already_done",
+        "observe_unknown",
+        "manipulate"
+      ],
+      "missing_edge_semantics": [
+        "already_done",
+        "observe_unknown",
+        "manipulate"
+      ],
+      "audit_inferred_endpoints": true,
+      "reward_binding_ready": false
+    },
+    {
+      "source_path": "artifacts/pathgraph_sarm/stage3/input_adapter_v1/runtime_graph_specs_v1.0.1/transport_recovery_graph_runtime_v1.0.1.yaml",
+      "role": "LEGACY_REWARD_GRAPH",
+      "graph_id": "transport_recovery_graph",
+      "node_count": 8,
+      "edge_count": 9,
+      "issues": [],
+      "nodes_without_success_path": [],
+      "missing_edge_cost": [],
+      "missing_edge_semantics": [],
+      "audit_inferred_endpoints": false,
+      "reward_binding_ready": true
+    },
+    {
+      "source_path": "artifacts/pathgraph_sarm/stage3/input_adapter_v1/runtime_graph_specs_v1.0.1/transport_dual_order_graph_runtime_v1.0.1.yaml",
+      "role": "LEGACY_REWARD_GRAPH",
+      "graph_id": "transport_dual_order_graph",
+      "node_count": 7,
+      "edge_count": 12,
+      "issues": [],
+      "nodes_without_success_path": [],
+      "missing_edge_cost": [],
+      "missing_edge_semantics": [],
+      "audit_inferred_endpoints": false,
+      "reward_binding_ready": true
+    }
+  ],
+  "note": "This is syntax/reachability inspection, not a history-aware semantic proof. Gaps do not authorize invented edges."
+}

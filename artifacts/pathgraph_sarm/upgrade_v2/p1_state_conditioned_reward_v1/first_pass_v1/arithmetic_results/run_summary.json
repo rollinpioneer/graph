@@ -1,0 +1,60 @@
+{
+  "engineering_status": "PASS",
+  "source_engine_verified": true,
+  "n_transitions": 33,
+  "n_episodes": 12,
+  "methods": [
+    "SPARSE_TERMINAL",
+    "LINEAR_FIXED_ORDER",
+    "UNORDERED_COMPLETION_PROGRESS",
+    "GRAPH_COST_ONLY",
+    "GRAPH_COST_PHI",
+    "GRAPH_COST_DEBT",
+    "FULL_FROZEN",
+    "NO_RECOVERY_CREDIT"
+  ],
+  "input_sha256": "06c450e54e3bf8f4cc29eb4dd2f58e350a982c2a07d0a2b9d70853a6b6575f3c",
+  "evidence_tiers": [
+    "SYNTHETIC_PROTOCOL_FIXTURE"
+  ],
+  "max_engine_mirror_error": 0.0,
+  "full_method_positive_closed_returns": [
+    {
+      "episode_id": "unit_scale_clipped_closed_cycle",
+      "method": "FULL_FROZEN",
+      "evidence_tier": "SYNTHETIC_PROTOCOL_FIXTURE",
+      "root_group_id": "scale_pair",
+      "cost_contract_id": "P1_SYNTHETIC_ARITHMETIC_V1",
+      "transitions": 4,
+      "signed_return": 1.0,
+      "positive_weight_sum": 2.5,
+      "debt_after": 0.0,
+      "mirror_max_error": 0.0,
+      "clip_count": 1,
+      "recovery_cap_count": 1,
+      "closed_in_supplied_z_cost_phi": true,
+      "positive_closed_return": true
+    },
+    {
+      "episode_id": "phi_reset_closed_cycle",
+      "method": "FULL_FROZEN",
+      "evidence_tier": "SYNTHETIC_PROTOCOL_FIXTURE",
+      "root_group_id": "phi_reset_closed_cycle",
+      "cost_contract_id": "P1_SYNTHETIC_ARITHMETIC_V1",
+      "transitions": 3,
+      "signed_return": 0.5,
+      "positive_weight_sum": 0.75,
+      "debt_after": 0.0,
+      "mirror_max_error": 0.0,
+      "clip_count": 0,
+      "recovery_cap_count": 0,
+      "closed_in_supplied_z_cost_phi": true,
+      "positive_closed_return": true
+    }
+  ],
+  "universal_cycle_safety": "COUNTEREXAMPLE_IN_SUPPLIED_FIXTURES",
+  "claim_scope": "Only the supplied typed transitions; not new physical trials, model inference or policy learning.",
+  "physics_executions": 0,
+  "policy_training_runs": 0,
+  "confirmation_passed": false
+}
