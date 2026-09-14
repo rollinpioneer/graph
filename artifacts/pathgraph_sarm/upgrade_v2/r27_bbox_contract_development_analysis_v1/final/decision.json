@@ -1,0 +1,391 @@
+{
+  "B1_750ms": {
+    "all_no_loss_episodes": "44",
+    "early": "0",
+    "episodes": "208",
+    "false_loss_events": "0",
+    "fully_observed_loss_episodes": "36",
+    "horizon_ns": "750000000",
+    "late": "0",
+    "method": "B1",
+    "missed": "36",
+    "on_time": "0",
+    "reference_loss_episodes": "116",
+    "right_censored": "80"
+  },
+  "B2_750ms": {
+    "all_no_loss_episodes": "44",
+    "early": "18",
+    "episodes": "208",
+    "false_loss_events": "0",
+    "fully_observed_loss_episodes": "36",
+    "horizon_ns": "750000000",
+    "late": "0",
+    "method": "B2",
+    "missed": "20",
+    "on_time": "38",
+    "reference_loss_episodes": "116",
+    "right_censored": "40"
+  },
+  "B3_750ms": {
+    "all_no_loss_episodes": "44",
+    "early": "18",
+    "episodes": "208",
+    "false_loss_events": "0",
+    "fully_observed_loss_episodes": "36",
+    "horizon_ns": "750000000",
+    "late": "0",
+    "method": "B3",
+    "missed": "20",
+    "on_time": "38",
+    "reference_loss_episodes": "116",
+    "right_censored": "40"
+  },
+  "confirmation_passed": false,
+  "coverage_750ms_target_loss": 0.5,
+  "decision": "R27_INSUFFICIENT_OBSERVATION_HORIZON",
+  "formal_r27_decision_retained": "R27_INSUFFICIENT_OBSERVATION_HORIZON",
+  "interface_shadow": {
+    "cases": [
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "pending_then_confirm_100ms",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": true,
+            "guard_state": "PENDING",
+            "pending_attempt_id": 1,
+            "pending_capture_order": 0,
+            "pending_physical_time_ns": 0,
+            "physical_time_ns": 0,
+            "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+            "selected_action": "none",
+            "time": null
+          },
+          {
+            "capture_order": 1,
+            "contact_loss_pending": false,
+            "guard_state": "CONFIRMED",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 100000000,
+            "reason_code": "NON_RELEASE_CONTACT_LOSS_PERSISTENCE_CONFIRMED_CANONICAL_TIME",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          },
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 1,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 100000000,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "same_time_remains_pending",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": true,
+            "guard_state": "PENDING",
+            "pending_attempt_id": 1,
+            "pending_capture_order": 0,
+            "pending_physical_time_ns": 0,
+            "physical_time_ns": 0,
+            "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+            "selected_action": "none",
+            "time": null
+          },
+          {
+            "capture_order": 1,
+            "contact_loss_pending": true,
+            "guard_state": "PENDING",
+            "pending_attempt_id": 1,
+            "pending_capture_order": 0,
+            "pending_physical_time_ns": 0,
+            "physical_time_ns": 0,
+            "reason_code": "CONTACT_LOSS_PENDING_SAME_PHYSICAL_TIME",
+            "selected_action": "none",
+            "time": null
+          },
+          {
+            "capture_order": 2,
+            "contact_loss_pending": false,
+            "guard_state": "CONFIRMED",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 100000000,
+            "reason_code": "NON_RELEASE_CONTACT_LOSS_PERSISTENCE_CONFIRMED_CANONICAL_TIME",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          },
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 1,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          },
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 2,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 100000000,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "contact_true_passthrough",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": false,
+            "guard_state": "PASS_THROUGH",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 0,
+            "reason_code": "historical_hold_established_then_observed_non_release_contact_loss",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": true,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "contact_null_clear_no_fake_contact",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": false,
+            "guard_state": "CLEAR",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 0,
+            "reason_code": "historical_hold_established_then_observed_non_release_contact_loss",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": null,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "release_clears_pending",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": true,
+            "guard_state": "PENDING",
+            "pending_attempt_id": 1,
+            "pending_capture_order": 0,
+            "pending_physical_time_ns": 0,
+            "physical_time_ns": 0,
+            "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+            "selected_action": "none",
+            "time": null
+          },
+          {
+            "capture_order": 1,
+            "contact_loss_pending": false,
+            "guard_state": "CLEAR",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 50000000,
+            "reason_code": "historical_hold_established_then_observed_non_release_contact_loss",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          },
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 1,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "open",
+            "physical_time_ns": 50000000,
+            "requested_effect": "RELEASE_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "attempt_switch_clears_pending",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": true,
+            "guard_state": "PENDING",
+            "pending_attempt_id": 1,
+            "pending_capture_order": 0,
+            "pending_physical_time_ns": 0,
+            "physical_time_ns": 0,
+            "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME",
+            "selected_action": "none",
+            "time": null
+          },
+          {
+            "capture_order": 1,
+            "contact_loss_pending": false,
+            "guard_state": "CLEAR",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 50000000,
+            "reason_code": "CONTACT_LOSS_PENDING_CANONICAL_TIME_CLEARED",
+            "selected_action": "none",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          },
+          {
+            "attempt_end": false,
+            "attempt_id": 2,
+            "capture_order": 1,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 50000000,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      },
+      {
+        "intercept_reason": "historical_hold_established_then_observed_non_release_contact_loss",
+        "name": "wrong_reason_passthrough",
+        "outputs": [
+          {
+            "capture_order": 0,
+            "contact_loss_pending": false,
+            "guard_state": "PASS_THROUGH",
+            "pending_attempt_id": null,
+            "pending_capture_order": null,
+            "pending_physical_time_ns": null,
+            "physical_time_ns": 0,
+            "reason_code": "NON_RELEASE_CONTACT_LOSS",
+            "selected_action": "recover_object",
+            "time": null
+          }
+        ],
+        "rows": [
+          {
+            "attempt_end": false,
+            "attempt_id": 1,
+            "capture_order": 0,
+            "contact_present": false,
+            "context_valid": true,
+            "gripper_command": "closed",
+            "physical_time_ns": 0,
+            "requested_effect": "HOLD_OBJECT"
+          }
+        ]
+      }
+    ],
+    "muJoCo_imported": false,
+    "physical_executions": 0,
+    "schema": "l2rar2_r27_interface_shadow_v2",
+    "semantics": {
+      "confirmed": "strictly later same-attempt contact=false within 100ms",
+      "passthrough": "contact=true, contact=null, invalid reason, release, or attempt switch are never converted to confirmation",
+      "pending": "first exact-intercept proposal with measured contact=false"
+    },
+    "visual_proposal_requires_contact_false_for_clp3": true
+  },
+  "physical_executions": 0,
+  "proposal_episodes": 112,
+  "proposal_without_execution_episodes": 16,
+  "proposal_without_execution_preserved_to_last_observation": 16,
+  "recovery_control_executed_episodes": 96,
+  "recovery_supervisor_unchanged": "RecoverySupervisorV2",
+  "schema": "l2rar2_r27_zero_physics_review_decision_v1",
+  "selected_online_candidate_unchanged": "O_C3_CLP3_CANONICAL_TIME",
+  "target_loss_episodes": 16,
+  "target_loss_fully_observed_episodes": 8
+}

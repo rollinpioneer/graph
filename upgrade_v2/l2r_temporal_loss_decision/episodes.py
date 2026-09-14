@@ -8,6 +8,7 @@ from typing import Any, Iterable
 
 from .online_schema import sanitize
 from .timebase import Point, deduplicate_points
+from .visual_separation import BBOX_FORMAT, as_xyxy
 
 
 def _jsonl(path: Path) -> list[dict[str, Any]]:
@@ -61,9 +62,22 @@ def _last_observation_before(
 def _detector(path: Path) -> dict[str, Any]:
     from .visual_separation import detect_frame_boxes
     try:
-        return detect_frame_boxes(path)
+        result = detect_frame_boxes(path)
+        if result.get("bbox_format") != BBOX_FORMAT:
+            raise ValueError(f"unexpected bbox format: {result.get('bbox_format')!r}")
+        return result
     except Exception as exc:
         return {"detector_error": type(exc).__name__}
+
+
+def as_box(value: Any) -> list[float] | None:
+    """Adapt detector output under the explicit package-wide ``xyxy`` contract.
+
+    The detector already returns ``[x1, y1, x2, y2]``.  This adapter validates
+    and preserves those coordinates; it deliberately does not perform the
+    historical ``xywh -> xyxy`` conversion.
+    """
+    return as_xyxy(value)
 
 
 def _relative(row: dict[str, Any]) -> tuple[float, float] | None:
@@ -127,11 +141,6 @@ def _rollout(path: Path) -> dict[str, Any]:
         order = int(row.get("capture_order", -1)); frame = by_candidate.get(order, by_order.get(order, {}))
         jpeg_path = path / str(frame.get("jpeg_path", "")); det = _detector(jpeg_path) if jpeg_path.is_file() else {"detector_error": "missing_frame"}
         jpeg_hash = str(frame.get("jpeg_sha256", "")); ns = int(row.get("physical_time_ns", frame.get("physical_time_ns", 0)))
-        def as_box(value: Any) -> list[float] | None:
-            if not isinstance(value, (list, tuple)) or len(value) != 4:
-                return None
-            x, y, w, h = (float(item) for item in value)
-            return [x, y, x + w, y + h]
         row.update({"object_centroid": list(det.get("object_centroid")) if det.get("object_centroid") is not None else row.get("object_centroid"), "gripper_centroid": list(det.get("gripper_centroid")) if det.get("gripper_centroid") is not None else row.get("gripper_centroid"), "object_area": float(det.get("object_area", 0.0)), "gripper_area": float(det.get("gripper_area", 0.0)), "detector_error": bool(det.get("detector_error")), "object_bbox": as_box(det.get("object_bbox")), "gripper_bbox": as_box(det.get("gripper_bbox")), "jpeg_sha256": jpeg_hash, "jpeg_path": str(frame.get("jpeg_path", "")), "frame_missing": not jpeg_path.is_file(), "physical_time_ns": ns})
         observations.append(row)
     observations.sort(key=lambda item: int(item.get("capture_order", -1)))

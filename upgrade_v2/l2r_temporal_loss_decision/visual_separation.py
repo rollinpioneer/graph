@@ -9,8 +9,37 @@ import cv2
 import numpy as np
 
 
+BBOX_FORMAT = "xyxy"
+
+
+def as_xyxy(value: Any) -> list[float] | None:
+    """Validate and normalize the package-wide ``xyxy`` bbox contract.
+
+    ``detect_frame_boxes`` emits ``[x1, y1, x2, y2]``.  Consumers must pass
+    those coordinates through unchanged; in particular, they must not treat
+    the last two values as width/height.  Missing or malformed boxes are
+    represented as ``None`` so a missing visual remains an unavailable
+    observation instead of becoming a fabricated box.
+    """
+    if value is None:
+        return None
+    if not isinstance(value, (list, tuple)) or len(value) != 4:
+        return None
+    try:
+        x1, y1, x2, y2 = (float(item) for item in value)
+    except (TypeError, ValueError):
+        return None
+    if not all(math.isfinite(item) for item in (x1, y1, x2, y2)):
+        return None
+    if x2 < x1 or y2 < y1:
+        return None
+    return [x1, y1, x2, y2]
+
+
 def box_gap(object_box: list[float] | None, gripper_box: list[float] | None, scale: float) -> float | None:
-    if not object_box or not gripper_box or scale <= 0:
+    object_box = as_xyxy(object_box)
+    gripper_box = as_xyxy(gripper_box)
+    if object_box is None or gripper_box is None or scale <= 0:
         return None
     dx = max(object_box[0] - gripper_box[2], gripper_box[0] - object_box[2], 0.0)
     dy = max(object_box[1] - gripper_box[3], gripper_box[1] - object_box[3], 0.0)
@@ -45,7 +74,7 @@ def detect_frame_boxes(path: Path) -> dict[str, Any]:
         "object": cv2.morphologyEx(red, cv2.MORPH_OPEN, kernel),
         "gripper": cv2.morphologyEx(cyan, cv2.MORPH_OPEN, kernel),
     }
-    result: dict[str, Any] = {}
+    result: dict[str, Any] = {"bbox_format": BBOX_FORMAT}
     for name, mask in masks.items():
         pixels = cv2.findNonZero(mask)
         if pixels is None:
@@ -55,7 +84,8 @@ def detect_frame_boxes(path: Path) -> dict[str, Any]:
             continue
         x, y, w, h = cv2.boundingRect(pixels)
         moments = cv2.moments(mask)
-        result[f"{name}_bbox"] = [float(x), float(y), float(x + w), float(y + h)]
+        # OpenCV reports x/y/width/height; convert exactly once to xyxy.
+        result[f"{name}_bbox"] = as_xyxy([float(x), float(y), float(x + w), float(y + h)])
         result[f"{name}_centroid"] = [
             float(moments["m10"] / moments["m00"]),
             float(moments["m01"] / moments["m00"]),
