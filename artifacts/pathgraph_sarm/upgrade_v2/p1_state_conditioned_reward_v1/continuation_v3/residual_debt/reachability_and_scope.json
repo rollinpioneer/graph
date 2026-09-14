@@ -1,0 +1,89 @@
+{
+  "matched_suffix_path": [
+    "in_transit",
+    "dropped_or_misaligned",
+    "recovery",
+    "grasped",
+    "in_transit",
+    "placed",
+    "success"
+  ],
+  "extra_reachable": [
+    {
+      "name": "partial_recovery_stop",
+      "path": [
+        "in_transit",
+        "dropped_or_misaligned",
+        "recovery"
+      ],
+      "edges": [
+        "in_transit_to_dropped_or_misaligned",
+        "dropped_or_misaligned_to_recovery"
+      ],
+      "note": "Stops after recovery begins; no success. Lawful prefix of the recovery chain."
+    },
+    {
+      "name": "recover_then_terminal_failure",
+      "path": [
+        "in_transit",
+        "dropped_or_misaligned",
+        "recovery",
+        "grasped",
+        "in_transit",
+        "terminal_failure"
+      ],
+      "edges": [
+        "in_transit_to_dropped_or_misaligned",
+        "dropped_or_misaligned_to_recovery",
+        "recovery_to_grasped",
+        "grasped_to_in_transit",
+        "in_transit_to_terminal_failure"
+      ],
+      "note": "Recovery then unrecoverable terminal failure. Existing failure edge."
+    },
+    {
+      "name": "recover_then_fail_again",
+      "path": [
+        "in_transit",
+        "dropped_or_misaligned",
+        "recovery",
+        "grasped",
+        "in_transit",
+        "dropped_or_misaligned"
+      ],
+      "edges": [
+        "in_transit_to_dropped_or_misaligned",
+        "dropped_or_misaligned_to_recovery",
+        "recovery_to_grasped",
+        "grasped_to_in_transit",
+        "in_transit_to_dropped_or_misaligned"
+      ],
+      "note": "Second drop after recovery. No new edges."
+    },
+    {
+      "name": "success_then_hold",
+      "path": [
+        "in_transit",
+        "dropped_or_misaligned",
+        "recovery",
+        "grasped",
+        "in_transit",
+        "placed",
+        "success",
+        "success"
+      ],
+      "edges": [
+        "in_transit_to_dropped_or_misaligned",
+        "dropped_or_misaligned_to_recovery",
+        "recovery_to_grasped",
+        "grasped_to_in_transit",
+        "in_transit_to_placed",
+        "placed_to_success",
+        null
+      ],
+      "note": "Matched success suffix plus same-node hold. Hold is none, not a new graph edge."
+    }
+  ],
+  "counterfactual_ledger_probes": "NOT_RUN_AS_REAL_RISK; would be CONTROLLED_LEDGER_STATE_PROBE if added",
+  "episode_vs_attempt": "new_episode clears debt; recovery attempts do not"
+}

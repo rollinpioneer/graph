@@ -1,0 +1,16 @@
+{
+  "engine_phi_indicator": "Phi credit is applied only when predicted node stays the same, node confidence is high, and the predicted edge type is not recovery(3) or failure(4). Cross-node failure/recovery therefore does not debit previously earned intra-node phi.",
+  "engine_does_not_store_entry_anchor": true,
+  "same_node_gate_present": true,
+  "graph_progress_signal": "distance_or_stability on recovery-graph nodes; not an executable adapter",
+  "dedicated_entry_distance_adapter": "NOT_LOCATED",
+  "reentry_via_grasped_to_in_transit": "Re-entering in_transit is a different node than recovery/grasped, so the engine treats the first intra-node step after re-entry as a fresh same-node interval. If the caller reports phi=0 at re-entry, later intra-node progress is credited again.",
+  "when_is_in_transit_entered": "legacy edge grasped_to_in_transit; no extra geometric guard in YAML beyond 'state evidence'",
+  "same_attempt_vs_new_attempt": "RewardState.failure_debt persists across recovery attempts inside one episode; engine.new_episode() is the only debt reset. Phi entry anchors are not in RewardState.",
+  "physical_regrasp_evidence": "NOT_IN_ADAPTER; must come from causal replay contact/weld fields",
+  "hypothesis_used_by_packaged_probes": "ENTRY_RESET_HYPOTHESIS_TO_BE_CHECKED_IN_ACTUAL_ADAPTER",
+  "source_files": [
+    "tools/stage5/lib/reward_engine.py",
+    "artifacts/pathgraph_sarm/stage3/input_adapter_v1/runtime_graph_specs_v1.0.1/transport_recovery_graph_runtime_v1.0.1.yaml"
+  ]
+}

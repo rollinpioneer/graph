@@ -1,0 +1,41 @@
+{
+  "schema": "p1_v3_counterexample_admissibility_v1",
+  "loop_id": "normalized_main__reset__p0.4__k1",
+  "evidence_tier": "TOPOLOGY_CHECKED_SYMBOLIC_INPUT",
+  "topology_path": [
+    "in_transit",
+    "dropped_or_misaligned",
+    "recovery",
+    "grasped",
+    "in_transit"
+  ],
+  "topology_reachable": true,
+  "within_node_update_supported": true,
+  "guard_satisfiable_from_current_prefix": "UNKNOWN",
+  "runtime_phi_entry_reset_policy": "ENGINE_ALLOWS_REENTRY_ZERO_PHI_IF_CALLER_REPORTS_IT; ADAPTER_NOT_LOCATED",
+  "entry_anchor_source": "CONSTRUCTED_DISTANCE_SEQUENCE_NOT_RAW_PHYSICS",
+  "geometry_source": "d_entry=0.10 constructed fixture",
+  "physical_feasibility": "NOT_TESTED",
+  "raw_evidence_refs": [],
+  "task_projection_closed": true,
+  "closure_fields": [
+    "node",
+    "cost",
+    "phi"
+  ],
+  "nonclosing_history_fields": [
+    "failure_debt",
+    "phi_entry_anchor_if_reset"
+  ],
+  "normalized_main_return": 0.20000000000000007,
+  "unit_clip_sensitive_return": null,
+  "debt_before": 0.0,
+  "debt_after": 0.16666666666666663,
+  "verified_no_new_subgoal": true,
+  "conclusion": "TOPOLOGY_ADMISSIBLE_BINDING_UNRESOLVED",
+  "unresolved_reasons": [
+    "Four legacy edges exist and packaged arithmetic matches R_loop=0.5*p under entry-reset hypothesis",
+    "Runtime adapter that persists or resets d_entry was not located, so physical/formal binding stays unresolved"
+  ],
+  "signed_return": 0.20000000000000007
+}
