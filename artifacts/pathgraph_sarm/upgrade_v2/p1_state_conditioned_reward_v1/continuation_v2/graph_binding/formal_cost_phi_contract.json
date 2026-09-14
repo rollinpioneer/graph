@@ -1,0 +1,12 @@
+{
+  "contract_id": "P1_NORMALIZED_RUNTIME_GRAPH_V1",
+  "source_graph": "artifacts/pathgraph_sarm/stage3/input_adapter_v1/runtime_graph_specs_v1.0.1/transport_recovery_graph_runtime_v1.0.1.yaml",
+  "source_graph_sha256": "c5530aa9de41330d0fe3a1eb39ff58d7466abdb62ca192a618483881eac099a6",
+  "cost_definition": "D_G(s)=min legal forward/recovery/alternative path cost to success; failure is not an active shortcut; stagnation is zero progress.",
+  "normalizer_definition": "S_G=1+max finite D_G",
+  "phi_definition": "clip(1-d_current/max(d_entry,epsilon),0,1) only within a node with current geometry",
+  "lambda": 0.5,
+  "reward_clip": 1.5,
+  "recovery_debt_cap": true,
+  "manifest_listed_raw_path": true
+}

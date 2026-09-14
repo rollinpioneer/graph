@@ -1,0 +1,76 @@
+{
+  "status": "PASS_WITH_UNRESOLVED_HISTORY_GUARDS",
+  "tests": [
+    {
+      "id": "G1_MANIPULATE_IS_SINGLE_TOP_LEVEL_EDGE",
+      "status": "PASS",
+      "details": {
+        "src": "scene_unverified",
+        "dst": "grasp_candidate",
+        "action": "grasp_object"
+      }
+    },
+    {
+      "id": "G1_COVERAGE_DISTINGUISHED_FROM_EXPLICIT_TOPOLOGY",
+      "status": "PASS",
+      "details": {
+        "explicit_actions": [
+          "grasp_object",
+          "observe_scene",
+          "stop_no_action"
+        ],
+        "implicit_fixed_path_actions": [
+          "align_with_target",
+          "place_object",
+          "release_object",
+          "transport_object",
+          "verify_goal_relation"
+        ],
+        "coverage_is_not_control_or_reward_binding": true
+      }
+    },
+    {
+      "id": "G1_FAILURE_RECOVERY_TOPOLOGY",
+      "status": "NOT_PRESENT",
+      "details": {
+        "failure_edges": 0,
+        "recovery_edges": 0
+      }
+    },
+    {
+      "id": "LEGACY_RECOVERY_CYCLE_LEGALITY",
+      "status": "PASS",
+      "details": {
+        "path": "in_transit->dropped_or_misaligned->recovery->grasped->in_transit"
+      }
+    },
+    {
+      "id": "DUAL_ORDER_HISTORY_DECLARATION",
+      "status": "PASS",
+      "details": {
+        "history_policy": "completed_subgoal_set is part of state"
+      }
+    },
+    {
+      "id": "DUAL_ORDER_SUCCESS_GUARD_CONCRETENESS",
+      "status": "UNRESOLVED",
+      "details": {
+        "generic_guard_edges": [
+          "B_done_to_success",
+          "A_done_to_success"
+        ],
+        "required_guard": "current valid completed_subgoal_set contains A and B"
+      }
+    },
+    {
+      "id": "NO_THRESHOLD_OR_REWARD_PARAMETER_CHANGE",
+      "status": "PASS",
+      "details": {
+        "lambda": 0.5,
+        "reward_clip": 1.5,
+        "eta": 0.0,
+        "beta": 0.0
+      }
+    }
+  ]
+}

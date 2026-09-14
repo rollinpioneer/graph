@@ -1,0 +1,108 @@
+{
+  "contract": {
+    "lambda": 0.5,
+    "reward_clip": 1.5,
+    "recovery_debt_cap": true,
+    "cost_definition": "shortest legal forward/recovery/alternative path to success",
+    "normalizer": 6.0,
+    "phi_failure_recovery_indicator": 0
+  },
+  "graphs": {
+    "current_g1": {
+      "explicit_path_to_recovery": false,
+      "explicit_path_to_failure": false
+    },
+    "legacy_transport_recovery": {
+      "path_nodes": [
+        "in_transit",
+        "dropped_or_misaligned",
+        "recovery",
+        "grasped",
+        "in_transit"
+      ],
+      "edge_ids": [
+        "in_transit_to_dropped_or_misaligned",
+        "dropped_or_misaligned_to_recovery",
+        "recovery_to_grasped",
+        "grasped_to_in_transit"
+      ],
+      "reachable": true
+    },
+    "legacy_dual_order": {
+      "failure_edges": [
+        "A_done_to_dropped",
+        "B_done_to_dropped",
+        "B_done_to_terminal_failure"
+      ],
+      "recovery_edges": [
+        "dropped_to_recovery",
+        "recovery_to_B_done"
+      ]
+    }
+  },
+  "unit_scale_clipped_closed_cycle": {
+    "raw_fixture_path_reachable_in_legacy_graph": true,
+    "raw_edge_ids": [
+      "in_transit_to_dropped_or_misaligned",
+      "dropped_or_misaligned_to_recovery",
+      "recovery_to_grasped",
+      "grasped_to_in_transit"
+    ],
+    "raw_signed_return": 1.0,
+    "raw_debt_end": 0.0,
+    "raw_ledger": [
+      {
+        "step": 0,
+        "edge_type": "failure",
+        "raw_core": -3.0,
+        "clipped_core": -1.5,
+        "recovery_credit": 0.0,
+        "reward": -1.5,
+        "debt_after": 1.5
+      },
+      {
+        "step": 1,
+        "edge_type": "recovery",
+        "raw_core": 1.0,
+        "clipped_core": 1.0,
+        "recovery_credit": 1.0,
+        "reward": 1.0,
+        "debt_after": 0.5
+      },
+      {
+        "step": 2,
+        "edge_type": "recovery",
+        "raw_core": 1.0,
+        "clipped_core": 1.0,
+        "recovery_credit": 0.5,
+        "reward": 0.5,
+        "debt_after": 0.0
+      },
+      {
+        "step": 3,
+        "edge_type": "forward",
+        "raw_core": 1.0,
+        "clipped_core": 1.0,
+        "recovery_credit": 0.0,
+        "reward": 1.0,
+        "debt_after": 0.0
+      }
+    ],
+    "normalized_main_contract_signed_return": 5.551115123125783e-17,
+    "normalized_main_contract_debt_end": 0.16666666666666663,
+    "normalized_cost_endpoints": [
+      0.3333333333333333,
+      0.8333333333333334,
+      0.6666666666666666,
+      0.5,
+      0.3333333333333333
+    ],
+    "scope": "Legacy graph reachable; positive raw result is clip-sensitive. Locked normalized main contract returns approximately zero; sensitivity result is retained."
+  },
+  "phi_reset_closed_cycle": {
+    "exact_same_node_failure_recovery_reachable_in_formal_graph": false,
+    "matching_edge_pairs": [],
+    "synthetic_signed_return_preserved": 0.5,
+    "scope": "Not exact in retained graph; conditional on a future runtime expansion allowing same-node phi progress, failure reset and recovery back to same node. No edge is invented for G1."
+  }
+}

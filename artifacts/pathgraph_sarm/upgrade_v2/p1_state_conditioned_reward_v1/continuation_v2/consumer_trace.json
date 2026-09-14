@@ -1,0 +1,63 @@
+{
+  "graph_id": "G1_predicate_bound",
+  "source_graph": "artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/graphs/G1_predicate_bound.json",
+  "source_graph_sha256": "26c49f0803ae7d2b88e4b491cfe1dab729db815a5f2ce3a0271a8682e33f2810",
+  "chain": [
+    {
+      "stage": "graph_compilation",
+      "file": "upgrade_v2/visual_refine_l2/compile_graph.py",
+      "function": "compile_graphs",
+      "category": "graph_structure",
+      "role": "Writes G1 from canonical graph/predicate schema; numeric_reward_or_cost is None."
+    },
+    {
+      "stage": "predicate_inference",
+      "file": "upgrade_v2/visual_refine_l2/predicates.py",
+      "function": "infer_dataset/infer_rollout",
+      "category": "state_observation",
+      "role": "Produces three-valued online predicates; no reward cost/debt."
+    },
+    {
+      "stage": "graph_consumer",
+      "file": "upgrade_v2/visual_refine_l2/execute_graph.py",
+      "function": "predict_branch/graph_coverage/execute_graphs",
+      "category": "coverage_statistics",
+      "role": "Uses G1 for branch diagnostics; fixed_manipulation_path adds implicit canonical action coverage."
+    },
+    {
+      "stage": "high_level_control_program",
+      "file": "upgrade_v2/visual_refine_l2/scripted_controller.py",
+      "function": "action_program",
+      "category": "control_flow",
+      "role": "Produces scripted actions independently of G1 edge dispatch."
+    },
+    {
+      "stage": "control_execution",
+      "file": "upgrade_v2/visual_refine_l2/dynamic_simulator.py",
+      "function": "DynamicTabletop.perform",
+      "category": "control_flow",
+      "role": "Executes action strings and writes state/control streams; does not load G1 or reward engine."
+    },
+    {
+      "stage": "numeric_reward_binding",
+      "file": "tools/stage5/lib/reward_engine.py",
+      "function": "frozen reward API",
+      "category": "reward_binding",
+      "role": "Consumes normalized node/edge/cost/phi fields; no G1-to-numeric binding call path found."
+    }
+  ],
+  "final_handoff": {
+    "retained_graph_id": "G1_predicate_bound",
+    "entry_allowed": false,
+    "evidence": "artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/third_layer_interface.json",
+    "interpretation": "G2 development selection did not pass GO; G1 retained as coarse interface."
+  },
+  "file_sha256": {
+    "graph_compile": "cdced3ab65789820fb3326b36f1198f79895df91d5d9cd3a187492f6b959155c",
+    "predicate_inference": "69abead1f86b89013c438251f39f1f23562d7a930e55bfb2b3e01271d27a4c1c",
+    "graph_execution_and_coverage": "2362b82277f24b4dd3624ab95850bb067fb7bd5977160dce5dc0f3c73210de43",
+    "control_program": "203119fc13b6c1b3f7ee971c9d6d85aa7a7f87db5d3bf7bfdf020d5415c02c08",
+    "control_executor": "01ae494a802d5b62bda5bc077c9034608cc334ff7febe1e7279ecd33847fd70b",
+    "reward_engine": "e49892276707d0077d5c43975e5c4441a1b2757b982093d4a0c82f6f6507794c"
+  }
+}
