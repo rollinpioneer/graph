@@ -1,0 +1,89 @@
+{
+  "case_order": [
+    {
+      "case_id": "D1_A_then_B_clean_success",
+      "index": 0,
+      "required_semantics": "A_THEN_B_SUCCESS",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "D2_B_then_A_clean_success",
+      "index": 1,
+      "required_semantics": "B_THEN_A_SUCCESS",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "D3_A_done_B_loss_recovery_then_success",
+      "index": 2,
+      "required_semantics": "A_VALID_B_LOSS_RECOVERY_SUCCESS",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "D4_B_done_A_loss_recovery_then_success",
+      "index": 3,
+      "required_semantics": "B_VALID_A_LOSS_RECOVERY_SUCCESS",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "D5_completed_subgoal_invalidated_restored",
+      "index": 4,
+      "required_semantics": "CURRENT_VALID_INVALIDATION_RESTORE",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "D6_repeat_completed_subgoal_then_terminal_failure",
+      "index": 5,
+      "required_semantics": "REPEAT_NO_NEW_PROGRESS_TERMINAL",
+      "task": "dual_order"
+    },
+    {
+      "case_id": "R1_clean_transport_success",
+      "index": 6,
+      "required_semantics": "CLEAN_SUCCESS",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R2_loss_at_40pct_recover_success",
+      "index": 7,
+      "required_semantics": "ONE_LOSS_RECOVERY_40",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R3_loss_at_80pct_recover_success",
+      "index": 8,
+      "required_semantics": "ONE_LOSS_RECOVERY_80",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R4_three_cycles_at_40pct_then_success",
+      "index": 9,
+      "required_semantics": "THREE_CYCLES_40_SUCCESS",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R5_three_cycles_at_80pct_then_success",
+      "index": 10,
+      "required_semantics": "THREE_CYCLES_80_SUCCESS",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R6_three_closed_cycles_then_stop",
+      "index": 11,
+      "required_semantics": "THREE_CLOSED_CYCLES_NO_SUCCESS",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R7_loss_recovery_started_not_completed_terminal",
+      "index": 12,
+      "required_semantics": "PARTIAL_RECOVERY_TERMINAL",
+      "task": "recovery"
+    },
+    {
+      "case_id": "R8_commanded_release",
+      "index": 13,
+      "required_semantics": "COMMANDED_RELEASE",
+      "task": "recovery"
+    }
+  ],
+  "schema": "pathgraph_p1_v5_case_registry_v1"
+}

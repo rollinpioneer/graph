@@ -1,0 +1,21 @@
+{
+  "anchor_key": [
+    "episode_id",
+    "object_id",
+    "goal_id",
+    "node_id"
+  ],
+  "anchor_policy": "FIRST_ENTRY_LOCKED_V5",
+  "case_id_allowed_in_state_kernel": false,
+  "delta_semantics": {
+    "explicit_null": "invalidate_to_unknown",
+    "missing_key": "no_update"
+  },
+  "future_fields_forbidden": true,
+  "hold_current": "gripper_closed AND current_contact_support AND current_grasp_constraint_or_relative_pose",
+  "hold_established_earlier": "episode_latch_after_stable_hold; attempt_change_does_not_clear",
+  "loss": "prior_hold AND not_release AND sustained_current_hold_loss AND outside_capture_region",
+  "recovery_completed": "stable_hold_reestablished_for_same_loss_event_id",
+  "schema": "pathgraph_p1_v5_state_contract_v1",
+  "success": "A_current_valid AND B_current_valid AND goal_verified for dual-order"
+}
