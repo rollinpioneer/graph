@@ -46,7 +46,7 @@ def lifted_graph() -> dict[str, Any]:
     """Finite (node, valid_set) graph. Success only if A and B currently valid."""
     nodes = [
         "start|none", "A_done|{A}", "B_done|{B}", "AB|{A,B}", "success|{A,B}",
-        "dropped|{A}", "dropped|{B}", "dropped|{A,B}", "recovery|{A,B}", "terminal_failure|none",
+        "dropped|{A}", "dropped|{B}", "dropped|{A,B}", "recovery|{A}", "recovery|{B}", "recovery|{A,B}", "terminal_failure|none",
     ]
     def e(i, src, dst, typ, cost, guard):
         return dict(id=i, src=src, dst=dst, type=typ, base_step_cost=cost, guard=guard)
@@ -59,6 +59,10 @@ def lifted_graph() -> dict[str, Any]:
         e("Adrop", "A_done|{A}", "dropped|{A}", "failure", 1, "A lost, B never valid so not success"),
         e("Bdrop", "B_done|{B}", "dropped|{B}", "failure", 1, "B lost"),
         e("ABdrop", "AB|{A,B}", "dropped|{A,B}", "failure", 1, "subgoal currently lost"),
+        e("drecA", "dropped|{A}", "recovery|{A}", "recovery", 1, "recovery started"),
+        e("recA", "recovery|{A}", "A_done|{A}", "recovery", 1, "A restored"),
+        e("drecB", "dropped|{B}", "recovery|{B}", "recovery", 1, "recovery started"),
+        e("recB", "recovery|{B}", "B_done|{B}", "recovery", 1, "B restored"),
         e("drec", "dropped|{A,B}", "recovery|{A,B}", "recovery", 1, "recovery started"),
         e("recAB", "recovery|{A,B}", "AB|{A,B}", "recovery", 1, "A and B currently restored"),
         e("term", "B_done|{B}", "terminal_failure|none", "failure", 1, "terminal failure evidence"),

@@ -175,7 +175,6 @@ def run_all(repo: Path, pkg: Path, out: Path) -> int:
         "confirmation_passed: false. new physics/training/LLM: 0/0/0.",
     ])
     from .report import write_final
-    write_csv(dirs["final"] / "claim_to_evidence.csv", claims)
     write_final(dirs["final"], dict(decision=decision, report_md=report,
         next_stage="If graph incremental value is wanted on physical dual-order, collect current-valid A/B raw; else keep G1 normal-path view and treat recovery as a named extension.",
         external_tsv=f"role\tpath\tsha256\npilot_manifest\t{manifest}\t{sha256_file(manifest)}\n",

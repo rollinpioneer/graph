@@ -1,0 +1,129 @@
+{
+  "graph_id": "G1_RW_NORMAL_PATH_V4",
+  "nodes": [
+    {
+      "id": "scene_unverified"
+    },
+    {
+      "id": "grasp_candidate"
+    },
+    {
+      "id": "stable_hold_candidate"
+    },
+    {
+      "id": "object_in_transport"
+    },
+    {
+      "id": "object_above_target"
+    },
+    {
+      "id": "object_on_target_candidate"
+    },
+    {
+      "id": "object_released"
+    },
+    {
+      "id": "goal_stability_candidate"
+    },
+    {
+      "id": "goal_verified"
+    }
+  ],
+  "edges": [
+    {
+      "id": "manipulate_or_approach",
+      "src": "scene_unverified",
+      "dst": "grasp_candidate",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "ORIGINAL_OR_HUMAN",
+      "structural_extension": false
+    },
+    {
+      "id": "hold_established",
+      "src": "grasp_candidate",
+      "dst": "stable_hold_candidate",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "transport_started",
+      "src": "stable_hold_candidate",
+      "dst": "object_in_transport",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "above_target",
+      "src": "object_in_transport",
+      "dst": "object_above_target",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "on_target",
+      "src": "object_above_target",
+      "dst": "object_on_target_candidate",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "released",
+      "src": "object_on_target_candidate",
+      "dst": "object_released",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "stability_wait",
+      "src": "object_released",
+      "dst": "goal_stability_candidate",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "goal_verified",
+      "src": "goal_stability_candidate",
+      "dst": "goal_verified",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "HUMAN_BINDING",
+      "structural_extension": true
+    },
+    {
+      "id": "already_done",
+      "src": "scene_unverified",
+      "dst": "goal_verified",
+      "type": "forward",
+      "base_step_cost": 1,
+      "origin": "ORIGINAL_G1_EDGE",
+      "structural_extension": false
+    }
+  ],
+  "success_nodes": [
+    "goal_verified"
+  ],
+  "terminal_failure_nodes": [],
+  "original_edges": [
+    "already_done",
+    "observe_unknown",
+    "manipulate"
+  ],
+  "controller_driven_by_graph": false,
+  "missing_failure_recovery": [
+    "STRUCTURAL_EXTENSION_REQUIRED"
+  ],
+  "extension_name_if_added": "G1_RW_EXTENDED_REFERENCE_V4"
+}

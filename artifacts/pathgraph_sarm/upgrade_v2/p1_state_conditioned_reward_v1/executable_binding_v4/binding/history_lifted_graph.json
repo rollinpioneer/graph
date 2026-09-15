@@ -1,0 +1,172 @@
+{
+  "graph_id": "DUAL_VALID_STATE_REFERENCE_V4",
+  "nodes": [
+    {
+      "id": "start|none"
+    },
+    {
+      "id": "A_done|{A}"
+    },
+    {
+      "id": "B_done|{B}"
+    },
+    {
+      "id": "AB|{A,B}"
+    },
+    {
+      "id": "success|{A,B}"
+    },
+    {
+      "id": "dropped|{A}"
+    },
+    {
+      "id": "dropped|{B}"
+    },
+    {
+      "id": "dropped|{A,B}"
+    },
+    {
+      "id": "recovery|{A}"
+    },
+    {
+      "id": "recovery|{B}"
+    },
+    {
+      "id": "recovery|{A,B}"
+    },
+    {
+      "id": "terminal_failure|none"
+    }
+  ],
+  "success_nodes": [
+    "success|{A,B}"
+  ],
+  "terminal_failure_nodes": [
+    "terminal_failure|none"
+  ],
+  "edges": [
+    {
+      "id": "sA",
+      "src": "start|none",
+      "dst": "A_done|{A}",
+      "type": "forward",
+      "base_step_cost": 1,
+      "guard": "A_current_valid"
+    },
+    {
+      "id": "sB",
+      "src": "start|none",
+      "dst": "B_done|{B}",
+      "type": "alternative",
+      "base_step_cost": 1,
+      "guard": "B_current_valid"
+    },
+    {
+      "id": "AB",
+      "src": "A_done|{A}",
+      "dst": "AB|{A,B}",
+      "type": "forward",
+      "base_step_cost": 1,
+      "guard": "B_current_valid"
+    },
+    {
+      "id": "BA",
+      "src": "B_done|{B}",
+      "dst": "AB|{A,B}",
+      "type": "alternative",
+      "base_step_cost": 1,
+      "guard": "A_current_valid"
+    },
+    {
+      "id": "ABsucc",
+      "src": "AB|{A,B}",
+      "dst": "success|{A,B}",
+      "type": "forward",
+      "base_step_cost": 1,
+      "guard": "A_valid AND B_valid AND goal_verified"
+    },
+    {
+      "id": "Adrop",
+      "src": "A_done|{A}",
+      "dst": "dropped|{A}",
+      "type": "failure",
+      "base_step_cost": 1,
+      "guard": "A lost, B never valid so not success"
+    },
+    {
+      "id": "Bdrop",
+      "src": "B_done|{B}",
+      "dst": "dropped|{B}",
+      "type": "failure",
+      "base_step_cost": 1,
+      "guard": "B lost"
+    },
+    {
+      "id": "ABdrop",
+      "src": "AB|{A,B}",
+      "dst": "dropped|{A,B}",
+      "type": "failure",
+      "base_step_cost": 1,
+      "guard": "subgoal currently lost"
+    },
+    {
+      "id": "drecA",
+      "src": "dropped|{A}",
+      "dst": "recovery|{A}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "recovery started"
+    },
+    {
+      "id": "recA",
+      "src": "recovery|{A}",
+      "dst": "A_done|{A}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "A restored"
+    },
+    {
+      "id": "drecB",
+      "src": "dropped|{B}",
+      "dst": "recovery|{B}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "recovery started"
+    },
+    {
+      "id": "recB",
+      "src": "recovery|{B}",
+      "dst": "B_done|{B}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "B restored"
+    },
+    {
+      "id": "drec",
+      "src": "dropped|{A,B}",
+      "dst": "recovery|{A,B}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "recovery started"
+    },
+    {
+      "id": "recAB",
+      "src": "recovery|{A,B}",
+      "dst": "AB|{A,B}",
+      "type": "recovery",
+      "base_step_cost": 1,
+      "guard": "A and B currently restored"
+    },
+    {
+      "id": "term",
+      "src": "B_done|{B}",
+      "dst": "terminal_failure|none",
+      "type": "failure",
+      "base_step_cost": 1,
+      "guard": "terminal failure evidence"
+    }
+  ],
+  "old_runtime_equivalence": false,
+  "physical_dual_order_binding": "RAW_NOT_FOUND",
+  "note": "A_done->success from the unlifted YAML is NOT an enabled edge here."
+}
