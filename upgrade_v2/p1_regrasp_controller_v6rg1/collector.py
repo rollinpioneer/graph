@@ -124,7 +124,7 @@ class RegraspCollector(ReturnCollector):
             o = self._obj(last)
             tgt = grasp_target(o["pos"], GRASP_H)
             self.backend.max_speed = CLOSE_SPEED
-            self.backend.set_controller_target(tgt, "closed", mode=stage)
+            self.backend.set_controller_target(tgt, "closed", mode="CLOSE")
             last = self._advance(raw, integ)
             self._tick_log(stage, last, tgt, attempt)
         # VERIFY_HOLD
@@ -134,7 +134,7 @@ class RegraspCollector(ReturnCollector):
         while last["t"] - verify_t0 < max(VERIFY_S, 0.20):
             o = self._obj(last)
             tgt = grasp_target(o["pos"], GRASP_H)
-            self.backend.set_controller_target(tgt, "closed", mode=stage)
+            self.backend.set_controller_target(tgt, "closed", mode="CLOSE")
             last = self._advance(raw, integ)
             self._tick_log(stage, last, tgt, attempt)
             if last["objects"]["obj"]["held"]:
