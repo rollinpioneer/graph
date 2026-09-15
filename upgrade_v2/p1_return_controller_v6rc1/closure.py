@@ -11,6 +11,7 @@ def git_blob_sha1(data: bytes) -> str:
 
 def load_v6_closure(pkg_loop: Path | None = None):
     path = Path(pkg_loop or PKG_LOOP)
+    sys.path.insert(0, str(path.parent))
     data = path.read_bytes()
     spec = importlib.util.spec_from_file_location("_v6rc1_locked_loop_audit", path)
     mod = importlib.util.module_from_spec(spec)
