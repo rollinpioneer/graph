@@ -1,0 +1,54 @@
+{
+  "schema": "p1_v5r1_method_registry_v1",
+  "methods": [
+    {
+      "id": "SPARSE_TERMINAL",
+      "definition": "first causally verified success transition only"
+    },
+    {
+      "id": "LINEAR_A_FIRST_R1",
+      "definition": "(A + (A and B) + success) / 3 endpoint difference"
+    },
+    {
+      "id": "LINEAR_B_FIRST_R1",
+      "definition": "(B + (A and B) + success) / 3 endpoint difference"
+    },
+    {
+      "id": "UNORDERED_COMPLETION_PROGRESS_R1",
+      "definition": "(A + B + success) / 3 endpoint difference"
+    },
+    {
+      "id": "GRAPH_COST_ONLY",
+      "definition": "frozen engine use_phi=false,use_debt_cap=false"
+    },
+    {
+      "id": "GRAPH_COST_PHI",
+      "definition": "frozen engine use_phi=true,use_debt_cap=false"
+    },
+    {
+      "id": "GRAPH_COST_DEBT",
+      "definition": "frozen engine use_phi=false,use_debt_cap=true, independent state"
+    },
+    {
+      "id": "FULL_FROZEN",
+      "definition": "frozen engine use_phi=true,use_debt_cap=true, independent state"
+    },
+    {
+      "id": "NO_RECOVERY_CREDIT",
+      "definition": "preserve declared reward ablation, no changes to executed actions"
+    },
+    {
+      "id": "PAIRED_EVENT_BALANCED_V1",
+      "definition": "object-specific once-only observed loss/completed restoration tokens, independent of graph labels"
+    },
+    {
+      "id": "GLOBAL_POTENTIAL_AUDIT_V1",
+      "definition": "P=-C+0.5phi; every transition r=P_next-P_prev; no clipping"
+    }
+  ],
+  "backward_order_must_be_negative": false,
+  "is_original_sarm_replication": false,
+  "select_best_order_per_episode": false,
+  "stateful_methods_must_not_share_debt": true,
+  "shared_eligible_input_mask": true
+}

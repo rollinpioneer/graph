@@ -1,0 +1,53 @@
+# P1 V5R1 zero-physics reevaluation
+
+Original V5 decision unmodified. confirmation_passed=false.
+
+{
+  "schema": "p1_v5r1_decision_v1",
+  "confirmation_passed": false,
+  "new_simulation_runs": 0,
+  "new_physical_runs": 0,
+  "training_runs": 0,
+  "llm_calls": 0,
+  "policy_gain_claimed": false,
+  "visual_grounding_claimed": false,
+  "original_V5_decision_modified": false,
+  "source_provenance": "verified_v6_raw",
+  "causal_state": "passed in declared domain",
+  "old_metrics_reproduced": {
+    "n_old": 1232,
+    "n_repro": 1232,
+    "n_compared": 1232,
+    "max_abs_diff": 0.0,
+    "reproduced": true
+  },
+  "engine_parity": {
+    "n": 35248,
+    "passed": 35200,
+    "max_error": 0
+  },
+  "exact_observed_task_return_opportunities": {
+    "exact_returns": 0,
+    "approx_returns": 40,
+    "observed_losses": 112
+  },
+  "precompletion_credit": [
+    {
+      "kind": "CREDIT_CAUSE_UNRESOLVED",
+      "n": "270"
+    },
+    {
+      "kind": "COMPLETION_EVENT_CREDIT",
+      "n": "16"
+    },
+    {
+      "kind": "MEASURED_PARTIAL_PROGRESS",
+      "n": "1696"
+    }
+  ],
+  "scientific_status": "CYCLE_CLAIM_NOT_ESTABLISHED",
+  "evidence_class": "EXISTING_SIMPLIFIED_STATE_SIMULATION_REPLAY"
+}
+
+Raw: /home/__compress_data/xushijie/graph_pathgraph_p1_v5_data_v6
+Failed generator versions preserved under graph_pathgraph_p1_v5_data*

@@ -1,0 +1,46 @@
+{
+  "schema": "p1_v5r1_closure_contract_v1",
+  "original_v5_closure_contract_path": null,
+  "original_v5_closure_contract_hash": null,
+  "original_threshold_status": "TO_BE_CHECKED_NOT_ASSUMED",
+  "start_rule": "last known held in_transit state strictly before observed held-loss onset",
+  "end_rule": "first method-independent task return after matched restoration and before next loss onset",
+  "interval_convention": "states [s,e], transitions [s,e)",
+  "score_before_segmenting": true,
+  "reset_reward_state_at_boundary": false,
+  "discrete_fields": [
+    "episode_id",
+    "object_id",
+    "goal_id",
+    "graph_version",
+    "node",
+    "current_valid_subgoals",
+    "hold_current",
+    "success_verified",
+    "anchor_key"
+  ],
+  "observed_vectors": [
+    "object_position",
+    "object_velocity",
+    "eef_position",
+    "relative_position",
+    "goal_position"
+  ],
+  "new_descriptive_tolerance": {
+    "position_m": 0.001,
+    "velocity_m_per_s": 0.01
+  },
+  "reward_input_fields": [
+    "cost",
+    "phi",
+    "anchor_value"
+  ],
+  "internal_state_fields_report_separately": [
+    "failure_debt",
+    "unpaid_loss_tokens",
+    "history"
+  ],
+  "missing_orientation_means_not_full_6d_closure": true,
+  "expected_R6_candidates": 24,
+  "missing_candidates_stay_in_denominator": true
+}
