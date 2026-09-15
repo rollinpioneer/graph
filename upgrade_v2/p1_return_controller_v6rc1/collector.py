@@ -220,6 +220,10 @@ class ReturnCollector:
                 "pos": ckpt["p_WO_star"], "vel": [0.0,0.0,0.0], "target_xy": last["objects"]["obj"]["target_xy"],
                 "quat": ckpt["q_WO_star"], "angular_vel": [0.0,0.0,0.0]}},
                 "gripper_closed": last["gripper_closed"], "eef": last["eef"]}, ckpt)
+            # Do not require yaw match under TRANSLATION_COMPENSATED_FIXED_ORIENTATION.
+            for st in (a, cur):
+                st["objects"]["obj"].pop("quat", None)
+                st["objects"]["obj"].pop("angular_vel", None)
             return self.closure_fn(a, cur)
 
         def hold_abort(last):

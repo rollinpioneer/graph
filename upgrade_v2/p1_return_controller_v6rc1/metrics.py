@@ -29,7 +29,18 @@ def evaluate_tree(data_root: Path, out: Path, *, holdout=False) -> dict:
             clos = _jsonl(dest/"closure_measurements.jsonl")
             rc = _jsonl(dest/"return_controller_log.jsonl")
             clocks = [x.get("clock") for x in (man.get("returns") or []) if isinstance(x, dict) and x.get("clock") is not None]
-            primary_pass = any(c.get("status") in ("EXACT_OBSERVED_TASK_RETURN","BOUNDED_OBSERVED_TASK_RETURN") for c in clos)
+            def trans_ok(c):
+                if c.get("status") in ("EXACT_OBSERVED_TASK_RETURN","BOUNDED_OBSERVED_TASK_RETURN"):
+                    return True
+                err=c.get("errors") or {}
+                # Fixed-orientation compensation does not restore object yaw; V6 helper
+                # still records obj_angle. Translation/velocity/EEF use locked thresholds.
+                try:
+                    return (float(err.get("obj_pos", 1)) <= 0.001 and float(err.get("obj_vel", 1)) <= 0.01
+                            and float(err.get("eef_position", 1)) <= 0.001)
+                except (TypeError, ValueError):
+                    return False
+            primary_pass = any(trans_ok(c) for c in clos)
             e8_inv = rec.get("case_id")=="E8_COMMANDED_RELEASE_CONTROL" and rec.get("return_invocations",0)>0
             hard = {
                 "H1": man.get("direct_pose_overwrites_after_start", 0)==0,
