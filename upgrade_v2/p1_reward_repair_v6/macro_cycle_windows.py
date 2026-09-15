@@ -48,8 +48,10 @@ def build_windows(states, checkpoints, details, values, closure_fn, opportunitie
             continue
         by = {}
         for r in details:
-            if r["reward"] is not None:
-                by.setdefault(r["method"], []).append(r["reward"])
+            val = r.get("reward")
+            if val in (None, ""):
+                continue
+            by.setdefault(r["method"], []).append(float(val))
         dpsi = values[end]["psi"] - values[sidx]["psi"]
         for m, rs in by.items():
             R = math.fsum(rs[sidx:end])
