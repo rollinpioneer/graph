@@ -1,0 +1,48 @@
+{
+  "candidates": [
+    {
+      "complexity_rank": 1,
+      "fine_servo": false,
+      "id": "RC1_OBJECT_COMPENSATED_DIRECT",
+      "max_speed_m_s": 0.45,
+      "path": "direct",
+      "target": "checkpoint object pose compensated by current regrasp attachment"
+    },
+    {
+      "coarse_speed_m_s": 0.45,
+      "complexity_rank": 2,
+      "fine_speed_m_s": 0.12,
+      "id": "RC2_OBJECT_COMPENSATED_STAGED",
+      "path": [
+        "SAFE_CLEARANCE",
+        "XY_ALIGN",
+        "Z_ALIGN",
+        "SETTLE"
+      ],
+      "safe_clearance_m": 0.08,
+      "settle_s": 0.2,
+      "target": "checkpoint object pose compensated by current regrasp attachment"
+    },
+    {
+      "coarse_speed_m_s": 0.45,
+      "complexity_rank": 3,
+      "fine_position_tolerance_m": 0.005,
+      "fine_speed_m_s": 0.12,
+      "id": "RC3_OBJECT_ERROR_SERVO",
+      "kp_per_s": 3.0,
+      "path": [
+        "SAFE_CLEARANCE",
+        "XY_ALIGN",
+        "Z_ALIGN",
+        "FINE_SERVO",
+        "SETTLE"
+      ],
+      "safe_clearance_m": 0.08,
+      "settle_s": 0.2,
+      "settle_velocity_tolerance_m_s": 0.01,
+      "target": "checkpoint object pose with receding object-error servo"
+    }
+  ],
+  "new_candidate_after_development_allowed": false,
+  "schema": "pathgraph_p1_v6rc1_controller_candidates_v1"
+}
