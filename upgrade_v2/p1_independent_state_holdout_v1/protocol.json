@@ -1,0 +1,22 @@
+{
+  "protocol_id": "PATHGRAPH_P1_INDEPENDENT_STATE_HOLDOUT_V1",
+  "base_commit": "980997e69c914287349e51233c8fff0d50934406",
+  "branch": "research/pathgraph-p1-independent-state-holdout-v1",
+  "evidence_tier": "STATE_CONDITIONED_HOLDOUT",
+  "generator_reads_reward": false,
+  "frozen_methods": [
+    "LINEAR_A_FIRST_R1",
+    "LINEAR_B_FIRST_R1",
+    "UNORDERED_VALID_COUNT",
+    "VALID_COUNT_PLUS_MATCHED_EVENTS_V1",
+    "GRAPH_COST_ONLY",
+    "FULL_FROZEN",
+    "V6_CAP_POTENTIAL"
+  ],
+  "families": ["990100", "990101", "990102", "990103"],
+  "seeds": [99110000, 99110100, 99110200, 99110300],
+  "n_episodes": 32,
+  "gates": ["A_legal_order", "B_aliasing", "C_credit", "D_exact_state_cycles", "E_potential_identity"],
+  "out_of_scope": ["grasp", "vision", "mujoco_recovery", "policy_training", "llm", "real_robot", "reward_tuning", "graph_tuning"],
+  "global_confirmation_passed_if_gates_pass": false
+}
