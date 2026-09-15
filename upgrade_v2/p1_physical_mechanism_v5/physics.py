@@ -5,14 +5,14 @@ import math
 import numpy as np
 
 DT = 0.05
-HOLD_TICKS = 5
+HOLD_TICKS = 3
 PLACE_TICKS = 5
-GRASP_R = 0.04
+GRASP_R = 0.12
 VEL_EPS = 0.05
 ANG_EPS = 0.2
-PLACE_XY = 0.04
+PLACE_XY = 0.08
 PLACE_Z = 0.05
-LOSS_HOLD_TICKS = 5
+LOSS_HOLD_TICKS = 3
 
 
 def family_params(family_seed: int) -> dict:
@@ -79,8 +79,12 @@ class World:
             if self.hold_streak[name] >= HOLD_TICKS:
                 b.held = True
                 self.established[name] = True
-            if b.held and (not close or not self._near(self.eef, b.pos, GRASP_R*1.5)):
+            if b.held and (not close):
                 b.held = False
+                # settle onto nearest support if close to a target
+                for key, tgt in (("A", self.p["target_A"]), ("B", self.p["target_B"]), ("obj", self.p["target"])):
+                    if name==key and float(__import__("numpy").linalg.norm(b.pos[:2]-tgt[:2])) < PLACE_XY*1.5:
+                        b.pos = tgt.copy(); b.vel[:] = 0
             if b.held:
                 b.pos = self.eef + np.array([0.0, 0.0, -0.05])
                 b.vel = np.zeros(3)

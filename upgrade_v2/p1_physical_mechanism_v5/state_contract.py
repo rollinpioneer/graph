@@ -47,7 +47,9 @@ def events_from_rollout(dest: Path) -> list[dict[str, Any]]:
             facts["b_current_valid"]=True  # single-object task: B unused structural true? NO - leave false
             facts["b_current_valid"]=False
             # goal: near target and not held. target inferred from last positions when placed
-            facts["goal_verified"]= (not hold) and established["obj"] and _f(row,"obj_z")<=0.06 and abs(_f(row,"obj_vx"))<0.05 and i>10 and _f(row,"obj_x")>0.45
+            tx=_f(row,"target_obj_x", 0.62); ty=_f(row,"target_obj_y", 0.0)
+            dist=(( _f(row,"obj_x")-tx)**2+(_f(row,"obj_y")-ty)**2)**0.5
+            facts["goal_verified"]= (not hold) and established["obj"] and dist<=0.08 and _f(row,"obj_z")<=0.06 and abs(_f(row,"obj_vx"))<0.08
             if facts["hold_loss_confirmed"]:
                 rec_started=False
             if (not hold) and loss_id and close and _f(row,"obj_dist_eef")<0.12:

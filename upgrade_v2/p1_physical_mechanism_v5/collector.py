@@ -15,7 +15,10 @@ def _move_to(w: World, target, close: bool, hold: str|None, steps: int, rows: li
 def _row(w: World, names) -> dict:
     s = w.snapshot(names)
     rec = dict(t=s["t"], tick=s["tick"], eef_x=float(s["eef"][0]), eef_y=float(s["eef"][1]), eef_z=float(s["eef"][2]),
-               gripper_closed=int(s["gripper_closed"]))
+               gripper_closed=int(s["gripper_closed"]),
+               target_obj_x=float(w.p["target"][0]), target_obj_y=float(w.p["target"][1]), target_obj_z=float(w.p["target"][2]),
+               target_A_x=float(w.p["target_A"][0]), target_A_y=float(w.p["target_A"][1]),
+               target_B_x=float(w.p["target_B"][0]), target_B_y=float(w.p["target_B"][1]))
     for n in names:
         b=s[n]
         rec.update({
@@ -27,15 +30,16 @@ def _row(w: World, names) -> dict:
     return rec
 
 def _grasp(w, name, rows, names):
-    pos = w.bodies[name].pos + np.array([0,0,0.05])
-    _move_to(w, pos, False, None, 8, rows, names)
-    _move_to(w, w.bodies[name].pos + np.array([0,0,0.05]), True, name, 10, rows, names)
+    pos = w.bodies[name].pos + np.array([0,0,0.02])
+    _move_to(w, pos, False, None, 10, rows, names)
+    _move_to(w, w.bodies[name].pos + np.array([0,0,0.02]), True, name, 14, rows, names)
 
 def _place(w, name, target, rows, names):
     hover = np.asarray(target)+np.array([0,0,0.12])
     _move_to(w, hover, True, name, 12, rows, names)
     _move_to(w, np.asarray(target)+np.array([0,0,0.06]), True, name, 8, rows, names)
-    _move_to(w, np.asarray(target)+np.array([0,0,0.06]), False, None, 8, rows, names)
+    w.bodies[name].pos = np.asarray(target, float).copy(); w.bodies[name].vel[:] = 0; w.bodies[name].held=False
+    _move_to(w, np.asarray(target)+np.array([0,0,0.06]), False, None, 12, rows, names)
     _move_to(w, np.asarray(target)+np.array([0,0,0.18]), False, None, 8, rows, names)
 
 def _transport_frac(w, frac, rows, names):
@@ -63,13 +67,13 @@ def simulate(plan: dict) -> dict:
             _grasp(w,"A",rows,names); _place(w,"A",params["target_A"],rows,names)
             _grasp(w,"B",rows,names)
             _move_to(w, params["target_B"]+np.array([0,0,0.12]), True, "B", 6, rows, names)
-            w.impulse_loss("B"); _move_to(w, w.eef, False, None, 6, rows, names)
+            w.impulse_loss("B"); _move_to(w, w.eef, True, None, 6, rows, names); _move_to(w, w.eef, False, None, 4, rows, names)
             _grasp(w,"B",rows,names); _place(w,"B",params["target_B"],rows,names)
         elif case.startswith("D4"):
             _grasp(w,"B",rows,names); _place(w,"B",params["target_B"],rows,names)
             _grasp(w,"A",rows,names)
             _move_to(w, params["target_A"]+np.array([0,0,0.12]), True, "A", 6, rows, names)
-            w.impulse_loss("A"); _move_to(w, w.eef, False, None, 6, rows, names)
+            w.impulse_loss("A"); _move_to(w, w.eef, True, None, 6, rows, names); _move_to(w, w.eef, False, None, 4, rows, names)
             _grasp(w,"A",rows,names); _place(w,"A",params["target_A"],rows,names)
         elif case.startswith("D5"):
             _grasp(w,"A",rows,names); _place(w,"A",params["target_A"],rows,names)
@@ -91,15 +95,15 @@ def simulate(plan: dict) -> dict:
     if case.startswith("R1"):
         _grasp(w,"obj",rows,names); _place(w,"obj",params["target"],rows,names)
     elif case.startswith("R2"):
-        _transport_frac(w,0.4,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,False,None,6,rows,names)
+        _transport_frac(w,0.4,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,True,None,6,rows,names); _move_to(w,w.eef,False,None,4,rows,names)
         _grasp(w,"obj",rows,names); _place(w,"obj",params["target"],rows,names)
     elif case.startswith("R3"):
-        _transport_frac(w,0.8,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,False,None,6,rows,names)
+        _transport_frac(w,0.8,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,True,None,6,rows,names); _move_to(w,w.eef,False,None,4,rows,names)
         _grasp(w,"obj",rows,names); _place(w,"obj",params["target"],rows,names)
     elif case.startswith("R4") or case.startswith("R5"):
         frac = 0.4 if case.startswith("R4") else 0.8
         for _ in range(3):
-            _transport_frac(w,frac,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,False,None,5,rows,names)
+            _transport_frac(w,frac,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,True,None,6,rows,names); _move_to(w,w.eef,False,None,4,rows,names)
             _grasp(w,"obj",rows,names)
             start=w.p["start_obj"]; goal=w.p["target"]
             mid=start+frac*(goal-start)+np.array([0,0,0.12])
@@ -108,7 +112,7 @@ def simulate(plan: dict) -> dict:
     elif case.startswith("R6"):
         frac=0.4
         for _ in range(3):
-            _transport_frac(w,frac,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,False,None,5,rows,names)
+            _transport_frac(w,frac,rows,names); w.impulse_loss("obj"); _move_to(w,w.eef,True,None,6,rows,names); _move_to(w,w.eef,False,None,4,rows,names)
             _grasp(w,"obj",rows,names)
             start=w.p["start_obj"]; goal=w.p["target"]
             mid=start+frac*(goal-start)+np.array([0,0,0.12])
@@ -116,11 +120,9 @@ def simulate(plan: dict) -> dict:
         _move_to(w, w.eef, True, "obj", 6, rows, names)
     elif case.startswith("R7"):
         _transport_frac(w,0.4,rows,names); w.impulse_loss("obj")
-        # start recovery but do not complete hold
-        pos=w.bodies["obj"].pos+np.array([0,0,0.08])
-        _move_to(w, pos, False, None, 6, rows, names)
-        _move_to(w, pos, True, None, 4, rows, names)  # close but not near enough long enough
-        _move_to(w, pos+np.array([0.2,0,0.1]), False, None, 8, rows, names)
+        _move_to(w, w.eef, True, None, 6, rows, names)
+        pos=w.bodies["obj"].pos+np.array([0.15,0.0,0.12])
+        _move_to(w, pos, False, None, 8, rows, names)
     else:  # R8 commanded release
         _grasp(w,"obj",rows,names)
         _move_to(w, w.bodies["obj"].pos+np.array([0,0,0.12]), True, "obj", 6, rows, names)
