@@ -293,6 +293,10 @@ class ReturnCollector:
                     log_tick(stage_name, last, tgt)
                     if hold_abort(last):
                         return {"status": "HOLD_LOST_ABORT", "invoked": True, "clock": clock}
+                    primary = maybe_done(last)
+                    if primary["status"] in ("EXACT_OBSERVED_TASK_RETURN","BOUNDED_OBSERVED_TASK_RETURN") and clock >= 0.04:
+                        closures.append(dict(primary, t=last["t"], clock=clock, checkpoint_id=ckpt["checkpoint_id"]))
+                        return {"status": "RETURN_COMPLETE", "invoked": True, "clock": clock, "primary": primary}
             else:
                 continue
             break
