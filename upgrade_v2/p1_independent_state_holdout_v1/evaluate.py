@@ -141,22 +141,22 @@ def evaluate(holdout: Path, scored: Path, out: Path) -> dict:
         r = v6_at[c["episode_id"]][i0]
         ok = r < 0.0
         c_pass = c_pass and ok
-        c_rows.append({"episode_id": c["episode_id"], "case_id": "H5", "transition": [i0, i1],
-                       "v6_reward": r, "requirement": "reward<0", "passed": ok})
+        c_rows.append({"episode_id": c["episode_id"], "case_id": "H5", "start": i0, "end": i1,
+                       "v6_value": r, "requirement": "reward<0", "passed": ok})
     for c in by_case["H6"]:
         s, e = c["segments"]["repeat_segment"]
         total = math.fsum(v6_at[c["episode_id"]][i] for i in range(s, e - 1))
         ok = abs(total) <= ATOL
         c_pass = c_pass and ok
-        c_rows.append({"episode_id": c["episode_id"], "case_id": "H6", "segment": [s, e],
-                       "v6_signed": total, "requirement": "|R|<=1e-12", "passed": ok})
+        c_rows.append({"episode_id": c["episode_id"], "case_id": "H6", "start": s, "end": e,
+                       "v6_value": total, "requirement": "|R|<=1e-12", "passed": ok})
     for c in by_case["H8"]:
         i0, i1 = c["segments"]["label_only_transition"]
         r = v6_at[c["episode_id"]][i0]
         ok = abs(r) <= ATOL
         c_pass = c_pass and ok
-        c_rows.append({"episode_id": c["episode_id"], "case_id": "H8", "transition": [i0, i1],
-                       "v6_reward": r, "requirement": "reward=0+/-1e-12", "passed": ok})
+        c_rows.append({"episode_id": c["episode_id"], "case_id": "H8", "start": i0, "end": i1,
+                       "v6_value": r, "requirement": "reward=0+/-1e-12", "passed": ok})
 
     # Gate D
     d_rows = []
@@ -179,8 +179,9 @@ def evaluate(holdout: Path, scored: Path, out: Path) -> dict:
     def dump(path, rows):
         if not rows:
             path.write_text("status\nNO_ROWS\n", encoding="utf-8"); return
+        keys = list(dict.fromkeys(k for r in rows for k in r))
         with path.open("w", encoding="utf-8", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w = csv.DictWriter(f, fieldnames=keys)
             w.writeheader(); w.writerows(rows)
 
     art = out
@@ -277,7 +278,7 @@ def _report(decision, a_rows, b_rows, c_rows, d_rows, e_rows, incremental):
         lines.append(f"- {r['episode_id']}: count_same={r['unordered_count_same']} graph_diff={r['pathgraph_different']} events_diff={r['matched_events_different']} passed={r['passed']}")
     lines += ["", "## Gate C credit"]
     for r in c_rows:
-        lines.append(f"- {r['case_id']} {r['episode_id']}: {r.get('v6_reward', r.get('v6_signed'))} passed={r['passed']}")
+        lines.append(f"- {r['case_id']} {r['episode_id']}: {r.get('v6_value')} passed={r['passed']}")
     lines += ["", "## Gate D exact state cycles", f"n_cycles={len(d_rows)}"]
     fail_d = [r for r in d_rows if not r["passed"]]
     lines.append("all passed" if not fail_d else f"failed: {fail_d}")
