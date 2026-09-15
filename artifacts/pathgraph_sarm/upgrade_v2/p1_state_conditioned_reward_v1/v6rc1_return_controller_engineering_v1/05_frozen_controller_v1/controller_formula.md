@@ -1,0 +1,2 @@
+p_WE_des = p_WO_star - R_WE * r_EO_regrasp
+Mode: TRANSLATION_COMPENSATED_FIXED_ORIENTATION
