@@ -1,0 +1,25 @@
+from __future__ import annotations
+from .tracking_controller import above_target, grasp_target, xy_error, z_error, norm, preclose_ok, next_attempt
+
+CONTROL_DT = 0.020
+SETTLE_V = 0.030
+SETTLE_W = 0.80
+SETTLE_S = 0.20
+SETTLE_WAIT_MAX = 1.00
+MOVE_TRACK_V = 0.080
+APPROACH_H = 0.160
+GRASP_H = 0.130
+APPROACH_SPEED = 0.35
+DESCEND_SPEED = 0.18
+RECENTER_SPEED = 0.08
+CLOSE_SPEED = 0.05
+XY_TOL = 0.008
+Z_TOL = 0.008
+PRECLOSE_TICKS = 3
+CLOSE_TRACK_S = 0.16
+VERIFY_S = 0.12
+ATTEMPT_TIMEOUT = 3.00
+RETRY_RETREAT = 0.10
+RETRY_WAIT = 0.20
+
+STAGES = ["WAIT_OBJECT_SETTLE","TRACK_ABOVE","TRACK_DESCEND","FINAL_RECENTER","CLOSE_TRACK","VERIFY_HOLD"]

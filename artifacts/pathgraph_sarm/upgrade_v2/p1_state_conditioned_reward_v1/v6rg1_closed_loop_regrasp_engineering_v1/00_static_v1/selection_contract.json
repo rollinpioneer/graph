@@ -1,0 +1,26 @@
+{
+  "RG1_readiness": {
+    "G1": ">=5/6",
+    "G2": ">=5/6",
+    "G3_all_three": ">=4/6",
+    "G4_all_three": ">=4/6",
+    "G5": ">=4/6",
+    "G6": ">=4/6",
+    "G7": "6/6",
+    "G8": "6/6",
+    "attempt1_success": ">=0.80",
+    "conditional_return_pass": ">=0.85",
+    "p90_regrasp_s": "<=3.0"
+  },
+  "RG2_readiness": {
+    "all_attempt_success": ">=0.90",
+    "conditional_return_pass": ">=0.85",
+    "mean_attempts": "<=1.35",
+    "p90_regrasp_s": "<=3.5",
+    "same_case_gates_as_RG1": true
+  },
+  "holdout_may_change_selection": false,
+  "reward_score_used": false,
+  "rule": "select RG1 if ready; otherwise RG2 if ready; otherwise no selection",
+  "schema": "pathgraph_p1_v6rg1_selection_contract_v1"
+}

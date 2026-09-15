@@ -1,0 +1,58 @@
+{
+  "cases": [
+    {
+      "case_id": "G1_LOSS_REGRASP_RETURN_P40",
+      "index": 0,
+      "rollout_seed_offset": 0
+    },
+    {
+      "case_id": "G2_LOSS_REGRASP_RETURN_P80",
+      "index": 1,
+      "rollout_seed_offset": 1
+    },
+    {
+      "case_id": "G3_THREE_REGRASP_RETURN_P40",
+      "index": 2,
+      "rollout_seed_offset": 2
+    },
+    {
+      "case_id": "G4_THREE_REGRASP_RETURN_P80",
+      "index": 3,
+      "rollout_seed_offset": 3
+    },
+    {
+      "case_id": "G5_HIGH_RESIDUAL_SPEED_P40",
+      "index": 4,
+      "rollout_seed_offset": 4
+    },
+    {
+      "case_id": "G6_LOW_FRICTION_LONG_SLIDE_P80",
+      "index": 5,
+      "rollout_seed_offset": 5
+    },
+    {
+      "case_id": "G7_NO_LOSS_INITIAL_GRASP_CONTROL",
+      "index": 6,
+      "rollout_seed_offset": 6
+    },
+    {
+      "case_id": "G8_COMMANDED_RELEASE_NO_REGRASP",
+      "index": 7,
+      "rollout_seed_offset": 7
+    }
+  ],
+  "controller_may_read_case_id": false,
+  "schema": "pathgraph_p1_v6rg1_case_registry_v1",
+  "stress_overrides": {
+    "G5_HIGH_RESIDUAL_SPEED_P40": {
+      "declared_horizontal_impulse_multiplier": 1.25
+    },
+    "G6_LOW_FRICTION_LONG_SLIDE_P80": {
+      "declared_friction_multiplier": 0.7
+    }
+  },
+  "triple_cases_require_all_three_cycles": [
+    "G3_THREE_REGRASP_RETURN_P40",
+    "G4_THREE_REGRASP_RETURN_P80"
+  ]
+}

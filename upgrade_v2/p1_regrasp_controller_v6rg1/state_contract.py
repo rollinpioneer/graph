@@ -1,0 +1,2 @@
+from __future__ import annotations
+CONTROLLER_MAY_READ_CASE_ID=False

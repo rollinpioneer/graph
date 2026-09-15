@@ -1,0 +1,41 @@
+{
+  "base_model": "STATE_BASED_CLOSED_LOOP_TOPDOWN_REGRASP_V1",
+  "common_parameters": {
+    "approach_height_m": 0.16,
+    "approach_speed_m_s": 0.35,
+    "attempt_timeout_s": 3.0,
+    "close_track_duration_s": 0.16,
+    "close_track_speed_m_s": 0.05,
+    "control_dt_s": 0.02,
+    "descend_speed_m_s": 0.18,
+    "final_recenter_speed_m_s": 0.08,
+    "grasp_height_m": 0.13,
+    "moving_track_linear_speed_max_m_s": 0.08,
+    "preclose_consecutive_ticks": 3,
+    "preclose_xy_tolerance_m": 0.008,
+    "preclose_z_tolerance_m": 0.008,
+    "retry_retreat_height_m": 0.1,
+    "retry_wait_s": 0.2,
+    "settle_angular_speed_max_rad_s": 0.8,
+    "settle_linear_speed_max_m_s": 0.03,
+    "settle_required_s": 0.2,
+    "settle_wait_max_s": 1.0,
+    "verify_hold_required_s": 0.12
+  },
+  "models": [
+    {
+      "complexity_rank": 1,
+      "max_attempts": 1,
+      "model_id": "RG1_TRACK_RECENTER_SINGLE_ATTEMPT"
+    },
+    {
+      "complexity_rank": 2,
+      "max_attempts": 2,
+      "model_id": "RG2_TRACK_RECENTER_ONE_RETRY"
+    }
+  ],
+  "schema": "pathgraph_p1_v6rg1_model_registry_v1",
+  "training": false,
+  "velocity_prediction": false,
+  "vision": false
+}
