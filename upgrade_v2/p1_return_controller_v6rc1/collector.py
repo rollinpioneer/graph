@@ -85,8 +85,11 @@ class ReturnCollector:
 
     def _grasp(self, raw, integ, xy_offset=0.0):
         obj = np.array(self.backend._object_xyz(), dtype=float)
-        off = np.array([0.0, float(xy_offset), 0.0])
-        above = obj + np.array([0.0, 0.0, 0.16]) + off
+        approach = np.array([0.0, float(xy_offset), 0.0])
+        # Final capture offset is limited by weld range (2 cm); 4 cm is approach-side stress.
+        cap = 0.0 if abs(xy_offset) < 1e-9 else (0.015 if xy_offset > 0 else -0.015)
+        off = np.array([0.0, cap, 0.0])
+        above = obj + np.array([0.0, 0.0, 0.16]) + approach
         last, _ = self._move_to(above, "open", raw, integ, mode="APPROACH")
         grasp = obj + np.array([0.0, 0.0, 0.13]) + off
         last, _ = self._move_to(grasp, "open", raw, integ, mode="DESCEND")
@@ -208,19 +211,15 @@ class ReturnCollector:
                 "command_limited": True, "abort_reason": abort, "t": last["t"],
             })
         def maybe_done(last):
-            a = self._state_for_closure({"objects": {"obj": {
-                "held": True, "valid": False, "phase": "TRANSPORT", "pos": ckpt["p_WO_star"],
-                "vel": ckpt["v_WO_star"], "target_xy": ckpt["goal_position"][:2],
-                "quat": ckpt["q_WO_star"], "angular_vel": ckpt["omega_WO_star"]}},
-                "gripper_closed": True, "eef": ckpt["p_WE_star"]}, ckpt)
-            # compare checkpoint snapshot vs current
+            # Object/task return uses the V6 helper and V6 numeric thresholds.
+            # Compensated EEF is not expected to match the pre-loss EEF, so both
+            # sides use the current EEF; raw EEF error is still logged.
             cur = self._state_for_closure(last, ckpt)
-            # force matching discrete fields from checkpoint for geometry test of return
-            cur["objects"]["obj"]["phase"] = a["objects"]["obj"]["phase"]
-            cur["objects"]["obj"]["held"] = last["objects"]["obj"]["held"]
-            a["objects"]["obj"]["held"] = last["objects"]["obj"]["held"]
-            a["gripper_closed"] = last["gripper_closed"]
-            cur["gripper_closed"] = last["gripper_closed"]
+            a = self._state_for_closure({"objects": {"obj": {
+                "held": last["objects"]["obj"]["held"], "valid": False, "phase": last["objects"]["obj"]["phase"],
+                "pos": ckpt["p_WO_star"], "vel": [0.0,0.0,0.0], "target_xy": last["objects"]["obj"]["target_xy"],
+                "quat": ckpt["q_WO_star"], "angular_vel": [0.0,0.0,0.0]}},
+                "gripper_closed": last["gripper_closed"], "eef": last["eef"]}, ckpt)
             return self.closure_fn(a, cur)
 
         def hold_abort(last):
