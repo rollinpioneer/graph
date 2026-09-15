@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "backend_id": "MUJOCO_CONSTRAINT_ASSISTED_TABLETOP_V6",
+  "collector_commit": null,
+  "collector_hashes": {},
+  "mujoco_version": "3.4.0",
+  "model_xml_sha256": "1af2e19dd5935d1859dd56466014f9ceda59ea7e6bbe4fe31ec7440937c139df",
+  "candidate_lock_sha256": null,
+  "phase": "check",
+  "planned_rollouts": null,
+  "completed_rollouts": null,
+  "raw_manifest_sha256": null,
+  "direct_pose_overwrites_after_start": 0,
+  "checkpoint_resets_inside_episode": 0,
+  "velocity_zeroing_after_start": 0,
+  "weld_changes_logged": true,
+  "controls_logged": true,
+  "action_execution_logged": true,
+  "full_state_snapshots_available": true,
+  "source_audit_file": "artifacts/pathgraph_sarm/upgrade_v2/p1_state_conditioned_reward_v1/v6_three_issue_v1/05_backend_v1/source_audit.json",
+  "tests": {
+    "mujoco_version": "3.4.0",
+    "steps_per_control": 10,
+    "mj_step_time_consistent": true,
+    "object_followed_weld_without_qpos_write": true,
+    "direct_write_after_start_raises": true,
+    "reset_during_episode_raises": true,
+    "direct_pose_overwrites_after_start": 1,
+    "xml_sha256": "1af2e19dd5935d1859dd56466014f9ceda59ea7e6bbe4fe31ec7440937c139df",
+    "held_after_smoke": {
+      "pos": [
+        -0.3480747518229565,
+        -0.01358917216636465,
+        0.7228137450201303
+      ],
+      "vel": [
+        -5.571663073173736e-23,
+        2.054347558582512e-16,
+        6.693768751125888e-15
+      ],
+      "quat": [
+        0.9999402818185292,
+        -0.0006488858506535156,
+        0.0006236295813662818,
+        0.010891410835152295
+      ],
+      "angular_vel": [
+        -8.955882799178584e-16,
+        3.330289987545862e-17,
+        -4.108695117165014e-16
+      ],
+      "target_xy": [
+        0.29116095111150914,
+        0.07733732661587799
+      ],
+      "target_z": 0.515
+    },
+    "weld_after": true,
+    "z0": 0.5613158820867815,
+    "z1": 0.7228137450201303
+  },
+  "note": "smoke attempted a forbidden write to prove it raises; production collector never does that"
+}
