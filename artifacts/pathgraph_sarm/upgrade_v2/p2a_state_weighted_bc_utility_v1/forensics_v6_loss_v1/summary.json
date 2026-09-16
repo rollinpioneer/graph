@@ -1,0 +1,150 @@
+{
+  "overall_V6_minus_BC": -0.046875,
+  "condition_table": [
+    {
+      "condition": "A_STARTED",
+      "bucket": "A_first",
+      "n_episodes_per_method": 640,
+      "V6": 0.8125,
+      "BC": 0.9,
+      "V6_minus_BC": -0.0875,
+      "share_of_overall_minus_4p7pp": -0.0109375,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "A_VALID_B_LOSS",
+      "bucket": "drop_regrasp",
+      "n_episodes_per_method": 640,
+      "V6": 0.8,
+      "BC": 0.85,
+      "V6_minus_BC": -0.05,
+      "share_of_overall_minus_4p7pp": -0.00625,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "B_STARTED",
+      "bucket": "B_first",
+      "n_episodes_per_method": 640,
+      "V6": 0.925,
+      "BC": 0.9625,
+      "V6_minus_BC": -0.0375,
+      "share_of_overall_minus_4p7pp": -0.0046875,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "B_VALID_A_LOSS",
+      "bucket": "drop_regrasp",
+      "n_episodes_per_method": 640,
+      "V6": 0.9125,
+      "BC": 0.95,
+      "V6_minus_BC": -0.0375,
+      "share_of_overall_minus_4p7pp": -0.0046875,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "FREE_ORDER",
+      "bucket": "natural",
+      "n_episodes_per_method": 640,
+      "V6": 0.9125,
+      "BC": 0.95,
+      "V6_minus_BC": -0.0375,
+      "share_of_overall_minus_4p7pp": -0.0046875,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "INVALIDATE_FIRST",
+      "bucket": "invalidate_other",
+      "n_episodes_per_method": 640,
+      "V6": 0.825,
+      "BC": 0.8875,
+      "V6_minus_BC": -0.0625,
+      "share_of_overall_minus_4p7pp": -0.0078125,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "LATE_LOSS",
+      "bucket": "drop_regrasp",
+      "n_episodes_per_method": 640,
+      "V6": 0.9125,
+      "BC": 0.9375,
+      "V6_minus_BC": -0.025,
+      "share_of_overall_minus_4p7pp": -0.003125,
+      "seed_family_cells": 80
+    },
+    {
+      "condition": "TWO_LOSSES",
+      "bucket": "drop_regrasp",
+      "n_episodes_per_method": 640,
+      "V6": 0.8375,
+      "BC": 0.875,
+      "V6_minus_BC": -0.0375,
+      "share_of_overall_minus_4p7pp": -0.0046875,
+      "seed_family_cells": 80
+    }
+  ],
+  "bucket_table": [
+    {
+      "bucket": "A_first",
+      "conditions": "A_STARTED",
+      "mean_V6_minus_BC_across_those_conditions": -0.0875,
+      "equal_condition_share_of_overall": -0.0109375,
+      "n_conditions": 1
+    },
+    {
+      "bucket": "B_first",
+      "conditions": "B_STARTED",
+      "mean_V6_minus_BC_across_those_conditions": -0.0375,
+      "equal_condition_share_of_overall": -0.0046875,
+      "n_conditions": 1
+    },
+    {
+      "bucket": "drop_regrasp",
+      "conditions": "A_VALID_B_LOSS,B_VALID_A_LOSS,LATE_LOSS,TWO_LOSSES",
+      "mean_V6_minus_BC_across_those_conditions": -0.0375,
+      "equal_condition_share_of_overall": -0.01875,
+      "n_conditions": 4
+    },
+    {
+      "bucket": "invalidate_other",
+      "conditions": "INVALIDATE_FIRST",
+      "mean_V6_minus_BC_across_those_conditions": -0.0625,
+      "equal_condition_share_of_overall": -0.0078125,
+      "n_conditions": 1
+    },
+    {
+      "bucket": "natural",
+      "conditions": "FREE_ORDER",
+      "mean_V6_minus_BC_across_those_conditions": -0.0375,
+      "equal_condition_share_of_overall": -0.0046875,
+      "n_conditions": 1
+    }
+  ],
+  "shuffle_minus_v6": {
+    "unit": "crossed_policy_seed_and_eval_family",
+    "shuffle_mean": 0.903515625,
+    "v6_mean": 0.8671875,
+    "delta_shuffle_minus_v6": 0.036328125,
+    "low": -0.0382861328125,
+    "high": 0.1203125,
+    "confidence": 0.975,
+    "n_seeds": 5,
+    "n_families": 16,
+    "n_cells_shuffle_gt_v6": 16,
+    "n_cells": 80,
+    "per_seed_mean_delta": {
+      "17": 0.103515625,
+      "29": 0.0390625,
+      "43": -0.046875,
+      "71": 0.03125,
+      "101": 0.0546875
+    }
+  },
+  "global_means_are_one": {
+    "BC_UNIFORM": 1.0,
+    "V6_CAP_POTENTIAL": 1.0,
+    "V6_WEIGHT_SHUFFLED": 0.9999999403953552,
+    "VALID_COUNT_PLUS_MATCHED_EVENTS_V1": 1.0,
+    "V6_CAP_COST_ONLY": 1.0
+  },
+  "note": "No new training. Grad norms are one frozen backward on seed-17 first-batch indices."
+}
