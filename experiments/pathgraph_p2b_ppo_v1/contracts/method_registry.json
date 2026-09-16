@@ -1,0 +1,21 @@
+{
+  "beta": 1.0,
+  "common": "r_task + beta*(gamma*Phi_next_effective - Phi_current)",
+  "definitions": {
+    "COUNT_EVENTS_PBRS": "Phi=|V|/2 - 1 - 0.5*(n_open_matched_losses/2)",
+    "COUNT_PBRS": "Phi=|V|/2 - 1",
+    "GEOM_COUNT_EVENTS_PBRS": "Phi=count_event + 0.25*mean_i[1(not valid_i and held_i)*(1-min(1,d_i/max(d0_i,1e-9)))]",
+    "GRAPH_COST_PBRS": "Phi=-frozen_CapabilityPotential.observe(state).cost_cap",
+    "GRAPH_FULL_PBRS": "Phi=frozen_CapabilityPotential.observe(state).psi",
+    "TASK_ONLY": "Phi=0"
+  },
+  "event_baseline_status": "NEW_P2B_DISCOUNT_COMPATIBLE_EVENT_POTENTIAL_NOT_OLD_RAW_EVENT_BONUS",
+  "external_truncation_Phi_effective": "ACTUAL_NEXT_VALUE",
+  "gamma": 0.99,
+  "geometry_baseline_status": "NEW_P2B_PREDECLARED_NON_GRAPH_STRONG_BASELINE",
+  "p1_raw_label_only_delta": "0 under unchanged reward-relevant facts",
+  "p2b_discounted_label_only_F": "(gamma-1)*Phi may be nonzero; not a new label bonus",
+  "potential_scale_is_fixed_not_test_fitted": true,
+  "reward_clip": false,
+  "true_terminal_Phi_effective": 0.0
+}
