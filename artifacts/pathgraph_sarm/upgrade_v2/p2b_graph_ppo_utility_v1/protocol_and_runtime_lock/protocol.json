@@ -1,0 +1,215 @@
+{
+  "algorithm": "SB3_PPO_CLIP",
+  "audit": {
+    "float64_atol": 1e-10,
+    "float64_rtol": 1e-09,
+    "train_trace_sample_modulus": 128
+  },
+  "base_commit": "577db67c64343850965fa4e0f6bc7cac0c15674d",
+  "beta": 1.0,
+  "branch": "research/pathgraph-p2b-graph-ppo-utility-v1",
+  "claims": {
+    "confirmation_passed": false,
+    "p1_historical_outputs": "READ_ONLY",
+    "physical_cycle_claim": "NOT_EVALUATED",
+    "robot_policy_gain_claimed": false
+  },
+  "conditions": [
+    "FREE_ORDER",
+    "A_STARTED",
+    "B_STARTED",
+    "A_VALID_B_LOSS",
+    "B_VALID_A_LOSS",
+    "INVALIDATE_FIRST",
+    "LATE_LOSS",
+    "TWO_LOSSES"
+  ],
+  "deadline_semantics": "FINITE_HORIZON_TASK_TERMINATION",
+  "evaluation_repeats": 4,
+  "evidence_tier": "ONLINE_RL_ACTION_CONDITIONED_ABSTRACT_SKILL_ENV_NOT_PHYSICS",
+  "families": {
+    "smoke": [
+      1200000,
+      1200001,
+      1200002,
+      1200003
+    ],
+    "test": [
+      1203000,
+      1203001,
+      1203002,
+      1203003,
+      1203004,
+      1203005,
+      1203006,
+      1203007,
+      1203008,
+      1203009,
+      1203010,
+      1203011,
+      1203012,
+      1203013,
+      1203014,
+      1203015,
+      1203016,
+      1203017,
+      1203018,
+      1203019,
+      1203020,
+      1203021,
+      1203022,
+      1203023,
+      1203024,
+      1203025,
+      1203026,
+      1203027,
+      1203028,
+      1203029,
+      1203030,
+      1203031
+    ],
+    "train": [
+      1201000,
+      1201001,
+      1201002,
+      1201003,
+      1201004,
+      1201005,
+      1201006,
+      1201007,
+      1201008,
+      1201009,
+      1201010,
+      1201011,
+      1201012,
+      1201013,
+      1201014,
+      1201015,
+      1201016,
+      1201017,
+      1201018,
+      1201019,
+      1201020,
+      1201021,
+      1201022,
+      1201023,
+      1201024,
+      1201025,
+      1201026,
+      1201027,
+      1201028,
+      1201029,
+      1201030,
+      1201031
+    ],
+    "validation": [
+      1202000,
+      1202001,
+      1202002,
+      1202003,
+      1202004,
+      1202005,
+      1202006,
+      1202007
+    ]
+  },
+  "gamma": 0.99,
+  "methods": [
+    "TASK_ONLY",
+    "COUNT_PBRS",
+    "COUNT_EVENTS_PBRS",
+    "GEOM_COUNT_EVENTS_PBRS",
+    "GRAPH_COST_PBRS",
+    "GRAPH_FULL_PBRS"
+  ],
+  "new_design_not_prior_result": true,
+  "primary_comparators": [
+    "TASK_ONLY",
+    "GEOM_COUNT_EVENTS_PBRS"
+  ],
+  "primary_method": "GRAPH_FULL_PBRS",
+  "profiles": {
+    "BASE64": {
+      "horizon": 64,
+      "step_size_multiplier": 1.0
+    },
+    "LONG_CHAIN128": {
+      "horizon": 128,
+      "step_size_multiplier": 0.5
+    }
+  },
+  "schema": "pathgraph_p2b_graph_ppo_v1",
+  "stats": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260916,
+    "practical_margin_pp": 3.0,
+    "primary_ci": 0.975,
+    "secondary_ci": 0.95,
+    "threshold_consecutive_checkpoints": 2,
+    "threshold_success": 0.8,
+    "unit": "CROSSED_TRAIN_SEED_AND_TEST_FAMILY"
+  },
+  "task_reward": {
+    "other": 0.0,
+    "success": 1.0
+  },
+  "training": {
+    "action_mask": false,
+    "activation": "Tanh",
+    "batch_size": 256,
+    "bc_initialization": false,
+    "checkpoint_rule": "FIXED_LAST_STEP",
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "clip_reward": false,
+    "device": "cpu",
+    "ent_coef": 0.01,
+    "gae_lambda": 0.95,
+    "learning_rate": 0.0003,
+    "max_grad_norm": 0.5,
+    "n_envs": 8,
+    "n_epochs": 10,
+    "n_steps": 256,
+    "net_arch": {
+      "pi": [
+        128,
+        128
+      ],
+      "vf": [
+        128,
+        128
+      ]
+    },
+    "normalize_advantage": true,
+    "normalize_observation": false,
+    "normalize_reward": false,
+    "optimizer_eps": 1e-05,
+    "policy_seeds": [
+      211,
+      223,
+      227,
+      229,
+      233,
+      239,
+      241,
+      251
+    ],
+    "target_kl": null,
+    "test_after_all_jobs_frozen": true,
+    "torch_threads": 1,
+    "total_timesteps": 524288,
+    "validation_milestones": [
+      0,
+      32768,
+      65536,
+      131072,
+      262144,
+      524288
+    ],
+    "vf_coef": 0.5
+  },
+  "versions": {
+    "gymnasium": "1.2.2",
+    "stable-baselines3": "2.7.1"
+  }
+}
