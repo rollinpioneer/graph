@@ -1,0 +1,134 @@
+{
+  "action_mask": {
+    "algorithm": "SB3_CONTRIB_MASKABLE_PPO_2_7_1",
+    "legal_but_structurally_suboptimal_actions_remain_unmasked": true,
+    "mask_only_currently_unexecutable_skills": true,
+    "oracle_or_reward_or_method_fields_forbidden": true,
+    "place_with_unsatisfied_task_preconditions_remains_unmasked_when_physically_executable": true,
+    "same_mask_for_all_reward_methods": true,
+    "source": "SkillEnv.legal_mask",
+    "training_and_evaluation_mask_parity_required": true,
+    "wait_always_legal": true
+  },
+  "base_branch": "research/pathgraph-p2c-q-decision-separation-v1",
+  "base_commit": "ce148ce160df41ec0f8876faf3846a6538954dff",
+  "confirmation_passed": false,
+  "data_policy": {
+    "all_registered_slots_in_denominator": true,
+    "candidate_source_freeze_before_new_confirmation": true,
+    "legacy_p2cq_confirmation": "RECLASSIFY_AS_DEVELOPMENT_REGRESSION_AFTER_CANDIDATE_CHANGE",
+    "legacy_p2cq_development": "REUSE_AS_DEVELOPMENT_ONLY",
+    "new_independent_confirmation_required": true,
+    "no_confirmation_tuning": true
+  },
+  "execution_limits": {
+    "automatic_formal_training_release": false,
+    "formal_training_jobs": 0,
+    "model_api_calls": 0,
+    "physical_executions": 0,
+    "robot_or_vision_executions": 0,
+    "smoke_total_timesteps_per_job": 512,
+    "smoke_training_jobs_max": 4
+  },
+  "final_allowed_routes": [
+    "READY_FOR_P2C_RL_PREREGISTRATION",
+    "REWARD_V2_MECHANISM_PASS_SIGNAL_MIXED",
+    "REWARD_V2_QUALIFICATION_FAILED",
+    "MASKABLE_PPO_INTEGRATION_FAILED",
+    "EVIDENCE_INCOMPLETE_REMAIN_BLOCKED"
+  ],
+  "formal_main": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "historical_results": {
+    "P1": "READ_ONLY",
+    "P2A": "READ_ONLY",
+    "P2B": "READ_ONLY",
+    "P2B_D1": "READ_ONLY",
+    "P2C_Q": "READ_ONLY",
+    "p2c_q_policy_utility": "NOT_EVALUATED_IN_P2C_Q"
+  },
+  "methods": {
+    "legacy": [
+      "TASK_ONLY_ZERO_V1",
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "FLAT_CONTRACT_PBRS_V1",
+      "PATHGRAPH_MODEL_COST_PBRS_V1",
+      "PATHGRAPH_MODEL_FULL_PBRS_V1"
+    ],
+    "new_primary": "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+  },
+  "new_branch": "research/pathgraph-p2c-rw-maskable-pretrain-v1",
+  "package_version": "1.0",
+  "qualification_gates": {
+    "all_reachable_state_cost_parity_mismatches": 0,
+    "bellman_consistency_mismatches": 0,
+    "cache_equivalence_mismatches": 0,
+    "development_conservative_hit_gain_min": 0.05,
+    "development_mean_regret_must_decrease": true,
+    "independent_confirmation_conservative_hit_gain_min": 0.03,
+    "independent_confirmation_max_motif_drop": 0.05,
+    "mask_all_false_states": 0,
+    "mask_invalid_wait_transition_mismatches": 0,
+    "mask_legal_mismatches": 0,
+    "mask_method_dependence_violations": 0,
+    "pbrs_max_abs_error": 1e-10,
+    "reward_model_import_independence": true,
+    "smoke_invalid_actions_selected": 0,
+    "smoke_nonfinite_failures": 0,
+    "stage_handoff_regressions": 0
+  },
+  "repository": "rollinpioneer/graph",
+  "reward_v2": {
+    "beta": 1.0,
+    "cache_key": "contract.task_hash() + abstract_state",
+    "clipping": false,
+    "edge_cost": 1.0,
+    "effective_terminal_phi": 0.0,
+    "future_outcome_or_oracle_tables_forbidden": true,
+    "geometry_bonus": 0.0,
+    "invalid_actions_in_shortest_path": false,
+    "planner_model": "PUBLIC_TASK_CONTRACT_EXACT_PROGRESS_UNIT_SKILL_COST",
+    "potential": "-remaining_work_cost / scale",
+    "progress_bins_forbidden": true,
+    "public_one_shot_disturbance_mode": "APPLY_AFTER_EACH_MODELED_SKILL_EDGE",
+    "python_object_id_cache_key_forbidden": true,
+    "scale": "sum(transport_steps[i] + 4 for present nodes)",
+    "shaping": "task_reward + beta * (gamma * effective_phi_next - phi_current)",
+    "state_fields": [
+      "valid_bits",
+      "held_id",
+      "open_loss_bits",
+      "recovering_bits",
+      "invalidated_bits",
+      "disturbance_consumed",
+      "exact_progress_tuple"
+    ],
+    "unreachable_handling": "BLOCK_AND_AUDIT",
+    "wait_in_shortest_path": false
+  },
+  "schema": "P2C_RM_REWARD_V2_MASKABLE_PPO_V1",
+  "scope": "IMPLEMENT_REWARD_V2_AND_MASKABLE_PPO_TRAINING_READINESS_NOT_FORMAL_POLICY_UTILITY",
+  "smoke": {
+    "batch_size": 64,
+    "methods": [
+      "TASK_ONLY_ZERO_V1",
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "PATHGRAPH_MODEL_FULL_PBRS_V1",
+      "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+    ],
+    "n_envs": 2,
+    "n_epochs": 2,
+    "n_steps": 32,
+    "performance_claim_forbidden": true,
+    "policy_seed": 2026091701,
+    "status_label": "SMOKE_PASS_NOT_RESEARCH_RESULT",
+    "total_timesteps": 512
+  },
+  "training_release": false,
+  "versions": {
+    "gymnasium": "1.2.2",
+    "python_min": "3.10",
+    "sb3_contrib": "2.7.1",
+    "silent_upgrade_forbidden": true,
+    "stable_baselines3": "2.7.1"
+  }
+}

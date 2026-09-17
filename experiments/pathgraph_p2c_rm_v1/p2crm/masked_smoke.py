@@ -120,8 +120,6 @@ def run_smoke_job(method, out_dir, *, seed=SMOKE_SEED):
         "same_seed_must_match_across_methods": True,
         "versions": dict(versions, torch=torch.__version__, numpy=np.__version__),
     })
-    invalid_before = int(sum(e.invalid_selected for e in env.envs))
-    nonfinite_before = int(sum(getattr(e, "nonfinite", 0) if not hasattr(e, "env") else 0 for e in env.envs))
     model.learn(total_timesteps=SMOKE_STEPS, reset_num_timesteps=False, log_interval=1, progress_bar=False)
     if int(model.num_timesteps) != SMOKE_STEPS:
         raise RuntimeError(f"timesteps {model.num_timesteps}")
