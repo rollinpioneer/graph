@@ -217,16 +217,94 @@ def cmd_freeze(args):
     print("FREEZE_OK", receipt["status"], "receipt_passed", receipt["passed"])
 
 
+
 def cmd_execute(args):
     rel = load_json(args.release)
     if rel.get("status") != "ACTIVE" or rel.get("training_release") is not True:
         raise SystemExit("execute-campaign refused: campaign_release is not ACTIVE")
-    raise SystemExit("execute-campaign implementation is reserved for an explicit user execution instruction")
+    from .campaign import execute_campaign
+    campaign_root = getattr(args, "campaign_root", None) or getattr(args, "out", None)
+    if not campaign_root:
+        raise SystemExit("execute-campaign refused: campaign-root/out required after ACTIVE release")
+    backend = getattr(args, "backend", "real")
+    drill = bool(getattr(args, "zero_gradient_drill", False))
+    if drill:
+        backend = "fake"
+    plan = load_json(args.plan)
+    report = execute_campaign(
+        repo=getattr(args, "repo", None),
+        release=rel,
+        plan=plan,
+        data_root=getattr(args, "data_root", None),
+        campaign_root=campaign_root,
+        protocol_path=getattr(args, "protocol", None),
+        source_lock_path=getattr(args, "source_lock", None),
+        dataset_manifest_path=getattr(args, "dataset_manifest", None),
+        amendment_path=getattr(args, "amendment", None),
+        parallel_jobs=int(getattr(args, "parallel_jobs", 2) or 2),
+        backend=backend,
+        zero_gradient_drill=drill,
+        require_clean=bool(getattr(args, "require_clean", False)),
+        require_detached=bool(getattr(args, "require_detached", False)),
+    )
+    print("EXECUTE_OK", report.get("schema"), "learn_called", report.get("learn_called"))
 
 
 def cmd_finalize(args):
-    write_final_decision(Path(args.artifact_root) / "final" / "decision.json", status="PREREGISTERED_READY_NOT_STARTED")
+    from .finalize import write_final_decision
+    dest = Path(args.artifact_root) / "final" / "decision.json"
+    if dest.exists():
+        print("FINALIZE_EXISTS")
+        return
+    write_final_decision(dest, status="PREREGISTERED_READY_NOT_STARTED")
     print("FINALIZE_PREPARE_ONLY")
+
+
+def cmd_validate_release(args):
+    from .release import validate_release
+    rel = load_json(args.release)
+    validate_release(
+        rel,
+        repo=getattr(args, "repo", None),
+        protocol_path=getattr(args, "protocol", None),
+        plan_path=getattr(args, "plan", None),
+        source_lock_path=getattr(args, "source_lock", None),
+        dataset_manifest_path=getattr(args, "dataset_manifest", None),
+        amendment_path=getattr(args, "amendment", None),
+        require_active=bool(getattr(args, "require_active", False)),
+        require_clean=bool(getattr(args, "require_clean", False)),
+        require_detached=bool(getattr(args, "require_detached", False)),
+    )
+    print("RELEASE_OK", rel.get("status"), rel.get("training_release"))
+
+
+def cmd_campaign_status(args):
+    from .campaign_ledger import CampaignLedger
+    from .monitoring import write_status
+    ledger = CampaignLedger(args.ledger)
+    dest = Path(args.out) if getattr(args, "out", None) else Path(args.ledger).with_name("status.json")
+    rec = write_status(dest, ledger, getattr(args, "campaign_root", Path(args.ledger).parents[1]))
+    ledger.close()
+    print("STATUS_OK", rec.get("stop_new_claims"))
+
+
+def cmd_freeze_runner(args):
+    from .freeze_runner import freeze_runner
+    rec = freeze_runner(
+        repo=args.repo,
+        out_dir=args.out,
+        data_root=getattr(args, "data", None),
+        test_report=getattr(args, "test_report", None),
+        source_lock_a=getattr(args, "source_lock", None),
+    )
+    print("RUNNER_FREEZE_OK", rec["status"])
+
+
+def cmd_finalize_campaign(args):
+    from .analysis import confirmatory_statistics
+    counts = load_json(args.counts) if getattr(args, "counts", None) else {}
+    rec = confirmatory_statistics([], counts, Path(args.out))
+    print("FINALIZE_CAMPAIGN", rec.get("status"), rec.get("passed"))
 
 
 def main(argv=None):
@@ -249,10 +327,46 @@ def main(argv=None):
     a = sub.add_parser("execute-campaign")
     a.add_argument("--release", required=True)
     a.add_argument("--plan", required=True)
-    a.add_argument("--out", required=True)
+    a.add_argument("--out", required=False)
+    a.add_argument("--repo")
+    a.add_argument("--data-root")
+    a.add_argument("--campaign-root")
+    a.add_argument("--protocol")
+    a.add_argument("--source-lock")
+    a.add_argument("--dataset-manifest")
+    a.add_argument("--amendment")
+    a.add_argument("--parallel-jobs", type=int, default=2)
+    a.add_argument("--backend", default="real")
+    a.add_argument("--zero-gradient-drill", action="store_true")
+    a.add_argument("--require-clean", action="store_true")
+    a.add_argument("--require-detached", action="store_true")
     a = sub.add_parser("finalize")
     a.add_argument("--out", required=True)
     a.add_argument("--artifact-root", required=True)
+    a = sub.add_parser("validate-release")
+    a.add_argument("--release", required=True)
+    a.add_argument("--repo")
+    a.add_argument("--protocol")
+    a.add_argument("--plan")
+    a.add_argument("--source-lock")
+    a.add_argument("--dataset-manifest")
+    a.add_argument("--amendment")
+    a.add_argument("--require-active", action="store_true")
+    a.add_argument("--require-clean", action="store_true")
+    a.add_argument("--require-detached", action="store_true")
+    a = sub.add_parser("campaign-status")
+    a.add_argument("--ledger", required=True)
+    a.add_argument("--campaign-root")
+    a.add_argument("--out")
+    a = sub.add_parser("freeze-runner")
+    a.add_argument("--repo", required=True)
+    a.add_argument("--out", required=True)
+    a.add_argument("--data")
+    a.add_argument("--test-report")
+    a.add_argument("--source-lock")
+    a = sub.add_parser("finalize-campaign")
+    a.add_argument("--out", required=True)
+    a.add_argument("--counts")
     n = p.parse_args(argv)
     if n.cmd == "prepare":
         cmd_prepare(n)
@@ -262,6 +376,14 @@ def main(argv=None):
         cmd_freeze(n)
     elif n.cmd == "execute-campaign":
         cmd_execute(n)
+    elif n.cmd == "validate-release":
+        cmd_validate_release(n)
+    elif n.cmd == "campaign-status":
+        cmd_campaign_status(n)
+    elif n.cmd == "freeze-runner":
+        cmd_freeze_runner(n)
+    elif n.cmd == "finalize-campaign":
+        cmd_finalize_campaign(n)
     else:
         cmd_finalize(n)
 

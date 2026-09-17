@@ -133,4 +133,5 @@ def dry_run(contracts, methods, out_dir, seed=2026091801, env_step_budget=5120):
 
 
 def execute_job(*args, **kwargs):
-    raise RuntimeError("execute-campaign is disabled until an ACTIVE campaign_release is provided")
+    from .train_job import execute_job as _execute_job
+    return _execute_job(*args, **kwargs)
