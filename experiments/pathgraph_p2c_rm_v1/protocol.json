@@ -1,0 +1,134 @@
+{
+  "schema": "P2C_RM_REWARD_V2_MASKABLE_PPO_V1",
+  "package_version": "1.0",
+  "repository": "rollinpioneer/graph",
+  "base_branch": "research/pathgraph-p2c-q-decision-separation-v1",
+  "base_commit": "ce148ce160df41ec0f8876faf3846a6538954dff",
+  "formal_main": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "new_branch": "research/pathgraph-p2c-rw-maskable-pretrain-v1",
+  "scope": "IMPLEMENT_REWARD_V2_AND_MASKABLE_PPO_TRAINING_READINESS_NOT_FORMAL_POLICY_UTILITY",
+  "historical_results": {
+    "P1": "READ_ONLY",
+    "P2A": "READ_ONLY",
+    "P2B": "READ_ONLY",
+    "P2B_D1": "READ_ONLY",
+    "P2C_Q": "READ_ONLY",
+    "p2c_q_policy_utility": "NOT_EVALUATED_IN_P2C_Q"
+  },
+  "execution_limits": {
+    "formal_training_jobs": 0,
+    "smoke_training_jobs_max": 4,
+    "smoke_total_timesteps_per_job": 512,
+    "physical_executions": 0,
+    "model_api_calls": 0,
+    "robot_or_vision_executions": 0,
+    "automatic_formal_training_release": false
+  },
+  "versions": {
+    "stable_baselines3": "2.7.1",
+    "sb3_contrib": "2.7.1",
+    "gymnasium": "1.2.2",
+    "python_min": "3.10",
+    "silent_upgrade_forbidden": true
+  },
+  "methods": {
+    "legacy": [
+      "TASK_ONLY_ZERO_V1",
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "FLAT_CONTRACT_PBRS_V1",
+      "PATHGRAPH_MODEL_COST_PBRS_V1",
+      "PATHGRAPH_MODEL_FULL_PBRS_V1"
+    ],
+    "new_primary": "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+  },
+  "reward_v2": {
+    "planner_model": "PUBLIC_TASK_CONTRACT_EXACT_PROGRESS_UNIT_SKILL_COST",
+    "state_fields": [
+      "valid_bits",
+      "held_id",
+      "open_loss_bits",
+      "recovering_bits",
+      "invalidated_bits",
+      "disturbance_consumed",
+      "exact_progress_tuple"
+    ],
+    "progress_bins_forbidden": true,
+    "edge_cost": 1.0,
+    "wait_in_shortest_path": false,
+    "invalid_actions_in_shortest_path": false,
+    "public_one_shot_disturbance_mode": "APPLY_AFTER_EACH_MODELED_SKILL_EDGE",
+    "future_outcome_or_oracle_tables_forbidden": true,
+    "geometry_bonus": 0.0,
+    "scale": "sum(transport_steps[i] + 4 for present nodes)",
+    "clipping": false,
+    "unreachable_handling": "BLOCK_AND_AUDIT",
+    "potential": "-remaining_work_cost / scale",
+    "shaping": "task_reward + beta * (gamma * effective_phi_next - phi_current)",
+    "beta": 1.0,
+    "effective_terminal_phi": 0.0,
+    "cache_key": "contract.task_hash() + abstract_state",
+    "python_object_id_cache_key_forbidden": true
+  },
+  "action_mask": {
+    "algorithm": "SB3_CONTRIB_MASKABLE_PPO_2_7_1",
+    "source": "SkillEnv.legal_mask",
+    "same_mask_for_all_reward_methods": true,
+    "wait_always_legal": true,
+    "oracle_or_reward_or_method_fields_forbidden": true,
+    "mask_only_currently_unexecutable_skills": true,
+    "legal_but_structurally_suboptimal_actions_remain_unmasked": true,
+    "place_with_unsatisfied_task_preconditions_remains_unmasked_when_physically_executable": true,
+    "training_and_evaluation_mask_parity_required": true
+  },
+  "data_policy": {
+    "legacy_p2cq_development": "REUSE_AS_DEVELOPMENT_ONLY",
+    "legacy_p2cq_confirmation": "RECLASSIFY_AS_DEVELOPMENT_REGRESSION_AFTER_CANDIDATE_CHANGE",
+    "new_independent_confirmation_required": true,
+    "candidate_source_freeze_before_new_confirmation": true,
+    "no_confirmation_tuning": true,
+    "all_registered_slots_in_denominator": true
+  },
+  "qualification_gates": {
+    "reward_model_import_independence": true,
+    "all_reachable_state_cost_parity_mismatches": 0,
+    "bellman_consistency_mismatches": 0,
+    "pbrs_max_abs_error": 1e-10,
+    "cache_equivalence_mismatches": 0,
+    "stage_handoff_regressions": 0,
+    "development_conservative_hit_gain_min": 0.05,
+    "development_mean_regret_must_decrease": true,
+    "independent_confirmation_conservative_hit_gain_min": 0.03,
+    "independent_confirmation_max_motif_drop": 0.05,
+    "mask_legal_mismatches": 0,
+    "mask_invalid_wait_transition_mismatches": 0,
+    "mask_method_dependence_violations": 0,
+    "mask_all_false_states": 0,
+    "smoke_invalid_actions_selected": 0,
+    "smoke_nonfinite_failures": 0
+  },
+  "smoke": {
+    "status_label": "SMOKE_PASS_NOT_RESEARCH_RESULT",
+    "methods": [
+      "TASK_ONLY_ZERO_V1",
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "PATHGRAPH_MODEL_FULL_PBRS_V1",
+      "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+    ],
+    "policy_seed": 2026091701,
+    "n_envs": 2,
+    "n_steps": 32,
+    "batch_size": 64,
+    "n_epochs": 2,
+    "total_timesteps": 512,
+    "performance_claim_forbidden": true
+  },
+  "final_allowed_routes": [
+    "READY_FOR_P2C_RL_PREREGISTRATION",
+    "REWARD_V2_MECHANISM_PASS_SIGNAL_MIXED",
+    "REWARD_V2_QUALIFICATION_FAILED",
+    "MASKABLE_PPO_INTEGRATION_FAILED",
+    "EVIDENCE_INCOMPLETE_REMAIN_BLOCKED"
+  ],
+  "training_release": false,
+  "confirmation_passed": false
+}
