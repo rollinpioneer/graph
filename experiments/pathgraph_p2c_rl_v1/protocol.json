@@ -1,0 +1,175 @@
+{
+  "schema": "P2CRL_PREREGISTRATION_V1",
+  "document_status": "PROPOSED_NEW_PROTOCOL_NOT_PRIOR_RESULT",
+  "default_mode": "PREPARE_ONLY",
+  "training_release": false,
+  "repository": "rollinpioneer/graph",
+  "base_commit": "e31eaa5038224623e3e1659f4dbf9d340e9cc3ae",
+  "candidate_commit": "7a69b8416c41d27afc1dd46740a18d401d721454",
+  "main_recorded": "234cb6dc0e2767fa62cd2dbec4a868b8d0711bb2",
+  "new_branch": "research/pathgraph-p2c-rl-utility-v1",
+  "methods": [
+    "TASK_ONLY_ZERO_V1",
+    "GEOM_COUNT_EVENTS_PBRS_V1",
+    "FLAT_CONTRACT_PBRS_V1",
+    "PATHGRAPH_MODEL_FULL_PBRS_V1",
+    "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+  ],
+  "motifs": [
+    "PRECEDENCE",
+    "SHARED_PREREQUISITE",
+    "ALTERNATIVE_COST",
+    "INVALIDATION_RECOVERY"
+  ],
+  "train_draws": [
+    "A",
+    "B",
+    "C"
+  ],
+  "policy_seeds": [
+    317,
+    331,
+    347,
+    359
+  ],
+  "versions": {
+    "stable-baselines3": "2.7.1",
+    "sb3-contrib": "2.7.1",
+    "gymnasium": "1.2.2"
+  },
+  "training": {
+    "algorithm": "MaskablePPO",
+    "total_timesteps": 524288,
+    "n_envs": 8,
+    "n_steps": 256,
+    "batch_size": 256,
+    "n_epochs": 10,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "normalize_advantage": true,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "target_kl": null,
+    "net_arch": {
+      "pi": [
+        128,
+        128
+      ],
+      "vf": [
+        128,
+        128
+      ]
+    },
+    "activation": "Tanh",
+    "optimizer_eps": 1e-05,
+    "ortho_init": true,
+    "device": "cpu",
+    "torch_threads": 1,
+    "beta": 1.0,
+    "reward_normalization": false,
+    "reward_clipping": false,
+    "observation_normalization": false,
+    "action_mask": true,
+    "bc_initialization": false,
+    "expert_takeover": false,
+    "checkpoint_rule": "FIXED_LAST_POST_UPDATE"
+  },
+  "validation_milestones": [
+    0,
+    32768,
+    65536,
+    131072,
+    262144,
+    524288
+  ],
+  "data": {
+    "train_roots_per_motif_per_draw": 32,
+    "validation_roots_per_motif": 32,
+    "test_roots_per_motif": 64,
+    "sides": [
+      "left",
+      "right"
+    ],
+    "diagnostic_prefixes_per_root": 16,
+    "dataset_seed": 2026091801,
+    "horizons": [
+      32,
+      40,
+      48,
+      56,
+      64,
+      72,
+      80,
+      88
+    ],
+    "namespaces": {
+      "train_A": 1321000,
+      "train_B": 1322000,
+      "train_C": 1323000,
+      "validation": 1324000,
+      "test": 1325000,
+      "integration": 1326000
+    },
+    "forbidden_prior_prefixes": [
+      "120",
+      "130",
+      "131"
+    ],
+    "primary_evaluation_repeats": 1,
+    "primary_policy_mode": "DETERMINISTIC_MASKED",
+    "secondary_stochastic_sampling_seeds": [
+      2026091802,
+      2026091803,
+      2026091804,
+      2026091805
+    ],
+    "secondary_stochastic_roots_per_motif": 8,
+    "qualification": {
+      "train_separating_roots_per_motif_min": 16,
+      "validation_separating_roots_per_motif_min": 16,
+      "test_separating_roots_per_motif_min": 32,
+      "test_separating_pairs_per_motif_min": 128,
+      "replace_failed_families": false,
+      "full_contract_hash_collision_count_max": 0
+    },
+    "claim_scope": "NEW_INSTANCES_WITHIN_FROZEN_MOTIF_TEMPLATES_NOT_UNSEEN_TOPOLOGY"
+  },
+  "statistics": {
+    "primary_method": "PATHGRAPH_REMAINING_WORK_PBRS_V2",
+    "primary_comparators": [
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "FLAT_CONTRACT_PBRS_V1"
+    ],
+    "endpoint": "MOTIF_MACRO_FINAL_TASK_SUCCESS",
+    "practical_margin": 0.03,
+    "ci_level": 0.975,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 2026091806,
+    "resampling": "DRAW_THEN_SEED_WITHIN_DRAW_CROSSED_WITH_FAMILY_WITHIN_MOTIF",
+    "missing_job_policy": "INCOMPLETE_NO_CONFIRMATORY_PASS",
+    "secondary_ci_level": 0.95
+  },
+  "budgets": {
+    "prepare_gradient_updates": 0,
+    "formal_job_limit": 60,
+    "formal_step_limit": 31457280,
+    "new_runner_smoke_jobs": 5,
+    "new_runner_smoke_steps_each": 512,
+    "smoke_allowed_only_after_campaign_release": true,
+    "parallel_jobs_max": 2,
+    "new_data_disk_limit_bytes": 21474836480,
+    "enumerated_states_per_contract_max": 200000,
+    "enumerated_states_campaign_max": 10000000,
+    "retry_failed_formal_job": false,
+    "physical_executions": 0,
+    "model_api_calls": 0,
+    "prepare_diagnostic_env_steps_max": 5120
+  },
+  "historical_scope_note": "RM_ROOT_COVERAGE_GATE_FAILED_29_OF_32_DO_NOT_REINTERPRET_AS_FULL_COMPLIANCE",
+  "policy_utility_evidence": "NOT_EVALUATED",
+  "global_confirmation_passed": false
+}
