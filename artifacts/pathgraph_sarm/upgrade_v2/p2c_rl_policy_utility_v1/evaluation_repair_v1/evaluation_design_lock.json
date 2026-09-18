@@ -1,0 +1,60 @@
+{
+  "schema": "P2CRL_EVALUATION_REPAIR_DESIGN_LOCK_V1",
+  "recorded_at_utc": "2026-09-18T17:20:41Z",
+  "recorded_before_repaired_evaluation": true,
+  "main_panel": {
+    "policies": 60,
+    "contracts_per_policy": 512,
+    "expected_rows": 30720,
+    "policy_mode": "DETERMINISTIC_MASKED",
+    "repeats": 1
+  },
+  "stochastic_panel": {
+    "policies": 60,
+    "contracts_per_seed_per_policy": 64,
+    "sampling_seeds": [
+      2026091802,
+      2026091803,
+      2026091804,
+      2026091805
+    ],
+    "expected_rows": 15360,
+    "contract_selection": "For each motif, sort registered test families by (root, family_id), select the first 8 families, and evaluate both registered sides."
+  },
+  "critical_state_panel": {
+    "policies": 60,
+    "test_families": 256,
+    "registered_prefixes_per_family": 16,
+    "sides": 2,
+    "states_per_policy": 8192,
+    "expected_rows": 491520,
+    "state_selection": "All 16 registered diagnostic prefixes for every registered test family and both sides.",
+    "oracle": "Independent task-cost oracle is analysis-only and never enters policy inputs.",
+    "policy_inputs": [
+      "observation",
+      "action_mask"
+    ]
+  },
+  "episode_key": [
+    "panel",
+    "job_id",
+    "family_id",
+    "side",
+    "sampling_seed"
+  ],
+  "main_method_panel": {
+    "methods_required_per_draw_seed_family_side": [
+      "TASK_ONLY_ZERO_V1",
+      "GEOM_COUNT_EVENTS_PBRS_V1",
+      "FLAT_CONTRACT_PBRS_V1",
+      "PATHGRAPH_MODEL_FULL_PBRS_V1",
+      "PATHGRAPH_REMAINING_WORK_PBRS_V2"
+    ]
+  },
+  "write_policy": {
+    "attempt_03_inputs": "READ_ONLY",
+    "new_outputs": "SEPARATE_EVALUATION_REPAIR_ROOT",
+    "records_format": "DETERMINISTIC_GZIP_CSV",
+    "partial_results_are_not_statistics_inputs": true
+  }
+}
