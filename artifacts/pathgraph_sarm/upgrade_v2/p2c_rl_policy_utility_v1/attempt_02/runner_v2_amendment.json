@@ -1,0 +1,101 @@
+{
+  "schema": "P2CRL_RUNNER_V2_AMENDMENT_V1",
+  "category": "NON_SCIENTIFIC_SMOKE_ROLLOUT_QUANTUM_AND_ACCOUNTING_FIX",
+  "base_result_commit": "2cf48bfd3f18bdfa9de706eba3411d3c1ffd6f4c",
+  "runner_v1_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca",
+  "runner_v2_commit": "c34b3a1077cef23b071c646f724981370b98d2df",
+  "scientific_protocol_changed": false,
+  "job_plan_changed": false,
+  "dataset_changed": false,
+  "methods_changed": false,
+  "reward_changed": false,
+  "mask_changed": false,
+  "formal_ppo_changed": false,
+  "statistics_changed": false,
+  "changes": [
+    "SMOKE_N_STEPS_256_TO_64_WITH_N_ENVS_8",
+    "CHECKPOINT_REQUESTED_EQUALS_ACTUAL",
+    "ACTUAL_OPTIMIZER_STEP_COUNTER",
+    "ATTEMPT_RELEASE_TOMBSTONE_ENFORCEMENT",
+    "CSV_LF_EXPLICIT"
+  ],
+  "tests_passed": true,
+  "learn_called": false,
+  "optimizer_steps": 0,
+  "smoke_jobs": 0,
+  "formal_jobs": 0,
+  "changed_files": [
+    {
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/p2c_rl_policy_utility_v1/attempt_01_terminal/release_terminal_receipt.json",
+      "sha256": "51a90b64b945853c9dbd7b2c7a523679434e63902145293752524402f0f44b5a"
+    },
+    {
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/p2c_rl_policy_utility_v1/attempt_01_terminal/release_tombstone_registry.json",
+      "sha256": "5c0ea8ab585fbdc98d92a5197e4373255256230ca5abb911b31cd27de8bb9689"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/backends.py",
+      "sha256": "9d96d7b8fe40728e550829610b88bafa4ab46f2f7ab961beb365bd2eb28ae967"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/campaign.py",
+      "sha256": "844a066ced271ab7d88f85f306e2aa3517637aa7784d8e06dbca0f1c8dbdd3e2"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/checkpointing.py",
+      "sha256": "1c15a87135e644de143538ac265073aff8fc1869d57ff11fd651d5f9543b2b3a"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/cli.py",
+      "sha256": "1ec08f8de40ba59fac46ae6e96e9bec9dbf8c5d47d0c0d8ba79d1c673bda0cab"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/constants_b.py",
+      "sha256": "0531d4d8a624d8ef7baa49b0832a6f9cd79b3e4fc4f0f4c099420ecc9b247c6a"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/errors.py",
+      "sha256": "34b7af732e47db34914d630140106ad65187300a4a358e3ed60564800b917b50"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/freeze_runner_v2.py",
+      "sha256": "b087d7eb032a338a43eb0b4cb262fff213e0557f36fc321850f91affb074cca6"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/learner.py",
+      "sha256": "a81b3b73a99b8fd23e83f803ae85cdf3aad3d138a241af79a37a2fe888a4dc38"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/optimizer_counter.py",
+      "sha256": "01eb7fbfaaf1b4e5c49383f75ccc6742241570f0242a5e0e2fa10a07f63552e4"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/release.py",
+      "sha256": "b02e12f2700b4cf4d0ab66bec1d57abc67ff6a8618661589a208b171d0fb9d21"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/release_terminal_registry.py",
+      "sha256": "73af8de9ab255c405fd72ebfeffebd2f09f0688b115819ad4ea04b502926ac43"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/train_job.py",
+      "sha256": "4c63e167a9c8c00d54de38f32feed0af49a324e9c08a186a051e2313e2797906"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/p2crl/training_shape.py",
+      "sha256": "391e8f1dbf7c877af0cd8ba936b5ff029db224ecb4c1e2eb49dd0ca92ee386a4"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/tests/test_runner_b0.py",
+      "sha256": "58b41f8d8c58dafe1fdad6b7453715c78737ae637242f8935533e5fb9c0d3fe5"
+    },
+    {
+      "path": "experiments/pathgraph_p2c_rl_v1/tests/test_runner_v2.py",
+      "sha256": "6ec39d8663b99d193d1e5ed62960c1f7e2d120b609226887b43427f517bb8b06"
+    }
+  ],
+  "known_deviations": [
+    "CANDIDATE_WORKTREE_UNWRAP_MASKED_SMOKE_FOLLOWS_RESULT_BASE"
+  ],
+  "preregistration_commit": "cb223ab3bceb3ccbe0a91962d4c274deb5243e40"
+}
