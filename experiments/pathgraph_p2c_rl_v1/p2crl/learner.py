@@ -71,7 +71,7 @@ def make_model(contracts, method, seed, n_envs, n_steps, batch_size, n_epochs, d
 
 
 def assert_release_active(release):
-    if not release or release.get("schema") != "P2CRL_CAMPAIGN_RELEASE_V1":
+    if not release or release.get("schema") not in ("P2CRL_CAMPAIGN_RELEASE_V1", "P2CRL_CAMPAIGN_RELEASE_V2"):
         raise RuntimeError("release schema")
     if release.get("status") != "ACTIVE" or release.get("training_release") is not True:
         raise RuntimeError("campaign not released")

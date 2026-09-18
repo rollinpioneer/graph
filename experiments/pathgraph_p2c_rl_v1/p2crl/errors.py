@@ -12,3 +12,9 @@ class ResourceLimit(RuntimeError):
 
 class ProtocolViolation(RuntimeError):
     pass
+
+class CheckpointStepMismatch(RuntimeError):
+    pass
+
+class TimestepQuantumMismatch(RuntimeError):
+    pass

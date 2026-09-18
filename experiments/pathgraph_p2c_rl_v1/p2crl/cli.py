@@ -246,6 +246,7 @@ def cmd_execute(args):
         zero_gradient_drill=drill,
         require_clean=bool(getattr(args, "require_clean", False)),
         require_detached=bool(getattr(args, "require_detached", False)),
+        tombstone_registry_path=getattr(args, "release_tombstones", None),
     )
     print("EXECUTE_OK", report.get("schema"), "learn_called", report.get("learn_called"))
 
@@ -340,6 +341,7 @@ def main(argv=None):
     a.add_argument("--zero-gradient-drill", action="store_true")
     a.add_argument("--require-clean", action="store_true")
     a.add_argument("--require-detached", action="store_true")
+    a.add_argument("--release-tombstones")
     a = sub.add_parser("finalize")
     a.add_argument("--out", required=True)
     a.add_argument("--artifact-root", required=True)

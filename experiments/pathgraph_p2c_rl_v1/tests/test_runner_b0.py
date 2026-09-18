@@ -441,8 +441,10 @@ class CheckpointTests(unittest.TestCase):
     def test_post_update_true(self):
         with tempfile.TemporaryDirectory() as td:
             rec = save_milestone(FakeModel(3), Path(td), 0, post_update=True)
-            self.assertTrue(rec["post_update"])
+            self.assertFalse(rec["post_update"])
+            self.assertEqual(rec["checkpoint_phase"], "INITIALIZATION")
             self.assertEqual(rec["num_timesteps"], 0)
+            self.assertEqual(rec["requested_step"], rec["actual_num_timesteps"])
             self.assertTrue((Path(td) / "policy_0.zip").exists())
     def test_post_update_false_rejected(self):
         with tempfile.TemporaryDirectory() as td:

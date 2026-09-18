@@ -2,11 +2,13 @@
 from __future__ import annotations
 from pathlib import Path
 from .campaign_ledger import CampaignLedger
-from .constants_b import CAMPAIGN_ID, PARALLEL_JOBS_MAX
+from .constants_b import CAMPAIGN_ID, FORMAL_STEPS, PARALLEL_JOBS_MAX, SMOKE_STEPS
 from .errors import GateError, IncompletePanel
 from .io_utils import load_json, sha256_file, write_new
 from .release import ReleaseRejected, validate_release
+from .release_terminal_registry import assert_sha_not_tombstoned
 from .train_job import execute_job
+from .training_shape import FORMAL_SHAPE, SMOKE_SHAPE
 
 def _reject(campaign_root, code, detail):
     if campaign_root:
@@ -27,12 +29,31 @@ def smoke_gate(ledger):
         rec = load_json(Path(j["directory"]) / "complete.json")
         if rec.get("status") != "TRAINING_COMPLETE":
             raise GateError(f"smoke {j['job_id']} not trained")
-        if int(rec.get("environment_steps") or 0) != 512:
+        if int(rec.get("environment_steps") or 0) != SMOKE_STEPS:
             raise GateError(f"smoke {j['job_id']} steps")
+        if int(rec.get("rollout_quantum") or 0) != SMOKE_SHAPE.rollout_quantum:
+            raise GateError(f"smoke {j['job_id']} quantum")
+        if int(rec.get("rollout_iterations") or 0) != 1:
+            raise GateError(f"smoke {j['job_id']} rollouts")
+        if int(rec.get("ppo_epoch_count") or 0) != 10:
+            raise GateError(f"smoke {j['job_id']} epochs")
+        if int(rec.get("optimizer_step_count") or 0) != 20:
+            raise GateError(f"smoke {j['job_id']} optimizer")
+        if int(rec.get("final_checkpoint_actual_step") or rec.get("environment_steps") or 0) != SMOKE_STEPS:
+            raise GateError(f"smoke {j['job_id']} ckpt")
+        if rec.get("backend") != "real":
+            raise GateError(f"smoke {j['job_id']} backend")
         if int(rec.get("invalid_selected") or 0) != 0 or int(rec.get("nonfinite") or 0) != 0:
             raise GateError(f"smoke {j['job_id']} invalid/nonfinite")
         init = load_json(Path(j["directory"]) / "initialization.json")
         hashes.append(init.get("policy_sha256"))
+        meta = Path(j["directory"]) / "checkpoints" / "policy_512.zip.meta.json"
+        if meta.exists():
+            m = load_json(meta)
+            if int(m.get("actual_num_timesteps") or 0) != SMOKE_STEPS:
+                raise GateError(f"smoke {j['job_id']} meta actual")
+            if int(m.get("requested_step") or 0) != SMOKE_STEPS:
+                raise GateError(f"smoke {j['job_id']} meta requested")
     hashes = [h for h in hashes if h]
     if hashes and len(set(hashes)) != 1:
         raise GateError("smoke initial policy hash mismatch")
@@ -46,8 +67,14 @@ def complete_panel_gate(ledger):
         if j["status"] != "COMPLETE":
             raise GateError(f"formal {j['job_id']} {j['status']}")
         rec = load_json(Path(j["directory"]) / "complete.json")
-        if rec.get("status") != "TRAINING_COMPLETE" or int(rec.get("environment_steps") or 0) != 524288:
+        if rec.get("status") != "TRAINING_COMPLETE" or int(rec.get("environment_steps") or 0) != FORMAL_STEPS:
             raise GateError(f"formal {j['job_id']} incomplete")
+        if rec.get("optimizer_step_count") is not None and int(rec.get("optimizer_step_count") or 0) != FORMAL_SHAPE.expected_optimizer_steps(FORMAL_STEPS):
+            raise GateError(f"formal {j['job_id']} optimizer")
+        if rec.get("rollout_iterations") is not None and int(rec.get("rollout_iterations") or 0) != 256:
+            raise GateError(f"formal {j['job_id']} rollouts")
+        if rec.get("ppo_epoch_count") is not None and int(rec.get("ppo_epoch_count") or 0) != 2560:
+            raise GateError(f"formal {j['job_id']} epochs")
     return True
 
 def _plan_jobs(plan):
@@ -69,6 +96,7 @@ def execute_campaign(
     zero_gradient_drill=False,
     require_clean=False,
     require_detached=False,
+    tombstone_registry_path=None,
 ):
     campaign_root = Path(campaign_root)
     control = campaign_root / "control"
@@ -84,6 +112,7 @@ def execute_campaign(
             require_active=True,
             require_clean=require_clean,
             require_detached=require_detached,
+            tombstone_registry_path=tombstone_registry_path,
         )
     except ReleaseRejected as e:
         _reject(campaign_root, e.code, e.detail)
@@ -99,11 +128,24 @@ def execute_campaign(
     control.mkdir(parents=True, exist_ok=True)
     ledger_path = control / "campaign.sqlite3"
     ledger = CampaignLedger(ledger_path)
-    release_sha = sha256_file(control / "release.used.json") if (control / "release.used.json").exists() else "fixture"
-    if not (control / "release.used.json").exists():
+    if (control / "release.used.json").exists():
+        release_sha = sha256_file(control / "release.used.json")
+    else:
         write_new(control / "release.used.json", release)
         release_sha = sha256_file(control / "release.used.json")
+    try:
+        assert_sha_not_tombstoned(release_sha, tombstone_registry_path)
+    except ReleaseRejected as e:
+        _reject(campaign_root, e.code, e.detail)
     ledger.init_campaign(release_sha, jobs)
+
+    job_kwargs = dict(
+        protocol_path=protocol_path,
+        source_lock_path=source_lock_path,
+        dataset_manifest_path=dataset_manifest_path,
+        amendment_path=amendment_path,
+        tombstone_registry_path=tombstone_registry_path,
+    )
 
     if backend == "fake" or zero_gradient_drill:
         smoke_n = formal_n = 0
@@ -145,6 +187,7 @@ def execute_campaign(
             "backend": "fake",
             "learn_called": bool(learn_called),
             "gradient_updates": 0,
+            "optimizer_step_count": 0,
             "formal_steps": int(camp.get("formal_steps_used") or 0),
             "smoke_steps": 0,
             "smoke_registered": smoke_n,
@@ -157,7 +200,6 @@ def execute_campaign(
         ledger.close()
         return report
 
-    # Real execution path. Not used in B0.
     for job in plan.get("smoke_jobs") or []:
         try:
             execute_job(
@@ -165,14 +207,11 @@ def execute_campaign(
                 data_root=data_root,
                 release=release,
                 plan_job=job,
-                protocol_path=protocol_path,
-                source_lock_path=source_lock_path,
-                dataset_manifest_path=dataset_manifest_path,
-                amendment_path=amendment_path,
                 campaign_root=campaign_root,
                 ledger=ledger,
                 backend="real",
                 register_only=False,
+                **job_kwargs,
             )
         except Exception as e:
             ledger.mark_failed(job["job_id"], str(e))
@@ -186,14 +225,11 @@ def execute_campaign(
                 data_root=data_root,
                 release=release,
                 plan_job=job,
-                protocol_path=protocol_path,
-                source_lock_path=source_lock_path,
-                dataset_manifest_path=dataset_manifest_path,
-                amendment_path=amendment_path,
                 campaign_root=campaign_root,
                 ledger=ledger,
                 backend="real",
                 register_only=False,
+                **job_kwargs,
             )
         except Exception as e:
             ledger.mark_failed(job["job_id"], str(e))
