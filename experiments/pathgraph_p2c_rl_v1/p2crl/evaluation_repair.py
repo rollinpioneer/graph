@@ -350,13 +350,75 @@ def _build_critical_case(case):
     }
 
 
+def _load_critical_cache(cache_path, cases):
+    required = {
+        "observation",
+        "action_mask",
+        "oracle_optimal_mask",
+        "family_id",
+        "motif",
+        "side",
+        "contract_sha256",
+        "prefix_index",
+        "prefix_length",
+    }
+    with np.load(cache_path, allow_pickle=False) as stored:
+        if set(stored.files) != required:
+            raise EvaluationRepairError("CRITICAL_CACHE_FIELDS", stored.files)
+        arrays = {field: np.array(stored[field], copy=True) for field in required}
+    expected_shapes = {
+        "observation": (8192, 224),
+        "action_mask": (8192, 37),
+        "oracle_optimal_mask": (8192, 37),
+    }
+    for field, shape in expected_shapes.items():
+        if arrays[field].shape != shape:
+            raise EvaluationRepairError(
+                "CRITICAL_CACHE_SHAPE", f"{field}:{arrays[field].shape}"
+            )
+    for field in required - set(expected_shapes):
+        if arrays[field].shape != (8192,):
+            raise EvaluationRepairError(
+                "CRITICAL_CACHE_SHAPE", f"{field}:{arrays[field].shape}"
+            )
+    if not np.isfinite(arrays["observation"]).all():
+        raise EvaluationRepairError("CRITICAL_CACHE_NONFINITE")
+    masks = arrays["action_mask"]
+    optimal = arrays["oracle_optimal_mask"]
+    if (
+        masks.dtype.kind != "b"
+        or optimal.dtype.kind != "b"
+        or np.any(np.count_nonzero(optimal, axis=1) == 0)
+        or np.any(optimal & ~masks)
+    ):
+        raise EvaluationRepairError("CRITICAL_CACHE_MASK_CONTRACT")
+
+    expected = {
+        "family_id": [],
+        "motif": [],
+        "side": [],
+        "contract_sha256": [],
+        "prefix_index": [],
+        "prefix_length": [],
+    }
+    for case in cases:
+        prefixes = case["family"].get("prefixes") or []
+        expected["family_id"].extend([case["family_id"]] * 16)
+        expected["motif"].extend([case["motif"]] * 16)
+        expected["side"].extend([case["side"]] * 16)
+        expected["contract_sha256"].extend([case["contract_sha256"]] * 16)
+        expected["prefix_index"].extend(range(16))
+        expected["prefix_length"].extend(len(prefix) for prefix in prefixes)
+    for field, values in expected.items():
+        if arrays[field].tolist() != values:
+            raise EvaluationRepairError("CRITICAL_CACHE_METADATA", field)
+    return arrays
+
+
 def build_critical_cache(cases, cache_path):
     cache_path = Path(cache_path)
     if cache_path.exists():
-        data = np.load(cache_path, allow_pickle=False)
-        if int(data["observation"].shape[0]) != 8192:
-            raise EvaluationRepairError("CRITICAL_CACHE_ROWS", data["observation"].shape[0])
-        return data
+        return _load_critical_cache(cache_path, cases)
     collected = {
         "observation": [],
         "action_mask": [],
@@ -415,7 +477,7 @@ def build_critical_cache(cases, cache_path):
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(tmp, cache_path)
-    return np.load(cache_path, allow_pickle=False)
+    return _load_critical_cache(cache_path, cases)
 
 
 def evaluate_critical(model, checkpoint, cache, batch_size=512):
