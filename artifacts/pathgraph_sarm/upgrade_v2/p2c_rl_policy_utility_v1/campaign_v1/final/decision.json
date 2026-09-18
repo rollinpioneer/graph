@@ -1,0 +1,33 @@
+{
+  "schema": "P2CRL_FINAL_DECISION_V1",
+  "status": "CAMPAIGN_INCOMPLETE_NO_CONFIRMATORY_CLAIM",
+  "stop_code": "SMOKE_FAILED_STOP",
+  "policy_utility": "NOT_EVALUATED",
+  "training_release": true,
+  "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca",
+  "preregistration_commit": "cb223ab3bceb3ccbe0a91962d4c274deb5243e40",
+  "protocol_sha256": "cb2961a67e31c62fff91597b8d4ff357bd950d574381c9326667385734af46e8",
+  "plan_sha256": "b2713d61f432b3d9328b81ea3265bb6fc509055816edfee6e5bfcff2b1013bdd",
+  "dataset_manifest_sha256": "04a58235b83c30416b0dd82d3e61450c88643b1559279392dcbd7c6516b01c1f",
+  "source_lock_sha256": "d77d81b30bc9d8fe2273923b58b65dd12acc8600594d047008012fc8a62902bc",
+  "amendment_sha256": "22eaae0d71ad13890fbfd66470196ad20bcf7c712f5de40e77df3e8ac28623b2",
+  "smoke_complete": 5,
+  "smoke_steps_required": 512,
+  "smoke_steps_observed": 2048,
+  "formal_jobs_started": 0,
+  "formal_jobs_completed": 0,
+  "main_test_rows": 0,
+  "confirmatory_claim": false,
+  "same_release_retry_forbidden": true,
+  "runner_patch_on_this_release_forbidden": true,
+  "known_deviations": [
+    "CANDIDATE_WORKTREE_UNWRAP_MASKED_SMOKE_FOLLOWS_RESULT_BASE"
+  ],
+  "gate_error": "smoke SMOKE_TASK steps",
+  "notes": [
+    "Five real smoke jobs ran with backend=real and learn_called=true.",
+    "SB3 MaskablePPO collect_rollouts uses n_envs=8 and n_steps=256, so the first update covers 2048 env steps.",
+    "Frozen smoke_gate requires environment_steps==512; it stopped the campaign before any formal job.",
+    "A-stage campaign_release.json remains NOT_RELEASED; this stop used campaign_release.active.json only."
+  ]
+}

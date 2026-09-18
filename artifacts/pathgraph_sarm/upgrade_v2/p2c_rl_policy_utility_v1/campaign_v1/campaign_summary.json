@@ -1,0 +1,107 @@
+{
+  "schema": "P2CRL_CAMPAIGN_SUMMARY_V1",
+  "status": "SMOKE_FAILED_STOP",
+  "decision": "CAMPAIGN_INCOMPLETE_NO_CONFIRMATORY_CLAIM",
+  "training_release": true,
+  "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca",
+  "preregistration_commit": "cb223ab3bceb3ccbe0a91962d4c274deb5243e40",
+  "smoke_jobs_completed": 5,
+  "smoke_jobs_required": 5,
+  "smoke_steps_required": 512,
+  "smoke_steps_observed": [
+    2048
+  ],
+  "formal_jobs_started": 0,
+  "formal_jobs_completed": 0,
+  "learn_called": true,
+  "confirmatory_statistics": false,
+  "reason": "smoke_gate rejected because frozen MaskablePPO n_envs*n_steps=8*256=2048 overshoots the registered 512-step smoke budget; all 5 smoke jobs finished TRAINING_COMPLETE with environment_steps=2048.",
+  "policy": "no retry, no runner patch on this ACTIVE release, formal remains 0",
+  "smoke_jobs": [
+    {
+      "job_id": "SMOKE_FLAT",
+      "method": "FLAT_CONTRACT_PBRS_V1",
+      "status": "TRAINING_COMPLETE",
+      "environment_steps": 2048,
+      "learn_called": true,
+      "gradient_updates": 10,
+      "invalid_selected": 0,
+      "nonfinite": 0,
+      "backend": "real",
+      "directory": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/campaign_v1/smoke/SMOKE_FLAT",
+      "complete_sha256": "132c609c40d4cefe50b313c79d8385dad48805ee70223299b2a1a3c342e8ff84",
+      "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca"
+    },
+    {
+      "job_id": "SMOKE_GEOM",
+      "method": "GEOM_COUNT_EVENTS_PBRS_V1",
+      "status": "TRAINING_COMPLETE",
+      "environment_steps": 2048,
+      "learn_called": true,
+      "gradient_updates": 10,
+      "invalid_selected": 0,
+      "nonfinite": 0,
+      "backend": "real",
+      "directory": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/campaign_v1/smoke/SMOKE_GEOM",
+      "complete_sha256": "ee4d256b3536861f0ac43bed7ba978a5c63e9f9d6ab276e2166c9390461377cd",
+      "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca"
+    },
+    {
+      "job_id": "SMOKE_GRAPH1",
+      "method": "PATHGRAPH_MODEL_FULL_PBRS_V1",
+      "status": "TRAINING_COMPLETE",
+      "environment_steps": 2048,
+      "learn_called": true,
+      "gradient_updates": 10,
+      "invalid_selected": 0,
+      "nonfinite": 0,
+      "backend": "real",
+      "directory": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/campaign_v1/smoke/SMOKE_GRAPH1",
+      "complete_sha256": "c65f21beac4a5d10833061fcd06aea863238cb0f669b3985e589125a5c65ae55",
+      "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca"
+    },
+    {
+      "job_id": "SMOKE_RW2",
+      "method": "PATHGRAPH_REMAINING_WORK_PBRS_V2",
+      "status": "TRAINING_COMPLETE",
+      "environment_steps": 2048,
+      "learn_called": true,
+      "gradient_updates": 10,
+      "invalid_selected": 0,
+      "nonfinite": 0,
+      "backend": "real",
+      "directory": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/campaign_v1/smoke/SMOKE_RW2",
+      "complete_sha256": "a823866fb5c118f01c5936ed0bc495210c6f5f5bf6d0dffb02bb61d88e0240b2",
+      "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca"
+    },
+    {
+      "job_id": "SMOKE_TASK",
+      "method": "TASK_ONLY_ZERO_V1",
+      "status": "TRAINING_COMPLETE",
+      "environment_steps": 2048,
+      "learn_called": true,
+      "gradient_updates": 10,
+      "invalid_selected": 0,
+      "nonfinite": 0,
+      "backend": "real",
+      "directory": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/campaign_v1/smoke/SMOKE_TASK",
+      "complete_sha256": "86318f4d8a922b19ff8feaf38762ea0734500a72a878ea10f74ca4737034a2fb",
+      "runner_commit": "2335a2e9a52340778da335ffb63e269e4d4c4cca"
+    }
+  ],
+  "ledger_groups": [
+    {
+      "kind": "formal",
+      "status": "PENDING",
+      "n": 60,
+      "steps": 0
+    },
+    {
+      "kind": "smoke",
+      "status": "COMPLETE",
+      "n": 5,
+      "steps": 10240
+    }
+  ],
+  "recorded_at_utc": "2026-09-18T03:36:40Z"
+}
