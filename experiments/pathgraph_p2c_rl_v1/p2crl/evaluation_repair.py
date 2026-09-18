@@ -957,7 +957,7 @@ def finalize(output_root, checkpoint_rows, cases, stochastic_cases):
                 "sha256": sha256_file(path),
             }
             for path in sorted(final_root.iterdir())
-            if path.is_file()
+            if path.is_file() and path.name != "output_manifest.json"
         },
         "training_calls": 0,
         "optimizer_steps": 0,
