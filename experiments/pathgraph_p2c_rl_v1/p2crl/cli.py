@@ -241,6 +241,7 @@ def cmd_execute(args):
         source_lock_path=getattr(args, "source_lock", None),
         dataset_manifest_path=getattr(args, "dataset_manifest", None),
         amendment_path=getattr(args, "amendment", None),
+        runtime_lock_path=getattr(args, "runtime_lock", None),
         parallel_jobs=int(getattr(args, "parallel_jobs", 2) or 2),
         backend=backend,
         zero_gradient_drill=drill,
@@ -272,6 +273,7 @@ def cmd_validate_release(args):
         source_lock_path=getattr(args, "source_lock", None),
         dataset_manifest_path=getattr(args, "dataset_manifest", None),
         amendment_path=getattr(args, "amendment", None),
+        runtime_lock_path=getattr(args, "runtime_lock", None),
         require_active=bool(getattr(args, "require_active", False)),
         require_clean=bool(getattr(args, "require_clean", False)),
         require_detached=bool(getattr(args, "require_detached", False)),
@@ -336,6 +338,7 @@ def main(argv=None):
     a.add_argument("--source-lock")
     a.add_argument("--dataset-manifest")
     a.add_argument("--amendment")
+    a.add_argument("--runtime-lock")
     a.add_argument("--parallel-jobs", type=int, default=2)
     a.add_argument("--backend", default="real")
     a.add_argument("--zero-gradient-drill", action="store_true")
@@ -353,6 +356,7 @@ def main(argv=None):
     a.add_argument("--source-lock")
     a.add_argument("--dataset-manifest")
     a.add_argument("--amendment")
+    a.add_argument("--runtime-lock")
     a.add_argument("--require-active", action="store_true")
     a.add_argument("--require-clean", action="store_true")
     a.add_argument("--require-detached", action="store_true")

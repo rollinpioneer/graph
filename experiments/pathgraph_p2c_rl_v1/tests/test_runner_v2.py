@@ -217,6 +217,61 @@ class TombstoneTests(unittest.TestCase):
             validate_release(rel, require_active=True, repo=None)
         self.assertEqual(e.exception.code, "OLD_ATTEMPT_ROOT")
 
+    def test_v3_requires_frozen_runtime_lock(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            runtime = root / "runtime.json"
+            write_new(runtime, {
+                "status": "FROZEN_PREFLIGHT_PASSED",
+                "learn_called": False,
+                "optimizer_steps": 0,
+                "packages": [
+                    {"name": "stable-baselines3", "version": "2.7.1"},
+                    {"name": "sb3-contrib", "version": "2.7.1"},
+                    {"name": "gymnasium", "version": "1.2.2"},
+                ],
+            })
+            amendment = root / "runtime_amendment.json"
+            runner = "b" * 40
+            from p2crl.io_utils import sha256_file
+            runtime_sha = sha256_file(runtime)
+            write_new(amendment, {
+                "category": "NON_SCIENTIFIC_RUNTIME_ENVIRONMENT_AND_ATTEMPT_03_ENABLEMENT",
+                "runner_v3_commit": runner,
+                "runtime_lock_sha256": runtime_sha,
+                "scientific_protocol_changed": False,
+                "job_plan_changed": False,
+                "dataset_changed": False,
+                "methods_changed": False,
+                "reward_changed": False,
+                "mask_changed": False,
+                "formal_ppo_changed": False,
+                "statistics_changed": False,
+                "training_logic_changed": False,
+            })
+            rel = make_release(
+                schema="P2CRL_CAMPAIGN_RELEASE_V3",
+                attempt_id="P2CRL_V1_ATTEMPT_03",
+                runner_commit=None,
+                runner_v3_commit=runner,
+                attempt_root="/tmp/campaign_v1_attempt_03",
+                smoke_shape={"n_envs": 8, "n_steps": 64, "batch_size": 256, "n_epochs": 10},
+                formal_shape={"n_envs": 8, "n_steps": 256, "batch_size": 256, "n_epochs": 10},
+                runtime_lock_sha256=runtime_sha,
+                runtime_amendment_sha256=sha256_file(amendment),
+            )
+            rel.pop("runner_commit", None)
+            self.assertTrue(validate_release(
+                rel,
+                runtime_lock_path=runtime,
+                amendment_path=amendment,
+                require_active=True,
+            ))
+            rel["runtime_lock_sha256"] = "0" * 64
+            with self.assertRaises(ReleaseRejected) as e:
+                validate_release(rel, runtime_lock_path=runtime, require_active=True)
+            self.assertEqual(e.exception.code, "RUNTIME_LOCK_HASH")
+
 
 class FakeJobShapeTests(unittest.TestCase):
     def test_register_only_uses_smoke_shape(self):

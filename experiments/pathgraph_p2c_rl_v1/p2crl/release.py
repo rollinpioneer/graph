@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 from .constants_b import (
-    ATTEMPT_02_ID, CAMPAIGN_ID, DATASET_MANIFEST_SHA256, FORMAL_JOB_LIMIT, FORMAL_STEP_LIMIT,
+    ATTEMPT_02_ID, ATTEMPT_03_ID, CAMPAIGN_ID, DATASET_MANIFEST_SHA256, FORMAL_JOB_LIMIT, FORMAL_STEP_LIMIT,
     KNOWN_DEVIATIONS, PARALLEL_JOBS_MAX, PLAN_SHA256, PREREGISTRATION_COMMIT,
     PROTOCOL_SEMANTIC_SHA256, PROTOCOL_SHA256, SMOKE_JOB_LIMIT, SMOKE_STEPS,
 )
@@ -11,7 +11,17 @@ from .contracts import load_protocol
 from .io_utils import hash_json, load_json, sha256_file
 from .training_shape import FORMAL_SHAPE, SMOKE_SHAPE
 
-ALLOWED_RELEASE_SCHEMAS = ("P2CRL_CAMPAIGN_RELEASE_V1", "P2CRL_CAMPAIGN_RELEASE_V2")
+ALLOWED_RELEASE_SCHEMAS = (
+    "P2CRL_CAMPAIGN_RELEASE_V1",
+    "P2CRL_CAMPAIGN_RELEASE_V2",
+    "P2CRL_CAMPAIGN_RELEASE_V3",
+)
+
+FROZEN_RUNTIME_VERSIONS = {
+    "stable-baselines3": "2.7.1",
+    "sb3-contrib": "2.7.1",
+    "gymnasium": "1.2.2",
+}
 
 
 class ReleaseRejected(RuntimeError):
@@ -26,6 +36,8 @@ def git(repo, *args):
 
 
 def _runner_commit(release):
+    if release.get("schema") == "P2CRL_CAMPAIGN_RELEASE_V3":
+        return release.get("runner_v3_commit")
     if release.get("schema") == "P2CRL_CAMPAIGN_RELEASE_V2":
         return release.get("runner_v2_commit") or release.get("runner_commit")
     return release.get("runner_commit")
@@ -44,6 +56,7 @@ def validate_release(
     source_lock_path=None,
     dataset_manifest_path=None,
     amendment_path=None,
+    runtime_lock_path=None,
     require_active=True,
     require_clean=True,
     require_detached=False,
@@ -95,8 +108,9 @@ def validate_release(
         raise ReleaseRejected("PARALLEL_JOBS")
     if not release.get("explicit_user_execution_instruction_ref"):
         raise ReleaseRejected("EXPLICIT_INSTRUCTION")
-    if schema == "P2CRL_CAMPAIGN_RELEASE_V2":
-        if release.get("attempt_id") != ATTEMPT_02_ID:
+    if schema in ("P2CRL_CAMPAIGN_RELEASE_V2", "P2CRL_CAMPAIGN_RELEASE_V3"):
+        expected_attempt = ATTEMPT_02_ID if schema == "P2CRL_CAMPAIGN_RELEASE_V2" else ATTEMPT_03_ID
+        if release.get("attempt_id") != expected_attempt:
             raise ReleaseRejected("ATTEMPT_ID")
         smoke = release.get("smoke_shape") or {}
         formal = release.get("formal_shape") or {}
@@ -113,9 +127,38 @@ def validate_release(
             raise ReleaseRejected("OLD_ATTEMPT_ROOT")
         if _plan_sha(release) not in (None, PLAN_SHA256) and _plan_sha(release) != PLAN_SHA256:
             raise ReleaseRejected("PLAN_HASH")
+    if schema == "P2CRL_CAMPAIGN_RELEASE_V3":
+        if runtime_lock_path is None:
+            raise ReleaseRejected("RUNTIME_LOCK_REQUIRED")
+        if release.get("runtime_lock_sha256") != sha256_file(runtime_lock_path):
+            raise ReleaseRejected("RUNTIME_LOCK_HASH")
+        runtime = load_json(runtime_lock_path)
+        if runtime.get("status") != "FROZEN_PREFLIGHT_PASSED":
+            raise ReleaseRejected("RUNTIME_PREFLIGHT")
+        if runtime.get("learn_called") is not False or int(runtime.get("optimizer_steps", -1)) != 0:
+            raise ReleaseRejected("RUNTIME_PREFLIGHT_GRADIENT")
+        versions = {item.get("name"): item.get("version") for item in runtime.get("packages", [])}
+        if any(versions.get(name) != version for name, version in FROZEN_RUNTIME_VERSIONS.items()):
+            raise ReleaseRejected("RUNTIME_VERSION")
     if amendment_path is not None:
         amd = load_json(amendment_path)
-        if schema == "P2CRL_CAMPAIGN_RELEASE_V2":
+        if schema == "P2CRL_CAMPAIGN_RELEASE_V3":
+            if amd.get("category") != "NON_SCIENTIFIC_RUNTIME_ENVIRONMENT_AND_ATTEMPT_03_ENABLEMENT":
+                raise ReleaseRejected("AMENDMENT_CATEGORY")
+            for key in (
+                "scientific_protocol_changed", "job_plan_changed", "dataset_changed", "methods_changed",
+                "reward_changed", "mask_changed", "formal_ppo_changed", "statistics_changed",
+                "training_logic_changed",
+            ):
+                if amd.get(key) is not False:
+                    raise ReleaseRejected("AMENDMENT_SCIENCE", key)
+            if amd.get("runner_v3_commit") != runner:
+                raise ReleaseRejected("AMENDMENT_RUNNER_COMMIT")
+            if amd.get("runtime_lock_sha256") != release.get("runtime_lock_sha256"):
+                raise ReleaseRejected("AMENDMENT_RUNTIME_LOCK")
+            if release.get("runtime_amendment_sha256") != sha256_file(amendment_path):
+                raise ReleaseRejected("AMENDMENT_HASH")
+        elif schema == "P2CRL_CAMPAIGN_RELEASE_V2":
             if amd.get("category") != "NON_SCIENTIFIC_SMOKE_ROLLOUT_QUANTUM_AND_ACCOUNTING_FIX":
                 raise ReleaseRejected("AMENDMENT_CATEGORY")
             for key in (

@@ -91,6 +91,7 @@ def execute_campaign(
     source_lock_path=None,
     dataset_manifest_path=None,
     amendment_path=None,
+    runtime_lock_path=None,
     parallel_jobs=2,
     backend="real",
     zero_gradient_drill=False,
@@ -109,6 +110,7 @@ def execute_campaign(
             source_lock_path=source_lock_path,
             dataset_manifest_path=dataset_manifest_path,
             amendment_path=amendment_path,
+            runtime_lock_path=runtime_lock_path,
             require_active=True,
             require_clean=require_clean,
             require_detached=require_detached,
@@ -144,6 +146,7 @@ def execute_campaign(
         source_lock_path=source_lock_path,
         dataset_manifest_path=dataset_manifest_path,
         amendment_path=amendment_path,
+        runtime_lock_path=runtime_lock_path,
         tombstone_registry_path=tombstone_registry_path,
     )
 
