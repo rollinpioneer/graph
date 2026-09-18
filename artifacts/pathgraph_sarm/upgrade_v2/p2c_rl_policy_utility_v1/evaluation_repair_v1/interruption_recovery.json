@@ -1,0 +1,26 @@
+{
+  "schema": "P2CRL_EVALUATION_REPAIR_INTERRUPTION_RECOVERY_V1",
+  "recorded_at_utc": "2026-09-18T18:17:12Z",
+  "attempt_01": {
+    "status": "INTERRUPTED_RUNTIME_SHARED_NPZ_HANDLE",
+    "complete_job_receipts_preserved": 2,
+    "partial_job_directories_preserved": 20,
+    "archive": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_data/run_v1/evaluation_repair_v1/interruptions/attempt_01_shared_npz_handle",
+    "error": "zipfile.BadZipFile: Overlapped entries: action_mask.npy",
+    "cause": "Forked workers shared one lazy NpzFile ZIP handle.",
+    "attempt_03_inputs_mutated": false
+  },
+  "repair": {
+    "commit": "fd119af67",
+    "change": "Load and validate every critical-cache array eagerly before forking workers."
+  },
+  "attempt_02": {
+    "status": "COMPLETE",
+    "resumed_complete_job_receipts": 2,
+    "final_complete_job_receipts": 60,
+    "main_rows": 30720,
+    "stochastic_rows": 15360,
+    "critical_rows": 491520,
+    "bootstrap_replicates": 200000
+  }
+}
