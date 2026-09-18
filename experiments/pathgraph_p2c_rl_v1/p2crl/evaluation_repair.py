@@ -45,6 +45,7 @@ MARGIN = 0.03
 MAIN_EXPECTED = 30720
 STOCHASTIC_EXPECTED = 15360
 CRITICAL_EXPECTED = 491520
+_JOB_CONTEXT = None
 
 MAIN_FIELDS = (
     "panel", "job_id", "method", "draw", "policy_seed", "family_id", "motif",
@@ -536,6 +537,15 @@ def evaluate_job(checkpoint, cases, stochastic_cases, critical_cache, output_roo
     return receipt
 
 
+def _evaluate_job_worker(checkpoint):
+    if _JOB_CONTEXT is None:
+        raise EvaluationRepairError("JOB_WORKER_CONTEXT_MISSING")
+    cases, stochastic_cases, critical_cache, output_root = _JOB_CONTEXT
+    return evaluate_job(
+        checkpoint, cases, stochastic_cases, critical_cache, output_root
+    )
+
+
 def _records_from_jobs(output_root, checkpoint_rows, name):
     records = []
     for checkpoint in checkpoint_rows:
@@ -886,9 +896,26 @@ def run(args):
         selected = [row for row in checkpoints if row["job_id"] == args.job_id]
         if len(selected) != 1:
             raise EvaluationRepairError("UNKNOWN_JOB", args.job_id)
-    for index, checkpoint in enumerate(selected, start=1):
-        evaluate_job(checkpoint, cases, stochastic_cases, cache, output_root)
-        print(f"EVALUATION_PROGRESS {index}/{len(selected)}", flush=True)
+    workers = 1 if args.job_id else int(os.environ.get("P2CRL_JOB_WORKERS", "1"))
+    if workers < 1 or workers > 16:
+        raise EvaluationRepairError("EVALUATION_JOB_WORKERS", workers)
+    if workers == 1:
+        for index, checkpoint in enumerate(selected, start=1):
+            evaluate_job(checkpoint, cases, stochastic_cases, cache, output_root)
+            print(f"EVALUATION_PROGRESS {index}/{len(selected)}", flush=True)
+    else:
+        global _JOB_CONTEXT
+        _JOB_CONTEXT = (cases, stochastic_cases, cache, output_root)
+        try:
+            with ProcessPoolExecutor(max_workers=workers) as executor:
+                receipts = executor.map(_evaluate_job_worker, selected)
+                for index, _receipt in enumerate(receipts, start=1):
+                    print(
+                        f"EVALUATION_PROGRESS {index}/{len(selected)}",
+                        flush=True,
+                    )
+        finally:
+            _JOB_CONTEXT = None
     if not args.job_id:
         statistics = finalize(
             output_root, checkpoints, cases, stochastic_cases
