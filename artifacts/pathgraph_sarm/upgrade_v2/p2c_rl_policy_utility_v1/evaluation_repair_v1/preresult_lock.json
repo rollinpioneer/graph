@@ -1,0 +1,69 @@
+{
+  "schema": "P2CRL_EVALUATION_REPAIR_PRERESULT_LOCK_V1",
+  "recorded_at_utc": "2026-09-18T17:12:15Z",
+  "base_commit": "1eaa0a48dfaf75563c05a0ba974ed3a7465f739e",
+  "branch": "research/pathgraph-p2c-rl-evaluation-repair-v1",
+  "prior_result_disposition": {
+    "status": "INVALID_EMPTY_RECORD_INPUT",
+    "affected_comparisons": [
+      "RW_V2_minus_GEOM",
+      "RW_V2_minus_FLAT"
+    ],
+    "reason": "The frozen main, stochastic, and critical modules wrote metadata only, and campaign.py invoked confirmatory_statistics with an empty records list.",
+    "evidence": {
+      "campaign_call": "confirmatory_statistics([], complete_counts, output_path)",
+      "main_module_output": "metadata_only",
+      "stochastic_module_output": "metadata_only",
+      "critical_module_output": "metadata_only"
+    },
+    "supersedes_scientific_interpretation_only": true,
+    "mutates_attempt_03": false
+  },
+  "confidence_interval_lock": {
+    "registered_field": "statistics.ci_level",
+    "registered_value": 0.975,
+    "registered_source": "experiments/pathgraph_p2c_rl_v1/protocol.json",
+    "frozen_code_source": "experiments/pathgraph_p2c_rl_v1/p2crl/analysis.py",
+    "interpretation": "TWO_SIDED_EQUAL_TAILED_CENTRAL_0.95_INTERVAL",
+    "lower_quantile": 0.025,
+    "upper_quantile": 0.975,
+    "selection_timing": "BEFORE_ANY_REPAIRED_EVALUATION_RESULT_WAS_READ_OR_CREATED",
+    "post_result_selection_forbidden": true
+  },
+  "resampling_lock": {
+    "registered_text": "DRAW_THEN_SEED_WITHIN_DRAW_CROSSED_WITH_FAMILY_WITHIN_MOTIF",
+    "order": [
+      "draw",
+      "policy_seed_within_draw",
+      "family_within_motif"
+    ],
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 2026091806,
+    "practical_margin": 0.03
+  },
+  "evaluation_lock": {
+    "checkpoint_filename": "policy_524288.zip",
+    "checkpoint_count": 60,
+    "checkpoint_selection": "FINAL_ONLY",
+    "main_mode": "DETERMINISTIC_MASKED",
+    "main_expected_rows": 30720,
+    "stochastic_sampling_seeds": [
+      2026091802,
+      2026091803,
+      2026091804,
+      2026091805
+    ],
+    "stochastic_expected_rows": 15360,
+    "training_forbidden": true,
+    "learn_forbidden": true,
+    "optimizer_step_forbidden": true
+  },
+  "statistics_input_hard_failures": [
+    "EMPTY_RECORDS",
+    "MISSING_ROWS",
+    "DUPLICATE_EPISODE_KEY",
+    "INCOMPLETE_METHOD_PANEL"
+  ],
+  "attempt_03_sqlite_status_preserved": "RESUMING",
+  "attempt_03_sqlite_mutation_forbidden": true
+}
