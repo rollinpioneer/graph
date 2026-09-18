@@ -852,6 +852,26 @@ def _combine_job_files(output_root, checkpoint_rows, name, fields, destination):
             yield from read_gzip_csv(_job_paths(output_root, checkpoint["job_id"])[name])
     return write_gzip_csv_atomic(destination, fields, rows())
 
+def _by_method_mean(records, field):
+    totals = {method: 0 for method in METHODS}
+    counts = {method: 0 for method in METHODS}
+    for row in records:
+        method = row["method"]
+        if method not in totals:
+            raise EvaluationRepairError("UNKNOWN_METHOD", method)
+        totals[method] += int(row[field])
+        counts[method] += 1
+    if any(counts[method] == 0 for method in METHODS):
+        raise EvaluationRepairError("INCOMPLETE_METHOD_PANEL", field)
+    return {
+        method: {
+            "rows": counts[method],
+            "mean": totals[method] / counts[method],
+        }
+        for method in METHODS
+    }
+
+
 
 def finalize(output_root, checkpoint_rows, cases, stochastic_cases):
     output_root = Path(output_root)
@@ -904,6 +924,7 @@ def finalize(output_root, checkpoint_rows, cases, stochastic_cases):
             "rows": counts["main"],
             "success_mean": sum(int(row["success"]) for row in main_records) / counts["main"],
             "invalid_actions": sum(int(row["invalid_actions"]) for row in main_records),
+            "by_method": _by_method_mean(main_records, "success"),
             "nonfinite": sum(int(row["nonfinite"]) for row in main_records),
         },
         "stochastic": {
@@ -913,6 +934,7 @@ def finalize(output_root, checkpoint_rows, cases, stochastic_cases):
                 sum(int(row["success"]) for row in stochastic_records)
                 / counts["stochastic"]
             ),
+            "by_method": _by_method_mean(stochastic_records, "success"),
             "sampling_seeds": list(SAMPLING_SEEDS),
         },
         "critical": {
@@ -920,6 +942,7 @@ def finalize(output_root, checkpoint_rows, cases, stochastic_cases):
             "rows": counts["critical"],
             "oracle_agreement_mean": critical_agreement,
             "policy_inputs": ["observation", "action_mask"],
+            "by_method": _by_method_mean(critical_records, "oracle_agreement"),
             "oracle_process": "analysis_only",
         },
     }
