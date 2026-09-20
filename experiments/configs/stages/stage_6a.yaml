@@ -1,0 +1,46 @@
+id: 6A
+part: VII
+name: Raw Archive Review
+type: Packaging
+purpose: 建立所有真实运行、失败、模型和评价的可追溯总索引，不修改原数据。
+paper: NO；为最终可追溯性必需
+prerequisites: 至少一个已完成或失败但留有真实日志的Stage；raw/run目录可读；不要求所有可选Stage完成。
+inputs: 所有part目录与raw_archive；所有attempt/seed/checkpoint/config/cache；stage状态；file checksums；无需API、模型执行或训练设备。
+frozen: 原始日志和checkpoint只读；不把缺失日志补造成存在。
+tunable: None；仅修索引工具。
+run_matrix:
+- group: archive_scan
+  method: All actual methods
+  task: All attempted tasks
+  seeds: []
+  budget: 0
+  prior: All actual variants
+  notes: 仅索引；包括失败与零成功run
+training_budget: 0 transitions、0 updates、0 evaluation episodes。
+evaluation: 逐run验证必需文件/hash与源引用；区分TRAIN_COMPLETE、NORMAL_ZERO_SUCCESS、INFRA_FAILED、PARTIAL、MISSING_SOURCE；状态不是方法排名。
+logging: 扫描时间、文件总数/hash、run/attempt/seed/ckpt索引、缺失项、原始错误分类、来源目录；不输出敏感API key。
+required_files:
+- raw_archive_index.csv
+- checkpoint_index.csv
+- evaluation_index.csv
+- archive_integrity_report.md
+- stage_6a_summary.md
+plots: None；可选archive_coverage.svg/png仅计数量，不画伪性能。
+tables: raw_archive_index.csv：run_id、stage、task/method/seed、attempt、code/config/cache
+  hash、budget、status、success可用性、source path、failure_reason；一真实run一行。
+criteria: PASS：所有发现的运行均入索引；有少量缺失可PASS_WITH_NOTES并限制可展示集合。某主图源文件丢失则BLOCKED该图，不能靠回忆补数。
+failure_handling: 先路径与manifest→checksums→日志完整性→重复run ID→checkpoint源→密钥脱敏。只修改派生index，原raw保持不动。
+rerun_allowed: YES。
+tuning_allowed: None。
+writing_block: NO。
+next_stage: 6B
+execution_steps:
+- 扫描全部实际运行目录，不只扫描获胜或成功run。
+- 读取manifest建立run/attempt/seed唯一索引。
+- 核对config、checkpoint、cache及episode日志hash。
+- 识别技术失败、正常零成功、partial和缺源，分别标注。
+- 建立checkpoint/evaluation/qualitative候选索引。
+- 只读验证主结果来源是否仍存在，不补造丢失记录。
+- 输出archive index与完整性报告。
+- 写stage_6a.json，停止，不自动筛选主文。
+extra: ''

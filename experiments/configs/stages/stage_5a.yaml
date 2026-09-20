@@ -1,0 +1,82 @@
+id: 5A
+part: VI
+name: Compositional Generalization
+type: Generalization
+purpose: 仅检验seen skills/predicates下的未见对象—目标或依赖组合，不叠加视觉/机器人/对象数shift。
+paper: OPTIONAL
+prerequisites: 0A splits预先登记G1/G2；绑定证明确非纯ID重命名；默认2B T_C Full/B2三个seed checkpoint；新组合cache通过相同冻结生产协议；不可因测试成绩重定义组合。
+inputs: 一个source task family T_C（实际绑定可替换）；Full/B2 seeds012；两个held-out compositions
+  G1/G2及各前30cases；固定训练checkpoint、同相机/对象数量/低层/谓词/schema。
+frozen: 全部训练参数、模型权重、技能/谓词词表、观测和控制器；零adaptation；只改变composition字段。
+tunable: None；追加评价至50可新revision，不能fine-tune后仍称zero-shot。
+run_matrix:
+- group: generalization
+  method: Full
+  task: T_C:G1
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Original
+  notes: 30episode/seed；已见原子＋未见组合
+- group: generalization
+  method: B2
+  task: T_C:G1
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: 空
+  notes: 30episode/seed；已见原子＋未见组合
+- group: generalization
+  method: Full
+  task: T_C:G2
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Original
+  notes: 30episode/seed；已见原子＋未见组合
+- group: generalization
+  method: B2
+  task: T_C:G2
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: 空
+  notes: 30episode/seed；已见原子＋未见组合
+training_budget: 0训练transitions/updates；2methods×2compositions×3seeds×30=360evaluation
+  episodes；ID比较复用同checkpoint2B日志。扩50=600，不默认增加新training job。
+evaluation: deterministic，冻结VLM生产Original cache，Full/B2相同case；报告每composition成功与配对ID差异。使用了测试结果调配composition时改标exploratory-generalization，而非未触碰holdout。
+logging: L_EVAL/L_DECISION＋seen/unseen原子表、canonical composition signature、source training
+  split hash、checkpoint hash前后、ID/OOD case IDs、未支持资产原因。
+required_files:
+- generalization_manifest.json
+- composition_audit.md
+- generalization_results.csv
+- generalization_report.md
+- stage_5a_summary.md
+plots: fig_5a_composition_success.svg/png：x=ID/G1/G2，y=success，Full/B2 mean across
+  seeds，无平滑。
+tables: generalization_results.csv：source_task、composition、method、seen_skills/predicates、unseen_signature、n_seeds/episodes、success_mean/std、ID_matched、delta_pp；不可混外观shift。
+criteria: PASS：组合划分真实有效、冻结评价可追溯；结果一般/较差可放附录或缩claim。只有同构重命名、训练见过该组合、需要新skill的case不算本Stage完成，写BLOCKED/不支持并不造数。
+failure_handling: 先查split泄漏与纯重命名→技能/predicate覆盖→controller/camera一致→goal/ID绑定→cache生成→policy行为。不要为好结果同时改变视觉、对象数与任务难度。
+rerun_allowed: YES，修绑定/评价bug或明确补50，不重训。
+tuning_allowed: None。
+writing_block: NO。
+next_stage: 6A
+execution_steps:
+- 读取G1/G2及source training split，核对seen skills/predicates。
+- 检验composition signature不是仅改ID字符串或纯随机位置。
+- 冻结Full/B2 checkpoint，确认无新训练与finetune。
+- 按既定prompt/schema为新初始case生产/加载一次cache。
+- 对两个composition、两method、三seed各30episode评价。
+- 复用对应ID结果，计算每composition成功与退化。
+- 如组合不成立则报告不支持，不编造泛化能力。
+- 生成manifest/report和stage_5a.json并停止。
+extra: ''

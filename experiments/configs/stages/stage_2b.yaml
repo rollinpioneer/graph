@@ -1,0 +1,131 @@
+id: 2B
+part: III
+name: Presentation Runs
+type: Presentation
+purpose: 以已基本确定的配置获取三个主任务、四个方法、三个seed的私人论文展示结果。
+paper: YES：标明所选任务/seed/checkpoint视图
+prerequisites: 2A报告及推荐config存在；T_A/T_B/T_C三任务真实绑定（允许报告中明确替换）；选定seed列表和presentation
+  manifest落盘；测试case/cache可用。
+inputs: 2A选定defaults/少量per-method overrides；默认T_A/T_B/T_C；B0/B1/B2/Full；seeds012；从头训练；当前verified
+  commit与平台；test_id前30固定。
+frozen: 每run配置、观测/合同/任务/reward/cache、checkpoint选择算法；使用同task dev选模型，不用单个test尖峰。
+tunable: None在已启动run内。补seed3/4、任务扩展或超参变更必须新presentation revision且预算单列。
+run_matrix:
+- group: main
+  method: B0
+  task: T_A
+  seeds: &id001
+  - 0
+  - 1
+  - 2
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B1
+  task: T_A
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B2
+  task: T_A
+  seeds: *id001
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: Full
+  task: T_A
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B0
+  task: T_B
+  seeds: *id001
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B1
+  task: T_B
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B2
+  task: T_B
+  seeds: *id001
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: Full
+  task: T_B
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B0
+  task: T_C
+  seeds: *id001
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B1
+  task: T_C
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: B2
+  task: T_C
+  seeds: *id001
+  budget: 131072
+  prior: 空
+  notes: 默认36新job；不是默认复用2A曲线拼接
+- group: main
+  method: Full
+  task: T_C
+  seeds: *id001
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 默认36新job；不是默认复用2A曲线拼接
+training_budget: 每job131,072 transitions=128updates；每16updates checkpoint＋20episode
+  dev；完成后selected checkpoint做30episode test_id。默认36新job；资源cap=2×N×d_ref。扩到5tasks为60主job，不自动执行。
+evaluation: 训练中dev前20；按3连续窗口选择各method自己的checkpoint；最终test_id前30、deterministic、Original。需50时仅追加20。同一seed三方法/四方法可共享初始case，训练环境轨迹自然不同。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL全套＋checkpoint_selection.json、selected seed标志、presentation
+  revision和全部可用run候选。
+required_files:
+- presentation_manifest.yaml
+- presentation_run_index.csv
+- checkpoint_selection.json
+- presentation_results.csv
+- seed_selection_notes.md
+- stage_2b_summary.md
+plots: 仅每run核查曲线；正式合并图交2C。run_success.svg/png：x=skill transitions、y=dev success，原始点＋MA3。
+tables: presentation_results.csv：task、family、method、training_seed、run_id、checkpoint/hash、step、dev_window_score、test_success_n/n/rate、return、completion_time、actual_budget；不先手工四舍五入再聚合。
+criteria: PASS：真实三任务矩阵及可追溯checkpoint/test日志齐备；不要求Full优于基线。某seed失败可PASS_WITH_NOTES并声明实际n或有限补3/4；某任务未绑定则BLOCKED该矩阵，不能拿两任务称三任务。
+failure_handling: 技术错误同seed重跑；普通差异小先保留结果，再在Paper View选择适当metric/子集。反复调参必须回到新探索revision，不在本run中隐式更改。
+rerun_allowed: YES，技术修复或有记录presentation revision。
+tuning_allowed: 本Stage运行内None；少量已登记方法适配只能在run前生效。
+writing_block: NO；本Stage未完成只阻塞最终Main Results数字，不阻塞正文其他部分。
+next_stage: 2C
+execution_steps:
+- 读取2A建议，绑定并核查第三任务，生成presentation manifest。
+- 锁定任务、各方法config与默认seeds，展开36个新job。
+- 从头运行128update配额，保存16update间隔开发评价。
+- 以每个task的dev连续3窗口规则选checkpoint，不按test挑选。
+- 在固定30个test_id case上评价冻结checkpoint。
+- 技术失败用同seed新attempt；需要额外seed只能依已记录理由补3/4。
+- 保存所有seed与checkpoint候选，标出拟展示三个seed及原因。
+- 汇总真实presentation_results和checkpoint selection。
+- 写stage_2b.json与summary，停止，不自动生成2C或消融。
+extra: ''

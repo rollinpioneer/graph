@@ -1,0 +1,48 @@
+id: 1B
+part: II
+name: Minimal Tuning
+type: Exploration
+purpose: 在实现正确的前提下，用最多6个单变量trial找到能正常学习的配置，不做grid。
+paper: 'NO'
+prerequisites: 1A完成但学习/数值现象不满足smoke；1A正常PASS则本Stage直接记录skipped，不启动job。若有权限bug先修并重验对应0B测试。
+inputs: 1A全量日志/checkpoint、D0默认config、v2.1源码、同D0 cache/split、seed0；trial从头开始，长度延长可从同配置同seed完整checkpoint继续且记录parent。
+frozen: 方法/奖励/任务/80-20/schema/patch/目标；single-factor trial；最多6个新增job。
+tunable: lr→训练长度→entropy→B→λQ；每量含默认最多3值，详第7.2章；只改一个量。
+run_matrix:
+- group: conditional_trial
+  method: B2或Full（只跑受影响者）
+  task: D0
+  seeds:
+  - 0
+  budget: 16384
+  prior: Full80/20；B2空
+  notes: 最多6个新job；length trial cap32,768；每job config显式登记
+training_budget: 默认每trial16,384/16updates，length trial32,768/32updates；评估间隔4updates×10episodes；总新增训练job≤6，每个cap物理时间2×N×d_ref。不要求把每个参数都试完。
+evaluation: 同1A；候选配置优先数值正常、真实成功出现、DP/Δ工作，再看dev最近3点均值；不是比较谁能击败baseline。被选配置若影响两个方法，在剩余trial额度中做另一方法确认。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL＋trial_id、hypothesis、changed_field、old/new、reason、accepted、parent_run与seen_results。
+required_files:
+- trial_registry.jsonl
+- tuning_history.jsonl
+- tuning_results.csv
+- selected_config.yaml
+- tuning_report.md
+- stage_1b_summary.md
+plots: minimal_tuning_success.svg/png：x=skill transitions，y=dev success，按单变量trial叠加、原始点不平滑；无数据时不造图。
+tables: tuning_results.csv：trial、method、changed_field、old/new、updates、success、DP_active、numeric_issue、selected；只作开发选择。
+criteria: 配置满足1A门即PASS停止；无需穷尽trial。1A已PASS则PASS_WITH_NOTES＋skipped。6个job用完仍无成功/通路失效写NEEDS_RERUN或结构问题报告，不无限搜索。硬资源缺失BLOCKED。
+failure_handling: 先实现与输入链，再按唯一调参顺序；length只延长真实训练；无成功不暗加curriculum/BC/reward。VLM自然关系不足可换已注册适合D0场景模板revision，不能篡改缓存。
+rerun_allowed: YES，限制在本Stage额度；新增授权另记revision。
+tuning_allowed: 仅上述五类量；hidden/batch只在资源明确原因且回归单测后改。
+writing_block: NO。
+next_stage: 2A
+execution_steps:
+- 检查1A；已PASS就写skipped并立即停止。
+- 按固定排查顺序确认不是mask/reward/合同/Verifier或重算bug。
+- 在trial_registry登记一个最有依据的单变量调整。
+- 使用seed0同D0数据链运行受影响方法，保存全部trial日志。
+- 每4updates评估10episode，检查真实成功与结构通路。
+- 满足smoke即停止搜索，保存selected_config。
+- 未满足且额度尚有才进入下一个有依据的值/参数，绝不做grid。
+- 核查是否需要对另一方法确认配置，计入6job上限。
+- 生成tuning_report和stage_1b.json，停止，不运行2A。
+extra: ''

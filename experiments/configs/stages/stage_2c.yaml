@@ -1,0 +1,52 @@
+id: 2C
+part: III
+name: Main Figure & Table Generation
+type: Packaging
+purpose: 只将2B真实结果转换成主图主表，不增加训练或评价。
+paper: 'YES'
+prerequisites: 2B至少有可用于展示的真实结果；presentation manifest和所有source hash可解析；无test日志则BLOCKED数字图表。
+inputs: 2B run index、train/dev/test logs、checkpoint selection、selected tasks/seeds、plot
+  config；同一已验软件profile中的Pandas/Matplotlib；不载入模型执行。
+frozen: 原始数值、source hash、指标公式；success分母；不插入未运行baseline；默认MA3仅用于显示。
+tunable: 仅展示：metric、明确task subset、mean/median（默认mean）、MA3或EMA(.3)二选一、坐标zoom；全部记录，不改raw。
+run_matrix:
+- group: report
+  method: B0/B1/B2/Full
+  task: 2B selected 3 tasks
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: 读取Original结果
+  notes: 0训练；0新增episode
+training_budget: 0 transitions、0 updates、0 environment seconds；只读取文件。
+evaluation: 无新评价；重算per-seed success、共同区间AUC及task-family均值，与原始episode逐项核对。
+logging: 输入/输出SHA、selection manifest、metric/smoothing版本、聚合层级、n/tasks/seeds/episodes、缺失值/截取范围和图表生成命令。
+required_files:
+- table_1_main_success.csv
+- table_2_efficiency.csv
+- figure_sources.json
+- plot_config.yaml
+- selection_manifest.yaml
+- stage_2c_summary.md
+plots: fig_1_<task>_learning.svg/png：x=skill transitions，y=dev success，四方法seed均值、MA3、SD；fig_2_family_result.svg/png：x=family，y=最终test
+  success，四方法、无平滑。每task独立画布。
+tables: Table1：Task、B0、B1、B2、Full，每格selected-seed mean±SD、n；Table2：Task、Method、AUC_common、time_to_70、success-conditioned
+  completion time、success_n、physical budget。AUC/时间不适用写N/A。
+criteria: PASS：每个图表值可回溯到2B真实source，重算误差≤1e-10（展示四舍五入前），图轴/标签/分母齐全。Full不领先仍PASS。缺源/不一致为NEEDS_RERUN报告脚本，不重新训练。
+failure_handling: 先source路径/hash→episode分母→seed/task聚合→共同横轴→平滑→图轴。禁止通过改原始CSV修图。
+rerun_allowed: YES，仅重生成派生图表；新selection revision。
+tuning_allowed: 仅展示设置，不能训练调参。
+writing_block: NO；图表不齐只阻塞最终结果插图。
+next_stage: 按证据缺口3A/3B；或6A
+execution_steps:
+- 加载2B真实source及presentation/selection manifest。
+- 校验所有run/checkpoint/cache hash与样本分母。
+- 用原始episode重算per-seed success与duration。
+- 用原始dev曲线计算共同横轴AUC与time_to_70。
+- 按任务/seed层级聚合，保留所选子集标签。
+- 生成Figure1、Figure2、Table1及可用Table2。
+- 逐图保存smoothing、轴范围、source与selected seed说明。
+- 生成figure_sources和stage_2c_summary；更新状态后停止。
+extra: ''

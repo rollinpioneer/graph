@@ -1,0 +1,115 @@
+id: 4A
+part: V
+name: Actor Dependence Diagnostics
+type: Mechanism
+purpose: 分别测同一真实快照上的Actor敏感性与闭环后果，区分使用结构和使用得有益。
+paper: OPTIONAL
+prerequisites: 至少一个真实Full checkpoint及evaluation decision日志；默认2B T_C三个seed；真实有效候选/goal/mask、GRU
+  prefix可重建；不需新训练。
+inputs: T_C Full seeds012 selected checkpoints；test_id前20；每seed从实际Original episode按episode轮询取至多64快照（每episode≤4，候选≥2）；固定source/history、DP
+  shuffle seed、原prior及合法target-swap编辑。
+frozen: 参数、任务、感知、合同、mask、reward、原始快照内容；干预只发生在规定的特征/软边输入，不反向写真实事实。
+tunable: None；可缩减至1个已有seed作首轮，但必须标n=1；默认3seed。
+run_matrix:
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Original
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: DK=0
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: DP=0
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: DP shuffle
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: remove prior
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+- group: snapshot+closed_loop
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: target-swap
+  notes: 64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A
+training_budget: 0训练transitions/updates。最多3×64×6=1,152个固定快照前向；最多3×6×20=360个闭环evaluation
+  episodes，已有同checkpoint/case的Original可复用。物理时间另计，不把前向次数算环境步。
+evaluation: 快照：相同历史/GRU、candidate/goal绑定，逐条件重算logits，记录JS、KL(Poriginal||Pcondition)、argmax变化。闭环：各condition独立reset同初始case，从t0持续施加干预，deterministic；后续状态允许自然分化。
+logging: L_EVAL＋原始/干预action distributions、masked support、DK/DP/RMS、Δ、selected_skill、JS/KL、argmax
+  change、快照/原history引用、condition适用性、before/after模型hash；L_DECISION闭环全量。
+required_files:
+- intervention_manifest.json
+- snapshot_diagnostics.csv
+- closed_loop_diagnostics.csv
+- actor_dependence_report.md
+- stage_4a_summary.md
+plots: fig_4a_js.svg/png：x=condition，y=per-snapshot JS，按seed汇总原始分布；fig_4a_closed_loop.svg/png：x=condition，y=success，selected-seed
+  mean，无平滑。
+tables: actor_interventions.csv：condition、eligible_snapshots、mean_JS/KL、argmax_change_rate、Δ_RMS、closed_loop_n/success、source_checkpoint；single-step与closed-loop分开。
+criteria: PASS表示诊断完整、干预实现正确；Actor变化不明显仍可PASS_WITH_NOTES并报告未见依赖证据。固定快照DP=0与remove-prior应得到相同分布（FP32tol），不一致为NEEDS_RERUN。非零JS只说明敏感，不自动说明有益。
+failure_handling: 确认快照/history一致→candidate/goal对齐→干预是否生效→DP本来是否零→基础margin→mask单候选。只有在多项合法非退化case都不响应时写结构问题报告。
+rerun_allowed: YES，仅重复评价/修诊断代码，参数冻结。
+tuning_allowed: None。
+writing_block: NO；缺证据就不写Actor有益利用。
+next_stage: 4B
+execution_steps:
+- 校验Full checkpoint/hash和真实Original decision日志。
+- 按固定round-robin规则取最多64个真实快照/seed，不按reward选快照。
+- 实现DK零、DP零、有效候选DP derangement、先验删除和target-swap。
+- 固定snapshot/history/mask测action分布，验证DP0与remove-prior等价。
+- 记录JS/KL/argmax/残差，目标行与对象绑定不能错位。
+- 对每condition从相同初始case独立跑20episode闭环，持续施加干预。
+- 分别汇总固定状态敏感性与真实最终success，记录N/A分母。
+- 校验模型权重未变，生成actor_dependence_report和stage_4a.json并停止。
+extra: '### 干预的精确定义
+
+  `DK=0`：只将进入F_K的DK置零，重算uK/b及依赖uK的prior branch；DP本身仍为原始四路结果。它是特征干预，不声称对应某个真实合同图。
+
+  `DP=0`：固定c、uK，prior输入置零，因zero-anchor使Δ=0。
+
+  `shuffle DP`：仅在同snapshot允许候选间将整个goal-aligned DP矩阵作循环非零offset置换；offset从1..K−1均匀抽取；不乱排goal行/对象绑定，K<2不适用。
+
+  `remove prior`：删除全部语义及对应反向边后重新四路编码；同快照的GK/DK/context不变。
+
+  `target-swap`：第4B冻结算法；无合法对写N/A。
+
+  JS使用自然对数及同一个有效mask支持集；零概率项按0log0=0处理，不对padding计算KL。原始/干预分布均保存，不只输出一个距离。'

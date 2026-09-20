@@ -1,0 +1,55 @@
+id: 0A
+part: I
+name: Environment & Manifest Freeze
+type: Infrastructure
+purpose: 将文档默认变为真实可识别的代码、环境、任务和接口；建立后续Agent无歧义的运行入口。
+paper: 'NO'
+prerequisites: 当前v2.1规范、v2.1接口包与本计划存在；允许读项目文件。无训练checkpoint前置。API密钥只检查可用性，不读取/打印值。
+inputs: 读取sources中的规范/接口/prompt；manifests初始模板；当前worktree和git（MUST_BIND）；实际训练host、GPU/driver、已有controller/观测/评价器、任务资产与标定记录。历史repo名称只能作查找线索，不作为已确认工作分支。
+frozen: 第2章方法核心、relation schema、80/20、真实奖励权限；主RL路线为项目内PyTorch SMDP-PPO；不迁移旧奖励方法为主方法。
+tunable: 仅依赖兼容profile、目录/入口映射、num_env与view分块、资产绑定；无性能调参。
+run_matrix:
+- group: bootstrap
+  method: Infrastructure
+  task: D0/T_A/T_B/T_C/T_D/T_E templates
+  seeds:
+  - 0
+  budget: 0
+  prior: 不调用
+  notes: 1次host/manifest核验；仅按已有记录估计时长
+training_budget: 训练0 transitions、0 PPO updates、0性能episode。无机器人动作默认；若项目既有许可允许，可做≤12次控制器接口调用校准d_ref，标为基础设施校准，不入RL结果。不具备许可时使用既有校验记录或MUST_BIND。
+evaluation: 不做成功率评估；import、依赖解析、RGCN最小前/反向和checkpoint round-trip各1次。不以这些检查代替0B的T01–T25。
+logging: L_RUN的版本/资源子集＋source_hashes、依赖解析输出、git dirty diff hash、entrypoint检查、资源缺项；无训练loss日志。
+required_files:
+- source_inventory.json
+- environment_probe.json
+- binding_report.md
+- implementation_inventory.md
+- resolved_defaults.yaml
+- entrypoints.yaml
+- software_manifest.yaml
+- runtime_manifest.yaml
+- task_manifest.yaml
+- splits.json
+- stage_0a_summary.md
+plots: None；只输出表格和缺项报告。
+tables: binding_table.csv：field、proposed、observed、status、evidence；dependency_table.csv：package、requested、resolved、import_status。无均值。
+criteria: PASS：选定host软件能解析/导入，核心代码入口可定位，D0及2A两个任务所需controller、camera、verifier、deadline和evaluator完成真实绑定；T_B/D/E可先标可选未绑定。BLOCKED：核心资产、code、host、账户region或安全许可缺失。可完成资料预检但不称完整0A
+  PASS。
+failure_handling: 先查源文件/hash→项目路径/分支→依赖冲突→核心模块缺失→资产→感知/合同/评价器→安全/时间→API配置。缺代码可按第3.3章在本Stage实现冻结接口，但不假装外部controller存在。
+rerun_allowed: YES，补绑定后新revision；不覆盖前次报告。
+tuning_allowed: 只允许依赖/资源/绑定调整，不允许性能优化。
+writing_block: NO；只阻塞尚未绑定平台上的执行，不阻塞Introduction/Method。
+next_stage: 0B
+execution_steps:
+- 读取本计划与v2.1原文件并记录SHA-256。
+- 定位用户指定worktree；记录完整commit和dirty diff，未指定则写MUST_BIND。
+- 只读盘点host、CUDA、Python、包版本与文件系统权限。
+- 在独立虚拟环境解析第3.2章推荐profile；不覆盖系统Python。
+- 映射或实现第3.3章冻结代码入口，保存入口参数和hash。
+- 绑定技能合同、Fact Verifier、独立任务评价器和安全结束规则。
+- 将D0、T_A、T_C结构模板映射到真实资产并定义train/dev/test初始化池。
+- 登记时钟、deadline、timeout、d_ref及GPU/view分块；标出剩余MUST_BIND。
+- 生成所有manifest与implementation/binding报告，执行轻量import/round-trip检查。
+- 按实际readiness写stage_0a.json；有核心缺项则BLOCKED，不自动执行0B。
+extra: ''

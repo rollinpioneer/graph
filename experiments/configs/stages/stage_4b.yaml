@@ -1,0 +1,104 @@
+id: 4B
+part: V
+name: Prior Robustness Evaluation
+type: Robustness
+purpose: 在冻结模型上测先验缺省、缺边、端点错配及合格无关边的影响，不引入训练corruption。
+paper: OPTIONAL
+prerequisites: Full T_C三个冻结checkpoint、test_id前20和原始cache可用；target-swap编辑与irrelevant适用性仅依task/初始输入判定。3C完成时可加入已训练A_B，不作为Full-only执行的前置。
+inputs: 默认1个task T_C，Full seeds012；Original/No-prior/Deletion/Target-swap/Irrelevant；独立prior_robustness_eval
+  seed；相同20初始cases和固定checkpoint。
+frozen: 全部模型参数、任务/事实/合同/mask/reward、每条件checkpoint；deletion p=.5，swap1edge，irrelevant最多1edge且总预算≤8。
+tunable: None；可按需一次扩至50episode，或加第2task。使用已有A_B属显式scope扩展，不新增训练。
+run_matrix:
+- group: robustness
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Original
+  notes: 20episode/seed；N/A不计作扰动成功
+- group: robustness
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: No-prior
+  notes: 20episode/seed；N/A不计作扰动成功
+- group: robustness
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Deletion(p=.5)
+  notes: 20episode/seed；N/A不计作扰动成功
+- group: robustness
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Target-swap(1)
+  notes: 20episode/seed；N/A不计作扰动成功
+- group: robustness
+  method: Full frozen
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: Irrelevant(+1)
+  notes: 20episode/seed；N/A不计作扰动成功
+training_budget: 0训练updates/transitions；默认最多1task×3seeds×5conditions×20=300评价episode（适用性可能减少）；一次扩50为750。第二task×2；显式加入A_B再×2。不要默认叠加所有扩展。
+evaluation: deterministic；每case编辑一次并固定整episode，method/训练seed共用同case边编辑。按条件适用子集重报Original；Original全部为空仍可报告No-prior，但不冒称未见错误类型鲁棒。
+logging: L_EVAL/L_DECISION＋original/edited edge lists与hash、semantic forward/reverse列表、实际删数、EMPTY_SOURCE/NO_EDGE_DELETED/N_A、独立无关性证据、residual/argmax、成功/失败。
+required_files:
+- robustness_cases.json
+- edited_priors.jsonl
+- robustness_metrics.csv
+- applicability_table.csv
+- robustness_report.md
+- stage_4b_summary.md
+plots: fig_4b_success.svg/png：x=condition，y=绝对success，mean across training seeds；fig_4b_degradation.svg/png：x=condition，y=相对同子集Original的百分点变化；无平滑。
+tables: robustness_metrics.csv：task、method、condition、eligible_case_n、training_seed_n、episodes_n、success_rate、original_matched_rate、delta_pp、empty_rate、residual_p95；N/A理由另表。
+criteria: PASS：适用条件真实完成、编辑/分母/对照正确；趋势明显或无明显差异均可停止。Irrelevant不适用并不阻塞；不制造任务来凑表。N/A误算成功、改mask/reward、编辑逆边遗漏为NEEDS_RERUN。
+failure_handling: 先编辑合法性/反向边→源cache→pairing→checkpoint→环境版本。语义错配不一定错误，禁止为让Full更好而挑编辑seed。结果差时收缩robustness
+  claim。
+rerun_allowed: YES，诊断bug或明确一次扩50；不重训。
+tuning_allowed: None。
+writing_block: NO。
+next_stage: 5A或6A
+execution_steps:
+- 读取冻结Full、原始cache及20个固定test case。
+- 对每case生成5条件，并验证只编辑语义软边。
+- 对每次编辑重建反向消息边、保存seed/hash/适用性。
+- 先判定Target-swap与Irrelevant是否有合法操作，无则N/A。
+- 在相同初始case执行20episode/condition/seed，不更新参数。
+- 在每个适用子集重算Original参考，避免分母错配。
+- 生成success、退化百分点、残差与适用性表；趋势已够清楚则停止。
+- 写robustness_report和stage_4b.json，不自动追加50或进入5A。
+extra: '### 测试编辑算法（唯一版本）
+
+  **Original**：用原始解析/校验/局部去重后soft edges，不修语义。
+
+  **No-prior**：整份空，不改别的输入。
+
+  **Deletion**：每条语义正向边独立以0.5概率删；不分类型、不保证留边或删边；原始空记EMPTY_SOURCE，恰好无删除记NO_EDGE_DELETED并保留，不能拒绝重抽。
+
+  **Target-swap**：枚举全部合法(原边,new target)对；固定source/type/effect_ref；排除原target、自指supports、已有同型边、局部合同冗余和独立任务禁止项；relevant-to-goal仍指向现有goal；在全部合法对中均匀选一对，替换1边，保持边数/类型数。不存在候选对则N/A。该操作名是端点错配，不保证语义必错；只有独立提前标注的subset可称semantic-wrong。
+
+  **Irrelevant**：只在已有且任务明确定义不影响目标/关键资源/执行路径、并在原GK/GH消息图中与目标不连通的干扰组件内，枚举合法非重复非合同冗余supports及有效source
+  effect锚点，均匀加1边。原prior已有8边、无独立无关性依据或无合法边均N/A；不删原边腾位、不新造节点。
+
+  先操作语义边再统一生成反向消息边；对应逆边不能残留。编辑不改真实facts/goal/skill/mask/reward。全局读出可能使无关组件有响应，所以Irrelevant不是强制Δ=0的单测。'

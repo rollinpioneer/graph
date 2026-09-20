@@ -1,0 +1,53 @@
+id: 6B
+part: VII
+name: Private Paper View Selection
+type: Packaging
+purpose: 从Raw Archive选出真实且最有解释价值的任务、seed、checkpoint、metric和qualitative case。
+paper: YES：展示选择规范
+prerequisites: 6A索引完成；有真实可用结果；已有2B时主表只选2B；仅有2A时允许私人探索Results view并标provisional，不冒称2B已经完成。
+inputs: raw_archive_index、checkpoint/evaluation索引、task suitability、dev checkpoint证据、已查看结果范围、paper
+  story draft；不重新执行任何模型。
+frozen: 原始结果不变；每个selection必须有source；同一学习曲线只属于同一run，不能跨seed/attempt拼成best-of曲线。
+tunable: 展示层task subset、3个seed选择、每method合理dev checkpoint、metric、MA3或EMA(.3)、axis/zoom、主文/附录分配；全部留记录。
+run_matrix:
+- group: paper_view
+  method: Selected actual methods
+  task: 3主task默认；或标注的exploratory subset
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 0
+  prior: 按实际评价条件
+  notes: 允许从0..4真实seed选3；不暗示未选择总体
+training_budget: 0训练、0新评价；只能选择/重算现有真实文件。
+evaluation: 选择后重算图表数值并与source逐项核对；checkpoint优先现有dev三窗口结果；换选时保存理由、查看过的数据范围。
+logging: selection_id、view_revision、run_id/task/seed/checkpoint、metric、smoothing/window、subset、reason、source
+  file/hash、selected_from、selection_data_used、n_attempted/n_selected。
+required_files:
+- private_paper_selection_manifest.yaml
+- selection_manifest.yaml
+- selection_report.md
+- qualitative_case_manifest.json
+- stage_6b_summary.md
+plots: preview_*仅用已选真实数据，沿用2C/3/4/5对应轴和smoothing；没有数据不生成结果图。
+tables: selection_table.csv：figure/table/cell、run_id、task、seed、checkpoint、metric、source、reason、selection_scope；一项展示证据一行。
+criteria: PASS：全部拟展示数值/曲线/case有完整来源且标签准确；无需包含所有seed/失败run。找不到至少一个真实qualitative episode可PASS_WITH_NOTES并标缺口；不能用toy冒充实机case。
+failure_handling: 先查来源→checkpoint开发证据→seed正常与性能选择区别→subset范围→聚合→措辞。差异不清楚可以不写优势，不通过截轴和择seed暗示稳定总体增益。
+rerun_allowed: YES，新selection revision；raw不变。
+tuning_allowed: 仅展示参数。
+writing_block: NO。
+next_stage: 6C
+execution_steps:
+- 读取6A完整索引和任务解释价值报告。
+- 确定主叙事只围绕已观察到的现象，不预定Full必须赢。
+- 选择任务及主文/附录范围，记录排除与纳入原因。
+- 默认选012三seed；补到5后选3必须登记全部候选和具体理由。
+- 使用各method合理dev checkpoint，记录不同训练step。
+- 选择success/AUC/稳定性等真实metric，冻结展示smoothing和坐标。
+- 选择至少一个可解释的真实episode，保留完整facts→actions→outcome链。
+- 生成private_paper_selection_manifest及同内容规范selection文件。
+- 更新stage_6b.json后停止，不重新训练或自动执行6C。
+extra: '### 最小selection语义
+
+  保留selection_mode=all_available / representative / selected_high_performing / illustrative_case；实际选择较好seed时不能写representative。允许每method不同seed集合，但必须标nonpaired_selected_seeds，不能据此画配对改善。默认尽量同集合；不要求把全体未选结果塞进主文。'

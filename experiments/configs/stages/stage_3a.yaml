@@ -1,0 +1,63 @@
+id: 3A
+part: IV
+name: Dual-Difference Ablation
+type: Ablation
+purpose: 在一个先验具有解释价值的任务中比较DP与DH，隔离第二次差分。
+paper: YES；第一批为exploratory mechanism evidence
+prerequisites: 2A有T_C Full三个seed、可追溯config和checkpoint；A_DD开关通过T25。可在2B之前执行；无匹配Full则将补跑Full显式计入本Stage矩阵。
+inputs: T_C默认或2A选定1个有合法非空prior的task；Full源为2A同task seeds012；A_DD同样seeds从头训练；同task cache、同预算64updates、相同其余超参、平台/commit语义。
+frozen: 只改prior输入DP→DH；空prior仍显式0；DK主通路、F_P、B、Q target、80/20、reward、预算、其余超参不变。
+tunable: None；允许资源分块，不改有效batch；需不同稳定化适配时降级为适配比较，不称单因素。
+run_matrix:
+- group: reference
+  method: Full
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 复用2A匹配Full；0新增训练
+- group: main
+  method: A_DD
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 3新job；未训练Full不得冒称复用
+training_budget: A_DD每job65,536=64updates；每8updates×20dev episodes。Full复用0新训练；最终比较可对两个method
+  selected checkpoint各做30个test_id，最多180evaluation episodes，日志已有且完全匹配可复用。
+evaluation: checkpoint用同task dev连续3点选；test_id前30、deterministic、Original；同seeds、同case；可追加到50但不强制。报告实际empty
+  prior比例，A_DD空输入0。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL＋A_DD具体input-source标记、empty/nonempty分组、DK/DH/DP
+  RMS、Δ饱和、Q loss；Full reuse provenance。
+required_files:
+- comparison_manifest.json
+- ablation_dd.csv
+- reused_full_runs.json
+- dd_report.md
+- stage_3a_summary.md
+plots: fig_3a_dd_learning.svg/png：x=skill transitions，y=dev success，Full/A_DD，seed均值＋MA3；fig_3a_prior_input.svg/png：x=update，y=有效候选输入RMS，按方法独立说明量不同，不当价值。
+tables: ablation_dd.csv：task、method、n_seeds、test_success、AUC_common、checkpoint_step、empty_rate、prior_input_RMS、residual_RMS、source_run；每seed先算再均值。
+criteria: PASS：Full/A_DD匹配比较完成、空prior接口正确、真实曲线与差异可解释；无差异或A_DD更好也PASS并限制claim。全DP严格零先排查T23与输入，不能用胜负门替代工程门。
+failure_handling: 先核对A_DD是否空prior误用DK→是否改变额外架构/超参→Full复用hash→target/梯度→数值。无收益不重新加static
+  prior。
+rerun_allowed: YES，技术错误时；新预算比较须同时有匹配Full。
+tuning_allowed: None。
+writing_block: NO；只阻塞“双差分优于直接DH”的经验句。
+next_stage: 第一批在此暂停，整理Results；之后显式2B或3B
+execution_steps:
+- 读取2A的机制task选择，默认T_C，不按test成绩重新挑task。
+- 校验Full三个源run的全部对照条件与预算，登记复用。
+- 构造A_DD唯一开关并运行T25空prior/非空prior检查。
+- 从头运行A_DD三个seed，每8updates评估20个dev episode。
+- 按相同dev规则选Full/A_DD的checkpoint。
+- 在同一30个test_id case评价或复用完全相同的已有评价。
+- 计算success/AUC与输入残差行为，保留负向/接近结果。
+- 完成dd_report、source manifest和stage_3a.json。
+- 停止扩实验，交付第一版Results证据，不自动跑3B。
+extra: ''

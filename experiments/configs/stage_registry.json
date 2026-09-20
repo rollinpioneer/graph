@@ -1,0 +1,1431 @@
+[
+  {
+    "id": "0A",
+    "part": "I",
+    "name": "Environment & Manifest Freeze",
+    "type": "Infrastructure",
+    "purpose": "将文档默认变为真实可识别的代码、环境、任务和接口；建立后续Agent无歧义的运行入口。",
+    "paper": "NO",
+    "prerequisites": "当前v2.1规范、v2.1接口包与本计划存在；允许读项目文件。无训练checkpoint前置。API密钥只检查可用性，不读取/打印值。",
+    "inputs": "读取sources中的规范/接口/prompt；manifests初始模板；当前worktree和git（MUST_BIND）；实际训练host、GPU/driver、已有controller/观测/评价器、任务资产与标定记录。历史repo名称只能作查找线索，不作为已确认工作分支。",
+    "frozen": "第2章方法核心、relation schema、80/20、真实奖励权限；主RL路线为项目内PyTorch SMDP-PPO；不迁移旧奖励方法为主方法。",
+    "tunable": "仅依赖兼容profile、目录/入口映射、num_env与view分块、资产绑定；无性能调参。",
+    "run_matrix": [
+      {
+        "group": "bootstrap",
+        "method": "Infrastructure",
+        "task": "D0/T_A/T_B/T_C/T_D/T_E templates",
+        "seeds": [
+          0
+        ],
+        "budget": 0,
+        "prior": "不调用",
+        "notes": "1次host/manifest核验；仅按已有记录估计时长"
+      }
+    ],
+    "training_budget": "训练0 transitions、0 PPO updates、0性能episode。无机器人动作默认；若项目既有许可允许，可做≤12次控制器接口调用校准d_ref，标为基础设施校准，不入RL结果。不具备许可时使用既有校验记录或MUST_BIND。",
+    "evaluation": "不做成功率评估；import、依赖解析、RGCN最小前/反向和checkpoint round-trip各1次。不以这些检查代替0B的T01–T25。",
+    "logging": "L_RUN的版本/资源子集＋source_hashes、依赖解析输出、git dirty diff hash、entrypoint检查、资源缺项；无训练loss日志。",
+    "required_files": [
+      "source_inventory.json",
+      "environment_probe.json",
+      "binding_report.md",
+      "implementation_inventory.md",
+      "resolved_defaults.yaml",
+      "entrypoints.yaml",
+      "software_manifest.yaml",
+      "runtime_manifest.yaml",
+      "task_manifest.yaml",
+      "splits.json",
+      "stage_0a_summary.md"
+    ],
+    "plots": "None；只输出表格和缺项报告。",
+    "tables": "binding_table.csv：field、proposed、observed、status、evidence；dependency_table.csv：package、requested、resolved、import_status。无均值。",
+    "criteria": "PASS：选定host软件能解析/导入，核心代码入口可定位，D0及2A两个任务所需controller、camera、verifier、deadline和evaluator完成真实绑定；T_B/D/E可先标可选未绑定。BLOCKED：核心资产、code、host、账户region或安全许可缺失。可完成资料预检但不称完整0A PASS。",
+    "failure_handling": "先查源文件/hash→项目路径/分支→依赖冲突→核心模块缺失→资产→感知/合同/评价器→安全/时间→API配置。缺代码可按第3.3章在本Stage实现冻结接口，但不假装外部controller存在。",
+    "rerun_allowed": "YES，补绑定后新revision；不覆盖前次报告。",
+    "tuning_allowed": "只允许依赖/资源/绑定调整，不允许性能优化。",
+    "writing_block": "NO；只阻塞尚未绑定平台上的执行，不阻塞Introduction/Method。",
+    "next_stage": "0B",
+    "execution_steps": [
+      "读取本计划与v2.1原文件并记录SHA-256。",
+      "定位用户指定worktree；记录完整commit和dirty diff，未指定则写MUST_BIND。",
+      "只读盘点host、CUDA、Python、包版本与文件系统权限。",
+      "在独立虚拟环境解析第3.2章推荐profile；不覆盖系统Python。",
+      "映射或实现第3.3章冻结代码入口，保存入口参数和hash。",
+      "绑定技能合同、Fact Verifier、独立任务评价器和安全结束规则。",
+      "将D0、T_A、T_C结构模板映射到真实资产并定义train/dev/test初始化池。",
+      "登记时钟、deadline、timeout、d_ref及GPU/view分块；标出剩余MUST_BIND。",
+      "生成所有manifest与implementation/binding报告，执行轻量import/round-trip检查。",
+      "按实际readiness写stage_0a.json；有核心缺项则BLOCKED，不自动执行0B。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "0B",
+    "part": "I",
+    "name": "Unit & Invariant Tests",
+    "type": "Unit Test",
+    "purpose": "验证v2.1公式、权限与PPO数据链，不检验机器人策略性能。",
+    "paper": "NO",
+    "prerequisites": "0A至少readiness.core_code=true、软件可运行；规范/schema及fixture存在。可在robot未绑定时独立执行纯逻辑测试，但不得自动把0A升级PASS。",
+    "inputs": "当前代码commit和resolved_defaults；生产nominal/graph/policy/targets/buffer组件；tests/fixtures；v2.1 schema；seed32(unit_fixture,...,0)；CPU为必需，目标GPU可用时补测。无cache请求、无checkpoint训练。",
+    "frozen": "全部方法不变量、测试期望和fixture语义；不能通过放宽公式来让错误实现通过。",
+    "tunable": "None；只修bug。数值tol若因设备调整必须给CPU对照和原因，不改变严格零性质。",
+    "run_matrix": [
+      {
+        "group": "invariants",
+        "method": "Production components + controlled fixtures",
+        "task": "T01–T25",
+        "seeds": [
+          0
+        ],
+        "budget": 0,
+        "prior": "空/合法/非法fixture",
+        "notes": "CPU 25项；GPU补对应数值项，不是25个RL runs"
+      }
+    ],
+    "training_budget": "0真实skill transitions，0科研PPO updates，0性能episode；允许test内dummy backward/optimizer验证梯度。",
+    "evaluation": "逐项T01–T25执行；CPU FP64/FP32及可用GPU FP32。expected/tolerance在下表。所有实际收集的测试都报告，包括失败与不适用设备。",
+    "logging": "L_TEST完整；保留pytest JUnit XML、stdout、traceback、fixture/code/schema hash；统计passed/failed/skipped，不产生训练success率。",
+    "required_files": [
+      "junit.xml",
+      "test_results.json",
+      "test_results.csv",
+      "fixture_manifest.json",
+      "invariant_report.md",
+      "stage_0b_summary.md"
+    ],
+    "plots": "None；可选test_status.png（x=test ID，y=0/1，原始无平滑），不得称学习曲线。",
+    "tables": "test_results.csv：test_id、device、dtype、expected、actual、tolerance、status、failure_location；按测试计数，不以toy=25项。",
+    "criteria": "PASS：T01–T25生产组件CPU检查全部通过；目标GPU未绑定可PASS_WITH_NOTES并记录GPU未验。NEEDS_RERUN：任何权限/target/mask错误；BLOCKED：核心生产组件缺失。不能用skip代替通过。",
+    "failure_handling": "按测试失败定位，不做超参搜索；优先T03污染、T10 mask、T12 target、T14边界，再alignment、数值和梯度。修复后重跑受影响测试及完整CPU套件。",
+    "rerun_allowed": "YES，技术修复后重跑。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO；阻塞未经验收的1A训练，不阻塞方法写作。",
+    "next_stage": "0C",
+    "execution_steps": [
+      "读取当前commit、schema、配置和fixture hash。",
+      "确认测试调用生产组件，而非独立伪实现。",
+      "先运行T01–T09的逻辑与关系校验。",
+      "运行T10–T18的数据链、梯度与prior重算测试。",
+      "运行T19–T25时间、权限、界、GRU、传播和消融开关测试。",
+      "目标GPU可用时补FP32数值/梯度子集并记录设备差异。",
+      "修复本Stage内发现的实现bug，保留diff并重跑受影响项。",
+      "汇总全部通过、失败、未运行项和容差，生成invariant report。",
+      "写stage_0b.json及summary；不启动VLM生成或训练。"
+    ],
+    "extra": "### Stage 0B的逐项测试规范（T01–T25）\n\nCPU逻辑期望精确相等；FP32标准比较默认 `atol=1e-6, rtol=1e-5`；FP64手算默认 `atol=1e-10, rtol=1e-9`。空prior复用与零锚定必须严格零；不用宽容差掩盖两条不一致路径。GPU先保持FP32；目标GPU与CPU逐元素结果不要求逐bit相同，但零通路仍显式复用。\n\n| ID / test filename | 输入与procedure | expected result / tolerance / PASS |\n|---|---|---|\n| T01 `tests/test_zero_prior.py::test_dp_zero` | 固定6–10节点合同fixture；facts含T/F/U；prior为空；至少2个非空候选patch，分别做四路前向 | 直接复用K当前及K后继；所有DP元素严格0；形状、dtype一致 |\n| T02 `tests/test_zero_prior.py::test_residual_zero` | 任意合法context与随机已初始化F_P，输入DP=0；另测原始cache为空 | uP和Δ严格0，Full概率与同参数合同分数分布一致；概率tol FP32；不是与独立训练B2权重比较 |\n| T03 `tests/test_nominal_isolation.py` | 真实Fact Store含timestamp、attempt、quality、图模板；连续生成多个候选patch并尝试写入overlay | 真实序列化SHA256前后完全相同；不可变写入抛异常；观测/时钟/attempt/reward不变 |\n| T04 `tests/test_node_alignment.py` | GK/GH及2个候选的两种后继；加入1条合法soft edge | node IDs、顺序、类型、argument binding逐项相同；只有边集合或声明的临时facts不同，精确通过 |\n| T05 `tests/test_goal_alignment.py` | 含一个已完成goal、一个未完成goal和一个负目标；多个goal排列 | goal_refs、sign、行mask在四路相同；完成goal不删；padding重排后读出按ID还原一致，FP32tol |\n| T06 `tests/test_three_valued_logic.py` | 正/负文字各测试T/F/U；AND包含未知；条件效果guard为U | U既不满足正前置也不满足负前置；非关键U不阻塞无关动作；UNKNOWN guard仅保留共同确定效果，精确 |\n| T07 `tests/test_effect_conflicts.py` | 同一fact同时ADD/DEL、ADD/UNKNOWN、两个互斥Held等 | 注册/patch合并时报可定位异常；不按列表先后覆盖；合法非冲突对照通过 |\n| T08 `tests/test_relation_validation.py::test_effect_ref` | 合法ADD锚点、合法DEL锚点、未知ID、target类型错、其他action效果、纯UNKNOWN锚点 | 仅合法source效果且已有ADD/DEL邻接者通过；给goal外部ID需正确规范化；metadata不新增edge/fact |\n| T09 `tests/test_relation_validation.py::test_no_order` | SOFT_ORDER JSON以及missing effect_ref JSON；检查registered relation IDs | schema拒绝两个非法样例；生产relation表无ORDER及反向ORDER；历史toy文件出现该字符串不算生产违规 |\n| T10 `tests/test_ppo_masks.py` | 存储candidate IDs/mask/action/oldlogp；未更新参数重算；故意更换顺序并以ID映射，再故意改mask | 正确重算old/new logp在tol内相同；合法重排等价；mask hash变化主动报错；不以新mask解释旧动作 |\n| T11 `tests/test_q_executed_only.py` | leaf `q_values`形状[2,3]，executed=[0,2]，两个真实targets；loss.backward | 未选择的q_values输出项梯度严格0，selected有非零梯度；共享上游因集合池化收到梯度不是违规 |\n| T12 `tests/test_q_target_detach.py` | oldVnext requires_grad=True；非终止真实r/Gamma；构造Q target | yQ.requires_grad=False、无grad_fn；Q backward不更新oldV；V target同样detach |\n| T13 `tests/test_shared_gradients.py` | 非退化有效prior fixture；分别只反传actor、V、Q loss；4路E保留autograd路径 | 同一E对象/参数ID；各loss至少一项预期共享参数梯度有限且非零；不是要求所有参数或零prior分支都有梯度 |\n| T14 `tests/test_smdp_boundaries.py` | 三种边界：terminated、valid truncation、buffer end；最后状态V=2，reset状态V=99，r=.3，Gamma=.9 | terminated yQ=.3；其他有效bootstrap yQ=2.1；不读取99；GAE不跨reset；FP64tol |\n| T15 `tests/test_permutation.py` | 候选重排、对象ID一致重命名、goal行重排；同时重排对应边/参数/mask | 按canonical真实身份逆映射后logit/probability一致，FP32tol；精确tie用ID规则，不按原列表位置 |\n| T16 `tests/test_cache_key_isolation.py` | task名相同但图像字节、split、goal、绑定、schema、region分别改变一次；另改JSON key顺序 | 每个语义输入改变都变key；只改变无序键顺序不变；数据split不相互覆盖 |\n| T17 `tests/test_prior_episode_fixed.py` | 3个env、4个episode，跨多次rollout边界；固定RNG状态 | 只在episode_start抽一次；同episode prior hash不变；各env独立；不要求小样本恰好80/20 |\n| T18 `tests/test_recompute.py` | 同一stored buffer执行4个PPO epochs的前向及一次dummy update，用spy计数API/RNG/E调用 | 重算E且使用当前参数；API调用0、prior抽样0；读取stored edges/mask；不能以detach旧D替代重算 |\n| T19 `tests/test_duration_discount.py` | d=1s、2s和奖励在区间内0.5s的手算事件；episode起点累计权重 | Gamma=.99、.9801；reward按真实事件偏移折扣；w递乘；技能耗时非正拒绝；FP64tol |\n| T20 `tests/test_permissions.py` | 只改prior边或传入拒绝关系，真实task/facts不变；检查mask/evaluator输入schema | candidate/mask/reward定义与prior无关；evaluator不接DK/DP；静态ZH不能偷进Full基础GRU/context |\n| T21 `tests/test_prior_bound.py` | s取大正/负及0；B=.5，多个候选 | abs(Δ)≤B+1e-7；允许动作的概率比在exp(±2B)内（FP32tol）；A_B不要求该界 |\n| T22 `tests/test_recurrent_prefix.py` | 两env不同历史，连续片段与全prefix；nextV probe重复调用 | probe不重复提交GRU；当前参数prefix重算与整段一致；reset只清本env；截断BPTT片段有梯度 |\n| T23 `tests/test_soft_message_path.py` | 保留附件四个线性toy；另用生产128维、ReLU/LN共享RGCN，预先构造多维非退化权重与有效3跳soft路径 | 线性toy复现代数见证；生产fixture中至少一个DP与边移除响应>1e-6且梯度有限；不是要求随机网络每次都非零；合法但合同重复的边正式validator应剔除 |\n| T24 `tests/test_empty_candidates.py` | 全mask false、仅安全WAIT合法、WAIT空patch三种 | 全空按独立安全结束，不创建非法Categorical；WAIT时长>0且patch空；不能给虚假transition奖励 |\n| T25 `tests/test_ablation_switches.py` | 同一模型前向分别Full/A_DD/A_Q/A_B，prior空/非空 | A_DD非空用DH、空显式0；A_Q只有Q loss系数改0；A_B只移除tanh且保留B；其余config hash等价 |\n\n**实现要求：**T01–T25必须针对实际生产组件或明确的最小fixture执行。没有生产代码时写BLOCKED，不用`assert True`、skip所有测试或附件4个toy冒充全量通过。T18的dummy backward/optimizer仅用于代码验收，不构成科研RL训练。\n\n**固定fixture目录：**`tests/fixtures/contracts_v1.json`、`facts_tfu.json`、`nonredundant_support_graph.json`、`smdp_transitions.json`、`snapshots_two_envs.json`。均标 `synthetic_unit_fixture=true`，不入经验数据/论文主成功率。\n"
+  },
+  {
+    "id": "0C",
+    "part": "I",
+    "name": "VLM Cache Sanity Check",
+    "type": "Cache Validation",
+    "purpose": "用24个真实task-scene确认缓存与关系接口能产出可用输入，不做大型VLM能力benchmark。",
+    "paper": "NO；统计可选写入Implementation说明",
+    "prerequisites": "0A具备API region、SDK、图像和场景绑定；0B的schema/ID/effect/冗余/key检查通过；D0/T_A/T_C各8个dev图像存在。无RL checkpoint。",
+    "inputs": "v2.1 prompt/schema/注册ID/合同、固定3个few-shot；模型qwen3.8-max-0902；dashscope1.27.6；actual API endpoint/region；case seeds派生dev_case；API密钥仅经环境提供。",
+    "frozen": "第8.1章模型快照、温度0、JSON object、非思考、2048 tokens、≤8关系、一次重试、effect锚点、证据权限与cache key。",
+    "tunable": "只修接口/格式错误；正式产出前允许一次prompt说明澄清但必须升prompt hash并整批重建，不以RL回报挑关系。",
+    "run_matrix": [
+      {
+        "group": "cache_sanity",
+        "method": "Frozen API VLM",
+        "task": "D0 dev[0:8]",
+        "seeds": [
+          0
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "8场景；三任务合计24；非RL训练"
+      },
+      {
+        "group": "cache_sanity",
+        "method": "Frozen API VLM",
+        "task": "T_A dev[0:8]",
+        "seeds": [
+          0
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "8场景；三任务合计24；非RL训练"
+      },
+      {
+        "group": "cache_sanity",
+        "method": "Frozen API VLM",
+        "task": "T_C dev[0:8]",
+        "seeds": [
+          0
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "8场景；三任务合计24；非RL训练"
+      }
+    ],
+    "training_budget": "0训练transitions、0 PPO updates；24次首答，最多24次格式/传输重试，总请求≤48；没有语义重试。",
+    "evaluation": "每scene记录首答JSON合法率、ID合法率、effect合法率、局部合同冗余率、最终空比例、mean边数、两类型数、obvious semantic issue数。人工复核24份，分CORRECT/OBVIOUS_ISSUE/UNDECIDABLE，仅审计不改正式边。",
+    "logging": "L_CACHE全部＋request ID、输入哈希、原始/拒绝/去重文件、时间和API错误原因。合法率按原始候选关系为分母；无候选时ID/effect比率N/A。",
+    "required_files": [
+      "sanity_cases.json",
+      "cache_sanity.csv",
+      "semantic_audit.csv",
+      "cache_manifest.json",
+      "cache_sanity_report.md",
+      "stage_0c_summary.md"
+    ],
+    "plots": "cache_relation_counts.svg/png：x=scene ID，y=最终关系数，24个原始柱，无均值/平滑。",
+    "tables": "cache_summary.csv：24输入数、成功请求数、first_json_valid_n/rate、raw_relation_n、id/effect_valid_n/rate、redundant_n/rate、empty_n/rate、type_count、semantic_issue_n。空请求和API失败分列。",
+    "criteria": "PASS：24场景均有处理记录、正常完成请求≥20，首答JSON合法≥80%，有至少3个合法非空且非冗余case（含D0≥1）。只有1–2个可用case可PASS_WITH_NOTES继续有限smoke，但不说普遍高产出。全部空/几乎全非法先NEEDS_RERUN排查输入；API/图像权限缺失BLOCKED。部分自然空不是方法失败。",
+    "failure_handling": "检查真实图像和ID→SDK/region/参数→解析schema→effect出处→局部冗余→任务是否有额外语义关系潜力。不得放松合同冗余、补假effects或反复模型抽样以凑非空。",
+    "rerun_allowed": "YES，仅接口修复/已记录版本变更后；原raw保留。",
+    "tuning_allowed": "不允许模型性能调参；最多一次说明性prompt revision，保持v2关系语义。",
+    "writing_block": "NO；缺少可用prior阻塞Full smoke的先验通路验收，不阻塞论文方法。",
+    "next_stage": "1A",
+    "execution_steps": [
+      "核查API、region、模型快照、SDK和冻结prompt/schema hash。",
+      "核查24个dev场景均为真实允许输入且不包含未来或答案。",
+      "执行1个场景接口检查，作为24份之一而非额外挑选。",
+      "按同一参数完成其余请求，严格执行≤1次失败重试。",
+      "解析、校验ID/effect、局部去重，保存所有raw及rejected记录。",
+      "逐份审计明显语义问题，仅加审计标签不修改保留关系。",
+      "计算明确分母的合法/重复/空关系统计并画关系数图。",
+      "检查D0是否至少一个有效非空case，定位全空/非法原因。",
+      "冻结生产cache协议，写stage_0c.json和summary；不启动1A。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "1A",
+    "part": "II",
+    "name": "One-Task Smoke Run",
+    "type": "Smoke",
+    "purpose": "仅判断B2和Full是否能产生真实成功、保持数值正常且结构通路未永久失活。",
+    "paper": "NO",
+    "prerequisites": "0A D0真实平台与时间/安全字段已绑定；0B PASS；0C有D0合法非空prior；D0 train64/dev10 cache齐全；训练入口真实存在。",
+    "inputs": "v2.1 code commit、D0合同/感知/evaluator/split、defaults、seed0、无预训练checkpoint。B2/Full从各自同seed初始化开始；硬件使用已验profile。",
+    "frozen": "方法核心；D0定义与reward；16,384 cap、10episode dev、Original评估；初次lr/B/λQ默认。",
+    "tunable": "None；资源性view分块允许，不改变有效batch。效果差转1B，不在本run暗调参。",
+    "run_matrix": [
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "D0",
+        "seeds": [
+          0
+        ],
+        "budget": 16384,
+        "prior": "空",
+        "notes": "两个新job；无B0默认"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "D0",
+        "seeds": [
+          0
+        ],
+        "budget": 16384,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "两个新job；无B0默认"
+      }
+    ],
+    "training_budget": "每job最多16,384 transitions=16 full updates；每4 updates保存/评估；最早8 updates检查提前结束；物理cap=2×16,384×D0.d_ref。",
+    "evaluation": "step0与每4updates：D0 dev前10、deterministic；Full Original、B2空；成功从训练episode或dev真实记录确认。需要随机动作诊断时单列10episode，不与主口径混合。",
+    "logging": "L_RUN＋L_TRAIN＋L_DECISION＋L_EVAL；重点reward全零、有效结束、DK/DP非零、Δ、mask、Q loss/grad、循环与timeout。",
+    "required_files": [
+      "config.yaml",
+      "manifest.json",
+      "train_metrics.csv",
+      "eval_metrics.csv",
+      "episode_log.jsonl",
+      "decision_log.jsonl",
+      "diagnostics.csv",
+      "run_summary.md",
+      "smoke_pair_report.md",
+      "stage_1a_summary.md"
+    ],
+    "plots": "smoke_success.svg/png：x=真实skill transitions，y=dev success，B2/Full原始点、不平滑；smoke_dp.svg/png：x=update，y=Full DP_RMS/Δ_RMS，各自独立图。",
+    "tables": "smoke_gate_table.csv：method、completed_updates、valid_transitions、success_episodes、NaN_n、DP_nonzero_rate、residual_nonzero_rate、mask_error_n、verdict；不做显著性。",
+    "criteria": "最早两job各≥8updates且均有真实成功、无严重数值/权限错误、Full在合法非空prior＋非空patch中出现DP和Δ响应即可PASS并停止。达到16updates仍无学习/永久零通路则NEEDS_RERUN转1B诊断；Full无需>B2。初始策略已常成功只能写pipeline可用，不强称学习提升。",
+    "failure_handling": "按第7.2章顺序；先排除空candidate、假reward、Verifier、零patch和冗余先验。数值错误即时停止；正常零成功不修改reward。",
+    "rerun_allowed": "YES，修bug后新attempt；正常调参在1B。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO；只阻塞进入大批训练，不阻塞方法写作。",
+    "next_stage": "PASS→2A；否则1B",
+    "execution_steps": [
+      "核查0A/0B/0C及D0资源、缓存与时间manifest。",
+      "生成B2/Full seed0两个resolved config并写run_id。",
+      "验证初始候选≥2、patch与真实事实隔离，做step0 dev评价。",
+      "执行真实skill rollout和PPO，不缓存旧可学习D作为新输入。",
+      "每4updates落checkpoint、10episode dev和数值诊断。",
+      "在各job第8update起检查宽松smoke门，满足即停止该job。",
+      "未达门则运行到16update或实际资源cap，不偷偷延长。",
+      "联合核对两job及Full DP/Δ合法非零证据。",
+      "归档原始日志，写pair report、stage_1a.json；不自动进入1B/2A。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "1B",
+    "part": "II",
+    "name": "Minimal Tuning",
+    "type": "Exploration",
+    "purpose": "在实现正确的前提下，用最多6个单变量trial找到能正常学习的配置，不做grid。",
+    "paper": "NO",
+    "prerequisites": "1A完成但学习/数值现象不满足smoke；1A正常PASS则本Stage直接记录skipped，不启动job。若有权限bug先修并重验对应0B测试。",
+    "inputs": "1A全量日志/checkpoint、D0默认config、v2.1源码、同D0 cache/split、seed0；trial从头开始，长度延长可从同配置同seed完整checkpoint继续且记录parent。",
+    "frozen": "方法/奖励/任务/80-20/schema/patch/目标；single-factor trial；最多6个新增job。",
+    "tunable": "lr→训练长度→entropy→B→λQ；每量含默认最多3值，详第7.2章；只改一个量。",
+    "run_matrix": [
+      {
+        "group": "conditional_trial",
+        "method": "B2或Full（只跑受影响者）",
+        "task": "D0",
+        "seeds": [
+          0
+        ],
+        "budget": 16384,
+        "prior": "Full80/20；B2空",
+        "notes": "最多6个新job；length trial cap32,768；每job config显式登记"
+      }
+    ],
+    "training_budget": "默认每trial16,384/16updates，length trial32,768/32updates；评估间隔4updates×10episodes；总新增训练job≤6，每个cap物理时间2×N×d_ref。不要求把每个参数都试完。",
+    "evaluation": "同1A；候选配置优先数值正常、真实成功出现、DP/Δ工作，再看dev最近3点均值；不是比较谁能击败baseline。被选配置若影响两个方法，在剩余trial额度中做另一方法确认。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL＋trial_id、hypothesis、changed_field、old/new、reason、accepted、parent_run与seen_results。",
+    "required_files": [
+      "trial_registry.jsonl",
+      "tuning_history.jsonl",
+      "tuning_results.csv",
+      "selected_config.yaml",
+      "tuning_report.md",
+      "stage_1b_summary.md"
+    ],
+    "plots": "minimal_tuning_success.svg/png：x=skill transitions，y=dev success，按单变量trial叠加、原始点不平滑；无数据时不造图。",
+    "tables": "tuning_results.csv：trial、method、changed_field、old/new、updates、success、DP_active、numeric_issue、selected；只作开发选择。",
+    "criteria": "配置满足1A门即PASS停止；无需穷尽trial。1A已PASS则PASS_WITH_NOTES＋skipped。6个job用完仍无成功/通路失效写NEEDS_RERUN或结构问题报告，不无限搜索。硬资源缺失BLOCKED。",
+    "failure_handling": "先实现与输入链，再按唯一调参顺序；length只延长真实训练；无成功不暗加curriculum/BC/reward。VLM自然关系不足可换已注册适合D0场景模板revision，不能篡改缓存。",
+    "rerun_allowed": "YES，限制在本Stage额度；新增授权另记revision。",
+    "tuning_allowed": "仅上述五类量；hidden/batch只在资源明确原因且回归单测后改。",
+    "writing_block": "NO。",
+    "next_stage": "2A",
+    "execution_steps": [
+      "检查1A；已PASS就写skipped并立即停止。",
+      "按固定排查顺序确认不是mask/reward/合同/Verifier或重算bug。",
+      "在trial_registry登记一个最有依据的单变量调整。",
+      "使用seed0同D0数据链运行受影响方法，保存全部trial日志。",
+      "每4updates评估10episode，检查真实成功与结构通路。",
+      "满足smoke即停止搜索，保存selected_config。",
+      "未满足且额度尚有才进入下一个有依据的值/参数，绝不做grid。",
+      "核查是否需要对另一方法确认配置，计入6job上限。",
+      "生成tuning_report和stage_1b.json，停止，不运行2A。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "2A",
+    "part": "III",
+    "name": "Core Exploration Runs",
+    "type": "Exploration",
+    "purpose": "在两个结构任务中观察四个核心方法的学习现象，确定任务展示价值与适合的预算。",
+    "paper": "OPTIONAL：第一版Results可用，必须标exploratory",
+    "prerequisites": "1A PASS或1B选定有效配置；T_A/T_C均已绑定；B0/B1代码和Q头已通过相关0B测试；train64/dev20 cache齐全。",
+    "inputs": "当前resolved defaults/1B选定config；T_A/T_C及其同task dev；B0/B1/B2/Full；seeds012；从头初始化；v2.1 commit、平台、合同、evaluator、cache冻结。",
+    "frozen": "方法核心、各task及split、reward、观测/技能/mask、80/20；每个run内config锁定。",
+    "tunable": "run之间允许第7.2章有限单变量适配；额外≤4诊断job或一次第3task完整12job，均新revision；默认矩阵不自动扩。",
+    "run_matrix": [
+      {
+        "group": "main",
+        "method": "B0",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "空",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "B1",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "空",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "B0",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "空",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "B1",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "空",
+        "notes": "每行3个seed，合计24新job"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "每行3个seed，合计24新job"
+      }
+    ],
+    "training_budget": "每job65,536 transitions=64updates；每8updates保存/20episode dev；物理cap=2×65,536×task.d_ref。共24主job；无全局“训练到收敛”。",
+    "evaluation": "dev前20，step0和每8updates，deterministic，Original；B0/B2空。按最近3点选择开发checkpoint；本Stage不必须访问test_id。允许报告zero-success正常seed。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL；每task汇总四条曲线、success、AUC、seed波动、DK/DP/Δ、candidate/relation数及实际交互时间。",
+    "required_files": [
+      "exploration_run_index.csv",
+      "task_suitability_report.md",
+      "exploration_summary.csv",
+      "recommended_stage_2b.yaml",
+      "mechanism_task_selection.yaml",
+      "results_draft_v0.md",
+      "stage_2a_summary.md"
+    ],
+    "plots": "explore_<task>_success.svg/png：x=skill transitions，y=dev success，四方法seed均值＋各seed原始淡线，显示MA3；explore_<task>_dp.svg/png：Full DP_RMS随update独立图；各方法不适用D写N/A。",
+    "tables": "exploration_summary.csv：task、method、seed_count、selected_dev_checkpoint、success、AUC_common、std、zero_success_seed_n、candidate_mean、relation_mean、DP_nonzero_rate、physical_seconds；先seed后task聚合。",
+    "criteria": "PASS：矩阵主要运行结束并有可解释原始曲线、完整失败记录和task suitability。某正常seed零成功/Full不领先不阻塞。缺个别技术run可PASS_WITH_NOTES并列实际n及未完成项；某方法在某task完全没有有效run则NEEDS_RERUN，不能造比较。",
+    "failure_handling": "先技术问题，再输入与D/Δ，再有限参数；评估task结构意义，不以Full赢家作为唯一task准入条件。若Full持续严重异常，写method_issue_report但不自动改Method。",
+    "rerun_allowed": "YES，有限诊断或基础设施修复；保留所有attempt。",
+    "tuning_allowed": "默认有限lr/长度/entropy/B/λQ；方法间适配写明；超额度停止。",
+    "writing_block": "NO；此时即可写Experimental Setup与探索Results。",
+    "next_stage": "第一批优先3A；需要主展示则显式执行2B",
+    "execution_steps": [
+      "读取Stage前置与两个task实际绑定，解析所有config及cache hash。",
+      "展开2tasks×4methods×3seeds为24行run registry。",
+      "先跑各method一个完整update检查日志与mask，再继续同run。",
+      "按64update cap运行全部矩阵，保留每8update的checkpoint和20episode dev。",
+      "对技术失败做同seed新attempt；正常零成功不得重标异常。",
+      "汇总success/AUC/稳定性/结构诊断，生成每task四方法图。",
+      "用结构需求、可执行性、机制可解释性与真实结果分类task suitability。",
+      "登记2B的3task建议（第三task须真实绑定）和3A/3B/3C候选task。",
+      "形成第一版exploratory Results草稿与stage_2a.json，停止，不自动扩实验。"
+    ],
+    "extra": "### Task Suitability Report字段\n每task给结构类型、asset readiness、可执行候选范围、非空prior率、非冗余关系例、典型失败、四方法真实现象、推荐metric、推荐claim范围；类别限定为Main-paper strong candidate / Main-paper usable / Appendix–weak separation / Not useful for presentation。类别表示展示解释价值，不代表科学方法胜负。"
+  },
+  {
+    "id": "2B",
+    "part": "III",
+    "name": "Presentation Runs",
+    "type": "Presentation",
+    "purpose": "以已基本确定的配置获取三个主任务、四个方法、三个seed的私人论文展示结果。",
+    "paper": "YES：标明所选任务/seed/checkpoint视图",
+    "prerequisites": "2A报告及推荐config存在；T_A/T_B/T_C三任务真实绑定（允许报告中明确替换）；选定seed列表和presentation manifest落盘；测试case/cache可用。",
+    "inputs": "2A选定defaults/少量per-method overrides；默认T_A/T_B/T_C；B0/B1/B2/Full；seeds012；从头训练；当前verified commit与平台；test_id前30固定。",
+    "frozen": "每run配置、观测/合同/任务/reward/cache、checkpoint选择算法；使用同task dev选模型，不用单个test尖峰。",
+    "tunable": "None在已启动run内。补seed3/4、任务扩展或超参变更必须新presentation revision且预算单列。",
+    "run_matrix": [
+      {
+        "group": "main",
+        "method": "B0",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B1",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B0",
+        "task": "T_B",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B1",
+        "task": "T_B",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "T_B",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "T_B",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B0",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B1",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "B2",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "空",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      },
+      {
+        "group": "main",
+        "method": "Full",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "默认36新job；不是默认复用2A曲线拼接"
+      }
+    ],
+    "training_budget": "每job131,072 transitions=128updates；每16updates checkpoint＋20episode dev；完成后selected checkpoint做30episode test_id。默认36新job；资源cap=2×N×d_ref。扩到5tasks为60主job，不自动执行。",
+    "evaluation": "训练中dev前20；按3连续窗口选择各method自己的checkpoint；最终test_id前30、deterministic、Original。需50时仅追加20。同一seed三方法/四方法可共享初始case，训练环境轨迹自然不同。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL全套＋checkpoint_selection.json、selected seed标志、presentation revision和全部可用run候选。",
+    "required_files": [
+      "presentation_manifest.yaml",
+      "presentation_run_index.csv",
+      "checkpoint_selection.json",
+      "presentation_results.csv",
+      "seed_selection_notes.md",
+      "stage_2b_summary.md"
+    ],
+    "plots": "仅每run核查曲线；正式合并图交2C。run_success.svg/png：x=skill transitions、y=dev success，原始点＋MA3。",
+    "tables": "presentation_results.csv：task、family、method、training_seed、run_id、checkpoint/hash、step、dev_window_score、test_success_n/n/rate、return、completion_time、actual_budget；不先手工四舍五入再聚合。",
+    "criteria": "PASS：真实三任务矩阵及可追溯checkpoint/test日志齐备；不要求Full优于基线。某seed失败可PASS_WITH_NOTES并声明实际n或有限补3/4；某任务未绑定则BLOCKED该矩阵，不能拿两任务称三任务。",
+    "failure_handling": "技术错误同seed重跑；普通差异小先保留结果，再在Paper View选择适当metric/子集。反复调参必须回到新探索revision，不在本run中隐式更改。",
+    "rerun_allowed": "YES，技术修复或有记录presentation revision。",
+    "tuning_allowed": "本Stage运行内None；少量已登记方法适配只能在run前生效。",
+    "writing_block": "NO；本Stage未完成只阻塞最终Main Results数字，不阻塞正文其他部分。",
+    "next_stage": "2C",
+    "execution_steps": [
+      "读取2A建议，绑定并核查第三任务，生成presentation manifest。",
+      "锁定任务、各方法config与默认seeds，展开36个新job。",
+      "从头运行128update配额，保存16update间隔开发评价。",
+      "以每个task的dev连续3窗口规则选checkpoint，不按test挑选。",
+      "在固定30个test_id case上评价冻结checkpoint。",
+      "技术失败用同seed新attempt；需要额外seed只能依已记录理由补3/4。",
+      "保存所有seed与checkpoint候选，标出拟展示三个seed及原因。",
+      "汇总真实presentation_results和checkpoint selection。",
+      "写stage_2b.json与summary，停止，不自动生成2C或消融。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "2C",
+    "part": "III",
+    "name": "Main Figure & Table Generation",
+    "type": "Packaging",
+    "purpose": "只将2B真实结果转换成主图主表，不增加训练或评价。",
+    "paper": "YES",
+    "prerequisites": "2B至少有可用于展示的真实结果；presentation manifest和所有source hash可解析；无test日志则BLOCKED数字图表。",
+    "inputs": "2B run index、train/dev/test logs、checkpoint selection、selected tasks/seeds、plot config；同一已验软件profile中的Pandas/Matplotlib；不载入模型执行。",
+    "frozen": "原始数值、source hash、指标公式；success分母；不插入未运行baseline；默认MA3仅用于显示。",
+    "tunable": "仅展示：metric、明确task subset、mean/median（默认mean）、MA3或EMA(.3)二选一、坐标zoom；全部记录，不改raw。",
+    "run_matrix": [
+      {
+        "group": "report",
+        "method": "B0/B1/B2/Full",
+        "task": "2B selected 3 tasks",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "读取Original结果",
+        "notes": "0训练；0新增episode"
+      }
+    ],
+    "training_budget": "0 transitions、0 updates、0 environment seconds；只读取文件。",
+    "evaluation": "无新评价；重算per-seed success、共同区间AUC及task-family均值，与原始episode逐项核对。",
+    "logging": "输入/输出SHA、selection manifest、metric/smoothing版本、聚合层级、n/tasks/seeds/episodes、缺失值/截取范围和图表生成命令。",
+    "required_files": [
+      "table_1_main_success.csv",
+      "table_2_efficiency.csv",
+      "figure_sources.json",
+      "plot_config.yaml",
+      "selection_manifest.yaml",
+      "stage_2c_summary.md"
+    ],
+    "plots": "fig_1_<task>_learning.svg/png：x=skill transitions，y=dev success，四方法seed均值、MA3、SD；fig_2_family_result.svg/png：x=family，y=最终test success，四方法、无平滑。每task独立画布。",
+    "tables": "Table1：Task、B0、B1、B2、Full，每格selected-seed mean±SD、n；Table2：Task、Method、AUC_common、time_to_70、success-conditioned completion time、success_n、physical budget。AUC/时间不适用写N/A。",
+    "criteria": "PASS：每个图表值可回溯到2B真实source，重算误差≤1e-10（展示四舍五入前），图轴/标签/分母齐全。Full不领先仍PASS。缺源/不一致为NEEDS_RERUN报告脚本，不重新训练。",
+    "failure_handling": "先source路径/hash→episode分母→seed/task聚合→共同横轴→平滑→图轴。禁止通过改原始CSV修图。",
+    "rerun_allowed": "YES，仅重生成派生图表；新selection revision。",
+    "tuning_allowed": "仅展示设置，不能训练调参。",
+    "writing_block": "NO；图表不齐只阻塞最终结果插图。",
+    "next_stage": "按证据缺口3A/3B；或6A",
+    "execution_steps": [
+      "加载2B真实source及presentation/selection manifest。",
+      "校验所有run/checkpoint/cache hash与样本分母。",
+      "用原始episode重算per-seed success与duration。",
+      "用原始dev曲线计算共同横轴AUC与time_to_70。",
+      "按任务/seed层级聚合，保留所选子集标签。",
+      "生成Figure1、Figure2、Table1及可用Table2。",
+      "逐图保存smoothing、轴范围、source与selected seed说明。",
+      "生成figure_sources和stage_2c_summary；更新状态后停止。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "3A",
+    "part": "IV",
+    "name": "Dual-Difference Ablation",
+    "type": "Ablation",
+    "purpose": "在一个先验具有解释价值的任务中比较DP与DH，隔离第二次差分。",
+    "paper": "YES；第一批为exploratory mechanism evidence",
+    "prerequisites": "2A有T_C Full三个seed、可追溯config和checkpoint；A_DD开关通过T25。可在2B之前执行；无匹配Full则将补跑Full显式计入本Stage矩阵。",
+    "inputs": "T_C默认或2A选定1个有合法非空prior的task；Full源为2A同task seeds012；A_DD同样seeds从头训练；同task cache、同预算64updates、相同其余超参、平台/commit语义。",
+    "frozen": "只改prior输入DP→DH；空prior仍显式0；DK主通路、F_P、B、Q target、80/20、reward、预算、其余超参不变。",
+    "tunable": "None；允许资源分块，不改有效batch；需不同稳定化适配时降级为适配比较，不称单因素。",
+    "run_matrix": [
+      {
+        "group": "reference",
+        "method": "Full",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "复用2A匹配Full；0新增训练"
+      },
+      {
+        "group": "main",
+        "method": "A_DD",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 65536,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "3新job；未训练Full不得冒称复用"
+      }
+    ],
+    "training_budget": "A_DD每job65,536=64updates；每8updates×20dev episodes。Full复用0新训练；最终比较可对两个method selected checkpoint各做30个test_id，最多180evaluation episodes，日志已有且完全匹配可复用。",
+    "evaluation": "checkpoint用同task dev连续3点选；test_id前30、deterministic、Original；同seeds、同case；可追加到50但不强制。报告实际empty prior比例，A_DD空输入0。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL＋A_DD具体input-source标记、empty/nonempty分组、DK/DH/DP RMS、Δ饱和、Q loss；Full reuse provenance。",
+    "required_files": [
+      "comparison_manifest.json",
+      "ablation_dd.csv",
+      "reused_full_runs.json",
+      "dd_report.md",
+      "stage_3a_summary.md"
+    ],
+    "plots": "fig_3a_dd_learning.svg/png：x=skill transitions，y=dev success，Full/A_DD，seed均值＋MA3；fig_3a_prior_input.svg/png：x=update，y=有效候选输入RMS，按方法独立说明量不同，不当价值。",
+    "tables": "ablation_dd.csv：task、method、n_seeds、test_success、AUC_common、checkpoint_step、empty_rate、prior_input_RMS、residual_RMS、source_run；每seed先算再均值。",
+    "criteria": "PASS：Full/A_DD匹配比较完成、空prior接口正确、真实曲线与差异可解释；无差异或A_DD更好也PASS并限制claim。全DP严格零先排查T23与输入，不能用胜负门替代工程门。",
+    "failure_handling": "先核对A_DD是否空prior误用DK→是否改变额外架构/超参→Full复用hash→target/梯度→数值。无收益不重新加static prior。",
+    "rerun_allowed": "YES，技术错误时；新预算比较须同时有匹配Full。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO；只阻塞“双差分优于直接DH”的经验句。",
+    "next_stage": "第一批在此暂停，整理Results；之后显式2B或3B",
+    "execution_steps": [
+      "读取2A的机制task选择，默认T_C，不按test成绩重新挑task。",
+      "校验Full三个源run的全部对照条件与预算，登记复用。",
+      "构造A_DD唯一开关并运行T25空prior/非空prior检查。",
+      "从头运行A_DD三个seed，每8updates评估20个dev episode。",
+      "按相同dev规则选Full/A_DD的checkpoint。",
+      "在同一30个test_id case评价或复用完全相同的已有评价。",
+      "计算success/AUC与输入残差行为，保留负向/接近结果。",
+      "完成dd_report、source manifest和stage_3a.json。",
+      "停止扩实验，交付第一版Results证据，不自动跑3B。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "3B",
+    "part": "IV",
+    "name": "Structural Q Ablation",
+    "type": "Ablation",
+    "purpose": "判断实际动作Q监督对学习速度、稳定性和最终成功的作用。",
+    "paper": "YES；按论文证据缺口执行",
+    "prerequisites": "已有匹配Full（默认2B T_A三个seed128updates）；A_Q开关通过T25；不要求3A性能提升。",
+    "inputs": "默认T_A，或2A选定代表task；Full seeds012源run；A_Q相同seed、task、cache、128update预算；除λQ外相同config和代码。",
+    "frozen": "仅λQ=0；Actor/V/图/GRU/80-20/reward/优化器其余设置不变；不同时删层或更换数据。",
+    "tunable": "None。",
+    "run_matrix": [
+      {
+        "group": "reference",
+        "method": "Full",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "复用2B匹配Full"
+      },
+      {
+        "group": "main",
+        "method": "A_Q",
+        "task": "T_A",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "3新job"
+      }
+    ],
+    "training_budget": "A_Q每job131,072=128updates；16update×20dev评估；Full0新训练。最终两个method各3seed×30case=180评价episode，已有匹配Full评价可复用。",
+    "evaluation": "Original、deterministic、同task dev选checkpoint，test_id前30；以原始学习曲线AUC、达到阈值位置、正常零成功seed数、final success和跨seedSD描述，不强制显著性。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL＋各loss的共享梯度norm定期抽样（每16updates）；A_Q的raw Q误差如记录必须标UNTRAINED_HEAD，不称其较差证明Q监督有效。",
+    "required_files": [
+      "comparison_manifest.json",
+      "ablation_q.csv",
+      "q_report.md",
+      "stage_3b_summary.md"
+    ],
+    "plots": "fig_3b_q_learning.svg/png：x=skill transitions，y=dev success，Full/A_Q，mean＋MA3；fig_3b_seed_auc.svg/png：x=method，y=per-seed AUC，原始点无平滑。",
+    "tables": "ablation_q.csv：task、method、n、success_mean/std、AUC_mean/std、time_to_70、zero_success_seed_n、actual_budget；Q loss下降只作诊断。",
+    "criteria": "PASS：匹配比较完整且λQ之外未变；效应小、无效或负效应均可PASS。Q导致技术性NaN则NEEDS_RERUN先修复；多个正常负结果不自动加新loss。",
+    "failure_handling": "核对target detach/边界→只gather已执行→共享参数重复更新→Q权重/梯度尺度→数据预算。需要调λQ只能新的探索revision，不在此消融偷偷调。",
+    "rerun_allowed": "YES，技术修复后；保留原比较。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO；不阻塞方法，未运行则不写Q稳定提高收益。",
+    "next_stage": "3C或4A（需新指令）",
+    "execution_steps": [
+      "读取匹配Full源run和选定代表task。",
+      "确认A_Q只将λQ置零，Actor/V图结构不变。",
+      "检查真实Q target和共享参数实现已通过单测。",
+      "从头训练A_Q三个seed，按16update间隔保存/评价。",
+      "按同task dev规则选择checkpoint并固定。",
+      "读取/运行配对30episode test评价。",
+      "从真实曲线计算AUC、稳定性与最终成功，不只看Q误差。",
+      "生成q_report、比较表和stage_3b.json，停止。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "3C",
+    "part": "IV",
+    "name": "Bounded Prior Ablation",
+    "type": "Ablation",
+    "purpose": "在一个prior-sensitive任务中比较有界和无界残差，保存供robustness比较使用的模型。",
+    "paper": "OPTIONAL；低于3A/3B优先级",
+    "prerequisites": "2A确定T_C有先验敏感性；默认2B Full T_C三个seed可复用；A_B开关T25通过。",
+    "inputs": "T_C、seeds012；Full复用2B；A_B从头；相同128update、B数值、reward/合同/mask/80-20/cache。",
+    "frozen": "仅去掉tanh，Δ=B*s；不去掉zero anchor、不换F_P、不增加bias、不改B或其他优化参数。",
+    "tunable": "None。",
+    "run_matrix": [
+      {
+        "group": "reference",
+        "method": "Full",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "复用2B Full"
+      },
+      {
+        "group": "main",
+        "method": "A_B",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 131072,
+        "prior": "80/20；B0/B2无prior",
+        "notes": "3新job"
+      }
+    ],
+    "training_budget": "A_B每job131,072/128updates；每16updates×20dev；最终Original30episode/seed。测试corruption在4B执行，不在此默认额外扩条件。",
+    "evaluation": "Original配对评价；正常prior下没差异可完成。本Stage产出冻结A_B checkpoint；若4B随后被授权，可增加Full/A_B相同扰动对照而无需新训练。",
+    "logging": "L_RUN/L_TRAIN/L_DECISION/L_EVAL＋abs residual分位数、|Δ|>B比例、base logit margin、actor_entropy、梯度与NaN；A_B不受B界不是实现错误。",
+    "required_files": [
+      "comparison_manifest.json",
+      "ablation_bound.csv",
+      "boundedness_report.md",
+      "ablation_checkpoints.json",
+      "stage_3c_summary.md"
+    ],
+    "plots": "fig_3c_residual_distribution.svg/png：x=|Δ|，y=有效候选频率，Full/A_B原始直方；fig_3c_learning.svg/png：x=skill transitions，y=dev success，mean＋MA3。",
+    "tables": "ablation_bound.csv：method、n、success/AUC、residual_p50/p95/max、over_B_fraction、numeric_issue_n、checkpoint_hash；按run统计再聚合。",
+    "criteria": "PASS：唯一开关正确且真实运行可比较；Original差异小无需重跑。无界分支数值异常如实记录，不用隐藏clip强行救活后仍称原A_B。",
+    "failure_handling": "先开关/额外bias/倍率→zero anchor→大残差/梯度→是否溢出。技术问题修复；纯算法不稳定保留现象，不更改其他超参掩盖。",
+    "rerun_allowed": "YES，技术修复后；纯性能不强制。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO。",
+    "next_stage": "4A/4B（需指令）",
+    "execution_steps": [
+      "读取T_C Full参考与相同B/config/hash。",
+      "确认A_B仅删除tanh，zero anchor仍成立。",
+      "从头训练三个A_B seed，保存完整残差和数值日志。",
+      "按16update间隔开发评价，观察但不隐藏过大残差。",
+      "按同一dev规则冻结checkpoint。",
+      "执行/复用Original30episode配对评价。",
+      "生成残差分布、成功/AUC表与待4B模型索引。",
+      "写stage_3c.json并停止，不自动运行corruption。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "4A",
+    "part": "V",
+    "name": "Actor Dependence Diagnostics",
+    "type": "Mechanism",
+    "purpose": "分别测同一真实快照上的Actor敏感性与闭环后果，区分使用结构和使用得有益。",
+    "paper": "OPTIONAL",
+    "prerequisites": "至少一个真实Full checkpoint及evaluation decision日志；默认2B T_C三个seed；真实有效候选/goal/mask、GRU prefix可重建；不需新训练。",
+    "inputs": "T_C Full seeds012 selected checkpoints；test_id前20；每seed从实际Original episode按episode轮询取至多64快照（每episode≤4，候选≥2）；固定source/history、DP shuffle seed、原prior及合法target-swap编辑。",
+    "frozen": "参数、任务、感知、合同、mask、reward、原始快照内容；干预只发生在规定的特征/软边输入，不反向写真实事实。",
+    "tunable": "None；可缩减至1个已有seed作首轮，但必须标n=1；默认3seed。",
+    "run_matrix": [
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      },
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "DK=0",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      },
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "DP=0",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      },
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "DP shuffle",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      },
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "remove prior",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      },
+      {
+        "group": "snapshot+closed_loop",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "target-swap",
+        "notes": "64真实快照/seed；闭环20episode/seed；不可编辑条件标N/A"
+      }
+    ],
+    "training_budget": "0训练transitions/updates。最多3×64×6=1,152个固定快照前向；最多3×6×20=360个闭环evaluation episodes，已有同checkpoint/case的Original可复用。物理时间另计，不把前向次数算环境步。",
+    "evaluation": "快照：相同历史/GRU、candidate/goal绑定，逐条件重算logits，记录JS、KL(Poriginal||Pcondition)、argmax变化。闭环：各condition独立reset同初始case，从t0持续施加干预，deterministic；后续状态允许自然分化。",
+    "logging": "L_EVAL＋原始/干预action distributions、masked support、DK/DP/RMS、Δ、selected_skill、JS/KL、argmax change、快照/原history引用、condition适用性、before/after模型hash；L_DECISION闭环全量。",
+    "required_files": [
+      "intervention_manifest.json",
+      "snapshot_diagnostics.csv",
+      "closed_loop_diagnostics.csv",
+      "actor_dependence_report.md",
+      "stage_4a_summary.md"
+    ],
+    "plots": "fig_4a_js.svg/png：x=condition，y=per-snapshot JS，按seed汇总原始分布；fig_4a_closed_loop.svg/png：x=condition，y=success，selected-seed mean，无平滑。",
+    "tables": "actor_interventions.csv：condition、eligible_snapshots、mean_JS/KL、argmax_change_rate、Δ_RMS、closed_loop_n/success、source_checkpoint；single-step与closed-loop分开。",
+    "criteria": "PASS表示诊断完整、干预实现正确；Actor变化不明显仍可PASS_WITH_NOTES并报告未见依赖证据。固定快照DP=0与remove-prior应得到相同分布（FP32tol），不一致为NEEDS_RERUN。非零JS只说明敏感，不自动说明有益。",
+    "failure_handling": "确认快照/history一致→candidate/goal对齐→干预是否生效→DP本来是否零→基础margin→mask单候选。只有在多项合法非退化case都不响应时写结构问题报告。",
+    "rerun_allowed": "YES，仅重复评价/修诊断代码，参数冻结。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO；缺证据就不写Actor有益利用。",
+    "next_stage": "4B",
+    "execution_steps": [
+      "校验Full checkpoint/hash和真实Original decision日志。",
+      "按固定round-robin规则取最多64个真实快照/seed，不按reward选快照。",
+      "实现DK零、DP零、有效候选DP derangement、先验删除和target-swap。",
+      "固定snapshot/history/mask测action分布，验证DP0与remove-prior等价。",
+      "记录JS/KL/argmax/残差，目标行与对象绑定不能错位。",
+      "对每condition从相同初始case独立跑20episode闭环，持续施加干预。",
+      "分别汇总固定状态敏感性与真实最终success，记录N/A分母。",
+      "校验模型权重未变，生成actor_dependence_report和stage_4a.json并停止。"
+    ],
+    "extra": "### 干预的精确定义\n`DK=0`：只将进入F_K的DK置零，重算uK/b及依赖uK的prior branch；DP本身仍为原始四路结果。它是特征干预，不声称对应某个真实合同图。\n`DP=0`：固定c、uK，prior输入置零，因zero-anchor使Δ=0。\n`shuffle DP`：仅在同snapshot允许候选间将整个goal-aligned DP矩阵作循环非零offset置换；offset从1..K−1均匀抽取；不乱排goal行/对象绑定，K<2不适用。\n`remove prior`：删除全部语义及对应反向边后重新四路编码；同快照的GK/DK/context不变。\n`target-swap`：第4B冻结算法；无合法对写N/A。\nJS使用自然对数及同一个有效mask支持集；零概率项按0log0=0处理，不对padding计算KL。原始/干预分布均保存，不只输出一个距离。"
+  },
+  {
+    "id": "4B",
+    "part": "V",
+    "name": "Prior Robustness Evaluation",
+    "type": "Robustness",
+    "purpose": "在冻结模型上测先验缺省、缺边、端点错配及合格无关边的影响，不引入训练corruption。",
+    "paper": "OPTIONAL",
+    "prerequisites": "Full T_C三个冻结checkpoint、test_id前20和原始cache可用；target-swap编辑与irrelevant适用性仅依task/初始输入判定。3C完成时可加入已训练A_B，不作为Full-only执行的前置。",
+    "inputs": "默认1个task T_C，Full seeds012；Original/No-prior/Deletion/Target-swap/Irrelevant；独立prior_robustness_eval seed；相同20初始cases和固定checkpoint。",
+    "frozen": "全部模型参数、任务/事实/合同/mask/reward、每条件checkpoint；deletion p=.5，swap1edge，irrelevant最多1edge且总预算≤8。",
+    "tunable": "None；可按需一次扩至50episode，或加第2task。使用已有A_B属显式scope扩展，不新增训练。",
+    "run_matrix": [
+      {
+        "group": "robustness",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "20episode/seed；N/A不计作扰动成功"
+      },
+      {
+        "group": "robustness",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "No-prior",
+        "notes": "20episode/seed；N/A不计作扰动成功"
+      },
+      {
+        "group": "robustness",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Deletion(p=.5)",
+        "notes": "20episode/seed；N/A不计作扰动成功"
+      },
+      {
+        "group": "robustness",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Target-swap(1)",
+        "notes": "20episode/seed；N/A不计作扰动成功"
+      },
+      {
+        "group": "robustness",
+        "method": "Full frozen",
+        "task": "T_C",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Irrelevant(+1)",
+        "notes": "20episode/seed；N/A不计作扰动成功"
+      }
+    ],
+    "training_budget": "0训练updates/transitions；默认最多1task×3seeds×5conditions×20=300评价episode（适用性可能减少）；一次扩50为750。第二task×2；显式加入A_B再×2。不要默认叠加所有扩展。",
+    "evaluation": "deterministic；每case编辑一次并固定整episode，method/训练seed共用同case边编辑。按条件适用子集重报Original；Original全部为空仍可报告No-prior，但不冒称未见错误类型鲁棒。",
+    "logging": "L_EVAL/L_DECISION＋original/edited edge lists与hash、semantic forward/reverse列表、实际删数、EMPTY_SOURCE/NO_EDGE_DELETED/N_A、独立无关性证据、residual/argmax、成功/失败。",
+    "required_files": [
+      "robustness_cases.json",
+      "edited_priors.jsonl",
+      "robustness_metrics.csv",
+      "applicability_table.csv",
+      "robustness_report.md",
+      "stage_4b_summary.md"
+    ],
+    "plots": "fig_4b_success.svg/png：x=condition，y=绝对success，mean across training seeds；fig_4b_degradation.svg/png：x=condition，y=相对同子集Original的百分点变化；无平滑。",
+    "tables": "robustness_metrics.csv：task、method、condition、eligible_case_n、training_seed_n、episodes_n、success_rate、original_matched_rate、delta_pp、empty_rate、residual_p95；N/A理由另表。",
+    "criteria": "PASS：适用条件真实完成、编辑/分母/对照正确；趋势明显或无明显差异均可停止。Irrelevant不适用并不阻塞；不制造任务来凑表。N/A误算成功、改mask/reward、编辑逆边遗漏为NEEDS_RERUN。",
+    "failure_handling": "先编辑合法性/反向边→源cache→pairing→checkpoint→环境版本。语义错配不一定错误，禁止为让Full更好而挑编辑seed。结果差时收缩robustness claim。",
+    "rerun_allowed": "YES，诊断bug或明确一次扩50；不重训。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO。",
+    "next_stage": "5A或6A",
+    "execution_steps": [
+      "读取冻结Full、原始cache及20个固定test case。",
+      "对每case生成5条件，并验证只编辑语义软边。",
+      "对每次编辑重建反向消息边、保存seed/hash/适用性。",
+      "先判定Target-swap与Irrelevant是否有合法操作，无则N/A。",
+      "在相同初始case执行20episode/condition/seed，不更新参数。",
+      "在每个适用子集重算Original参考，避免分母错配。",
+      "生成success、退化百分点、残差与适用性表；趋势已够清楚则停止。",
+      "写robustness_report和stage_4b.json，不自动追加50或进入5A。"
+    ],
+    "extra": "### 测试编辑算法（唯一版本）\n**Original**：用原始解析/校验/局部去重后soft edges，不修语义。\n**No-prior**：整份空，不改别的输入。\n**Deletion**：每条语义正向边独立以0.5概率删；不分类型、不保证留边或删边；原始空记EMPTY_SOURCE，恰好无删除记NO_EDGE_DELETED并保留，不能拒绝重抽。\n**Target-swap**：枚举全部合法(原边,new target)对；固定source/type/effect_ref；排除原target、自指supports、已有同型边、局部合同冗余和独立任务禁止项；relevant-to-goal仍指向现有goal；在全部合法对中均匀选一对，替换1边，保持边数/类型数。不存在候选对则N/A。该操作名是端点错配，不保证语义必错；只有独立提前标注的subset可称semantic-wrong。\n**Irrelevant**：只在已有且任务明确定义不影响目标/关键资源/执行路径、并在原GK/GH消息图中与目标不连通的干扰组件内，枚举合法非重复非合同冗余supports及有效source effect锚点，均匀加1边。原prior已有8边、无独立无关性依据或无合法边均N/A；不删原边腾位、不新造节点。\n先操作语义边再统一生成反向消息边；对应逆边不能残留。编辑不改真实facts/goal/skill/mask/reward。全局读出可能使无关组件有响应，所以Irrelevant不是强制Δ=0的单测。"
+  },
+  {
+    "id": "5A",
+    "part": "VI",
+    "name": "Compositional Generalization",
+    "type": "Generalization",
+    "purpose": "仅检验seen skills/predicates下的未见对象—目标或依赖组合，不叠加视觉/机器人/对象数shift。",
+    "paper": "OPTIONAL",
+    "prerequisites": "0A splits预先登记G1/G2；绑定证明确非纯ID重命名；默认2B T_C Full/B2三个seed checkpoint；新组合cache通过相同冻结生产协议；不可因测试成绩重定义组合。",
+    "inputs": "一个source task family T_C（实际绑定可替换）；Full/B2 seeds012；两个held-out compositions G1/G2及各前30cases；固定训练checkpoint、同相机/对象数量/低层/谓词/schema。",
+    "frozen": "全部训练参数、模型权重、技能/谓词词表、观测和控制器；零adaptation；只改变composition字段。",
+    "tunable": "None；追加评价至50可新revision，不能fine-tune后仍称zero-shot。",
+    "run_matrix": [
+      {
+        "group": "generalization",
+        "method": "Full",
+        "task": "T_C:G1",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "30episode/seed；已见原子＋未见组合"
+      },
+      {
+        "group": "generalization",
+        "method": "B2",
+        "task": "T_C:G1",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "空",
+        "notes": "30episode/seed；已见原子＋未见组合"
+      },
+      {
+        "group": "generalization",
+        "method": "Full",
+        "task": "T_C:G2",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "Original",
+        "notes": "30episode/seed；已见原子＋未见组合"
+      },
+      {
+        "group": "generalization",
+        "method": "B2",
+        "task": "T_C:G2",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "空",
+        "notes": "30episode/seed；已见原子＋未见组合"
+      }
+    ],
+    "training_budget": "0训练transitions/updates；2methods×2compositions×3seeds×30=360evaluation episodes；ID比较复用同checkpoint2B日志。扩50=600，不默认增加新training job。",
+    "evaluation": "deterministic，冻结VLM生产Original cache，Full/B2相同case；报告每composition成功与配对ID差异。使用了测试结果调配composition时改标exploratory-generalization，而非未触碰holdout。",
+    "logging": "L_EVAL/L_DECISION＋seen/unseen原子表、canonical composition signature、source training split hash、checkpoint hash前后、ID/OOD case IDs、未支持资产原因。",
+    "required_files": [
+      "generalization_manifest.json",
+      "composition_audit.md",
+      "generalization_results.csv",
+      "generalization_report.md",
+      "stage_5a_summary.md"
+    ],
+    "plots": "fig_5a_composition_success.svg/png：x=ID/G1/G2，y=success，Full/B2 mean across seeds，无平滑。",
+    "tables": "generalization_results.csv：source_task、composition、method、seen_skills/predicates、unseen_signature、n_seeds/episodes、success_mean/std、ID_matched、delta_pp；不可混外观shift。",
+    "criteria": "PASS：组合划分真实有效、冻结评价可追溯；结果一般/较差可放附录或缩claim。只有同构重命名、训练见过该组合、需要新skill的case不算本Stage完成，写BLOCKED/不支持并不造数。",
+    "failure_handling": "先查split泄漏与纯重命名→技能/predicate覆盖→controller/camera一致→goal/ID绑定→cache生成→policy行为。不要为好结果同时改变视觉、对象数与任务难度。",
+    "rerun_allowed": "YES，修绑定/评价bug或明确补50，不重训。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO。",
+    "next_stage": "6A",
+    "execution_steps": [
+      "读取G1/G2及source training split，核对seen skills/predicates。",
+      "检验composition signature不是仅改ID字符串或纯随机位置。",
+      "冻结Full/B2 checkpoint，确认无新训练与finetune。",
+      "按既定prompt/schema为新初始case生产/加载一次cache。",
+      "对两个composition、两method、三seed各30episode评价。",
+      "复用对应ID结果，计算每composition成功与退化。",
+      "如组合不成立则报告不支持，不编造泛化能力。",
+      "生成manifest/report和stage_5a.json并停止。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "6A",
+    "part": "VII",
+    "name": "Raw Archive Review",
+    "type": "Packaging",
+    "purpose": "建立所有真实运行、失败、模型和评价的可追溯总索引，不修改原数据。",
+    "paper": "NO；为最终可追溯性必需",
+    "prerequisites": "至少一个已完成或失败但留有真实日志的Stage；raw/run目录可读；不要求所有可选Stage完成。",
+    "inputs": "所有part目录与raw_archive；所有attempt/seed/checkpoint/config/cache；stage状态；file checksums；无需API、模型执行或训练设备。",
+    "frozen": "原始日志和checkpoint只读；不把缺失日志补造成存在。",
+    "tunable": "None；仅修索引工具。",
+    "run_matrix": [
+      {
+        "group": "archive_scan",
+        "method": "All actual methods",
+        "task": "All attempted tasks",
+        "seeds": [],
+        "budget": 0,
+        "prior": "All actual variants",
+        "notes": "仅索引；包括失败与零成功run"
+      }
+    ],
+    "training_budget": "0 transitions、0 updates、0 evaluation episodes。",
+    "evaluation": "逐run验证必需文件/hash与源引用；区分TRAIN_COMPLETE、NORMAL_ZERO_SUCCESS、INFRA_FAILED、PARTIAL、MISSING_SOURCE；状态不是方法排名。",
+    "logging": "扫描时间、文件总数/hash、run/attempt/seed/ckpt索引、缺失项、原始错误分类、来源目录；不输出敏感API key。",
+    "required_files": [
+      "raw_archive_index.csv",
+      "checkpoint_index.csv",
+      "evaluation_index.csv",
+      "archive_integrity_report.md",
+      "stage_6a_summary.md"
+    ],
+    "plots": "None；可选archive_coverage.svg/png仅计数量，不画伪性能。",
+    "tables": "raw_archive_index.csv：run_id、stage、task/method/seed、attempt、code/config/cache hash、budget、status、success可用性、source path、failure_reason；一真实run一行。",
+    "criteria": "PASS：所有发现的运行均入索引；有少量缺失可PASS_WITH_NOTES并限制可展示集合。某主图源文件丢失则BLOCKED该图，不能靠回忆补数。",
+    "failure_handling": "先路径与manifest→checksums→日志完整性→重复run ID→checkpoint源→密钥脱敏。只修改派生index，原raw保持不动。",
+    "rerun_allowed": "YES。",
+    "tuning_allowed": "None。",
+    "writing_block": "NO。",
+    "next_stage": "6B",
+    "execution_steps": [
+      "扫描全部实际运行目录，不只扫描获胜或成功run。",
+      "读取manifest建立run/attempt/seed唯一索引。",
+      "核对config、checkpoint、cache及episode日志hash。",
+      "识别技术失败、正常零成功、partial和缺源，分别标注。",
+      "建立checkpoint/evaluation/qualitative候选索引。",
+      "只读验证主结果来源是否仍存在，不补造丢失记录。",
+      "输出archive index与完整性报告。",
+      "写stage_6a.json，停止，不自动筛选主文。"
+    ],
+    "extra": ""
+  },
+  {
+    "id": "6B",
+    "part": "VII",
+    "name": "Private Paper View Selection",
+    "type": "Packaging",
+    "purpose": "从Raw Archive选出真实且最有解释价值的任务、seed、checkpoint、metric和qualitative case。",
+    "paper": "YES：展示选择规范",
+    "prerequisites": "6A索引完成；有真实可用结果；已有2B时主表只选2B；仅有2A时允许私人探索Results view并标provisional，不冒称2B已经完成。",
+    "inputs": "raw_archive_index、checkpoint/evaluation索引、task suitability、dev checkpoint证据、已查看结果范围、paper story draft；不重新执行任何模型。",
+    "frozen": "原始结果不变；每个selection必须有source；同一学习曲线只属于同一run，不能跨seed/attempt拼成best-of曲线。",
+    "tunable": "展示层task subset、3个seed选择、每method合理dev checkpoint、metric、MA3或EMA(.3)、axis/zoom、主文/附录分配；全部留记录。",
+    "run_matrix": [
+      {
+        "group": "paper_view",
+        "method": "Selected actual methods",
+        "task": "3主task默认；或标注的exploratory subset",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "budget": 0,
+        "prior": "按实际评价条件",
+        "notes": "允许从0..4真实seed选3；不暗示未选择总体"
+      }
+    ],
+    "training_budget": "0训练、0新评价；只能选择/重算现有真实文件。",
+    "evaluation": "选择后重算图表数值并与source逐项核对；checkpoint优先现有dev三窗口结果；换选时保存理由、查看过的数据范围。",
+    "logging": "selection_id、view_revision、run_id/task/seed/checkpoint、metric、smoothing/window、subset、reason、source file/hash、selected_from、selection_data_used、n_attempted/n_selected。",
+    "required_files": [
+      "private_paper_selection_manifest.yaml",
+      "selection_manifest.yaml",
+      "selection_report.md",
+      "qualitative_case_manifest.json",
+      "stage_6b_summary.md"
+    ],
+    "plots": "preview_*仅用已选真实数据，沿用2C/3/4/5对应轴和smoothing；没有数据不生成结果图。",
+    "tables": "selection_table.csv：figure/table/cell、run_id、task、seed、checkpoint、metric、source、reason、selection_scope；一项展示证据一行。",
+    "criteria": "PASS：全部拟展示数值/曲线/case有完整来源且标签准确；无需包含所有seed/失败run。找不到至少一个真实qualitative episode可PASS_WITH_NOTES并标缺口；不能用toy冒充实机case。",
+    "failure_handling": "先查来源→checkpoint开发证据→seed正常与性能选择区别→subset范围→聚合→措辞。差异不清楚可以不写优势，不通过截轴和择seed暗示稳定总体增益。",
+    "rerun_allowed": "YES，新selection revision；raw不变。",
+    "tuning_allowed": "仅展示参数。",
+    "writing_block": "NO。",
+    "next_stage": "6C",
+    "execution_steps": [
+      "读取6A完整索引和任务解释价值报告。",
+      "确定主叙事只围绕已观察到的现象，不预定Full必须赢。",
+      "选择任务及主文/附录范围，记录排除与纳入原因。",
+      "默认选012三seed；补到5后选3必须登记全部候选和具体理由。",
+      "使用各method合理dev checkpoint，记录不同训练step。",
+      "选择success/AUC/稳定性等真实metric，冻结展示smoothing和坐标。",
+      "选择至少一个可解释的真实episode，保留完整facts→actions→outcome链。",
+      "生成private_paper_selection_manifest及同内容规范selection文件。",
+      "更新stage_6b.json后停止，不重新训练或自动执行6C。"
+    ],
+    "extra": "### 最小selection语义\n保留selection_mode=all_available / representative / selected_high_performing / illustrative_case；实际选择较好seed时不能写representative。允许每method不同seed集合，但必须标nonpaired_selected_seeds，不能据此画配对改善。默认尽量同集合；不要求把全体未选结果塞进主文。"
+  },
+  {
+    "id": "6C",
+    "part": "VII",
+    "name": "Final Result Package",
+    "type": "Packaging",
+    "purpose": "将已选择真实证据打包进私人论文，并逐条建立claim到figure/table/run的映射。",
+    "paper": "YES",
+    "prerequisites": "6B selection manifest完整；展示所需raw均存在；主结果/消融/机制缺项可显式缺省，不伪造补齐。",
+    "inputs": "6B选择、6A索引、相关Stage图表/数据、paper draft、当前手册与方法版本；无训练checkpoint调用、无API。",
+    "frozen": "真实证据、source hash、selection规则、方法定义；没有实验不能写成已验证。",
+    "tunable": "文案、图表顺序、主文/附录范围、claim强弱；任何数值选择变化回写selection revision。",
+    "run_matrix": [
+      {
+        "group": "final_package",
+        "method": "Selected actual evidence",
+        "task": "Selected task/family views",
+        "seeds": [],
+        "budget": 0,
+        "prior": "实际条件",
+        "notes": "不新增任何训练或evaluation"
+      }
+    ],
+    "training_budget": "0 transitions、0 updates、0 environment time；只复制/链接源文件并重生成派生展示。",
+    "evaluation": "逐claim检查证据类型：方法代数性质/单测、Actor敏感性、成功/AUC增益、robustness、组合泛化分别需要对应证据；不把一种替代另一种。",
+    "logging": "package版本、全部figure/table源、claim IDs、完成/未做/不支持项、每图n及selection mode、checksums、生成命令与软件环境。",
+    "required_files": [
+      "paper_results/figures/",
+      "paper_results/tables/",
+      "paper_results/qualitative/",
+      "paper_results/selection_manifest.yaml",
+      "paper_results/results_summary.md",
+      "paper_results/result_claim_mapping.md",
+      "paper_results/figure_sources.json",
+      "paper_results/README.md",
+      "paper_results/checksums.sha256",
+      "stage_6c_summary.md"
+    ],
+    "plots": "复制或重生成已定义的主学习曲线、family图、真实消融/机制/robustness/generalization图；未执行的章节不造空白胜出图。",
+    "tables": "最终table_1、可用table_2、必要消融表；claim_mapping：claim_id、准确表述、scope、evidence_stage、figure/table、run_id/checkpoint、supported/limited/not_evaluated。",
+    "criteria": "PASS：最终package可追溯、无编造结果、claim与实际证据一致；没有必要把可选3C/4/5跑满。证据缺失则标LIMITED/NOT_EVALUATED，不能用过强措辞；源数据损坏为BLOCKED该claim。",
+    "failure_handling": "先来源与数值→selection标签→claim范围→图表可读性→引用与hash。只改派生文案和图表，不能改raw。",
+    "rerun_allowed": "YES，修改稿件或补入后续真实结果时升package版本。",
+    "tuning_allowed": "仅写作和展示。",
+    "writing_block": "NO；本Stage完成后可完成Abstract/Discussion/Conclusion。",
+    "next_stage": "STOP：交付最终私人论文结果包",
+    "execution_steps": [
+      "加载selection manifest，确认所有source仍存在且hash相符。",
+      "复制/生成最终figures、tables与真实qualitative材料。",
+      "每个figure/table标出任务、seed、episode、checkpoint与选择方式。",
+      "建立claim→Stage→图表→run/checkpoint映射。",
+      "将未做或不支持的结果写NOT_EVALUATED/LIMITED，收缩文案。",
+      "生成results_summary、README和checksums。",
+      "检查所有数字都能从raw重算，不依赖手工改CSV。",
+      "交付结果包，写stage_6c.json并停止，不自动安排新实验。"
+    ],
+    "extra": ""
+  }
+]

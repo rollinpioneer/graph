@@ -1,0 +1,106 @@
+id: 2A
+part: III
+name: Core Exploration Runs
+type: Exploration
+purpose: 在两个结构任务中观察四个核心方法的学习现象，确定任务展示价值与适合的预算。
+paper: OPTIONAL：第一版Results可用，必须标exploratory
+prerequisites: 1A PASS或1B选定有效配置；T_A/T_C均已绑定；B0/B1代码和Q头已通过相关0B测试；train64/dev20 cache齐全。
+inputs: 当前resolved defaults/1B选定config；T_A/T_C及其同task dev；B0/B1/B2/Full；seeds012；从头初始化；v2.1
+  commit、平台、合同、evaluator、cache冻结。
+frozen: 方法核心、各task及split、reward、观测/技能/mask、80/20；每个run内config锁定。
+tunable: run之间允许第7.2章有限单变量适配；额外≤4诊断job或一次第3task完整12job，均新revision；默认矩阵不自动扩。
+run_matrix:
+- group: main
+  method: B0
+  task: T_A
+  seeds: &id001
+  - 0
+  - 1
+  - 2
+  budget: 65536
+  prior: 空
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: B1
+  task: T_A
+  seeds: *id001
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: B2
+  task: T_A
+  seeds: *id001
+  budget: 65536
+  prior: 空
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: Full
+  task: T_A
+  seeds: *id001
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: B0
+  task: T_C
+  seeds: *id001
+  budget: 65536
+  prior: 空
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: B1
+  task: T_C
+  seeds: *id001
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: B2
+  task: T_C
+  seeds: *id001
+  budget: 65536
+  prior: 空
+  notes: 每行3个seed，合计24新job
+- group: main
+  method: Full
+  task: T_C
+  seeds: *id001
+  budget: 65536
+  prior: 80/20；B0/B2无prior
+  notes: 每行3个seed，合计24新job
+training_budget: 每job65,536 transitions=64updates；每8updates保存/20episode dev；物理cap=2×65,536×task.d_ref。共24主job；无全局“训练到收敛”。
+evaluation: dev前20，step0和每8updates，deterministic，Original；B0/B2空。按最近3点选择开发checkpoint；本Stage不必须访问test_id。允许报告zero-success正常seed。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL；每task汇总四条曲线、success、AUC、seed波动、DK/DP/Δ、candidate/relation数及实际交互时间。
+required_files:
+- exploration_run_index.csv
+- task_suitability_report.md
+- exploration_summary.csv
+- recommended_stage_2b.yaml
+- mechanism_task_selection.yaml
+- results_draft_v0.md
+- stage_2a_summary.md
+plots: explore_<task>_success.svg/png：x=skill transitions，y=dev success，四方法seed均值＋各seed原始淡线，显示MA3；explore_<task>_dp.svg/png：Full
+  DP_RMS随update独立图；各方法不适用D写N/A。
+tables: exploration_summary.csv：task、method、seed_count、selected_dev_checkpoint、success、AUC_common、std、zero_success_seed_n、candidate_mean、relation_mean、DP_nonzero_rate、physical_seconds；先seed后task聚合。
+criteria: PASS：矩阵主要运行结束并有可解释原始曲线、完整失败记录和task suitability。某正常seed零成功/Full不领先不阻塞。缺个别技术run可PASS_WITH_NOTES并列实际n及未完成项；某方法在某task完全没有有效run则NEEDS_RERUN，不能造比较。
+failure_handling: 先技术问题，再输入与D/Δ，再有限参数；评估task结构意义，不以Full赢家作为唯一task准入条件。若Full持续严重异常，写method_issue_report但不自动改Method。
+rerun_allowed: YES，有限诊断或基础设施修复；保留所有attempt。
+tuning_allowed: 默认有限lr/长度/entropy/B/λQ；方法间适配写明；超额度停止。
+writing_block: NO；此时即可写Experimental Setup与探索Results。
+next_stage: 第一批优先3A；需要主展示则显式执行2B
+execution_steps:
+- 读取Stage前置与两个task实际绑定，解析所有config及cache hash。
+- 展开2tasks×4methods×3seeds为24行run registry。
+- 先跑各method一个完整update检查日志与mask，再继续同run。
+- 按64update cap运行全部矩阵，保留每8update的checkpoint和20episode dev。
+- 对技术失败做同seed新attempt；正常零成功不得重标异常。
+- 汇总success/AUC/稳定性/结构诊断，生成每task四方法图。
+- 用结构需求、可执行性、机制可解释性与真实结果分类task suitability。
+- 登记2B的3task建议（第三task须真实绑定）和3A/3B/3C候选task。
+- 形成第一版exploratory Results草稿与stage_2a.json，停止，不自动扩实验。
+extra: '### Task Suitability Report字段
+
+  每task给结构类型、asset readiness、可执行候选范围、非空prior率、非冗余关系例、典型失败、四方法真实现象、推荐metric、推荐claim范围；类别限定为Main-paper
+  strong candidate / Main-paper usable / Appendix–weak separation / Not useful for
+  presentation。类别表示展示解释价值，不代表科学方法胜负。'

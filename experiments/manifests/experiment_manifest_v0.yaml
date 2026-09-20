@@ -1,0 +1,311 @@
+manifest_version: experiment_manifest_v0
+plan_version: EEP-v1.0
+created_date: '2026-09-20'
+state: PROPOSED_NOT_EXECUTED
+method:
+  name: CP-DISR
+  internal_name: M1
+  version: v2.1
+  specification_ref: sources/CP_DISR_M1_Research_Specification_v2.1.md
+  core_frozen: true
+  no_static_prior: true
+  nominal_success_only: true
+  nominal_depth: 1
+  prereq_research_experiments: 0
+rl:
+  framework: project_local_pytorch_recurrent_smdp_ppo
+  cleanrl_role: reading_reference_only
+  trainer_implemented_in_this_kit: false
+vlm:
+  provider: alibaba_model_studio
+  model_snapshot: qwen3.8-max-0902
+  full_snapshot_alias: qwen3.8-max-2026-09-02
+  region_recommendation: Singapore
+  region: MUST_BIND
+  base_http_api_url: MUST_BIND
+  api_account_authorized: MUST_BIND
+  sdk: dashscope
+  sdk_version: 1.27.6
+  relation_schema: m1_soft_relations_v2
+  schema_ref: sources/v2.1_interfaces/relation_schema.json
+  prompt_ref: sources/v2.1_interfaces/system_prompt.txt
+  prompt_version: cp_disr_relations_v2.1_p1
+  fewshot_count: 3
+  fewshot_manifest: MUST_BIND
+  max_relations: 8
+  temperature: 0
+  max_output_tokens: 2048
+  thinking: false
+  response_format: json_object
+  max_retries: 1
+  retry_only:
+  - transport_error
+  - syntax_error
+  - truncated_output
+  semantic_retry: false
+  allow_web_search: false
+  tools_enabled: false
+  cache_mode: offline
+  cache_required: true
+  cache_key_hash: sha256
+  key_includes_split: true
+  seed_supported_by_api: MUST_VERIFY_OR_UNSUPPORTED
+prior_training:
+  original: 0.8
+  absent: 0.2
+  sampled_at: episode_start
+  fixed_within_episode: true
+  resample_during_ppo: false
+  expose_sampling_mode_to_network: false
+  shared_across_prior_consumers: true
+  rng_namespace: prior_dropout_train
+  edge_corruption_enabled: false
+graph:
+  representation: grounded_action_proposition_slg
+  node_types:
+  - ACTION
+  - PROPOSITION
+  contract_relations:
+  - PRE_POS
+  - PRE_NEG
+  - ADD
+  - DEL
+  soft_relations:
+  - SOFT_SUPPORTS
+  - SOFT_RELEVANT_TO_GOAL
+  reverse_message_edges: true
+  encoder: RGCNConv
+  hidden_dim: 128
+  layers: 4
+  num_bases: 4
+  aggregation: mean
+  root_weight: true
+  activation: ReLU
+  normalization: per_node_LayerNorm
+  dropout: 0
+  difference_dtype: float32
+  goal_alignment: fixed_proposition_indices
+  empty_prior_encoding_reuse: true
+actor:
+  prior_bound_B: 0.5
+  zero_anchor: true
+  prior_input: DP_only
+  enhanced_context_in_full: false
+  final_prior_bias: false
+  candidate_readout: single_head_scaled_dot_product_attention
+  mlp_hidden_dims:
+  - 128
+  - 128
+structural_q:
+  lambda_q: 0.1
+  target: stop_gradient(real_r + Gamma * (1-terminated) * old_V_next)
+  executed_action_only: true
+  loss: Huber
+  huber_delta: 1.0
+  label_unexecuted_candidates: false
+ppo:
+  optimizer: Adam
+  lr: 0.0003
+  adam_eps: 1.0e-08
+  adam_betas:
+  - 0.9
+  - 0.999
+  weight_decay: 0.0
+  clip: 0.2
+  gae_lambda_per_skill: 0.95
+  value_coef: 0.5
+  entropy_coef: 0.01
+  grad_clip: 0.5
+  epochs: 4
+  rollout_skill_transitions: 1024
+  recurrent_sequence_length: 16
+  recurrent_hidden_dim: 128
+  minibatch_valid_transitions: 64
+  num_envs_recommendation_sim: 4
+  learning_rate_schedule: constant
+  value_loss: Huber
+  value_clipping: false
+  advantage_normalization: valid_minibatch_actor_only
+  actor_episode_discount_weight: true
+  surrogate_reduction: sum(w * surrogate)/sum(w)
+  critic_and_entropy_reduction: valid_transition_mean
+  gamma_reference_seconds: 1.0
+  gamma_reference_value: 0.99
+  graph_recompute_during_ppo: true
+  gru_prefix_recompute_with_current_parameters: true
+  amp: false
+  torch_compile: false
+  reward_shaping: false
+  reward_normalization: false
+  graph_pretraining: false
+  q_pretraining: false
+  bc_warm_start: false
+seeds:
+  smoke:
+  - 0
+  exploration:
+  - 0
+  - 1
+  - 2
+  presentation_default:
+  - 0
+  - 1
+  - 2
+  presentation_default_count: 3
+  extension_order:
+  - 3
+  - 4
+  maximum_initial_extension: 5
+  derive_algorithm: first4bytes_big_endian_SHA256(canonical_json(namespace,task,case,seed))
+  eval_and_corruption_omit_method_and_train_seed: true
+tasks:
+  development: D0
+  exploration_default:
+  - T_A
+  - T_C
+  presentation_default:
+  - T_A
+  - T_B
+  - T_C
+  optional_candidates:
+  - T_D
+  - T_E
+  dd_default: T_C
+  q_default: T_A
+  bound_default: T_C
+  diagnostics_default: T_C
+  generalization_source_default: T_C
+  train_case_pool: 64
+  dev_case_pool: 50
+  test_id_case_pool: 50
+  generalization_compositions:
+  - G1
+  - G2
+  generalization_cases_per_composition: 50
+budget:
+  primary_execution_axis: real_skill_transitions
+  physical_budget_equality_claimed: false
+  smoke: 16384
+  tuning_trial: 16384
+  tuning_length_trial: 32768
+  exploration: 65536
+  presentation: 131072
+  dd_first_batch: 65536
+  q_and_bound: 131072
+  tuning_max_new_jobs: 6
+  exploration_optional_diagnostic_jobs: 4
+  physical_cap_formula: 2 * N_cap * bound_task_reference_skill_seconds
+  planning_only_reference_skill_seconds: 2.0
+  real_reference_skill_seconds: MUST_BIND_PER_TASK
+  partial_rollout: valid_samples_only_single_partial_update
+  default_first_batch_new_training_jobs: 29
+  default_full_route_new_training_jobs: 71
+evaluation:
+  policy_mode: deterministic_masked_argmax
+  tie_break: canonical_candidate_id
+  default_prior: original
+  no_train_dropout_in_evaluation: true
+  smoke_episodes: 10
+  exploration_episodes: 20
+  training_presentation_dev_episodes: 20
+  presentation_test_episodes: 30
+  robustness_initial_episodes: 20
+  mechanism_closed_loop_episodes: 20
+  snapshot_max_per_training_seed: 64
+  snapshot_max_per_episode: 4
+  generalization_episodes: 30
+  optional_stable_episodes: 50
+  append_only_episode_extension: true
+  checkpoint_interval_updates:
+    smoke: 4
+    exploration: 8
+    presentation: 16
+    dd: 8
+    q: 16
+    bound: 16
+  checkpoint_selection: maximize trailing_3_dev_success_mean; tie smaller_sd; tie
+    earlier_step
+  success_threshold_for_efficiency: 0.7
+  threshold_consecutive_points: 2
+robustness:
+  conditions:
+  - original
+  - absent
+  - edge_deletion
+  - type_preserving_target_swap
+  - irrelevant_edge_addition
+  deletion_p: 0.5
+  target_swap_edges: 1
+  irrelevant_add_edges: 1
+  max_relations: 8
+  edit_semantic_forward_then_rebuild_reverse: true
+  fixed_within_episode: true
+  no_eligible_edit: NOT_APPLICABLE
+  semantic_wrong_requires_independent_annotation: true
+  irrelevant_requires_task_and_graph_evidence: true
+presentation:
+  raw_archive_immutable: true
+  selection_allowed: true
+  manifest_required: true
+  default_seed_aggregation: mean
+  error_bar: selected_seed_sample_standard_deviation_not_CI
+  default_smoothing: trailing_MA3
+  smoothing_for_display_only: true
+  alternate_smoothing: EMA_alpha_0.3
+  raw_AUC: true
+  success_axis:
+  - 0
+  - 1
+  no_cross_run_curve_splicing: true
+  explicitly_label_selected_seed_view: true
+software:
+  profile_status: PROPOSED_NOT_VALIDATED
+  python: 3.11.13
+  torch: 2.7.1
+  cuda_wheel: cu126
+  torchvision_optional: 0.22.1
+  torch_geometric: 2.6.1
+  numpy: 1.26.4
+  pandas: 2.2.3
+  matplotlib: 3.9.4
+  jsonschema: 4.23.0
+  PyYAML: 6.0.2
+  tensorboard: 2.19.0
+  pytest: 8.3.5
+  gymnasium: 1.1.1
+  uv: 0.8.22
+  dashscope: 1.27.6
+  lockfile: MUST_GENERATE_ON_TARGET_HOST
+runtime:
+  experiment_root: MUST_BIND
+  repository_path: MUST_BIND
+  repository_url: MUST_BIND
+  git_hash: MUST_BIND
+  simulator_or_robot: MUST_BIND
+  environment_version: MUST_BIND
+  task_assets: MUST_BIND
+  controller_manifest: MUST_BIND
+  camera: MUST_BIND
+  calibration_manifest: MUST_BIND
+  perception_checkpoint: MUST_BIND
+  verifier_thresholds: MUST_BIND
+  skill_timeouts: MUST_BIND
+  task_deadlines: MUST_BIND
+  actual_interaction_time_unit: MUST_BIND
+  reference_skill_seconds_by_task: MUST_BIND
+  task_evaluator_version: MUST_BIND
+  hardware: MUST_BIND
+  gpu_driver: MUST_BIND
+  os: MUST_BIND
+  safety_authorization: MUST_BIND
+  entrypoints: MUST_BIND
+  task_splits: MUST_BIND
+agent_scope:
+  single_stage_auto_advance: false
+  explicit_part_allows_internal_stages: true
+  stop_on:
+  - BLOCKED
+  - NEEDS_RERUN
+  skip_1b_when_smoke_passed: true
+  skip_status: PASS_WITH_NOTES
+  skipped_boolean: true

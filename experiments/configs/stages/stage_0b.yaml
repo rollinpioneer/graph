@@ -1,0 +1,145 @@
+id: 0B
+part: I
+name: Unit & Invariant Tests
+type: Unit Test
+purpose: 验证v2.1公式、权限与PPO数据链，不检验机器人策略性能。
+paper: 'NO'
+prerequisites: 0A至少readiness.core_code=true、软件可运行；规范/schema及fixture存在。可在robot未绑定时独立执行纯逻辑测试，但不得自动把0A升级PASS。
+inputs: 当前代码commit和resolved_defaults；生产nominal/graph/policy/targets/buffer组件；tests/fixtures；v2.1
+  schema；seed32(unit_fixture,...,0)；CPU为必需，目标GPU可用时补测。无cache请求、无checkpoint训练。
+frozen: 全部方法不变量、测试期望和fixture语义；不能通过放宽公式来让错误实现通过。
+tunable: None；只修bug。数值tol若因设备调整必须给CPU对照和原因，不改变严格零性质。
+run_matrix:
+- group: invariants
+  method: Production components + controlled fixtures
+  task: T01–T25
+  seeds:
+  - 0
+  budget: 0
+  prior: 空/合法/非法fixture
+  notes: CPU 25项；GPU补对应数值项，不是25个RL runs
+training_budget: 0真实skill transitions，0科研PPO updates，0性能episode；允许test内dummy backward/optimizer验证梯度。
+evaluation: 逐项T01–T25执行；CPU FP64/FP32及可用GPU FP32。expected/tolerance在下表。所有实际收集的测试都报告，包括失败与不适用设备。
+logging: L_TEST完整；保留pytest JUnit XML、stdout、traceback、fixture/code/schema hash；统计passed/failed/skipped，不产生训练success率。
+required_files:
+- junit.xml
+- test_results.json
+- test_results.csv
+- fixture_manifest.json
+- invariant_report.md
+- stage_0b_summary.md
+plots: None；可选test_status.png（x=test ID，y=0/1，原始无平滑），不得称学习曲线。
+tables: test_results.csv：test_id、device、dtype、expected、actual、tolerance、status、failure_location；按测试计数，不以toy=25项。
+criteria: PASS：T01–T25生产组件CPU检查全部通过；目标GPU未绑定可PASS_WITH_NOTES并记录GPU未验。NEEDS_RERUN：任何权限/target/mask错误；BLOCKED：核心生产组件缺失。不能用skip代替通过。
+failure_handling: 按测试失败定位，不做超参搜索；优先T03污染、T10 mask、T12 target、T14边界，再alignment、数值和梯度。修复后重跑受影响测试及完整CPU套件。
+rerun_allowed: YES，技术修复后重跑。
+tuning_allowed: None。
+writing_block: NO；阻塞未经验收的1A训练，不阻塞方法写作。
+next_stage: 0C
+execution_steps:
+- 读取当前commit、schema、配置和fixture hash。
+- 确认测试调用生产组件，而非独立伪实现。
+- 先运行T01–T09的逻辑与关系校验。
+- 运行T10–T18的数据链、梯度与prior重算测试。
+- 运行T19–T25时间、权限、界、GRU、传播和消融开关测试。
+- 目标GPU可用时补FP32数值/梯度子集并记录设备差异。
+- 修复本Stage内发现的实现bug，保留diff并重跑受影响项。
+- 汇总全部通过、失败、未运行项和容差，生成invariant report。
+- 写stage_0b.json及summary；不启动VLM生成或训练。
+extra: '### Stage 0B的逐项测试规范（T01–T25）
+
+
+  CPU逻辑期望精确相等；FP32标准比较默认 `atol=1e-6, rtol=1e-5`；FP64手算默认 `atol=1e-10, rtol=1e-9`。空prior复用与零锚定必须严格零；不用宽容差掩盖两条不一致路径。GPU先保持FP32；目标GPU与CPU逐元素结果不要求逐bit相同，但零通路仍显式复用。
+
+
+  | ID / test filename | 输入与procedure | expected result / tolerance / PASS |
+
+  |---|---|---|
+
+  | T01 `tests/test_zero_prior.py::test_dp_zero` | 固定6–10节点合同fixture；facts含T/F/U；prior为空；至少2个非空候选patch，分别做四路前向
+  | 直接复用K当前及K后继；所有DP元素严格0；形状、dtype一致 |
+
+  | T02 `tests/test_zero_prior.py::test_residual_zero` | 任意合法context与随机已初始化F_P，输入DP=0；另测原始cache为空
+  | uP和Δ严格0，Full概率与同参数合同分数分布一致；概率tol FP32；不是与独立训练B2权重比较 |
+
+  | T03 `tests/test_nominal_isolation.py` | 真实Fact Store含timestamp、attempt、quality、图模板；连续生成多个候选patch并尝试写入overlay
+  | 真实序列化SHA256前后完全相同；不可变写入抛异常；观测/时钟/attempt/reward不变 |
+
+  | T04 `tests/test_node_alignment.py` | GK/GH及2个候选的两种后继；加入1条合法soft edge | node IDs、顺序、类型、argument
+  binding逐项相同；只有边集合或声明的临时facts不同，精确通过 |
+
+  | T05 `tests/test_goal_alignment.py` | 含一个已完成goal、一个未完成goal和一个负目标；多个goal排列 | goal_refs、sign、行mask在四路相同；完成goal不删；padding重排后读出按ID还原一致，FP32tol
+  |
+
+  | T06 `tests/test_three_valued_logic.py` | 正/负文字各测试T/F/U；AND包含未知；条件效果guard为U | U既不满足正前置也不满足负前置；非关键U不阻塞无关动作；UNKNOWN
+  guard仅保留共同确定效果，精确 |
+
+  | T07 `tests/test_effect_conflicts.py` | 同一fact同时ADD/DEL、ADD/UNKNOWN、两个互斥Held等 |
+  注册/patch合并时报可定位异常；不按列表先后覆盖；合法非冲突对照通过 |
+
+  | T08 `tests/test_relation_validation.py::test_effect_ref` | 合法ADD锚点、合法DEL锚点、未知ID、target类型错、其他action效果、纯UNKNOWN锚点
+  | 仅合法source效果且已有ADD/DEL邻接者通过；给goal外部ID需正确规范化；metadata不新增edge/fact |
+
+  | T09 `tests/test_relation_validation.py::test_no_order` | SOFT_ORDER JSON以及missing
+  effect_ref JSON；检查registered relation IDs | schema拒绝两个非法样例；生产relation表无ORDER及反向ORDER；历史toy文件出现该字符串不算生产违规
+  |
+
+  | T10 `tests/test_ppo_masks.py` | 存储candidate IDs/mask/action/oldlogp；未更新参数重算；故意更换顺序并以ID映射，再故意改mask
+  | 正确重算old/new logp在tol内相同；合法重排等价；mask hash变化主动报错；不以新mask解释旧动作 |
+
+  | T11 `tests/test_q_executed_only.py` | leaf `q_values`形状[2,3]，executed=[0,2]，两个真实targets；loss.backward
+  | 未选择的q_values输出项梯度严格0，selected有非零梯度；共享上游因集合池化收到梯度不是违规 |
+
+  | T12 `tests/test_q_target_detach.py` | oldVnext requires_grad=True；非终止真实r/Gamma；构造Q
+  target | yQ.requires_grad=False、无grad_fn；Q backward不更新oldV；V target同样detach |
+
+  | T13 `tests/test_shared_gradients.py` | 非退化有效prior fixture；分别只反传actor、V、Q loss；4路E保留autograd路径
+  | 同一E对象/参数ID；各loss至少一项预期共享参数梯度有限且非零；不是要求所有参数或零prior分支都有梯度 |
+
+  | T14 `tests/test_smdp_boundaries.py` | 三种边界：terminated、valid truncation、buffer
+  end；最后状态V=2，reset状态V=99，r=.3，Gamma=.9 | terminated yQ=.3；其他有效bootstrap yQ=2.1；不读取99；GAE不跨reset；FP64tol
+  |
+
+  | T15 `tests/test_permutation.py` | 候选重排、对象ID一致重命名、goal行重排；同时重排对应边/参数/mask | 按canonical真实身份逆映射后logit/probability一致，FP32tol；精确tie用ID规则，不按原列表位置
+  |
+
+  | T16 `tests/test_cache_key_isolation.py` | task名相同但图像字节、split、goal、绑定、schema、region分别改变一次；另改JSON
+  key顺序 | 每个语义输入改变都变key；只改变无序键顺序不变；数据split不相互覆盖 |
+
+  | T17 `tests/test_prior_episode_fixed.py` | 3个env、4个episode，跨多次rollout边界；固定RNG状态
+  | 只在episode_start抽一次；同episode prior hash不变；各env独立；不要求小样本恰好80/20 |
+
+  | T18 `tests/test_recompute.py` | 同一stored buffer执行4个PPO epochs的前向及一次dummy update，用spy计数API/RNG/E调用
+  | 重算E且使用当前参数；API调用0、prior抽样0；读取stored edges/mask；不能以detach旧D替代重算 |
+
+  | T19 `tests/test_duration_discount.py` | d=1s、2s和奖励在区间内0.5s的手算事件；episode起点累计权重
+  | Gamma=.99、.9801；reward按真实事件偏移折扣；w递乘；技能耗时非正拒绝；FP64tol |
+
+  | T20 `tests/test_permissions.py` | 只改prior边或传入拒绝关系，真实task/facts不变；检查mask/evaluator输入schema
+  | candidate/mask/reward定义与prior无关；evaluator不接DK/DP；静态ZH不能偷进Full基础GRU/context |
+
+  | T21 `tests/test_prior_bound.py` | s取大正/负及0；B=.5，多个候选 | abs(Δ)≤B+1e-7；允许动作的概率比在exp(±2B)内（FP32tol）；A_B不要求该界
+  |
+
+  | T22 `tests/test_recurrent_prefix.py` | 两env不同历史，连续片段与全prefix；nextV probe重复调用 |
+  probe不重复提交GRU；当前参数prefix重算与整段一致；reset只清本env；截断BPTT片段有梯度 |
+
+  | T23 `tests/test_soft_message_path.py` | 保留附件四个线性toy；另用生产128维、ReLU/LN共享RGCN，预先构造多维非退化权重与有效3跳soft路径
+  | 线性toy复现代数见证；生产fixture中至少一个DP与边移除响应>1e-6且梯度有限；不是要求随机网络每次都非零；合法但合同重复的边正式validator应剔除
+  |
+
+  | T24 `tests/test_empty_candidates.py` | 全mask false、仅安全WAIT合法、WAIT空patch三种 | 全空按独立安全结束，不创建非法Categorical；WAIT时长>0且patch空；不能给虚假transition奖励
+  |
+
+  | T25 `tests/test_ablation_switches.py` | 同一模型前向分别Full/A_DD/A_Q/A_B，prior空/非空 |
+  A_DD非空用DH、空显式0；A_Q只有Q loss系数改0；A_B只移除tanh且保留B；其余config hash等价 |
+
+
+  **实现要求：**T01–T25必须针对实际生产组件或明确的最小fixture执行。没有生产代码时写BLOCKED，不用`assert True`、skip所有测试或附件4个toy冒充全量通过。T18的dummy
+  backward/optimizer仅用于代码验收，不构成科研RL训练。
+
+
+  **固定fixture目录：**`tests/fixtures/contracts_v1.json`、`facts_tfu.json`、`nonredundant_support_graph.json`、`smdp_transitions.json`、`snapshots_two_envs.json`。均标
+  `synthetic_unit_fixture=true`，不入经验数据/论文主成功率。
+
+  '

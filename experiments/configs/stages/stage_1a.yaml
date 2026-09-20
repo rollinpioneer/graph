@@ -1,0 +1,60 @@
+id: 1A
+part: II
+name: One-Task Smoke Run
+type: Smoke
+purpose: 仅判断B2和Full是否能产生真实成功、保持数值正常且结构通路未永久失活。
+paper: 'NO'
+prerequisites: 0A D0真实平台与时间/安全字段已绑定；0B PASS；0C有D0合法非空prior；D0 train64/dev10 cache齐全；训练入口真实存在。
+inputs: v2.1 code commit、D0合同/感知/evaluator/split、defaults、seed0、无预训练checkpoint。B2/Full从各自同seed初始化开始；硬件使用已验profile。
+frozen: 方法核心；D0定义与reward；16,384 cap、10episode dev、Original评估；初次lr/B/λQ默认。
+tunable: None；资源性view分块允许，不改变有效batch。效果差转1B，不在本run暗调参。
+run_matrix:
+- group: main
+  method: B2
+  task: D0
+  seeds: &id001
+  - 0
+  budget: 16384
+  prior: 空
+  notes: 两个新job；无B0默认
+- group: main
+  method: Full
+  task: D0
+  seeds: *id001
+  budget: 16384
+  prior: 80/20；B0/B2无prior
+  notes: 两个新job；无B0默认
+training_budget: 每job最多16,384 transitions=16 full updates；每4 updates保存/评估；最早8 updates检查提前结束；物理cap=2×16,384×D0.d_ref。
+evaluation: step0与每4updates：D0 dev前10、deterministic；Full Original、B2空；成功从训练episode或dev真实记录确认。需要随机动作诊断时单列10episode，不与主口径混合。
+logging: L_RUN＋L_TRAIN＋L_DECISION＋L_EVAL；重点reward全零、有效结束、DK/DP非零、Δ、mask、Q loss/grad、循环与timeout。
+required_files:
+- config.yaml
+- manifest.json
+- train_metrics.csv
+- eval_metrics.csv
+- episode_log.jsonl
+- decision_log.jsonl
+- diagnostics.csv
+- run_summary.md
+- smoke_pair_report.md
+- stage_1a_summary.md
+plots: smoke_success.svg/png：x=真实skill transitions，y=dev success，B2/Full原始点、不平滑；smoke_dp.svg/png：x=update，y=Full
+  DP_RMS/Δ_RMS，各自独立图。
+tables: smoke_gate_table.csv：method、completed_updates、valid_transitions、success_episodes、NaN_n、DP_nonzero_rate、residual_nonzero_rate、mask_error_n、verdict；不做显著性。
+criteria: 最早两job各≥8updates且均有真实成功、无严重数值/权限错误、Full在合法非空prior＋非空patch中出现DP和Δ响应即可PASS并停止。达到16updates仍无学习/永久零通路则NEEDS_RERUN转1B诊断；Full无需>B2。初始策略已常成功只能写pipeline可用，不强称学习提升。
+failure_handling: 按第7.2章顺序；先排除空candidate、假reward、Verifier、零patch和冗余先验。数值错误即时停止；正常零成功不修改reward。
+rerun_allowed: YES，修bug后新attempt；正常调参在1B。
+tuning_allowed: None。
+writing_block: NO；只阻塞进入大批训练，不阻塞方法写作。
+next_stage: PASS→2A；否则1B
+execution_steps:
+- 核查0A/0B/0C及D0资源、缓存与时间manifest。
+- 生成B2/Full seed0两个resolved config并写run_id。
+- 验证初始候选≥2、patch与真实事实隔离，做step0 dev评价。
+- 执行真实skill rollout和PPO，不缓存旧可学习D作为新输入。
+- 每4updates落checkpoint、10episode dev和数值诊断。
+- 在各job第8update起检查宽松smoke门，满足即停止该job。
+- 未达门则运行到16update或实际资源cap，不偷偷延长。
+- 联合核对两job及Full DP/Δ合法非零证据。
+- 归档原始日志，写pair report、stage_1a.json；不自动进入1B/2A。
+extra: ''

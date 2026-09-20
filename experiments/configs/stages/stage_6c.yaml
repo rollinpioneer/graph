@@ -1,0 +1,50 @@
+id: 6C
+part: VII
+name: Final Result Package
+type: Packaging
+purpose: 将已选择真实证据打包进私人论文，并逐条建立claim到figure/table/run的映射。
+paper: 'YES'
+prerequisites: 6B selection manifest完整；展示所需raw均存在；主结果/消融/机制缺项可显式缺省，不伪造补齐。
+inputs: 6B选择、6A索引、相关Stage图表/数据、paper draft、当前手册与方法版本；无训练checkpoint调用、无API。
+frozen: 真实证据、source hash、selection规则、方法定义；没有实验不能写成已验证。
+tunable: 文案、图表顺序、主文/附录范围、claim强弱；任何数值选择变化回写selection revision。
+run_matrix:
+- group: final_package
+  method: Selected actual evidence
+  task: Selected task/family views
+  seeds: []
+  budget: 0
+  prior: 实际条件
+  notes: 不新增任何训练或evaluation
+training_budget: 0 transitions、0 updates、0 environment time；只复制/链接源文件并重生成派生展示。
+evaluation: 逐claim检查证据类型：方法代数性质/单测、Actor敏感性、成功/AUC增益、robustness、组合泛化分别需要对应证据；不把一种替代另一种。
+logging: package版本、全部figure/table源、claim IDs、完成/未做/不支持项、每图n及selection mode、checksums、生成命令与软件环境。
+required_files:
+- paper_results/figures/
+- paper_results/tables/
+- paper_results/qualitative/
+- paper_results/selection_manifest.yaml
+- paper_results/results_summary.md
+- paper_results/result_claim_mapping.md
+- paper_results/figure_sources.json
+- paper_results/README.md
+- paper_results/checksums.sha256
+- stage_6c_summary.md
+plots: 复制或重生成已定义的主学习曲线、family图、真实消融/机制/robustness/generalization图；未执行的章节不造空白胜出图。
+tables: 最终table_1、可用table_2、必要消融表；claim_mapping：claim_id、准确表述、scope、evidence_stage、figure/table、run_id/checkpoint、supported/limited/not_evaluated。
+criteria: PASS：最终package可追溯、无编造结果、claim与实际证据一致；没有必要把可选3C/4/5跑满。证据缺失则标LIMITED/NOT_EVALUATED，不能用过强措辞；源数据损坏为BLOCKED该claim。
+failure_handling: 先来源与数值→selection标签→claim范围→图表可读性→引用与hash。只改派生文案和图表，不能改raw。
+rerun_allowed: YES，修改稿件或补入后续真实结果时升package版本。
+tuning_allowed: 仅写作和展示。
+writing_block: NO；本Stage完成后可完成Abstract/Discussion/Conclusion。
+next_stage: STOP：交付最终私人论文结果包
+execution_steps:
+- 加载selection manifest，确认所有source仍存在且hash相符。
+- 复制/生成最终figures、tables与真实qualitative材料。
+- 每个figure/table标出任务、seed、episode、checkpoint与选择方式。
+- 建立claim→Stage→图表→run/checkpoint映射。
+- 将未做或不支持的结果写NOT_EVALUATED/LIMITED，收缩文案。
+- 生成results_summary、README和checksums。
+- 检查所有数字都能从raw重算，不依赖手工改CSV。
+- 交付结果包，写stage_6c.json并停止，不自动安排新实验。
+extra: ''

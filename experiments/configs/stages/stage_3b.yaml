@@ -1,0 +1,60 @@
+id: 3B
+part: IV
+name: Structural Q Ablation
+type: Ablation
+purpose: 判断实际动作Q监督对学习速度、稳定性和最终成功的作用。
+paper: YES；按论文证据缺口执行
+prerequisites: 已有匹配Full（默认2B T_A三个seed128updates）；A_Q开关通过T25；不要求3A性能提升。
+inputs: 默认T_A，或2A选定代表task；Full seeds012源run；A_Q相同seed、task、cache、128update预算；除λQ外相同config和代码。
+frozen: 仅λQ=0；Actor/V/图/GRU/80-20/reward/优化器其余设置不变；不同时删层或更换数据。
+tunable: None。
+run_matrix:
+- group: reference
+  method: Full
+  task: T_A
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 复用2B匹配Full
+- group: main
+  method: A_Q
+  task: T_A
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 3新job
+training_budget: A_Q每job131,072=128updates；16update×20dev评估；Full0新训练。最终两个method各3seed×30case=180评价episode，已有匹配Full评价可复用。
+evaluation: Original、deterministic、同task dev选checkpoint，test_id前30；以原始学习曲线AUC、达到阈值位置、正常零成功seed数、final
+  success和跨seedSD描述，不强制显著性。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL＋各loss的共享梯度norm定期抽样（每16updates）；A_Q的raw Q误差如记录必须标UNTRAINED_HEAD，不称其较差证明Q监督有效。
+required_files:
+- comparison_manifest.json
+- ablation_q.csv
+- q_report.md
+- stage_3b_summary.md
+plots: fig_3b_q_learning.svg/png：x=skill transitions，y=dev success，Full/A_Q，mean＋MA3；fig_3b_seed_auc.svg/png：x=method，y=per-seed
+  AUC，原始点无平滑。
+tables: ablation_q.csv：task、method、n、success_mean/std、AUC_mean/std、time_to_70、zero_success_seed_n、actual_budget；Q
+  loss下降只作诊断。
+criteria: PASS：匹配比较完整且λQ之外未变；效应小、无效或负效应均可PASS。Q导致技术性NaN则NEEDS_RERUN先修复；多个正常负结果不自动加新loss。
+failure_handling: 核对target detach/边界→只gather已执行→共享参数重复更新→Q权重/梯度尺度→数据预算。需要调λQ只能新的探索revision，不在此消融偷偷调。
+rerun_allowed: YES，技术修复后；保留原比较。
+tuning_allowed: None。
+writing_block: NO；不阻塞方法，未运行则不写Q稳定提高收益。
+next_stage: 3C或4A（需新指令）
+execution_steps:
+- 读取匹配Full源run和选定代表task。
+- 确认A_Q只将λQ置零，Actor/V图结构不变。
+- 检查真实Q target和共享参数实现已通过单测。
+- 从头训练A_Q三个seed，按16update间隔保存/评价。
+- 按同task dev规则选择checkpoint并固定。
+- 读取/运行配对30episode test评价。
+- 从真实曲线计算AUC、稳定性与最终成功，不只看Q误差。
+- 生成q_report、比较表和stage_3b.json，停止。
+extra: ''

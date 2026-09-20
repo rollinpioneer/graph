@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CP-DISR stage status",
+  "type": "object",
+  "required": [
+    "stage",
+    "status",
+    "method_version",
+    "git_hash",
+    "runs_completed",
+    "runs_failed",
+    "selected_tasks",
+    "selected_config",
+    "issues",
+    "tuning_changes",
+    "next_stage"
+  ],
+  "properties": {
+    "stage": {
+      "enum": [
+        "0A",
+        "0B",
+        "0C",
+        "1A",
+        "1B",
+        "2A",
+        "2B",
+        "2C",
+        "3A",
+        "3B",
+        "3C",
+        "4A",
+        "4B",
+        "5A",
+        "6A",
+        "6B",
+        "6C"
+      ]
+    },
+    "status": {
+      "enum": [
+        "NOT_STARTED",
+        "RUNNING",
+        "PASS",
+        "PASS_WITH_NOTES",
+        "NEEDS_RERUN",
+        "BLOCKED"
+      ]
+    },
+    "method_version": {
+      "const": "CP-DISR-v2.1"
+    },
+    "git_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runs_completed": {
+      "type": "array"
+    },
+    "runs_failed": {
+      "type": "array"
+    },
+    "selected_tasks": {
+      "type": "array"
+    },
+    "selected_config": {
+      "type": [
+        "object",
+        "string",
+        "null"
+      ]
+    },
+    "issues": {
+      "type": "array"
+    },
+    "tuning_changes": {
+      "type": "array"
+    },
+    "next_stage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "skipped": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,113 @@
+method:
+  name: CP-DISR
+  internal_name: M1
+  specification: v2.1
+  prereq_research_experiments: 0
+vlm:
+  provider: alibaba_model_studio
+  model_snapshot: qwen3.8-max-0902
+  region: null
+  thinking: false
+  response_format: json_object
+  relation_schema: m1_soft_relations_v2
+  max_relations: 8
+  temperature: 0
+  max_output_tokens: 2048
+  format_retries: 1
+  allow_web_search: false
+  trainable: false
+  cache_required_for_training: true
+graph:
+  representation: grounded_action_proposition_slg
+  node_types:
+  - ACTION
+  - PROPOSITION
+  contract_relations:
+  - PRE_POS
+  - PRE_NEG
+  - ADD
+  - DEL
+  reverse_relations: true
+  encoder: RGCNConv
+  hidden_dim: 128
+  layers: 4
+  num_bases: 4
+  aggregation: mean
+  root_weight: true
+  normalization: per_node_layer_norm
+  dropout: 0
+  goal_alignment: fixed_proposition_indices
+  soft_relations:
+  - SOFT_SUPPORTS
+  - SOFT_RELEVANT_TO_GOAL
+m1:
+  nominal_branches: success_only
+  nominal_depth: 1
+  shared_encoder: true
+  zero_anchor_prior: true
+  prior_bound: 0.5
+  difference_dtype: float32
+  use_text_initialization: false
+  use_teacher: false
+  prior_input: interaction_difference_only
+  static_prior_branch: false
+  enhanced_context_in_prior_branch: false
+training:
+  optimizer: Adam
+  learning_rate: 0.0003
+  ppo_clip: 0.2
+  gae_lambda_per_skill: 0.95
+  ppo_epochs: 4
+  rollout_skill_transitions: 1024
+  recurrent_sequence_length: 16
+  minibatch_transitions: 64
+  recurrent_hidden_dim: 128
+  value_coef: 0.5
+  structural_q_coef: 0.1
+  entropy_coef: 0.01
+  grad_clip_norm: 0.5
+  reward: independent_terminal_success
+  gamma_reference_seconds: 1.0
+  gamma_reference_value: 0.99
+  actor_episode_discount_weight: true
+  target_detach: true
+  graph_pretraining: false
+  value_pretraining: false
+  policy_warm_start: false
+prior_training:
+  protocol: episode_prior_dropout
+  original: 0.8
+  absent: 0.2
+  sampled_at: episode_start
+  fixed_within_episode: true
+  resample_during_ppo: false
+  share_protocol_across_prior_using_baselines: true
+  expose_sampling_mode_to_network: false
+  rng_stream: prior_dropout_train
+runtime_required:
+  robot_or_simulator: null
+  environment_version: null
+  controller_manifest: null
+  calibration_manifest: null
+  verifier_manifest: null
+  skill_time_limits: null
+  task_splits: null
+  task_evaluator_version: null
+  total_interaction_budget: null
+  seeds: null
+prior_evaluation:
+  default: original
+  conditions:
+  - original
+  - absent
+  - edge_deletion
+  - type_preserving_target_swap
+  - irrelevant_edge_addition
+  edge_deletion_drop_probability: 0.5
+  target_swap_edge_count: 1
+  irrelevant_add_edge_count: 1
+  sampled_at: episode_start
+  fixed_within_episode: true
+  rng_stream: prior_robustness_eval
+  no_eligible_edit: NOT_APPLICABLE
+  semantic_error_requires_independent_annotation: true

@@ -1,0 +1,67 @@
+id: 0C
+part: I
+name: VLM Cache Sanity Check
+type: Cache Validation
+purpose: 用24个真实task-scene确认缓存与关系接口能产出可用输入，不做大型VLM能力benchmark。
+paper: NO；统计可选写入Implementation说明
+prerequisites: 0A具备API region、SDK、图像和场景绑定；0B的schema/ID/effect/冗余/key检查通过；D0/T_A/T_C各8个dev图像存在。无RL
+  checkpoint。
+inputs: v2.1 prompt/schema/注册ID/合同、固定3个few-shot；模型qwen3.8-max-0902；dashscope1.27.6；actual
+  API endpoint/region；case seeds派生dev_case；API密钥仅经环境提供。
+frozen: 第8.1章模型快照、温度0、JSON object、非思考、2048 tokens、≤8关系、一次重试、effect锚点、证据权限与cache key。
+tunable: 只修接口/格式错误；正式产出前允许一次prompt说明澄清但必须升prompt hash并整批重建，不以RL回报挑关系。
+run_matrix:
+- group: cache_sanity
+  method: Frozen API VLM
+  task: D0 dev[0:8]
+  seeds:
+  - 0
+  budget: 0
+  prior: Original
+  notes: 8场景；三任务合计24；非RL训练
+- group: cache_sanity
+  method: Frozen API VLM
+  task: T_A dev[0:8]
+  seeds:
+  - 0
+  budget: 0
+  prior: Original
+  notes: 8场景；三任务合计24；非RL训练
+- group: cache_sanity
+  method: Frozen API VLM
+  task: T_C dev[0:8]
+  seeds:
+  - 0
+  budget: 0
+  prior: Original
+  notes: 8场景；三任务合计24；非RL训练
+training_budget: 0训练transitions、0 PPO updates；24次首答，最多24次格式/传输重试，总请求≤48；没有语义重试。
+evaluation: 每scene记录首答JSON合法率、ID合法率、effect合法率、局部合同冗余率、最终空比例、mean边数、两类型数、obvious semantic
+  issue数。人工复核24份，分CORRECT/OBVIOUS_ISSUE/UNDECIDABLE，仅审计不改正式边。
+logging: L_CACHE全部＋request ID、输入哈希、原始/拒绝/去重文件、时间和API错误原因。合法率按原始候选关系为分母；无候选时ID/effect比率N/A。
+required_files:
+- sanity_cases.json
+- cache_sanity.csv
+- semantic_audit.csv
+- cache_manifest.json
+- cache_sanity_report.md
+- stage_0c_summary.md
+plots: cache_relation_counts.svg/png：x=scene ID，y=最终关系数，24个原始柱，无均值/平滑。
+tables: cache_summary.csv：24输入数、成功请求数、first_json_valid_n/rate、raw_relation_n、id/effect_valid_n/rate、redundant_n/rate、empty_n/rate、type_count、semantic_issue_n。空请求和API失败分列。
+criteria: PASS：24场景均有处理记录、正常完成请求≥20，首答JSON合法≥80%，有至少3个合法非空且非冗余case（含D0≥1）。只有1–2个可用case可PASS_WITH_NOTES继续有限smoke，但不说普遍高产出。全部空/几乎全非法先NEEDS_RERUN排查输入；API/图像权限缺失BLOCKED。部分自然空不是方法失败。
+failure_handling: 检查真实图像和ID→SDK/region/参数→解析schema→effect出处→局部冗余→任务是否有额外语义关系潜力。不得放松合同冗余、补假effects或反复模型抽样以凑非空。
+rerun_allowed: YES，仅接口修复/已记录版本变更后；原raw保留。
+tuning_allowed: 不允许模型性能调参；最多一次说明性prompt revision，保持v2关系语义。
+writing_block: NO；缺少可用prior阻塞Full smoke的先验通路验收，不阻塞论文方法。
+next_stage: 1A
+execution_steps:
+- 核查API、region、模型快照、SDK和冻结prompt/schema hash。
+- 核查24个dev场景均为真实允许输入且不包含未来或答案。
+- 执行1个场景接口检查，作为24份之一而非额外挑选。
+- 按同一参数完成其余请求，严格执行≤1次失败重试。
+- 解析、校验ID/effect、局部去重，保存所有raw及rejected记录。
+- 逐份审计明显语义问题，仅加审计标签不修改保留关系。
+- 计算明确分母的合法/重复/空关系统计并画关系数图。
+- 检查D0是否至少一个有效非空case，定位全空/非法原因。
+- 冻结生产cache协议，写stage_0c.json和summary；不启动1A。
+extra: ''

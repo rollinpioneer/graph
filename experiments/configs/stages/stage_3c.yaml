@@ -1,0 +1,59 @@
+id: 3C
+part: IV
+name: Bounded Prior Ablation
+type: Ablation
+purpose: 在一个prior-sensitive任务中比较有界和无界残差，保存供robustness比较使用的模型。
+paper: OPTIONAL；低于3A/3B优先级
+prerequisites: 2A确定T_C有先验敏感性；默认2B Full T_C三个seed可复用；A_B开关T25通过。
+inputs: T_C、seeds012；Full复用2B；A_B从头；相同128update、B数值、reward/合同/mask/80-20/cache。
+frozen: 仅去掉tanh，Δ=B*s；不去掉zero anchor、不换F_P、不增加bias、不改B或其他优化参数。
+tunable: None。
+run_matrix:
+- group: reference
+  method: Full
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 复用2B Full
+- group: main
+  method: A_B
+  task: T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  budget: 131072
+  prior: 80/20；B0/B2无prior
+  notes: 3新job
+training_budget: A_B每job131,072/128updates；每16updates×20dev；最终Original30episode/seed。测试corruption在4B执行，不在此默认额外扩条件。
+evaluation: Original配对评价；正常prior下没差异可完成。本Stage产出冻结A_B checkpoint；若4B随后被授权，可增加Full/A_B相同扰动对照而无需新训练。
+logging: L_RUN/L_TRAIN/L_DECISION/L_EVAL＋abs residual分位数、|Δ|>B比例、base logit margin、actor_entropy、梯度与NaN；A_B不受B界不是实现错误。
+required_files:
+- comparison_manifest.json
+- ablation_bound.csv
+- boundedness_report.md
+- ablation_checkpoints.json
+- stage_3c_summary.md
+plots: fig_3c_residual_distribution.svg/png：x=|Δ|，y=有效候选频率，Full/A_B原始直方；fig_3c_learning.svg/png：x=skill
+  transitions，y=dev success，mean＋MA3。
+tables: ablation_bound.csv：method、n、success/AUC、residual_p50/p95/max、over_B_fraction、numeric_issue_n、checkpoint_hash；按run统计再聚合。
+criteria: PASS：唯一开关正确且真实运行可比较；Original差异小无需重跑。无界分支数值异常如实记录，不用隐藏clip强行救活后仍称原A_B。
+failure_handling: 先开关/额外bias/倍率→zero anchor→大残差/梯度→是否溢出。技术问题修复；纯算法不稳定保留现象，不更改其他超参掩盖。
+rerun_allowed: YES，技术修复后；纯性能不强制。
+tuning_allowed: None。
+writing_block: NO。
+next_stage: 4A/4B（需指令）
+execution_steps:
+- 读取T_C Full参考与相同B/config/hash。
+- 确认A_B仅删除tanh，zero anchor仍成立。
+- 从头训练三个A_B seed，保存完整残差和数值日志。
+- 按16update间隔开发评价，观察但不隐藏过大残差。
+- 按同一dev规则冻结checkpoint。
+- 执行/复用Original30episode配对评价。
+- 生成残差分布、成功/AUC表与待4B模型索引。
+- 写stage_3c.json并停止，不自动运行corruption。
+extra: ''
