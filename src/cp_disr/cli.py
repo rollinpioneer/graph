@@ -50,7 +50,9 @@ def main(argv=None):
             if not config.exists():raise BindingError('MUST_BIND: configs/run_resolved.json (model dimensions, task cases, budget, trusted runtime factory)')
             from .execution import execute
             return execute(a.command,root,read(config))
-        if a.command=='generate-cache':require_cache_configuration(read(root/'experiments/manifests/vlm_manifest.yaml'))
+        if a.command=='generate-cache':
+            from .stage0c import run
+            print(canonical(run(root)));return 0
     except (BindingError,ContractError,ValueError,FileNotFoundError) as error:
         print(canonical({'status':'BLOCKED','error':str(error)}));return 2
 

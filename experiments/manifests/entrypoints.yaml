@@ -7,9 +7,9 @@ tests_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --s
   full
 cache_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
 report_cli: .venv-stage0a/bin/python tools/finalize_environment_revision.py
-note: Core code present. Stage 0A library validation is separate from Stage 0B method
-  tests, which remain NOT_RUN. Real runtime unbound. API region/endpoint user-bound;
-  model access MUST_VERIFY in Stage 0C.
+note: Stage 0B PASS (existing evidence unchanged). Stage 0C production preparation
+  offline validated; formal inputs/credential unbound; service MUST_VERIFY. Runtime
+  unbound.
 infrastructure_only:
   host_probe:
     path: tools/stage0a_host_probe.py
@@ -28,21 +28,21 @@ commands:
   validate-manifests:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-manifests
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-contracts:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-contracts
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-relation-cache:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-relation-cache
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
@@ -50,35 +50,37 @@ commands:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
       pure|full
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   build-graph-fixture:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-graph-fixture
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   train:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
     requires_torch: true
     calls_api_this_revision: false
   evaluate:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
     requires_torch: true
     calls_api_this_revision: false
   generate-cache:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
     source_path: src/cp_disr/cli.py
-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
-    status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
+    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+    status: IMPLEMENTED_FORMAL_INPUTS_UNBOUND_GATE_BLOCKED
     requires_torch: false
     calls_api_this_revision: false
+    production_runner: cp_disr.stage0c.run
+    offline_validation_ref: ../part_0_validation/stage_0c/offline_validation.json

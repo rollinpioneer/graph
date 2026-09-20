@@ -6,7 +6,7 @@ from .common import ContractError,digest,canonical
 
 ALLOWED_TYPES=('SOFT_SUPPORTS','SOFT_RELEVANT_TO_GOAL')
 RELATION_FIELDS={'relation_id','type','source_ref','target_ref','effect_fact_ref'}
-CACHE_FIELDS=('split','task_definition_hash','initial_RGB_content_hash','preprocessing_hash','object_binding_hash','allowed_ID_hash','contract_version','predicate_version','model_snapshot','sdk_api_version','region','endpoint','prompt_hash','fewshot_hash','schema_hash','decoding_config')
+CACHE_FIELDS=('split','task_definition_hash','initial_RGB_content_hash','preprocessing_hash','object_binding_hash','allowed_ID_hash','contract_version','predicate_version','model_snapshot','sdk_api_version','region','endpoint','prompt_hash','fewshot_hash','schema_hash','decoding_config','initial_facts_hash','asset_binding_hash','request_payload_hash')
 
 @dataclass(frozen=True)
 class ValidatedRelations:
@@ -62,6 +62,12 @@ def save_cache(root,manifest,raw_response,validated):
     return path
 
 def load_cache(path):
-    path=Path(path); manifest=json.loads((path/'manifest.json').read_text())
+    path=Path(path)
+    if (path/'content_hashes.json').exists() or (path/'INCOMPLETE').exists():
+        from .vlm_cache_pipeline import verify_audit_cache
+        manifest,edges=verify_audit_cache(path)
+        if manifest.get('synthetic_unit_fixture'):raise ContractError('Synthetic cache prohibited for production consumption')
+        return manifest,edges
+    manifest=json.loads((path/'manifest.json').read_text())
     if cache_key(manifest)!=manifest.get('cache_key') or path.name!=manifest['cache_key']:raise ContractError('Cache identity mismatch')
     return manifest,json.loads((path/'final_edges.json').read_text())

@@ -1,0 +1,36 @@
+.......F.........................                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_provider_sdk_dispatch_no_key_read ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fecbc11b820>
+
+    def test_provider_sdk_dispatch_no_key_read(monkeypatch):
+        from dashscope import MultiModalConversation
+        from dashscope.client.base_api import BaseApi
+        from dashscope.api_entities.dashscope_response import DashScopeAPIResponse
+        captured={}
+        def offline_call(cls,**kwargs):
+            captured.update(kwargs)
+            return DashScopeAPIResponse(status_code=200,request_id='synthetic-request',code='',message='',output={'choices':[{'message':{'content':[{'text':'{"schema_version":"m1_soft_relations_v2","relations":[]}'}]},'finish_reason':'stop'}]},usage={})
+        monkeypatch.setattr(BaseApi,'call',classmethod(offline_call))
+        # SDK image preprocessing is exercised with an inline unit payload, no upload.
+        provider=DashScopeProvider();monkeypatch.setattr(provider,'key_present',lambda:True)
+        result=provider.send(payload())
+>       assert result['error_type']=='OK',result
+E       AssertionError: {'code': 'TypeError', 'error_type': 'SDK_ERROR', 'latency_seconds': 0.0017490120371803641, 'raw': {'exception_type': 'TypeError'}, ...}
+E       assert 'SDK_ERROR' == 'OK'
+E         
+E         - OK
+E         + SDK_ERROR
+
+tests/test_stage0c_pipeline.py:60: AssertionError
+=============================== warnings summary ===============================
+tests/test_stage0c_pipeline.py::test_provider_sdk_dispatch_no_key_read
+  /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/lib/python3.10/site-packages/dashscope/__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
+    from dashscope.assistants import Assistant, AssistantList, Assistants
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments/part_0_validation/stage_0c/attempts/002_sdk_mock_fix/junit.xml -
+=========================== short test summary info ============================
+FAILED tests/test_stage0c_pipeline.py::test_provider_sdk_dispatch_no_key_read
+1 failed, 32 passed, 1 warning in 0.51s

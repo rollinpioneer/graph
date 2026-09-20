@@ -1,0 +1,1 @@
+Real requests: 0. Retries: 0. Request ledger absent. Formal caches: 0. No API secret accessed. Offline tests use mocked responses and blocked sockets, not API observations. Missing image inputs do not count as empty priors. No RL/PPO, robot/simulator actions, evaluation, Stage 1A or push executed.

@@ -12,7 +12,7 @@ schema_ref: sources/v2.1_interfaces/relation_schema.json
 prompt_ref: sources/v2.1_interfaces/system_prompt.txt
 prompt_version: cp_disr_relations_v2.1_p1
 fewshot_count: 3
-fewshot_manifest: MUST_BIND
+fewshot_manifest: ../part_0_validation/stage_0c/few_shot_manifest.json
 max_relations: 8
 temperature: 0
 max_output_tokens: 2048
@@ -54,3 +54,10 @@ model_access_verification_stage: 0C
 allow_automatic_model_or_endpoint_fallback: false
 configuration_provenance: User explicitly supplied Beijing region and endpoint; instructed
   no API request in Stage 0A
+provider_implementation: src/cp_disr/vlm_provider.py
+provider_source_sha256: 64068e8e7f2c709d1922678968e17c0b262443c4ece9b5b9d4791f4e38b90670
+cache_pipeline: src/cp_disr/vlm_cache_pipeline.py
+stage_0c_runner: src/cp_disr/stage0c.py
+task_scene_manifest: ../part_0_validation/stage_0c/task_scene_manifest.json
+fewshot_binding_status: MUST_BIND
+provider_validation_status: OFFLINE_PASS_SERVICE_MUST_VERIFY

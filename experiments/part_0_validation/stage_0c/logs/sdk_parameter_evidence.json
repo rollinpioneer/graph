@@ -1,0 +1,1457 @@
+[
+  {
+    "file": "acli/acceptance.py",
+    "line": 190,
+    "source": "timeout=_env_int(\"ACLI_ACCEPTANCE_TIMEOUT\", DEFAULT_TIMEOUT),"
+  },
+  {
+    "file": "acli/acceptance.py",
+    "line": 304,
+    "source": "text = await run_command(command=self.command, timeout=self.timeout)"
+  },
+  {
+    "file": "acli/agent.py",
+    "line": 89,
+    "source": "after a stalled endpoint it means ``max_retries x request_timeout`` went"
+  },
+  {
+    "file": "acli/agent.py",
+    "line": 782,
+    "source": "# re-attempted here: that multiplied max_retries x request_timeout"
+  },
+  {
+    "file": "acli/agent.py",
+    "line": 804,
+    "source": "response_format=("
+  },
+  {
+    "file": "acli/config.py",
+    "line": 227,
+    "source": "default_timeout=int(d.get(\"default_timeout\", 120)),"
+  },
+  {
+    "file": "acli/config.py",
+    "line": 358,
+    "source": "if key := os.environ.get(\"DASHSCOPE_API_KEY\"):"
+  },
+  {
+    "file": "acli/config.py",
+    "line": 372,
+    "source": "if os.environ.get(\"DASHSCOPE_API_KEY\"):"
+  },
+  {
+    "file": "acli/config.py",
+    "line": 633,
+    "source": "os.environ.get(\"DASHSCOPE_API_KEY\"),"
+  },
+  {
+    "file": "acli/dev.py",
+    "line": 183,
+    "source": "api_key_env = \"DASHSCOPE_API_KEY\""
+  },
+  {
+    "file": "acli/extensions.py",
+    "line": 133,
+    "source": "# env var matches this capability's (e.g. DASHSCOPE_API_KEY \u2194 tongyi)."
+  },
+  {
+    "file": "acli/extensions.py",
+    "line": 169,
+    "source": "``env_name`` (e.g. DASHSCOPE_API_KEY \u2192 config.tongyi_api_key). Lets an"
+  },
+  {
+    "file": "acli/extensions.py",
+    "line": 602,
+    "source": "async with httpx.AsyncClient(timeout=60) as client:"
+  },
+  {
+    "file": "acli/extensions.py",
+    "line": 1282,
+    "source": "timeout=60,"
+  },
+  {
+    "file": "acli/hooks.py",
+    "line": 158,
+    "source": "timeout=_HOOK_TIMEOUT,"
+  },
+  {
+    "file": "acli/hooks.py",
+    "line": 181,
+    "source": "timeout=_HOOK_TIMEOUT,"
+  },
+  {
+    "file": "acli/hooks.py",
+    "line": 186,
+    "source": "await asyncio.wait_for(proc.wait(), timeout=5)"
+  },
+  {
+    "file": "acli/mcp_stdio.py",
+    "line": 121,
+    "source": "await asyncio.wait_for(proc.wait(), timeout=_CLOSE_TIMEOUT)"
+  },
+  {
+    "file": "acli/mcp_stdio.py",
+    "line": 127,
+    "source": "timeout=_CLOSE_TIMEOUT,"
+  },
+  {
+    "file": "acli/mcp_stdio.py",
+    "line": 209,
+    "source": "return await asyncio.wait_for(future, timeout=self.timeout)"
+  },
+  {
+    "file": "acli/mcp_stdio.py",
+    "line": 303,
+    "source": "timeout=1.0,"
+  },
+  {
+    "file": "acli/scheduler.py",
+    "line": 439,
+    "source": "timeout=300.0,"
+  },
+  {
+    "file": "acli/scheduler.py",
+    "line": 559,
+    "source": "timeout=30.0,"
+  },
+  {
+    "file": "acli/agents/delegate.py",
+    "line": 200,
+    "source": "timeout=effective_timeout,"
+  },
+  {
+    "file": "acli/agents/delegate.py",
+    "line": 279,
+    "source": "timeout=task_def.get(\"timeout\"),"
+  },
+  {
+    "file": "acli/cli/constants.py",
+    "line": 13,
+    "source": "\"env\": \"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "acli/cli/handlers_key.py",
+    "line": 305,
+    "source": "# (e.g. tongyi \u2194 DASHSCOPE_API_KEY) \u2014 no second prompt needed."
+  },
+  {
+    "file": "acli/cli/multimodal.py",
+    "line": 111,
+    "source": "timeout=5,"
+  },
+  {
+    "file": "acli/cli/runners.py",
+    "line": 108,
+    "source": "thread.join(timeout=5.0)"
+  },
+  {
+    "file": "acli/cli/streaming.py",
+    "line": 345,
+    "source": "thread.join(timeout=5)"
+  },
+  {
+    "file": "acli/platforms/bailian/cli.py",
+    "line": 83,
+    "source": "timeout=15,"
+  },
+  {
+    "file": "acli/platforms/bailian/cli.py",
+    "line": 116,
+    "source": "env = {**os.environ, \"DASHSCOPE_API_KEY\": self.api_key}"
+  },
+  {
+    "file": "acli/platforms/bailian/cli.py",
+    "line": 131,
+    "source": "timeout=self.timeout,"
+  },
+  {
+    "file": "acli/platforms/bailian/mcp.py",
+    "line": 52,
+    "source": "self._client = httpx.AsyncClient(timeout=60, follow_redirects=True)"
+  },
+  {
+    "file": "acli/platforms/bailian/mcp.py",
+    "line": 64,
+    "source": "await asyncio.wait_for(self._connected.wait(), timeout=15)"
+  },
+  {
+    "file": "acli/platforms/bailian/mcp.py",
+    "line": 176,
+    "source": "result = await asyncio.wait_for(future, timeout=30)"
+  },
+  {
+    "file": "acli/providers/__init__.py",
+    "line": 34,
+    "source": "\"tongyi\": \"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "acli/providers/anthropic.py",
+    "line": 70,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "acli/providers/anthropic.py",
+    "line": 164,
+    "source": "response_format: dict | None = None,  # pylint: disable=unused-argument"
+  },
+  {
+    "file": "acli/providers/anthropic.py",
+    "line": 177,
+    "source": "# Anthropic API does not support OpenAI-style response_format;"
+  },
+  {
+    "file": "acli/providers/anthropic.py",
+    "line": 235,
+    "source": "response_format: dict | None = None,  # pylint: disable=unused-argument"
+  },
+  {
+    "file": "acli/providers/anthropic.py",
+    "line": 248,
+    "source": "# Anthropic API does not support OpenAI-style response_format;"
+  },
+  {
+    "file": "acli/providers/base.py",
+    "line": 39,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/base.py",
+    "line": 47,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 124,
+    "source": "``max_retries x request_timeout`` a second time, which against a stalled"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 129,
+    "source": "stalled endpoint costs ``max_retries x request_timeout`` (268s measured);"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 138,
+    "source": "#: one request_timeout, the attempts were each stalling rather than"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 189,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 200,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 229,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/hardening.py",
+    "line": 240,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 99,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 109,
+    "source": "if response_format:"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 110,
+    "source": "kwargs[\"response_format\"] = response_format"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 169,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 180,
+    "source": "if response_format:"
+  },
+  {
+    "file": "acli/providers/openai.py",
+    "line": 181,
+    "source": "kwargs[\"response_format\"] = response_format"
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 22,
+    "source": "\"tongyi\": \"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 167,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 257,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 270,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 283,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/profile.py",
+    "line": 297,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 192,
+    "source": "request_timeout: int = 60,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 199,
+    "source": "self.request_timeout = request_timeout"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 265,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 281,
+    "source": "if response_format:"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 282,
+    "source": "parameters[\"response_format\"] = response_format"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 309,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 335,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 341,
+    "source": "timeout=self.request_timeout,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 428,
+    "source": "response_format: dict | None = None,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 454,
+    "source": "response_format=response_format,"
+  },
+  {
+    "file": "acli/providers/tongyi.py",
+    "line": 460,
+    "source": "timeout=self.request_timeout,"
+  },
+  {
+    "file": "acli/skills/store.py",
+    "line": 184,
+    "source": "with urllib.request.urlopen(source, timeout=60) as resp:"
+  },
+  {
+    "file": "acli/skills/store.py",
+    "line": 232,
+    "source": "with urllib.request.urlopen(registry_url, timeout=30) as resp:"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 337,
+    "source": "await page.goto(url, wait_until=\"domcontentloaded\", timeout=timeout)"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 339,
+    "source": "await page.wait_for_selector(wait_selector, timeout=timeout)"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 341,
+    "source": "await page.wait_for_load_state(\"networkidle\", timeout=timeout)"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 378,
+    "source": "async with _launch_page(timeout=timeout) as page:"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 431,
+    "source": "async with _launch_page(timeout=timeout) as page:"
+  },
+  {
+    "file": "acli/tools/browser.py",
+    "line": 480,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "acli/tools/platform.py",
+    "line": 184,
+    "source": "# same env var (DASHSCOPE_API_KEY \u2194 tongyi) instead of failing at call"
+  },
+  {
+    "file": "acli/tools/shell.py",
+    "line": 559,
+    "source": "timeout=10,"
+  },
+  {
+    "file": "acli/tools/shell.py",
+    "line": 683,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "acli/ui/camera.py",
+    "line": 79,
+    "source": "timeout=10,"
+  },
+  {
+    "file": "acli/ui/camera.py",
+    "line": 196,
+    "source": "timeout=duration + 10,"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 282,
+    "source": "os.environ.setdefault(\"DASHSCOPE_API_KEY\", self.api_key)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 366,
+    "source": "audio_complete.wait(timeout=0.1)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 374,
+    "source": "audio_complete.wait(timeout=5.0)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 410,
+    "source": "audio_complete.wait(timeout=0.05)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 415,
+    "source": "audio_complete.wait(timeout=60)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 481,
+    "source": "audio_complete.wait(timeout=60)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 490,
+    "source": "audio_complete.wait(timeout=0.1)"
+  },
+  {
+    "file": "acli/ui/tts.py",
+    "line": 614,
+    "source": "self._done_event.wait(timeout=120)"
+  },
+  {
+    "file": "acli/ui/tui.py",
+    "line": 1595,
+    "source": "self.notify(f\"Copied {n_lines} lines to clipboard\", timeout=2)"
+  },
+  {
+    "file": "acli/ui/tui.py",
+    "line": 1604,
+    "source": "timeout=3,"
+  },
+  {
+    "file": "acli/ui/tui.py",
+    "line": 1856,
+    "source": "timeout=3,"
+  },
+  {
+    "file": "acli/ui/tui.py",
+    "line": 1864,
+    "source": "self.notify(\"Select content in the output area first\", timeout=3)"
+  },
+  {
+    "file": "acli/ui/tui.py",
+    "line": 2321,
+    "source": "future.wait(timeout=self._INLINE_INPUT_TIMEOUT)"
+  },
+  {
+    "file": "acli/ui/voice.py",
+    "line": 60,
+    "source": "os.environ.setdefault(\"DASHSCOPE_API_KEY\", api_key)"
+  },
+  {
+    "file": "acli/ui/voice.py",
+    "line": 189,
+    "source": "self._complete.wait(timeout=10)"
+  },
+  {
+    "file": "acli/ui/voice.py",
+    "line": 395,
+    "source": "timeout=0.15,"
+  },
+  {
+    "file": "acli/utils/spinner.py",
+    "line": 42,
+    "source": "self._thread.join(timeout=1)"
+  },
+  {
+    "file": "acli/utils/validation.py",
+    "line": 71,
+    "source": "# str and blowing up at the call site (asyncio.wait_for(timeout=str)"
+  },
+  {
+    "file": "agentstudio/client.py",
+    "line": 135,
+    "source": "timeout=timeout or AGENTSTUDIO_DEFAULT_TIMEOUT,"
+  },
+  {
+    "file": "agentstudio/client.py",
+    "line": 209,
+    "source": "timeout=timeout or AGENTSTUDIO_DEFAULT_TIMEOUT,"
+  },
+  {
+    "file": "agentstudio/streaming.py",
+    "line": 114,
+    "source": "item = q.get(timeout=self.idle_timeout)"
+  },
+  {
+    "file": "agentstudio/streaming.py",
+    "line": 196,
+    "source": "timeout=self.idle_timeout,"
+  },
+  {
+    "file": "agentstudio/transport.py",
+    "line": 225,
+    "source": "\"the DASHSCOPE_API_KEY environment variable.\","
+  },
+  {
+    "file": "agentstudio/transport.py",
+    "line": 296,
+    "source": "timeout=_resolve_timeout(timeout),"
+  },
+  {
+    "file": "agentstudio/transport.py",
+    "line": 360,
+    "source": "timeout=req_timeout,"
+  },
+  {
+    "file": "agentstudio/transport.py",
+    "line": 522,
+    "source": "timeout=_resolve_timeout(timeout),"
+  },
+  {
+    "file": "agentstudio/transport.py",
+    "line": 584,
+    "source": "timeout=req_timeout,"
+  },
+  {
+    "file": "agentstudio/resources/files.py",
+    "line": 197,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "agentstudio/resources/files.py",
+    "line": 326,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "agentstudio/resources/session_events.py",
+    "line": 141,
+    "source": "timeout=timeout or AGENTSTUDIO_DEFAULT_TIMEOUT,"
+  },
+  {
+    "file": "agentstudio/resources/session_events.py",
+    "line": 317,
+    "source": "timeout=timeout or AGENTSTUDIO_DEFAULT_TIMEOUT,"
+  },
+  {
+    "file": "aigc/chat_completion.py",
+    "line": 136,
+    "source": "base_address=dashscope.base_compatible_api_url,"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 79,
+    "source": "response_format: Dict[str, Any] = None,"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 123,
+    "source": "response_format (dict, optional): Format constraint for response,"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 183,
+    "source": "if response_format is not None:"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 184,
+    "source": "kwargs[\"response_format\"] = response_format"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 372,
+    "source": "response_format: Dict[str, Any] = None,"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 413,
+    "source": "response_format (dict, optional): Format constraint for response,"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 473,
+    "source": "if response_format is not None:"
+  },
+  {
+    "file": "aigc/generation.py",
+    "line": 474,
+    "source": "kwargs[\"response_format\"] = response_format"
+  },
+  {
+    "file": "aigc/image_generation.py",
+    "line": 201,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "aigc/image_generation.py",
+    "line": 520,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "aigc/image_synthesis.py",
+    "line": 1019,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "aigc/video_synthesis.py",
+    "line": 972,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "api_entities/aiohttp_request.py",
+    "line": 276,
+    "source": "request_timeout = aiohttp.ClientTimeout("
+  },
+  {
+    "file": "api_entities/aiohttp_request.py",
+    "line": 281,
+    "source": "request_timeout = aiohttp.ClientTimeout(total=self.timeout)"
+  },
+  {
+    "file": "api_entities/aiohttp_request.py",
+    "line": 294,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/aiohttp_request.py",
+    "line": 306,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/aiohttp_request.py",
+    "line": 318,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 40,
+    "source": "request_timeout: Optional[int] = None,"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 49,
+    "source": "base_address: Optional[str] = None,"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 82,
+    "source": "request_timeout (int, optional): Request timeout in seconds."
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 95,
+    "source": "base_address (str, optional): Custom base URL for the API."
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 138,
+    "source": "if base_address is not None:"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 139,
+    "source": "base_address = resolve_base_url(base_address, workspace)"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 142,
+    "source": "if base_address is None:"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 143,
+    "source": "base_address = resolve_base_url("
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 147,
+    "source": "if not base_address.endswith(\"/\"):"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 148,
+    "source": "http_url = base_address + \"/\""
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 150,
+    "source": "http_url = base_address"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 177,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 185,
+    "source": "if base_address is not None:"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 186,
+    "source": "websocket_url = base_address"
+  },
+  {
+    "file": "api_entities/api_request_factory.py",
+    "line": 198,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/encryption.py",
+    "line": 104,
+    "source": "timeout=DEFAULT_REQUEST_TIMEOUT_SECONDS,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 313,
+    "source": "request_timeout = aiohttp.ClientTimeout("
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 318,
+    "source": "request_timeout = aiohttp.ClientTimeout(total=self.timeout)"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 331,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 343,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 357,
+    "source": "timeout=request_timeout,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 623,
+    "source": "timeout=self.timeout,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 636,
+    "source": "timeout=self.timeout,"
+  },
+  {
+    "file": "api_entities/http_request.py",
+    "line": 648,
+    "source": "timeout=self.timeout,"
+  },
+  {
+    "file": "api_entities/websocket_request.py",
+    "line": 123,
+    "source": "timeout=aiohttp.ClientTimeout("
+  },
+  {
+    "file": "audio/asr/transcription.py",
+    "line": 191,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "audio/qwen_asr/qwen_transcription.py",
+    "line": 148,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "audio/qwen_tts_realtime/qwen_tts_realtime.py",
+    "line": 174,
+    "source": "response_format: AudioFormat = AudioFormat.PCM_24000HZ_MONO_16BIT,"
+  },
+  {
+    "file": "audio/qwen_tts_realtime/qwen_tts_realtime.py",
+    "line": 195,
+    "source": "response_format: AudioFormat"
+  },
+  {
+    "file": "audio/qwen_tts_realtime/qwen_tts_realtime.py",
+    "line": 223,
+    "source": "\"response_format\": response_format.format,"
+  },
+  {
+    "file": "audio/qwen_tts_realtime/qwen_tts_realtime.py",
+    "line": 224,
+    "source": "\"sample_rate\": response_format.sample_rate,"
+  },
+  {
+    "file": "audio/qwen_tts_realtime/qwen_tts_realtime.py",
+    "line": 234,
+    "source": "\"response_format\""
+  },
+  {
+    "file": "audio/tts_v2/speech_synthesizer.py",
+    "line": 687,
+    "source": "timeout=complete_timeout_millis / 1000,"
+  },
+  {
+    "file": "audio/tts_v2/speech_synthesizer.py",
+    "line": 706,
+    "source": "if not self.complete_event.wait(timeout=timeout / 1000):"
+  },
+  {
+    "file": "audio/tts_v2/speech_synthesizer.py",
+    "line": 769,
+    "source": "timeout=complete_timeout_millis / 1000,"
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 246,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 247,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 322,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 323,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 392,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 393,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 478,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 479,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 595,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 596,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 635,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 636,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 666,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 667,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 709,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/agentic_rl.py",
+    "line": 710,
+    "source": "help=\"DashScope API Key (uses DASHSCOPE_API_KEY env var if omitted)\","
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 11,
+    "source": "from dashscope.common.constants import DEFAULT_DASHSCOPE_API_KEY_FILE_PATH"
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 44,
+    "source": "\"DASHSCOPE_API_KEY to configure one.\","
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 53,
+    "source": "elif os.path.exists(DEFAULT_DASHSCOPE_API_KEY_FILE_PATH):"
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 54,
+    "source": "source = f\"file ({DEFAULT_DASHSCOPE_API_KEY_FILE_PATH})\""
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 103,
+    "source": "key_path = DEFAULT_DASHSCOPE_API_KEY_FILE_PATH"
+  },
+  {
+    "file": "cli/auth.py",
+    "line": 110,
+    "source": "path = DEFAULT_DASHSCOPE_API_KEY_FILE_PATH"
+  },
+  {
+    "file": "cli/files.py",
+    "line": 72,
+    "source": "base_address=base_url,"
+  },
+  {
+    "file": "cli/files.py",
+    "line": 101,
+    "source": "rsp = dashscope.Files.get(file_id=file_id, base_address=base_url)"
+  },
+  {
+    "file": "cli/files.py",
+    "line": 125,
+    "source": "base_address=base_url,"
+  },
+  {
+    "file": "cli/files.py",
+    "line": 146,
+    "source": "ensure_ok(dashscope.Files.delete(file_id, base_address=base_url))"
+  },
+  {
+    "file": "cli/oss.py",
+    "line": 41,
+    "source": "envvar=\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "cli/oss.py",
+    "line": 62,
+    "source": "api_key or dashscope.api_key or os.environ.get(\"DASHSCOPE_API_KEY\")"
+  },
+  {
+    "file": "cli/oss.py",
+    "line": 67,
+    "source": "\"DASHSCOPE_API_KEY or pass it as argument by -k/--api-key\","
+  },
+  {
+    "file": "cli/oss.py",
+    "line": 76,
+    "source": "base_address=base_url,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 46,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 54,
+    "source": "kwargs[\"base_address\"] = url"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 308,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 317,
+    "source": "kwargs[\"base_address\"] = url"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 372,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 588,
+    "source": "def _normalization_url(base_address, *args, workspace=None):"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 589,
+    "source": "if base_address:"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 590,
+    "source": "url = resolve_base_url(base_address, workspace)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 605,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 627,
+    "source": "timeout=DEFAULT_REQUEST_TIMEOUT_SECONDS,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 667,
+    "source": "wait_timeout=wait_timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 707,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 762,
+    "source": "base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 999,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1044,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1095,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1136,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1176,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1218,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1259,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1284,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1312,
+    "source": "kwargs.pop(\"base_address\", None),"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1338,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1376,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1406,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1418,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1446,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1476,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1505,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1532,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1558,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1584,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1672,
+    "source": "custom_base_url = kwargs.pop(\"base_address\", None)"
+  },
+  {
+    "file": "client/base_api.py",
+    "line": 1695,
+    "source": "timeout=timeout,"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 9,
+    "source": "DEFAULT_DASHSCOPE_API_KEY_FILE_PATH,"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 17,
+    "source": "# user set environment variable DASHSCOPE_API_KEY"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 20,
+    "source": "# user set environment variable DASHSCOPE_API_KEY_FILE_PATH"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 28,
+    "source": "if os.path.exists(DEFAULT_DASHSCOPE_API_KEY_FILE_PATH):"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 30,
+    "source": "DEFAULT_DASHSCOPE_API_KEY_FILE_PATH,"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 38,
+    "source": "\"or you can set it via environment variable DASHSCOPE_API_KEY= your_api_key. \"  # noqa: E501"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 40,
+    "source": "\"or you can set api key file path via environment variable DASHSCOPE_API_KEY_FILE_PATH, \"  # noqa: E501  # pylint: disable=line-too-long"
+  },
+  {
+    "file": "common/api_key.py",
+    "line": 49,
+    "source": "with open(DEFAULT_DASHSCOPE_API_KEY_FILE_PATH, \"w+\") as f:"
+  },
+  {
+    "file": "common/constants.py",
+    "line": 7,
+    "source": "DASHSCOPE_API_KEY_ENV = \"DASHSCOPE_API_KEY\""
+  },
+  {
+    "file": "common/constants.py",
+    "line": 8,
+    "source": "DASHSCOPE_API_KEY_FILE_PATH_ENV = \"DASHSCOPE_API_KEY_FILE_PATH\""
+  },
+  {
+    "file": "common/constants.py",
+    "line": 15,
+    "source": "DEFAULT_DASHSCOPE_API_KEY_FILE_PATH = Path.joinpath("
+  },
+  {
+    "file": "common/constants.py",
+    "line": 21,
+    "source": "REQUEST_TIMEOUT_KEYWORD = \"request_timeout\""
+  },
+  {
+    "file": "common/env.py",
+    "line": 8,
+    "source": "DASHSCOPE_API_KEY_ENV,"
+  },
+  {
+    "file": "common/env.py",
+    "line": 9,
+    "source": "DASHSCOPE_API_KEY_FILE_PATH_ENV,"
+  },
+  {
+    "file": "common/env.py",
+    "line": 80,
+    "source": "api_key = os.environ.get(DASHSCOPE_API_KEY_ENV)"
+  },
+  {
+    "file": "common/env.py",
+    "line": 81,
+    "source": "api_key_file_path = os.environ.get(DASHSCOPE_API_KEY_FILE_PATH_ENV)"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 263,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 353,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 372,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 391,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 409,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 429,
+    "source": "kwargs[\"base_address\"] = DASHSCOPE_HTTP_BASE_URL"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 458,
+    "source": "api_key: DashScope API key (uses DASHSCOPE_API_KEY env var"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 533,
+    "source": "api_key: DashScope API key (uses DASHSCOPE_API_KEY env var"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 581,
+    "source": "api_key: DashScope API key (uses DASHSCOPE_API_KEY env var"
+  },
+  {
+    "file": "finetune/agentic_rl.py",
+    "line": 617,
+    "source": "api_key: DashScope API key (uses DASHSCOPE_API_KEY env var"
+  },
+  {
+    "file": "finetune/reinforcement/__init__.py",
+    "line": 15,
+    "source": "DASHSCOPE_API_KEY,"
+  },
+  {
+    "file": "finetune/reinforcement/__init__.py",
+    "line": 155,
+    "source": "\"DASHSCOPE_API_KEY\","
+  },
+  {
+    "file": "finetune/reinforcement/common/constants.py",
+    "line": 32,
+    "source": "DASHSCOPE_API_KEY = os.environ.get(\"DASHSCOPE_API_KEY\", \"\")"
+  },
+  {
+    "file": "finetune/reinforcement/common/constants.py",
+    "line": 33,
+    "source": "FC_API_KEY = os.environ.get(\"FC_API_KEY\", DASHSCOPE_API_KEY)"
+  },
+  {
+    "file": "finetune/reinforcement/common/model.py",
+    "line": 1745,
+    "source": "timeout=("
+  },
+  {
+    "file": "finetune/reinforcement/common/model.py",
+    "line": 1777,
+    "source": "timeout=("
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 35,
+    "source": "DASHSCOPE_API_KEY,"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 77,
+    "source": "timeout=aiohttp.ClientTimeout(total=timeout),"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 182,
+    "source": "timeout=HTTP_REQUEST_TIMEOUT,"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 549,
+    "source": "timeout=BAILIAN_FILE_TIMEOUT,"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 618,
+    "source": "\"Authorization\": f\"Bearer {DASHSCOPE_API_KEY}\","
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 680,
+    "source": "timeout=BAILIAN_FILE_TIMEOUT,"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 762,
+    "source": "existing DASHSCOPE_API_KEY environment variable."
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 765,
+    "source": "ConfigurationError: If api_key is not provided and DASHSCOPE_API_KEY"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 770,
+    "source": "os.environ[\"DASHSCOPE_API_KEY\"] = api_key"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 772,
+    "source": "f\"Set environ DASHSCOPE_API_KEY: \""
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 778,
+    "source": "if not os.environ.get(\"DASHSCOPE_API_KEY\"):"
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 782,
+    "source": "\"'DASHSCOPE_API_KEY' environment variable.\","
+  },
+  {
+    "file": "finetune/reinforcement/common/utils.py",
+    "line": 787,
+    "source": "logger.debug(\"Using existing DASHSCOPE_API_KEY from environment.\")"
+  },
+  {
+    "file": "multimodal/multimodal_dialog.py",
+    "line": 377,
+    "source": "self.ws.run_forever(ping_interval=None, ping_timeout=None)"
+  },
+  {
+    "file": "multimodal/multimodal_dialog.py",
+    "line": 428,
+    "source": "self.thread.join(timeout=2)"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu.py",
+    "line": 35,
+    "source": "base_address: base address"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 91,
+    "source": "base_address: str = None,"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 99,
+    "source": "if base_address is None:"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 100,
+    "source": "base_address = dashscope.base_websocket_api_url"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 101,
+    "source": "self.base_address = resolve_base_url(base_address, workspace)"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 241,
+    "source": "self.ws.run_forever(ping_interval=5, ping_timeout=4)"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 246,
+    "source": "self.base_address,  # type: ignore[has-type]"
+  },
+  {
+    "file": "multimodal/tingwu/tingwu_realtime.py",
+    "line": 304,
+    "source": "self.thread.join(timeout=2)"
+  },
+  {
+    "file": "utils/oss_utils.py",
+    "line": 98,
+    "source": "timeout=3600,"
+  }
+]

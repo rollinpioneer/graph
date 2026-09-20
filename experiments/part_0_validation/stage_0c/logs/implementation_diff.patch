@@ -1,0 +1,152 @@
+diff --git a/experiments/manifests/entrypoints.yaml b/experiments/manifests/entrypoints.yaml
+index 35097b6..315a986 100644
+--- a/experiments/manifests/entrypoints.yaml
++++ b/experiments/manifests/entrypoints.yaml
+@@ -7,9 +7,9 @@ tests_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --s
+   full
+ cache_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
+ report_cli: .venv-stage0a/bin/python tools/finalize_environment_revision.py
+-note: Core code present. Stage 0A library validation is separate from Stage 0B method
+-  tests, which remain NOT_RUN. Real runtime unbound. API region/endpoint user-bound;
+-  model access MUST_VERIFY in Stage 0C.
++note: Stage 0B PASS (existing evidence unchanged). Stage 0C production preparation
++  offline validated; formal inputs/credential unbound; service MUST_VERIFY. Runtime
++  unbound.
+ infrastructure_only:
+   host_probe:
+     path: tools/stage0a_host_probe.py
+@@ -28,21 +28,21 @@ commands:
+   validate-manifests:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-manifests
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED
+     requires_torch: false
+     calls_api_this_revision: false
+   validate-contracts:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-contracts
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED
+     requires_torch: false
+     calls_api_this_revision: false
+   validate-relation-cache:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-relation-cache
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED
+     requires_torch: false
+     calls_api_this_revision: false
+@@ -50,35 +50,37 @@ commands:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
+       pure|full
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED
+     requires_torch: false
+     calls_api_this_revision: false
+   build-graph-fixture:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-graph-fixture
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED
+     requires_torch: false
+     calls_api_this_revision: false
+   train:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
+     requires_torch: true
+     calls_api_this_revision: false
+   evaluate:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
+     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
+     requires_torch: true
+     calls_api_this_revision: false
+   generate-cache:
+     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
+     source_path: src/cp_disr/cli.py
+-    source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
+-    status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
++    source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
++    status: IMPLEMENTED_FORMAL_INPUTS_UNBOUND_GATE_BLOCKED
+     requires_torch: false
+     calls_api_this_revision: false
++    production_runner: cp_disr.stage0c.run
++    offline_validation_ref: ../part_0_validation/stage_0c/offline_validation.json
+diff --git a/experiments/manifests/vlm_manifest.yaml b/experiments/manifests/vlm_manifest.yaml
+index 0207cd8..46099c1 100644
+--- a/experiments/manifests/vlm_manifest.yaml
++++ b/experiments/manifests/vlm_manifest.yaml
+@@ -12,7 +12,7 @@ schema_ref: sources/v2.1_interfaces/relation_schema.json
+ prompt_ref: sources/v2.1_interfaces/system_prompt.txt
+ prompt_version: cp_disr_relations_v2.1_p1
+ fewshot_count: 3
+-fewshot_manifest: MUST_BIND
++fewshot_manifest: ../part_0_validation/stage_0c/few_shot_manifest.json
+ max_relations: 8
+ temperature: 0
+ max_output_tokens: 2048
+@@ -54,3 +54,10 @@ model_access_verification_stage: 0C
+ allow_automatic_model_or_endpoint_fallback: false
+ configuration_provenance: User explicitly supplied Beijing region and endpoint; instructed
+   no API request in Stage 0A
++provider_implementation: src/cp_disr/vlm_provider.py
++provider_source_sha256: 64068e8e7f2c709d1922678968e17c0b262443c4ece9b5b9d4791f4e38b90670
++cache_pipeline: src/cp_disr/vlm_cache_pipeline.py
++stage_0c_runner: src/cp_disr/stage0c.py
++task_scene_manifest: ../part_0_validation/stage_0c/task_scene_manifest.json
++fewshot_binding_status: MUST_BIND
++provider_validation_status: OFFLINE_PASS_SERVICE_MUST_VERIFY
+diff --git a/src/cp_disr/cli.py b/src/cp_disr/cli.py
+index be9f253..c549222 100644
+--- a/src/cp_disr/cli.py
++++ b/src/cp_disr/cli.py
+@@ -50,7 +50,9 @@ def main(argv=None):
+             if not config.exists():raise BindingError('MUST_BIND: configs/run_resolved.json (model dimensions, task cases, budget, trusted runtime factory)')
+             from .execution import execute
+             return execute(a.command,root,read(config))
+-        if a.command=='generate-cache':require_cache_configuration(read(root/'experiments/manifests/vlm_manifest.yaml'))
++        if a.command=='generate-cache':
++            from .stage0c import run
++            print(canonical(run(root)));return 0
+     except (BindingError,ContractError,ValueError,FileNotFoundError) as error:
+         print(canonical({'status':'BLOCKED','error':str(error)}));return 2
+ 
+diff --git a/src/cp_disr/vlm.py b/src/cp_disr/vlm.py
+index 94ab025..bd14f8f 100644
+--- a/src/cp_disr/vlm.py
++++ b/src/cp_disr/vlm.py
+@@ -6,7 +6,7 @@ from .common import ContractError,digest,canonical
+ 
+ ALLOWED_TYPES=('SOFT_SUPPORTS','SOFT_RELEVANT_TO_GOAL')
+ RELATION_FIELDS={'relation_id','type','source_ref','target_ref','effect_fact_ref'}
+-CACHE_FIELDS=('split','task_definition_hash','initial_RGB_content_hash','preprocessing_hash','object_binding_hash','allowed_ID_hash','contract_version','predicate_version','model_snapshot','sdk_api_version','region','endpoint','prompt_hash','fewshot_hash','schema_hash','decoding_config')
++CACHE_FIELDS=('split','task_definition_hash','initial_RGB_content_hash','preprocessing_hash','object_binding_hash','allowed_ID_hash','contract_version','predicate_version','model_snapshot','sdk_api_version','region','endpoint','prompt_hash','fewshot_hash','schema_hash','decoding_config','initial_facts_hash','asset_binding_hash','request_payload_hash')
+ 
+ @dataclass(frozen=True)
+ class ValidatedRelations:
+@@ -62,6 +62,12 @@ def save_cache(root,manifest,raw_response,validated):
+     return path
+ 
+ def load_cache(path):
+-    path=Path(path); manifest=json.loads((path/'manifest.json').read_text())
++    path=Path(path)
++    if (path/'content_hashes.json').exists() or (path/'INCOMPLETE').exists():
++        from .vlm_cache_pipeline import verify_audit_cache
++        manifest,edges=verify_audit_cache(path)
++        if manifest.get('synthetic_unit_fixture'):raise ContractError('Synthetic cache prohibited for production consumption')
++        return manifest,edges
++    manifest=json.loads((path/'manifest.json').read_text())
+     if cache_key(manifest)!=manifest.get('cache_key') or path.name!=manifest['cache_key']:raise ContractError('Cache identity mismatch')
+     return manifest,json.loads((path/'final_edges.json').read_text())

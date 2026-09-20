@@ -1,0 +1,1 @@
+Code/manifests/status pass git diff --check. Original pytest outputs, user request and captured patch retain their original whitespace as audit evidence; these are excluded from whitespace cleanup. Generated CSV line endings normalized to LF.

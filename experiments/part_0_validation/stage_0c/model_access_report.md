@@ -1,0 +1,1 @@
+MUST_VERIFY. No API request was permitted because real scenes/fewshots and protected SDK environment are unbound. No API error code exists to report. Local key file was not read/copied/hashed/transferred. No model/endpoint substitution. Future first formal scene counts within 24; permission/model/endpoint rejection stops immediately without fallback.
