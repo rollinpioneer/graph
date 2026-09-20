@@ -1,11 +1,11 @@
-# CP-DISR v2.1 — Stage 0A
+# CP-DISR v2.1
 
-Status: **BLOCKED**. Only Stage 0A is authorized and executed.
+Stage 0A remains **BLOCKED**: external runtime and user-owned environment/API bindings pending.
 
-- Full report: `experiments/part_0_validation/stage_0a/stage_0a_summary.md`
-- Current status: `experiments/stage_status/stage_0a.json`
-- Exact unresolved fields: `experiments/part_0_validation/stage_0a/unbound_must_bind.csv`
-- Frozen originals: `inputs/` and `experiments/sources/`
-- Independent project environment: `.venv`; resolver: `.bootstrap/bin/uv`
+Production package: `src/cp_disr`; no imports of torch from package root or offline CLI.
 
-This repository begins a new independent history; the previous graph repositories are discovery sources only. Origin is configured, but this branch has not been pushed. Do not start Stage 0B automatically. The bundled Kit README and original preflight history describe the supplied package, not target-host completion.
+Latest report: `experiments/part_0_validation/stage_0a/revisions/non_environment_20260920T142216Z/stage_0a_non_environment_remediation_summary.md`
+
+Use `PYTHONPATH=src python -m cp_disr --help`. Pure logic checks run under Stage 0A remediation only. Full T01–T25 tests require the user-completed environment and explicit authorization; no automatic stage advancement.
+
+Original reports and frozen Method sources remain preserved. No real controller/task binding is implied by a template or a discovered file. Synthetic fixtures are forbidden from performance data.

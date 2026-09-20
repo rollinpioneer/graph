@@ -1,0 +1,176 @@
+{
+  "stage": "0A",
+  "status": "BLOCKED",
+  "method_version": "CP-DISR-v2.1",
+  "plan_version": "EEP-v1.0",
+  "git_hash": "7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5",
+  "git_hash_semantics": "Checked repository base plus git_snapshot.json dirty diff and untracked hashes; final delivery commit is recorded externally",
+  "source_hashes": {
+    "sources/CP_DISR_v2.1_Final_Experimental_Agent_Prompt.md": "e74eb0dc879e538c23ef3436ca8243fc3bd00a2d96dc50e913c99972d25c01eb",
+    "sources/CP_DISR_M1_Research_Specification_v2.1.md": "c552592d9d201e54332344379ceb130fd740dcd1b43134f94f18ad222399fdae",
+    "sources/CP_DISR_M1_Implementation_Interfaces_v2.1.zip": "d46dcbe3032da4b987001f0ee2394d1a1eb5ecbc11b4b70a4071c62596dd783f",
+    "inputs/CP_DISR_v2.1_Experimental_Agent_Kit.zip": "ba07d48739078a0879ee96eaa125963daa3241d7283e77eff9ec369008f23e59",
+    "inputs/CP_DISR_v2.1_Minimal_Experimental_Execution_Plan.md": "bdff530cdb0fd3002653b1202a734c7abde8661de9c42c023082ce63797b57d9",
+    "inputs/CP_DISR_v2.1_Experiment_Manifest_v0.yaml": "9d891f8ce5e3a047d1347095ab568f3acbe74c57e0d5999d363d763ace1685e2"
+  },
+  "started_at": "2026-09-20T13:17:31.795373+00:00",
+  "completed_at": "2026-09-20T13:39:56.805272+00:00",
+  "runs_completed": [],
+  "runs_failed": [],
+  "runs_reused": [],
+  "selected_tasks": [],
+  "requested_task_templates": [
+    "D0",
+    "T_A",
+    "T_C"
+  ],
+  "selected_config": "configs/resolved_defaults.yaml",
+  "issues": [
+    {
+      "field": "软件安装/验证",
+      "issue": "依赖解析成功；安装 attempt 01 网络超时退出 1，attempt 02 总时限 900 秒退出 124。目标环境无 torch；RGCN/round-trip 未执行。",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "运行平台",
+      "issue": "simulator_or_robot、environment_version、task_assets",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "技能与事实",
+      "issue": "controller_manifest、skill_contracts、verifier_thresholds；真实前置/ADD/DEL、三态证据与标定",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "视觉",
+      "issue": "camera、calibration_manifest、perception_checkpoint",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "时间与安全",
+      "issue": "skill_timeouts、task_deadlines、actual_interaction_time_unit、reference_skill_seconds_by_task、safety_authorization",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "独立评价",
+      "issue": "task_evaluator_version；真实终端成功和结束规则",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "实现入口",
+      "issue": "runtime.entrypoints；train_cli/eval_cli/tests_cli/cache_cli/report_cli；模型源码 hash 与参数量",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "任务与 split",
+      "issue": "D0/T_A/T_C 的 asset_ref、controller_refs、goal_atoms、skill_contract_refs、camera_verifier_refs、initial_state_generator、deadline_seconds、reference_skill_seconds、split_ref；64/50/50 实例池",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "VLM",
+      "issue": "region、base_http_api_url、api_account_authorized、fewshot_manifest；seed 参数实际支持能力另待核实",
+      "state": "MUST_BIND"
+    },
+    {
+      "field": "资源配置",
+      "issue": "实际 num_envs、candidate view 分块与运行时钟来源；GPU 清单不是专属训练资源预约",
+      "state": "MUST_BIND"
+    }
+  ],
+  "tuning_changes": [],
+  "runtime_adjustments": [
+    {
+      "field": "OS",
+      "observed": "Rocky Linux 10.2"
+    },
+    {
+      "field": "dependency_indexes",
+      "observed": [
+        "https://download.pytorch.org/whl/cu126",
+        "https://mirrors.nju.edu.cn/pypi/web/simple"
+      ]
+    },
+    {
+      "field": "UV_HTTP_TIMEOUT",
+      "old": 30,
+      "new": 300,
+      "reason": "torch wheel download timeout; no package version change"
+    }
+  ],
+  "next_stage": "0B",
+  "skipped": false,
+  "execution_scope": "Stage 0A only on target gpu03; no auto advance",
+  "readiness": {
+    "target_host": true,
+    "software": false,
+    "core_code": false,
+    "runtime": false,
+    "account": false,
+    "stage_0b": false
+  },
+  "infrastructure_checks": [
+    {
+      "check": "source_hashes",
+      "status": "PASS",
+      "evidence": "source_inventory.json"
+    },
+    {
+      "check": "target_host_and_new_repository",
+      "status": "PASS",
+      "evidence": "environment_probe.json"
+    },
+    {
+      "check": "dependency_resolution",
+      "status": "PASS",
+      "evidence": "host_logs/resolver.log; ../../../../uv.lock"
+    },
+    {
+      "check": "dependency_install_and_pip_check",
+      "status": "BLOCKED",
+      "evidence": "host_logs/install_attempt_02.log; host_logs/install_attempt_02.exit; pip_check if installation completed"
+    },
+    {
+      "check": "imports",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "RGCN_forward_backward",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "checkpoint_roundtrip",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "CP_DISR_production_entrypoints",
+      "status": "BLOCKED",
+      "evidence": "implementation_inventory.md"
+    },
+    {
+      "check": "D0_T_A_T_C_real_asset_bindings",
+      "status": "BLOCKED",
+      "evidence": "task_manifest.yaml; legacy_resource_review.json"
+    },
+    {
+      "check": "controller_camera_verifier_evaluator_time_safety",
+      "status": "BLOCKED",
+      "evidence": "runtime_manifest.yaml; binding_table.csv"
+    },
+    {
+      "check": "VLM_account_region_endpoint_fewshot",
+      "status": "BLOCKED",
+      "evidence": "manifests/vlm_manifest.yaml; environment_probe.json"
+    }
+  ],
+  "rl_jobs_executed": 0,
+  "real_skill_transitions": 0,
+  "ppo_updates": 0,
+  "performance_episodes": 0,
+  "vlm_requests_executed": 0,
+  "robot_actions_executed": 0,
+  "stage_0b_executed": false,
+  "unbound_inventory": "part_0_validation/stage_0a/unbound_must_bind.json"
+}

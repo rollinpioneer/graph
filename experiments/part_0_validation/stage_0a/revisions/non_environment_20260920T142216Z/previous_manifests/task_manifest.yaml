@@ -1,0 +1,83 @@
+status: UNBOUND_REAL_ASSETS_NOT_SUBSTITUTED_WITH_TEMPLATES
+tasks:
+- task_id: D0
+  structure: development_shared_prerequisite_plus_buffer_choice
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+- task_id: T_A
+  structure: shared_prerequisite
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+- task_id: T_B
+  structure: multi_object_choice
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+- task_id: T_C
+  structure: intermediate_relocation
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+- task_id: T_D
+  structure: multi_goal_interaction
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+- task_id: T_E
+  structure: recoverable_state_change
+  asset_ref: MUST_BIND
+  controller_refs: MUST_BIND
+  goal_atoms: MUST_BIND
+  skill_contract_refs: MUST_BIND
+  camera_verifier_refs: MUST_BIND
+  initial_state_generator: MUST_BIND
+  deadline_seconds: MUST_BIND
+  reference_skill_seconds: MUST_BIND
+  split_ref: MUST_BIND
+  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+required_for_stage_0a:
+- D0
+- T_A
+- T_C
+optional_for_stage_0a:
+- T_B
+- T_D
+- T_E
+legacy_discovery_ref: part_0_validation/stage_0a/legacy_resource_review.json

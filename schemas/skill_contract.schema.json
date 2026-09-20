@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "name",
+    "arguments",
+    "initiation",
+    "nominal",
+    "verification",
+    "failures",
+    "interrupts",
+    "timeout_seconds",
+    "controller_ref",
+    "verifier_ref",
+    "provenance",
+    "version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "arguments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "initiation": {
+      "type": "object",
+      "required": [
+        "pre_pos",
+        "pre_neg"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pre_pos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "predicate",
+              "arguments"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "pre_neg": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "predicate",
+              "arguments"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "nominal": {
+      "type": "object",
+      "required": [
+        "add",
+        "delete",
+        "unknown"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "predicate",
+              "arguments"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "predicate",
+              "arguments"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "unknown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "predicate",
+              "arguments"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "interrupts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeout_seconds": {
+      "oneOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "const": "MUST_BIND"
+        }
+      ]
+    },
+    "controller_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verifier_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

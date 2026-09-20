@@ -1,0 +1,343 @@
+{
+  "status": "UNBOUND_STRUCTURAL_TEMPLATES",
+  "runtime_capability_claimed": false,
+  "predicate_types": {
+    "GripperEmpty": [],
+    "Held": [
+      "object"
+    ],
+    "OnTable": [
+      "object"
+    ],
+    "Open": [
+      "container"
+    ],
+    "Inside": [
+      "object",
+      "container"
+    ],
+    "AtBuffer": [
+      "object",
+      "buffer"
+    ]
+  },
+  "contracts": [
+    {
+      "name": "OPEN",
+      "arguments": [
+        {
+          "name": "?c",
+          "type": "container"
+        }
+      ],
+      "initiation": {
+        "pre_pos": [
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          }
+        ],
+        "pre_neg": []
+      },
+      "nominal": {
+        "add": [
+          {
+            "predicate": "Open",
+            "arguments": [
+              "?c"
+            ]
+          }
+        ],
+        "delete": [],
+        "unknown": []
+      },
+      "verification": [
+        "MUST_BIND_POSTCONDITION_RULE"
+      ],
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "timeout_seconds": "MUST_BIND",
+      "controller_ref": "MUST_BIND",
+      "verifier_ref": "MUST_BIND",
+      "provenance": "Frozen specification example; NOT an observed runtime capability",
+      "version": "template-v2.1-1"
+    },
+    {
+      "name": "PICK",
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        }
+      ],
+      "initiation": {
+        "pre_pos": [
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          },
+          {
+            "predicate": "OnTable",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "pre_neg": []
+      },
+      "nominal": {
+        "add": [
+          {
+            "predicate": "Held",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "delete": [
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          },
+          {
+            "predicate": "OnTable",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "unknown": []
+      },
+      "verification": [
+        "MUST_BIND_POSTCONDITION_RULE"
+      ],
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "timeout_seconds": "MUST_BIND",
+      "controller_ref": "MUST_BIND",
+      "verifier_ref": "MUST_BIND",
+      "provenance": "Frozen specification example; NOT an observed runtime capability",
+      "version": "template-v2.1-1"
+    },
+    {
+      "name": "PLACE",
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        },
+        {
+          "name": "?c",
+          "type": "container"
+        }
+      ],
+      "initiation": {
+        "pre_pos": [
+          {
+            "predicate": "Held",
+            "arguments": [
+              "?o"
+            ]
+          },
+          {
+            "predicate": "Open",
+            "arguments": [
+              "?c"
+            ]
+          }
+        ],
+        "pre_neg": []
+      },
+      "nominal": {
+        "add": [
+          {
+            "predicate": "Inside",
+            "arguments": [
+              "?o",
+              "?c"
+            ]
+          },
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          }
+        ],
+        "delete": [
+          {
+            "predicate": "Held",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "unknown": []
+      },
+      "verification": [
+        "MUST_BIND_POSTCONDITION_RULE"
+      ],
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "timeout_seconds": "MUST_BIND",
+      "controller_ref": "MUST_BIND",
+      "verifier_ref": "MUST_BIND",
+      "provenance": "Frozen specification example; NOT an observed runtime capability",
+      "version": "template-v2.1-1"
+    },
+    {
+      "name": "PLACE_BUFFER",
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        },
+        {
+          "name": "?b",
+          "type": "buffer"
+        }
+      ],
+      "initiation": {
+        "pre_pos": [
+          {
+            "predicate": "Held",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "pre_neg": []
+      },
+      "nominal": {
+        "add": [
+          {
+            "predicate": "AtBuffer",
+            "arguments": [
+              "?o",
+              "?b"
+            ]
+          },
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          }
+        ],
+        "delete": [
+          {
+            "predicate": "Held",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "unknown": []
+      },
+      "verification": [
+        "MUST_BIND_POSTCONDITION_RULE"
+      ],
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "timeout_seconds": "MUST_BIND",
+      "controller_ref": "MUST_BIND",
+      "verifier_ref": "MUST_BIND",
+      "provenance": "Frozen specification example; NOT an observed runtime capability",
+      "version": "template-v2.1-1"
+    },
+    {
+      "name": "MOVE",
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        },
+        {
+          "name": "?b",
+          "type": "buffer"
+        }
+      ],
+      "initiation": {
+        "pre_pos": [
+          {
+            "predicate": "OnTable",
+            "arguments": [
+              "?o"
+            ]
+          },
+          {
+            "predicate": "GripperEmpty",
+            "arguments": []
+          }
+        ],
+        "pre_neg": []
+      },
+      "nominal": {
+        "add": [
+          {
+            "predicate": "AtBuffer",
+            "arguments": [
+              "?o",
+              "?b"
+            ]
+          }
+        ],
+        "delete": [
+          {
+            "predicate": "OnTable",
+            "arguments": [
+              "?o"
+            ]
+          }
+        ],
+        "unknown": []
+      },
+      "verification": [
+        "MUST_BIND_POSTCONDITION_RULE"
+      ],
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "timeout_seconds": "MUST_BIND",
+      "controller_ref": "MUST_BIND",
+      "verifier_ref": "MUST_BIND",
+      "provenance": "Frozen specification example; NOT an observed runtime capability",
+      "version": "template-v2.1-1"
+    }
+  ],
+  "move_runtime_bound": false,
+  "move_alternative": [
+    "PICK",
+    "PLACE_BUFFER"
+  ]
+}

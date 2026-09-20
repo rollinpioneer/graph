@@ -1,0 +1,111 @@
+{
+  "task_id": "T_A",
+  "status": "STRUCTURE_TEMPLATE_NOT_RUNTIME_ASSET",
+  "required_skill_schemas": [
+    "OPEN",
+    "PICK",
+    "PLACE",
+    {
+      "one_of": [
+        "MOVE",
+        [
+          "PICK",
+          "PLACE_BUFFER"
+        ]
+      ]
+    }
+  ],
+  "required_predicates": {
+    "GripperEmpty": [],
+    "Held": [
+      "object"
+    ],
+    "OnTable": [
+      "object"
+    ],
+    "Open": [
+      "container"
+    ],
+    "Inside": [
+      "object",
+      "container"
+    ],
+    "AtBuffer": [
+      "object",
+      "buffer"
+    ]
+  },
+  "object_roles": {
+    "movable_objects": [
+      "target",
+      "second_object"
+    ],
+    "openable_container": "container",
+    "buffer_region": "buffer"
+  },
+  "signed_goals": [
+    {
+      "predicate": "Inside",
+      "arguments": [
+        "target",
+        "container"
+      ],
+      "sign": 1
+    }
+  ],
+  "structural_signature": {
+    "family": "shared_prerequisite",
+    "minimum_legal_candidates": 2,
+    "expected_necessary_skills": [
+      4,
+      8
+    ],
+    "shared_precondition": "actual Open/Ready controller condition",
+    "buffer_choice": false,
+    "goal_note": "Role-level example; freeze actual signed conjunction after asset mapping"
+  },
+  "required_runtime_bindings": [
+    "asset",
+    "skill_contracts",
+    "camera",
+    "calibration",
+    "perception",
+    "verifier",
+    "independent_success",
+    "clock",
+    "timeout",
+    "deadline",
+    "safety",
+    "case_generator"
+  ],
+  "initialization_pools": {
+    "schema": {
+      "required": [
+        "case_id",
+        "seed",
+        "asset_hash",
+        "initial_rgb_hash",
+        "object_binding_hash",
+        "initial_state_ref",
+        "canonical_graph_signature"
+      ]
+    },
+    "train": {
+      "count": 64,
+      "namespace": "train_case"
+    },
+    "dev": {
+      "count": 50,
+      "namespace": "dev_case"
+    },
+    "test_id": {
+      "count": 50,
+      "namespace": "test_id_case"
+    },
+    "case_definitions": []
+  },
+  "actual_asset_refs": "MUST_BIND",
+  "controller_refs": "MUST_BIND",
+  "evaluator_ref": "MUST_BIND",
+  "constraint": "No invented effects for VLM; no simulated truth for hidden policy/controller input; MOVE remains unbound without controller evidence"
+}

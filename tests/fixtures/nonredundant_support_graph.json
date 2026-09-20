@@ -1,0 +1,30 @@
+{
+  "synthetic_unit_fixture": true,
+  "paper_performance_eligible": false,
+  "goals": [
+    {
+      "fact_id": "p:Open:box",
+      "sign": 1
+    },
+    {
+      "fact_id": "p:GripperEmpty",
+      "sign": 1
+    },
+    {
+      "fact_id": "p:Held:red",
+      "sign": -1
+    }
+  ],
+  "payload": {
+    "schema_version": "m1_soft_relations_v2",
+    "relations": [
+      {
+        "relation_id": "r1",
+        "type": "SOFT_SUPPORTS",
+        "source_ref": "a:MOVE:red:buffer:v1",
+        "target_ref": "a:OPEN:box:v1",
+        "effect_fact_ref": "p:AtBuffer:red:buffer"
+      }
+    ]
+  }
+}

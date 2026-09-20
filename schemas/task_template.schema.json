@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "task_id",
+    "status",
+    "required_skill_schemas",
+    "required_predicates",
+    "object_roles",
+    "signed_goals",
+    "structural_signature",
+    "required_runtime_bindings",
+    "initialization_pools",
+    "actual_asset_refs",
+    "controller_refs",
+    "evaluator_ref"
+  ],
+  "properties": {
+    "task_id": {
+      "enum": [
+        "D0",
+        "T_A",
+        "T_C"
+      ]
+    },
+    "status": {
+      "const": "STRUCTURE_TEMPLATE_NOT_RUNTIME_ASSET"
+    },
+    "actual_asset_refs": {
+      "const": "MUST_BIND"
+    },
+    "controller_refs": {
+      "const": "MUST_BIND"
+    },
+    "evaluator_ref": {
+      "const": "MUST_BIND"
+    },
+    "signed_goals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "predicate",
+          "arguments",
+          "sign"
+        ],
+        "properties": {
+          "sign": {
+            "enum": [
+              -1,
+              1
+            ]
+          },
+          "predicate": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "initialization_pools": {
+      "type": "object",
+      "required": [
+        "schema",
+        "train",
+        "dev",
+        "test_id",
+        "case_definitions"
+      ],
+      "properties": {
+        "case_definitions": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+manifest_status: PARTIALLY_BOUND_BLOCKED
+execution_host_identity: xushijie@gpu03 (172.19.164.160)
+runtime:
+  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
+  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+  repository_url: git@github.com:rollinpioneer/graph.git
+  git_hash: 7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5
+  simulator_or_robot: MUST_BIND
+  environment_version: MUST_BIND
+  task_assets: MUST_BIND
+  controller_manifest: MUST_BIND
+  camera: MUST_BIND
+  calibration_manifest: MUST_BIND
+  perception_checkpoint: MUST_BIND
+  verifier_thresholds: MUST_BIND
+  skill_timeouts: MUST_BIND
+  task_deadlines: MUST_BIND
+  actual_interaction_time_unit: MUST_BIND
+  reference_skill_seconds_by_task: MUST_BIND
+  task_evaluator_version: MUST_BIND
+  hardware:
+    host: gpu03
+    cpu_count: 112
+    gpu_inventory:
+    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
+      40960 MiB, 29482 MiB
+    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
+      40960 MiB, 34804 MiB
+    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
+      40960 MiB, 37579 MiB
+    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
+      40960 MiB, 39191 MiB
+    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
+      40960 MiB, 13842 MiB
+    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
+      40960 MiB, 36851 MiB
+    reservation: NOT_RESERVED_FOR_TRAINING
+  gpu_driver: 610.57.04
+  os:
+    distribution: Rocky Linux 10.2
+    kernel: 7.2.2-1.el10.elrepo.x86_64
+    architecture: x86_64
+    container: NOT_APPLICABLE_HOST_EXECUTION
+  safety_authorization: MUST_BIND
+  entrypoints: MUST_BIND
+  task_splits: MUST_BIND
+vlm_runtime:
+  region: MUST_BIND
+  base_http_api_url: MUST_BIND
+  api_account_authorized: MUST_BIND
+  fewshot_manifest: MUST_BIND
+execution_scope: Stage 0A infrastructure only; no robot, simulator rollout, training,
+  VLM call or Stage 0B
+entrypoints_manifest_ref: manifests/entrypoints.yaml
+resource_settings:
+  num_envs: MUST_BIND_AFTER_PLATFORM_BINDING
+  candidate_view_chunk: MUST_BIND_AFTER_MODEL_IMPLEMENTATION
+  clock_unit_required: seconds
+  actual_clock_source: MUST_BIND

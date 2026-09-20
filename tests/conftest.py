@@ -1,0 +1,17 @@
+from pathlib import Path
+import pytest
+from cp_disr.fixtures import build_fixture,snapshot
+
+@pytest.fixture
+def fixture():return build_fixture(Path(__file__).parent/'fixtures')
+
+@pytest.fixture
+def snap(fixture):return snapshot(fixture)
+
+@pytest.fixture
+def policy(fixture):
+    import torch
+    from cp_disr.neural import Policy
+    torch.manual_seed(7);torch.set_num_threads(2)
+    t=fixture['template']
+    return Policy({n.schema for n in t.nodes if n.kind=='ACTION'},{n.schema for n in t.nodes if n.kind=='PROPOSITION'},{x for n in t.nodes for x in n.argument_types},4,3)

@@ -1,4 +1,4 @@
-status: DESIGN_DEFAULT_NOT_IMPLEMENTED
+status: PRODUCTION_CODE_PRESENT_NOT_RUNTIME_VALIDATED
 architecture:
   candidate_readout: single_head_scaled_dot_product_attention
   mlp_hidden_dims:
@@ -31,7 +31,8 @@ architecture:
     goal_alignment: fixed_proposition_indices
     empty_prior_encoding_reuse: true
   gru_hidden_dim: 128
-actual_parameter_count: MUST_BIND
-source_code_sha256: MUST_BIND
+actual_parameter_count: MUST_BIND_AFTER_USER_ENVIRONMENT_READY
+source_code_sha256: 22ed9cdecae882037154bf5e5e5504b48dafaaa75a8384ee7658ace4ff967654
 initialization: record_actual_nn_initialization; shared untrained initialization permitted
   for ablations
+source_path: ../../src/cp_disr/neural.py

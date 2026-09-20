@@ -1,0 +1,32 @@
+status: PLANNED_NOT_RUN
+tasks:
+- T_A
+- T_B
+- T_C
+methods:
+- B0
+- B1
+- B2
+- Full
+default_seeds:
+- 0
+- 1
+- 2
+selected_run_ids: []
+selected_checkpoints: {}
+selection_manifest_ref: paper_results/selection_manifest.yaml
+protocol:
+  raw_archive_immutable: true
+  selection_allowed: true
+  manifest_required: true
+  default_seed_aggregation: mean
+  error_bar: selected_seed_sample_standard_deviation_not_CI
+  default_smoothing: trailing_MA3
+  smoothing_for_display_only: true
+  alternate_smoothing: EMA_alpha_0.3
+  raw_AUC: true
+  success_axis:
+  - 0
+  - 1
+  no_cross_run_curve_splicing: true
+  explicitly_label_selected_seed_view: true

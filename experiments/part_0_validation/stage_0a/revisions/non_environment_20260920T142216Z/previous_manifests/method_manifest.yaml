@@ -1,0 +1,63 @@
+method:
+  name: CP-DISR
+  internal_name: M1
+  version: v2.1
+  specification_ref: sources/CP_DISR_M1_Research_Specification_v2.1.md
+  core_frozen: true
+  no_static_prior: true
+  nominal_success_only: true
+  nominal_depth: 1
+  prereq_research_experiments: 0
+graph:
+  representation: grounded_action_proposition_slg
+  node_types:
+  - ACTION
+  - PROPOSITION
+  contract_relations:
+  - PRE_POS
+  - PRE_NEG
+  - ADD
+  - DEL
+  soft_relations:
+  - SOFT_SUPPORTS
+  - SOFT_RELEVANT_TO_GOAL
+  reverse_message_edges: true
+  encoder: RGCNConv
+  hidden_dim: 128
+  layers: 4
+  num_bases: 4
+  aggregation: mean
+  root_weight: true
+  activation: ReLU
+  normalization: per_node_LayerNorm
+  dropout: 0
+  difference_dtype: float32
+  goal_alignment: fixed_proposition_indices
+  empty_prior_encoding_reuse: true
+actor:
+  prior_bound_B: 0.5
+  zero_anchor: true
+  prior_input: DP_only
+  enhanced_context_in_full: false
+  final_prior_bias: false
+  candidate_readout: single_head_scaled_dot_product_attention
+  mlp_hidden_dims:
+  - 128
+  - 128
+structural_q:
+  lambda_q: 0.1
+  target: stop_gradient(real_r + Gamma * (1-terminated) * old_V_next)
+  executed_action_only: true
+  loss: Huber
+  huber_delta: 1.0
+  label_unexecuted_candidates: false
+prior_training:
+  original: 0.8
+  absent: 0.2
+  sampled_at: episode_start
+  fixed_within_episode: true
+  resample_during_ppo: false
+  expose_sampling_mode_to_network: false
+  shared_across_prior_consumers: true
+  rng_namespace: prior_dropout_train
+  edge_corruption_enabled: false

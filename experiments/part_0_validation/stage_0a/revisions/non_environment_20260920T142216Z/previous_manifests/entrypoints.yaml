@@ -1,0 +1,23 @@
+status: PARTIALLY_BOUND_BLOCKED
+implemented_trainer_in_this_kit: false
+repository: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+train_cli: MUST_BIND
+eval_cli: MUST_BIND
+tests_cli: MUST_BIND
+cache_cli: MUST_BIND
+report_cli: MUST_BIND
+note: Only infrastructure paths are implemented. train/eval/tests/cache/report production
+  CLIs remain MUST_BIND; no invented executable paths.
+infrastructure_only:
+  host_probe:
+    path: tools/stage0a_host_probe.py
+    cli: python3 tools/stage0a_host_probe.py
+    sha256: 87bda5cd4a2737d9ec5aca6b0cb559afc0a2ab4582f577ca2339c9b6a6d1a0e1
+  software_probe:
+    path: tools/stage0a_software_probe.py
+    cli: .venv/bin/python tools/stage0a_software_probe.py
+    sha256: 73db570ca9533ed811ccae701fb420e565d1b4517961728797e0a3949b6e6f38
+  kit_plan:
+    path: experiments/tools/plan_stage.py
+    cli: .venv/bin/python experiments/tools/plan_stage.py --stage 0A
+    sha256: 86db7daa2a779222547b24007550f4e90c50812cf84cab8b0bebb1b9eb04d25e

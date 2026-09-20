@@ -1,0 +1,40 @@
+provider: alibaba_model_studio
+model_snapshot: qwen3.8-max-0902
+full_snapshot_alias: qwen3.8-max-2026-09-02
+region_recommendation: Singapore
+region: MUST_BIND
+base_http_api_url: MUST_BIND
+api_account_authorized: MUST_BIND
+sdk: dashscope
+sdk_version: 1.27.6
+relation_schema: m1_soft_relations_v2
+schema_ref: sources/v2.1_interfaces/relation_schema.json
+prompt_ref: sources/v2.1_interfaces/system_prompt.txt
+prompt_version: cp_disr_relations_v2.1_p1
+fewshot_count: 3
+fewshot_manifest: MUST_BIND
+max_relations: 8
+temperature: 0
+max_output_tokens: 2048
+thinking: false
+response_format: json_object
+max_retries: 1
+retry_only:
+- transport_error
+- syntax_error
+- truncated_output
+semantic_retry: false
+allow_web_search: false
+tools_enabled: false
+cache_mode: offline
+cache_required: true
+cache_key_hash: sha256
+key_includes_split: true
+seed_supported_by_api: MUST_VERIFY_OR_UNSUPPORTED
+credential_presence_evidence:
+  DASHSCOPE_API_KEY: false
+  MODEL_STUDIO_API_KEY: false
+  ALIBABA_API_KEY: false
+credential_check_scope: Current non-login SSH process environment only; no secret
+  file contents read
+requests_executed: 0

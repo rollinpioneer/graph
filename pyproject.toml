@@ -14,3 +14,9 @@ torch = { index = "pytorch-cu126" }
 name = "pytorch-cu126"
 url = "https://download.pytorch.org/whl/cu126"
 explicit = true
+
+[project.scripts]
+cp-disr = "cp_disr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
