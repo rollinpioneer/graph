@@ -33,8 +33,17 @@ class RecurrentState:
     """Committed state changes only on a real decision. Value probes are read-only."""
     def __init__(self):self.histories={}
     def reset(self,env):self.histories[env]=[]
-    def probe(self,policy,env,snapshot):return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
+    def _validate_next(self,env,snapshot):
+        seq=self.histories.get(env,())
+        if snapshot.env_id!=env:raise DataIntegrityError('Recurrent environment mismatch')
+        if snapshot.decision_id!=len(seq):raise DataIntegrityError('Repeated or discontinuous decision commit/probe')
+        if seq and (snapshot.episode_id!=seq[-1].episode_id or snapshot.prior_hash!=seq[-1].prior_hash):
+            raise DataIntegrityError('Episode/prior changed without recurrent reset')
+    def probe(self,policy,env,snapshot):
+        self._validate_next(env,snapshot)
+        return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
     def commit(self,env,snapshot):
+        self._validate_next(env,snapshot)
         seq=self.histories.setdefault(env,[])
         if seq and snapshot.decision_id!=seq[-1].decision_id+1:raise DataIntegrityError('Repeated or discontinuous decision commit')
         seq.append(snapshot)

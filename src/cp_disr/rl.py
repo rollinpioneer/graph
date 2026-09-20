@@ -87,6 +87,7 @@ def scalar_targets(transitions,lam=.95):
     return tuple(adv),tuple(vq),tuple(qq)
 
 def remap_stored(snapshot,candidate_ids,mask):
+    if len(candidate_ids)!=len(mask):raise DataIntegrityError("Candidate/mask length mismatch")
     if len(set(candidate_ids))!=len(candidate_ids) or set(candidate_ids)!=set(snapshot.candidate_ids):raise DataIntegrityError('Changed candidate set')
     if digest(sorted(zip(candidate_ids,mask)))!=snapshot.mask_hash:raise DataIntegrityError('Changed rollout mask')
     return tuple(snapshot.candidate_ids.index(k) for k in candidate_ids)

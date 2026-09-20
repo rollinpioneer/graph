@@ -1,0 +1,38 @@
+FF........                                                               [100%]
+=================================== FAILURES ===================================
+____________________ test_T10_recompute_mask_shape_rejected ____________________
+
+snap = Snapshot(env_id='e0', episode_id='ep0', decision_id=0, template=GraphTemplate(nodes=(Node(id='a:MOVE:red:buffer:v1', k..., 2.0, 0.0)), observation_ref='synthetic:frame0', clock_seconds=0.0, execution_summary=(), synthetic_unit_fixture=True)
+
+    @pytest.mark.pure
+    def test_T10_recompute_mask_shape_rejected(snap):
+>       with pytest.raises(DataIntegrityError):
+E       Failed: DID NOT RAISE <class 'cp_disr.common.DataIntegrityError'>
+
+tests/test_stage0b_extended.py:9: Failed
+______________________ test_T22_recurrent_commit_identity ______________________
+
+snap = Snapshot(env_id='e0', episode_id='ep0', decision_id=0, template=GraphTemplate(nodes=(Node(id='a:MOVE:red:buffer:v1', k..., 2.0, 0.0)), observation_ref='synthetic:frame0', clock_seconds=0.0, execution_summary=(), synthetic_unit_fixture=True)
+policy = Policy(
+  (encoder): GraphEncoder(
+    (features): NodeFeatures(
+      (kind): Embedding(2, 128)
+      (action): Embed...res=640, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+
+    @pytest.mark.torch_runtime
+    def test_T22_recurrent_commit_identity(snap,policy):
+        from cp_disr.torch_rl import RecurrentState
+        state=RecurrentState();state.reset('e0')
+>       with pytest.raises(DataIntegrityError):state.commit('e0',replace(snap,env_id='e1'))
+E       Failed: DID NOT RAISE <class 'cp_disr.common.DataIntegrityError'>
+
+tests/test_stage0b_extended.py:16: Failed
+- generated xml file: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments/part_0_validation/stage_0b/attempts/002_extended_cpu/junit.xml -
+=========================== short test summary info ============================
+FAILED tests/test_stage0b_extended.py::test_T10_recompute_mask_shape_rejected
+FAILED tests/test_stage0b_extended.py::test_T22_recurrent_commit_identity - F...
+2 failed, 8 passed in 9.48s

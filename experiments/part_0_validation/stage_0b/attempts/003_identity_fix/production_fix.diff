@@ -1,0 +1,35 @@
+diff --git a/src/cp_disr/rl.py b/src/cp_disr/rl.py
+index 8dd163b..4451f71 100644
+--- a/src/cp_disr/rl.py
++++ b/src/cp_disr/rl.py
+@@ -87,6 +87,7 @@ def scalar_targets(transitions,lam=.95):
+     return tuple(adv),tuple(vq),tuple(qq)
+ 
+ def remap_stored(snapshot,candidate_ids,mask):
++    if len(candidate_ids)!=len(mask):raise DataIntegrityError("Candidate/mask length mismatch")
+     if len(set(candidate_ids))!=len(candidate_ids) or set(candidate_ids)!=set(snapshot.candidate_ids):raise DataIntegrityError('Changed candidate set')
+     if digest(sorted(zip(candidate_ids,mask)))!=snapshot.mask_hash:raise DataIntegrityError('Changed rollout mask')
+     return tuple(snapshot.candidate_ids.index(k) for k in candidate_ids)
+diff --git a/src/cp_disr/torch_rl.py b/src/cp_disr/torch_rl.py
+index cfc1ffb..80183cb 100644
+--- a/src/cp_disr/torch_rl.py
++++ b/src/cp_disr/torch_rl.py
+@@ -33,8 +33,17 @@ class RecurrentState:
+     """Committed state changes only on a real decision. Value probes are read-only."""
+     def __init__(self):self.histories={}
+     def reset(self,env):self.histories[env]=[]
+-    def probe(self,policy,env,snapshot):return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
++    def _validate_next(self,env,snapshot):
++        seq=self.histories.get(env,())
++        if snapshot.env_id!=env:raise DataIntegrityError('Recurrent environment mismatch')
++        if snapshot.decision_id!=len(seq):raise DataIntegrityError('Repeated or discontinuous decision commit/probe')
++        if seq and (snapshot.episode_id!=seq[-1].episode_id or snapshot.prior_hash!=seq[-1].prior_hash):
++            raise DataIntegrityError('Episode/prior changed without recurrent reset')
++    def probe(self,policy,env,snapshot):
++        self._validate_next(env,snapshot)
++        return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
+     def commit(self,env,snapshot):
++        self._validate_next(env,snapshot)
+         seq=self.histories.setdefault(env,[])
+         if seq and snapshot.decision_id!=seq[-1].decision_id+1:raise DataIntegrityError('Repeated or discontinuous decision commit')
+         seq.append(snapshot)

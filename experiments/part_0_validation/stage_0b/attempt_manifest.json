@@ -1,0 +1,116 @@
+{
+  "fixes": [
+    {
+      "test_id": "T10",
+      "failure": "extra mask element not rejected",
+      "root_cause": "zip silently truncates before canonical mask hashing",
+      "fix": "validate candidate/mask lengths before hashing",
+      "method_changed": false
+    },
+    {
+      "test_id": "T22",
+      "failure": "cross-environment snapshot accepted",
+      "root_cause": "recurrent state keyed by env did not verify snapshot env/episode/prior identity",
+      "fix": "validate env, decision continuity, episode and prior before commit or read-only probe",
+      "method_changed": false
+    }
+  ],
+  "attempts": [
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/001_initial_cpu",
+      "files": [
+        "test_inventory.json",
+        "T01_T09.xml",
+        "T01_T09.log",
+        "T10_T18.xml",
+        "T10_T18.log",
+        "T19_T25.xml",
+        "T19_T25.log",
+        "group_results.json"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/002_extended_cpu",
+      "files": [
+        "pytest.log",
+        "junit.xml.jsonl",
+        "junit.xml"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/003_identity_fix",
+      "files": [
+        "production_fix.diff",
+        "root_cause.json",
+        "affected_tests.log",
+        "junit.xml.jsonl",
+        "junit.xml"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/004_full_cpu",
+      "files": [
+        "pytest.log",
+        "junit.xml.jsonl",
+        "junit.xml"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/005_cpu_fp64",
+      "files": [
+        "junit.xml.jsonl",
+        "junit.xml",
+        "pytest.log",
+        "invocation.json"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/006_gpu_fp32",
+      "files": [
+        "junit.xml.jsonl",
+        "junit.xml",
+        "pytest.log",
+        "invocation.json"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/007_device_parity",
+      "files": [
+        "numeric_comparison.json",
+        "junit.xml.jsonl",
+        "junit.xml",
+        "pytest.log",
+        "invocation.json"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/008_parity_artifact_fallback",
+      "files": [
+        "pytest.log",
+        "numeric_comparison.json",
+        "junit.xml.jsonl",
+        "junit.xml"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/009_final_cpu",
+      "files": [
+        "junit.xml.jsonl",
+        "junit.xml",
+        "pytest.log",
+        "invocation.json"
+      ]
+    },
+    {
+      "directory": "experiments/part_0_validation/stage_0b/attempts/010_final_fp64",
+      "files": [
+        "junit.xml.jsonl",
+        "junit.xml",
+        "pytest.log",
+        "invocation.json"
+      ]
+    }
+  ],
+  "initial_test_failures": 2,
+  "all_final_required_checks_passed": true
+}

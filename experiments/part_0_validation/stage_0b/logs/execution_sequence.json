@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": "001_initial_cpu",
+    "purpose": "Initial three groups in prescribed order",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "002_extended_cpu",
+    "purpose": "Production regressions revealed T10 and T22 failures",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "003_identity_fix",
+    "purpose": "Production fixes; affected tests rerun",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "004_full_cpu",
+    "purpose": "Complete CPU regression after fixes",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "005_cpu_fp64",
+    "purpose": "FP64 manual comparisons",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "006_gpu_fp32",
+    "purpose": "All torch-runtime cases on CUDA FP32",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "007_device_parity",
+    "purpose": "CPU/GPU numerical and gradient comparisons",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "008_parity_artifact_fallback",
+    "purpose": "Make standalone parity output portable; rerun parity",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "009_final_cpu",
+    "purpose": "Explicit FP64 relative tolerances tightened to 1e-9 in pure tests; full CPU regression",
+    "logs_preserved": true
+  },
+  {
+    "attempt": "010_final_fp64",
+    "purpose": "FP64 final regression after tolerance audit",
+    "logs_preserved": true
+  }
+]

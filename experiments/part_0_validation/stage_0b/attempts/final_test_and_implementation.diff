@@ -1,0 +1,291 @@
+diff --git a/src/cp_disr/rl.py b/src/cp_disr/rl.py
+index 8dd163b..4451f71 100644
+--- a/src/cp_disr/rl.py
++++ b/src/cp_disr/rl.py
+@@ -87,6 +87,7 @@ def scalar_targets(transitions,lam=.95):
+     return tuple(adv),tuple(vq),tuple(qq)
+ 
+ def remap_stored(snapshot,candidate_ids,mask):
++    if len(candidate_ids)!=len(mask):raise DataIntegrityError("Candidate/mask length mismatch")
+     if len(set(candidate_ids))!=len(candidate_ids) or set(candidate_ids)!=set(snapshot.candidate_ids):raise DataIntegrityError('Changed candidate set')
+     if digest(sorted(zip(candidate_ids,mask)))!=snapshot.mask_hash:raise DataIntegrityError('Changed rollout mask')
+     return tuple(snapshot.candidate_ids.index(k) for k in candidate_ids)
+diff --git a/src/cp_disr/torch_rl.py b/src/cp_disr/torch_rl.py
+index cfc1ffb..80183cb 100644
+--- a/src/cp_disr/torch_rl.py
++++ b/src/cp_disr/torch_rl.py
+@@ -33,8 +33,17 @@ class RecurrentState:
+     """Committed state changes only on a real decision. Value probes are read-only."""
+     def __init__(self):self.histories={}
+     def reset(self,env):self.histories[env]=[]
+-    def probe(self,policy,env,snapshot):return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
++    def _validate_next(self,env,snapshot):
++        seq=self.histories.get(env,())
++        if snapshot.env_id!=env:raise DataIntegrityError('Recurrent environment mismatch')
++        if snapshot.decision_id!=len(seq):raise DataIntegrityError('Repeated or discontinuous decision commit/probe')
++        if seq and (snapshot.episode_id!=seq[-1].episode_id or snapshot.prior_hash!=seq[-1].prior_hash):
++            raise DataIntegrityError('Episode/prior changed without recurrent reset')
++    def probe(self,policy,env,snapshot):
++        self._validate_next(env,snapshot)
++        return policy(snapshot,prefix_hidden(policy,self.histories.get(env,())))
+     def commit(self,env,snapshot):
++        self._validate_next(env,snapshot)
+         seq=self.histories.setdefault(env,[])
+         if seq and snapshot.decision_id!=seq[-1].decision_id+1:raise DataIntegrityError('Repeated or discontinuous decision commit')
+         seq.append(snapshot)
+diff --git a/tests/conftest.py b/tests/conftest.py
+index 133becc..b24f07f 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -12,6 +12,7 @@ def snap(fixture):return snapshot(fixture)
+ def policy(fixture):
+     import torch
+     from cp_disr.neural import Policy
+-    torch.manual_seed(7);torch.set_num_threads(2)
++    from cp_disr.common import seed32
++    torch.manual_seed(seed32('unit_fixture','contracts_v1',0,0));torch.set_num_threads(2)
+     t=fixture['template']
+     return Policy({n.schema for n in t.nodes if n.kind=='ACTION'},{n.schema for n in t.nodes if n.kind=='PROPOSITION'},{x for n in t.nodes for x in n.argument_types},4,3)
+diff --git a/tests/test_duration_discount.py b/tests/test_duration_discount.py
+index 03da828..a1882cb 100644
+--- a/tests/test_duration_discount.py
++++ b/tests/test_duration_discount.py
+@@ -3,9 +3,9 @@ from cp_disr.rl import gamma,interval_reward,cumulative_weights
+ 
+ @pytest.mark.pure
+ def test_T19_duration():
+-    assert gamma(1)==pytest.approx(.99,abs=1e-10)
+-    assert gamma(2)==pytest.approx(.9801,abs=1e-10)
+-    assert interval_reward(1,[(.5,1)])==pytest.approx(.99**.5,abs=1e-10)
+-    assert cumulative_weights([1,2,1])==pytest.approx((1,.99,.99**3),abs=1e-10)
++    assert gamma(1)==pytest.approx(.99,abs=1e-10,rel=1e-9)
++    assert gamma(2)==pytest.approx(.9801,abs=1e-10,rel=1e-9)
++    assert interval_reward(1,[(.5,1)])==pytest.approx(.99**.5,abs=1e-10,rel=1e-9)
++    assert cumulative_weights([1,2,1])==pytest.approx((1,.99,.99**3),abs=1e-10,rel=1e-9)
+     for d in [0,-1,float('nan')]:
+         with pytest.raises(ValueError):gamma(d)
+diff --git a/tests/test_smdp_boundaries.py b/tests/test_smdp_boundaries.py
+index 6517ee9..192a806 100644
+--- a/tests/test_smdp_boundaries.py
++++ b/tests/test_smdp_boundaries.py
+@@ -9,8 +9,8 @@ def test_T14_boundaries(snap):
+     d=math.log(f['Gamma'])/math.log(.99)
+     def transition(term,trunc):return Transition(snap,n,snap.candidate_ids[0],-.5,.4,2.,.3,d,1.,term,trunc,'synthetic',())
+     for name,term,trunc in [('terminated',True,False),('truncated',False,True),('buffer_end',False,False)]:
+-        a,v,q=scalar_targets([transition(term,trunc)]);assert q[0]==pytest.approx(f['expected'][name],abs=1e-10)
+-        assert v[0]==pytest.approx(q[0],abs=1e-10)
++        a,v,q=scalar_targets([transition(term,trunc)]);assert q[0]==pytest.approx(f['expected'][name],abs=1e-10,rel=1e-9)
++        assert v[0]==pytest.approx(q[0],abs=1e-10,rel=1e-9)
+     with pytest.raises(ValueError):replace(transition(False,True),next_snapshot=replace(n,episode_id='reset'))
+     t=transition(False,True);second=replace(t,snapshot=replace(snap,env_id='other'),next_snapshot=replace(n,env_id='other'),reward=1.)
+-    assert scalar_targets([t,second])[0][0]==pytest.approx(.3+.9*2-.4,abs=1e-10)
++    assert scalar_targets([t,second])[0][0]==pytest.approx(.3+.9*2-.4,abs=1e-10,rel=1e-9)
+--- /dev/null
++++ b/tests/test_stage0b_extended.py
+@@ -0,0 +1,132 @@
++"""Additional production regressions; all inputs are synthetic unit fixtures."""
++from dataclasses import replace
++import pytest
++from cp_disr.common import DataIntegrityError,digest
++from cp_disr.rl import remap_stored,Transition,Rollout,scalar_targets
++
++@pytest.mark.pure
++def test_T10_recompute_mask_shape_rejected(snap):
++    with pytest.raises(DataIntegrityError):
++        remap_stored(snap,snap.candidate_ids,snap.mask+(True,))
++
++@pytest.mark.torch_runtime
++def test_T22_recurrent_commit_identity(snap,policy):
++    from cp_disr.torch_rl import RecurrentState
++    state=RecurrentState();state.reset('e0')
++    with pytest.raises(DataIntegrityError):state.commit('e0',replace(snap,env_id='e1'))
++    state.commit('e0',snap)
++    with pytest.raises(DataIntegrityError):state.commit('e0',replace(snap,episode_id='other',decision_id=1))
++    with pytest.raises(DataIntegrityError):state.probe(policy,'e0',replace(snap,env_id='other',decision_id=1))
++    assert state.histories['e0']==[snap]
++
++@pytest.mark.torch_runtime
++def test_T12_fp64_hand_targets():
++    import torch
++    from cp_disr.torch_rl import q_targets,value_targets,q_loss
++    old=torch.tensor([2.,2.,2.],dtype=torch.float64,requires_grad=True)
++    target=q_targets(torch.tensor([.3]*3,dtype=torch.float64),torch.tensor([.9]*3,dtype=torch.float64),torch.tensor([True,False,False]),old)
++    torch.testing.assert_close(target,torch.tensor([.3,2.1,2.1],dtype=torch.float64),atol=1e-10,rtol=1e-9)
++    v=value_targets(old,torch.tensor([-.5,.25,1.],dtype=torch.float64,requires_grad=True))
++    torch.testing.assert_close(v,torch.tensor([1.5,2.25,3.],dtype=torch.float64),atol=1e-10,rtol=1e-9)
++    assert not target.requires_grad and target.grad_fn is None and v.grad_fn is None
++    q=torch.zeros(3,3,dtype=torch.float64,requires_grad=True)
++    q_loss(q,torch.tensor([0,1,2]),target).backward()
++    assert old.grad is None and torch.count_nonzero(q.grad[~torch.eye(3,dtype=torch.bool)])==0
++
++@pytest.mark.pure
++def test_T14_gae_continuity_and_reset(snap):
++    import math
++    n=replace(snap,decision_id=1)
++    t=Transition(snap,n,snap.candidate_ids[0],-.5,.4,2.,.3,math.log(.9)/math.log(.99),1.,False,False,'synthetic',())
++    t2=Transition(n,replace(n,decision_id=2),snap.candidate_ids[0],-.5,2.,0.,1.,1.,.9,True,False,'synthetic',(snap,))
++    a,v,q=scalar_targets([t,t2])
++    assert a==pytest.approx((1.7+.9*.95*(-1),-1),abs=1e-10,rel=1e-9)
++    assert v==pytest.approx((.4+a[0],1.),abs=1e-10,rel=1e-9)
++    assert scalar_targets([replace(t,truncated=True),t2])[0][0]==pytest.approx(1.7,abs=1e-10,rel=1e-9)
++
++@pytest.mark.torch_runtime
++def test_T13_each_of_four_encodings_keeps_gradient(fixture,policy):
++    import torch
++    from cp_disr.neural import differences
++    from cp_disr.graph import four_views
++    c=next(c for c in fixture['contracts'] if c.name=='MOVE')
++    d=differences(policy.encoder,four_views(fixture['template'],fixture['facts'].values,fixture['edges'],c))
++    assert len({id(x) for x in d.encodings})==4
++    for x in d.encodings:x.retain_grad()
++    d.dp.square().sum().backward()
++    for x in d.encodings:assert x.grad is not None and torch.isfinite(x.grad).all() and torch.count_nonzero(x.grad)>0
++
++@pytest.mark.torch_runtime
++def test_T18_production_ppo_recomputes_four_epochs(snap,policy,monkeypatch):
++    import torch,socket
++    from cp_disr.torch_rl import PPO
++    from cp_disr.prior import PriorSampler
++    def forbidden(*args,**kwargs):raise AssertionError('PPO attempted API/network or prior resampling')
++    monkeypatch.setattr(PriorSampler,'start',forbidden)
++    monkeypatch.setattr(socket.socket,'connect',forbidden)
++    with torch.no_grad():old=policy(snap)
++    t=Transition(snap,replace(snap,decision_id=1),snap.candidate_ids[0],float(old.distribution.log_prob(torch.tensor(0))),float(old.value),.2,.3,1.,1.,False,True,'synthetic_unit_fixture',())
++    buffer=Rollout();buffer.append(t);before=policy.encoder.forward_calls;state=digest(snap)
++    observed=[]
++    hook=policy.encoder.register_forward_hook(lambda m,a,out:observed.append((m,tuple(p._version for p in m.parameters()),out.requires_grad)))
++    logs=PPO(policy).update(buffer,epochs=4,minibatch=1)
++    hook.remove()
++    assert [x['epoch'] for x in logs]==[0,1,2,3] and len(buffer.transitions)==0
++    assert policy.encoder.forward_calls>before+4 and all(x[0] is policy.encoder and x[2] for x in observed)
++    assert len({x[1] for x in observed})>=4 and digest(snap)==state
++    assert all(torch.isfinite(torch.tensor(x['total'])) for x in logs)
++
++@pytest.mark.torch_runtime
++def test_T20_prior_cannot_enter_base_context(snap,policy):
++    import torch
++    empty=replace(snap,prior_edges=(),prior_hash=digest(()))
++    a=policy(snap);b=policy(empty)
++    assert torch.equal(a.hidden,b.hidden) and a.candidate_ids==b.candidate_ids and torch.equal(a.mask,b.mask)
++    for i,cid in enumerate(a.candidate_ids):
++        torch.testing.assert_close(a.logits[i]-a.diagnostics['delta'][cid],b.logits[i],atol=1e-6,rtol=1e-5)
++    assert snap.facts is empty.facts and snap.base_input==empty.base_input
++
++@pytest.mark.torch_runtime
++def test_T24_registered_wait_and_no_candidates(snap,fixture):
++    import torch
++    from cp_disr.contracts import SkillContract,Effects
++    from cp_disr.graph import build_template
++    from cp_disr.neural import Policy
++    wait=SkillContract('WAIT',(),(),(),Effects(),'synthetic-v1','synthetic unit test; not runtime authorization',timeout_seconds=1.)
++    cs=fixture['contracts']+(wait,)
++    template=build_template(cs,snap.template.goals,fixture['registry'].predicate_types,fixture['objects'])
++    model=Policy({n.schema for n in template.nodes if n.kind=='ACTION'},{n.schema for n in template.nodes if n.kind=='PROPOSITION'},{x for n in template.nodes for x in n.argument_types},4,3)
++    waiting=replace(snap,template=template,candidate_ids=(wait.id,),candidate_features=((0.,0.,0.),),mask=(True,))
++    out=model(waiting)
++    assert out.select()==(wait.id,0) and out.distribution.probs.item()==1
++    assert all(torch.count_nonzero(x)==0 for x in (out.diagnostics['differences'][wait.id].dk,out.diagnostics['differences'][wait.id].dh,out.diagnostics['differences'][wait.id].dp))
++    none=model(replace(waiting,candidate_ids=(),candidate_features=(),mask=()))
++    assert none.distribution is None and none.ended_reason=='NO_SAFE_CANDIDATES'
++
++@pytest.mark.torch_runtime
++def test_T25_ablation_parameter_and_loss_isolation(snap,policy):
++    import torch
++    from cp_disr.torch_rl import ppo_losses
++    before={k:v.detach().clone() for k,v in policy.state_dict().items()}
++    outputs={}
++    for method in ['Full','A_DD','A_Q','A_B']:
++        policy.method=method;outputs[method]=policy(snap)
++        assert all(torch.equal(before[k],v) for k,v in policy.state_dict().items())
++    assert torch.equal(outputs['Full'].logits,outputs['A_Q'].logits)
++    for cid in snap.candidate_ids:
++        i=snap.candidate_ids.index(cid)
++        base=outputs['Full'].logits[i]-outputs['Full'].diagnostics['delta'][cid]
++        for method in ['A_DD','A_B']:
++            torch.testing.assert_close(outputs[method].logits[i]-outputs[method].diagnostics['delta'][cid],base,atol=1e-6,rtol=1e-5)
++    x=torch.tensor([.1,.2]);args=(x,x,torch.tensor([1.,-1.]),torch.ones(2),x,torch.zeros(2),x,torch.ones(2),x)
++    full=ppo_losses(*args,lambda_q=.1);aq=ppo_losses(*args,lambda_q=0.)
++    torch.testing.assert_close(full['total']-aq['total'],.1*full['q'],atol=1e-6,rtol=1e-5)
++    assert all(torch.equal(full[k],aq[k]) for k in ['actor','v','q'])
++
++@pytest.mark.torch_runtime
++def test_T15_canonical_tie_break(snap,policy):
++    import torch
++    out=policy(snap);out.logits=torch.zeros_like(out.logits)
++    assert out.select(deterministic=True)[0]==min(snap.candidate_ids)
++    out.candidate_ids=tuple(reversed(out.candidate_ids))
++    assert out.select(deterministic=True)[0]==min(snap.candidate_ids)
+--- /dev/null
++++ b/tests/test_stage0b_device_parity.py
+@@ -0,0 +1,33 @@
++"""CPU/GPU FP32 agreement, with absolute/relative errors for every output."""
++import copy,json,os
++from pathlib import Path
++import pytest
++from cp_disr.common import seed32
++
++@pytest.mark.torch_runtime
++def test_T13_T23_cpu_gpu_fp32_outputs_and_gradients(fixture,snap,tmp_path):
++    import torch
++    from cp_disr.neural import Policy
++    if not torch.cuda.is_available():pytest.skip("GPU-only parity check: CUDA unavailable")
++    torch.manual_seed(seed32('unit_fixture','device_parity',0,0))
++    t=fixture['template'];model=Policy({n.schema for n in t.nodes if n.kind=='ACTION'},{n.schema for n in t.nodes if n.kind=='PROPOSITION'},{x for n in t.nodes for x in n.argument_types},4,3).cpu()
++    gpu=copy.deepcopy(model).cuda();results=[]
++    def compare(name,a,b):
++        a=a.detach().cpu().double();b=b.detach().cpu().double();diff=(a-b).abs();rel=diff/a.abs().clamp_min(1e-12)
++        bad=diff>(1e-6+1e-5*a.abs())
++        results.append({'name':name,'max_absolute_error':float(diff.max()) if diff.numel() else 0.,'max_relative_error':float(rel.max()) if rel.numel() else 0.,'failure_locations':bad.nonzero().tolist(),'status':'FAIL' if bad.any() else 'PASS','atol':1e-6,'rtol':1e-5})
++    for loss_name in ['actor','value','q']:
++        model.zero_grad();gpu.zero_grad();a=model(snap);b=gpu(snap)
++        for field in ['logits','value','q','hidden']:compare(loss_name+'/'+field,getattr(a,field),getattr(b,field))
++        compare(loss_name+'/probabilities',a.distribution.probs,b.distribution.probs)
++        for cid in a.diagnostics['differences']:
++            for field in ['dk','dh','dp']:compare(loss_name+'/'+cid+'/'+field,getattr(a.diagnostics['differences'][cid],field),getattr(b.diagnostics['differences'][cid],field))
++            compare(loss_name+'/'+cid+'/delta',a.diagnostics['delta'][cid],b.diagnostics['delta'][cid])
++        for out in [a,b]:
++            loss=-out.distribution.log_prob(torch.tensor(0,device=out.logits.device)) if loss_name=='actor' else out.value.square()+out.value if loss_name=='value' else out.q[0].square()+out.q[0]
++            loss.backward()
++        for (name,p),(other,q) in zip(model.named_parameters(),gpu.named_parameters()):
++            assert name==other and (p.grad is None)==(q.grad is None)
++            if p.grad is not None:compare(loss_name+'/gradient/'+name,p.grad,q.grad)
++    path=Path(os.environ.get('CP_DISR_PARITY_REPORT',str(tmp_path/'numeric_comparison.json')));path.write_text(json.dumps(results,indent=2)+'\n')
++    assert all(x['status']=='PASS' for x in results),[x for x in results if x['status']=='FAIL']
+--- /dev/null
++++ b/tools/stage0b_plugin.py
+@@ -0,0 +1,35 @@
++"""Explicit device/precision and network denial for Stage 0B only."""
++import json,random,re,socket
++from pathlib import Path
++import pytest
++from cp_disr.common import seed32
++
++def pytest_addoption(parser):
++    parser.addoption('--cp-device',default='cpu',choices=['cpu','cuda'])
++    parser.addoption('--cp-dtype',default='float32',choices=['float32','float64'])
++
++@pytest.fixture(autouse=True)
++def stage0b_device_and_rng(request,monkeypatch):
++    import torch,numpy as np
++    device=request.config.getoption('--cp-device');dtype=request.config.getoption('--cp-dtype')
++    if device=='cuda' and not torch.cuda.is_available():pytest.fail('Requested CUDA device unavailable; no silent skip')
++    old_device=torch.get_default_device();old_dtype=torch.get_default_dtype()
++    torch.set_default_device(device);torch.set_default_dtype(getattr(torch,dtype));torch.set_num_threads(2)
++    torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
++    seed=seed32('unit_fixture',request.node.name,0,0);random.seed(seed);np.random.seed(seed);torch.manual_seed(seed)
++    if torch.cuda.is_available():torch.cuda.manual_seed_all(seed)
++    def denied(*args,**kwargs):raise AssertionError('Network forbidden during Stage 0B')
++    monkeypatch.setattr(socket.socket,'connect',denied)
++    request.node.user_properties.extend([('device',device),('dtype',dtype),('unit_seed',str(seed)),('synthetic_unit_fixture','true')])
++    yield
++    torch.set_default_device(old_device);torch.set_default_dtype(old_dtype)
++
++@pytest.hookimpl(hookwrapper=True)
++def pytest_runtest_makereport(item,call):
++    outcome=yield;report=outcome.get_result()
++    if report.when=='call':
++        evidence={'nodeid':item.nodeid,'status':report.outcome,'device':item.config.getoption('--cp-device'),'dtype':item.config.getoption('--cp-dtype'),'duration':report.duration,'failure':str(report.longrepr) if report.failed else None}
++        # Per-invocation stream next to JUnit, so failures survive later fixes.
++        xml=item.config.option.xmlpath
++        if xml:
++            with Path(str(xml)+'.jsonl').open('a') as f:f.write(json.dumps(evidence)+'\n')

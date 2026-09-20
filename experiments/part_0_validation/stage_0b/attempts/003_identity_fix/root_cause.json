@@ -1,0 +1,16 @@
+[
+  {
+    "test_id": "T10",
+    "failure": "extra mask element not rejected",
+    "root_cause": "zip silently truncates before canonical mask hashing",
+    "fix": "validate candidate/mask lengths before hashing",
+    "method_changed": false
+  },
+  {
+    "test_id": "T22",
+    "failure": "cross-environment snapshot accepted",
+    "root_cause": "recurrent state keyed by env did not verify snapshot env/episode/prior identity",
+    "fix": "validate env, decision continuity, episode and prior before commit or read-only probe",
+    "method_changed": false
+  }
+]

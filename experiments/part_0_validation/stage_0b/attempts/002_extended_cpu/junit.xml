@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="10" time="9.489" timestamp="2026-09-21T00:46:46.817636+08:00" hostname="gpu03"><testcase classname="tests.test_stage0b_extended" name="test_T10_recompute_mask_shape_rejected" time="1.987"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="3222186660" /><property name="synthetic_unit_fixture" value="true" /></properties><failure message="Failed: DID NOT RAISE &lt;class 'cp_disr.common.DataIntegrityError'&gt;">snap = Snapshot(env_id='e0', episode_id='ep0', decision_id=0, template=GraphTemplate(nodes=(Node(id='a:MOVE:red:buffer:v1', k..., 2.0, 0.0)), observation_ref='synthetic:frame0', clock_seconds=0.0, execution_summary=(), synthetic_unit_fixture=True)
+
+    @pytest.mark.pure
+    def test_T10_recompute_mask_shape_rejected(snap):
+&gt;       with pytest.raises(DataIntegrityError):
+E       Failed: DID NOT RAISE &lt;class 'cp_disr.common.DataIntegrityError'&gt;
+
+tests/test_stage0b_extended.py:9: Failed</failure></testcase><testcase classname="tests.test_stage0b_extended" name="test_T22_recurrent_commit_identity" time="3.677"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="3456381276" /><property name="synthetic_unit_fixture" value="true" /></properties><failure message="Failed: DID NOT RAISE &lt;class 'cp_disr.common.DataIntegrityError'&gt;">snap = Snapshot(env_id='e0', episode_id='ep0', decision_id=0, template=GraphTemplate(nodes=(Node(id='a:MOVE:red:buffer:v1', k..., 2.0, 0.0)), observation_ref='synthetic:frame0', clock_seconds=0.0, execution_summary=(), synthetic_unit_fixture=True)
+policy = Policy(
+  (encoder): GraphEncoder(
+    (features): NodeFeatures(
+      (kind): Embedding(2, 128)
+      (action): Embed...res=640, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+
+    @pytest.mark.torch_runtime
+    def test_T22_recurrent_commit_identity(snap,policy):
+        from cp_disr.torch_rl import RecurrentState
+        state=RecurrentState();state.reset('e0')
+&gt;       with pytest.raises(DataIntegrityError):state.commit('e0',replace(snap,env_id='e1'))
+E       Failed: DID NOT RAISE &lt;class 'cp_disr.common.DataIntegrityError'&gt;
+
+tests/test_stage0b_extended.py:16: Failed</failure></testcase><testcase classname="tests.test_stage0b_extended" name="test_T12_fp64_hand_targets" time="0.006"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="1051795561" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T14_gae_continuity_and_reset" time="0.003"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="738904539" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T13_each_of_four_encodings_keeps_gradient" time="0.132"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="2688384241" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T18_production_ppo_recomputes_four_epochs" time="1.891"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="4285833427" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T20_prior_cannot_enter_base_context" time="0.370"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="1997727978" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T24_registered_wait_and_no_candidates" time="0.074"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="3064570151" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T25_ablation_parameter_and_loss_isolation" time="0.962"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="35519010" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase><testcase classname="tests.test_stage0b_extended" name="test_T15_canonical_tie_break" time="0.238"><properties><property name="device" value="cpu" /><property name="dtype" value="float32" /><property name="unit_seed" value="922296949" /><property name="synthetic_unit_fixture" value="true" /></properties></testcase></testsuite></testsuites>

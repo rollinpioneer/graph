@@ -1,0 +1,21 @@
+{
+  "command": [
+    ".venv-stage0a/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "stage0b_plugin",
+    "tests/test_q_executed_only.py",
+    "tests/test_q_target_detach.py",
+    "tests/test_smdp_boundaries.py",
+    "tests/test_duration_discount.py",
+    "tests/test_prior_bound.py",
+    "tests/test_stage0b_extended.py::test_T12_fp64_hand_targets",
+    "tests/test_stage0b_extended.py::test_T14_gae_continuity_and_reset",
+    "--cp-dtype=float64",
+    "--tb=long",
+    "--junitxml=experiments/part_0_validation/stage_0b/attempts/010_final_fp64/junit.xml"
+  ],
+  "exit_code": 0
+}

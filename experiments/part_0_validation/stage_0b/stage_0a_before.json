@@ -1,0 +1,175 @@
+{
+  "stage": "0A",
+  "status": "BLOCKED",
+  "method_version": "CP-DISR-v2.1",
+  "plan_version": "EEP-v1.0",
+  "git_hash": "1a00beb8f9a06753325fb2bdd7c191c3ec731a8e",
+  "git_hash_semantics": "Pre-revision base; exact delivery commit recorded in receipt",
+  "source_hashes": {
+    "sources/CP_DISR_v2.1_Final_Experimental_Agent_Prompt.md": "e74eb0dc879e538c23ef3436ca8243fc3bd00a2d96dc50e913c99972d25c01eb",
+    "sources/CP_DISR_M1_Research_Specification_v2.1.md": "c552592d9d201e54332344379ceb130fd740dcd1b43134f94f18ad222399fdae",
+    "sources/CP_DISR_M1_Implementation_Interfaces_v2.1.zip": "d46dcbe3032da4b987001f0ee2394d1a1eb5ecbc11b4b70a4071c62596dd783f",
+    "inputs/CP_DISR_v2.1_Experimental_Agent_Kit.zip": "ba07d48739078a0879ee96eaa125963daa3241d7283e77eff9ec369008f23e59",
+    "inputs/CP_DISR_v2.1_Minimal_Experimental_Execution_Plan.md": "bdff530cdb0fd3002653b1202a734c7abde8661de9c42c023082ce63797b57d9",
+    "inputs/CP_DISR_v2.1_Experiment_Manifest_v0.yaml": "9d891f8ce5e3a047d1347095ab568f3acbe74c57e0d5999d363d763ace1685e2"
+  },
+  "started_at": "2026-09-20T13:17:31.795373+00:00",
+  "completed_at": "2026-09-20T16:29:15.651319+00:00",
+  "runs_completed": [
+    {
+      "kind": "Stage 0A library infrastructure probe",
+      "evidence": "part_0_validation/stage_0a/revisions/environment_reuse_20260920T161216Z/software_checks.json",
+      "trained_policy": false
+    }
+  ],
+  "runs_failed": [],
+  "runs_reused": [],
+  "selected_tasks": [],
+  "requested_task_templates": [
+    "D0",
+    "T_A",
+    "T_C"
+  ],
+  "selected_config": "configs/resolved_defaults.yaml",
+  "issues": [
+    {
+      "category": "external_runtime_missing",
+      "issue": "D0/T_A/T_C concrete assets, controllers, perception/verifier, evaluator, safety, timing and initialization splits are not certified; see unbound_must_bind.csv"
+    },
+    {
+      "category": "api_verification_deferred",
+      "issue": "Local credential file exists; no key read or API call. Beijing region and endpoint are user-bound. Model access MUST_VERIFY in Stage 0C; no automatic model or endpoint fallback."
+    },
+    {
+      "category": "method_validation",
+      "issue": "Stage 0B T01-T25 remain NOT_RUN; library smoke tests are not Method validation."
+    }
+  ],
+  "tuning_changes": [],
+  "runtime_adjustments": [
+    {
+      "field": "OS",
+      "observed": "Rocky Linux 10.2"
+    },
+    {
+      "field": "dependency_indexes",
+      "observed": [
+        "https://download.pytorch.org/whl/cu126",
+        "https://mirrors.nju.edu.cn/pypi/web/simple"
+      ]
+    },
+    {
+      "field": "UV_HTTP_TIMEOUT",
+      "old": 30,
+      "new": 300,
+      "reason": "torch wheel download timeout; no package version change"
+    },
+    {
+      "field": "software_profile.python",
+      "old": "3.11.13",
+      "new": "3.10.19",
+      "reason": "Reuse existing PyTorch 2.7.1+cu126/CUDA binaries without modifying the source environment"
+    }
+  ],
+  "next_stage": "0B",
+  "skipped": false,
+  "execution_scope": "Stage 0A environment reuse, library probe, manifest audit; no API/robot/training/evaluation/Stage 0B",
+  "readiness": {
+    "target_host": true,
+    "software": true,
+    "core_code": true,
+    "runtime": false,
+    "account": false,
+    "stage_0b": true,
+    "core_code_present": true,
+    "production_entrypoints_present": true,
+    "task_templates_present": true,
+    "contracts_present": true,
+    "fixtures_present": true,
+    "stage_0b_tests_authored": true,
+    "pure_logic_validation_passed": true,
+    "torch_runtime_validation_pending": false,
+    "external_runtime_binding_pending": true,
+    "api_binding_pending": true,
+    "stage_0b_code_prerequisites_present": true,
+    "stage_0b_ready_after_user_environment_validation": true,
+    "stage_0b_authorization_required": true,
+    "credential_file_present": true,
+    "credential_server_bound": false,
+    "api_configuration_bound": true,
+    "model_access_verification_pending": true,
+    "method_unit_tests_validated": false
+  },
+  "infrastructure_checks": [
+    {
+      "check": "source_hashes",
+      "status": "PASS",
+      "evidence": "source_inventory.json"
+    },
+    {
+      "check": "target_host_and_new_repository",
+      "status": "PASS",
+      "evidence": "environment_probe.json"
+    },
+    {
+      "check": "dependency_resolution",
+      "status": "PASS",
+      "evidence": "host_logs/resolver.log; ../../../../uv.lock"
+    },
+    {
+      "check": "dependency_install_and_pip_check",
+      "status": "BLOCKED",
+      "evidence": "host_logs/install_attempt_02.log; host_logs/install_attempt_02.exit; pip_check if installation completed"
+    },
+    {
+      "check": "imports",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "RGCN_forward_backward",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "checkpoint_roundtrip",
+      "status": "BLOCKED",
+      "evidence": "software_checks.json"
+    },
+    {
+      "check": "CP_DISR_production_entrypoints",
+      "status": "BLOCKED",
+      "evidence": "implementation_inventory.md"
+    },
+    {
+      "check": "D0_T_A_T_C_real_asset_bindings",
+      "status": "BLOCKED",
+      "evidence": "task_manifest.yaml; legacy_resource_review.json"
+    },
+    {
+      "check": "controller_camera_verifier_evaluator_time_safety",
+      "status": "BLOCKED",
+      "evidence": "runtime_manifest.yaml; binding_table.csv"
+    },
+    {
+      "check": "VLM_account_region_endpoint_fewshot",
+      "status": "BLOCKED",
+      "evidence": "manifests/vlm_manifest.yaml; environment_probe.json"
+    },
+    {
+      "check": "environment_reuse_revision",
+      "status": "PASS_WITH_NOTES",
+      "evidence": "part_0_validation/stage_0a/revisions/environment_reuse_20260920T161216Z/software_checks.json"
+    }
+  ],
+  "rl_jobs_executed": 0,
+  "real_skill_transitions": 0,
+  "ppo_updates": 0,
+  "performance_episodes": 0,
+  "vlm_requests_executed": 0,
+  "robot_actions_executed": 0,
+  "stage_0b_executed": false,
+  "unbound_inventory": "part_0_validation/stage_0a/unbound_must_bind.json",
+  "current_revision": "part_0_validation/stage_0a/revisions/environment_reuse_20260920T161216Z",
+  "source_tree_sha256": "c59ef711298363d1de2199cf33bc8f47b768109d458f1dd9cd85b9d0341382e1"
+}

@@ -12,6 +12,7 @@ def snap(fixture):return snapshot(fixture)
 def policy(fixture):
     import torch
     from cp_disr.neural import Policy
-    torch.manual_seed(7);torch.set_num_threads(2)
+    from cp_disr.common import seed32
+    torch.manual_seed(seed32('unit_fixture','contracts_v1',0,0));torch.set_num_threads(2)
     t=fixture['template']
     return Policy({n.schema for n in t.nodes if n.kind=='ACTION'},{n.schema for n in t.nodes if n.kind=='PROPOSITION'},{x for n in t.nodes for x in n.argument_types},4,3)
