@@ -42,9 +42,9 @@ Kit 自带的聊天沙箱预检已归档为 supplied_kit 历史，不能当作�
 
 软件 profile：**PROPOSED_NOT_VALIDATED**。目标 Python `3.11.13`；完整已解析版本、导入结果和错误见 dependency_table.csv / software_checks.json。独立环境位于 `.venv`，uv 0.8.22 位于 `.bootstrap`。真实 resolver / 安装 / pip check / freeze 日志保存在 host_logs，wheel 来源和 uv.lock hash 写入 software_manifest.yaml。
 
-安装 attempt 01 遇到 torch wheel 网络超时，原始失败日志和首次缺包检查保存在 host_logs/attempt_01。attempt 02 保持版本与来源不变，只提高 UV_HTTP_TIMEOUT 至 300 秒、下载并发降为 2；实际结果：attempt 02 达到 900 秒安装时限，退出码 124；没有完成安装。attempt 01 的网络超时退出码为 1。详见 install_attempt_02.log / .exit。安装失败不记作训练失败。软件检查在安装恢复后才可升级 VALIDATED。
+安装 attempt 01 遇到 torch wheel 网络超时，原始失败日志和首次缺包检查保存在 host_logs/attempt_01。attempt 02 保持版本与来源不变，只提高 UV_HTTP_TIMEOUT 至 300 秒、下载并发降为 2；实际结果见 install_attempt_02.log / .exit。安装失败不记作训练失败。软件检查在安装恢复后才可升级 VALIDATED。
 
-本次由于 torch 未安装，RGCN 前后向与 checkpoint round-trip 的计算部分均未执行；不能写为数值测试通过或失败。探针程序设计使用合成张量，仅检查库前后向；若 round-trip 成功，文件是未训练库模型的 state_dict，不是 CP-DISR policy checkpoint。两者不证明方法语义通过，不替代 T01–T25。
+RGCN 探针使用合成张量，仅检查库前后向；若 round-trip 成功，文件是未训练库模型的 state_dict，不是 CP-DISR policy checkpoint。两者不证明方法语义通过，不替代 T01–T25。
 
 ## 4. 实际运行与结果边界
 

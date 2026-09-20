@@ -1,0 +1,127 @@
+{
+  "repositories": [
+    {
+      "repository": "/home/__compress_data/xushijie/graph_github_upload",
+      "git_hash": "087a7b2770c8130c9d0b29e3a6b703f19c8c50e5",
+      "search_scope": "Tracked non-vendor, non-placeholder filenames; targeted source inspection; no legacy execution",
+      "cp_disr_path_candidates": [],
+      "inspected_sources": [],
+      "cp_disr_compatibility": "NOT_CERTIFIED; historical task/reward code is not a v2.1 asset binding"
+    },
+    {
+      "repository": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_evaluation_repair_v1_worktree",
+      "git_hash": "999958422d876270337afa469e3047f605dceb84",
+      "search_scope": "Tracked non-vendor, non-placeholder filenames; targeted source inspection; no legacy execution",
+      "cp_disr_path_candidates": [],
+      "inspected_sources": [
+        {
+          "path": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_evaluation_repair_v1_worktree/experiments/pathgraph_p2c_rl_v1/p2crl/backends.py",
+          "sha256": "9d96d7b8fe40728e550829610b88bafa4ab46f2f7ab961beb365bd2eb28ae967",
+          "evidence_lines": [
+            {
+              "line": 11,
+              "text": "class FakePolicy:"
+            },
+            {
+              "line": 24,
+              "text": "class FakeModel:"
+            },
+            {
+              "line": 71,
+              "text": "class FakeBackend:"
+            },
+            {
+              "line": 100,
+              "text": "class RealBackend:"
+            }
+          ]
+        },
+        {
+          "path": "/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_evaluation_repair_v1_worktree/experiments/pathgraph_p2c_rl_v1/p2crl/gym_adapter.py",
+          "sha256": "c4412c6d5d47baef7b99aacc150e9e8e6262a1270870bfc29d5fce8555995ec5",
+          "evidence_lines": [
+            {
+              "line": 10,
+              "text": "from p2crm.potentials_v2 import METHOD_V2, shaped_training_reward"
+            },
+            {
+              "line": 14,
+              "text": "class RLTaskEnv(gym.Env):"
+            },
+            {
+              "line": 26,
+              "text": "        self.action_space = spaces.Discrete(37)"
+            },
+            {
+              "line": 27,
+              "text": "        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(LAYOUT_DIM,), dtype=np.float32)"
+            },
+            {
+              "line": 64,
+              "text": "    def reset(self, *, seed=None, options=None):"
+            },
+            {
+              "line": 80,
+              "text": "    def step(self, action):"
+            },
+            {
+              "line": 90,
+              "text": "        train_r, bonus = shaped_training_reward("
+            }
+          ]
+        }
+      ],
+      "cp_disr_compatibility": "NOT_CERTIFIED; historical task/reward code is not a v2.1 asset binding"
+    },
+    {
+      "repository": "/home/__compress_data/xushijie/graph_pathgraph_p1_v6gm1_worktree",
+      "git_hash": "980997e69c914287349e51233c8fff0d50934406",
+      "search_scope": "Tracked non-vendor, non-placeholder filenames; targeted source inspection; no legacy execution",
+      "cp_disr_path_candidates": [],
+      "inspected_sources": [
+        {
+          "path": "/home/__compress_data/xushijie/graph_pathgraph_p1_v6gm1_worktree/upgrade_v2/p1_mainline_grasp_v6gm1/replay_bridge.py",
+          "sha256": "f3e0213285dfbd936f2f529aeff7646f22a2ddf0b17034be15e25ffc97219e46",
+          "evidence_lines": [
+            {
+              "line": 11,
+              "text": "    from reward_v6 import score_episode"
+            }
+          ]
+        },
+        {
+          "path": "/home/__compress_data/xushijie/graph_pathgraph_p1_v6gm1_worktree/upgrade_v2/p1_regrasp_controller_v6rg1/tracking_controller.py",
+          "sha256": "6ee6c3efd46c9704482aececceb5bad933a29ee2f7a7a6ff31fb0940a8e6cf5c",
+          "evidence_lines": []
+        }
+      ],
+      "cp_disr_compatibility": "NOT_CERTIFIED; historical task/reward code is not a v2.1 asset binding"
+    }
+  ],
+  "asset_roots": [
+    {
+      "path": "/home/xushijie/CUPID",
+      "exists": true,
+      "resolved_path": "/home/__compress_data/xushijie/CUPID",
+      "binding": "DISCOVERY_ONLY_NOT_BOUND"
+    },
+    {
+      "path": "/home/__compress_data/xushijie/CUPID",
+      "exists": true,
+      "resolved_path": "/home/__compress_data/xushijie/CUPID",
+      "binding": "DISCOVERY_ONLY_NOT_BOUND"
+    },
+    {
+      "path": "/home/xushijie/LIBERO",
+      "exists": true,
+      "resolved_path": "/home/__compress_data/xushijie/LIBERO",
+      "binding": "DISCOVERY_ONLY_NOT_BOUND"
+    },
+    {
+      "path": "/home/__compress_data/xushijie/LIBERO",
+      "exists": true,
+      "resolved_path": "/home/__compress_data/xushijie/LIBERO",
+      "binding": "DISCOVERY_ONLY_NOT_BOUND"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "check": "source_hashes",
+    "status": "PASS",
+    "evidence": "source_inventory.json"
+  },
+  {
+    "check": "target_host_and_new_repository",
+    "status": "PASS",
+    "evidence": "environment_probe.json"
+  },
+  {
+    "check": "dependency_resolution",
+    "status": "PASS",
+    "evidence": "host_logs/resolver.log; ../../../../uv.lock"
+  },
+  {
+    "check": "dependency_install_and_pip_check",
+    "status": "BLOCKED",
+    "evidence": "host_logs/install_attempt_02.log; host_logs/install_attempt_02.exit; pip_check if installation completed"
+  },
+  {
+    "check": "imports",
+    "status": "BLOCKED",
+    "evidence": "software_checks.json"
+  },
+  {
+    "check": "RGCN_forward_backward",
+    "status": "BLOCKED",
+    "evidence": "software_checks.json"
+  },
+  {
+    "check": "checkpoint_roundtrip",
+    "status": "BLOCKED",
+    "evidence": "software_checks.json"
+  },
+  {
+    "check": "CP_DISR_production_entrypoints",
+    "status": "BLOCKED",
+    "evidence": "implementation_inventory.md"
+  },
+  {
+    "check": "D0_T_A_T_C_real_asset_bindings",
+    "status": "BLOCKED",
+    "evidence": "task_manifest.yaml; legacy_resource_review.json"
+  },
+  {
+    "check": "controller_camera_verifier_evaluator_time_safety",
+    "status": "BLOCKED",
+    "evidence": "runtime_manifest.yaml; binding_table.csv"
+  },
+  {
+    "check": "VLM_account_region_endpoint_fewshot",
+    "status": "BLOCKED",
+    "evidence": "manifests/vlm_manifest.yaml; environment_probe.json"
+  }
+]

@@ -1,11 +1,149 @@
-field,requirement,status,evidence
-runtime.target_host,实际训练主机及资源授权,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.repository,当前v2.1实现worktree/commit及入口,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.simulator_or_robot,环境及版本,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.task_assets,D0/T_A/T_C真实资产与初始化池,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.controller,冻结技能执行器及参数生成,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.camera,观测来源、标定和冻结感知,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.verifier_thresholds,谓词校准与独立成功评价,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.skill_timeouts,技能时限、任务deadline与安全许可,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-runtime.interaction_time_unit,时钟单位、d_ref和耗时计数,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
-vlm.account_region_endpoint,实际账户、地区、endpoint、SDK调用验证,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+field,proposed,observed,status,evidence
+runtime.experiment_root,MUST_BIND,/home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments,BOUND,environment_probe.json
+runtime.repository_path,MUST_BIND,/home/__compress_data/xushijie/graph_cp_disr_v2_1,BOUND,environment_probe.json
+runtime.repository_url,MUST_BIND,git@github.com:rollinpioneer/graph.git,BOUND,environment_probe.json
+runtime.git_hash,MUST_BIND,7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5,BOUND,environment_probe.json
+runtime.simulator_or_robot,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.environment_version,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.task_assets,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.controller_manifest,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.camera,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.calibration_manifest,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.perception_checkpoint,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.verifier_thresholds,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.skill_timeouts,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.task_deadlines,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.actual_interaction_time_unit,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.reference_skill_seconds_by_task,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.task_evaluator_version,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.hardware,MUST_BIND,"{""host"": ""gpu03"", ""cpu_count"": 112, ""gpu_inventory"": [""0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04, 40960 MiB, 29482 MiB"", ""1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04, 40960 MiB, 34804 MiB"", ""2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04, 40960 MiB, 36851 MiB"", ""3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04, 40960 MiB, 37579 MiB"", ""4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04, 40960 MiB, 36851 MiB"", ""5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04, 40960 MiB, 39191 MiB"", ""6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04, 40960 MiB, 13842 MiB"", ""7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04, 40960 MiB, 36851 MiB""], ""reservation"": ""NOT_RESERVED_FOR_TRAINING""}",BOUND,environment_probe.json
+runtime.gpu_driver,MUST_BIND,610.57.04,BOUND,environment_probe.json
+runtime.os,MUST_BIND,"{""distribution"": ""Rocky Linux 10.2"", ""kernel"": ""7.2.2-1.el10.elrepo.x86_64"", ""architecture"": ""x86_64"", ""container"": ""NOT_APPLICABLE_HOST_EXECUTION""}",BOUND,environment_probe.json
+runtime.safety_authorization,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.entrypoints,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+runtime.task_splits,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
+manifests/entrypoints.yaml:train_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/entrypoints.yaml:eval_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/entrypoints.yaml:tests_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/entrypoints.yaml:cache_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/entrypoints.yaml:report_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:vlm.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:vlm.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:vlm.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:vlm.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:vlm.seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:budget.real_reference_skill_seconds,MUST_BIND_PER_TASK,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.simulator_or_robot,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.environment_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.task_assets,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.controller_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.camera,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.calibration_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.perception_checkpoint,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.verifier_thresholds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.skill_timeouts,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.task_deadlines,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.actual_interaction_time_unit,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.reference_skill_seconds_by_task,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.task_evaluator_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.safety_authorization,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.entrypoints,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/experiment_manifest_v0.yaml:runtime.task_splits,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/model_manifest.yaml:actual_parameter_count,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/model_manifest.yaml:source_code_sha256,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:vlm_runtime.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:vlm_runtime.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:vlm_runtime.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:vlm_runtime.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:resource_settings.num_envs,MUST_BIND_AFTER_PLATFORM_BINDING,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:resource_settings.candidate_view_chunk,MUST_BIND_AFTER_MODEL_IMPLEMENTATION,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/runtime_manifest.yaml:resource_settings.actual_clock_source,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/skill_contracts.yaml:status,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[0].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[1].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[2].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[3].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[4].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/task_manifest.yaml:tasks[5].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+manifests/verifier_manifest.yaml:status,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/vlm_manifest.yaml:region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/vlm_manifest.yaml:base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/vlm_manifest.yaml:api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/vlm_manifest.yaml:fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+manifests/vlm_manifest.yaml:seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:vlm.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:vlm.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:vlm.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:vlm.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:vlm.seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:budget.real_reference_skill_seconds,MUST_BIND_PER_TASK,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.simulator_or_robot,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.environment_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.task_assets,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.controller_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.camera,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.calibration_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.perception_checkpoint,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.verifier_thresholds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.skill_timeouts,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.task_deadlines,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.actual_interaction_time_unit,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.reference_skill_seconds_by_task,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.task_evaluator_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.safety_authorization,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.entrypoints,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+configs/resolved_defaults.yaml:runtime.task_splits,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence

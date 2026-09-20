@@ -1,0 +1,1085 @@
+diff --git a/experiments/DELIVERY_STATUS.json b/experiments/DELIVERY_STATUS.json
+index fc5f49c..fb9fc54 100644
+--- a/experiments/DELIVERY_STATUS.json
++++ b/experiments/DELIVERY_STATUS.json
+@@ -1,17 +1,13 @@
+ {
+-  "artifact": "CP-DISR v2.1 Minimal Experimental Execution Plan",
++  "artifact": "CP-DISR v2.1 Stage 0A target-host execution",
+   "plan_version": "EEP-v1.0",
+   "method_version": "CP-DISR-v2.1",
+-  "stage_count": 17,
+-  "planned_production_test_count": 25,
+-  "default_first_batch_new_training_jobs": 29,
+-  "default_full_route_new_training_jobs": 71,
+-  "actual_rl_jobs_this_response": 0,
+-  "actual_vlm_calls_this_response": 0,
+-  "actual_scope": "source and local software metadata inventory; handbook/package validation",
+   "stage_0a_status": "BLOCKED",
+   "other_stages": "NOT_STARTED",
+-  "package_checks": "105/105",
++  "actual_rl_jobs_this_response": 0,
++  "actual_vlm_calls_this_response": 0,
++  "actual_scope": "Stage 0A on gpu03 only",
+   "production_tests_run": false,
+-  "trainer_included": false
++  "trainer_included": false,
++  "report": "part_0_validation/stage_0a/stage_0a_summary.md"
+ }
+diff --git a/experiments/configs/resolved_defaults.yaml b/experiments/configs/resolved_defaults.yaml
+index b929828..f7a3a14 100644
+--- a/experiments/configs/resolved_defaults.yaml
++++ b/experiments/configs/resolved_defaults.yaml
+@@ -1,7 +1,7 @@
+ manifest_version: experiment_manifest_v0
+ plan_version: EEP-v1.0
+ created_date: '2026-09-20'
+-state: TEMPLATE_UNBOUND_NOT_RUN_RESOLVED
++state: STAGE_0A_PARTIALLY_BOUND_BLOCKED
+ method:
+   name: CP-DISR
+   internal_name: M1
+@@ -275,12 +275,12 @@ software:
+   gymnasium: 1.1.1
+   uv: 0.8.22
+   dashscope: 1.27.6
+-  lockfile: MUST_GENERATE_ON_TARGET_HOST
++  lockfile: ../../uv.lock
+ runtime:
+-  experiment_root: MUST_BIND
+-  repository_path: MUST_BIND
+-  repository_url: MUST_BIND
+-  git_hash: MUST_BIND
++  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
++  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
++  repository_url: git@github.com:rollinpioneer/graph.git
++  git_hash: 7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5
+   simulator_or_robot: MUST_BIND
+   environment_version: MUST_BIND
+   task_assets: MUST_BIND
+@@ -294,9 +294,33 @@ runtime:
+   actual_interaction_time_unit: MUST_BIND
+   reference_skill_seconds_by_task: MUST_BIND
+   task_evaluator_version: MUST_BIND
+-  hardware: MUST_BIND
+-  gpu_driver: MUST_BIND
+-  os: MUST_BIND
++  hardware:
++    host: gpu03
++    cpu_count: 112
++    gpu_inventory:
++    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
++      40960 MiB, 29482 MiB
++    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
++      40960 MiB, 34804 MiB
++    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
++      40960 MiB, 37579 MiB
++    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
++      40960 MiB, 39191 MiB
++    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
++      40960 MiB, 13842 MiB
++    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
++      40960 MiB, 36851 MiB
++    reservation: NOT_RESERVED_FOR_TRAINING
++  gpu_driver: 610.57.04
++  os:
++    distribution: Rocky Linux 10.2
++    kernel: 7.2.2-1.el10.elrepo.x86_64
++    architecture: x86_64
++    container: NOT_APPLICABLE_HOST_EXECUTION
+   safety_authorization: MUST_BIND
+   entrypoints: MUST_BIND
+   task_splits: MUST_BIND
+diff --git a/experiments/manifests/entrypoints.yaml b/experiments/manifests/entrypoints.yaml
+index 3a765a8..1dd4227 100644
+--- a/experiments/manifests/entrypoints.yaml
++++ b/experiments/manifests/entrypoints.yaml
+@@ -1,9 +1,23 @@
+-status: UNBOUND
++status: PARTIALLY_BOUND_BLOCKED
+ implemented_trainer_in_this_kit: false
+-repository: MUST_BIND
++repository: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+ train_cli: MUST_BIND
+ eval_cli: MUST_BIND
+ tests_cli: MUST_BIND
+ cache_cli: MUST_BIND
+ report_cli: MUST_BIND
+-note: Do not invoke invented CLI paths; bind actual scripts/parameters in Stage 0A.
++note: Only infrastructure paths are implemented. train/eval/tests/cache/report production
++  CLIs remain MUST_BIND; no invented executable paths.
++infrastructure_only:
++  host_probe:
++    path: tools/stage0a_host_probe.py
++    cli: python3 tools/stage0a_host_probe.py
++    sha256: 87bda5cd4a2737d9ec5aca6b0cb559afc0a2ab4582f577ca2339c9b6a6d1a0e1
++  software_probe:
++    path: tools/stage0a_software_probe.py
++    cli: .venv/bin/python tools/stage0a_software_probe.py
++    sha256: 73db570ca9533ed811ccae701fb420e565d1b4517961728797e0a3949b6e6f38
++  kit_plan:
++    path: experiments/tools/plan_stage.py
++    cli: .venv/bin/python experiments/tools/plan_stage.py --stage 0A
++    sha256: 86db7daa2a779222547b24007550f4e90c50812cf84cab8b0bebb1b9eb04d25e
+diff --git a/experiments/manifests/experiment_manifest_v0.yaml b/experiments/manifests/experiment_manifest_v0.yaml
+index 8662905..f7a3a14 100644
+--- a/experiments/manifests/experiment_manifest_v0.yaml
++++ b/experiments/manifests/experiment_manifest_v0.yaml
+@@ -1,7 +1,7 @@
+ manifest_version: experiment_manifest_v0
+ plan_version: EEP-v1.0
+ created_date: '2026-09-20'
+-state: PROPOSED_NOT_EXECUTED
++state: STAGE_0A_PARTIALLY_BOUND_BLOCKED
+ method:
+   name: CP-DISR
+   internal_name: M1
+@@ -275,12 +275,12 @@ software:
+   gymnasium: 1.1.1
+   uv: 0.8.22
+   dashscope: 1.27.6
+-  lockfile: MUST_GENERATE_ON_TARGET_HOST
++  lockfile: ../../uv.lock
+ runtime:
+-  experiment_root: MUST_BIND
+-  repository_path: MUST_BIND
+-  repository_url: MUST_BIND
+-  git_hash: MUST_BIND
++  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
++  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
++  repository_url: git@github.com:rollinpioneer/graph.git
++  git_hash: 7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5
+   simulator_or_robot: MUST_BIND
+   environment_version: MUST_BIND
+   task_assets: MUST_BIND
+@@ -294,9 +294,33 @@ runtime:
+   actual_interaction_time_unit: MUST_BIND
+   reference_skill_seconds_by_task: MUST_BIND
+   task_evaluator_version: MUST_BIND
+-  hardware: MUST_BIND
+-  gpu_driver: MUST_BIND
+-  os: MUST_BIND
++  hardware:
++    host: gpu03
++    cpu_count: 112
++    gpu_inventory:
++    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
++      40960 MiB, 29482 MiB
++    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
++      40960 MiB, 34804 MiB
++    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
++      40960 MiB, 37579 MiB
++    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
++      40960 MiB, 39191 MiB
++    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
++      40960 MiB, 13842 MiB
++    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
++      40960 MiB, 36851 MiB
++    reservation: NOT_RESERVED_FOR_TRAINING
++  gpu_driver: 610.57.04
++  os:
++    distribution: Rocky Linux 10.2
++    kernel: 7.2.2-1.el10.elrepo.x86_64
++    architecture: x86_64
++    container: NOT_APPLICABLE_HOST_EXECUTION
+   safety_authorization: MUST_BIND
+   entrypoints: MUST_BIND
+   task_splits: MUST_BIND
+diff --git a/experiments/manifests/runtime_manifest.yaml b/experiments/manifests/runtime_manifest.yaml
+index b263629..1e028af 100644
+--- a/experiments/manifests/runtime_manifest.yaml
++++ b/experiments/manifests/runtime_manifest.yaml
+@@ -1,10 +1,10 @@
+-manifest_status: UNBOUND
+-execution_host_identity: MUST_BIND
++manifest_status: PARTIALLY_BOUND_BLOCKED
++execution_host_identity: xushijie@gpu03 (172.19.164.160)
+ runtime:
+-  experiment_root: MUST_BIND
+-  repository_path: MUST_BIND
+-  repository_url: MUST_BIND
+-  git_hash: MUST_BIND
++  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
++  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
++  repository_url: git@github.com:rollinpioneer/graph.git
++  git_hash: 7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5
+   simulator_or_robot: MUST_BIND
+   environment_version: MUST_BIND
+   task_assets: MUST_BIND
+@@ -18,9 +18,33 @@ runtime:
+   actual_interaction_time_unit: MUST_BIND
+   reference_skill_seconds_by_task: MUST_BIND
+   task_evaluator_version: MUST_BIND
+-  hardware: MUST_BIND
+-  gpu_driver: MUST_BIND
+-  os: MUST_BIND
++  hardware:
++    host: gpu03
++    cpu_count: 112
++    gpu_inventory:
++    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
++      40960 MiB, 29482 MiB
++    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
++      40960 MiB, 34804 MiB
++    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
++      40960 MiB, 37579 MiB
++    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
++      40960 MiB, 36851 MiB
++    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
++      40960 MiB, 39191 MiB
++    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
++      40960 MiB, 13842 MiB
++    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
++      40960 MiB, 36851 MiB
++    reservation: NOT_RESERVED_FOR_TRAINING
++  gpu_driver: 610.57.04
++  os:
++    distribution: Rocky Linux 10.2
++    kernel: 7.2.2-1.el10.elrepo.x86_64
++    architecture: x86_64
++    container: NOT_APPLICABLE_HOST_EXECUTION
+   safety_authorization: MUST_BIND
+   entrypoints: MUST_BIND
+   task_splits: MUST_BIND
+@@ -29,3 +53,11 @@ vlm_runtime:
+   base_http_api_url: MUST_BIND
+   api_account_authorized: MUST_BIND
+   fewshot_manifest: MUST_BIND
++execution_scope: Stage 0A infrastructure only; no robot, simulator rollout, training,
++  VLM call or Stage 0B
++entrypoints_manifest_ref: manifests/entrypoints.yaml
++resource_settings:
++  num_envs: MUST_BIND_AFTER_PLATFORM_BINDING
++  candidate_view_chunk: MUST_BIND_AFTER_MODEL_IMPLEMENTATION
++  clock_unit_required: seconds
++  actual_clock_source: MUST_BIND
+diff --git a/experiments/manifests/software_manifest.yaml b/experiments/manifests/software_manifest.yaml
+index 178aa42..7cbc7b6 100644
+--- a/experiments/manifests/software_manifest.yaml
++++ b/experiments/manifests/software_manifest.yaml
+@@ -14,4 +14,16 @@ pytest: 8.3.5
+ gymnasium: 1.1.1
+ uv: 0.8.22
+ dashscope: 1.27.6
+-lockfile: MUST_GENERATE_ON_TARGET_HOST
++lockfile: ../../uv.lock
++python_executable: /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv/bin/python
++bootstrap_uv_executable: /home/__compress_data/xushijie/graph_cp_disr_v2_1/.bootstrap/bin/uv
++lockfile_path_from_repository: uv.lock
++lockfile_sha256: 312a704added791bef7cd2ee5e86c6ba85a952fd1fadb5112acf8312fd201585
++wheel_indexes:
++- https://download.pytorch.org/whl/cu126
++- https://mirrors.nju.edu.cn/pypi/web/simple
++evidence: part_0_validation/stage_0a/software_checks.json
++validation_scope: Library imports, minimal RGCN forward/backward and untrained state_dict
++  round-trip; NOT CP-DISR method validation
++torchvision_status: NOT_INSTALLED_OPTIONAL_NO_BOUND_VISUAL_FRONTEND
++system_environment_modified: false
+diff --git a/experiments/manifests/splits.json b/experiments/manifests/splits.json
+index 031d57e..a4cc82c 100644
+--- a/experiments/manifests/splits.json
++++ b/experiments/manifests/splits.json
+@@ -1,5 +1,5 @@
+ {
+-  "status": "TEMPLATE_UNBOUND",
++  "status": "BLOCKED_NO_BOUND_INITIAL_STATE_GENERATOR",
+   "train_cases_per_task": 64,
+   "dev_cases_per_task": 50,
+   "test_id_cases_per_task": 50,
+@@ -8,5 +8,5 @@
+     "G2"
+   ],
+   "case_definitions": [],
+-  "note": "Indices are not environment assets; Stage 0A must bind real case definitions and signatures."
+-}
+\ No newline at end of file
++  "note": "64/50/50 are planned per-task counts only. No real task case, image, object binding or graph signature has been created or claimed."
++}
+diff --git a/experiments/manifests/task_manifest.yaml b/experiments/manifests/task_manifest.yaml
+index b82b7b3..35d3630 100644
+--- a/experiments/manifests/task_manifest.yaml
++++ b/experiments/manifests/task_manifest.yaml
+@@ -1,4 +1,4 @@
+-status: STRUCTURE_TEMPLATES_NOT_ASSETS
++status: UNBOUND_REAL_ASSETS_NOT_SUBSTITUTED_WITH_TEMPLATES
+ tasks:
+ - task_id: D0
+   structure: development_shared_prerequisite_plus_buffer_choice
+@@ -72,3 +72,12 @@ tasks:
+   reference_skill_seconds: MUST_BIND
+   split_ref: MUST_BIND
+   prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
++required_for_stage_0a:
++- D0
++- T_A
++- T_C
++optional_for_stage_0a:
++- T_B
++- T_D
++- T_E
++legacy_discovery_ref: part_0_validation/stage_0a/legacy_resource_review.json
+diff --git a/experiments/manifests/vlm_manifest.yaml b/experiments/manifests/vlm_manifest.yaml
+index 74185ab..998eb86 100644
+--- a/experiments/manifests/vlm_manifest.yaml
++++ b/experiments/manifests/vlm_manifest.yaml
+@@ -31,3 +31,10 @@ cache_required: true
+ cache_key_hash: sha256
+ key_includes_split: true
+ seed_supported_by_api: MUST_VERIFY_OR_UNSUPPORTED
++credential_presence_evidence:
++  DASHSCOPE_API_KEY: false
++  MODEL_STUDIO_API_KEY: false
++  ALIBABA_API_KEY: false
++credential_check_scope: Current non-login SSH process environment only; no secret
++  file contents read
++requests_executed: 0
+diff --git a/experiments/part_0_validation/stage_0a/binding_report.md b/experiments/part_0_validation/stage_0a/binding_report.md
+index ee77dc1..9e9dd83 100644
+--- a/experiments/part_0_validation/stage_0a/binding_report.md
++++ b/experiments/part_0_validation/stage_0a/binding_report.md
+@@ -1,24 +1,16 @@
+-# Stage 0A：本地资料预检
++# Stage 0A 绑定报告
+ 
+-**状态：BLOCKED；范围：conversation_sandbox的元数据盘点，不是用户训练机验收。**
++**BLOCKED**。已绑定 host、repo、分支、真实硬件/OS、软件环境；核心运行资源仍未绑定。
+ 
+-已记录三份输入的SHA-256、当前Python与包metadata，并写入缺项表。没有安装依赖，没有进行生产模型前后向、完整单元测试、VLM请求、RL训练或机器人动作。
++- 软件安装/验证：推荐 profile 虽已解析，但安装/导入/数值检查未全部通过；详见 host_logs 与 software_checks.json。
++- 运行平台：simulator_or_robot、environment_version、task_assets。
++- 技能与事实：controller_manifest、skill_contracts、verifier_thresholds；真实前置/ADD/DEL、三态证据与标定。
++- 视觉：camera、calibration_manifest、perception_checkpoint。
++- 时间与安全：skill_timeouts、task_deadlines、actual_interaction_time_unit、reference_skill_seconds_by_task、safety_authorization。
++- 独立评价：task_evaluator_version；真实终端成功和结束规则。
++- 实现入口：runtime.entrypoints；train_cli/eval_cli/tests_cli/cache_cli/report_cli；模型源码 hash 与参数量。
++- 任务与 split：D0/T_A/T_C 的 asset_ref、controller_refs、goal_atoms、skill_contract_refs、camera_verifier_refs、initial_state_generator、deadline_seconds、reference_skill_seconds、split_ref；64/50/50 实例池。
++- VLM：region、base_http_api_url、api_account_authorized、fewshot_manifest；seed 参数实际支持能力另待核实。
++- 资源配置：实际 num_envs、candidate view 分块与运行时钟来源；GPU 清单不是专属训练资源预约。
+ 
+-当前Python为3.13.5；torch为2.10.0+cpu；nvidia-smi路径为未发现。缺失包metadata：torch-geometric, tensorboard, gymnasium, dashscope。这些只描述当前进程所在环境，不能推出用户目标主机的情况。
+-
+-## 阻塞项
+-
+-- `runtime.target_host`：实际训练主机及资源授权。
+-- `runtime.repository`：当前v2.1实现worktree/commit及入口。
+-- `runtime.simulator_or_robot`：环境及版本。
+-- `runtime.task_assets`：D0/T_A/T_C真实资产与初始化池。
+-- `runtime.controller`：冻结技能执行器及参数生成。
+-- `runtime.camera`：观测来源、标定和冻结感知。
+-- `runtime.verifier_thresholds`：谓词校准与独立成功评价。
+-- `runtime.skill_timeouts`：技能时限、任务deadline与安全许可。
+-- `runtime.interaction_time_unit`：时钟单位、d_ref和耗时计数。
+-- `vlm.account_region_endpoint`：实际账户、地区、endpoint、SDK调用验证。
+-
+-## 下一步
+-
+-在实际项目环境读取已有绑定并完成0A剩余工作；证据齐全后由Agent更新状态。本预检工具从不自动给出PASS，也不执行0B。论文方法写作不受阻塞。
++完整逐字段证据见 binding_table.csv 与 unbound_must_bind.csv；完整阶段报告见 stage_0a_summary.md。
+diff --git a/experiments/part_0_validation/stage_0a/binding_table.csv b/experiments/part_0_validation/stage_0a/binding_table.csv
+index ab83c15..41f70f5 100644
+--- a/experiments/part_0_validation/stage_0a/binding_table.csv
++++ b/experiments/part_0_validation/stage_0a/binding_table.csv
+@@ -1,11 +1,149 @@
+-field,requirement,status,evidence
+-runtime.target_host,实际训练主机及资源授权,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.repository,当前v2.1实现worktree/commit及入口,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.simulator_or_robot,环境及版本,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.task_assets,D0/T_A/T_C真实资产与初始化池,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.controller,冻结技能执行器及参数生成,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.camera,观测来源、标定和冻结感知,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.verifier_thresholds,谓词校准与独立成功评价,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.skill_timeouts,技能时限、任务deadline与安全许可,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-runtime.interaction_time_unit,时钟单位、d_ref和耗时计数,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
+-vlm.account_region_endpoint,实际账户、地区、endpoint、SDK调用验证,MUST_BIND_OR_AGENT_VERIFY,No bound runtime manifest verified
++field,proposed,observed,status,evidence
++runtime.experiment_root,MUST_BIND,/home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments,BOUND,environment_probe.json
++runtime.repository_path,MUST_BIND,/home/__compress_data/xushijie/graph_cp_disr_v2_1,BOUND,environment_probe.json
++runtime.repository_url,MUST_BIND,git@github.com:rollinpioneer/graph.git,BOUND,environment_probe.json
++runtime.git_hash,MUST_BIND,7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5,BOUND,environment_probe.json
++runtime.simulator_or_robot,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.environment_version,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.task_assets,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.controller_manifest,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.camera,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.calibration_manifest,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.perception_checkpoint,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.verifier_thresholds,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.skill_timeouts,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.task_deadlines,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.actual_interaction_time_unit,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.reference_skill_seconds_by_task,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.task_evaluator_version,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.hardware,MUST_BIND,"{""host"": ""gpu03"", ""cpu_count"": 112, ""gpu_inventory"": [""0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04, 40960 MiB, 29482 MiB"", ""1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04, 40960 MiB, 34804 MiB"", ""2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04, 40960 MiB, 36851 MiB"", ""3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04, 40960 MiB, 37579 MiB"", ""4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04, 40960 MiB, 36851 MiB"", ""5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04, 40960 MiB, 39191 MiB"", ""6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04, 40960 MiB, 13842 MiB"", ""7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04, 40960 MiB, 36851 MiB""], ""reservation"": ""NOT_RESERVED_FOR_TRAINING""}",BOUND,environment_probe.json
++runtime.gpu_driver,MUST_BIND,610.57.04,BOUND,environment_probe.json
++runtime.os,MUST_BIND,"{""distribution"": ""Rocky Linux 10.2"", ""kernel"": ""7.2.2-1.el10.elrepo.x86_64"", ""architecture"": ""x86_64"", ""container"": ""NOT_APPLICABLE_HOST_EXECUTION""}",BOUND,environment_probe.json
++runtime.safety_authorization,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.entrypoints,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++runtime.task_splits,MUST_BIND,MUST_BIND,MUST_BIND,legacy_resource_review.json; manifests/runtime_manifest.yaml
++manifests/entrypoints.yaml:train_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/entrypoints.yaml:eval_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/entrypoints.yaml:tests_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/entrypoints.yaml:cache_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/entrypoints.yaml:report_cli,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:vlm.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:vlm.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:vlm.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:vlm.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:vlm.seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:budget.real_reference_skill_seconds,MUST_BIND_PER_TASK,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.simulator_or_robot,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.environment_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.task_assets,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.controller_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.camera,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.calibration_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.perception_checkpoint,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.verifier_thresholds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.skill_timeouts,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.task_deadlines,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.actual_interaction_time_unit,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.reference_skill_seconds_by_task,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.task_evaluator_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.safety_authorization,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.entrypoints,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/experiment_manifest_v0.yaml:runtime.task_splits,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/model_manifest.yaml:actual_parameter_count,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/model_manifest.yaml:source_code_sha256,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:vlm_runtime.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:vlm_runtime.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:vlm_runtime.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:vlm_runtime.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:resource_settings.num_envs,MUST_BIND_AFTER_PLATFORM_BINDING,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:resource_settings.candidate_view_chunk,MUST_BIND_AFTER_MODEL_IMPLEMENTATION,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/runtime_manifest.yaml:resource_settings.actual_clock_source,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/skill_contracts.yaml:status,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[0].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[1].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[2].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[3].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[4].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].asset_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].controller_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].goal_atoms,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].skill_contract_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].camera_verifier_refs,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].initial_state_generator,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].deadline_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].reference_skill_seconds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].split_ref,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/task_manifest.yaml:tasks[5].prior_potential,MUST_VALIDATE_FROM_REAL_INITIAL_SCENES,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++manifests/verifier_manifest.yaml:status,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/vlm_manifest.yaml:region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/vlm_manifest.yaml:base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/vlm_manifest.yaml:api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/vlm_manifest.yaml:fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++manifests/vlm_manifest.yaml:seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:vlm.region,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:vlm.base_http_api_url,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:vlm.api_account_authorized,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:vlm.fewshot_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:vlm.seed_supported_by_api,MUST_VERIFY_OR_UNSUPPORTED,NOT_BOUND,MUST_VERIFY,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:budget.real_reference_skill_seconds,MUST_BIND_PER_TASK,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.simulator_or_robot,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.environment_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.task_assets,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.controller_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.camera,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.calibration_manifest,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.perception_checkpoint,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.verifier_thresholds,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.skill_timeouts,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.task_deadlines,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.actual_interaction_time_unit,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.reference_skill_seconds_by_task,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.task_evaluator_version,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.safety_authorization,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.entrypoints,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
++configs/resolved_defaults.yaml:runtime.task_splits,MUST_BIND,NOT_BOUND,MUST_BIND,Active manifest placeholder; no approved runtime evidence
+diff --git a/experiments/part_0_validation/stage_0a/dependency_table.csv b/experiments/part_0_validation/stage_0a/dependency_table.csv
+index 859408a..27b670d 100644
+--- a/experiments/part_0_validation/stage_0a/dependency_table.csv
++++ b/experiments/part_0_validation/stage_0a/dependency_table.csv
+@@ -1,14 +1,14 @@
+-package,requested,observed,import_status
+-Python,3.11.13,3.13.5,CURRENT_PROCESS_ONLY
+-torch,2.7.1+cu126,2.10.0+cpu,NOT_TESTED
+-torch-geometric,2.6.1,NOT_INSTALLED,NOT_TESTED
+-numpy,1.26.4,2.3.5,NOT_TESTED
+-pandas,2.2.3,2.2.3,NOT_TESTED
+-matplotlib,3.9.4,3.10.8,NOT_TESTED
+-jsonschema,4.23.0,4.26.0,NOT_TESTED
+-PyYAML,6.0.2,6.0.3,NOT_TESTED
+-tensorboard,2.19.0,NOT_INSTALLED,NOT_TESTED
+-pytest,8.3.5,9.0.2,NOT_TESTED
+-gymnasium,1.1.1,NOT_INSTALLED,NOT_TESTED
+-uv,0.8.22,0.10.0,NOT_TESTED
+-dashscope,1.27.6,NOT_INSTALLED,NOT_TESTED
++package,requested,resolved,import_status
++Python,3.11.13,3.11.13,CURRENT_PROCESS
++torch,2.7.1+cu126,,BLOCKED
++torch-geometric,2.6.1,,BLOCKED
++numpy,1.26.4,,BLOCKED
++pandas,2.2.3,,BLOCKED
++matplotlib,3.9.4,,BLOCKED
++jsonschema,4.23.0,,BLOCKED
++PyYAML,6.0.2,,BLOCKED
++tensorboard,2.19.0,,BLOCKED
++pytest,8.3.5,,BLOCKED
++gymnasium,1.1.1,,BLOCKED
++dashscope,1.27.6,,BLOCKED
++uv,0.8.22,uv 0.8.22,CLI_PASS
+diff --git a/experiments/part_0_validation/stage_0a/environment_probe.json b/experiments/part_0_validation/stage_0a/environment_probe.json
+index 96c57ee..ec6d718 100644
+--- a/experiments/part_0_validation/stage_0a/environment_probe.json
++++ b/experiments/part_0_validation/stage_0a/environment_probe.json
+@@ -1,34 +1,49 @@
+ {
+-  "context": "conversation_sandbox",
+-  "scope": "LOCAL_METADATA_INVENTORY_ONLY",
+-  "timestamp_utc": "2026-09-20T12:30:18.184338+00:00",
+-  "python": "3.13.5",
+-  "python_full": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+-  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+-  "packages_metadata": {
+-    "torch": "2.10.0+cpu",
+-    "torch-geometric": null,
+-    "numpy": "2.3.5",
+-    "pandas": "2.2.3",
+-    "matplotlib": "3.10.8",
+-    "jsonschema": "4.26.0",
+-    "PyYAML": "6.0.3",
+-    "tensorboard": null,
+-    "pytest": "9.0.2",
+-    "gymnasium": null,
+-    "uv": "0.10.0",
+-    "dashscope": null
++  "timestamp_utc": "2026-09-20T13:17:31.854257+00:00",
++  "hostname": "gpu03",
++  "ssh_target": "xushijie@172.19.164.160",
++  "platform": "Linux-7.2.2-1.el10.elrepo.x86_64-x86_64-with-glibc2.39",
++  "os_release": "NAME=\"Rocky Linux\"\nVERSION=\"10.2 (Red Quartz)\"\nRELEASE_TYPE=\"stable\"\nID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\nVERSION_ID=\"10.2\"\nPLATFORM_ID=\"platform:el10\"\nPRETTY_NAME=\"Rocky Linux 10.2 (Red Quartz)\"\nANSI_COLOR=\"0;32\"\nLOGO=\"fedora-logo-icon\"\nCPE_NAME=\"cpe:/o:rocky:rocky:10::baseos\"\nHOME_URL=\"https://rockylinux.org/\"\nVENDOR_NAME=\"RESF\"\nVENDOR_URL=\"https://resf.org/\"\nBUG_REPORT_URL=\"https://bugs.rockylinux.org/\"\nSUPPORT_END=\"2035-05-31\"\nROCKY_SUPPORT_PRODUCT=\"Rocky-Linux-10\"\nROCKY_SUPPORT_PRODUCT_VERSION=\"10.2\"\nREDHAT_SUPPORT_PRODUCT=\"Rocky Linux\"\nREDHAT_SUPPORT_PRODUCT_VERSION=\"10.2\"\n",
++  "kernel": "7.2.2-1.el10.elrepo.x86_64",
++  "architecture": "x86_64",
++  "cpu_count": 112,
++  "memory": [
++    "MemTotal:       527457968 kB",
++    "MemFree:         9999440 kB",
++    "MemAvailable:   423123028 kB"
++  ],
++  "disk": {
++    "total": 5957119639552,
++    "used": 4681701289984,
++    "free": 1270118453248
+   },
+-  "nvidia_smi_executable": null,
+-  "git_hash": null,
+-  "git_note": "未绑定项目；没有访问远程仓库。",
+-  "imports_executed": false,
+-  "cuda_tensor_test_executed": false,
+-  "dependency_resolution_executed": false,
+-  "production_tests_executed": false,
+-  "rl_jobs_executed": 0,
+-  "vlm_requests_executed": 0,
+-  "robot_actions_executed": 0,
+-  "user_training_host_verified": false,
++  "project_writable": true,
++  "git": {
++    "exit_code": 0,
++    "stdout": "git version 2.52.0\n",
++    "stderr": ""
++  },
++  "git_hash": "7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5",
++  "git_branch": "codex/cp-disr-v2.1-stage-0a",
++  "nvidia_smi": {
++    "exit_code": 0,
++    "stdout": "0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04, 40960 MiB, 29482 MiB\n1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04, 40960 MiB, 34804 MiB\n2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04, 40960 MiB, 36851 MiB\n3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04, 40960 MiB, 37579 MiB\n4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04, 40960 MiB, 36851 MiB\n5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04, 40960 MiB, 39191 MiB\n6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04, 40960 MiB, 13842 MiB\n7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04, 40960 MiB, 36851 MiB\n",
++    "stderr": ""
++  },
++  "credential_presence_only": {
++    "DASHSCOPE_API_KEY": false,
++    "MODEL_STUDIO_API_KEY": false,
++    "ALIBABA_API_KEY": false
++  },
++  "credentials_scope": "Current non-login SSH process environment only; no secret file contents read",
++  "system_python": "3.14.6 | packaged by Anaconda, Inc. | (main, Jul  9 2026, 14:37:38) [GCC 14.3.0]",
++  "system_python_executable": "/opt/miniconda3/bin/python3",
++  "container_digest": null,
++  "container_note": "Host execution; no container launched or digest bound",
++  "robot_actions": 0,
++  "vlm_requests": 0,
++  "real_skill_transitions": 0,
++  "ppo_updates": 0,
++  "performance_episodes": 0,
+   "source_hashes_all_match": true
+ }
+diff --git a/experiments/part_0_validation/stage_0a/implementation_inventory.md b/experiments/part_0_validation/stage_0a/implementation_inventory.md
+index 4137422..1f9759f 100644
+--- a/experiments/part_0_validation/stage_0a/implementation_inventory.md
++++ b/experiments/part_0_validation/stage_0a/implementation_inventory.md
+@@ -1,5 +1,26 @@
+-# Implementation inventory
++# Stage 0A 实现清单
+ 
+-本包是执行计划、配置和资料预检工具，不是已完成的CP-DISR训练仓库。
+-core_code=false（指本包没有生产模型/collector/executor）；用户项目是否已有实现尚未核验。
+-训练入口、相机、控制器、任务资产、缓存、checkpoint均须在实际worktree定位或实现。
++状态：BLOCKED。生产入口不以建议路径冒充已存在实现。
++
++| 计划 §3.3 模块 | 盘点结论 |
++|---|---|
++| `contracts/registry.py` | 技能、谓词、类型 grounding 与真实合同来源未绑定 |
++| `graph/snapshots.py, intervention.py` | 不可变快照、三态 overlay 与不变量生产实现未建立 |
++| `graph/rgcn.py, readout.py` | 仅执行第三方 RGCN 库探针；尚无生产四路编码和 goal readout |
++| `vlm/client.py, cache.py, validate.py` | 只有冻结 schema/prompt；无已绑定 API adapter、few-shot 和缓存入口 |
++| `policy/model.py` | 冻结 v2.1 七配置、GRU、V/Q 与单一参数所有者未实现 |
++| `rl/collector.py, rollout.py` | 无真实平台 on-policy skill transition 接口 |
++| `rl/targets.py, losses.py, recurrent.py` | 旧 PPO/reward 实现未认证为本版 SMDP/当前参数 prefix 重算 |
++| `env/adapter.py, skills/executor.py` | 无 D0/T_A/T_C 的正式平台和固定技能接口绑定 |
++| `evaluation/run.py, metrics.py` | 无本版独立 task_success evaluator 和配对 case 入口 |
++| `reporting/build.py` | 本次仅有 Stage 0A 审计报告生成器；无科研结果报告入口 |
++
++## 已有历史代码的实际核查
++
++- `/home/__compress_data/xushijie/graph_github_upload`，commit `087a7b2770c8130c9d0b29e3a6b703f19c8c50e5`；路径检索 CP-DISR/M1 候选 0 项，定点源码审查 0 个文件。
++- `/home/__compress_data/xushijie/graph_pathgraph_p2c_rl_evaluation_repair_v1_worktree`，commit `999958422d876270337afa469e3047f605dceb84`；路径检索 CP-DISR/M1 候选 0 项，定点源码审查 2 个文件。
++- `/home/__compress_data/xushijie/graph_pathgraph_p1_v6gm1_worktree`，commit `980997e69c914287349e51233c8fff0d50934406`；路径检索 CP-DISR/M1 候选 0 项，定点源码审查 2 个文件。
++
++完整范围、真实路径、SHA-256 和行号证据见 `legacy_resource_review.json`。该检索不宣称穷尽服务器所有文件。历史 reward shaping、旧离散任务或控制器可供后续适配审查，但未直接绑定为 v2.1 训练器或 D0/T_A/T_C 资产。
++
++因外部任务与控制器合同仍未绑定，本轮在 Stage 0A 核心资源停止条件处结束；没有用自造平台、toy nominal transition 或空壳 CLI 填补缺项。后续补做 0A 时需实现/绑定上述生产模块。
+diff --git a/experiments/part_0_validation/stage_0a/source_inventory.json b/experiments/part_0_validation/stage_0a/source_inventory.json
+index e01c337..f0d7304 100644
+--- a/experiments/part_0_validation/stage_0a/source_inventory.json
++++ b/experiments/part_0_validation/stage_0a/source_inventory.json
+@@ -5,7 +5,7 @@
+     "relative_path": "sources/CP_DISR_v2.1_Final_Experimental_Agent_Prompt.md",
+     "sha256": "e74eb0dc879e538c23ef3436ca8243fc3bd00a2d96dc50e913c99972d25c01eb",
+     "role": "experimental_user_request",
+-    "exists": true,
++    "path_from_repository": "experiments/sources/CP_DISR_v2.1_Final_Experimental_Agent_Prompt.md",
+     "observed_sha256": "e74eb0dc879e538c23ef3436ca8243fc3bd00a2d96dc50e913c99972d25c01eb",
+     "match": true
+   },
+@@ -15,7 +15,7 @@
+     "relative_path": "sources/CP_DISR_M1_Research_Specification_v2.1.md",
+     "sha256": "c552592d9d201e54332344379ceb130fd740dcd1b43134f94f18ad222399fdae",
+     "role": "frozen_method",
+-    "exists": true,
++    "path_from_repository": "experiments/sources/CP_DISR_M1_Research_Specification_v2.1.md",
+     "observed_sha256": "c552592d9d201e54332344379ceb130fd740dcd1b43134f94f18ad222399fdae",
+     "match": true
+   },
+@@ -25,8 +25,26 @@
+     "relative_path": "sources/CP_DISR_M1_Implementation_Interfaces_v2.1.zip",
+     "sha256": "d46dcbe3032da4b987001f0ee2394d1a1eb5ecbc11b4b70a4071c62596dd783f",
+     "role": "frozen_interfaces",
+-    "exists": true,
++    "path_from_repository": "experiments/sources/CP_DISR_M1_Implementation_Interfaces_v2.1.zip",
+     "observed_sha256": "d46dcbe3032da4b987001f0ee2394d1a1eb5ecbc11b4b70a4071c62596dd783f",
+     "match": true
++  },
++  {
++    "relative_path": "inputs/CP_DISR_v2.1_Experimental_Agent_Kit.zip",
++    "observed_sha256": "ba07d48739078a0879ee96eaa125963daa3241d7283e77eff9ec369008f23e59",
++    "match": true,
++    "check_type": "user_input_hash_record"
++  },
++  {
++    "relative_path": "inputs/CP_DISR_v2.1_Minimal_Experimental_Execution_Plan.md",
++    "observed_sha256": "bdff530cdb0fd3002653b1202a734c7abde8661de9c42c023082ce63797b57d9",
++    "match": true,
++    "check_type": "user_input_hash_record"
++  },
++  {
++    "relative_path": "inputs/CP_DISR_v2.1_Experiment_Manifest_v0.yaml",
++    "observed_sha256": "9d891f8ce5e3a047d1347095ab568f3acbe74c57e0d5999d363d763ace1685e2",
++    "match": true,
++    "check_type": "user_input_hash_record"
+   }
+ ]
+diff --git a/experiments/part_0_validation/stage_0a/stage_0a_summary.md b/experiments/part_0_validation/stage_0a/stage_0a_summary.md
+index ee77dc1..7fd2ac8 100644
+--- a/experiments/part_0_validation/stage_0a/stage_0a_summary.md
++++ b/experiments/part_0_validation/stage_0a/stage_0a_summary.md
+@@ -1,24 +1,88 @@
+-# Stage 0A：本地资料预检
++# CP-DISR v2.1 Stage 0A 完整报告
+ 
+-**状态：BLOCKED；范围：conversation_sandbox的元数据盘点，不是用户训练机验收。**
++**最终状态：BLOCKED。Stage 0B 条件尚未具备；Stage 0B 未执行，保持 NOT_STARTED。**
+ 
+-已记录三份输入的SHA-256、当前Python与包metadata，并写入缺项表。没有安装依赖，没有进行生产模型前后向、完整单元测试、VLM请求、RL训练或机器人动作。
++完成时间（UTC）：2026-09-20T13:38:54.111566+00:00。Method：CP-DISR v2.1；计划：EEP-v1.0。
+ 
+-当前Python为3.13.5；torch为2.10.0+cpu；nvidia-smi路径为未发现。缺失包metadata：torch-geometric, tensorboard, gymnasium, dashscope。这些只描述当前进程所在环境，不能推出用户目标主机的情况。
++## 1. 授权范围与目录
+ 
+-## 阻塞项
++本轮仅执行 Stage 0A Environment & Manifest Freeze。文档中的后续阶段、旧 prompt 和示例命令只用于理解约束，不扩展本轮授权。
+ 
+-- `runtime.target_host`：实际训练主机及资源授权。
+-- `runtime.repository`：当前v2.1实现worktree/commit及入口。
+-- `runtime.simulator_or_robot`：环境及版本。
+-- `runtime.task_assets`：D0/T_A/T_C真实资产与初始化池。
+-- `runtime.controller`：冻结技能执行器及参数生成。
+-- `runtime.camera`：观测来源、标定和冻结感知。
+-- `runtime.verifier_thresholds`：谓词校准与独立成功评价。
+-- `runtime.skill_timeouts`：技能时限、任务deadline与安全许可。
+-- `runtime.interaction_time_unit`：时钟单位、d_ref和耗时计数。
+-- `vlm.account_region_endpoint`：实际账户、地区、endpoint、SDK调用验证。
++- 服务器项目：`/home/__compress_data/xushijie/graph_cp_disr_v2_1`
++- EXPERIMENT_ROOT：`/home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments`
++- 分支：`codex/cp-disr-v2.1-stage-0a`
++- 取证基准 commit：`7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5`；最终交付 commit 在 delivery receipt 中单独记录。
++- origin：`git@github.com:rollinpioneer/graph.git`
++- 新仓库采用独立根提交历史，未把过时分支或主仓库文件复制为当前方法实现。旧仓库仅被读取。
++- 本轮未推送 GitHub；未切换或修改旧仓库分支。
+ 
+-## 下一步
++## 2. 完成了什么
+ 
+-在实际项目环境读取已有绑定并完成0A剩余工作；证据齐全后由Agent更新状态。本预检工具从不自动给出PASS，也不执行0B。论文方法写作不受阻塞。
++保存全部用户附件与冻结规范；核对源 hash；建立独立仓库、分支和虚拟环境；记录真实 host/GPU/driver/OS；解析推荐依赖；执行以下基础设施检查；定点审查旧项目资源；生成 manifests、绑定表、缺项清单、实现清单、完整报告和状态历史。
++
++Kit 自带的聊天沙箱预检已归档为 supplied_kit 历史，不能当作本服务器执行证据。`inputs/` 和 `experiments/sources/` 原件保持不变。
++
++## 3. 检查结果
++
++| 检查项 | 结果 | 证据（相对阶段目录） |
++|---|---|---|
++| source_hashes | PASS | `source_inventory.json` |
++| target_host_and_new_repository | PASS | `environment_probe.json` |
++| dependency_resolution | PASS | `host_logs/resolver.log; ../../../../uv.lock` |
++| dependency_install_and_pip_check | BLOCKED | `host_logs/install_attempt_02.log; host_logs/install_attempt_02.exit; pip_check if installation completed` |
++| imports | BLOCKED | `software_checks.json` |
++| RGCN_forward_backward | BLOCKED | `software_checks.json` |
++| checkpoint_roundtrip | BLOCKED | `software_checks.json` |
++| CP_DISR_production_entrypoints | BLOCKED | `implementation_inventory.md` |
++| D0_T_A_T_C_real_asset_bindings | BLOCKED | `task_manifest.yaml; legacy_resource_review.json` |
++| controller_camera_verifier_evaluator_time_safety | BLOCKED | `runtime_manifest.yaml; binding_table.csv` |
++| VLM_account_region_endpoint_fewshot | BLOCKED | `manifests/vlm_manifest.yaml; environment_probe.json` |
++
++实际主机为 gpu03 / Rocky Linux 10.2 / x86_64；8 张 NVIDIA A100-SXM4-40GB，driver 610.57.04。完整 GPU 清单及探测时显存占用见 environment_probe.json；不承诺资源独占或性能。实际系统 Python 未被覆盖。
++
++软件 profile：**PROPOSED_NOT_VALIDATED**。目标 Python `3.11.13`；完整已解析版本、导入结果和错误见 dependency_table.csv / software_checks.json。独立环境位于 `.venv`，uv 0.8.22 位于 `.bootstrap`。真实 resolver / 安装 / pip check / freeze 日志保存在 host_logs，wheel 来源和 uv.lock hash 写入 software_manifest.yaml。
++
++安装 attempt 01 遇到 torch wheel 网络超时，原始失败日志和首次缺包检查保存在 host_logs/attempt_01。attempt 02 保持版本与来源不变，只提高 UV_HTTP_TIMEOUT 至 300 秒、下载并发降为 2；实际结果：attempt 02 达到 900 秒安装时限，退出码 124；没有完成安装。attempt 01 的网络超时退出码为 1。详见 install_attempt_02.log / .exit。安装失败不记作训练失败。软件检查在安装恢复后才可升级 VALIDATED。
++
++本次由于 torch 未安装，RGCN 前后向与 checkpoint round-trip 的计算部分均未执行；不能写为数值测试通过或失败。探针程序设计使用合成张量，仅检查库前后向；若 round-trip 成功，文件是未训练库模型的 state_dict，不是 CP-DISR policy checkpoint。两者不证明方法语义通过，不替代 T01–T25。
++
++## 4. 实际运行与结果边界
++
++- 科研训练完成 / 失败 / 复用：**0 / 0 / 0**；无 training run_id。
++- 真实 skill transitions：**0**；PPO updates / optimizer steps：**0 / 0**。
++- 性能评价 episodes：**0**；控制器/机器人动作：**0**；VLM 请求：**0**。
++- 执行的是一次 host 盘点和一次软件基础设施检查批次，详细检查计数见 check_results.json。
++- 没有成功率、学习曲线、机制收益或泛化结果；没有用历史训练结果充当本版结果。
++
++## 5. 仍未绑定的 MUST_BIND 项
++
++- **软件安装/验证**：推荐 profile 虽已解析，但安装/导入/数值检查未全部通过；详见 host_logs 与 software_checks.json。
++- **运行平台**：simulator_or_robot、environment_version、task_assets。
++- **技能与事实**：controller_manifest、skill_contracts、verifier_thresholds；真实前置/ADD/DEL、三态证据与标定。
++- **视觉**：camera、calibration_manifest、perception_checkpoint。
++- **时间与安全**：skill_timeouts、task_deadlines、actual_interaction_time_unit、reference_skill_seconds_by_task、safety_authorization。
++- **独立评价**：task_evaluator_version；真实终端成功和结束规则。
++- **实现入口**：runtime.entrypoints；train_cli/eval_cli/tests_cli/cache_cli/report_cli；模型源码 hash 与参数量。
++- **任务与 split**：D0/T_A/T_C 的 asset_ref、controller_refs、goal_atoms、skill_contract_refs、camera_verifier_refs、initial_state_generator、deadline_seconds、reference_skill_seconds、split_ref；64/50/50 实例池。
++- **VLM**：region、base_http_api_url、api_account_authorized、fewshot_manifest；seed 参数实际支持能力另待核实。
++- **资源配置**：实际 num_envs、candidate view 分块与运行时钟来源；GPU 清单不是专属训练资源预约。
++
++可选任务 T_B/T_D/T_E 同样未绑定，但它们不是当前 0A 的独立阻塞原因。主任务 D0/T_A/T_C 缺项本身已足以阻塞。完整逐文件逐字段占位项共 **141** 行（包含镜像字段和 MUST_VERIFY 类项，不是 141 个独立问题），见 `unbound_must_bind.csv` / `.json`；`binding_table.csv` 同时列出已绑定字段。
++
++API 检查只记录当前非 login SSH 进程中常用环境变量是否设置，未读取或打印密钥值；未发现不等于账户在其他凭据存储中绝对不存在。真实 region、endpoint、账户权限和 3 个开发 few-shot 均未确认。
++
++## 6. 任务与实现判定
++
++D0/T_A/T_C 尚未形成可验证的资产→技能合同→相机/Verifier→独立评价器映射，真实 case_definitions 为空。64/50/50 只是计划数，不伪造初始图像、对象绑定或合法动作序列。CUPID 和 LIBERO 路径真实存在，LIBERO commit 为 8f1084e3132a39270c3a13ebe37270a43ece2a01，发现 BDDL 任务文件；尚无本次模板与固定技能、视觉权限、Verifier、安全合同的一致映射。详见 implementation_inventory.md、legacy_resource_review.json 和 platform_discovery.json。
++
++## 7. 相对冻结配置的变更
++
++冻结 Method、关系 schema、prompt 原件及七方法定义未修改；无性能调参。目录、Git 分支和软件环境由真实 host 绑定。OS 从推荐的 Ubuntu 兼容候选记录为实际 Rocky Linux 10.2；这属于允许的环境适配，软件通过与否以探针为准。torchvision 为可选依赖，尚无绑定视觉前端需要它，故未安装。软件推荐版本未暗中升级或替换。
++
++## 8. 状态与下一步
++
++PASS 要求核心代码和真实运行资产完成绑定；软件检查通过不能抵消这些核心缺项，因此选择 **BLOCKED**，不能标 PASS 或 PASS_WITH_NOTES。
++
++**目前不具备完整执行 Stage 0B 的条件。** 后续应先补做 Stage 0A：明确真实平台及 D0/T_A/T_C 资产，冻结控制器/视觉/Verifier/评价器/时间/安全合同，完成生产模块和 CLI，生成真实 split，并绑定 API 账户地区/端点/few-shot，再重新判定 0A。Stage 0B 即使可用纯程序 fixture，当前生产实现缺失也不能视为可验收。
++
++本轮报告写入后停止。0B 及其他未授权阶段保持 NOT_STARTED；不会自动进入 0B，不调用模型或启动训练。
+diff --git a/experiments/stage_status/stage_0a.json b/experiments/stage_status/stage_0a.json
+index bd2edae..1aae752 100644
+--- a/experiments/stage_status/stage_0a.json
++++ b/experiments/stage_status/stage_0a.json
+@@ -2,78 +2,175 @@
+   "stage": "0A",
+   "status": "BLOCKED",
+   "method_version": "CP-DISR-v2.1",
+-  "git_hash": null,
+-  "started_at": "2026-09-20T12:30:18.184338+00:00",
+-  "completed_at": null,
+-  "last_preflight_at": "2026-09-20T12:30:18.184338+00:00",
+-  "scope": "local_inventory_only",
+-  "context": "conversation_sandbox",
++  "plan_version": "EEP-v1.0",
++  "git_hash": "7f7a22ef330abcdaefc4ac4e6999dc99c7c345f5",
++  "git_hash_semantics": "Checked repository base plus git_snapshot.json dirty diff and untracked hashes; final delivery commit is recorded externally",
++  "source_hashes": {
++    "sources/CP_DISR_v2.1_Final_Experimental_Agent_Prompt.md": "e74eb0dc879e538c23ef3436ca8243fc3bd00a2d96dc50e913c99972d25c01eb",
++    "sources/CP_DISR_M1_Research_Specification_v2.1.md": "c552592d9d201e54332344379ceb130fd740dcd1b43134f94f18ad222399fdae",
++    "sources/CP_DISR_M1_Implementation_Interfaces_v2.1.zip": "d46dcbe3032da4b987001f0ee2394d1a1eb5ecbc11b4b70a4071c62596dd783f",
++    "inputs/CP_DISR_v2.1_Experimental_Agent_Kit.zip": "ba07d48739078a0879ee96eaa125963daa3241d7283e77eff9ec369008f23e59",
++    "inputs/CP_DISR_v2.1_Minimal_Experimental_Execution_Plan.md": "bdff530cdb0fd3002653b1202a734c7abde8661de9c42c023082ce63797b57d9",
++    "inputs/CP_DISR_v2.1_Experiment_Manifest_v0.yaml": "9d891f8ce5e3a047d1347095ab568f3acbe74c57e0d5999d363d763ace1685e2"
++  },
++  "started_at": "2026-09-20T13:17:31.795373+00:00",
++  "completed_at": "2026-09-20T13:39:56.805272+00:00",
+   "runs_completed": [],
+   "runs_failed": [],
++  "runs_reused": [],
+   "selected_tasks": [],
+-  "selected_config": null,
++  "requested_task_templates": [
++    "D0",
++    "T_A",
++    "T_C"
++  ],
++  "selected_config": "configs/resolved_defaults.yaml",
+   "issues": [
+     {
+-      "field": "runtime.target_host",
+-      "issue": "实际训练主机及资源授权",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "软件安装/验证",
++      "issue": "依赖解析成功；安装 attempt 01 网络超时退出 1，attempt 02 总时限 900 秒退出 124。目标环境无 torch；RGCN/round-trip 未执行。",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.repository",
+-      "issue": "当前v2.1实现worktree/commit及入口",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "运行平台",
++      "issue": "simulator_or_robot、environment_version、task_assets",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.simulator_or_robot",
+-      "issue": "环境及版本",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "技能与事实",
++      "issue": "controller_manifest、skill_contracts、verifier_thresholds；真实前置/ADD/DEL、三态证据与标定",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.task_assets",
+-      "issue": "D0/T_A/T_C真实资产与初始化池",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "视觉",
++      "issue": "camera、calibration_manifest、perception_checkpoint",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.controller",
+-      "issue": "冻结技能执行器及参数生成",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "时间与安全",
++      "issue": "skill_timeouts、task_deadlines、actual_interaction_time_unit、reference_skill_seconds_by_task、safety_authorization",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.camera",
+-      "issue": "观测来源、标定和冻结感知",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "独立评价",
++      "issue": "task_evaluator_version；真实终端成功和结束规则",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.verifier_thresholds",
+-      "issue": "谓词校准与独立成功评价",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "实现入口",
++      "issue": "runtime.entrypoints；train_cli/eval_cli/tests_cli/cache_cli/report_cli；模型源码 hash 与参数量",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.skill_timeouts",
+-      "issue": "技能时限、任务deadline与安全许可",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "任务与 split",
++      "issue": "D0/T_A/T_C 的 asset_ref、controller_refs、goal_atoms、skill_contract_refs、camera_verifier_refs、initial_state_generator、deadline_seconds、reference_skill_seconds、split_ref；64/50/50 实例池",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "runtime.interaction_time_unit",
+-      "issue": "时钟单位、d_ref和耗时计数",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "VLM",
++      "issue": "region、base_http_api_url、api_account_authorized、fewshot_manifest；seed 参数实际支持能力另待核实",
++      "state": "MUST_BIND"
+     },
+     {
+-      "field": "vlm.account_region_endpoint",
+-      "issue": "实际账户、地区、endpoint、SDK调用验证",
+-      "state": "MUST_BIND_OR_AGENT_VERIFY"
++      "field": "资源配置",
++      "issue": "实际 num_envs、candidate view 分块与运行时钟来源；GPU 清单不是专属训练资源预约",
++      "state": "MUST_BIND"
+     }
+   ],
+   "tuning_changes": [],
++  "runtime_adjustments": [
++    {
++      "field": "OS",
++      "observed": "Rocky Linux 10.2"
++    },
++    {
++      "field": "dependency_indexes",
++      "observed": [
++        "https://download.pytorch.org/whl/cu126",
++        "https://mirrors.nju.edu.cn/pypi/web/simple"
++      ]
++    },
++    {
++      "field": "UV_HTTP_TIMEOUT",
++      "old": 30,
++      "new": 300,
++      "reason": "torch wheel download timeout; no package version change"
++    }
++  ],
+   "next_stage": "0B",
+   "skipped": false,
++  "execution_scope": "Stage 0A only on target gpu03; no auto advance",
+   "readiness": {
++    "target_host": true,
++    "software": false,
+     "core_code": false,
+-    "target_host": false,
+     "runtime": false,
+-    "account": false
++    "account": false,
++    "stage_0b": false
+   },
+-  "production_tests_executed": false,
++  "infrastructure_checks": [
++    {
++      "check": "source_hashes",
++      "status": "PASS",
++      "evidence": "source_inventory.json"
++    },
++    {
++      "check": "target_host_and_new_repository",
++      "status": "PASS",
++      "evidence": "environment_probe.json"
++    },
++    {
++      "check": "dependency_resolution",
++      "status": "PASS",
++      "evidence": "host_logs/resolver.log; ../../../../uv.lock"
++    },
++    {
++      "check": "dependency_install_and_pip_check",
++      "status": "BLOCKED",
++      "evidence": "host_logs/install_attempt_02.log; host_logs/install_attempt_02.exit; pip_check if installation completed"
++    },
++    {
++      "check": "imports",
++      "status": "BLOCKED",
++      "evidence": "software_checks.json"
++    },
++    {
++      "check": "RGCN_forward_backward",
++      "status": "BLOCKED",
++      "evidence": "software_checks.json"
++    },
++    {
++      "check": "checkpoint_roundtrip",
++      "status": "BLOCKED",
++      "evidence": "software_checks.json"
++    },
++    {
++      "check": "CP_DISR_production_entrypoints",
++      "status": "BLOCKED",
++      "evidence": "implementation_inventory.md"
++    },
++    {
++      "check": "D0_T_A_T_C_real_asset_bindings",
++      "status": "BLOCKED",
++      "evidence": "task_manifest.yaml; legacy_resource_review.json"
++    },
++    {
++      "check": "controller_camera_verifier_evaluator_time_safety",
++      "status": "BLOCKED",
++      "evidence": "runtime_manifest.yaml; binding_table.csv"
++    },
++    {
++      "check": "VLM_account_region_endpoint_fewshot",
++      "status": "BLOCKED",
++      "evidence": "manifests/vlm_manifest.yaml; environment_probe.json"
++    }
++  ],
+   "rl_jobs_executed": 0,
+-  "note": "仅本地inventory；不代表完整0A已执行完成。"
++  "real_skill_transitions": 0,
++  "ppo_updates": 0,
++  "performance_episodes": 0,
++  "vlm_requests_executed": 0,
++  "robot_actions_executed": 0,
++  "stage_0b_executed": false,
++  "unbound_inventory": "part_0_validation/stage_0a/unbound_must_bind.json"
+ }
