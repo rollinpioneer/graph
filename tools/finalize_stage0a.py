@@ -171,7 +171,7 @@ summary+=f'''
 
 实际主机为 gpu03 / Rocky Linux 10.2 / {host['architecture']}；8 张 NVIDIA A100-SXM4-40GB，driver 610.57.04。完整 GPU 清单及探测时显存占用见 environment_probe.json；不承诺资源独占或性能。实际系统 Python 未被覆盖。
 
-软件 profile：**{software['profile_status']}**。目标 Python `{sw['python']}`；完整已解析版本、导入结果和错误见 dependency_table.csv / software_checks.json。独立环境位于 `.venv`，uv 0.8.22 位于 `.bootstrap`。真实 resolver / 安装 / pip check / freeze 日志保存在 host_logs，wheel 来源和 uv.lock hash 写入 software_manifest.yaml。
+软件 profile：**{software['profile_status']}**。目标 Python `{sw['python']}`；完整已解析版本、导入结果和错误见 dependency_table.csv / software_checks.json。独立环境位于 `.venv`，uv 0.8.22 位于 `.bootstrap`。真实 resolver 和安装日志保存在 host_logs；pip check / freeze 仅在安装完成后执行，实际有无日志以 host_logs 为准，wheel 来源和 uv.lock hash 写入 software_manifest.yaml。
 
 安装 attempt 01 遇到 torch wheel 网络超时，原始失败日志和首次缺包检查保存在 host_logs/attempt_01。attempt 02 保持版本与来源不变，只提高 UV_HTTP_TIMEOUT 至 300 秒、下载并发降为 2；实际结果见 install_attempt_02.log / .exit。安装失败不记作训练失败。软件检查在安装恢复后才可升级 VALIDATED。
 
