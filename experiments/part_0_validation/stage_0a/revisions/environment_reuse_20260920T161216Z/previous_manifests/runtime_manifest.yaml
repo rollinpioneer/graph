@@ -4,7 +4,7 @@ runtime:
   experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
   repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
   repository_url: git@github.com:rollinpioneer/graph.git
-  git_hash: 1a00beb8f9a06753325fb2bdd7c191c3ec731a8e
+  git_hash: 9e90dfb42dfae8c258ea42f73f9a3947e909b403
   simulator_or_robot: MUST_BIND
   environment_version: MUST_BIND
   task_assets: MUST_BIND
@@ -48,16 +48,13 @@ runtime:
   safety_authorization: MUST_BIND
   entrypoints: manifests/entrypoints.yaml
   task_splits: MUST_BIND
-  git_hash_semantics: Pre-revision base; delivery receipt records resulting commit
 vlm_runtime:
-  region: cn-beijing
-  base_http_api_url: https://dashscope.aliyuncs.com/api/v1
-  api_account_authorized: MUST_VERIFY_MODEL_ACCESS
+  region: MUST_BIND
+  base_http_api_url: MUST_BIND
+  api_account_authorized: MUST_BIND
   fewshot_manifest: MUST_BIND
-  model_access_verification_stage: 0C
-  automatic_fallback_allowed: false
-execution_scope: Stage 0A environment reuse, library probe, manifest audit; no API/robot/training/evaluation/Stage
-  0B
+execution_scope: Stage 0A non-environment remediation; no installs, credentials, API,
+  robot, training, performance evaluation or formal Stage 0B
 entrypoints_manifest_ref: manifests/entrypoints.yaml
 resource_settings:
   num_envs: MUST_BIND_AFTER_PLATFORM_BINDING

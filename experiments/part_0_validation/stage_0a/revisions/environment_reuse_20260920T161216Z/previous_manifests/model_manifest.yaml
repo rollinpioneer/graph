@@ -1,0 +1,38 @@
+status: PRODUCTION_CODE_PRESENT_NOT_RUNTIME_VALIDATED
+architecture:
+  candidate_readout: single_head_scaled_dot_product_attention
+  mlp_hidden_dims:
+  - 128
+  - 128
+  graph:
+    representation: grounded_action_proposition_slg
+    node_types:
+    - ACTION
+    - PROPOSITION
+    contract_relations:
+    - PRE_POS
+    - PRE_NEG
+    - ADD
+    - DEL
+    soft_relations:
+    - SOFT_SUPPORTS
+    - SOFT_RELEVANT_TO_GOAL
+    reverse_message_edges: true
+    encoder: RGCNConv
+    hidden_dim: 128
+    layers: 4
+    num_bases: 4
+    aggregation: mean
+    root_weight: true
+    activation: ReLU
+    normalization: per_node_LayerNorm
+    dropout: 0
+    difference_dtype: float32
+    goal_alignment: fixed_proposition_indices
+    empty_prior_encoding_reuse: true
+  gru_hidden_dim: 128
+actual_parameter_count: MUST_BIND_AFTER_USER_ENVIRONMENT_READY
+source_code_sha256: 22ed9cdecae882037154bf5e5e5504b48dafaaa75a8384ee7658ace4ff967654
+initialization: record_actual_nn_initialization; shared untrained initialization permitted
+  for ablations
+source_path: ../../src/cp_disr/neural.py

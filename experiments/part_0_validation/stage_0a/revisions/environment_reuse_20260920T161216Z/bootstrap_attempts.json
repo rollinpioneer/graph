@@ -1,0 +1,38 @@
+[
+  {
+    "step": "legacy_pending_queue_download",
+    "status": "CANCELLED",
+    "reason": "Old queued uv sync resumed with bridge startup; owned process terminated; not accepted as validation"
+  },
+  {
+    "step": "initial_symlink_metadata_reuse_install",
+    "status": "TIMEOUT_124",
+    "evidence": "dependency_install.log",
+    "reason": "uv did not recognize symlinked dist-info; copied only metadata, retained large binary package symlinks"
+  },
+  {
+    "step": "reuse_missing_dependencies_install",
+    "status": "PASS",
+    "evidence": "dependency_install_reuse.log"
+  },
+  {
+    "step": "offline_lock_resolution",
+    "status": "FAILED",
+    "evidence": "resolver_reuse.log"
+  },
+  {
+    "step": "online_lock_resolution",
+    "status": "PASS",
+    "evidence": "resolver_reuse_online.log"
+  },
+  {
+    "step": "library_probe",
+    "status": "PASS",
+    "evidence": "software_checks.json"
+  },
+  {
+    "step": "frozen_sync_dry_run",
+    "status": "PASS_NO_CHANGES",
+    "evidence": "frozen_sync_dry_run.log"
+  }
+]

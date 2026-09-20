@@ -1,82 +1,80 @@
 status: CORE_CODE_PRESENT_RUNTIME_UNBOUND
 implemented_trainer_in_this_kit: false
 repository: /home/__compress_data/xushijie/graph_cp_disr_v2_1
-train_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
-eval_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
-tests_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
-  full
-cache_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
-report_cli: .venv-stage0a/bin/python tools/finalize_environment_revision.py
-note: Core code present. Stage 0A library validation is separate from Stage 0B method
-  tests, which remain NOT_RUN. Real runtime unbound. API region/endpoint user-bound;
-  model access MUST_VERIFY in Stage 0C.
+train_cli: PYTHONPATH=src python -m cp_disr train
+eval_cli: PYTHONPATH=src python -m cp_disr evaluate
+tests_cli: PYTHONPATH=src python -m cp_disr run-unit-tests --scope full
+cache_cli: PYTHONPATH=src python -m cp_disr generate-cache
+report_cli: python3 tools/finalize_remediation.py
+note: The original Kit contains no trainer. This revision adds production components
+  and gated drivers. Torch tests NOT_RUN_ENVIRONMENT_BLOCKED; real task adapters unbound;
+  API transport deliberately not implemented under this scope.
 infrastructure_only:
   host_probe:
     path: tools/stage0a_host_probe.py
     cli: python3 tools/stage0a_host_probe.py
     sha256: 87bda5cd4a2737d9ec5aca6b0cb559afc0a2ab4582f577ca2339c9b6a6d1a0e1
   software_probe:
-    path: tools/stage0a_reuse_software_probe.py
-    cli: .venv-stage0a/bin/python tools/stage0a_reuse_software_probe.py
-    sha256: ebcd7eca0d8709f17fc894044c7323f2f61a84c43a37adcdc0ef16c3b885cd9e
+    path: tools/stage0a_software_probe.py
+    cli: .venv/bin/python tools/stage0a_software_probe.py
+    sha256: 73db570ca9533ed811ccae701fb420e565d1b4517961728797e0a3949b6e6f38
   kit_plan:
     path: experiments/tools/plan_stage.py
-    cli: .venv-stage0a/bin/python experiments/tools/plan_stage.py --stage 0A
+    cli: .venv/bin/python experiments/tools/plan_stage.py --stage 0A
     sha256: 86db7daa2a779222547b24007550f4e90c50812cf84cab8b0bebb1b9eb04d25e
 production_package_added_in_remediation: true
 commands:
   validate-manifests:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-manifests
+    cli: PYTHONPATH=src python -m cp_disr validate-manifests
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-contracts:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-contracts
+    cli: PYTHONPATH=src python -m cp_disr validate-contracts
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-relation-cache:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-relation-cache
+    cli: PYTHONPATH=src python -m cp_disr validate-relation-cache
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   run-unit-tests:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
-      pure|full
+    cli: PYTHONPATH=src python -m cp_disr run-unit-tests --scope pure|full
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   build-graph-fixture:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-graph-fixture
+    cli: PYTHONPATH=src python -m cp_disr build-graph-fixture
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   train:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
+    cli: PYTHONPATH=src python -m cp_disr train
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
     requires_torch: true
     calls_api_this_revision: false
   evaluate:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
+    cli: PYTHONPATH=src python -m cp_disr evaluate
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
     requires_torch: true
     calls_api_this_revision: false
   generate-cache:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
+    cli: PYTHONPATH=src python -m cp_disr generate-cache
     source_path: src/cp_disr/cli.py
     source_sha256: 719288fc0a0d5e5ed0cc4e5c261eb90c20f3769a5b00b1925ad09e01f0c756e9
     status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED

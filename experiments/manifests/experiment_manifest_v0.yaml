@@ -21,9 +21,9 @@ vlm:
   model_snapshot: qwen3.8-max-0902
   full_snapshot_alias: qwen3.8-max-2026-09-02
   region_recommendation: Singapore
-  region: MUST_BIND
-  base_http_api_url: MUST_BIND
-  api_account_authorized: MUST_BIND
+  region: cn-beijing
+  base_http_api_url: https://dashscope.aliyuncs.com/api/v1
+  api_account_authorized: MUST_VERIFY_MODEL_ACCESS
   sdk: dashscope
   sdk_version: 1.27.6
   relation_schema: m1_soft_relations_v2
@@ -259,8 +259,8 @@ presentation:
   no_cross_run_curve_splicing: true
   explicitly_label_selected_seed_view: true
 software:
-  profile_status: PROPOSED_NOT_VALIDATED
-  python: 3.11.13
+  profile_status: VALIDATED_COMPATIBILITY_PROFILE
+  python: 3.10.19
   torch: 2.7.1
   cuda_wheel: cu126
   torchvision_optional: 0.22.1
@@ -276,6 +276,29 @@ software:
   uv: 0.8.22
   dashscope: 1.27.6
   lockfile: ../../uv.lock
+  python_executable: /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python
+  bootstrap_uv_executable: /home/__compress_data/xushijie/graph_cp_disr_v2_1/.bootstrap/bin/uv
+  lockfile_path_from_repository: uv.lock
+  lockfile_sha256: 5cdc05af05799aba08ee09e3bae2fcb020199ce0b92ec5a2b86fe41ad7282362
+  wheel_indexes:
+  - https://mirrors.nju.edu.cn/pypi/web/simple
+  evidence: part_0_validation/stage_0a/revisions/environment_reuse_20260920T161216Z/software_checks.json
+  validation_scope: Library imports, minimal RGCN forward/backward and untrained state_dict
+    round-trip; NOT CP-DISR method validation
+  torchvision_status: NOT_INSTALLED_OPTIONAL_NO_BOUND_VISUAL_FRONTEND
+  system_environment_modified: false
+  preferred_python: 3.11.13
+  compatibility_adjustment_reason: Reuse existing PyTorch 2.7.1+cu126/CUDA binaries
+    without modifying the source environment
+  reuse_provenance: part_0_validation/stage_0a/revisions/environment_reuse_20260920T161216Z/reused_package_links.json
+  source_environment_modified: false
+  reuse_mode: Isolated venv with explicit read-only reuse by symlink; source packages
+    must remain available and unchanged
+  method_validation: NOT_RUN_STAGE_0B_NOT_AUTHORIZED
+  torch_distribution_metadata: 2.7.1
+  torch_runtime_build: 2.7.1+cu126
+  frozen_sync_validation: 'UV_PROJECT_ENVIRONMENT=.venv-stage0a .bootstrap/bin/uv
+    sync --frozen --dry-run: Would make no changes'
 runtime:
   experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
   repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
