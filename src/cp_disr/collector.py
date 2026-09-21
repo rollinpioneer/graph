@@ -4,7 +4,7 @@ from .adapters import EvaluationInput
 from .common import DataIntegrityError
 
 class Collector:
-    def __init__(self,bundle,policy):self.bundle=bundle;self.policy=policy;self.prefixes={};self.weights={};self.success_seen=set()
+    def __init__(self,bundle,policy):self.bundle=bundle;self.policy=policy;self.prefixes={};self.weights={};self.success_seen=set();self.last_output=None;self.last_execution=None
     def reset_episode(self,env_id,episode_id):
         self.prefixes[(env_id,episode_id)]=[];self.weights[(env_id,episode_id)]=1.
     def step(self,snapshot):
@@ -13,6 +13,7 @@ class Collector:
         from .torch_rl import prefix_hidden
         key=(snapshot.env_id,snapshot.episode_id);prefix=self.prefixes[key]
         with torch.no_grad():out=self.policy(snapshot,prefix_hidden(self.policy,prefix))
+        self.last_output=out
         if out.distribution is None:
             reason=self.bundle.safety.end_no_candidates(*key)
             return None,{'terminated':True,'reason':reason,'no_transition':True}
@@ -23,6 +24,7 @@ class Collector:
         if not isinstance(contract.timeout_seconds,(int,float)) or contract.timeout_seconds<=0:raise DataIntegrityError('Unbound controller timeout')
         start=self.bundle.clock.now_seconds()
         execution=self.bundle.executor.execute(candidate,contract.timeout_seconds)
+        self.last_execution=execution
         observation=self.bundle.observations.observe();measured=self.bundle.perception.infer(observation)
         facts=self.bundle.verifier.verify(measured,execution)
         end=self.bundle.clock.now_seconds();duration=self.bundle.clock.duration_seconds(start,end);gamma(duration)

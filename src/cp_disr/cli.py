@@ -29,14 +29,19 @@ def main(argv=None):
         "build-d0-split",
         "validate-d0-cache",
         "stage-1a-preflight",
+        "stage-1a-run",
     )
     for name in core:
         sp = sub.add_parser(name)
-        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight"):
+        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run"):
             sp.add_argument("--gpu", type=int, default=0)
         if name == "stage-1a-preflight":
             sp.add_argument("--all-p0", action="store_true")
             sp.add_argument("--resume-p0", action="store_true")
+        if name == "stage-1a-run":
+            sp.add_argument("--only-startup-gates", action="store_true")
+            sp.add_argument("--resume", action="store_true")
+            sp.add_argument("--max-updates", type=int, default=16)
     cache = sub.add_parser("validate-relation-cache")
     cache.add_argument("--cache-directory", type=Path)
     t = sub.add_parser("run-unit-tests")
@@ -103,6 +108,10 @@ def main(argv=None):
         if a.command == "validate-d0-cache":
             from . import stage1a
             print(canonical(stage1a.cmd_validate_d0_cache(root)))
+            return 0
+        if a.command == "stage-1a-run":
+            from . import stage1a_smoke
+            print(canonical(stage1a_smoke.cmd_stage_1a_run(root, gpu=getattr(a, "gpu", 0), only_startup_gates=bool(getattr(a, "only_startup_gates", False)), resume=bool(getattr(a, "resume", False)), max_updates=int(getattr(a, "max_updates", 16)))))
             return 0
         from . import stage1a
         gpu = getattr(a, "gpu", 0)
