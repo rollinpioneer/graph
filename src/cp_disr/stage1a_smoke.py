@@ -235,6 +235,14 @@ def candidate_struct(out, snapshot, cid):
 def finite_tensor(t):
     return t is not None and bool(torch.isfinite(t.detach()).all().item())
 
+def finite_masked_logits(out):
+    if out is None or out.logits is None:
+        return False
+    if out.distribution is None:
+        return True
+    x = out.logits.detach()[out.mask.bool()]
+    return x.numel() == 0 or bool(torch.isfinite(x).all().item())
+
 def make_bundle(root):
     manifest = load_yaml(root / 'experiments/manifests/runtime_manifest.yaml')
     return create_runtime(manifest)
@@ -311,7 +319,7 @@ def compact_transition(method, seed, case_id, t, result, out, execution, prior_m
         'evaluator_result': actual,
         'qualifying_for_dp': qualifying,
         'struct': struct,
-        'logits_finite': finite_tensor(out.logits),
+        'logits_finite': finite_masked_logits(out),
         'value_finite': finite_tensor(out.value),
     }
     if rec.get('action') is not None or 'action' in rec:
@@ -462,7 +470,7 @@ def run_corrected_dry_run(bundle, method, device, case_id, empty=False, force_or
         'candidate_ids': list(snap.candidate_ids),
         'mask': [bool(x) for x in snap.mask],
         'mask_true': int(sum(snap.mask)),
-        'logits_finite': finite_tensor(out0.logits),
+        'logits_finite': finite_masked_logits(out0),
         'forward_structs': structs,
         'transitions': records,
         'policy_id': id(policy),
