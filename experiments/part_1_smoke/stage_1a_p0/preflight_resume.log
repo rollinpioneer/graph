@@ -1,0 +1,51 @@
+P0 resume host=gpu03 cuda_visible=5 python=/home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python 2026-09-21T20:32:41+08:00
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+resume: validate-runtime
+Warning: make sure gym is installed if you want to use the GymWrapper.
+resume: validate-d0-cache
+resume: verifier
+resume: evaluator
+resume: B2 dry-run
+resume: Full dry-run
+resume: Stage 0B unit tests
+============================= test session starts ==============================
+platform linux -- Python 3.10.19, pytest-9.0.2, pluggy-1.6.0
+rootdir: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+configfile: pytest.ini
+plugins: hydra-core-1.3.2, anyio-4.15.1
+collected 74 items / 34 deselected / 40 selected
+
+tests/test_ablation_switches.py .                                        [  2%]
+tests/test_cache_key_isolation.py .                                      [  5%]
+tests/test_duration_discount.py .                                        [  7%]
+tests/test_effect_conflicts.py .                                         [ 10%]
+tests/test_empty_candidates.py ..                                        [ 15%]
+tests/test_goal_alignment.py .                                           [ 17%]
+tests/test_node_alignment.py .                                           [ 20%]
+tests/test_nominal_isolation.py .                                        [ 22%]
+tests/test_permissions.py .                                              [ 25%]
+tests/test_permutation.py .                                              [ 27%]
+tests/test_ppo_masks.py .                                                [ 30%]
+tests/test_prior_bound.py .                                              [ 32%]
+tests/test_prior_episode_fixed.py .                                      [ 35%]
+tests/test_q_executed_only.py .                                          [ 37%]
+tests/test_q_target_detach.py .                                          [ 40%]
+tests/test_recompute.py .                                                [ 42%]
+tests/test_recurrent_prefix.py .                                         [ 45%]
+tests/test_relation_validation.py ..                                     [ 50%]
+tests/test_runtime_gate.py .                                             [ 52%]
+tests/test_shared_gradients.py .                                         [ 55%]
+tests/test_smdp_boundaries.py .                                          [ 57%]
+tests/test_soft_message_path.py .                                        [ 60%]
+tests/test_stage0b_device_parity.py .                                    [ 62%]
+tests/test_stage0b_extended.py ..........                                [ 87%]
+tests/test_stage1a_p0_unit.py ..                                         [ 92%]
+tests/test_three_valued_logic.py .                                       [ 95%]
+tests/test_zero_prior.py ..                                              [100%]
+
+====================== 40 passed, 34 deselected in 18.36s ======================
+P0 resume finished status=NEEDS_RERUN notes=['verifier qualification failed']
+{"cache":{"dev":10,"missing":[],"nonempty_prior":5,"status":"PASS","train":64},"elapsed_seconds":71.43197536468506,"notes":["verifier qualification failed"],"runtime":{"case":"ep-1","initial_candidates":3,"status":"PASS"},"stage0b_returncode":0,"status":"NEEDS_RERUN"}
+P0 resume exit=0 2026-09-21T20:33:54+08:00

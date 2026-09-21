@@ -1,17 +1,26 @@
-status: UNBOUND_REAL_ASSETS_NOT_SUBSTITUTED_WITH_TEMPLATES
+status: D0_BOUND_OTHER_TASKS_UNBOUND
 tasks:
 - task_id: D0
   structure: development_shared_prerequisite_plus_buffer_choice
-  asset_ref: MUST_BIND
-  controller_refs: MUST_BIND
-  goal_atoms: MUST_BIND
-  skill_contract_refs: MUST_BIND
-  camera_verifier_refs: MUST_BIND
-  initial_state_generator: MUST_BIND
-  deadline_seconds: MUST_BIND
-  reference_skill_seconds: MUST_BIND
-  split_ref: MUST_BIND
-  prior_potential: MUST_VALIDATE_FROM_REAL_INITIAL_SCENES
+  asset_ref: src/cp_disr/platforms/libero/d0_env.py
+  controller_refs:
+  - a:OPEN:container:v1
+  - a:PICK:target:v1
+  - a:PICK:second_object:v1
+  - a:PLACE:target:container:v1
+  - a:PLACE:second_object:container:v1
+  - a:PLACE_BUFFER:target:buffer:v1
+  - a:PLACE_BUFFER:second_object:buffer:v1
+  goal_atoms:
+  - p:Inside:target:container
+  skill_contract_refs: configs/contracts/d0_runtime_skills.yaml
+  camera_verifier_refs: src/cp_disr/platforms/libero/verifier.py
+  initial_state_generator: configs/splits/D0_stage_1a.json
+  deadline_seconds: 43.0
+  reference_skill_seconds: 3.5500000000006953
+  split_ref: configs/splits/D0_stage_1a.json
+  prior_potential: D0 train/dev VLM cache after Action-registry bump; Stage 0C D0
+    caches archived unused
 - task_id: T_A
   structure: shared_prerequisite
   asset_ref: MUST_BIND
@@ -85,6 +94,7 @@ template_refs:
   D0: ../../configs/tasks/resolved/D0.yaml
   T_A: ../../configs/tasks/resolved/T_A.yaml
   T_C: ../../configs/tasks/resolved/T_C.yaml
-resolved_real_tasks: []
+resolved_real_tasks:
+- D0
 stage_0c_r1_platform_audit: experiments/part_0_validation/stage_0c/platform_selection_report.md
-stage_0c_r1_status: BLOCKED_PLATFORM_SKILL_BINDING
+stage_0c_r1_status: SUPERSEDED_BY_STAGE_0C_PASS_AND_STAGE_1A_P0

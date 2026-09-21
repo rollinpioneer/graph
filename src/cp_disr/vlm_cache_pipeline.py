@@ -70,8 +70,9 @@ def request_and_process(provider,payload,template,schema,forbidden_edges=()):
 def write_audit_cache(root,manifest,prompt,input_refs,execution):
     """Exclusive creation, completion marker and content hashes; no overwrite path."""
     key=cache_key(manifest)
-    if manifest['split']!='dev':raise ContractError('Stage 0C only writes dev cache')
-    path=Path(root)/'dev'/key;path.mkdir(parents=True,exist_ok=False)
+    split=manifest['split']
+    if split not in ('dev','train'):raise ContractError('Cache split must be train or dev')
+    path=Path(root)/split/key;path.mkdir(parents=True,exist_ok=False)
     (path/'INCOMPLETE').write_text('Cache cannot be consumed until COMPLETE exists.\n')
     processing=execution.get('processing')
     files={'manifest.json':{**manifest,'cache_key':key,'processing_status':execution['status'],'synthetic_unit_fixture':bool(manifest.get('synthetic_unit_fixture',False))},

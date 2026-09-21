@@ -1,0 +1,50 @@
+# B2/Full dry-run
+
+No PPO update. optimizer_steps were not executed.
+
+```json
+{
+  "B2": {
+    "method": "B2",
+    "case_id": "D0_dev_00",
+    "prior_edge_count": 1,
+    "mask_true": 3,
+    "transition": {
+      "duration": 4.749999999999588,
+      "reward": 0.0,
+      "terminated": false,
+      "truncated": false,
+      "reason": "CONTINUE",
+      "action": null
+    },
+    "result": {
+      "success": false,
+      "terminated": false,
+      "truncated": false,
+      "reason": "CONTINUE"
+    },
+    "b2_prior_not_empty": true
+  },
+  "Full": {
+    "method": "Full",
+    "case_id": "D0_dev_00",
+    "prior_edge_count": 1,
+    "mask_true": 3,
+    "transition": {
+      "duration": 4.2999999999996374,
+      "reward": 0.0,
+      "terminated": false,
+      "truncated": false,
+      "reason": "CONTINUE",
+      "action": null
+    },
+    "result": {
+      "success": false,
+      "terminated": false,
+      "truncated": false,
+      "reason": "CONTINUE"
+    }
+  },
+  "ppo_update": false
+}
+```

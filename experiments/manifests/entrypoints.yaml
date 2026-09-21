@@ -1,4 +1,4 @@
-status: CORE_CODE_PRESENT_RUNTIME_UNBOUND
+status: D0_RUNTIME_BOUND
 implemented_trainer_in_this_kit: false
 repository: /home/__compress_data/xushijie/graph_cp_disr_v2_1
 train_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
@@ -7,9 +7,8 @@ tests_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --s
   full
 cache_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
 report_cli: .venv-stage0a/bin/python tools/finalize_environment_revision.py
-note: Stage 0B PASS (existing evidence unchanged). Stage 0C production preparation
-  offline validated; formal inputs/credential unbound; service MUST_VERIFY. Runtime
-  unbound.
+note: Stage 0B PASS. Stage 0C PASS. Stage 1A-P0 binds D0 runtime. Stage 1A training
+  remains NOT_STARTED.
 infrastructure_only:
   host_probe:
     path: tools/stage0a_host_probe.py
@@ -65,14 +64,14 @@ commands:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
-    status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
+    status: IMPLEMENTED_RUNTIME_BOUND_TRAINING_NOT_STARTED
     requires_torch: true
     calls_api_this_revision: false
   evaluate:
     cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
-    status: IMPLEMENTED_UNBOUND_RUNTIME_REJECTED
+    status: IMPLEMENTED_RUNTIME_BOUND_TRAINING_NOT_STARTED
     requires_torch: true
     calls_api_this_revision: false
   generate-cache:
@@ -84,3 +83,45 @@ commands:
     calls_api_this_revision: false
     production_runner: cp_disr.stage0c.run
     offline_validation_ref: ../part_0_validation/stage_0c/offline_validation.json
+  validate-runtime:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-runtime
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: false
+  validate-controller:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-controller
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: false
+  validate-verifier:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-verifier
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: false
+  validate-evaluator:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-evaluator
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: false
+  build-d0-split:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-d0-split
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: false
+    calls_api_this_revision: false
+  validate-d0-cache:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-d0-cache
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: false
+  stage-1a-preflight:
+    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr stage-1a-preflight
+    source_path: src/cp_disr/cli.py
+    status: IMPLEMENTED
+    requires_torch: true
+    calls_api_this_revision: true

@@ -1,59 +1,129 @@
 """Offline validations are torch/API independent; execution fails closed on bindings."""
-import argparse,json,subprocess,sys
+import argparse, json, subprocess, sys
 from pathlib import Path
-from .common import BindingError,ContractError,canonical
-from .runtime import require_runtime,require_cache_configuration
+from .common import BindingError, ContractError, canonical
+from .runtime import require_runtime, require_cache_configuration
 
 def read(path):
-    path=Path(path)
-    if path.suffix=='.json':return json.loads(path.read_text())
+    path = Path(path)
+    if path.suffix == ".json":
+        return json.loads(path.read_text())
     import yaml
     return yaml.safe_load(path.read_text())
 
 def main(argv=None):
-    p=argparse.ArgumentParser();p.add_argument('--root',type=Path,default=Path.cwd())
-    sub=p.add_subparsers(dest='command',required=True)
-    for name in ('validate-manifests','validate-contracts','build-graph-fixture','train','evaluate','generate-cache'):sub.add_parser(name)
-    cache=sub.add_parser('validate-relation-cache');cache.add_argument('--cache-directory',type=Path)
-    t=sub.add_parser('run-unit-tests');t.add_argument('--scope',choices=['pure','full'],required=True)
-    a=p.parse_args(argv);root=a.root.resolve()
+    p = argparse.ArgumentParser()
+    p.add_argument("--root", type=Path, default=Path.cwd())
+    sub = p.add_subparsers(dest="command", required=True)
+    core = (
+        "validate-manifests",
+        "validate-contracts",
+        "build-graph-fixture",
+        "train",
+        "evaluate",
+        "generate-cache",
+        "validate-runtime",
+        "validate-controller",
+        "validate-verifier",
+        "validate-evaluator",
+        "build-d0-split",
+        "validate-d0-cache",
+        "stage-1a-preflight",
+    )
+    for name in core:
+        sp = sub.add_parser(name)
+        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight"):
+            sp.add_argument("--gpu", type=int, default=0)
+        if name == "stage-1a-preflight":
+            sp.add_argument("--all-p0", action="store_true")
+            sp.add_argument("--resume-p0", action="store_true")
+    cache = sub.add_parser("validate-relation-cache")
+    cache.add_argument("--cache-directory", type=Path)
+    t = sub.add_parser("run-unit-tests")
+    t.add_argument("--scope", choices=["pure", "full"], required=True)
+    a = p.parse_args(argv)
+    root = a.root.resolve()
     try:
-        if a.command=='validate-manifests':
+        if a.command == "validate-manifests":
             from .validation import validate_repository
-            result=validate_repository(root);print(canonical(result));return 0 if result['passed'] else 2
-        if a.command=='validate-contracts':
-            from .contracts import from_dict,Registry
-            doc=read(root/'configs/contracts/skills.yaml');reg=Registry(doc['predicate_types'])
-            for c in doc['contracts']:reg.register(from_dict(c))
+            result = validate_repository(root)
+            print(canonical(result))
+            return 0 if result["passed"] else 2
+        if a.command == "validate-contracts":
+            from .contracts import from_dict, Registry
+            doc = read(root / "configs/contracts/skills.yaml")
+            reg = Registry(doc["predicate_types"])
+            for c in doc["contracts"]:
+                reg.register(from_dict(c))
             from jsonschema import Draft202012Validator
-            validator=Draft202012Validator(read(root/'schemas/skill_contract.schema.json'))
-            for c in doc['contracts']:validator.validate(c)
-            print(canonical({'status':'PASS_TEMPLATE_SCHEMA_ONLY','count':len(doc['contracts']),'runtime_bound':False}));return 0
-        if a.command=='build-graph-fixture':
+            validator = Draft202012Validator(read(root / "schemas/skill_contract.schema.json"))
+            for c in doc["contracts"]:
+                validator.validate(c)
+            print(canonical({"status": "PASS_TEMPLATE_SCHEMA_ONLY", "count": len(doc["contracts"]), "runtime_bound": False}))
+            return 0
+        if a.command == "build-graph-fixture":
             from .fixtures import build_fixture
-            f=build_fixture(root/'tests/fixtures');print(canonical({'synthetic_unit_fixture':True,'paper_performance_eligible':False,'template':f['template']}));return 0
-        if a.command=='validate-relation-cache':
+            f = build_fixture(root / "tests/fixtures")
+            print(canonical({"synthetic_unit_fixture": True, "paper_performance_eligible": False, "template": f["template"]}))
+            return 0
+        if a.command == "validate-relation-cache":
             from .fixtures import build_fixture
-            from .vlm import validate_relations,load_cache
+            from .vlm import validate_relations, load_cache
             if a.cache_directory:
-                manifest,edges=load_cache(a.cache_directory)
-                print(canonical({'cache_identity_valid':True,'edges':len(edges),'semantic_binding_validated':False,'note':'Supply registered task template/ID/effect context to validate_relations for semantic validation'}));return 0
-            f=build_fixture(root/'tests/fixtures');result=validate_relations(f['relations'],f['template'])
-            print(canonical({'synthetic_unit_fixture':True,'paper_performance_eligible':False,'result':result}));return 0
-        if a.command=='run-unit-tests':
-            args=[sys.executable,'-m','pytest',str(root/'tests'),'-m','pure' if a.scope=='pure' else 'pure or torch_runtime','-ra']
-            return subprocess.call(args,cwd=root)
-        if a.command in ('train','evaluate'):
-            require_runtime(read(root/'experiments/manifests/runtime_manifest.yaml'))
-            # The complete application configuration is also required before any driver loads.
-            config=root/'configs/run_resolved.json'
-            if not config.exists():raise BindingError('MUST_BIND: configs/run_resolved.json (model dimensions, task cases, budget, trusted runtime factory)')
+                manifest, edges = load_cache(a.cache_directory)
+                print(canonical({"cache_identity_valid": True, "edges": len(edges), "semantic_binding_validated": False, "note": "Supply registered task template/ID/effect context to validate_relations for semantic validation"}))
+                return 0
+            f = build_fixture(root / "tests/fixtures")
+            result = validate_relations(f["relations"], f["template"])
+            print(canonical({"synthetic_unit_fixture": True, "paper_performance_eligible": False, "result": result}))
+            return 0
+        if a.command == "run-unit-tests":
+            args = [sys.executable, "-m", "pytest", str(root / "tests"), "-m", "pure" if a.scope == "pure" else "pure or torch_runtime", "-ra"]
+            return subprocess.call(args, cwd=root)
+        if a.command in ("train", "evaluate"):
+            require_runtime(read(root / "experiments/manifests/runtime_manifest.yaml"))
+            config = root / "configs/run_resolved.json"
+            if not config.exists():
+                raise BindingError("MUST_BIND: configs/run_resolved.json (model dimensions, task cases, budget, trusted runtime factory)")
             from .execution import execute
-            return execute(a.command,root,read(config))
-        if a.command=='generate-cache':
+            return execute(a.command, root, read(config))
+        if a.command == "generate-cache":
             from .stage0c import run
-            print(canonical(run(root)));return 0
-    except (BindingError,ContractError,ValueError,FileNotFoundError) as error:
-        print(canonical({'status':'BLOCKED','error':str(error)}));return 2
+            print(canonical(run(root)))
+            return 0
+        if a.command == "build-d0-split":
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("build_d0_split", root / "scripts/stage_1a/build_d0_split.py")
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            path = root / "configs/splits/D0_stage_1a.json"
+            payload = mod.build_split(path)
+            print(canonical({"status": "PASS", "path": str(path), "train": payload["train_count"], "dev": payload["dev_count"]}))
+            return 0
+        if a.command == "validate-d0-cache":
+            from . import stage1a
+            print(canonical(stage1a.cmd_validate_d0_cache(root)))
+            return 0
+        from . import stage1a
+        gpu = getattr(a, "gpu", 0)
+        if a.command == "validate-runtime":
+            print(canonical(stage1a.cmd_validate_runtime(root)))
+            return 0
+        if a.command == "validate-controller":
+            print(canonical(stage1a.cmd_validate_controller(root, gpu=gpu)))
+            return 0
+        if a.command == "validate-verifier":
+            print(canonical(stage1a.cmd_validate_verifier(root, gpu=gpu)))
+            return 0
+        if a.command == "validate-evaluator":
+            print(canonical(stage1a.cmd_validate_evaluator(root, gpu=gpu)))
+            return 0
+        if a.command == "stage-1a-preflight":
+            print(canonical(stage1a.cmd_stage_1a_preflight(root, gpu=gpu, resume=bool(getattr(a, "resume_p0", False)))))
+            return 0
+    except (BindingError, ContractError, ValueError, FileNotFoundError) as error:
+        print(canonical({"status": "BLOCKED", "error": str(error)}))
+        return 2
 
-if __name__=='__main__':raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

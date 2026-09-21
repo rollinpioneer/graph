@@ -23,10 +23,17 @@ def execute(mode,root,config):
     if config['runtime_driver']!='skill_on_policy_v1':raise BindingError('Unsupported runtime driver')
     torch.manual_seed(config['seed']);model=Policy(**config['model']);trainer=PPO(model);collector=Collector(bundle,model)
     output=Path(config['output_directory']);output.mkdir(parents=True,exist_ok=False)
+    if config.get('dry_run') or config.get('optimizer_steps')==0:
+        snap=bundle.start_case(bundle.next_case(config['task_cases'],config['seed']))
+        collector.reset_episode(snap.env_id,snap.episode_id)
+        t,result=collector.step(snap)
+        payload={'mode':mode,'dry_run':True,'ppo_update':False,'has_transition':t is not None,'duration':None if t is None else t.duration,'reason':getattr(result,'reason',result)}
+        (output/'preflight_transition.json').write_text(canonical(payload)+'\n')
+        bundle.environment.close()
+        return 0
     if mode=='evaluate':
         if not config.get('checkpoint'):raise BindingError('MUST_BIND: trusted trained checkpoint')
         load_checkpoint(config['checkpoint'],model);model.eval()
-        # Evaluation needs deterministic actions. No training driver is reused silently.
         from .evaluation import evaluate
         return evaluate(bundle,model,config,output)
     rollout=Rollout();count=0;logs=[];interaction_seconds=0.;empty_episodes=0;priors=PriorSampler(config['seed'])

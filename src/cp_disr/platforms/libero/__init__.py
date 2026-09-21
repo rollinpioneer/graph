@@ -1,2 +1,1 @@
-from .scene_capture import SceneCaptureAdapter
-__all__=['SceneCaptureAdapter']
+"""LIBERO/robosuite adapters for CP-DISR D0 runtime."""

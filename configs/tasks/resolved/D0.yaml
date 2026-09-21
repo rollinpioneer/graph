@@ -1,9 +1,9 @@
 task_id: D0
-task_version: cp-disr-v2.1-r1-candidate
-status: CAPTURE_READY_STAGE_0C_RUNTIME_UNVERIFIED_STAGE_1A
-platform_ref: LIBERO_CANDIDATE_BLOCKED
+task_version: cp-disr-v2.1-d0-runtime-p0
+status: RUNTIME_BOUND_STAGE_1A_NOT_STARTED
+platform_ref: LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
 platform_type: simulator
-platform_version: LIBERO@8f1084e3132a39270c3a13ebe37270a43ece2a01_dirty_UNFROZEN
+platform_version: LIBERO@8f1084e3132a39270c3a13ebe37270a43ece2a01
 asset_refs:
   scene_template: assets/cp_disr/scene_template.xml
   license: assets/cp_disr/LICENSE
@@ -24,7 +24,8 @@ object_roles:
   - second_object
   openable_container: container
   buffer_region: buffer
-instruction: MUST_BIND_AFTER_TASK_BDDL_AND_CONTROLLER_BINDING
+instruction: Place the red target cube into the openable blue container. The yellow
+  cube may be moved to the green buffer if it blocks the target.
 signed_goals:
 - predicate: Inside
   arguments:
@@ -42,15 +43,13 @@ required_skill_schemas:
 - PLACE
 - PLACE_BUFFER
 grounded_action_ids:
-- a:MOVE:second_object:buffer:v1
-- a:MOVE:target:buffer:v1
 - a:OPEN:container:v1
-- a:PICK:second_object:v1
 - a:PICK:target:v1
-- a:PLACE:second_object:container:v1
+- a:PICK:second_object:v1
 - a:PLACE:target:container:v1
-- a:PLACE_BUFFER:second_object:buffer:v1
+- a:PLACE:second_object:container:v1
 - a:PLACE_BUFFER:target:buffer:v1
+- a:PLACE_BUFFER:second_object:buffer:v1
 proposition_ids:
 - p:AtBuffer:second_object:buffer
 - p:AtBuffer:target:buffer
@@ -68,10 +67,10 @@ predicate_registry_version: CP-DISR-v2.1
 camera_config_ref: experiments/stage_0c_inputs/dev/D0/scene_00/camera_config.json
 scene_reset_ref: scripts/stage_0c/capture_formal_scenes.py
 scene_generator_ref: scripts/stage_0c/capture_formal_scenes.py
-task_evaluator_ref: MUST_BIND
-a_controller_ref: MUST_BIND
-verifier_ref: MUST_BIND
-controller_ref: MUST_BIND
+task_evaluator_ref: src/cp_disr/platforms/libero/task_evaluator.py
+a_controller_ref: src/cp_disr/platforms/libero/skill_executor.py
+verifier_ref: src/cp_disr/platforms/libero/verifier.py
+controller_ref: src/cp_disr/platforms/libero/skill_executor.py
 structural_signature: development_shared_prerequisite_plus_buffer_choice
 split_policy:
   formal: dev
@@ -83,12 +82,19 @@ provenance:
   asset_license: assets/cp_disr/LICENSE
   formal_scene_count: 8
 stage_0c_capture_ready: true
-stage_1a_runtime_ready: false
-contract_registry_ref: configs/contracts/stage_0c_input_skills.json
-controller_binding_status: MUST_BIND_BEFORE_STAGE_1A
-verifier_binding_status: MUST_BIND_BEFORE_STAGE_1A
-task_evaluator_status: MUST_BIND_BEFORE_STAGE_1A
-safety_status: MUST_BIND_BEFORE_STAGE_1A
-timing_status: MUST_BIND_BEFORE_STAGE_1A
+stage_1a_runtime_ready: true
+contract_registry_ref: configs/contracts/d0_runtime_skills.yaml
+controller_binding_status: BOUND
+verifier_binding_status: BOUND
+task_evaluator_status: BOUND
+safety_status: BOUND
+timing_status: BOUND
 contract_registry_sha256: 3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6
 scene_config_examples: experiments/stage_0c_inputs/dev/D0
+split_ref: configs/splits/D0_stage_1a.json
+deadline_seconds: 43.0
+reference_skill_seconds: 3.5500000000006953
+move_decision: REJECTED_FOR_D0
+move_alternative:
+- PICK
+- PLACE_BUFFER
