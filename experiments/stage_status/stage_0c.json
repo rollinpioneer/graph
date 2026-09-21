@@ -1,13 +1,14 @@
 {
   "stage": "0C",
-  "status": "BLOCKED",
+  "status": "PASS",
   "method_version": "CP-DISR-v2.1",
   "plan_version": "EEP-v1.0",
   "git_hash": "502d33cbca9a83eccd1c32840a0d0b50189c3ad1",
   "started_at": "2026-09-20T13:05:41.121926+00:00",
-  "completed_at": "2026-09-21T07:25:05.527235+00:00",
+  "completed_at": "2026-09-21T09:32:00.860502+00:00",
   "runs_completed": [
-    "offline validation: 40 passed"
+    "offline validation: 40 passed",
+    "formal requests: 24/24 SUCCESS, 0 retries"
   ],
   "runs_failed": [
     "offline attempt 001: one SDK mock failure",
@@ -21,20 +22,15 @@
   ],
   "selected_config": "experiments/manifests/vlm_manifest.yaml",
   "issues": [
-    "MUST_BIND: 24 real initial RGB dev scenes (D0/T_A/T_C x8), provenance, split and upload permission, typed object bindings, goals, grounded IDs, effects, initial facts, task-to-asset mapping",
-    "MUST_BIND: 3 authorized real independent dev fewshots with frozen expected JSON and provenance",
-    "MUST_BIND: protected server SDK environment credential (key_present=false); local file was not accessed",
-    "MUST_VERIFY: qwen3.8-max-0902 access, image/JSON support, endpoint/parameter acceptance and request IDs via first formal scene only after all gates pass",
-    "R1b: candidate resolved tasks remain blocked because CP-DISR high-level controller/verifier/evaluator/safety/timing are not bound",
-    "R1b: formal capture refused; 24 dev scenes and 3 few-shots remain absent",
-    "R2 complete: awaiting protected API credential and first model-access verification",
-    "R2 non-API remediation complete; awaiting protected API credential and model-access verification",
-    "Stage 0C-R1: no platform currently satisfies CP-DISR high-level skill/controller/verifier/evaluator binding; 24+3 inputs not created"
+    "Manual review: 1 OBVIOUS_ISSUE on T_C_dev_06 PICK(interferer)->PICK(target); cache not edited",
+    "High contract-redundancy among raw candidates (86/95); 19/24 legal empty after isolation",
+    "SDK response did not echo model name; requested frozen snapshot qwen3.8-max-0902 used for all calls",
+    "Stage 1A runtime remains unbound: controller/verifier/evaluator/safety/timing/runtime factory"
   ],
   "tuning_changes": [],
   "next_stage": "1A",
   "skipped": false,
-  "execution_scope": "Stage 0C production preparation and offline validation only; real requests blocked",
+  "execution_scope": "Stage 0C formal 24-scene VLM cache sanity only; no Stage 1A",
   "readiness": {
     "provider_code_ready": true,
     "formal_scene_count": 24,
@@ -47,9 +43,11 @@
     "split_leakage_detected": false,
     "hidden_truth_prompt_leakage": false,
     "asset_upload_permission_resolved": true,
-    "api_credential_present": false,
-    "model_access_verified": false,
+    "api_credential_present": true,
+    "model_access_verified": true,
     "ready_for_formal_requests_after_credential": true,
+    "formal_requests_completed": true,
+    "manual_semantic_review_complete": true,
     "stage_1a_runtime_ready": false
   },
   "git_hash_semantics": "starting commit; final delivery commit in external receipt",
@@ -80,6 +78,7 @@
     "tests/fixtures/snapshots_two_envs.json": "4c04292bebc58e5c72b2f76c34e373b9c82a3135234bca0ec7dfe9ab8ff3509c"
   },
   "report": "experiments/part_0_validation/stage_0c/stage_0c_summary.md",
-  "blocked_reason": "AWAITING_API_CREDENTIAL_AND_MODEL_ACCESS",
-  "r2_report": "experiments/part_0_validation/stage_0c_r2/stage_0c_r2_summary.md"
+  "blocked_reason": null,
+  "r2_report": "experiments/part_0_validation/stage_0c_r2/stage_0c_r2_summary.md",
+  "parent_git_hash": "99e53baf0983de252049a136af7177c7ca9b57a2"
 }

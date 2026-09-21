@@ -1,1 +1,3 @@
-MUST_VERIFY. No API request was permitted because real scenes/fewshots and protected SDK environment are unbound. No API error code exists to report. Local key file was not read/copied/hashed/transferred. No model/endpoint substitution. Future first formal scene counts within 24; permission/model/endpoint rejection stops immediately without fallback.
+# Model access report
+
+`qwen3.8-max-0902` on `https://dashscope.aliyuncs.com/api/v1` accepted 24/24 formal multimodal JSON requests. First scene `D0_dev_00` was the preflight and counted in the matrix. No fallback model or endpoint was used. Request IDs are stored in each cache `raw_response.json` and `processing_log.json`.

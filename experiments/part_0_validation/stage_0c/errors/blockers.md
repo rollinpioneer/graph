@@ -1,4 +1,13 @@
-MUST_BIND: 24 real initial RGB dev scenes (D0/T_A/T_C x8), provenance, split and upload permission, typed object bindings, goals, grounded IDs, effects, initial facts, task-to-asset mapping
-MUST_BIND: 3 authorized real independent dev fewshots with frozen expected JSON and provenance
-MUST_BIND: protected server SDK environment credential (key_present=false); local file was not accessed
-MUST_VERIFY: qwen3.8-max-0902 access, image/JSON support, endpoint/parameter acceptance and request IDs via first formal scene only after all gates pass
+# Residual blockers
+
+Stage 0C formal requests completed. Remaining items are Stage 1A runtime, not missing Stage 0C inputs:
+
+- high-level controller implementation and execution validation
+- postcondition verifier validation
+- independent TaskEvaluator
+- safety authorization
+- skill timeouts, task deadline, reference skill seconds
+- perception/calibration
+- runtime factory
+
+No missing formal scenes, few-shots, or API credential for Stage 0C.

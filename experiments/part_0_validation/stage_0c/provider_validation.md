@@ -1,1 +1,11 @@
-Production adapter and frozen configuration implemented; offline SDK dispatch validated with BaseApi transport double and sockets disabled. Same parser/cache code is used in tests and production. Fixed qwen3.8-max-0902, cn-beijing, https://dashscope.aliyuncs.com/api/v1, dashscope 1.27.6, JSON object, temperature 0, max_tokens 2048, thinking/search disabled. SDK retry helper patched under lock for a single send and redirects disabled. No credential lookup outside SDK. Secret-shaped strings/fields redacted. Actual remote API capability, model permission, parameter acceptance, usage and request ID remain MUST_VERIFY. SDK package was not changed. Offline mock is not a formal image or result.
+# Provider validation
+
+Frozen configuration was used for all 24 formal requests:
+
+- model: `qwen3.8-max-0902`
+- region: `cn-beijing`
+- endpoint: `https://dashscope.aliyuncs.com/api/v1`
+- SDK: dashscope `1.27.6`
+- temperature 0, max_tokens 2048, JSON object, thinking/search/tools off
+
+All 24 requests returned HTTP 200 with a request ID on the first attempt. No authorization, endpoint, or model rejection occurred. The SDK response object did not include an echoed model name; requested model remains the frozen snapshot. Credential value was not logged, hashed, or copied into the repository.

@@ -1,200 +1,2651 @@
 {
-  "status": "MUST_BIND",
-  "scenes": [],
-  "required_count": 24,
-  "bound_count": 0,
-  "prompt_sha256": "3c61fa3558e8fe2ee98d8e84824ca177a5fcc3e7b6c6bda17e900a028bd10662",
-  "required_fields": [
-    "scene_id",
-    "task_id",
-    "case_index",
-    "split=dev",
-    "synthetic_unit_fixture=false",
-    "image_ref",
-    "image_sha256",
-    "provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref",
-    "permission.vlm_upload_allowed/evidence_ref",
-    "preprocessing",
-    "object_table[id,type,binding_status,visual_evidence_ref]",
-    "signed_goals",
-    "allowed_action_ids",
-    "allowed_proposition_ids",
-    "contracts_ref/sha256",
-    "predicate_version",
-    "initial_facts(TRUE/FALSE/UNKNOWN)",
-    "task_definition_ref/sha256",
-    "asset_binding_ref/sha256",
-    "asset binding reviewer/time/template/assets/controller_refs/object evidence"
-  ],
-  "required_slots": [
+  "status": "READY_FOR_LOCAL_VALIDATION",
+  "scenes": [
     {
-      "slot_id": "D0_dev_00",
+      "scene_id": "D0_dev_00",
       "task_id": "D0",
       "case_index": 0,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_00/rgb.png",
+      "image_sha256": "42a92e75dcf8205ae6487d1349c611241d010c1f9ff938c08a1e4cbf68a23216",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_00",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_00/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_00/asset_binding.json",
+      "asset_binding_sha256": "3360d53bbf33619797c35b80b768182c7ead1c9f6ba42d93e153f1045b5e464a",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "07fe1e3f8698aaef02093da0056aa9f12f5fdbde9a77be4d66f2862ddf0f9b1d",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "049fdaaacb3f965e5b90131fe864c8c7aec397dc61c203221ac1f2cdd84217a5",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "86495295c40d6d8484a1143f3444fe1d35da889565233b74d91ad036739d4447"
     },
     {
-      "slot_id": "D0_dev_01",
+      "scene_id": "D0_dev_01",
       "task_id": "D0",
       "case_index": 1,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_01/rgb.png",
+      "image_sha256": "f7eac5dd30fe42159dfd2d8cc6a693f5a4fbf6b5b35e12722266da271c922389",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_01",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_01/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_01/asset_binding.json",
+      "asset_binding_sha256": "570ef1704c1fcd1330cb3927c8efade5d2a42cb200c18ee8b6dbbe7991f947b5",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "15783d0263f1c27ea2421cb6ecf663e5c41e70ae27009f958be924ebe2ef8ee1",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "f6b58bb4e2b84cdd9f1a5092891b140fc251ff39b2e86e26d652d8ad3a660a82",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "b09733b60071ee3d15d26a5395d0a3883f8911284987364d4558f375eedd045d"
     },
     {
-      "slot_id": "D0_dev_02",
+      "scene_id": "D0_dev_02",
       "task_id": "D0",
       "case_index": 2,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_02/rgb.png",
+      "image_sha256": "76873bf15fec055e65ac6f94a13031191684b170c665e98cf9aaf3cdb270074d",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_02",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_02/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_02/asset_binding.json",
+      "asset_binding_sha256": "9b7bca0ed4b3c081670106d52ca1280275af3ab93c212793b89d736c4a98c318",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "97dcc304eda534225979bd099883f53077f45deb924c309a90997c9d06a7b03c",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "e2a466919f2125712a7bbae50e030a26954e29d9abe066c6505c81a5ba640b9d",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "7b47436a95a28ff034227a8b29c46c7ded497347b7dcc7de6c7db743ee458f4d"
     },
     {
-      "slot_id": "D0_dev_03",
+      "scene_id": "D0_dev_03",
       "task_id": "D0",
       "case_index": 3,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_03/rgb.png",
+      "image_sha256": "0a8f49fbd25faebe5fde4d408a85c79af92ea1b7b794b88cfba2c046eb451b2d",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_03",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_03/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_03/asset_binding.json",
+      "asset_binding_sha256": "1a41afe96888e5331f5b697d114f33759326863683b23dc1d4ca9fda26908642",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "bceb4052f663fac29bb8da734354fde1461849cb31ee080f5eb77d0a6abbc12e",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "ce732750b1b321210daed103a35ae5784e2381580729cc653ea214595c4e94c9",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "1b0d2d76b963f3d41e33033399064029324d2044f760094e409c207ec159e628"
     },
     {
-      "slot_id": "D0_dev_04",
+      "scene_id": "D0_dev_04",
       "task_id": "D0",
       "case_index": 4,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_04/rgb.png",
+      "image_sha256": "4fcfc4cc12c4642ac10e19b1994dae0bf77fd761bb29db2f84d92906a104603d",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_04",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_04/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_04/asset_binding.json",
+      "asset_binding_sha256": "4d14cfe4eebb13ae31e0a8a52a567917d18dc708c3c5bb5b13f4ef057406ebf3",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "0b2ae802b6c6bcbff79510c5060462bed231ae6834f390513d91bcfbcd035e4a",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "7f0a5c4417092c318f2d9e135517cf103314529797be13434e9c7929c6f622e1",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "3a595e5ee457a6c7d62353c80f3d0a6de8f093d7be88f0e81331992c4aa08f80"
     },
     {
-      "slot_id": "D0_dev_05",
+      "scene_id": "D0_dev_05",
       "task_id": "D0",
       "case_index": 5,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_05/rgb.png",
+      "image_sha256": "30c50b7db00d145a1b0a2fd8a2a0c55d620173fbd56b15c0d79c72fe989bb99b",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_05",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_05/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_05/asset_binding.json",
+      "asset_binding_sha256": "a9a9b177aa0d9e89bbcad9a592a56ed82a51bc9bdd36394462bd57d4e55b96e1",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "f7dcdc1d65eeb31f873009adb8c4185d75dc175ca7090bb6e0f8ac1ae5b5d17a",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "80e2d5878ee59b29b70b2158eb2119e2223f137f3384848e06ab8926e8e94fac",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "dbe184c8c743cb44f2cb5c7e6a199d7ff137867a5767672bf2fa8f5ad8a899e4"
     },
     {
-      "slot_id": "D0_dev_06",
+      "scene_id": "D0_dev_06",
       "task_id": "D0",
       "case_index": 6,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_06/rgb.png",
+      "image_sha256": "7dc7c42c247a59bc6988a0879133b6910776748b8d291684158ccb5dbd46cd73",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_06",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_06/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_06/asset_binding.json",
+      "asset_binding_sha256": "57155b8180a11507688e14bada25d01de6ffe3abc19b454f0de0980b068291dc",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "d09ffc3ffb7902a0271d358f321efbdd3d6a5400292cb2f73e72fd1982ef3197",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "935b9d14ccba7a9ec5023e378d6ee756936b41ad2d15f9a734b9ea834e3b62e1",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "dc4b1f5c0a9bd9a2cd520453315590284cff2a2235079fcc60121bc81160b20c"
     },
     {
-      "slot_id": "D0_dev_07",
+      "scene_id": "D0_dev_07",
       "task_id": "D0",
       "case_index": 7,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/D0/scene_07/rgb.png",
+      "image_sha256": "f1a31e0b3fc4c16a465094c9c9512fb3279f7068254174ec2f086c9a4e407654",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/D0/D0_dev_07",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/D0/scene_07/task_definition.json",
+      "task_definition_sha256": "7eb51ece4922bfe4d8fb13b4ffa63aed4cb79415179a7270b3b09dcc96841e3f",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/D0/scene_07/asset_binding.json",
+      "asset_binding_sha256": "59863ea2410985318cf4628bc0d2653647c3d94b8be7eaa84a5b2530d2e5b482",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "8bacd35bd1dd239e70b8688be07b8750907b6a6b92feabfb3a2e064587bc7df0",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "156a630765cef056da4fc86740b9ee07d30c4774107ef676818250619428204d",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "673b0483f5d33f29e29148c1899afa2d8466084e711f4c3805c4c1adaa4bb7ae"
     },
     {
-      "slot_id": "T_A_dev_00",
+      "scene_id": "T_A_dev_00",
       "task_id": "T_A",
       "case_index": 0,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_00/rgb.png",
+      "image_sha256": "53f4e3cb539de0e8d9fbaf4debe3887938e4816d0189df09ac0bbe572a99bcdd",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_00",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_00/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_00/asset_binding.json",
+      "asset_binding_sha256": "44efa8962f029c5f450de318c0403cf951c7a94ca82a948f3cd0118e8b90f384",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "54d54ee549c5c77c6e68d8499370b31ee1f5de8697805f20cf54e51cf81bdce0",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "f960f8259fb7366250d2420e5bd2436b9ee651f6ee7702b3fa8bda29714bb475",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "86495295c40d6d8484a1143f3444fe1d35da889565233b74d91ad036739d4447"
     },
     {
-      "slot_id": "T_A_dev_01",
+      "scene_id": "T_A_dev_01",
       "task_id": "T_A",
       "case_index": 1,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_01/rgb.png",
+      "image_sha256": "2916ceb6e07380796c43208d3cb9e254f96b63325a6ba2dcf83711357e337686",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_01",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_01/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_01/asset_binding.json",
+      "asset_binding_sha256": "77d5b45d19a9817a1012cd482d4d9a44054bea92f3bef8160f6974316a3fd041",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "3bdce0593283e0d3a96ae94247d933a653eeb897271acbfaa6e44ddd69ec3dc2",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "d7684c09f885dae65f0dadc59dbf9452b6bfc91677371e5b3375e851166e5f64",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "b09733b60071ee3d15d26a5395d0a3883f8911284987364d4558f375eedd045d"
     },
     {
-      "slot_id": "T_A_dev_02",
+      "scene_id": "T_A_dev_02",
       "task_id": "T_A",
       "case_index": 2,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_02/rgb.png",
+      "image_sha256": "0b4e9ea2314fe5fe9e19d487195004bdf9ba5d0709661dae92371163d70d2407",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_02",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_02/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_02/asset_binding.json",
+      "asset_binding_sha256": "820d46a2f173f882c0fe5022e62079ce602e10b6c9a1fa70befe85f59808b7c9",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "1c1051e6154dfa7d29cd90257a3b51e6b528ae3065d0669af4028ebf2f7e9fb9",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "9edfb6ebff239a6172d94413a0e07718e5730285e19117482743b38f7fc40c45",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "7b47436a95a28ff034227a8b29c46c7ded497347b7dcc7de6c7db743ee458f4d"
     },
     {
-      "slot_id": "T_A_dev_03",
+      "scene_id": "T_A_dev_03",
       "task_id": "T_A",
       "case_index": 3,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_03/rgb.png",
+      "image_sha256": "5a46304af8bcf9265d8a39ad44af6ceba802afc52a65d3013afdf046695947ad",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_03",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_03/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_03/asset_binding.json",
+      "asset_binding_sha256": "bb62bf6b681eb394d04b1e5c1429a0ba1761c9d86897871813e52cb7ec99cb11",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "5c36303a9888452b2fe584719678fa25ba20cff1a546ed34e0c0d9e2516d77e2",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "b991a97157028ee8af0f22fccf5a2a741712bb3da43bf0d22f92e7ebfe04bd86",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "1b0d2d76b963f3d41e33033399064029324d2044f760094e409c207ec159e628"
     },
     {
-      "slot_id": "T_A_dev_04",
+      "scene_id": "T_A_dev_04",
       "task_id": "T_A",
       "case_index": 4,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_04/rgb.png",
+      "image_sha256": "8424a280fba6b7bbd8bb45186d2a64dc056c3474cebad4db6aff666caa2dc250",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_04",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_04/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_04/asset_binding.json",
+      "asset_binding_sha256": "9f55b65f70f10682fca11fa0c9e8155289ccaf5d6bfc374d82ba89ae9faa072e",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "56bc6f0e2e316dc5e72e067c733c0916c03f39d97edbc1435b81dc56554932a7",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "9080f3e3906d9643db26fec2fe5784fa1186faebbd147fec7f259b26b3a81904",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "3a595e5ee457a6c7d62353c80f3d0a6de8f093d7be88f0e81331992c4aa08f80"
     },
     {
-      "slot_id": "T_A_dev_05",
+      "scene_id": "T_A_dev_05",
       "task_id": "T_A",
       "case_index": 5,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/rgb.png",
+      "image_sha256": "97d8e8049a152236c9eee8e67d9a4fd5db96c0dceff61ff22092532903363ef5",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_05",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/asset_binding.json",
+      "asset_binding_sha256": "117660dd38ac5c680fad3b171215627b026aa2b1b90eb8663931821a0d93f0a9",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "7ab34b287d9dc805fba6d7a22be560a648eb9e8ad5ce6853c8e604267b36ebdd",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "88dd66e5c4ead5fff95378adc7f0d88ef25c6e847b98ee58f76de178ee8f6279",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "dbe184c8c743cb44f2cb5c7e6a199d7ff137867a5767672bf2fa8f5ad8a899e4"
     },
     {
-      "slot_id": "T_A_dev_06",
+      "scene_id": "T_A_dev_06",
       "task_id": "T_A",
       "case_index": 6,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_06/rgb.png",
+      "image_sha256": "bdde1fc16dbff67179a7876ac5ed32cbec20c28f34343abccfcfd93d4ba890b2",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_06",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_06/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_06/asset_binding.json",
+      "asset_binding_sha256": "cd7da3de44631bbdda6aef01338f2fc7f125366516c595adbf2adbca00c27d52",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "0a1a0fbada1881bfbbae243bc2428d9c20785637bd9399ed9240ac065b67080f",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "385ab97cdf5386c71b4d0acacea3dc612ba231c2bb4a0a57451049bdcff143cb",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "dc4b1f5c0a9bd9a2cd520453315590284cff2a2235079fcc60121bc81160b20c"
     },
     {
-      "slot_id": "T_A_dev_07",
+      "scene_id": "T_A_dev_07",
       "task_id": "T_A",
       "case_index": 7,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_07/rgb.png",
+      "image_sha256": "51452e47b9b10f521b0672db53f716e1325c1ed2b49ac26b1b008fc164e7b583",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_07",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "second_object",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_07/task_definition.json",
+      "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_07/asset_binding.json",
+      "asset_binding_sha256": "1ee130a5cb9a668391c357a7573458c720b0a04ccb83af0266c8eb132d5c4d29",
+      "allowed_action_ids": [
+        "a:MOVE:second_object:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:second_object:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:second_object",
+        "p:Held:target",
+        "p:Inside:second_object:container",
+        "p:Inside:target:container",
+        "p:OnTable:second_object",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "18b02294b2ece534e5994cceaca3eab940ae55d0a59bc3720dee1f8892ea767f",
+      "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+      "scene_config_hash": "e4feecc786f2921ef826111ff144d925e603aadc2d2541ae9d6ab06851ea285f",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "673b0483f5d33f29e29148c1899afa2d8466084e711f4c3805c4c1adaa4bb7ae"
     },
     {
-      "slot_id": "T_C_dev_00",
+      "scene_id": "T_C_dev_00",
       "task_id": "T_C",
       "case_index": 0,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_00/rgb.png",
+      "image_sha256": "2ea29f9807cc3d249377844fce5b985d95997c014685c6055b7a529bb386a064",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_00",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_00/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_00/asset_binding.json",
+      "asset_binding_sha256": "6f1cf9e3a7073a5e21f5ca61501c0f0e949bb2249960147ed0948b6a2ed7b5c9",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "e89453f33904e9abacbf064a33bb3faad058f0ed585d5f5c123f399411d388c9",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "ce93e7f454e0ba4eaa16f309f26a673cca456e27120833858ba7779b6d935f73",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "ef2fa1917fd3d57235a71244913a76020658003bae0003cca8bf752af0ae7d46"
     },
     {
-      "slot_id": "T_C_dev_01",
+      "scene_id": "T_C_dev_01",
       "task_id": "T_C",
       "case_index": 1,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_01/rgb.png",
+      "image_sha256": "e91aee9c463bca01b118c423fd906927bf8a2b16a077abbf698e9313c6dc154c",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_01",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_01/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_01/asset_binding.json",
+      "asset_binding_sha256": "b7fece89039e5204433ec858214a90472b49ccdfc0263005d966abf3f4a4aec0",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "c632891d7a115a862f0420e55094fefade566d961dbc4dea8878b7640a14dafb",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "1cac8360588abd11fc7a4fbb206bc01e1d2a6d32cdc621ca6a470cabe44f8093",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "3355d2e217e7e0b3eb2a3fd44bfecc595cf95cf5c57405933be0552ed0b68d66"
     },
     {
-      "slot_id": "T_C_dev_02",
+      "scene_id": "T_C_dev_02",
       "task_id": "T_C",
       "case_index": 2,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_02/rgb.png",
+      "image_sha256": "5719090145cf255be719a5171ec9d34ead3e2bf1de9e36b6c756e435e004961c",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_02",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_02/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_02/asset_binding.json",
+      "asset_binding_sha256": "7280fd0d3e3f36a0785fd3b3eeb1423b4faf7c1dde965db5268c71cadc17ce12",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "439d93c9373488112c89e3a4f2932058313c60151e415ae892823a2b0d0c4750",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "f9f83c97ac4144e46308b2400d612209210e15d471f79484a58440531f340378",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "8e28d780b98a20502689a91e568f5f25860db2ea5abc557b51c5d118d9af64cf"
     },
     {
-      "slot_id": "T_C_dev_03",
+      "scene_id": "T_C_dev_03",
       "task_id": "T_C",
       "case_index": 3,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_03/rgb.png",
+      "image_sha256": "78ef168ab9a67c07cb9cf8f998e1c1519696492091a0e1f019049d30e0588371",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_03",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_03/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_03/asset_binding.json",
+      "asset_binding_sha256": "cdeecf72ba8cf0446f297a17861d6ce02b16d7493ea90c2772ffad2a0c90c81b",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "b995d9673bfdf899ff6e0808639d5663389dada394675eccb979b906004e4caf",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "e1c648986cb324206092ad0a1b96095c06e5d9aae4e0208b11d785b7384b495a",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "3fd28dfbd71adc0657048b250fb9e8963b2c62aba460a0e043ecea7cdfead74a"
     },
     {
-      "slot_id": "T_C_dev_04",
+      "scene_id": "T_C_dev_04",
       "task_id": "T_C",
       "case_index": 4,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_04/rgb.png",
+      "image_sha256": "e6348bfd5941a3a81e3c5afbda03c68fe023b136e3b8400ab2bd97062026c753",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_04",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_04/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_04/asset_binding.json",
+      "asset_binding_sha256": "cfcfb55850533146e486c2acb426774fce99bad4548baf6726d55a77a674d370",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "6017b303a0a6c3dfdae7e73ff1c426dfbf052e6903999af21a97ccacd675b7bd",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "22cb78c0e7599b03c1eff658ec865fb7a45d6d903f838ee640a19a6714223df6",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "8622b930be3705650f314f8f3bca8caa9cfc9c57235fb968b208294ba9db7d98"
     },
     {
-      "slot_id": "T_C_dev_05",
+      "scene_id": "T_C_dev_05",
       "task_id": "T_C",
       "case_index": 5,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_05/rgb.png",
+      "image_sha256": "81fa01f6092a403f650abfd0f7fd462dca9c488e08de1fd37f369a5eff30ad80",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_05",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_05/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_05/asset_binding.json",
+      "asset_binding_sha256": "cc29dedc9b51bf8abcf692b858d2b354b1009bff75ce23e1819fdeb2c8eb04ba",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "86d941fe21b4ec82182149c35e96a606d56827426657e6cb66dd849c41177bd8",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "c041af72823a11decc7e5f75471e7fb98459d49fdd57f75c967a658d1bb96fb0",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "0f6673584ab84821ce1f0e818a91163535c7d8f34b6a2706bb6db0c0b2710cd4"
     },
     {
-      "slot_id": "T_C_dev_06",
+      "scene_id": "T_C_dev_06",
       "task_id": "T_C",
       "case_index": 6,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_06/rgb.png",
+      "image_sha256": "059adb8ab8f3c38d47bb25d8fd8b27f243ab4e7ac4c9ce799c00bbf17041551c",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_06",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_06/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_06/asset_binding.json",
+      "asset_binding_sha256": "bec53e013aa9d7de7772e69203325f9713e3ca2471713e6e652d457d6ef84b54",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "10dd0141c3fe261e27bad83d4aaef44a98a3063408f8a0cbdcde5d02d1007b6a",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "272df1cff6af0bc219fc2099369195fd00536ecee593ad5e6e829a9de0862867",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "bb5d273978ab99700cb6302a1c0cd35608212b0b9923385b021218cc7afa2d22"
     },
     {
-      "slot_id": "T_C_dev_07",
+      "scene_id": "T_C_dev_07",
       "task_id": "T_C",
       "case_index": 7,
-      "status": "MUST_BIND",
-      "missing_fields": "scene_id; task_id; case_index; split=dev; synthetic_unit_fixture=false; image_ref; image_sha256; provenance.source_dataset/version/capture_kind/initial_frame_verified/split_evidence_ref; permission.vlm_upload_allowed/evidence_ref; preprocessing; object_table[id,type,binding_status,visual_evidence_ref]; signed_goals; allowed_action_ids; allowed_proposition_ids; contracts_ref/sha256; predicate_version; initial_facts(TRUE/FALSE/UNKNOWN); task_definition_ref/sha256; asset_binding_ref/sha256; asset binding reviewer/time/template/assets/controller_refs/object evidence"
+      "split": "dev",
+      "synthetic_unit_fixture": false,
+      "image_ref": "experiments/stage_0c_inputs/dev/T_C/scene_07/rgb.png",
+      "image_sha256": "4844f268f7e29fdf9d3e763e0d8bf5923713be334c8d7190b66f54cc72b930f3",
+      "provenance": {
+        "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+        "version": "cp-disr-procedural-box-v1",
+        "split_evidence_ref": "stage_0c_inputs/dev/T_C/T_C_dev_07",
+        "capture_kind": "recorded_simulator_rgb",
+        "initial_frame_verified": true,
+        "platform_type": "simulator",
+        "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+        "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+        "asset_license_ref": "assets/cp_disr/LICENSE",
+        "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+      },
+      "permission": {
+        "vlm_upload_allowed": true,
+        "evidence_ref": "assets/cp_disr/LICENSE"
+      },
+      "preprocessing": {
+        "version": "raw-rgb-inline-v1",
+        "resize": false,
+        "crop": false,
+        "content_bytes": "original"
+      },
+      "object_table": [
+        {
+          "id": "buffer",
+          "type": "buffer",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "container",
+          "type": "container",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "interferer",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        },
+        {
+          "id": "target",
+          "type": "object",
+          "binding_status": "VERIFIED",
+          "visual_evidence_ref": "rgb.png"
+        }
+      ],
+      "signed_goals": [
+        {
+          "fact_id": "p:Inside:target:container",
+          "sign": 1
+        }
+      ],
+      "initial_facts": {
+        "p:AtBuffer:interferer:buffer": "UNKNOWN",
+        "p:AtBuffer:target:buffer": "UNKNOWN",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:interferer": "UNKNOWN",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:interferer:container": "UNKNOWN",
+        "p:Inside:target:container": "UNKNOWN",
+        "p:OnTable:interferer": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+      "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+      "task_definition_ref": "experiments/stage_0c_inputs/dev/T_C/scene_07/task_definition.json",
+      "task_definition_sha256": "3acb4fa5797a7c70ab6c07e098ce936df214ac0f93493379222b3f3e32e1718b",
+      "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_C/scene_07/asset_binding.json",
+      "asset_binding_sha256": "1848f09b9e4e449eb5f13c6fe8e83b00dda399dcc403293df1eea6d82023b444",
+      "allowed_action_ids": [
+        "a:MOVE:interferer:buffer:v1",
+        "a:MOVE:target:buffer:v1",
+        "a:OPEN:container:v1",
+        "a:PICK:interferer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:interferer:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:interferer:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "allowed_proposition_ids": [
+        "p:AtBuffer:interferer:buffer",
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty",
+        "p:Held:interferer",
+        "p:Held:target",
+        "p:Inside:interferer:container",
+        "p:Inside:target:container",
+        "p:OnTable:interferer",
+        "p:OnTable:target",
+        "p:Open:container"
+      ],
+      "predicate_version": "CP-DISR-v2.1",
+      "asset_binding_hash": "2da8c2944093f9adfb23c500f3dfeb64d26ca86652b4e09bcc49533a830f0135",
+      "initial_facts_hash": "9def2a354f255aa05ebe71655ee69869452042dd45c813ac731b827a792965f4",
+      "scene_config_hash": "4e811fe7e6ee5b32d74d124c4b78ec363aca6dc7e73c36675845d884227c01b9",
+      "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+      "image_depth_sha256": "bae341befe01bab8f617ac2d9bbf45057915a6e5f44da368092eb8cf184174bd"
     }
   ],
-  "note": "Slots are collection requirements, not scene observations. Discovery is bounded, not proof of global absence."
+  "required_count": 24,
+  "bound_count": 24,
+  "prompt_sha256": "3c61fa3558e8fe2ee98d8e84824ca177a5fcc3e7b6c6bda17e900a028bd10662",
+  "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+  "runtime_status": "USED_IN_FORMAL_REQUESTS",
+  "formal_requests": 24
 }
