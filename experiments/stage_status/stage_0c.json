@@ -5,7 +5,7 @@
   "plan_version": "EEP-v1.0",
   "git_hash": "502d33cbca9a83eccd1c32840a0d0b50189c3ad1",
   "started_at": "2026-09-20T13:05:41.121926+00:00",
-  "completed_at": "2026-09-20T17:29:26.810986+00:00",
+  "completed_at": "2026-09-21T04:48:39.086061+00:00",
   "runs_completed": [
     "offline validation: 40 passed"
   ],
@@ -25,6 +25,8 @@
     "MUST_BIND: 3 authorized real independent dev fewshots with frozen expected JSON and provenance",
     "MUST_BIND: protected server SDK environment credential (key_present=false); local file was not accessed",
     "MUST_VERIFY: qwen3.8-max-0902 access, image/JSON support, endpoint/parameter acceptance and request IDs via first formal scene only after all gates pass",
+    "R1b: candidate resolved tasks remain blocked because CP-DISR high-level controller/verifier/evaluator/safety/timing are not bound",
+    "R1b: formal capture refused; 24 dev scenes and 3 few-shots remain absent",
     "Stage 0C-R1: no platform currently satisfies CP-DISR high-level skill/controller/verifier/evaluator binding; 24+3 inputs not created"
   ],
   "tuning_changes": [],
@@ -47,7 +49,9 @@
     "api_credential_present": false,
     "model_access_verified": false,
     "ready_for_formal_requests_after_credential": false,
-    "r1_platform": "LIBERO_CANDIDATE_BLOCKED"
+    "r1_platform": "LIBERO_CANDIDATE_BLOCKED",
+    "capture_tool_fail_closed": true,
+    "resolved_task_candidates": 3
   },
   "git_hash_semantics": "starting commit; final delivery commit in external receipt",
   "source_hashes": {

@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | LIBERO | `/home/__compress_data/xushijie/LIBERO` | `8f1084e3132a39270c3a13ebe37270a43ece2a01` | dirty（多处源码/配置修改） | 唯一推荐候选 |
 | Metaworld | `/home/__compress_data/xushijie/Metaworld` | `a98086ababc81560772e27e7f63fe5d120c4cc50` | 未在本轮作为目标平台绑定 | 不匹配容器/合同结构 |
-| CP-DISR仓库 | `/home/__compress_data/xushijie/graph_cp_disr_v2_1` | `7d8ef02d984a8266b39bf7c2facd138761127834` | clean at audit start | 冻结协议和待绑定模板 |
+| CP-DISR仓库 | `/home/__compress_data/xushijie/graph_cp_disr_v2_1` | `5baf90a4cb45ca2d8b0bd7f51ff2c83b89813cd6` | clean at audit start | 冻结协议和待绑定模板 |
 
 ## 已确认能力
 
@@ -32,3 +32,5 @@ LIBERO 仓库包含本地 BDDL、对象/场景 MuJoCo XML 和 MIT LICENSE；固�
 4. 为 D0/T_A/T_C 写真实 task BDDL/scene reset 配置，记录 asset hashes、对象位姿、buffer 区域和 camera config。
 5. 逐项确认 bundled asset 的使用与上传许可，建立独立 dev_fewshot pool 和 test split 隔离。
 6. 只在上述绑定完成后运行无 API 的 27 输入预检；随后用户单独处理凭证和模型权限。
+
+本轮新增候选 resolved 文件：`configs/tasks/resolved/D0.yaml`, `T_A.yaml`, `T_C.yaml`。它们明确标记 `BLOCKED_PLATFORM_SKILL_BINDING`，不被当作 READY 任务，也不能生成图像。

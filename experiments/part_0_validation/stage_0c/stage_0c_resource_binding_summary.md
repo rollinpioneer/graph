@@ -23,3 +23,5 @@ Stage 0A=BLOCKED、Stage 0B=PASS、Stage 0C=BLOCKED 均保留。
 13. 已解决的 Stage 1A 字段：本地 MuJoCo、robosuite、LIBERO 路径和固定相机 RGB-D 探针。
 14. Stage 1A 仍缺：CP-DISR controller、postcondition/independent verifier、TaskEvaluator、安全许可、clock、timeout/deadline、reference seconds、perception/calibration、干净冻结平台版本。
 15. 状态/readiness：Stage 0C=`BLOCKED`; provider_code_ready=true; formal_scene_count=0; required_scene_count=24; frozen_fewshot_count=0; required_fewshot_count=3; local_input_validation_passed=false; api_credential_present=false; model_access_verified=false; ready_for_formal_requests_after_credential=false。
+
+本轮新增：三个 candidate resolved task 文件和 fail-closed capture/validation 工具。capture 工具在任务未达到 READY_FOR_FORMAL_CAPTURE 时拒绝写图；validator 当前报告 24 个正式 scene 均缺失。

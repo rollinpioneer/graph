@@ -1,0 +1,35 @@
+task_id: D0
+task_version: cp-disr-v2.1-r1-candidate
+status: BLOCKED_PLATFORM_SKILL_BINDING
+platform_ref: LIBERO_CANDIDATE_BLOCKED
+platform_type: simulator
+platform_version: LIBERO@8f1084e3132a39270c3a13ebe37270a43ece2a01_dirty_UNFROZEN
+asset_refs:
+  scene_template: /home/__compress_data/xushijie/LIBERO/libero/libero/bddl_files/libero_10/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it.bddl
+  asset_root: /home/__compress_data/xushijie/LIBERO/libero/libero/assets
+  license_ref: /home/__compress_data/xushijie/LIBERO/LICENSE
+  vlm_upload_permission: MUST_BIND
+typed_entities:
+  target: {type: object}
+  second_object: {type: object}
+  container: {type: container}
+  buffer: {type: buffer}
+object_roles: {movable_objects: [target, second_object], openable_container: container, buffer_region: buffer}
+instruction: MUST_BIND_AFTER_TASK_BDDL_AND_CONTROLLER_BINDING
+signed_goals: [{predicate: Inside, arguments: [target, container], sign: 1}]
+explicit_constraints: [multi_step, minimum_two_legal_candidates, shared_prerequisite, buffer_choice]
+required_skill_schemas: [OPEN, PICK, PLACE, PLACE_BUFFER]
+grounded_action_ids: MUST_BIND_CONTROLLER_GROUNDING
+proposition_ids: MUST_BIND_GROUNDING
+contract_versions: [template-v2.1-1]
+predicate_registry_version: CP-DISR-v2.1
+camera_config_ref: MUST_BIND_FIXED_AGENTVIEW_CONFIG
+scene_reset_ref: MUST_BIND_DETERMINISTIC_RESET
+scene_generator_ref: scripts/stage_0c/capture_formal_scenes.py
+task_evaluator_ref: MUST_BIND
+a_controller_ref: MUST_BIND
+verifier_ref: MUST_BIND
+controller_ref: MUST_BIND
+structural_signature: development_shared_prerequisite_plus_buffer_choice
+split_policy: {formal: dev, fewshot: independent_dev, test: isolated}
+provenance: CP-DISR R1 candidate mapping; no formal asset or image bound
