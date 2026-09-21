@@ -63,7 +63,12 @@ def prepare_matrix(root,provider=None):
     if any(m.get(k)!=v for k,v in fixed.items()):raise BindingError('Frozen VLM manifest settings mismatch')
     config=ProviderConfig(model=m['model_snapshot'],region=m['region'],endpoint=m['base_http_api_url'],sdk_version=m['sdk_version'])
     provider=provider or DashScopeProvider(config)
-    scenes_doc=read(folder/'task_scene_manifest.json');few_doc=read(folder/'few_shot_manifest.json')
+    input_root=root/'experiments/stage_0c_inputs'
+    scene_manifest=input_root/'formal_scene_manifest.json'
+    few_manifest=input_root/'fewshots/few_shot_manifest.json'
+    if not scene_manifest.exists(): scene_manifest=folder/'task_scene_manifest.json'
+    if not few_manifest.exists(): few_manifest=folder/'few_shot_manifest.json'
+    scenes_doc=read(scene_manifest);few_doc=read(few_manifest)
     scenes=scenes_doc.get('scenes',[]);few=few_doc.get('examples',[]);issues=[]
     if len(scenes)!=24:issues.append('task_scene_manifest: require exactly 24 bound dev scenes')
     for task in TASKS:

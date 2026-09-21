@@ -12,7 +12,7 @@ schema_ref: sources/v2.1_interfaces/relation_schema.json
 prompt_ref: sources/v2.1_interfaces/system_prompt.txt
 prompt_version: cp_disr_relations_v2.1_p1
 fewshot_count: 3
-fewshot_manifest: ../part_0_validation/stage_0c/few_shot_manifest.json
+fewshot_manifest: ../stage_0c_inputs/fewshots/few_shot_manifest.json
 max_relations: 8
 temperature: 0
 max_output_tokens: 2048
@@ -48,7 +48,7 @@ credential_availability:
   api_requests: 0
   checked_at: '2026-09-20T16:25:57.923703+00:00'
   scope: Metadata only; not proof of key validity or model access
-credential_status: LOCAL_FILE_PRESENT_NOT_LOADED_OR_SERVER_BOUND
+credential_status: AWAITING_PROTECTED_SDK_CREDENTIAL
 model_access_status: MUST_VERIFY
 model_access_verification_stage: 0C
 allow_automatic_model_or_endpoint_fallback: false
@@ -58,6 +58,8 @@ provider_implementation: src/cp_disr/vlm_provider.py
 provider_source_sha256: 64068e8e7f2c709d1922678968e17c0b262443c4ece9b5b9d4791f4e38b90670
 cache_pipeline: src/cp_disr/vlm_cache_pipeline.py
 stage_0c_runner: src/cp_disr/stage0c.py
-task_scene_manifest: ../part_0_validation/stage_0c/task_scene_manifest.json
-fewshot_binding_status: MUST_BIND
+task_scene_manifest: ../stage_0c_inputs/formal_scene_manifest.json
+fewshot_binding_status: FROZEN
 provider_validation_status: OFFLINE_PASS_SERVICE_MUST_VERIFY
+formal_scene_count: 24
+frozen_fewshot_count: 3

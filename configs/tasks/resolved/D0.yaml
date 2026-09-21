@@ -1,35 +1,94 @@
 task_id: D0
 task_version: cp-disr-v2.1-r1-candidate
-status: BLOCKED_PLATFORM_SKILL_BINDING
+status: CAPTURE_READY_STAGE_0C_RUNTIME_UNVERIFIED_STAGE_1A
 platform_ref: LIBERO_CANDIDATE_BLOCKED
 platform_type: simulator
 platform_version: LIBERO@8f1084e3132a39270c3a13ebe37270a43ece2a01_dirty_UNFROZEN
 asset_refs:
-  scene_template: /home/__compress_data/xushijie/LIBERO/libero/libero/bddl_files/libero_10/KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it.bddl
-  asset_root: /home/__compress_data/xushijie/LIBERO/libero/libero/assets
-  license_ref: /home/__compress_data/xushijie/LIBERO/LICENSE
-  vlm_upload_permission: MUST_BIND
+  scene_template: assets/cp_disr/scene_template.xml
+  license: assets/cp_disr/LICENSE
+  license_sha256: a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053
+  vlm_upload_allowed: true
 typed_entities:
-  target: {type: object}
-  second_object: {type: object}
-  container: {type: container}
-  buffer: {type: buffer}
-object_roles: {movable_objects: [target, second_object], openable_container: container, buffer_region: buffer}
+  target:
+    type: object
+  second_object:
+    type: object
+  container:
+    type: container
+  buffer:
+    type: buffer
+object_roles:
+  movable_objects:
+  - target
+  - second_object
+  openable_container: container
+  buffer_region: buffer
 instruction: MUST_BIND_AFTER_TASK_BDDL_AND_CONTROLLER_BINDING
-signed_goals: [{predicate: Inside, arguments: [target, container], sign: 1}]
-explicit_constraints: [multi_step, minimum_two_legal_candidates, shared_prerequisite, buffer_choice]
-required_skill_schemas: [OPEN, PICK, PLACE, PLACE_BUFFER]
-grounded_action_ids: MUST_BIND_CONTROLLER_GROUNDING
-proposition_ids: MUST_BIND_GROUNDING
-contract_versions: [template-v2.1-1]
+signed_goals:
+- predicate: Inside
+  arguments:
+  - target
+  - container
+  sign: 1
+explicit_constraints:
+- multi_step
+- minimum_two_legal_candidates
+- shared_prerequisite
+- buffer_choice
+required_skill_schemas:
+- OPEN
+- PICK
+- PLACE
+- PLACE_BUFFER
+grounded_action_ids:
+- a:MOVE:second_object:buffer:v1
+- a:MOVE:target:buffer:v1
+- a:OPEN:container:v1
+- a:PICK:second_object:v1
+- a:PICK:target:v1
+- a:PLACE:second_object:container:v1
+- a:PLACE:target:container:v1
+- a:PLACE_BUFFER:second_object:buffer:v1
+- a:PLACE_BUFFER:target:buffer:v1
+proposition_ids:
+- p:AtBuffer:second_object:buffer
+- p:AtBuffer:target:buffer
+- p:GripperEmpty
+- p:Held:second_object
+- p:Held:target
+- p:Inside:second_object:container
+- p:Inside:target:container
+- p:OnTable:second_object
+- p:OnTable:target
+- p:Open:container
+contract_versions:
+- template-v2.1-1
 predicate_registry_version: CP-DISR-v2.1
-camera_config_ref: MUST_BIND_FIXED_AGENTVIEW_CONFIG
-scene_reset_ref: MUST_BIND_DETERMINISTIC_RESET
+camera_config_ref: experiments/stage_0c_inputs/dev/D0/scene_00/camera_config.json
+scene_reset_ref: scripts/stage_0c/capture_formal_scenes.py
 scene_generator_ref: scripts/stage_0c/capture_formal_scenes.py
 task_evaluator_ref: MUST_BIND
 a_controller_ref: MUST_BIND
 verifier_ref: MUST_BIND
 controller_ref: MUST_BIND
 structural_signature: development_shared_prerequisite_plus_buffer_choice
-split_policy: {formal: dev, fewshot: independent_dev, test: isolated}
-provenance: CP-DISR R1 candidate mapping; no formal asset or image bound
+split_policy:
+  formal: dev
+  fewshot: independent_dev
+  test: isolated
+provenance:
+  platform_commit: 8f1084e3132a39270c3a13ebe37270a43ece2a01
+  capture_adapter: src/cp_disr/platforms/libero/scene_capture.py
+  asset_license: assets/cp_disr/LICENSE
+  formal_scene_count: 8
+stage_0c_capture_ready: true
+stage_1a_runtime_ready: false
+contract_registry_ref: configs/contracts/stage_0c_input_skills.json
+controller_binding_status: MUST_BIND_BEFORE_STAGE_1A
+verifier_binding_status: MUST_BIND_BEFORE_STAGE_1A
+task_evaluator_status: MUST_BIND_BEFORE_STAGE_1A
+safety_status: MUST_BIND_BEFORE_STAGE_1A
+timing_status: MUST_BIND_BEFORE_STAGE_1A
+contract_registry_sha256: 3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6
+scene_config_examples: experiments/stage_0c_inputs/dev/D0

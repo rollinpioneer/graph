@@ -5,7 +5,7 @@
   "plan_version": "EEP-v1.0",
   "git_hash": "502d33cbca9a83eccd1c32840a0d0b50189c3ad1",
   "started_at": "2026-09-20T13:05:41.121926+00:00",
-  "completed_at": "2026-09-21T04:48:39.086061+00:00",
+  "completed_at": "2026-09-21T07:25:05.527235+00:00",
   "runs_completed": [
     "offline validation: 40 passed"
   ],
@@ -27,6 +27,8 @@
     "MUST_VERIFY: qwen3.8-max-0902 access, image/JSON support, endpoint/parameter acceptance and request IDs via first formal scene only after all gates pass",
     "R1b: candidate resolved tasks remain blocked because CP-DISR high-level controller/verifier/evaluator/safety/timing are not bound",
     "R1b: formal capture refused; 24 dev scenes and 3 few-shots remain absent",
+    "R2 complete: awaiting protected API credential and first model-access verification",
+    "R2 non-API remediation complete; awaiting protected API credential and model-access verification",
     "Stage 0C-R1: no platform currently satisfies CP-DISR high-level skill/controller/verifier/evaluator binding; 24+3 inputs not created"
   ],
   "tuning_changes": [],
@@ -34,24 +36,21 @@
   "skipped": false,
   "execution_scope": "Stage 0C production preparation and offline validation only; real requests blocked",
   "readiness": {
-    "Stage_1A": false,
-    "formal_scenes": 0,
-    "fewshots": 0,
-    "API_requests": 0,
-    "key_present": false,
-    "model_access": "MUST_VERIFY",
     "provider_code_ready": true,
-    "formal_scene_count": 0,
+    "formal_scene_count": 24,
     "required_scene_count": 24,
-    "frozen_fewshot_count": 0,
+    "frozen_fewshot_count": 3,
     "required_fewshot_count": 3,
-    "local_input_validation_passed": false,
+    "local_input_validation_passed": true,
+    "scene_capture_adapter_operational": true,
+    "clean_platform_frozen": true,
+    "split_leakage_detected": false,
+    "hidden_truth_prompt_leakage": false,
+    "asset_upload_permission_resolved": true,
     "api_credential_present": false,
     "model_access_verified": false,
-    "ready_for_formal_requests_after_credential": false,
-    "r1_platform": "LIBERO_CANDIDATE_BLOCKED",
-    "capture_tool_fail_closed": true,
-    "resolved_task_candidates": 3
+    "ready_for_formal_requests_after_credential": true,
+    "stage_1a_runtime_ready": false
   },
   "git_hash_semantics": "starting commit; final delivery commit in external receipt",
   "source_hashes": {
@@ -80,5 +79,7 @@
     "tests/fixtures/smdp_transitions.json": "723577194f0c9c15f073f5cd5f44dadb1e36084fd40aba777e27f3dc3611565b",
     "tests/fixtures/snapshots_two_envs.json": "4c04292bebc58e5c72b2f76c34e373b9c82a3135234bca0ec7dfe9ab8ff3509c"
   },
-  "report": "experiments/part_0_validation/stage_0c/stage_0c_summary.md"
+  "report": "experiments/part_0_validation/stage_0c/stage_0c_summary.md",
+  "blocked_reason": "AWAITING_API_CREDENTIAL_AND_MODEL_ACCESS",
+  "r2_report": "experiments/part_0_validation/stage_0c_r2/stage_0c_r2_summary.md"
 }

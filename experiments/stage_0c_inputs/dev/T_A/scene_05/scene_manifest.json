@@ -1,0 +1,110 @@
+{
+  "scene_id": "T_A_dev_05",
+  "task_id": "T_A",
+  "case_index": 5,
+  "split": "dev",
+  "synthetic_unit_fixture": false,
+  "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/rgb.png",
+  "image_sha256": "97d8e8049a152236c9eee8e67d9a4fd5db96c0dceff61ff22092532903363ef5",
+  "provenance": {
+    "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+    "version": "cp-disr-procedural-box-v1",
+    "split_evidence_ref": "stage_0c_inputs/dev/T_A/T_A_dev_05",
+    "capture_kind": "recorded_simulator_rgb",
+    "initial_frame_verified": true,
+    "platform_type": "simulator",
+    "platform_repo": "/home/__compress_data/xushijie/platforms/LIBERO_cpdisr_8f1084",
+    "platform_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+    "asset_license_ref": "assets/cp_disr/LICENSE",
+    "asset_license_sha256": "a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053"
+  },
+  "permission": {
+    "vlm_upload_allowed": true,
+    "evidence_ref": "assets/cp_disr/LICENSE"
+  },
+  "preprocessing": {
+    "version": "raw-rgb-inline-v1",
+    "resize": false,
+    "crop": false,
+    "content_bytes": "original"
+  },
+  "object_table": [
+    {
+      "id": "buffer",
+      "type": "buffer",
+      "binding_status": "VERIFIED",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "id": "container",
+      "type": "container",
+      "binding_status": "VERIFIED",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "id": "second_object",
+      "type": "object",
+      "binding_status": "VERIFIED",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "id": "target",
+      "type": "object",
+      "binding_status": "VERIFIED",
+      "visual_evidence_ref": "rgb.png"
+    }
+  ],
+  "signed_goals": [
+    {
+      "fact_id": "p:Inside:target:container",
+      "sign": 1
+    }
+  ],
+  "initial_facts": {
+    "p:AtBuffer:second_object:buffer": "UNKNOWN",
+    "p:AtBuffer:target:buffer": "UNKNOWN",
+    "p:GripperEmpty": "TRUE",
+    "p:Held:second_object": "UNKNOWN",
+    "p:Held:target": "UNKNOWN",
+    "p:Inside:second_object:container": "UNKNOWN",
+    "p:Inside:target:container": "UNKNOWN",
+    "p:OnTable:second_object": "TRUE",
+    "p:OnTable:target": "TRUE",
+    "p:Open:container": "UNKNOWN"
+  },
+  "contracts_ref": "configs/contracts/stage_0c_input_skills.json",
+  "contracts_sha256": "3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6",
+  "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/task_definition.json",
+  "task_definition_sha256": "be240310ce70362ae58eee753feec5586e05dc64165179e3cdbc68e07f7300bd",
+  "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_05/asset_binding.json",
+  "asset_binding_sha256": "117660dd38ac5c680fad3b171215627b026aa2b1b90eb8663931821a0d93f0a9",
+  "allowed_action_ids": [
+    "a:MOVE:second_object:buffer:v1",
+    "a:MOVE:target:buffer:v1",
+    "a:OPEN:container:v1",
+    "a:PICK:second_object:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:second_object:container:v1",
+    "a:PLACE:target:container:v1",
+    "a:PLACE_BUFFER:second_object:buffer:v1",
+    "a:PLACE_BUFFER:target:buffer:v1"
+  ],
+  "allowed_proposition_ids": [
+    "p:AtBuffer:second_object:buffer",
+    "p:AtBuffer:target:buffer",
+    "p:GripperEmpty",
+    "p:Held:second_object",
+    "p:Held:target",
+    "p:Inside:second_object:container",
+    "p:Inside:target:container",
+    "p:OnTable:second_object",
+    "p:OnTable:target",
+    "p:Open:container"
+  ],
+  "predicate_version": "CP-DISR-v2.1",
+  "asset_binding_hash": "7ab34b287d9dc805fba6d7a22be560a648eb9e8ad5ce6853c8e604267b36ebdd",
+  "initial_facts_hash": "92a439ff48da628117b2e602b53f933c30a9aafdbfbc7a0aa55233c369430330",
+  "scene_config_hash": "88dd66e5c4ead5fff95378adc7f0d88ef25c6e847b98ee58f76de178ee8f6279",
+  "camera_config_hash": "07e1ccb1b195260b79cc06a2c0a77979bee314ac34ee76338d9e4b75b697e0b9",
+  "image_depth_sha256": "dbe184c8c743cb44f2cb5c7e6a199d7ff137867a5767672bf2fa8f5ad8a899e4"
+}
