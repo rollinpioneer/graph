@@ -31,12 +31,19 @@ class TaskEvaluator:
 
     def evaluate(self, value):
         elapsed = float(value.elapsed_seconds)
+        interval_start = float(value.interval_start_seconds)
+        interval_end = float(value.interval_end_seconds)
         success_now = self.goal_true()
         reward_events = []
         if success_now and not self._rewarded:
             self._rewarded = True
             self._success_time = elapsed
-            reward_events.append((elapsed, 1.0))
+            # Frozen interval_reward() requires 0 <= offset <= skill duration.
+            # elapsed_seconds is episode time and is not a legal skill-interval offset.
+            offset = interval_end - interval_start
+            if offset < 0:
+                offset = 0.0
+            reward_events.append((float(offset), 1.0))
         terminated = bool(self._rewarded)
         truncated = (not terminated) and elapsed >= self.deadline
         reason = "TASK_SUCCESS" if terminated else ("DEADLINE" if truncated else "CONTINUE")

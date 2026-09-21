@@ -1,0 +1,50 @@
+{
+  "stage": "1A",
+  "status": "NEEDS_RERUN",
+  "method_version": "CP-DISR-v2.1",
+  "plan_version": "EEP-v1.0",
+  "git_hash": "e630734b0c244ed18d12fd5b4545ecbde1e2785c",
+  "started_at": null,
+  "completed_at": "2026-09-21T13:25:41Z",
+  "runs_completed": [],
+  "runs_failed": [],
+  "runs_reused": [],
+  "selected_tasks": [],
+  "selected_config": null,
+  "issues": [
+    {
+      "gate": "C",
+      "passed": false,
+      "issues": [
+        "logits nonfinite"
+      ],
+      "qualifying_n": 3,
+      "dp_nonzero_any": true,
+      "delta_nonzero_any": true,
+      "max_abs_residual": 0.00010998094512615353,
+      "prior_edges": 1
+    }
+  ],
+  "tuning_changes": [],
+  "next_stage": "1B",
+  "skipped": false,
+  "execution_scope": "startup_gates_only",
+  "readiness": {
+    "runtime_bound": true,
+    "controller_qualified": true,
+    "verifier_qualified": true,
+    "evaluator_qualified": true,
+    "safety_bound": true,
+    "timing_bound": true,
+    "train_scene_count": 64,
+    "dev_scene_count": 10,
+    "train_cache_count": 64,
+    "dev_cache_count": 10,
+    "scripted_dev_success": true,
+    "b2_dry_run_passed": true,
+    "full_dry_run_passed": true,
+    "hidden_truth_leakage": false,
+    "stage_1a_runtime_ready": true
+  },
+  "base_commit": "d270f373dbeb1eace4bc87112236829bb86cc6e6"
+}

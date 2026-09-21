@@ -1,0 +1,35 @@
+Using GPU 5
+python /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+[2026-09-21T13:28:30Z] Stage 1A start gpu=0 only_gates=False resume=False max_updates=16
+[2026-09-21T13:28:30Z] device=cuda:0 name=NVIDIA A100-SXM4-40GB visible=5
+[2026-09-21T13:28:32Z] startup gate A: corrected dry-run fields
+Warning: make sure gym is installed if you want to use the GymWrapper.
+[2026-09-21T13:28:44Z] startup gate B: B2 effective prior empty at input layer
+[2026-09-21T13:28:49Z] startup gate C: Full DP/Delta on frozen nonempty prior
+[2026-09-21T13:28:56Z] startup gate D: independent init, seeds, pytest, cache immutability
+[2026-09-21T13:28:56Z] running Stage 0B pytest marker=pure or torch_runtime
+........................................                                 [100%]
+40 passed, 34 deselected in 15.76s
+[2026-09-21T13:29:14Z] train B2 to 8 updates
+[2026-09-21T13:29:15Z] B2 eval step0
+[2026-09-21T13:33:18Z] B2 training start target_updates=8
+[2026-09-21T13:35:22Z] training exception: Invalid independently confirmed reward event
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/__main__.py", line 2, in <module>
+    raise SystemExit(main())
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/cli.py", line 114, in main
+    print(canonical(stage1a_smoke.cmd_stage_1a_run(root, gpu=getattr(a, "gpu", 0), only_startup_gates=bool(getattr(a, "only_startup_gates", False)), resume=bool(getattr(a, "resume", False)), max_updates=int(getattr(a, "max_updates", 16)))))
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage1a_smoke.py", line 1295, in cmd_stage_1a_run
+    write_combined(out, b2, full, final_status, reasons, hashes_doc)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage1a_smoke.py", line 1159, in write_combined
+    ok, _ = pass_conditions(b2, full)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage1a_smoke.py", line 1103, in pass_conditions
+    if b2['completed_updates'] < 8 or full['completed_updates'] < 8:
+KeyError: 'completed_updates'

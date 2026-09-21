@@ -940,7 +940,23 @@ def train_job(root, method, device, device_name, cases, eval_cases, hashes_doc, 
             try:
                 t, result = collector.step(snap)
             except Exception as exc:
-                hard_fail = {'error': str(exc), 'traceback': traceback.format_exc(), 'update': updates, 'count': count}
+                last_ex = collector.last_execution
+                hard_fail = {
+                    'error': str(exc),
+                    'traceback': traceback.format_exc(),
+                    'update': updates,
+                    'count': count,
+                    'case': case,
+                    'episode_id': getattr(snap, 'episode_id', None),
+                    'decision_id': getattr(snap, 'decision_id', None),
+                    'clock_seconds': getattr(snap, 'clock_seconds', None),
+                    'last_execution': None if last_ex is None else {
+                        'execution_id': getattr(last_ex, 'execution_id', None),
+                        'controller_exit': getattr(last_ex, 'controller_exit', None),
+                        'start_seconds': getattr(last_ex, 'start_seconds', None),
+                        'end_seconds': getattr(last_ex, 'end_seconds', None),
+                    },
+                }
                 write_json(job_dir / 'failure.json', hard_fail)
                 raise
             ended = False
@@ -1100,6 +1116,9 @@ def save_job_checkpoint(path, policy, optimizer, extra, rng_payload, prior_sampl
 
 def pass_conditions(b2, full):
     reasons = []
+    if not isinstance(b2, dict) or not isinstance(full, dict) or 'completed_updates' not in b2 or 'completed_updates' not in full:
+        reasons.append('incomplete jobs')
+        return False, reasons
     if b2['completed_updates'] < 8 or full['completed_updates'] < 8:
         reasons.append('fewer than 8 updates')
     def any_success(job):
