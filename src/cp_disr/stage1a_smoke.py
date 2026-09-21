@@ -964,11 +964,23 @@ def train_job(root, method, device, device_name, cases, eval_cases, hashes_doc, 
             if t is None:
                 empty_episodes += 1
                 reason = result.get('reason') if isinstance(result, dict) else getattr(result, 'reason', None)
-                append_jsonl(job_dir / 'decision_log.jsonl', {'method': method, 'no_transition': True, 'reason': reason, 'update': updates})
+                append_jsonl(job_dir / 'decision_log.jsonl', {
+                    'method': method,
+                    'no_transition': True,
+                    'reason': reason,
+                    'update': updates,
+                    'case_id': case,
+                    'empty_streak': empty_episodes,
+                    'decision_id': getattr(snap, 'decision_id', None),
+                    'episode_id': getattr(snap, 'episode_id', None),
+                    'mask': list(getattr(snap, 'mask', ())),
+                    'candidate_ids': list(getattr(snap, 'candidate_ids', ())),
+                })
                 ended = True
                 if empty_episodes >= MAX_EMPTY:
                     raise BindingError('Runtime repeatedly exposes no executable skill')
             else:
+                empty_episodes = 0
                 rec = compact_transition(method, 0, case, t, result, collector.last_output, collector.last_execution, prior.audit_mode, prior.original_hash, source_n, cache_key, run_id)
                 append_jsonl(job_dir / 'transition_log.jsonl', rec)
                 append_jsonl(job_dir / 'decision_log.jsonl', {'decision_id': rec['decision_id'], 'selected_candidate_id': rec['selected_candidate_id'], 'mask_hash': rec['mask_hash'], 'prior_mode': rec['prior_mode']})
