@@ -457,9 +457,12 @@ def train_job(root, task_id, method, seed, device, device_name, max_updates=None
         "no_pretrained_checkpoint": True,
         "learning_enabled": True,
     }
-    s1.write_json(job_dir / "config.json", cfg)
-    s1.write_json(job_dir / "environment_snapshot.json", s1.environment_snapshot(device, device_name, seed))
-    s1.write_json(job_dir / "software_snapshot.json", {"git_commit": git_commit(root), "base_commit": BASE_COMMIT, "python": sys.executable, "torch": torch.__version__})
+    if not (job_dir / "config.json").exists():
+        s1.write_json(job_dir / "config.json", cfg)
+    if not (job_dir / "environment_snapshot.json").exists():
+        s1.write_json(job_dir / "environment_snapshot.json", s1.environment_snapshot(device, device_name, seed))
+    if not (job_dir / "software_snapshot.json").exists():
+        s1.write_json(job_dir / "software_snapshot.json", {"git_commit": git_commit(root), "base_commit": BASE_COMMIT, "python": sys.executable, "torch": torch.__version__})
     target_updates = UPDATES if max_updates is None else int(max_updates)
     if stop_after_updates is not None:
         target_updates = min(target_updates, int(stop_after_updates))
@@ -485,7 +488,7 @@ def train_job(root, task_id, method, seed, device, device_name, max_updates=None
     ppo_updates = ppo_updates_l
     optimizer_steps = optimizer_steps_l
     interaction_seconds = interaction_seconds_l
-    skill_count = 0
+    skill_count = int(count_l)
     train_success_episodes = train_success_episodes_l
     zero_reward_episodes = 0
     empty_episodes = 0
@@ -500,12 +503,40 @@ def train_job(root, task_id, method, seed, device, device_name, max_updates=None
     trans_buffer = []
     train_rows = []
     eval_rows = [{"update": 0, "skill_transitions": 0, "success_rate": ev0["success_rate"], "success_n": ev0["success_n"]}]
-    s1.csv_write(job_dir / "eval_metrics.csv", eval_rows)
     case = prior = source_n = cache_key = None
     ep_reward = 0.0
     first_update_evidence = None
     param0 = param_digest(policy)
     opt0 = optimizer_digest(trainer.optimizer)
+    if resume:
+        summ_path = job_dir / "summary.json"
+        if summ_path.is_file():
+            summ = json.loads(summ_path.read_text(encoding="utf-8"))
+            skill_count = int(summ.get("skill_count") or skill_count)
+            deadline_n = int(summ.get("deadline_n") or 0)
+            started_episodes = int(summ.get("started_episodes") or 0)
+            closed_episodes = int(summ.get("closed_episodes") or 0)
+            live_episodes = int(summ.get("live_episodes") or 0)
+            if summ.get("param0"):
+                param0 = summ["param0"]
+            if summ.get("opt0"):
+                opt0 = summ["opt0"]
+        live_episodes = 1 if bundle.current_snapshot is not None else 0
+        evd_path = job_dir / "first_update_evidence.json"
+        if evd_path.is_file():
+            first_update_evidence = json.loads(evd_path.read_text(encoding="utf-8"))
+        tm = job_dir / "train_metrics.csv"
+        if tm.is_file() and tm.stat().st_size:
+            with tm.open(encoding="utf-8", newline="") as f:
+                train_rows = list(csv.DictReader(f))
+        em = job_dir / "eval_metrics.csv"
+        if em.is_file() and em.stat().st_size:
+            with em.open(encoding="utf-8", newline="") as f:
+                eval_rows = list(csv.DictReader(f))
+        else:
+            s1.csv_write(job_dir / "eval_metrics.csv", eval_rows)
+    else:
+        s1.csv_write(job_dir / "eval_metrics.csv", eval_rows)
     hard_fail = None
     wall_start = time.time()
     log("%s training start target_updates=%s d_ref=%s cap=%s" % (run_id, target_updates, d_ref, job_cap))
@@ -624,7 +655,9 @@ def train_job(root, task_id, method, seed, device, device_name, max_updates=None
                 }
                 if first_update_evidence is None:
                     first_update_evidence = evd
-                    s1.write_json(job_dir / "first_update_evidence.json", evd)
+                evd_path = job_dir / "first_update_evidence.json"
+                if not evd_path.exists():
+                    s1.write_json(evd_path, first_update_evidence)
                 row = {
                     "update": ppo_updates,
                     "valid_transitions": count,
@@ -666,6 +699,9 @@ def train_job(root, task_id, method, seed, device, device_name, max_updates=None
                 s1.write_json(job_dir / "resume.json", {
                     "updates": ppo_updates, "count": count, "interaction_seconds": interaction_seconds,
                     "optimizer_steps": optimizer_steps, "train_success_episodes": train_success_episodes,
+                    "skill_count": skill_count, "deadline_n": deadline_n,
+                    "started_episodes": started_episodes, "closed_episodes": closed_episodes,
+                    "live_episodes": live_episodes,
                 })
                 trans_buffer = []
                 log("%s PPO update %s transitions=%s opt_steps=%s changed=%s" % (run_id, ppo_updates, n_roll, optimizer_steps, changed))
