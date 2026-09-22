@@ -1,0 +1,17 @@
+Using GPU 5
+python /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+[2026-09-21T13:24:39Z] Stage 1A start gpu=0 only_gates=True resume=False max_updates=16
+[2026-09-21T13:24:39Z] device=cuda:0 name=NVIDIA A100-SXM4-40GB visible=5
+[2026-09-21T13:24:41Z] startup gate A: corrected dry-run fields
+Warning: make sure gym is installed if you want to use the GymWrapper.
+[2026-09-21T13:25:03Z] startup gate B: B2 effective prior empty at input layer
+[2026-09-21T13:25:11Z] startup gate C: Full DP/Delta on frozen nonempty prior
+[2026-09-21T13:25:20Z] startup gate D: independent init, seeds, pytest, cache immutability
+[2026-09-21T13:25:20Z] running Stage 0B pytest marker=pure or torch_runtime
+........................................                                 [100%]
+40 passed, 34 deselected in 17.66s
+[2026-09-21T13:25:41Z] startup gates FAILED; no PPO
+{"gates":[{"b2_n":2,"full_n":2,"gate":"A","issues":[],"passed":true},{"effective_prior_relation_count":0,"gate":"B","issues":[],"passed":true,"source_cache_relation_count":1},{"delta_nonzero_any":true,"dp_nonzero_any":true,"gate":"C","issues":["logits nonfinite"],"max_abs_residual":0.00010998094512615353,"passed":false,"prior_edges":1,"qualifying_n":3},{"device":"cuda:0","device_name":"NVIDIA A100-SXM4-40GB","gate":"D","issues":[],"passed":true,"pytest_rc":0}],"ppo_updates":false,"status":"NEEDS_RERUN"}

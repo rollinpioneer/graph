@@ -1,0 +1,44 @@
+Using GPU 0
+python /home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+[2026-09-21T14:10:06Z] Stage 1A start gpu=0 only_gates=False resume=False max_updates=16
+[2026-09-21T14:10:06Z] device=cuda:0 name=NVIDIA A100-SXM4-40GB visible=0
+[2026-09-21T14:10:08Z] startup gate A: corrected dry-run fields
+Warning: make sure gym is installed if you want to use the GymWrapper.
+[2026-09-21T14:10:28Z] startup gate B: B2 effective prior empty at input layer
+[2026-09-21T14:10:37Z] startup gate C: Full DP/Delta on frozen nonempty prior
+[2026-09-21T14:10:47Z] startup gate D: independent init, seeds, pytest, cache immutability
+[2026-09-21T14:10:48Z] running Stage 0B pytest marker=pure or torch_runtime
+........................................                                 [100%]
+40 passed, 34 deselected in 18.05s
+[2026-09-21T14:11:08Z] train B2 to 8 updates
+[2026-09-21T14:11:09Z] B2 eval step0
+[2026-09-21T14:15:36Z] B2 training start target_updates=8
+[2026-09-21T15:08:35Z] B2 PPO update 1 transitions=1024
+[2026-09-21T16:27:59Z] B2 PPO update 2 transitions=1024
+[2026-09-21T17:30:33Z] B2 PPO update 3 transitions=1024
+[2026-09-21T18:18:04Z] B2 PPO update 4 transitions=1024
+[2026-09-21T18:33:43Z] B2 eval update 4
+[2026-09-21T19:09:30Z] B2 PPO update 5 transitions=1024
+[2026-09-21T20:01:08Z] B2 PPO update 6 transitions=1024
+[2026-09-21T20:54:55Z] B2 PPO update 7 transitions=1024
+[2026-09-21T22:03:30Z] B2 PPO update 8 transitions=1024
+[2026-09-21T22:29:15Z] B2 eval update 8
+[2026-09-21T22:30:30Z] train Full to 8 updates
+[2026-09-21T22:30:31Z] Full eval step0
+[2026-09-21T22:33:54Z] Full training start target_updates=8
+[2026-09-21T23:13:11Z] Full PPO update 1 transitions=1024
+[2026-09-22T00:16:55Z] Full PPO update 2 transitions=1024
+[2026-09-22T00:37:57Z] Full PPO update 3 transitions=1024
+[2026-09-22T00:53:31Z] Full PPO update 4 transitions=1024
+[2026-09-22T01:02:28Z] Full eval update 4
+[2026-09-22T01:13:07Z] Full PPO update 5 transitions=1024
+[2026-09-22T01:35:00Z] Full PPO update 6 transitions=1024
+[2026-09-22T02:15:58Z] Full PPO update 7 transitions=1024
+[2026-09-22T03:09:13Z] Full PPO update 8 transitions=1024
+[2026-09-22T03:29:00Z] Full eval update 8
+[2026-09-22T03:30:10Z] stop-gate at 8 updates: True []
+[2026-09-22T03:30:12Z] Stage 1A finished status=PASS next=2A
+{"b2":{"completed_updates":8,"final_dev_success":1.0,"step0_dev_success":0.0,"train_success_episodes":1395,"valid_transitions":8192},"full":{"absent_episode_n":56,"completed_updates":8,"final_dev_success":1.0,"original_episode_n":230,"step0_dev_success":0.0,"train_success_episodes":94,"valid_transitions":8192},"gates":[{"b2_n":2,"full_n":2,"gate":"A","issues":[],"passed":true},{"effective_prior_relation_count":0,"gate":"B","issues":[],"passed":true,"source_cache_relation_count":1},{"delta_nonzero_any":true,"dp_nonzero_any":true,"gate":"C","issues":[],"max_abs_residual":0.00011045091378036886,"passed":true,"prior_edges":1,"qualifying_n":3},{"device":"cuda:0","device_name":"NVIDIA A100-SXM4-40GB","gate":"D","issues":[],"passed":true,"pytest_rc":0}],"next_stage":"2A","reasons":[],"status":"PASS"}
