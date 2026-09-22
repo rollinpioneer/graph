@@ -539,7 +539,7 @@ def evaluator_unit_checks(task_id, gpu=0):
         evaluator_d = TaskEvaluator(env, 0.5, task_id=task_id)
         evaluator_d.reset_episode()
         rd = evaluator_d.evaluate(EvaluationInput(task_id, "e", "ep2", (), 0.6, 0.0, 0.6))
-        results.append({"task_id": task_id, "name": "deadline_zero", "pass": (not rd.success) and bool(rd.truncated) and rd.reward_events == () and not rd.terminated, "reason": rd.reason})
+        results.append({"task_id": task_id, "name": "deadline_zero", "pass": (not rd.success) and (not rd.truncated) and rd.reward_events == () and bool(rd.terminated) and rd.reason == "DEADLINE", "reason": rd.reason})
     finally:
         env.close()
     return results
@@ -755,7 +755,20 @@ def generate_task_caches(root: Path, task_id, mapping, gpu=0):
             results.append({"case_id": row["case_id"], "split": row["split"], "task_id": task_id, "cache_key": key, "status": "REUSED", "cache_dir": str(path.relative_to(root))})
             continue
         if path.exists() and not reusable:
-            shutil.rmtree(path)
+            att = path / "failed_attempts"
+            n = len(list(att.glob("attempt_*"))) if att.is_dir() else 0
+            dest = att / ("attempt_%03d" % n)
+            dest.mkdir(parents=True, exist_ok=True)
+            budget_path = path / "retry_budget.json"
+            used = n + 1
+            if budget_path.is_file():
+                import json as _json
+                try:
+                    used = int(_json.loads(budget_path.read_text(encoding="utf-8")).get("used") or 0) + 1
+                except Exception:
+                    pass
+            budget_path.write_text(canonical({"scene_id": row["case_id"], "cache_key": key, "used": used}) + "\n", encoding="utf-8")
+            raise BindingError("Refusing to rmtree existing cache path; retry budget persisted")
         with ledger.open("a", encoding="utf-8") as f:
             f.write(canonical({"scene_id": row["case_id"], "state": "REQUEST_STARTED", "time": time.time()}) + "\n")
         execution = request_and_process(provider, payload, template, schema, ())

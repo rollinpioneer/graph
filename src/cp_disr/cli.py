@@ -30,15 +30,23 @@ def main(argv=None):
         "validate-d0-cache",
         "stage-1a-preflight",
         "stage-1a-run",
-        "stage-2a-p0",
+        "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run",
     )
     for name in core:
         sp = sub.add_parser(name)
-        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-2a-p0"):
+        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run"):
             sp.add_argument("--gpu", type=int, default=0)
         if name == "stage-1a-preflight":
             sp.add_argument("--all-p0", action="store_true")
             sp.add_argument("--resume-p0", action="store_true")
+
+        if name == "stage-2a-run":
+            sp.add_argument("--task", required=True, choices=["T_A", "T_C"])
+            sp.add_argument("--method", required=True, choices=["B0", "B1", "B2", "Full"])
+            sp.add_argument("--seed", type=int, required=True)
+            sp.add_argument("--max-updates", type=int, default=64)
+            sp.add_argument("--stop-after-updates", type=int, default=None)
+            sp.add_argument("--resume", action="store_true")
         if name == "stage-1a-run":
             sp.add_argument("--only-startup-gates", action="store_true")
             sp.add_argument("--resume", action="store_true")
@@ -127,6 +135,15 @@ def main(argv=None):
             return 0
         if a.command == "validate-evaluator":
             print(canonical(stage1a.cmd_validate_evaluator(root, gpu=gpu)))
+            return 0
+
+        if a.command == "stage-2a-startup-gate":
+            from . import stage2a_startup_gate
+            print(canonical(stage2a_startup_gate.cmd_stage_2a_startup_gate(root, gpu=gpu)))
+            return 0
+        if a.command == "stage-2a-run":
+            from . import stage2a_explore
+            print(canonical(stage2a_explore.cmd_stage_2a_run(root, a.task, a.method, a.seed, gpu=gpu, max_updates=getattr(a, "max_updates", 64), stop_after_updates=getattr(a, "stop_after_updates", None), resume=bool(getattr(a, "resume", False)))))
             return 0
         if a.command == "stage-2a-p0":
             from . import stage2a_p0

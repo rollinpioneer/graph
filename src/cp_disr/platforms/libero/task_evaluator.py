@@ -17,6 +17,13 @@ class TaskEvaluator:
         self.task_id = str(task_id)
         self._rewarded = False
         self._success_time = None
+        self.time_resolution_seconds = self._timestep()
+
+    def _timestep(self) -> float:
+        try:
+            return float(self.env.sim.model.opt.timestep)
+        except Exception:
+            return 0.002
 
     def reset_episode(self):
         self._rewarded = False
@@ -44,25 +51,58 @@ class TaskEvaluator:
         return self._inside(h, "target")
 
     def evaluate(self, value):
+        """Frozen v2.1 deadline: timeout without in-time success is terminated DEADLINE, not truncated."""
         elapsed = float(value.elapsed_seconds)
         interval_start = float(value.interval_start_seconds)
         interval_end = float(value.interval_end_seconds)
+        self.time_resolution_seconds = self._timestep()
         success_now = self.goal_true()
-        reward_events = []
-        if success_now and not self._rewarded:
+        # Strict in-time window: confirmation at elapsed >= deadline is not inside the deadline.
+        in_time = elapsed < self.deadline
+        if self._rewarded:
+            return TaskResult(
+                success=True,
+                terminated=True,
+                truncated=False,
+                reason="TASK_SUCCESS",
+                reward_events=(),
+            )
+        if in_time and success_now:
             self._rewarded = True
             self._success_time = elapsed
-            offset = interval_end - interval_start
+            offset = float(interval_end - interval_start)
             if offset < 0:
                 offset = 0.0
-            reward_events.append((float(offset), 1.0))
-        terminated = bool(self._rewarded)
-        truncated = (not terminated) and elapsed >= self.deadline
-        reason = "TASK_SUCCESS" if terminated else ("DEADLINE" if truncated else "CONTINUE")
+            if interval_end >= self.deadline:
+                # Skill overran the task clock; do not credit a late first success.
+                self._rewarded = False
+                self._success_time = None
+                return TaskResult(
+                    success=False,
+                    terminated=True,
+                    truncated=False,
+                    reason="DEADLINE",
+                    reward_events=(),
+                )
+            return TaskResult(
+                success=True,
+                terminated=True,
+                truncated=False,
+                reason="TASK_SUCCESS",
+                reward_events=((offset, 1.0),),
+            )
+        if elapsed >= self.deadline:
+            return TaskResult(
+                success=False,
+                terminated=True,
+                truncated=False,
+                reason="DEADLINE",
+                reward_events=(),
+            )
         return TaskResult(
-            success=bool(self._rewarded),
-            terminated=terminated,
-            truncated=truncated,
-            reason=reason,
-            reward_events=tuple(reward_events),
+            success=False,
+            terminated=False,
+            truncated=False,
+            reason="CONTINUE",
+            reward_events=(),
         )

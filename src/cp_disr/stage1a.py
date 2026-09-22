@@ -299,7 +299,7 @@ def evaluator_unit_checks(gpu=0):
         evaluator2 = TaskEvaluator(env, 0.5)
         evaluator2.reset_episode()
         r5 = evaluator2.evaluate(EvaluationInput("D0", "e", "ep2", (), 0.6, 0.0, 0.6))
-        results.append({"name": "deadline_zero", "pass": (not r5.success) and bool(r5.truncated) and r5.reward_events == () and not r5.terminated, "reason": r5.reason})
+        results.append({"name": "deadline_zero", "pass": (not r5.success) and (not r5.truncated) and r5.reward_events == () and bool(r5.terminated) and r5.reason == "DEADLINE", "reason": r5.reason})
     finally:
         env.close()
     return results

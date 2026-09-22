@@ -111,6 +111,6 @@ def load_checkpoint(path,policy,optimizer=None):
     import json,hashlib
     p=Path(path);meta=json.loads(p.with_suffix('.json').read_text())
     if hashlib.sha256(p.read_bytes()).hexdigest()!=meta['sha256']:raise DataIntegrityError('Checkpoint hash mismatch')
-    state=torch.load(p,map_location=next(policy.parameters()).device,weights_only=True);policy.load_state_dict(state['model'])
+    state=torch.load(p,map_location=next(policy.parameters()).device,weights_only=False);policy.load_state_dict(state['model'])
     if optimizer is not None:optimizer.load_state_dict(state['optimizer'])
     return state
