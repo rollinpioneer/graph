@@ -30,10 +30,11 @@ def main(argv=None):
         "validate-d0-cache",
         "stage-1a-preflight",
         "stage-1a-run",
+        "stage-2a-p0",
     )
     for name in core:
         sp = sub.add_parser(name)
-        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run"):
+        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-2a-p0"):
             sp.add_argument("--gpu", type=int, default=0)
         if name == "stage-1a-preflight":
             sp.add_argument("--all-p0", action="store_true")
@@ -126,6 +127,10 @@ def main(argv=None):
             return 0
         if a.command == "validate-evaluator":
             print(canonical(stage1a.cmd_validate_evaluator(root, gpu=gpu)))
+            return 0
+        if a.command == "stage-2a-p0":
+            from . import stage2a_p0
+            print(canonical(stage2a_p0.cmd_stage_2a_p0(root, gpu=gpu)))
             return 0
         if a.command == "stage-1a-preflight":
             print(canonical(stage1a.cmd_stage_1a_preflight(root, gpu=gpu, resume=bool(getattr(a, "resume_p0", False)))))

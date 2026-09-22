@@ -101,7 +101,7 @@ class RuntimeBundle:
         env.refresh_perception = lambda e=env, p=self.perception: p.infer(e.public_observation())
         self.verifier = FactVerifier(env)
         deadline = float(spec.__dict__.get("deadline", 90.0))
-        self.evaluator = TaskEvaluator(env, deadline)
+        self.evaluator = TaskEvaluator(env, deadline, task_id=self.task_id)
         self.evaluator.reset_episode()
         self.executor = _Executor(SkillExecutor(env, safety, clock))
         cache = self.caches.get(case_id)
@@ -184,7 +184,7 @@ def create_runtime(manifest: dict):
         observations=ObservationProvider(env, clock),
         perception=PerceptionAdapter(env),
         verifier=FactVerifier(env),
-        evaluator=TaskEvaluator(env, deadline),
+        evaluator=TaskEvaluator(env, deadline, task_id='D0'),
         safety=safety,
         clock=clock,
         snapshot_builder=SnapshotBuilder(template, (), env, clock, deadline),
@@ -196,5 +196,112 @@ def create_runtime(manifest: dict):
     return bundle
 
 
+
+TASK_OBJECTS = {
+    "D0": {"target": "object", "second_object": "object", "container": "container", "buffer": "buffer"},
+    "T_A": {"target": "object", "second_object": "object", "container": "container", "buffer": "buffer"},
+    "T_C": {"target": "object", "interferer": "object", "container": "container", "buffer": "buffer"},
+}
+TASK_GOALS = {
+    "D0": ("p:Inside:target:container",),
+    "T_A": ("p:Inside:target:container", "p:Inside:second_object:container"),
+    "T_C": ("p:Inside:target:container",),
+}
+TASK_SECOND_ROLE = {"D0": "second_object", "T_A": "second_object", "T_C": "interferer"}
+
+
+def _ground_contracts_for(contract_path, timeouts, objects):
+    doc = _read(contract_path)
+    names = [c["name"] for c in doc["contracts"]]
+    if "MOVE" in names:
+        raise BindingError("Stage 2A runtime registry must not include MOVE; use PICK+PLACE_BUFFER")
+    for c in doc["contracts"]:
+        c["timeout_seconds"] = float(timeouts[c["name"]])
+        c["controller_ref"] = f"src/cp_disr/platforms/libero/skill_executor.py::{c['name']}"
+        c["verifier_ref"] = "src/cp_disr/platforms/libero/verifier.py"
+        c["verification"] = ["rgb_depth_postcondition"]
+        if not isinstance(c.get("provenance"), str) or "MUST" in str(c.get("provenance")):
+            c["provenance"] = "stage-2a-p0-runtime"
+    reg = Registry(doc["predicate_types"])
+    for c in doc["contracts"]:
+        reg.register(from_dict(c))
+    return reg.ground(objects)
+
+
+def create_task_runtime(manifest: dict, task_id: str):
+    """Task-parameterized factory shared by T_A/T_C (and optionally D0). No MOVE."""
+    if task_id not in TASK_OBJECTS:
+        raise BindingError("unknown task_id " + task_id)
+    root = Path(manifest["runtime"]["repository_path"])
+    runtime = manifest["runtime"]
+    timeouts = runtime["skill_timeouts"][task_id]
+    deadline = float(runtime["task_deadlines"][task_id])
+    contract_path = root / runtime.get("stage_2a_contract_path", "configs/runtime/stage_2a_contract_registry.yaml")
+    objects = TASK_OBJECTS[task_id]
+    contracts = _ground_contracts_for(contract_path, timeouts, objects)
+    for c in contracts:
+        object.__setattr__(c, "timeout_seconds", float(timeouts[c.name]))
+    goals = tuple(Goal(g, 1) for g in TASK_GOALS[task_id])
+    template = build_template(contracts, goals, PREDICATES, objects)
+    split = _read(root / runtime["task_splits"][task_id])
+    role = TASK_SECOND_ROLE[task_id]
+    cases = {}
+    caches = {}
+    for row in split["train"] + split["dev"]:
+        spec = CaseSpec(
+            case_id=row["case_id"],
+            split=row["split"],
+            seed=int(row["seed"]),
+            target_xy=tuple(row["target_xy"]),
+            second_xy=tuple(row["second_xy"]),
+            container_xy=tuple(row["container_xy"]),
+            buffer_xy=tuple(row["buffer_xy"]),
+            lid_closed=bool(row.get("lid_closed", True)),
+            task_id=task_id,
+            second_role=role,
+            deadline=deadline,
+        )
+        cases[row["case_id"]] = spec
+        if row.get("cache_dir"):
+            caches[row["case_id"]] = root / row["cache_dir"]
+    first = next(iter(cases.values()))
+    env = make_env(first)
+    env.last_perception = {}
+    env.reset()
+    clock = DurationProvider(env)
+    safety = SafetyManager(env)
+    bundle = RuntimeBundle(
+        environment=env,
+        executor=_Executor(SkillExecutor(env, safety, clock)),
+        observations=ObservationProvider(env, clock),
+        perception=PerceptionAdapter(env),
+        verifier=FactVerifier(env),
+        evaluator=TaskEvaluator(env, deadline, task_id=task_id),
+        safety=safety,
+        clock=clock,
+        snapshot_builder=SnapshotBuilder(template, (), env, clock, deadline),
+        task_id=task_id,
+        template=template,
+        cases=cases,
+        caches=caches,
+    )
+    env.refresh_perception = lambda e=env, p=bundle.perception: p.infer(e.public_observation())
+    return bundle
+
+
+def create_ta_runtime(manifest: dict):
+    return create_task_runtime(manifest, "T_A")
+
+
+def create_tc_runtime(manifest: dict):
+    return create_task_runtime(manifest, "T_C")
+
 def create(manifest: dict):
     return create_runtime(manifest)
+
+
+def create_stage_2a_runtime(manifest: dict):
+    task_id = (manifest.get('runtime') or {}).get('active_task_id')
+    if task_id not in ('T_A', 'T_C'):
+        raise BindingError('stage 2A factory requires runtime.active_task_id in {T_A, T_C}')
+    return create_task_runtime(manifest, task_id)

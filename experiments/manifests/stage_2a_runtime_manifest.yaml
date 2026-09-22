@@ -1,0 +1,115 @@
+manifest_status: STAGE_2A_RUNTIME_BOUND_TRAINING_NOT_STARTED
+execution_host_identity: xushijie@gpu03 (172.19.164.160)
+runtime:
+  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
+  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+  repository_url: git@github.com:rollinpioneer/graph.git
+  git_hash: c17b52fb2d1c5a2362f9ea4fe3b5df43c18ae189
+  simulator_or_robot:
+    platform: LIBERO_robosuite_mujoco
+    libero_commit: 8f1084e3132a39270c3a13ebe37270a43ece2a01
+    robosuite: 1.4.0
+    mujoco: 3.6.0
+    python: /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages
+      reused read-only into .venv-stage0a
+  environment_version: stage-2a-p0
+  task_assets:
+    T_A: src/cp_disr/platforms/libero/d0_env.py
+    T_C: src/cp_disr/platforms/libero/d0_env.py
+    license: assets/cp_disr/LICENSE
+    owned_by: cp_disr_project
+  controller_manifest: experiments/part_1_smoke/stage_1a_p0/controller_manifest.yaml
+  camera:
+    name: agentview
+    width: 128
+    height: 128
+    depth: true
+    fixed: true
+  calibration_manifest: src/cp_disr/platforms/libero/perception.py::camera_calibration
+  perception_checkpoint: cp-disr-d0-rgbd-colorseg-v2
+  verifier_thresholds:
+    min_pixels: 8
+    depth_valid:
+    - 0.05
+    - 4.0
+    color_tol: 0.32
+    held_xy: 0.06
+    held_z: 0.07
+    table_z_tol: 0.05
+    inside_margin: 0.02
+    buffer_margin: 0.03
+    open_offset: 0.08
+    gripper_open: 0.022
+  skill_timeouts:
+    T_A:
+      OPEN: 16.0
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
+    T_C:
+      OPEN: 16.0
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
+  task_deadlines:
+    T_A: 60.0
+    T_C: 60.0
+  actual_interaction_time_unit: seconds
+  reference_skill_seconds_by_task:
+    T_A: 3.7000000000002355
+    T_C: 3.649999999999709
+  task_evaluator_version:
+    T_A: cp-disr-ta-task-evaluator-v1
+    T_C: cp-disr-tc-task-evaluator-v1
+  hardware:
+    host: gpu03
+    cpu_count: 112
+    gpu_inventory:
+    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
+      40960 MiB, 29482 MiB
+    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
+      40960 MiB, 34804 MiB
+    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
+      40960 MiB, 37579 MiB
+    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
+      40960 MiB, 39191 MiB
+    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
+      40960 MiB, 13842 MiB
+    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
+      40960 MiB, 36851 MiB
+    reservation: NOT_RESERVED_FOR_TRAINING
+  gpu_driver: 610.57.04
+  os:
+    distribution: Rocky Linux 10.2
+    kernel: 7.2.2-1.el10.elrepo.x86_64
+    architecture: x86_64
+    container: NOT_APPLICABLE_HOST_EXECUTION
+  safety_authorization: src/cp_disr/platforms/libero/safety.py
+  entrypoints: manifests/entrypoints.yaml
+  task_splits:
+    T_A: configs/splits/T_A_stage_2a.json
+    T_C: configs/splits/T_C_stage_2a.json
+  git_hash_semantics: Pre-revision base; delivery receipt records resulting commit
+  d0_contract_path: configs/contracts/d0_runtime_skills.yaml
+  actual_clock_source: mujoco_sim_data_time
+  clock_semantics: DurationProvider reads env.sim.data.time (MuJoCo simulation seconds).
+    The required binding token remains seconds.
+  stage_2a_contract_path: configs/runtime/stage_2a_contract_registry.yaml
+runtime_factory:
+  module: cp_disr.platforms.libero.runtime_factory
+  factory: create_stage_2a_runtime
+  source_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/runtime_factory.py
+  sha256: a38a2a580fa283219a45396cfbe2c7e0316a967603867045487ab4a4e2a680ce
+vlm_runtime:
+  region: cn-beijing
+  base_http_api_url: https://dashscope.aliyuncs.com/api/v1
+  api_account_authorized: MUST_VERIFY_MODEL_ACCESS
+  fewshot_manifest: MUST_BIND
+  model_access_verification_stage: 0C
+  automatic_fallback_allowed: false
+note: Separate Stage 2A runtime manifest. D0 Stage 1A runtime_manifest.yaml is not
+  modified.

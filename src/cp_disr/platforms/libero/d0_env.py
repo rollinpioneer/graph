@@ -19,6 +19,7 @@ from robosuite.utils.mjcf_utils import new_body, new_geom
 COLORS = {
     "target": np.array([0.85, 0.20, 0.15, 1.0]),
     "second_object": np.array([0.92, 0.72, 0.12, 1.0]),
+    "interferer": np.array([0.10, 0.78, 0.78, 1.0]),
     "container": np.array([0.18, 0.35, 0.75, 1.0]),
     "lid": np.array([0.55, 0.20, 0.85, 1.0]),
     "buffer": np.array([0.18, 0.72, 0.30, 1.0]),
@@ -45,6 +46,9 @@ class CaseSpec:
     container_xy: tuple[float, float]
     buffer_xy: tuple[float, float]
     lid_closed: bool = True
+    task_id: str = "D0"
+    second_role: str = "second_object"
+    deadline: float = 90.0
 
 
 class D0ManipulationEnv(SingleArmEnv):
@@ -96,8 +100,10 @@ class D0ManipulationEnv(SingleArmEnv):
         )
         arena.set_origin([0, 0, 0])
         self._inject_static_geoms(arena)
+        self.second_role = getattr(self.case, "second_role", "second_object")
+        second_rgba = COLORS.get(self.second_role, COLORS["second_object"])
         self.target = BoxObject(name="target", size=OBJECT_HALF, rgba=COLORS["target"], friction=(1.2, 0.005, 0.0001), density=200)
-        self.second_object = BoxObject(name="second_object", size=OBJECT_HALF, rgba=COLORS["second_object"], friction=(1.2, 0.005, 0.0001), density=200)
+        self.second_object = BoxObject(name=self.second_role, size=OBJECT_HALF, rgba=second_rgba, friction=(1.2, 0.005, 0.0001), density=200)
         self.lid = BoxObject(name="lid", size=LID_HALF, rgba=COLORS["lid"], friction=(1.8, 0.005, 0.0001), density=80)
         self.model = ManipulationTask(
             mujoco_arena=arena,
@@ -160,9 +166,11 @@ class D0ManipulationEnv(SingleArmEnv):
 
     def _setup_references(self):
         super()._setup_references()
+        role = getattr(self, "second_role", getattr(self.case, "second_role", "second_object"))
+        self.second_role = role
         self.obj_body_id = {
             "target": self.sim.model.body_name2id(self.target.root_body),
-            "second_object": self.sim.model.body_name2id(self.second_object.root_body),
+            role: self.sim.model.body_name2id(self.second_object.root_body),
             "lid": self.sim.model.body_name2id(self.lid.root_body),
         }
 
@@ -239,9 +247,10 @@ class D0ManipulationEnv(SingleArmEnv):
         def pos(name):
             return np.array(self.sim.data.body_xpos[self.obj_body_id[name]], dtype=float)
 
+        role = getattr(self, "second_role", "second_object")
         return {
             "target": pos("target"),
-            "second_object": pos("second_object"),
+            role: pos(role),
             "lid": pos("lid"),
             "container": np.array(self.container_center, dtype=float),
             "buffer": np.array(self.buffer_center, dtype=float),

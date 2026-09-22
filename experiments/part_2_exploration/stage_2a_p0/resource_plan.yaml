@@ -1,0 +1,13 @@
+max_parallel_jobs: 2
+gpu_policy: exclusive_per_job
+per_run_transition_cap: 65536
+per_run_update_cap: 64
+crash_recovery: resume_from_last_complete_checkpoint_without_overwriting_attempt
+attempt_policy: never_overwrite_existing_attempt_dir
+rng_resume: true
+optimizer_resume: true
+prior_resume: true
+case_scheduler_resume: true
+raw_log_archive: true
+p0_learning: false
+note: Formal Stage 2A jobs are not started in P0.

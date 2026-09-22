@@ -1,0 +1,169 @@
+predicate_types:
+  GripperEmpty: []
+  Held:
+  - object
+  OnTable:
+  - object
+  Open:
+  - container
+  Inside:
+  - object
+  - container
+  AtBuffer:
+  - object
+  - buffer
+contracts:
+- name: OPEN
+  arguments:
+  - name: ?c
+    type: container
+  initiation:
+    pre_pos:
+    - predicate: GripperEmpty
+      arguments: []
+    pre_neg: []
+  nominal:
+    add:
+    - predicate: Open
+      arguments:
+      - ?c
+    delete: []
+    unknown: []
+  verification:
+  - rgb_depth_postcondition
+  failures:
+  - EXECUTION_FAILED
+  - VERIFICATION_FAILED
+  - TIMEOUT
+  interrupts:
+  - SAFETY_STOP
+  - CRITICAL_FACT_LOST
+  timeout_seconds: 16.0
+  controller_ref: src/cp_disr/platforms/libero/skill_executor.py::OPEN
+  verifier_ref: src/cp_disr/platforms/libero/verifier.py
+  provenance: stage-2a-p0-runtime
+  version: stage-2a-p0
+- name: PICK
+  arguments:
+  - name: ?o
+    type: object
+  initiation:
+    pre_pos:
+    - predicate: GripperEmpty
+      arguments: []
+    - predicate: OnTable
+      arguments:
+      - ?o
+    pre_neg: []
+  nominal:
+    add:
+    - predicate: Held
+      arguments:
+      - ?o
+    delete:
+    - predicate: GripperEmpty
+      arguments: []
+    - predicate: OnTable
+      arguments:
+      - ?o
+    unknown: []
+  verification:
+  - rgb_depth_postcondition
+  failures:
+  - EXECUTION_FAILED
+  - VERIFICATION_FAILED
+  - TIMEOUT
+  interrupts:
+  - SAFETY_STOP
+  - CRITICAL_FACT_LOST
+  timeout_seconds: 9.0
+  controller_ref: src/cp_disr/platforms/libero/skill_executor.py::PICK
+  verifier_ref: src/cp_disr/platforms/libero/verifier.py
+  provenance: stage-2a-p0-runtime
+  version: stage-2a-p0
+- name: PLACE
+  arguments:
+  - name: ?o
+    type: object
+  - name: ?c
+    type: container
+  initiation:
+    pre_pos:
+    - predicate: Held
+      arguments:
+      - ?o
+    - predicate: Open
+      arguments:
+      - ?c
+    pre_neg: []
+  nominal:
+    add:
+    - predicate: Inside
+      arguments:
+      - ?o
+      - ?c
+    - predicate: GripperEmpty
+      arguments: []
+    delete:
+    - predicate: Held
+      arguments:
+      - ?o
+    unknown: []
+  verification:
+  - rgb_depth_postcondition
+  failures:
+  - EXECUTION_FAILED
+  - VERIFICATION_FAILED
+  - TIMEOUT
+  interrupts:
+  - SAFETY_STOP
+  - CRITICAL_FACT_LOST
+  timeout_seconds: 8.0
+  controller_ref: src/cp_disr/platforms/libero/skill_executor.py::PLACE
+  verifier_ref: src/cp_disr/platforms/libero/verifier.py
+  provenance: stage-2a-p0-runtime
+  version: stage-2a-p0
+- name: PLACE_BUFFER
+  arguments:
+  - name: ?o
+    type: object
+  - name: ?b
+    type: buffer
+  initiation:
+    pre_pos:
+    - predicate: Held
+      arguments:
+      - ?o
+    pre_neg: []
+  nominal:
+    add:
+    - predicate: AtBuffer
+      arguments:
+      - ?o
+      - ?b
+    - predicate: GripperEmpty
+      arguments: []
+    delete:
+    - predicate: Held
+      arguments:
+      - ?o
+    unknown: []
+  verification:
+  - rgb_depth_postcondition
+  failures:
+  - EXECUTION_FAILED
+  - VERIFICATION_FAILED
+  - TIMEOUT
+  interrupts:
+  - SAFETY_STOP
+  - CRITICAL_FACT_LOST
+  timeout_seconds: 8.0
+  controller_ref: src/cp_disr/platforms/libero/skill_executor.py::PLACE_BUFFER
+  verifier_ref: src/cp_disr/platforms/libero/verifier.py
+  provenance: stage-2a-p0-runtime
+  version: stage-2a-p0
+move_runtime_bound: false
+move_decision: REJECTED_FOR_STAGE_2A
+move_alternative:
+- PICK
+- PLACE_BUFFER

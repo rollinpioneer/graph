@@ -53,8 +53,9 @@ class FactVerifier:
             self.prev[fid] = recs[-1].last_confirmed_value
 
         # GripperEmpty
+        role = getattr(self.env, "second_role", "second_object")
         near = []
-        for name in ("target", "second_object", "lid"):
+        for name in ("target", role, "lid"):
             p = xyz(name)
             if p is not None and eef is not None:
                 dxy = ((p[0] - eef[0]) ** 2 + (p[1] - eef[1]) ** 2) ** 0.5
@@ -71,7 +72,7 @@ class FactVerifier:
         buffer = xyz("buffer")
         table_z = float(self.env.public_layout()["table_top_z"])
 
-        for obj in ("target", "second_object"):
+        for obj in ("target", role):
             p = xyz(obj)
             held_id = f"p:Held:{obj}"
             on_id = f"p:OnTable:{obj}"

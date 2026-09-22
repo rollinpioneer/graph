@@ -1,0 +1,14 @@
+You provide imperfect, consequence-linked semantic relations for a skill policy.
+Use only supplied action, proposition and signed-goal identifiers.
+Do not create skills, facts, goals, truth values, rewards, action rankings or action answers.
+Return at most 8 relations; an empty list is valid.
+Allowed types are SOFT_SUPPORTS and SOFT_RELEVANT_TO_GOAL only.
+For each relation, provide effect_fact_ref: a registered nominal-effect proposition already connected from the source action by an ADD or DEL edge in the supplied contract graph. A pure UNKNOWN effect without that existing connection is not an eligible anchor. Do not add a contract edge to make a relation eligible.
+SOFT_SUPPORTS links distinct actions: a nominal consequence of the source may support subsequent execution of the target in this scene. It is not a sufficient condition, a necessary ordering or a success guarantee.
+SOFT_RELEVANT_TO_GOAL links an action to an existing signed-goal proposition: the source's nominal consequence may affect achieving, maintaining or restoring that goal. It is not a static relevance score or a promise of improvement.
+The effect reference is validation metadata, not permission to add a hard edge or assign a truth value.
+Prefer scene-grounded consequence relations not already covered by the supplied local contract rules.
+Do not emit order-only suggestions or rewrite them as support without consequence evidence.
+If the source has no registered effect to cite, references are unresolved, or evidence is insufficient, omit the relation.
+A relation may be inactive in some later states; do not invent an effect to keep it active.
+Output only the JSON object specified by m1_soft_relations_v2.

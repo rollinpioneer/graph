@@ -1,0 +1,30 @@
+version: stage-2a-p0
+schema: executable_skill_ids
+move_runtime_bound: false
+move_decision: REJECTED_FOR_ALL_STAGE_2A_TASKS
+move_alias_of_place_buffer: false
+allowed_schemas:
+  - OPEN
+  - PICK
+  - PLACE
+  - PLACE_BUFFER
+rejected_schemas:
+  - MOVE
+grounded_action_ids:
+  T_A:
+    - a:OPEN:container:v1
+    - a:PICK:target:v1
+    - a:PICK:second_object:v1
+    - a:PLACE:target:container:v1
+    - a:PLACE:second_object:container:v1
+    - a:PLACE_BUFFER:target:buffer:v1
+    - a:PLACE_BUFFER:second_object:buffer:v1
+  T_C:
+    - a:OPEN:container:v1
+    - a:PICK:target:v1
+    - a:PICK:interferer:v1
+    - a:PLACE:target:container:v1
+    - a:PLACE:interferer:container:v1
+    - a:PLACE_BUFFER:target:buffer:v1
+    - a:PLACE_BUFFER:interferer:buffer:v1
+notes: T_C intermediate relocation is PICK(interferer)+PLACE_BUFFER(interferer, buffer). MOVE is not a PLACE_BUFFER alias and is rejected by SkillExecutor.

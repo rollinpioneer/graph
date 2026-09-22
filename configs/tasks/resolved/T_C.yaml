@@ -1,14 +1,7 @@
 task_id: T_C
-task_version: cp-disr-v2.1-r1-candidate
-status: CAPTURE_READY_STAGE_0C_RUNTIME_UNVERIFIED_STAGE_1A
-platform_ref: LIBERO_CANDIDATE_BLOCKED
-platform_type: simulator
-platform_version: LIBERO@8f1084e3132a39270c3a13ebe37270a43ece2a01_dirty_UNFROZEN
-asset_refs:
-  scene_template: assets/cp_disr/scene_template.xml
-  license: assets/cp_disr/LICENSE
-  license_sha256: a52c333754d3af3f766e53e42cad10c565447cc57d0b6c3ec183b33f00474053
-  vlm_upload_allowed: true
+task_version: cp-disr-v2.1-stage-2a-p0
+status: RUNTIME_BOUND_STAGE_2A_NOT_STARTED
+platform_ref: LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
 typed_entities:
   target:
     type: object
@@ -18,75 +11,38 @@ typed_entities:
     type: container
   buffer:
     type: buffer
-object_roles:
-  movable_objects:
-  - target
-  - interferer
-  openable_container: container
-  buffer_region: buffer
-instruction: MUST_BIND_AFTER_TASK_BDDL_AND_CONTROLLER_BINDING
+instruction: Place the red target cube into the openable blue container. The cyan
+  interferer starts between the target and the container and must be relocated with
+  PICK+PLACE_BUFFER; moving it is not itself the goal.
 signed_goals:
 - predicate: Inside
   arguments:
   - target
   - container
   sign: 1
-explicit_constraints:
-- intermediate_relocation
-- real_buffer_required
-- no_text_only_clear_path
 required_skill_schemas:
 - OPEN
 - PICK
 - PLACE
 - PLACE_BUFFER
 grounded_action_ids:
-- a:MOVE:interferer:buffer:v1
-- a:MOVE:target:buffer:v1
 - a:OPEN:container:v1
-- a:PICK:interferer:v1
 - a:PICK:target:v1
-- a:PLACE:interferer:container:v1
+- a:PICK:interferer:v1
 - a:PLACE:target:container:v1
-- a:PLACE_BUFFER:interferer:buffer:v1
+- a:PLACE:interferer:container:v1
 - a:PLACE_BUFFER:target:buffer:v1
-proposition_ids:
-- p:AtBuffer:interferer:buffer
-- p:AtBuffer:target:buffer
-- p:GripperEmpty
-- p:Held:interferer
-- p:Held:target
-- p:Inside:interferer:container
-- p:Inside:target:container
-- p:OnTable:interferer
-- p:OnTable:target
-- p:Open:container
-contract_versions:
-- template-v2.1-1
-predicate_registry_version: CP-DISR-v2.1
-camera_config_ref: experiments/stage_0c_inputs/dev/T_C/scene_00/camera_config.json
-scene_reset_ref: scripts/stage_0c/capture_formal_scenes.py
-scene_generator_ref: scripts/stage_0c/capture_formal_scenes.py
-task_evaluator_ref: MUST_BIND
-controller_ref: MUST_BIND
-verifier_ref: MUST_BIND
+- a:PLACE_BUFFER:interferer:buffer:v1
+move_decision: REJECTED_FOR_ALL_STAGE_2A_TASKS
+move_alternative:
+- PICK
+- PLACE_BUFFER
 structural_signature: intermediate_relocation
-split_policy:
-  formal: dev
-  fewshot: independent_dev
-  test: isolated
-provenance:
-  platform_commit: 8f1084e3132a39270c3a13ebe37270a43ece2a01
-  capture_adapter: src/cp_disr/platforms/libero/scene_capture.py
-  asset_license: assets/cp_disr/LICENSE
-  formal_scene_count: 8
-stage_0c_capture_ready: true
-stage_1a_runtime_ready: false
-contract_registry_ref: configs/contracts/stage_0c_input_skills.json
-controller_binding_status: MUST_BIND_BEFORE_STAGE_1A
-verifier_binding_status: MUST_BIND_BEFORE_STAGE_1A
-task_evaluator_status: MUST_BIND_BEFORE_STAGE_1A
-safety_status: MUST_BIND_BEFORE_STAGE_1A
-timing_status: MUST_BIND_BEFORE_STAGE_1A
-contract_registry_sha256: 3302d70f9d025f974382146767f51038b561a370b288e6c42363a243667d0eb6
-scene_config_examples: experiments/stage_0c_inputs/dev/T_C
+task_evaluator_ref: src/cp_disr/platforms/libero/task_evaluator.py
+controller_ref: src/cp_disr/platforms/libero/skill_executor.py
+verifier_ref: src/cp_disr/platforms/libero/verifier.py
+contract_registry_ref: configs/runtime/stage_2a_contract_registry.yaml
+split_ref: configs/splits/T_C_stage_2a.json
+deadline_seconds: 60.0
+reference_skill_seconds: 3.649999999999709
+stage_2a_runtime_ready: false
