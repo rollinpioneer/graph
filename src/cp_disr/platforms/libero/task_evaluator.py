@@ -41,6 +41,11 @@ class TaskEvaluator:
         inside_z = obj[2] <= float(h["table_top_z"]) + 0.12
         return bool(inside_xy and inside_z and self._lid_away(h))
 
+    def _at_buffer(self, h, name: str) -> bool:
+        obj = h[name]
+        b = h["buffer"]
+        return bool(abs(obj[0] - b[0]) <= 0.06 and abs(obj[1] - b[1]) <= 0.06 and obj[2] <= float(h["table_top_z"]) + 0.10)
+
     def _second_role(self) -> str:
         return getattr(self.env, "second_role", getattr(getattr(self.env, "case", None), "second_role", "second_object"))
 
@@ -48,6 +53,8 @@ class TaskEvaluator:
         h = self.env.hidden_truth()
         if self.task_id == "T_A":
             return self._inside(h, "target") and self._inside(h, self._second_role())
+        if self.task_id == "T_B":
+            return self._inside(h, "target") and self._at_buffer(h, self._second_role())
         return self._inside(h, "target")
 
     def evaluate(self, value):

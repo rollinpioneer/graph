@@ -103,7 +103,7 @@ def exact_d_ref(manifest, task_id):
 
 
 def physical_cap(manifest, task_id):
-    return 2.0 * float(TRANSITIONS) * exact_d_ref(manifest, task_id)
+    return 1.0 * float(TRANSITIONS) * exact_d_ref(manifest, task_id)
 
 
 def model_kwargs(template, method, task_id):

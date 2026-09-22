@@ -1,0 +1,27 @@
+{
+  "stage": "0B",
+  "plan_version": "1.1",
+  "method_version": "2.1.1",
+  "document_version": "3.1",
+  "status": "PASS",
+  "execution_reason": null,
+  "git_hash": "6141e47212671526de1e6bb86699f20484ecfb24",
+  "started_at": "2026-09-22T11:09:07Z",
+  "completed_at": "2026-09-22T11:09:25Z",
+  "duration_seconds": 18.582458972930908,
+  "pytest_returncode": 0,
+  "ignored": [
+    "tests/test_deadline_semantics.py"
+  ],
+  "ignore_reason": "Imports robosuite at collection time; not a Method 2.1.1 invariant. Production deadline checks remain in runtime/evaluator code.",
+  "new_rl_runs": 0,
+  "added_v211_invariants": [
+    "B1-K no successor / zero prior input",
+    "A_CAT empty-prior exact-zero residual",
+    "B0 candidate permutation",
+    "Actor ignores episode prefix weights when actor_episode_discount_weight=false",
+    "Gamma units are seconds via suite H"
+  ],
+  "old_stage_status_path_unmodified": "experiments/stage_status/stage_0b.json",
+  "log": "runs/stage_0b/pytest.log"
+}

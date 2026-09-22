@@ -1,0 +1,65 @@
+stage: 3A
+name: Four-view Concatenation Ablation
+part: 3
+method_version: 2.1.1
+plan_version: '1.1'
+phase: pilot_then_explicit_completion
+preconditions: pilot需2A TC Full；completion需2B匹配control
+methods:
+- A_CAT
+tasks:
+- T_C
+seeds:
+- 0
+- 1
+- 2
+profile: core
+evaluation_episodes: 20
+purpose: 核心pure-interaction检验；Full只引用匹配control。
+pass_stop_rule: 先pilot seed0一run，独立停止；明确completion后补seed1/2两run。CAT更好不是无效实验。
+extra: 必须使用C−C0的非线性成对读出；不是F(C)−F(0)；不强制CAT空patch为0。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows:
+- planned_id: v11_3A_T_C_A_CAT_s0
+  stage: 3A
+  phase: first_pause
+  task: T_C
+  method: A_CAT
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2A_T_C_Full_s0
+- planned_id: v11_3A_T_C_A_CAT_s1
+  stage: 3A
+  phase: seed_completion
+  task: T_C
+  method: A_CAT
+  seed: 1
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s1
+- planned_id: v11_3A_T_C_A_CAT_s2
+  stage: 3A
+  phase: seed_completion
+  task: T_C
+  method: A_CAT
+  seed: 2
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s2
+profile_values:
+  max_transitions: 65536
+  max_updates: 64
+  eval_interval_transitions: 8192
+  dev_episodes: 20

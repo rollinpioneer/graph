@@ -1,0 +1,496 @@
+plan_version: '1.1'
+method_version: 2.1.1
+document_version: '3.1'
+date: '2026-09-22'
+method_manifest: interfaces/paper_method_manifest.yaml
+runtime_manifest: interfaces/runtime_manifest.template.yaml
+auto_advance: false
+profiles:
+  smoke:
+    max_transitions: 16384
+    max_updates: 16
+    eval_interval_transitions: 4096
+    dev_episodes: 10
+  core:
+    max_transitions: 65536
+    max_updates: 64
+    eval_interval_transitions: 8192
+    dev_episodes: 20
+duration_discount:
+  rule: Gamma=2^(-duration_seconds/H)
+  suite_half_life: max family median reference success duration
+  reference_successes_target: 5
+  reference_attempts_max: 10
+  half_life_seconds: MUST_BIND
+  same_H_all_compared_methods: true
+  use_test_for_H: false
+task_gate:
+  uniform_episodes: 100
+  extend_if_successes_at_most: 2
+  max_uniform_episodes: 200
+  contract_aware_diagnostic_max: 50
+  hard_success_rate_threshold: null
+  success_count_practical_green: 3
+  green_min_initial_cases: 2
+  not_a_learnability_theorem: true
+core_families:
+- T_B
+- T_C
+stages:
+- stage: 0A
+  name: Environment, Interface and Time Binding
+  part: 0
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 原source可读且目标执行已获授权
+  methods: []
+  tasks:
+  - D0
+  - T_B
+  - T_C
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 绑定真实基础设施，并完成时间reference校准。
+  pass_stop_rule: 缺实际安全/资产/入口/软件则BLOCKED；生成文档不等于目标机通过。
+  extra: 每训练family最多10次reference尝试目标5个合法成功，确定H及d_ref；不是RL/BC数据。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 0B
+  name: Production Mathematical and Interface Invariants
+  part: 0
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 0A运行profile可用
+  methods: []
+  tasks:
+  - synthetic_fixtures
+  seeds:
+  - 0
+  - 1
+  - 2
+  profile: null
+  evaluation_episodes: 0
+  purpose: 生产实现验收，而不是本包代数示例。
+  pass_stop_rule: 必须通过所有硬权限与目标不变量；float容差不能掩盖事实污染。
+  extra: 原v3测试族全部保留；新增B1-K无后继、CAT空prior同输入anchor、Full空patch且CAT可不为0、S恒等式、B0候选重排、Actor无prefix、H单位、Q候选集合间接梯度核验。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 0C
+  name: Frozen VLM Cache Sanity
+  part: 0
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 0A/0B；实际API与初始图片已绑定
+  methods: []
+  tasks:
+  - D0
+  - T_B
+  - T_C
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 24个真实development scene，每family8个；核验格式/ID/效果引用/冗余与空率。
+  pass_stop_rule: 原始可空，不用语义重试补边；传输失败不是自愿空prior；全空则先验增量组仅标无信息。
+  extra: 最多一次格式/传输重试；本轮不改prompt/schema。无人工gold替换。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 0D
+  name: Reward Exposure and Decision Structure
+  part: 0
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 0A/0B；0C产物可供关系统计
+  methods:
+  - UniformMaskedRandom
+  - ContractAwareRandom_diagnostic
+  tasks:
+  - T_B
+  - T_C
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 检查稀疏奖励是否暴露，不建立5%学习定理。
+  pass_stop_rule: 100episode，≤2成功扩至200；仍低则最多50contract-aware。至少3成功/2case为工程绿灯；1–2可带注释先smoke；0则有限核查，硬失败仅安全/接口/不可达。
+  extra: '# Stage 0D — Reward Exposure & Decision-Structure Audit
+
+
+    ## 目的和边界
+
+
+    不再采用“random success必须≥5%”硬门槛。随机策略成功是当前初始化、deadline、动作分支和执行器下的**奖励暴露代理**，不是PPO可学习性的必要或充分条件。检查在合法仿真/受限技能接口内进行；真实机器人若未获安全授权，BLOCKED，不以随机探索之名绕过安全。
+
+
+    ## 运行合同
+
+
+    每个启用训练family，从预留dev/preflight池均匀有放回采样初始化，使用独立seed流，合法candidate上uniform采样。先100个完整episode；若有效成功≤2，扩至200；若在100时已≥3且覆盖至少2个初始case，不再扩。保留计划数、有效数、基础设施异常数与实际case分布，不能把失败删掉。
+
+
+    若200个仍≤2成功，最多另跑50个**contract-aware random**诊断：在合法且名义patch非空候选上uniform采样；该集合为空时回到全部合法候选。它只是检查大量空patch/无效重复是否淹没探索，不声称其最优或总比uniform强，特别观察动作的空patch可能有真正价值。不用VLM评分、最优路径、Q或隐藏正确动作；不把诊断数据送入PPO/BC。
+
+
+    ## 判断
+
+
+    - **PASS（工程暴露充分）：**默认至少3次真实成功且至少2case，存在合法恢复、至少两个真正有后果差异的选择点，关键日志完整；3不是理论阈值。
+
+    - **PASS_WITH_NOTES（低暴露）：**1–2次成功或集中单case，但已有独立成功reference和合法任务路径。允许先进行单seed smoke，不启动多seed矩阵；不称“不可学”。
+
+    - **NEEDS_TASK_REVIEW：**uniform200和可选contract-aware50仍无成功，且重复失败原因明确；用stage status=NEEDS_RERUN加该reason。暂停扩主训练，完成一轮有限任务/接口核查。
+
+    - **BLOCKED：**安全/观测/奖励/合同错误、没有合法可执行成功路径或现实资源未绑定。只阻塞执行，不阻塞论文写作。
+
+
+    若独立同分布Bernoulli近似适用，0/200的单侧95%成功率上界约为1.49%，不是0；若p=.01，100次全无成功的概率约36.6%，200次仍约13.4%。因此固定5%会错误排除部分可学习任务。实际相关初始化/非独立执行时不能把上述区间当严格统计保证。
+
+
+    ## 必填观测
+
+
+    success有效数/分母与初始case覆盖；每episode决策点数、≥2合法候选比例、平均/分位branching factor、强制动作比例、空patch比例、重复loop/失败类型、成功/失败耗时；raw
+    prior非空率与关系数；改变Fact到目标路径覆盖；实际非空prior+changed-patch中DP RMS与residual，后两者来自单独未训练forward而非策略成绩。
+
+
+    候选数≥2仅表示选择机会，不能证明长期后果不同。有效结构决策由任务定义、已注册可执行路径和受控开发执行证据确认，不由VLM或Full价值估计充当真值。
+
+
+    ## 有限调整顺序
+
+
+    检查reward/flags/time→合同/mask/控制器/观测绑定→恢复技能与无意义分支→deadline是否留了真实恢复机会→减少一项无关决策或使用较短的训练模板。benchmark固定deadline不擅改；自定义任务默认deadline=2*T_ref，仅允许在主训练前一次改至3*T_ref并记录版本、重跑0D。安全阈值与单技能超时不放宽。仍困难时如实标低暴露/暂不启用该family，不直接加shaping、专家暖启动或复杂课程。
+
+
+    ## 产物及停止
+
+
+    输出`stage_0d_summary.md`、`random_episode_log.jsonl`、`reward_exposure.csv`、`decision_structure.csv`、`task_revision_log.jsonl`、status
+    JSON。日志中preflight/source标签与RL训练分离。完成100/200及条件性50的明确预算后停止，不自动进入下一Stage。
+
+    '
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 1A
+  name: One-task Smoke
+  part: 1
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 0A–0D的相关输入可用；低暴露允许single-seed而非强制5%
+  methods:
+  - B2
+  - Full
+  tasks:
+  - D0
+  seeds:
+  - 0
+  profile: smoke
+  evaluation_episodes: 10
+  purpose: 完整运行两模型，获得真实成功与非空changed-prior响应见证。
+  pass_stop_rule: 最早8updates后可结束；上限16updates。没有成功或prior永久失活转有限1B；不要求Full>B2。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 1B
+  name: Conditional Minimal Tuning
+  part: 1
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 真实1A报告与诊断；先修实现
+  methods:
+  - affected_method_only
+  tasks:
+  - D0
+  seeds:
+  - 0
+  profile: conditional
+  evaluation_episodes: 10
+  purpose: 最多6个额外job的单项优化，不为赢baseline调参。
+  pass_stop_rule: 1A正常则PASS_WITH_NOTES/SKIPPED；6job耗尽停止，不自动第7个。
+  extra: 参数范围/顺序见共同合同；任何改变profile必须传递给配对消融。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 2A
+  name: Core Ladder Pilot
+  part: 2
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 1A或1B具备pipeline与初步学习可用性；TB/TC同suite H
+  methods:
+  - B0
+  - B1-K
+  - B2
+  - Full
+  tasks:
+  - T_B
+  - T_C
+  seeds:
+  - 0
+  profile: core
+  evaluation_episodes: 20
+  purpose: 8个单seed主阶梯，早产出真实Results草稿。
+  pass_stop_rule: 正常负/近似结果不失败；共享输入或预算不一致需修；完成后停，不自动三seed。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 2B
+  name: Core Ladder Seed Completion
+  part: 2
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 2A实际报告；同任务/config/hash，或明确受影响重跑清单
+  methods:
+  - B0
+  - B1-K
+  - B2
+  - Full
+  tasks:
+  - T_B
+  - T_C
+  seeds:
+  - 1
+  - 2
+  profile: core
+  evaluation_episodes: 20
+  purpose: 补16个新运行，与已匹配seed0构成3seed；不另建Presentation36run。
+  pass_stop_rule: 数据完整即可PASS；发生开发profile变更不能跨profile汇总。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 2C
+  name: Main Figures and Tables
+  part: 2
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 主阶梯真实source齐全；3A可按未完成标记
+  methods: []
+  tasks:
+  - T_B
+  - T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  profile: null
+  evaluation_episodes: 0
+  purpose: 生成主表与曲线，source可重算，不新训练/评价。
+  pass_stop_rule: 所有数字来自原始episode，NA/未跑不能填0；图与表的split和seed标清。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 3A
+  name: Four-view Concatenation Ablation
+  part: 3
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: pilot_then_explicit_completion
+  preconditions: pilot需2A TC Full；completion需2B匹配control
+  methods:
+  - A_CAT
+  tasks:
+  - T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  profile: core
+  evaluation_episodes: 20
+  purpose: 核心pure-interaction检验；Full只引用匹配control。
+  pass_stop_rule: 先pilot seed0一run，独立停止；明确completion后补seed1/2两run。CAT更好不是无效实验。
+  extra: 必须使用C−C0的非线性成对读出；不是F(C)−F(0)；不强制CAT空patch为0。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 3B
+  name: Auxiliary Candidate Q Ablation
+  part: 3
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: Full TC三个匹配训练seed已存在
+  methods:
+  - A_Q
+  tasks:
+  - T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  profile: core
+  evaluation_episodes: 20
+  purpose: 只置lambdaQ0，检验保留Q的增量。
+  pass_stop_rule: 结果小/无差异可PASS_WITH_NOTES；只改loss系数，其他配置匹配。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 3C
+  name: Conditional Bound Ablation
+  part: 3
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 明确要声明bounded的经验收益；匹配Full存在
+  methods:
+  - A_B
+  tasks:
+  - T_C
+  seeds:
+  - 0
+  - 1
+  - 2
+  profile: core
+  evaluation_episodes: 20
+  purpose: 只去tanh，不用clip/normalization补回界。
+  pass_stop_rule: 无经验bounded claim则不运行；不为数学界必加训练。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 4A
+  name: Same-snapshot Actor Dependence
+  part: 4
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 冻结Full/CAT实际checkpoint及可重建snapshot
+  methods:
+  - Full
+  - A_CAT
+  tasks:
+  - T_C
+  seeds:
+  - paired_existing_seed
+  profile: null
+  evaluation_episodes: 20
+  purpose: ≤100snapshot敏感性，及每选中条件20episode独立闭环。
+  pass_stop_rule: JS非零只说明敏感；success下降/上升均报告，不预设结构有效。
+  extra: DP置零适用于Full；CAT移除prior用C=C0，不把不存在DP入口强行置零。Full的DP0/remove同状态应一致；DK0重算全部下游；shuffle仅合法candidate整块差分。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 4B
+  name: Missing-prior and Perturbation Evaluation
+  part: 4
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: Full/CAT同训练seed实际checkpoint；编辑case预冻结
+  methods:
+  - Full
+  - A_CAT
+  tasks:
+  - T_C
+  seeds:
+  - paired_existing_seed
+  profile: null
+  evaluation_episodes: 25
+  purpose: 四常规条件+适用Irrelevant；不重新训练。
+  pass_stop_rule: No-prior不叫完全OOD；swap无合法target则NA；对每适用subset重算Original。
+  extra: 默认Original/NoPrior/Deletion/TargetSwap，25case/condition/model；Irrelevant有原定义独立证据再加，满8条则NA；保存正反向edge同步。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 5A
+  name: One Compositional Holdout
+  part: 5
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 已有Full/B2 source checkpoint；未见非同构组合但技能/predicate已见
+  methods:
+  - Full
+  - B2
+  tasks:
+  - one_bound_holdout
+  seeds:
+  - paired_existing_seed
+  profile: null
+  evaluation_episodes: 30
+  purpose: 仅一种组合泛化，不混视觉/对象数/机器人shift。
+  pass_stop_rule: 无实际source或新组合仅重命名则NOT_APPLICABLE，不自动增训。
+  extra: 每模型ID/OOD各30；case/cache只读初始合法输入，不能用test回报选prompt。
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 6A
+  name: Raw Archive Audit
+  part: 6
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 至少一个真实运行或阶段阻塞记录
+  methods: []
+  tasks: []
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 保留全部真实失败/续训/弃用source和hash。
+  pass_stop_rule: 找不到源数据就标缺失，不能生成假记录。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 6B
+  name: Private Paper View
+  part: 6
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 6A索引及真实source
+  methods: []
+  tasks: []
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 选择illustrative内容与所选seed必须显式标记，不替代主表完整3seed。
+  pass_stop_rule: 所有artifact可追溯run/seed/ckpt/split/source/metric/smoothing/reason。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+- stage: 6C
+  name: Final Result Package
+  part: 6
+  method_version: 2.1.1
+  plan_version: '1.1'
+  phase: single
+  preconditions: 6A/6B及被引用真实图表
+  methods: []
+  tasks: []
+  seeds: []
+  profile: null
+  evaluation_episodes: 0
+  purpose: 图表、case与claim mapping，不在打包阶段偷偷补训练。
+  pass_stop_rule: 无结果只交PRELIMINARY定义包；任何未跑经验claim删去或待验证。
+  extra: ''
+  auto_advance: false
+  status: NOT_STARTED
+  new_results_claimed: false
+run_counts:
+  first_pause: 11
+  three_seed_core_and_CAT: 29
+  including_Q: 32
+  optional_bound_total: 35
+mandatory_runs_first_phase:
+- 1A
+- 2A
+- 3A_pilot
+require_all_stages_for_writing: false

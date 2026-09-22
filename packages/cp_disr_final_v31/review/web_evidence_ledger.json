@@ -1,0 +1,206 @@
+{
+  "checked_date": "2026-09-22",
+  "scope": "全文可访问并核对相关方法段，不表示逐定理复证或实验复现；摘要条目不得被写成已精读全文。",
+  "entries": [
+    {
+      "id": "W01",
+      "title": "Nota & Thomas, Is the Policy Gradient a Gradient?",
+      "venue_version": "AAMAS 2020",
+      "url": "https://arxiv.org/html/1906.07073",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "外层折扣省略与起点折扣目标不等价；不能据此要求所有实现必须加权，也不能称去权仍无偏。"
+    },
+    {
+      "id": "W02",
+      "title": "Stable-Baselines3 PPO source",
+      "venue_version": "version 2.7.0",
+      "url": "https://stable-baselines3.readthedocs.io/en/v2.7.0/_modules/stable_baselines3/ppo/ppo.html",
+      "verification": "OFFICIAL_SOURCE_CHECKED",
+      "supports": "clipped surrogate使用mean而无episode-prefix权重；不据此声称它原生支持本项目GRU/动态候选/SMDP。"
+    },
+    {
+      "id": "W03",
+      "title": "Ståhlberg, Bonet & Geffner, Learning General Policies with Policy Gradient Methods",
+      "venue_version": "KR 2023",
+      "url": "https://proceedings.kr.org/2023/63/kr2023-0063-stahlberg-et-al.pdf",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "GNN state-transition classifier与策略梯度/actor-critic；arXiv2512.19366是后续deposit，不把编号年份当会议年份。"
+    },
+    {
+      "id": "W04",
+      "title": "Counterfactual Quotient Models: Learning What Actions Change, Not What the World Does",
+      "venue_version": "arXiv 2608.22092, 2026",
+      "url": "https://arxiv.org/html/2608.22092",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "行动间中心化的未来量/同步反事实rollout目标；不是本项目prior×nominal编码2×2；其定理不移植。"
+    },
+    {
+      "id": "W05",
+      "title": "Yan et al., Efficient Reinforcement Learning with Large Language Model Priors",
+      "venue_version": "ICLR 2025; arXiv 2410.07927",
+      "url": "https://arxiv.org/html/2410.07927",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "状态条件化动作先验p(a|s)参与KL/采样/Q；不能称为状态不变static prior。"
+    },
+    {
+      "id": "W06",
+      "title": "Guiding Reinforcement Learning Using Uncertainty-Aware Large Language Models",
+      "venue_version": "arXiv 2411.14457, 2024",
+      "url": "https://arxiv.org/html/2411.14457",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "MC dropout与动态熵调节guidance，并涉及LLM定制/微调；不是本项目固定图对照。"
+    },
+    {
+      "id": "W07",
+      "title": "Large Language Model as a Policy Teacher for Training Reinforcement Learning Agents / LLM4Teach",
+      "venue_version": "IJCAI 2024; arXiv 2311.13373",
+      "url": "https://arxiv.org/html/2311.13373",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "不完美teacher软动作指导/蒸馏与衰减；不作四视图结构交互。"
+    },
+    {
+      "id": "W08",
+      "title": "The Mechanism Matters: When Knowledge Graphs Help Reinforcement Learning",
+      "venue_version": "arXiv 2607.19616, 2026",
+      "url": "https://arxiv.org/html/2607.19616",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "比较feature/mask/shaping及KG质量；有限实验或最优策略不变性不证明本项目坏prior无害。"
+    },
+    {
+      "id": "W09",
+      "title": "Leveraging Approximate Symbolic Models for Reinforcement Learning via Skill Diversity / ASGRL",
+      "venue_version": "ICML 2022",
+      "url": "https://proceedings.mlr.press/v162/guan22c/guan22c.pdf",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "近似符号模型、landmarks、技能多样性；不完美符号知识+RL是已有设定。"
+    },
+    {
+      "id": "W10",
+      "title": "Subgoal Graph-Augmented Planning for LLM-Guided Open-World Reinforcement Learning",
+      "venue_version": "arXiv 2511.20993, 2025",
+      "url": "https://arxiv.org/html/2511.20993",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "子目标图与critique/refinement路径，与固定源关系使用不同。"
+    },
+    {
+      "id": "W11",
+      "title": "Leveraging Pre-trained Large Language Models to Construct and Utilize World Models for Model-based Task Planning",
+      "venue_version": "NeurIPS 2023; arXiv 2305.14909",
+      "url": "https://arxiv.org/html/2305.14909",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "显式规划模型构造、验证/修正、规划；非本项目软关系残差。"
+    },
+    {
+      "id": "W12",
+      "title": "InterPreT: Interactive Predicate Learning from Language Feedback for Generalizable Task Planning",
+      "venue_version": "RSS 2024; arXiv 2405.19758",
+      "url": "https://arxiv.org/html/2405.19758",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "根据交互语言反馈学习谓词与动作模型；不是冻结关系决策利用。"
+    },
+    {
+      "id": "W13",
+      "title": "UniDomain: Pretraining a Unified PDDL Domain from Real-World Demonstrations for Generalizable Robot Task Planning",
+      "venue_version": "arXiv 2507.21545, 2025",
+      "url": "https://arxiv.org/html/2507.21545",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "从示范学习/构造可复用PDDL domain，与soft message edges不同。"
+    },
+    {
+      "id": "W14",
+      "title": "Vision-Language Models Provide Promptable Representations for Reinforcement Learning / PR2L",
+      "venue_version": "arXiv 2402.02651, 2024",
+      "url": "https://arxiv.org/html/2402.02651",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "本轮独立补充；VLM提供语义表示，由RL学其用途，因此非动作指令式VLM+RL并非新领域。"
+    },
+    {
+      "id": "W15",
+      "title": "Set Transformer: A Framework for Attention-based Permutation-Invariant Neural Networks",
+      "venue_version": "ICML 2019",
+      "url": "https://proceedings.mlr.press/v97/lee19d/lee19d.pdf",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "SAB/MAB/PMA集合注意力与置换性质；本项目仅使用标准两层SAB+candidate query适配。"
+    },
+    {
+      "id": "W16",
+      "title": "High-Dimensional Continuous Control Using Generalized Advantage Estimation",
+      "venue_version": "ICLR 2016; arXiv 1506.02438",
+      "url": "https://arxiv.org/html/1506.02438",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "GAE/TD(lambda)偏差方差取舍；one-step并非普遍偏差最小。"
+    },
+    {
+      "id": "W17",
+      "title": "Reinforcement Learning with Unsupervised Auxiliary Tasks / UNREAL",
+      "venue_version": "ICLR 2017; arXiv 1611.05397",
+      "url": "https://arxiv.org/html/1611.05397",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "共享表示的辅助任务是已有原则；并非声称本Q严格复现UNREAL。"
+    },
+    {
+      "id": "W18",
+      "title": "Residual Reinforcement Learning for Robot Control",
+      "venue_version": "ICRA 2019; arXiv 1812.03201",
+      "url": "https://arxiv.org/html/1812.03201",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "本轮独立补充；既有控制+学习残差，区别在本项目logit界与交互输入。"
+    },
+    {
+      "id": "W19",
+      "title": "Modeling Relational Data with Graph Convolutional Networks",
+      "venue_version": "ESWC 2018; arXiv 1703.06103",
+      "url": "https://arxiv.org/html/1703.06103",
+      "verification": "FULL_TEXT_METHOD_CHECKED",
+      "supports": "关系权重共享、basis与aggregation；不是对当前task门控的证明。"
+    },
+    {
+      "id": "W20",
+      "title": "Phasic Policy Gradient",
+      "venue_version": "ICML 2021",
+      "url": "https://proceedings.mlr.press/v139/cobbe21a.html",
+      "verification": "ABSTRACT_OR_OFFICIAL_PAGE",
+      "supports": "辅助阶段与特征共享干扰的背景；未据摘要细节证明当前lambda=0.1无风险。"
+    },
+    {
+      "id": "W21",
+      "title": "Time Limits in Reinforcement Learning",
+      "venue_version": "ICML 2018",
+      "url": "https://proceedings.mlr.press/v80/pardo18a.html",
+      "verification": "ABSTRACT_OR_OFFICIAL_PAGE",
+      "supports": "终止与时间限制处理背景；本项目具体flag定义由规范负责。"
+    },
+    {
+      "id": "W22",
+      "title": "Planning with Learned Object Importance in Large Problem Instances using GNNs / PLOI",
+      "venue_version": "AAAI 2021",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/17421",
+      "verification": "ABSTRACT_OR_OFFICIAL_PAGE",
+      "supports": "对象重要性筛选，不是直接候选后继策略的同义工作。"
+    },
+    {
+      "id": "W23",
+      "title": "LLM+P: Empowering Large Language Models with Optimal Planning Proficiency",
+      "venue_version": "arXiv 2304.11477, 2023",
+      "url": "https://arxiv.org/abs/2304.11477",
+      "verification": "ABSTRACT_OR_OFFICIAL_PAGE",
+      "supports": "自然语言到规划问题/外部planner；不把全部LLM-PDDL都概括为学习新的动作模型。"
+    },
+    {
+      "id": "W24",
+      "title": "Graph Learning for Planning: The Story Thus Far and Open Challenges",
+      "venue_version": "arXiv 2412.02136, 2024",
+      "url": "https://arxiv.org/abs/2412.02136",
+      "verification": "ABSTRACT_OR_OFFICIAL_PAGE",
+      "supports": "只作综述导航，不以综述取代原创论文核验。"
+    },
+    {
+      "id": "W25",
+      "title": "Afterstate RL for Continuous Control（Claude给出的条目）",
+      "venue_version": "NOT_INDEPENDENTLY_CONFIRMED",
+      "url": "https://openreview.net/forum?id=XO944P8prc",
+      "verification": "UNCONFIRMED_ACCESS_BLOCKED",
+      "supports": "访问返回浏览器验证页，本轮未独立确认该题目/作者/正文，不作为已确认核心依据。"
+    }
+  ]
+}

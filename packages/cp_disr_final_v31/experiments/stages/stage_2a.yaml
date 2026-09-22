@@ -1,0 +1,127 @@
+stage: 2A
+name: Core Ladder Pilot
+part: 2
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 1A或1B具备pipeline与初步学习可用性；TB/TC同suite H
+methods:
+- B0
+- B1-K
+- B2
+- Full
+tasks:
+- T_B
+- T_C
+seeds:
+- 0
+profile: core
+evaluation_episodes: 20
+purpose: 8个单seed主阶梯，早产出真实Results草稿。
+pass_stop_rule: 正常负/近似结果不失败；共享输入或预算不一致需修；完成后停，不自动三seed。
+extra: ''
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows:
+- planned_id: v11_2A_T_B_B0_s0
+  stage: 2A
+  phase: first_pause
+  task: T_B
+  method: B0
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_B_B1-K_s0
+  stage: 2A
+  phase: first_pause
+  task: T_B
+  method: B1-K
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_B_B2_s0
+  stage: 2A
+  phase: first_pause
+  task: T_B
+  method: B2
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_B_Full_s0
+  stage: 2A
+  phase: first_pause
+  task: T_B
+  method: Full
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_C_B0_s0
+  stage: 2A
+  phase: first_pause
+  task: T_C
+  method: B0
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_C_B1-K_s0
+  stage: 2A
+  phase: first_pause
+  task: T_C
+  method: B1-K
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_C_B2_s0
+  stage: 2A
+  phase: first_pause
+  task: T_C
+  method: B2
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_2A_T_C_Full_s0
+  stage: 2A
+  phase: first_pause
+  task: T_C
+  method: Full
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+profile_values:
+  max_transitions: 65536
+  max_updates: 64
+  eval_interval_transitions: 8192
+  dev_episodes: 20

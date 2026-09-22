@@ -1,0 +1,55 @@
+{
+  "title": "CP-DISR M1 Soft Relations v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "relations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "m1_soft_relations_v2"
+    },
+    "relations": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "relation_id",
+          "type",
+          "source_ref",
+          "target_ref",
+          "effect_fact_ref"
+        ],
+        "properties": {
+          "relation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "SOFT_SUPPORTS",
+              "SOFT_RELEVANT_TO_GOAL"
+            ]
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect_fact_ref": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Validation metadata: source registered ADD/DEL proposition with an existing matching contract adjacency. Registry checks are required outside JSON Schema."
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

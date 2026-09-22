@@ -1,0 +1,45 @@
+{
+  "execution_reason": "SUPERSEDED_BY_PLAN_V1_1",
+  "verified_at": "2026-09-22T12:23:45Z",
+  "reported_clues": {
+    "repository": "/home/__compress_data/xushijie/graph_cp_disr_v2_1",
+    "reported_branch": "codex/cp-disr-v2.1-stage-2a-exploration",
+    "reported_commit": "6141e47",
+    "reported_orchestrator_pid": 2275072,
+    "reported_gpus": [
+      2,
+      1
+    ]
+  },
+  "actual_head_at_stop": "6141e47212671526de1e6bb86699f20484ecfb24",
+  "new_branch": "codex/cp-disr-method-2.1.1-plan-1.1-migration",
+  "current_head": "6141e47212671526de1e6bb86699f20484ecfb24",
+  "processes": {
+    "orchestrator_2275072": "not_running",
+    "bash_2275069": "not_running",
+    "trainer_2688488": "not_running",
+    "trainer_2726993": "not_running",
+    "watch_2387622": "not_running"
+  },
+  "stop_method": "Verified PIDs dead; wrote STOP_SUPERSEDED_BY_PLAN_V1_1.json; run_matrix.py exits if that file exists. No blind kill of other users. No resume-to-64. No seed1/2 dispatch. Did not start queued T_C Full to complete 8/8 first updates.",
+  "guard_file": "experiments/part_2_exploration/stage_2a/orchestrator/STOP_SUPERSEDED_BY_PLAN_V1_1.json",
+  "old_stage_2a_status": "RUNNING with execution_reason=SUPERSEDED_BY_PLAN_V1_1 (not PASS)",
+  "interrupted_jobs": [
+    {
+      "run_id": "stage2a_T_C_B2_seed0",
+      "last_safe_point": "760 valid transitions, 0 PPO updates, eval update_0.pt only, KeyboardInterrupt inside MuJoCo step"
+    },
+    {
+      "run_id": "stage2a_T_C_Full_seed0",
+      "last_safe_point": "609 valid transitions, 0 PPO updates, eval update_0.pt only, KeyboardInterrupt inside MuJoCo step"
+    }
+  ],
+  "preserved": [
+    "transitions jsonl",
+    "checkpoints present at interrupt",
+    "optimizer/RNG where saved",
+    "logs",
+    "actual consumption"
+  ],
+  "new_profile_rl_runs_this_round": 0
+}

@@ -8,6 +8,9 @@ ROOT = Path("/home/__compress_data/xushijie/graph_cp_disr_v2_1")
 PY = ROOT / ".venv-stage0a/bin/python"
 OUT = ROOT / "experiments/part_2_exploration/stage_2a"
 LOG = OUT / "orchestrator"
+STOP = LOG / "STOP_SUPERSEDED_BY_PLAN_V1_1.json"
+if STOP.exists():
+    raise SystemExit("Old Stage 2A orchestrator superseded by Plan v1.1; refuse dispatch/resume")
 SITE = "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages"
 FIRST = [
     ("T_A", "B0", 0), ("T_A", "B1", 0), ("T_A", "B2", 0), ("T_A", "Full", 0),

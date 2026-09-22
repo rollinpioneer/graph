@@ -1,0 +1,23 @@
+stage: 1B
+name: Conditional Minimal Tuning
+part: 1
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 真实1A报告与诊断；先修实现
+methods:
+- affected_method_only
+tasks:
+- D0
+seeds:
+- 0
+profile: conditional
+evaluation_episodes: 10
+purpose: 最多6个额外job的单项优化，不为赢baseline调参。
+pass_stop_rule: 1A正常则PASS_WITH_NOTES/SKIPPED；6job耗尽停止，不自动第7个。
+extra: 参数范围/顺序见共同合同；任何改变profile必须传递给配对消融。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

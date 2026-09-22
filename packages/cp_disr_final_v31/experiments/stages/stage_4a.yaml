@@ -1,0 +1,24 @@
+stage: 4A
+name: Same-snapshot Actor Dependence
+part: 4
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 冻结Full/CAT实际checkpoint及可重建snapshot
+methods:
+- Full
+- A_CAT
+tasks:
+- T_C
+seeds:
+- paired_existing_seed
+profile: null
+evaluation_episodes: 20
+purpose: ≤100snapshot敏感性，及每选中条件20episode独立闭环。
+pass_stop_rule: JS非零只说明敏感；success下降/上升均报告，不预设结构有效。
+extra: DP置零适用于Full；CAT移除prior用C=C0，不把不存在DP入口强行置零。Full的DP0/remove同状态应一致；DK0重算全部下游；shuffle仅合法candidate整块差分。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

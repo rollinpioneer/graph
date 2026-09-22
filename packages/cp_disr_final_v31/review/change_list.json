@@ -1,0 +1,156 @@
+[
+  {
+    "current_item": "B0",
+    "claude_suggestion": "换两层Set Transformer",
+    "verdict": "接受，定义无显式图而非无关系能力",
+    "change_now": "是",
+    "reason": "用替换而非追加解决弱基线质疑"
+  },
+  {
+    "current_item": "B1",
+    "claude_suggestion": "改current GK-only",
+    "verdict": "接受并精确定义FK(c,0)",
+    "change_now": "是",
+    "reason": "同B2context，避免同时改prior/干预"
+  },
+  {
+    "current_item": "B2",
+    "claude_suggestion": "合同干预",
+    "verdict": "保留",
+    "change_now": "否",
+    "reason": "先验增量与intervention参考"
+  },
+  {
+    "current_item": "Full",
+    "claude_suggestion": "保持主体",
+    "verdict": "保留结构，训练profile升级2.1.1",
+    "change_now": "训练默认改",
+    "reason": "无DP/graph/schema重构"
+  },
+  {
+    "current_item": "A_DD",
+    "claude_suggestion": "降optional",
+    "verdict": "接受",
+    "change_now": "是",
+    "reason": "CAT直接检验完整信息融合"
+  },
+  {
+    "current_item": "A_CAT",
+    "claude_suggestion": "新增必跑",
+    "verdict": "接受，合同重复zero anchor",
+    "change_now": "是",
+    "reason": "替代A_DD，不加配置总数"
+  },
+  {
+    "current_item": "A_Q",
+    "claude_suggestion": "Q降训练机制配消融",
+    "verdict": "接受，Tier2 TC三seed",
+    "change_now": "分阶段",
+    "reason": "检验辅助loss是否值得"
+  },
+  {
+    "current_item": "A_B",
+    "claude_suggestion": "继续必跑之一",
+    "verdict": "修改为conditional Tier3",
+    "change_now": "是",
+    "reason": "代数界本身不需性能归因"
+  },
+  {
+    "current_item": "Random success",
+    "claude_suggestion": ">=5%硬准入",
+    "verdict": "否决硬阈值，改奖励暴露审计",
+    "change_now": "是",
+    "reason": "无理论必要性；1–2%仍可能可学"
+  },
+  {
+    "current_item": "Decision density",
+    "claude_suggestion": "多个真实决策点",
+    "verdict": "接受，区分机会与后果",
+    "change_now": "是",
+    "reason": "candidate数不等于有效选择"
+  },
+  {
+    "current_item": "Gamma",
+    "claude_suggestion": "保留率>=0.3",
+    "verdict": "改suite半衰期H规则",
+    "change_now": "是",
+    "reason": "可解释且所有方法同时间偏好"
+  },
+  {
+    "current_item": "Actor weighting",
+    "claude_suggestion": "prefix=false",
+    "verdict": "接受工程选择，否决精确J等价",
+    "change_now": "是",
+    "reason": "统一empirical surrogate并记录版本"
+  },
+  {
+    "current_item": "effect_fact_ref",
+    "claude_suggestion": "admission constraint",
+    "verdict": "接受metadata定位，否决硬门控/源动作无差异",
+    "change_now": "文字改",
+    "reason": "不改A→A/schema/prompt字节"
+  },
+  {
+    "current_item": "80/20",
+    "claude_suggestion": "保持、无clean",
+    "verdict": "接受，但不能称无任何交互效应",
+    "change_now": "否",
+    "reason": "限定比较协议，不宣称dropout独立收益"
+  },
+  {
+    "current_item": "R-GCN/readout",
+    "claude_suggestion": "4层暂不改",
+    "verdict": "接受，不保证任意长期推理",
+    "change_now": "否",
+    "reason": "先诊断真实瓶颈"
+  },
+  {
+    "current_item": "Task families",
+    "claude_suggestion": "TB/TC优先",
+    "verdict": "接受，以实际任务绑定为准",
+    "change_now": "是",
+    "reason": "两任务足够首轮，不硬补第三"
+  },
+  {
+    "current_item": "Robustness",
+    "claude_suggestion": "五条件",
+    "verdict": "保留四常规＋irrelevant按适用性",
+    "change_now": "评价名改",
+    "reason": "No-prior不是全新缺省条件"
+  },
+  {
+    "current_item": "Seed count",
+    "claude_suggestion": "七配置各3seed",
+    "verdict": "分tier，先11run单seed，再补齐",
+    "change_now": "是",
+    "reason": "早得现象，主对照最终3seed"
+  },
+  {
+    "current_item": "Contribution",
+    "claude_suggestion": "问题/方法/协议三项",
+    "verdict": "改两个方法方面＋数据后的实证发现",
+    "change_now": "是",
+    "reason": "不强凑三项算法或自封协议创新"
+  },
+  {
+    "current_item": "Properties",
+    "claude_suggestion": "null/bound/permutation",
+    "verdict": "接受并补充假设及softmax分母边界",
+    "change_now": "是",
+    "reason": "不比较独立B2，不给CAT错误P2要求"
+  },
+  {
+    "current_item": "Online requery",
+    "claude_suggestion": "会破坏on-policy",
+    "verdict": "否决一般性因果推论，仍不做",
+    "change_now": "文字改",
+    "reason": "记录条件输入即可定义on-policy"
+  },
+  {
+    "current_item": "Novelty",
+    "claude_suggestion": "C2强且未撞车",
+    "verdict": "限于核对范围内未见相同定义",
+    "change_now": "是",
+    "reason": "查全文不等于穷尽首创证明"
+  }
+]

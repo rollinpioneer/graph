@@ -1,0 +1,42 @@
+
+# spawn 2026-09-22T17:50:26 gpu=1 stop=1
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+[stage2a] stage2a_T_C_Full_seed0 eval update0
+Warning: make sure gym is installed if you want to use the GymWrapper.
+[stage2a] stage2a_T_C_Full_seed0 training start target_updates=1 d_ref=3.649999999999709 cap=478412.79999996186
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/__main__.py", line 2, in <module>
+    raise SystemExit(main())
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/cli.py", line 146, in main
+    print(canonical(stage2a_explore.cmd_stage_2a_run(root, a.task, a.method, a.seed, gpu=gpu, max_updates=getattr(a, "max_updates", 64), stop_after_updates=getattr(a, "stop_after_updates", None), resume=bool(getattr(a, "resume", False)))))
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage2a_explore.py", line 755, in cmd_stage_2a_run
+    return train_job(Path(root), task_id, method, int(seed), device, device_name, max_updates=max_updates, stop_after_updates=stop_after_updates, resume=resume)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage2a_explore.py", line 555, in train_job
+    t, result = collector.step(snap)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/collector.py", line 47, in step
+    execution=self.bundle.executor.execute(candidate,capped)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/runtime_factory.py", line 55, in execute
+    raw = self.inner.execute(candidate_id, timeout_seconds)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/skill_executor.py", line 73, in execute
+    self._pick(trace, args[0], timeout_seconds, sim_start)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/skill_executor.py", line 203, in _pick
+    if not self._move_to(trace, grasp, GRIP_OPEN, timeout, sim_start, tag="INTERACT", tol=0.008, max_steps=260):
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/skill_executor.py", line 139, in _move_to
+    self.env.step_osc(dpos, grip, n=1)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/d0_env.py", line 271, in step_osc
+    obs, reward, done, info = super().step(action)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/environments/base.py", line 390, in step
+    self._pre_action(action, policy_step)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/environments/robot_env.py", line 583, in _pre_action
+    robot.control(robot_action, policy_step=policy_step)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/robots/single_arm.py", line 248, in control
+    torques = self.controller.run_controller()
+  File "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/controllers/osc.py", line 337, in run_controller
+    decoupled_force = np.dot(lambda_pos, desired_force)
+KeyboardInterrupt

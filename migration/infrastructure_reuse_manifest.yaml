@@ -1,0 +1,21 @@
+reused:
+  - LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
+  - robosuite 1.4.0 / mujoco 3.6.0 via lerobotpi0 site-packages
+  - .venv-stage0a python for unit tests
+  - DashScope cn-beijing https://dashscope.aliyuncs.com/api/v1 qwen3.8-max-0902
+  - frozen prompt/schema/3 few-shots
+  - D0 8 robosuite Stage-1A VLM caches
+  - T_C 8 Stage-2A VLM caches
+  - skill timeouts OPEN16/PICK9/PLACE8/PLACE_BUFFER8
+not_reused_as_new_results:
+  - old B0 RGCN / old B1-H checkpoints
+  - old actor_episode_discount_weight=true trajectories
+  - old Tcap=2*Ncap*d_ref
+  - T_A family and T_A caches as T_B
+  - old weighted checkpoint selection
+new:
+  - T_B split configs/splits/T_B_stage_0a.json
+  - T_B resolved task configs/tasks/resolved/T_B.yaml
+  - T_B 8 VLM caches under experiments/vlm_cache/plan_v11
+  - suite H from new 0A reference
+  - branch codex/cp-disr-method-2.1.1-plan-1.1-migration

@@ -1,0 +1,52 @@
+stage: 1A
+name: One-task Smoke
+part: 1
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 0A–0D的相关输入可用；低暴露允许single-seed而非强制5%
+methods:
+- B2
+- Full
+tasks:
+- D0
+seeds:
+- 0
+profile: smoke
+evaluation_episodes: 10
+purpose: 完整运行两模型，获得真实成功与非空changed-prior响应见证。
+pass_stop_rule: 最早8updates后可结束；上限16updates。没有成功或prior永久失活转有限1B；不要求Full>B2。
+extra: ''
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows:
+- planned_id: v11_1A_D0_B2_s0
+  stage: 1A
+  phase: first_pause
+  task: D0
+  method: B2
+  seed: 0
+  N_cap: 16384
+  updates_cap: 16
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+- planned_id: v11_1A_D0_Full_s0
+  stage: 1A
+  phase: first_pause
+  task: D0
+  method: Full
+  seed: 0
+  N_cap: 16384
+  updates_cap: 16
+  tier: 1
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: null
+profile_values:
+  max_transitions: 16384
+  max_updates: 16
+  eval_interval_transitions: 4096
+  dev_episodes: 10

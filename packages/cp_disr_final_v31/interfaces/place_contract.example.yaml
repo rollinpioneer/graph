@@ -1,0 +1,34 @@
+schema_version: skill_contract_v1
+skill_type: PLACE
+arguments:
+  - {name: object, type: movable_object}
+  - {name: target, type: openable_container}
+controller_ref: REQUIRED_CONTROLLER_ID
+initiation:
+  required_true: ["Held(object)", "Open(target)"]
+  required_false: []
+  execution_checks: [binding_resolved, parameter_available, safe_to_start]
+  unknown_policy: DEFER_CRITICAL_REQUIREMENTS
+nominal_success_effects:
+  add: ["Inside(object,target)", "GripperEmpty()"]
+  delete: ["Held(object)"]
+  unknown: []
+  conditional_effects: []
+effect_scope:
+  arguments: [object, target, gripper]
+  frame_assumption: unrelated_registered_facts_unchanged_nominally
+verification:
+  postconditions: ["Inside(object,target)", "NotHeld(object)"]
+  rule_ref: REQUIRED_VERIFIER_RULE
+execution:
+  normal_termination: [controller_finished]
+  failures: [execution_failed, verification_failed]
+  interrupts: [safety_stop, critical_fact_lost]
+  max_planning_seconds: null
+  max_execution_seconds: null
+  max_verification_seconds: null
+repeat_policy: ALLOW_IF_INITIATION_CONFIRMED
+provenance:
+  source: controller_interface_and_review
+  version: REQUIRED_VERSION
+  calibration_record: REQUIRED_RECORD

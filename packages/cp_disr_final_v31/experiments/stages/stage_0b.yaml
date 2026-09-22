@@ -1,0 +1,24 @@
+stage: 0B
+name: Production Mathematical and Interface Invariants
+part: 0
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 0A运行profile可用
+methods: []
+tasks:
+- synthetic_fixtures
+seeds:
+- 0
+- 1
+- 2
+profile: null
+evaluation_episodes: 0
+purpose: 生产实现验收，而不是本包代数示例。
+pass_stop_rule: 必须通过所有硬权限与目标不变量；float容差不能掩盖事实污染。
+extra: 原v3测试族全部保留；新增B1-K无后继、CAT空prior同输入anchor、Full空patch且CAT可不为0、S恒等式、B0候选重排、Actor无prefix、H单位、Q候选集合间接梯度核验。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

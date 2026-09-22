@@ -1,0 +1,24 @@
+stage: 4B
+name: Missing-prior and Perturbation Evaluation
+part: 4
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: Full/CAT同训练seed实际checkpoint；编辑case预冻结
+methods:
+- Full
+- A_CAT
+tasks:
+- T_C
+seeds:
+- paired_existing_seed
+profile: null
+evaluation_episodes: 25
+purpose: 四常规条件+适用Irrelevant；不重新训练。
+pass_stop_rule: No-prior不叫完全OOD；swap无合法target则NA；对每适用subset重算Original。
+extra: 默认Original/NoPrior/Deletion/TargetSwap，25case/condition/model；Irrelevant有原定义独立证据再加，满8条则NA；保存正反向edge同步。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

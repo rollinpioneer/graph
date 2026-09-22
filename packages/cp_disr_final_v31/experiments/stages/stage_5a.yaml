@@ -1,0 +1,24 @@
+stage: 5A
+name: One Compositional Holdout
+part: 5
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 已有Full/B2 source checkpoint；未见非同构组合但技能/predicate已见
+methods:
+- Full
+- B2
+tasks:
+- one_bound_holdout
+seeds:
+- paired_existing_seed
+profile: null
+evaluation_episodes: 30
+purpose: 仅一种组合泛化，不混视觉/对象数/机器人shift。
+pass_stop_rule: 无实际source或新组合仅重命名则NOT_APPLICABLE，不自动增训。
+extra: 每模型ID/OOD各30；case/cache只读初始合法输入，不能用test回报选prompt。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

@@ -14,14 +14,18 @@ def q_loss(values,executed,targets):
     selected=values.gather(1,executed[:,None]).squeeze(1)
     return F.huber_loss(selected,targets.detach(),delta=1.)
 
-def ppo_losses(new_logp,old_logp,advantages,weights,values,vtargets,q_selected,qtargets,entropy,lambda_q=.1):
+def ppo_losses(new_logp,old_logp,advantages,weights,values,vtargets,q_selected,qtargets,entropy,lambda_q=.1,actor_episode_discount_weight=False):
     adv=advantages.detach();adv=(adv-adv.mean())/(adv.std(unbiased=False)+1e-8)
     ratio=torch.exp(new_logp-old_logp.detach())
     surrogate=torch.minimum(ratio*adv,torch.clamp(ratio,.8,1.2)*adv)
-    actor=-(weights*surrogate).sum()/weights.sum()
+    # w is return accounting only; actor/V/Q/entropy average valid transitions.
+    if actor_episode_discount_weight:
+        actor=-(weights*surrogate).sum()/weights.sum()
+    else:
+        actor=-surrogate.mean()
     v=F.huber_loss(values,vtargets.detach(),delta=1.)
     q=F.huber_loss(q_selected,qtargets.detach(),delta=1.)
-    return {'total':actor+.5*v+lambda_q*q-.01*entropy.mean(),'actor':actor,'v':v,'q':q}
+    return {'total':actor+.5*v+lambda_q*q-.01*entropy.mean(),'actor':actor,'v':v,'q':q,'actor_episode_discount_weight':float(actor_episode_discount_weight)}
 
 def prefix_hidden(policy,prefix):
     hidden=policy.initial_hidden()
@@ -92,7 +96,7 @@ class PPO:
                 losses=ppo_losses(lp,old,targets[0][indices],weights,vs,targets[1][indices],qs,targets[2][indices],ent,self.policy.q_coefficient)
                 if not torch.isfinite(losses['total']):raise DataIntegrityError('Nonfinite PPO objective')
                 self.optimizer.zero_grad();losses['total'].backward();norm=torch.nn.utils.clip_grad_norm_(self.policy.parameters(),.5,error_if_nonfinite=True);self.optimizer.step()
-                logs.append({'epoch':epoch,'valid_transitions':len(indices),'grad_norm':float(norm),**{k:float(v.detach()) for k,v in losses.items()}});batch=[]
+                logs.append({'epoch':epoch,'valid_transitions':len(indices),'grad_norm':float(norm),**{k:(float(v.detach()) if torch.is_tensor(v) else float(v)) for k,v in losses.items()}});batch=[]
         rollout.clear();return logs
 
 def save_checkpoint(path,policy,optimizer,manifest):

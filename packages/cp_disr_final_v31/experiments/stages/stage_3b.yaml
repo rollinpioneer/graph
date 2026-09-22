@@ -1,0 +1,65 @@
+stage: 3B
+name: Auxiliary Candidate Q Ablation
+part: 3
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: Full TC三个匹配训练seed已存在
+methods:
+- A_Q
+tasks:
+- T_C
+seeds:
+- 0
+- 1
+- 2
+profile: core
+evaluation_episodes: 20
+purpose: 只置lambdaQ0，检验保留Q的增量。
+pass_stop_rule: 结果小/无差异可PASS_WITH_NOTES；只改loss系数，其他配置匹配。
+extra: ''
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows:
+- planned_id: v11_3B_T_C_A_Q_s0
+  stage: 3B
+  phase: training_mechanism
+  task: T_C
+  method: A_Q
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 2
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2A_T_C_Full_s0
+- planned_id: v11_3B_T_C_A_Q_s1
+  stage: 3B
+  phase: training_mechanism
+  task: T_C
+  method: A_Q
+  seed: 1
+  N_cap: 65536
+  updates_cap: 64
+  tier: 2
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s1
+- planned_id: v11_3B_T_C_A_Q_s2
+  stage: 3B
+  phase: training_mechanism
+  task: T_C
+  method: A_Q
+  seed: 2
+  N_cap: 65536
+  updates_cap: 64
+  tier: 2
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s2
+profile_values:
+  max_transitions: 65536
+  max_updates: 64
+  eval_interval_transitions: 8192
+  dev_episodes: 20

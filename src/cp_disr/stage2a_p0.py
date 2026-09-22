@@ -38,7 +38,7 @@ P0 = Path("experiments/part_2_exploration/stage_2a_p0")
 CACHE_ROOT = Path("experiments/vlm_cache/stage_2a")
 QUAL_BUDGET = 90.0
 ATTEMPTS = 5
-TASK_ROLE = {"T_A": "second_object", "T_C": "interferer"}
+TASK_ROLE = {"D0": "second_object", "T_A": "second_object", "T_B": "second_object", "T_C": "interferer"}
 SCRIPTED = {
     "T_A": [
         "a:OPEN:container:v1",
@@ -53,6 +53,13 @@ SCRIPTED = {
         "a:PLACE_BUFFER:interferer:buffer:v1",
         "a:PICK:target:v1",
         "a:PLACE:target:container:v1",
+    ],
+    "T_B": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
     ],
 }
 
@@ -156,8 +163,8 @@ def build_task_split(task_id: str):
     train, dev = [], []
     container = [0.18, 0.12]
     buffer = [-0.18, 0.12]
-    train_base = 2100 if task_id == "T_A" else 3100
-    dev_base = 6100 if task_id == "T_A" else 7100
+    train_base = {"T_A": 2100, "T_C": 3100, "T_B": 4100}.get(task_id, 4100)
+    dev_base = {"T_A": 6100, "T_C": 7100, "T_B": 8100}.get(task_id, 8100)
     for i in range(64):
         rng = np.random.RandomState(train_base + i)
         t = _xy(rng, -0.22, -0.02, -0.18, -0.02)

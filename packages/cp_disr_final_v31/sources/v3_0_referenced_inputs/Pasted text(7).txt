@@ -1,0 +1,1167 @@
+请继续基于当前已经冻结到 v2.0 的 CP-DISR / M1 方案，只处理两个尚未完全拍板的问题。
+
+这一次不要重新发散整个方法，不要提出新的大模块，不要重新设计 VLM、合同图、R-GCN、PPO、Structural Q、Verifier 等已经基本冻结的部分。
+
+目标只有两个：
+
+1. 明确决定：当前 D^P 是否应该继续只表示“VLM soft relation 与 candidate nominal intervention 的交互”，还是应该额外保留某种“静态 VLM prior”影响；
+2. 明确决定：prior corruption / prior perturbation 是否应该进入主训练流程；如果进入，具体怎么定义，不能再保留“relation rewrite”这种模糊实现。
+
+最终要求：
+
+- 给出唯一主方案；
+- 直接修改当前 v2.0 的定义；
+- 不再留下 A/B/C 都可以的开放状态；
+- 以“尽快冻结 Method、开始论文写作”为优先目标。
+
+
+==================================================
+一、问题 1：D^P 到底应该表达什么？
+==================================================
+
+当前定义为：
+
+D_i^K
+=
+E(tilde G_i^K)
+-
+E(G^K)
+
+D_i^H
+=
+E(tilde G_i^H)
+-
+E(G^H)
+
+D_i^P
+=
+D_i^H
+-
+D_i^K
+
+也就是：
+
+D_i^P
+=
+E(tilde F_i, R)
+-
+E(F, R)
+-
+E(tilde F_i, ∅)
++
+E(F, ∅)
+
+其中：
+
+F：
+当前合同事实状态；
+
+tilde F_i：
+对候选 skill i 施加 nominal success intervention 后的事实状态；
+
+R：
+VLM soft relations。
+
+
+==================================================
+二、先解释当前 D^P 实际保留了什么
+==================================================
+
+请严格分析：
+
+当前 D^P 只保留：
+
+“VLM soft relations 如何改变我们对 candidate-induced structural change 的编码响应。”
+
+也就是说，
+
+如果 VLM relation 只是提供一个：
+
+与 candidate intervention 无关的静态偏好，
+
+它可能在第二次差分中被抵消。
+
+例如：
+
+如果：
+
+E(F,R)
+=
+A(F)
++
+B(R)
+
+完全可分离，
+
+则：
+
+D^P
+=
+0。
+
+请确认：
+
+这是不是当前设计有意想要的性质。
+
+
+==================================================
+三、当前研究到底需不需要“静态 prior”？
+==================================================
+
+请区分两种信息。
+
+### A. Candidate-interaction prior
+
+例如：
+
+执行 OPEN 后建立 Open(box)，
+而 VLM relation 进一步表明这个变化与多个后续 skill / goal 有关系。
+
+这类信息明显应该进入 D^P。
+
+
+### B. Static prior
+
+例如 VLM 直接提出：
+
+OPEN
+SOFT_ORDER
+PICK
+
+或者：
+
+MOVE(red,buffer)
+SOFT_RELEVANT_TO_GOAL
+Goal_blue
+
+这种关系即使 candidate nominal effect 本身不改变图中关键 fact，
+也可能表示：
+
+“当前这个 skill 在任务层面值得优先考虑。”
+
+当前双差分可能会把这类纯静态偏好部分抵消。
+
+请回答：
+
+当前 CP-DISR 的研究目标到底是否需要保留这类信息？
+
+
+==================================================
+四、不要因为“VLM信息更多”就默认要保留静态 prior
+==================================================
+
+如果加入静态 prior，
+
+可能变成：
+
+Contract Branch
++
+Static VLM Prior
++
+Interventional D^P
+
+这样虽然信息更多，
+
+但也可能让方法重新退化为：
+
+“VLM给动作打bias + M1再做一点推演”。
+
+这会削弱：
+
+candidate-conditioned structural reasoning
+
+这个核心故事。
+
+请从以下角度比较：
+
+### 方案 A：保持现在纯 D^P
+
+VLM只通过：
+
+“它如何改变对 candidate consequence 的理解”
+
+进入策略。
+
+
+### 方案 B：D^P + Static Prior
+
+额外计算：
+
+S_i^P
+=
+某个当前 G^H 下的 candidate-specific prior representation
+
+或者：
+
+StaticRelationScore(a_i,G^H)
+
+然后：
+
+logit
+=
+contract score
++
+bounded static prior
++
+bounded interventional prior。
+
+
+### 方案 C：不用单独 static prior，但允许 G^H 当前表示进入 prior branch context
+
+即：
+
+prior branch仍然输出：
+
+Δ_i
+
+但输入除了 D^P，
+
+还允许读取：
+
+当前增强图中与 candidate 相关的局部表示。
+
+请判断三种方案。
+
+
+==================================================
+五、重点检查 SOFT_ORDER 是否和当前 D^P 逻辑匹配
+==================================================
+
+当前 soft relation 包括：
+
+SOFT_SUPPORTS
+
+SOFT_ORDER
+
+SOFT_RELEVANT_TO_GOAL。
+
+请逐一分析：
+
+### SOFT_SUPPORTS
+
+是否天然适合通过 D^P 生效？
+
+例如：
+
+A支持B，
+执行A后某个结构变化通过soft edge传向B。
+
+
+### SOFT_RELEVANT_TO_GOAL
+
+是否也能通过 candidate intervention 后的变化进入 D^P？
+
+
+### SOFT_ORDER
+
+是否可能是最大问题？
+
+因为：
+
+A should precede B
+
+这种顺序建议，
+
+如果它只是 Action→Action 静态边，
+
+而 candidate intervention 只修改 Fact 状态，
+
+那么：
+
+执行 A 前后图中的 SOFT_ORDER edge 本身并没有变化。
+
+它到底如何通过：
+
+after - before
+
+产生有效 D^P？
+
+是不是只能依赖 message passing 中：
+
+Fact变化
+→ Action A embedding变化
+→ SOFT_ORDER
+→ Action B
+
+间接产生作用？
+
+这种作用是否足够稳定？
+
+请具体分析。
+
+
+==================================================
+六、请设计一个纯逻辑 toy case 检查 D^P
+==================================================
+
+不要跑 RL。
+
+只构造 3–4 个极小图。
+
+例如：
+
+Case 1：
+
+OPEN
+ADD Open(box)
+
+Open(box)
+PRE PLACE
+
+VLM无soft edge。
+
+
+Case 2：
+
+同样合同图，
+
+加入：
+
+OPEN
+SOFT_SUPPORTS
+PLACE。
+
+
+Case 3：
+
+加入：
+
+OPEN
+SOFT_ORDER
+PLACE。
+
+
+Case 4：
+
+加入：
+
+MOVE
+SOFT_RELEVANT_TO_GOAL
+Inside(blue,box)
+
+但 MOVE nominal patch 不修改与 goal 相邻的 fact。
+
+
+请从数学和消息传播路径分析：
+
+对候选 OPEN / MOVE，
+
+D^P理论上何时非零？
+
+何时可能非常小？
+
+何时严格为零？
+
+这个检查用于帮助决定：
+
+soft relation schema是否与 D^P 算子匹配。
+
+
+==================================================
+七、如果某种 relation 无法自然作用于 D^P，优先删 relation，不要先加新模块
+==================================================
+
+如果最后发现：
+
+SOFT_ORDER
+
+主要表达静态偏好，
+
+而当前方法核心只想研究：
+
+“VLM如何改变 candidate consequence reasoning”，
+
+那么优先考虑：
+
+**从主版本 soft relation schema 中删除 SOFT_ORDER。**
+
+而不是为了保留 SOFT_ORDER，
+
+再增加：
+
+static bias branch
+
+或者：
+
+额外 planner head。
+
+同样，
+
+如果 SOFT_RELEVANT_TO_GOAL 不能自然作用于 D^P，
+
+也请判断是否应该删掉或重新定义。
+
+保持 soft relation vocabulary：
+
+少而且与核心算子真正匹配。
+
+
+==================================================
+八、最终必须对问题 1 给唯一结论
+==================================================
+
+请最终选择：
+
+### Decision 1A
+
+保持当前纯 D^P。
+
+理由：
+
+论文核心就是 prior × intervention interaction。
+
+删除或限制不能自然进入这一计算的 soft relation。
+
+
+### Decision 1B
+
+加入 static prior。
+
+如果选择它，
+
+必须证明：
+
+不加入就丢失当前研究必须表达的信息，
+
+而且不会退化回普通VLM bias。
+
+
+### Decision 1C
+
+其他更简单方案。
+
+但不能给三个并列。
+
+
+==================================================
+九、如果最终保留纯 D^P，请重新定义 VLM relation 的职责
+==================================================
+
+例如可以改成：
+
+VLM不负责直接说：
+
+“下一步做A。”
+
+而只负责提供：
+
+**可能改变候选后果解释的关系。**
+
+那么：
+
+SOFT_SUPPORTS
+
+可能成为核心关系。
+
+SOFT_RELEVANT_TO_GOAL
+
+需要定义为：
+
+candidate的结构变化如何影响某个goal，
+
+而不是静态“这个动作和goal有关”。
+
+SOFT_ORDER
+
+如果只是偏好顺序，
+则可能删除。
+
+请给最终 relation schema。
+
+
+==================================================
+十、如果最终加入 static prior，请严格限制它
+==================================================
+
+如果你确实判断需要 static prior，
+
+必须给：
+
+- 正式公式；
+- 输入；
+- zero-anchor方式；
+- bounded方式；
+- 与 D^P 的职责区别；
+- 为什么它不是普通 graph bias；
+- ablation怎么拆。
+
+而且必须判断：
+
+增加这条通路是否值得增加论文复杂度。
+
+如果只是“多保留一点VLM信息”，
+不值得加。
+
+
+==================================================
+十一、问题 2：prior corruption 是否应该进入主训练？
+==================================================
+
+当前 v2.0 有：
+
+原始 relation：50%
+
+空 prior：20%
+
+edge deletion：15%
+
+relation rewrite：15%
+
+每个 episode 开始固定一种版本。
+
+现在的问题是：
+
+这个“relation rewrite”定义不清楚。
+
+而且更根本的问题是：
+
+**我们真的需要在主训练阶段人工破坏 prior 吗？**
+
+
+==================================================
+十二、先明确 prior corruption 的研究目的
+==================================================
+
+可能有两种不同目的。
+
+### 目的 A：训练鲁棒性
+
+让模型训练时就看到：
+
+- 空 prior；
+- 缺边；
+- 错边；
+
+从而学会：
+
+VLM不可靠时不要过度依赖。
+
+
+### 目的 B：最终评价鲁棒性
+
+训练时只用原始 VLM prior，
+
+测试时分别用：
+
+- original；
+- no prior；
+- deleted；
+- plausible wrong；
+- irrelevant；
+
+看模型如何退化。
+
+
+请判断：
+
+当前论文真正需不需要 A，
+
+还是 B 已经足够。
+
+
+==================================================
+十三、训练 corruption 会不会引入新的混淆变量？
+==================================================
+
+如果 Full M1 训练时已经使用：
+
+empty / deletion / rewrite
+
+而 baseline 没有，
+
+那么 Full 的优势可能部分来自：
+
+“多了一套 data augmentation / robustness training”，
+
+而不是：
+
+双差分本身。
+
+这样论文就需要额外回答：
+
+- corruption training贡献多少；
+- M1本身贡献多少；
+- bounded residual贡献多少；
+- VLM本身贡献多少。
+
+这会增加：
+
+Full-clean-train
+
+等额外消融。
+
+请判断：
+
+为了主论文干净，
+
+是否反而应该：
+
+**主训练只使用原始 VLM prior。**
+
+然后 corruption只用于：
+
+robustness evaluation。
+
+
+==================================================
+十四、但主训练完全不扰动会不会导致 over-reliance？
+==================================================
+
+反过来，
+
+如果VLM训练/测试原始关系总是比较稳定，
+
+policy可能学会非常依赖 prior。
+
+虽然有：
+
+bounded residual B
+
+但它仍可能在边界内系统性依赖 soft relation。
+
+请分析：
+
+当前这些机制：
+
+- contract main branch；
+- zero-anchor；
+- bounded residual；
+-真实Q监督；
+
+是否已经足以让：
+
+主训练不需要额外 corruption。
+
+
+==================================================
+十五、请比较三种 prior training 方案
+==================================================
+
+### Training A：Clean-only
+
+训练时：
+
+100% original VLM prior。
+
+测试时做 robustness corruption。
+
+
+### Training B：Original + No-prior
+
+例如：
+
+80% original
+20% empty。
+
+目的只训练：
+
+系统能够在没有VLM时退化回contract reasoning。
+
+不人为生成错误关系。
+
+
+### Training C：Full corruption augmentation
+
+包括：
+
+original
+empty
+deletion
+plausible wrong relation。
+
+训练就显式学习错图鲁棒性。
+
+
+请从：
+
+- 方法纯度；
+- 鲁棒性；
+- 实现复杂度；
+- 额外变量；
+- 对论文claim影响；
+- ablation负担；
+
+比较。
+
+
+==================================================
+十六、重点考虑 Training B 是否最干净
+==================================================
+
+Training B 有一个潜在优点：
+
+它不需要定义：
+
+“什么叫合理错边”。
+
+只随机使用：
+
+原始 prior
+
+或者：
+
+完全空 prior。
+
+这样可以让：
+
+contract branch本身保持可用，
+
+同时不引入人工错误生成器。
+
+请认真判断：
+
+是否：
+
+Original + No-prior
+
+已经足够作为一个非常轻量的 robustness regularization。
+
+
+==================================================
+十七、如果要保留 edge deletion，请正式定义
+==================================================
+
+例如：
+
+对于 episode 原始 E_prior：
+
+随机删除：
+
+每条edge以概率 p_drop 删除，
+
+或者：
+
+固定删除比例 q。
+
+需要明确：
+
+- 是否按relation type分层；
+- 至少保留多少；
+- 空prior如何处理；
+- episode内是否固定；
+- PPO重新计算时是否保持同一个版本；
+- train/test corruption是否使用不同seed。
+
+不能只写：
+
+“删15%”。
+
+
+==================================================
+十八、如果要保留 plausible wrong relation，请正式定义
+==================================================
+
+只有你最终决定 Training C 才需要回答。
+
+必须给一个确定算法。
+
+例如：
+
+选择一条原始合法soft edge：
+
+(source,target,type)
+
+然后：
+
+在端点类型合法的候选集合中替换target，
+
+同时满足：
+
+- 新edge不在原始prior；
+- 不与合同直接重复；
+- ID合法；
+- 不改变hard mask；
+- 不改变reward；
+- 不新增节点；
+- 不使用测试结果选择；
+- 不能保证语义一定“合理”。
+
+如果需要人工判断“plausible”，
+
+那它是否适合作为大规模训练增强？
+
+还是只适合作为测试集 robustness case？
+
+
+==================================================
+十九、避免使用“relation rewrite”这种模糊名字
+==================================================
+
+最终训练配置中，
+
+不能再出现：
+
+relation_rewrite: 0.15
+
+但没有正式算法。
+
+如果保留，
+
+必须改成明确操作名，例如：
+
+target_swap
+source_swap
+type_preserving_endpoint_swap
+
+并给精确定义。
+
+如果不值得，
+
+直接删除。
+
+
+==================================================
+二十、prior corruption 是否属于核心方法？
+==================================================
+
+请明确：
+
+如果训练中使用 corruption，
+
+它到底是：
+
+### CP-DISR核心组成
+
+还是：
+
+### 普通robustness augmentation。
+
+如果只是augmentation，
+
+Introduction贡献不要写成核心创新。
+
+如果删掉它，
+
+当前三项核心贡献是否仍完整？
+
+我倾向于：
+
+candidate intervention
++
+dual difference
++
+outcome-grounded Structural Q
+
+已经构成完整M1。
+
+请独立判断。
+
+
+==================================================
+二十一、检查和 bounded prior residual 的关系
+==================================================
+
+当前已经有：
+
+Δ_i
+=
+B tanh(...)
+
+这本身就是：
+
+对不可靠 prior 的结构性限制。
+
+那么：
+
+bounded residual
+
+和：
+
+corruption training
+
+是不是两个不同鲁棒机制？
+
+如果都放主方法，
+
+是不是需要两个独立消融？
+
+如果不想扩大实验，
+
+是否应该只保留 bounded residual 作为主设计，
+
+corruption训练降级为可选增强？
+
+
+==================================================
+二十二、这两个问题要联动考虑
+==================================================
+
+问题1和问题2不是完全独立。
+
+如果最终：
+
+D^P本身只表示：
+
+prior × intervention interaction，
+
+而且prior branch又 bounded，
+
+那么模型已经不会直接把VLM静态建议作为命令。
+
+这可能降低：
+
+必须人工corrupt prior训练
+
+的必要性。
+
+请一起考虑，
+
+不要分别机械回答。
+
+
+==================================================
+二十三、优先选择更简单、论文更干净的主方案
+==================================================
+
+现在目标不是：
+
+把鲁棒性做到理论最强。
+
+而是：
+
+冻结一个：
+
+- 有明确算法创新；
+- 实现简单；
+- 逻辑闭环；
+- 实验变量少；
+- 审稿人容易理解；
+
+的主方法。
+
+如果某个模块：
+
+只是“可能更稳”，
+
+但会增加：
+
+- 新生成规则；
+- 新超参数；
+- 新ablation；
+- 新解释；
+
+那就优先不放进主版本。
+
+
+==================================================
+二十四、请最终输出两个明确Decision
+==================================================
+
+请直接给：
+
+# Decision 1：D^P与静态prior
+
+必须明确：
+
+- 保持纯交互双差分；
+- 还是加入静态prior；
+- 是否调整soft relation schema；
+- SOFT_ORDER保留还是删除；
+- SOFT_RELEVANT_TO_GOAL如何定义。
+
+
+# Decision 2：Prior corruption training
+
+必须明确：
+
+- Clean-only；
+- Original + No-prior；
+- Full corruption；
+
+三者选一个作为：
+
+**CP-DISR v2.1主训练协议。**
+
+
+==================================================
+二十五、如果你推荐修改当前v2.0，请直接给v2.1替换内容
+==================================================
+
+至少给出：
+
+### A. VLM relation schema最终版
+
+### B. D^P最终公式
+
+### C. Prior branch最终输入
+
+### D. Training prior sampling最终协议
+
+### E. 删除哪些旧配置项
+
+例如：
+
+删除：
+
+SOFT_ORDER
+
+或者：
+
+relation_rewrite: 0.15
+
+请明确写。
+
+
+==================================================
+二十六、检查对论文贡献有没有影响
+==================================================
+
+重新检查当前贡献：
+
+C1 Candidate Nominal Structural Intervention
+
+C2 Contract–Prior Dual Difference
+
+C3 Outcome-Grounded Structural Learning
+
+这两个Decision之后，
+
+是否仍然完整成立？
+
+如果需要微调Contribution wording，
+
+请直接改。
+
+不要增加第4个贡献，
+除非真的不可避免。
+
+
+==================================================
+二十七、检查最终实验矩阵是否可以更简化
+==================================================
+
+如果最终不使用 corruption training，
+
+那么可以删除：
+
+Full-clean-train vs Full
+
+这一组消融。
+
+只保留：
+
+Original
+No prior
+Deletion
+Wrong relation
+Irrelevant relation
+
+作为测试时robustness。
+
+如果最终不使用 static prior，
+
+则不需要：
+
+static-prior ablation。
+
+请给最终最小实验矩阵。
+
+
+==================================================
+二十八、不要再增加前置研究实验
+==================================================
+
+这一轮主要通过：
+
+数学分析；
+信息流分析；
+toy graph reasoning；
+方法逻辑；
+
+做决定。
+
+不要因为：
+
+SOFT_ORDER到底有效多少
+
+就要求先跑完整RL。
+
+最多提出：
+
+**实现级toy graph单元测试**
+
+例如：
+
+固定一个小图，
+手工检查：
+
+加入某soft edge以后，
+D^P是否如预期变化。
+
+这属于：
+
+代码/数学验收，
+
+不属于论文写作前置研究实验。
+
+
+==================================================
+二十九、最终给一个新的Frozen Snapshot
+==================================================
+
+最后只输出：
+
+Problem
+
+VLM soft relation schema
+
+G^K
+
+G^H
+
+D^K
+
+D^P
+
+Actor
+
+Prior branch
+
+Structural Q
+
+Prior training protocol
+
+Robustness evaluation
+
+Required pre-experiments
+
+每项1–3句话。
+
+
+==================================================
+最终目标
+==================================================
+
+这一轮结束后，
+
+我希望彻底冻结两个问题：
+
+1. VLM prior究竟以什么形式进入Actor；
+2. prior corruption究竟是否进入主训练。
+
+请优先采用：
+
+**最简单但逻辑完整的方案。**
+
+不要为了保留更多VLM信息而新增复杂分支；
+
+也不要为了“看起来更鲁棒”而默认加入人工错边训练。
+
+如果：
+
+纯 D^P
++
+bounded residual
++
+真实Structural Q
++
+原始/空prior轻量训练
+
+已经足够，
+
+就直接定下来。
+
+如果不是，
+
+必须明确指出哪一个能力缺失，
+以及为什么值得增加复杂度。

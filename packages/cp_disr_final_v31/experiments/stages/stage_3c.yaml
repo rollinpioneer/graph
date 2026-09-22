@@ -1,0 +1,65 @@
+stage: 3C
+name: Conditional Bound Ablation
+part: 3
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 明确要声明bounded的经验收益；匹配Full存在
+methods:
+- A_B
+tasks:
+- T_C
+seeds:
+- 0
+- 1
+- 2
+profile: core
+evaluation_episodes: 20
+purpose: 只去tanh，不用clip/normalization补回界。
+pass_stop_rule: 无经验bounded claim则不运行；不为数学界必加训练。
+extra: ''
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows:
+- planned_id: v11_3C_T_C_A_B_s0
+  stage: 3C
+  phase: optional_bound
+  task: T_C
+  method: A_B
+  seed: 0
+  N_cap: 65536
+  updates_cap: 64
+  tier: 3
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2A_T_C_Full_s0
+- planned_id: v11_3C_T_C_A_B_s1
+  stage: 3C
+  phase: optional_bound
+  task: T_C
+  method: A_B
+  seed: 1
+  N_cap: 65536
+  updates_cap: 64
+  tier: 3
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s1
+- planned_id: v11_3C_T_C_A_B_s2
+  stage: 3C
+  phase: optional_bound
+  task: T_C
+  method: A_B
+  seed: 2
+  N_cap: 65536
+  updates_cap: 64
+  tier: 3
+  status: NOT_STARTED
+  actual_run_id: null
+  control_reference: v11_2B_T_C_Full_s2
+profile_values:
+  max_transitions: 65536
+  max_updates: 64
+  eval_interval_transitions: 8192
+  dev_episodes: 20

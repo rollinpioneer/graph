@@ -1,0 +1,270 @@
+document:
+  title: CP-DISR Paper-Oriented Research Specification
+  version: '3.1'
+  date: '2026-09-22'
+  status: paper_definition_not_experiment_report
+method:
+  name: CP-DISR
+  full_name: Contract–Prior Differential Intervention for Skill Reasoning
+  internal_name: M1
+  version: 2.1.1
+  scope: candidate_conditioned_contract_prior_representation_interaction
+  future_m1_plus_enabled: false
+  architecture_family: '2.1'
+  training_profile_revision: 2.1.1
+  new_core_neural_module: false
+vlm:
+  trainable: false
+  model_snapshot_recommended: qwen3.8-max-0902
+  actual_snapshot: MUST_BIND
+  region: MUST_BIND
+  endpoint: MUST_BIND
+  sdk_version: MUST_BIND
+  credential_reference: MUST_BIND
+  cache_mode: offline
+  relation_schema: m1_soft_relations_v2
+  soft_types:
+  - SOFT_SUPPORTS
+  - SOFT_RELEVANT_TO_GOAL
+  effect_ref_role: consequence_grounding_admission_metadata_no_neural_effect_gate
+  max_relations: 8
+  temperature: 0
+  max_output_tokens: 2048
+  thinking: false
+  response_format: json_object
+  application_retries_max: 1
+  retry_scope:
+  - transport
+  - syntax
+  semantic_retry: false
+  hidden_sdk_retries: 0
+  web_search: false
+  tools: false
+  prompt_file: interfaces/system_prompt.txt
+  few_shot_assets: MUST_BIND
+graph:
+  representation: grounded_action_proposition_slg
+  node_types:
+  - ACTION
+  - PROPOSITION
+  contract_relations:
+  - PRE_POS
+  - PRE_NEG
+  - ADD
+  - DEL
+  reverse_message_edges: true
+  encoder: RGCNConv
+  api_reference_version: 2.6.1
+  hidden_dim: 128
+  layers: 4
+  num_bases: 4
+  aggregation: mean
+  root_weight: true
+  activation: ReLU
+  normalization: per_node_LayerNorm
+  dropout: 0
+  shared_encoder: true
+  readout: fixed_goal_rows_plus_global
+  feature_profile: v21_symbolic_nodes_real_observation_in_context
+  current_applicability_location: candidate_and_execution_mask
+  observation_geometry_location: observation_and_candidate_context
+intervention:
+  depth: 1
+  branch: nominal_success
+  writes_real_facts: false
+  writes_time_reward_done: false
+  same_patch_for_K_H: true
+  virtual_geometry: false
+policy:
+  prior_input: D_P=D_H-D_K
+  static_prior: false
+  direct_current_GH_context: false
+  zero_anchor: true
+  prior_bound: 0.5
+  prior_head_bias: false
+  mask_source: registered_capability_contract_actual_facts_safety
+  train_action: masked_categorical_sample
+  eval_action: deterministic_argmax
+  tie_break: canonical_candidate_id
+standard_implementation_defaults:
+  not_a_method_innovation: true
+  gru_hidden_dim: 128
+  candidate_attention: single_head_scaled_dot
+  query_key_value_width: 128
+  candidate_mlp_hidden: 256
+  candidate_feature_dim: 128
+  candidate_dropout: 0
+  observation_adapter: MUST_BIND
+  complete_model_layer_table: MUST_BIND
+value_learning:
+  independent_V: true
+  Q_auxiliary_only: true
+  Q_executed_action_only: true
+  Q_target: sg(r + Gamma*(1-terminated)*V_old(real_next_snapshot))
+  Q_target_source: actual_transition_with_bootstrap
+  target_detach: true
+  value_loss: Huber
+  q_loss: Huber
+  huber_delta: 1.0
+  relation_correctness_supervision: false
+ppo:
+  optimizer: Adam_unique_parameters
+  learning_rate: 0.0003
+  clip: 0.2
+  gae_lambda_per_skill: 0.95
+  value_coef: 0.5
+  structural_q_coef: 0.1
+  entropy_coef: 0.01
+  grad_clip_norm: 0.5
+  epochs: 4
+  rollout_skill_transitions: 1024
+  recurrent_sequence_length: 16
+  minibatch_transitions: 64
+  recompute_graphs: true
+  recompute_current_parameter_prefix: true
+  bootstrap_forward_commits_hidden: false
+  actor_episode_discount_weight: false
+  actor_weight_normalization: valid_transition_count
+  advantage_normalization_scope: valid_batch_actor_only
+  reward: independent_first_terminal_success_event
+  gamma_reference_value: DERIVE_FROM_FROZEN_SUITE_HALF_LIFE
+  gamma_reference_seconds: 1.0
+  actual_time_adapter: MUST_BIND
+  total_transition_budget: MUST_BIND
+  total_task_time_budget: MUST_BIND
+  evaluation_interval: MUST_BIND
+  checkpoint_interval: MUST_BIND
+  objective_claim: empirical_on_policy_occupancy_PPO_surrogate_not_unbiased_start_state_J_gradient
+  half_life_rule: H=max_training_family_median_reference_success_duration_seconds
+  discount_half_life_seconds: MUST_BIND_FROM_REFERENCE_EXECUTIONS
+  prefix_discount_saved_for: return_accounting_and_diagnostics_only
+prior_training:
+  original: 0.8
+  absent: 0.2
+  sampled_at: episode_start
+  fixed_within_episode: true
+  resample_during_ppo: false
+  mode_label_as_input: false
+  artificial_wrong_edges: false
+evaluation:
+  default_condition: Original
+  seeds_smoke:
+  - 0
+  seeds_exploration:
+  - 0
+  - 1
+  - 2
+  presentation_seed_count: 3
+  maximum_initial_seed_pool: 5
+  episodes_smoke: 10
+  episodes_exploration: 20
+  episodes_presentation: 30
+  episodes_optional_extension: 50
+  robustness_start_range:
+  - 20
+  - 30
+  robustness_conditions:
+  - Original
+  - No Prior
+  - Edge Deletion
+  - Target-swap
+  - Irrelevant
+  edge_deletion_probability: 0.5
+  target_swap_count: 1
+  irrelevant_add_count: 1
+  no_eligible_edit: NOT_APPLICABLE
+  selection_manifest_required: true
+  raw_archive_complete: true
+  checkpoint_metric: mean_discounted_return_last_3_dev_windows
+  main_quantitative_seed_policy: all_predeclared_valid_0_1_2
+  private_selected_view_label_required: true
+  curve_display_smoothing: trailing_moving_average_window_3
+  no_prior_label: missing_prior_and_dependence_not_unseen_condition
+  default_core_families:
+  - T_B
+  - T_C
+variants:
+  B0:
+    graph: false
+    intervention: false
+    prior: false
+    q_coef: 0.1
+    encoder: two_SAB_Set_Transformer
+    hidden_dim: 128
+    heads: 4
+    ffn_hidden: 256
+    blocks: 2
+    dropout: 0
+    position_embedding: false
+    attention_mask: padding_only
+    candidate_cross_attention: true
+    raw_contract_fields: complete
+  B1:
+    alias: B1-K
+    current_graph: G_K_only
+    prior: always_empty
+    intervention: false
+    candidate_feature: phi_K(c_i,zero_DK_slot)
+    same_context_as_B2: true
+    q_coef: 0.1
+  B2:
+    contract_intervention: true
+    prior: always_empty
+    independent_training: true
+    q_coef: 0.1
+  Full:
+    prior_input: D_P
+    q_coef: 0.1
+    bounded: true
+  A_DD:
+    only_change: prior_input
+    nonempty_prior_input: D_H
+    empty_prior_input: zero
+    tier: 3
+  A_Q:
+    only_change: q_loss_coefficient
+    q_coef: 0.0
+    tier: 2
+  A_B:
+    only_change: remove_tanh
+    residual: B * wP.T @ uP
+    zero_anchor_retained: true
+    tier: 3
+  A_CAT:
+    tier: 1
+    replaces_required: A_DD
+    contract_branch: same_as_Full
+    prior_input: rowwise_concat(ZK,ZK_after,ZH,ZH_after)
+    anchor: rowwise_concat(ZK,ZK_after,ZK,ZK_after)
+    projection: 4d_to_d
+    same_downstream_prior_head: true
+    no_prior_exact_zero: true
+    empty_patch_zero_required: false
+    bounded: true
+    extra_input_projection_parameters_at_d128: 49152
+  B1-H:
+    tier: 3
+    definition: archived_v21_current_GK_GH_policy
+    prior_protocol: 80/20
+    required: false
+prohibited_current_modules:
+- per_edge_trust
+- relation_memory
+- online_graph_repair
+- VLM_feedback_loop
+- VLM_finetuning
+- contract_calibration
+- relation_level_reward
+- learned_world_model
+- new_planner
+- LLM_teacher
+- future_relation_utility_loss
+runtime_manifest: interfaces/runtime_manifest.template.yaml
+evidence_state:
+  new_rl_runs: 0
+  new_vlm_calls: 0
+  robot_commands: 0
+  production_unit_tests_run: false
+  method_benefit_claimed: false
+  algebra_checks_only: true
+experiment_plan: experiments/Experimental_Plan_v1.1.md

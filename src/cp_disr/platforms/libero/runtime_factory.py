@@ -201,13 +201,15 @@ TASK_OBJECTS = {
     "D0": {"target": "object", "second_object": "object", "container": "container", "buffer": "buffer"},
     "T_A": {"target": "object", "second_object": "object", "container": "container", "buffer": "buffer"},
     "T_C": {"target": "object", "interferer": "object", "container": "container", "buffer": "buffer"},
+    "T_B": {"target": "object", "second_object": "object", "container": "container", "buffer": "buffer"},
 }
 TASK_GOALS = {
     "D0": ("p:Inside:target:container",),
     "T_A": ("p:Inside:target:container", "p:Inside:second_object:container"),
     "T_C": ("p:Inside:target:container",),
+    "T_B": ("p:Inside:target:container", "p:AtBuffer:second_object:buffer"),
 }
-TASK_SECOND_ROLE = {"D0": "second_object", "T_A": "second_object", "T_C": "interferer"}
+TASK_SECOND_ROLE = {"D0": "second_object", "T_A": "second_object", "T_B": "second_object", "T_C": "interferer"}
 
 
 def _ground_contracts_for(contract_path, timeouts, objects):
@@ -302,6 +304,6 @@ def create(manifest: dict):
 
 def create_stage_2a_runtime(manifest: dict):
     task_id = (manifest.get('runtime') or {}).get('active_task_id')
-    if task_id not in ('T_A', 'T_C'):
-        raise BindingError('stage 2A factory requires runtime.active_task_id in {T_A, T_C}')
+    if task_id not in ('T_A', 'T_B', 'T_C'):
+        raise BindingError('task factory requires runtime.active_task_id in {T_A, T_B, T_C}')
     return create_task_runtime(manifest, task_id)

@@ -1,0 +1,23 @@
+stage: 0C
+name: Frozen VLM Cache Sanity
+part: 0
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 0A/0B；实际API与初始图片已绑定
+methods: []
+tasks:
+- D0
+- T_B
+- T_C
+seeds: []
+profile: null
+evaluation_episodes: 0
+purpose: 24个真实development scene，每family8个；核验格式/ID/效果引用/冗余与空率。
+pass_stop_rule: 原始可空，不用语义重试补边；传输失败不是自愿空prior；全空则先验增量组仅标无信息。
+extra: 最多一次格式/传输重试；本轮不改prompt/schema。无人工gold替换。
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

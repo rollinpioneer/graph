@@ -1,0 +1,46 @@
+task_id: T_B
+task_version: cp-disr-v2.1.1-plan-1.1
+status: RUNTIME_BOUND_STAGE_0C_CACHE
+platform_ref: LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
+typed_entities:
+  target:
+    type: object
+  second_object:
+    type: object
+  container:
+    type: container
+  buffer:
+    type: buffer
+instruction: 'Place the red target cube into the openable blue container AND place
+  the yellow second cube onto the green buffer. Not a T_A relabel: Inside(target,container)
+  and AtBuffer(second_object,buffer) are both required.'
+signed_goals:
+- predicate: Inside
+  arguments:
+  - target
+  - container
+  sign: 1
+- predicate: AtBuffer
+  arguments:
+  - second_object
+  - buffer
+  sign: 1
+required_skill_schemas:
+- OPEN
+- PICK
+- PLACE
+- PLACE_BUFFER
+grounded_action_ids:
+- a:OPEN:container:v1
+- a:PICK:target:v1
+- a:PICK:second_object:v1
+- a:PLACE:target:container:v1
+- a:PLACE:second_object:container:v1
+- a:PLACE_BUFFER:target:buffer:v1
+- a:PLACE_BUFFER:second_object:buffer:v1
+move_decision: REJECTED
+structural_signature: dual_goal_inside_and_atbuffer
+split_ref: configs/splits/T_B_stage_0a.json
+deadline_seconds: 60.0
+reference_skill_seconds: 4.199999999997672
+not_a_ta_relabel: true

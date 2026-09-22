@@ -1,0 +1,25 @@
+stage: 2C
+name: Main Figures and Tables
+part: 2
+method_version: 2.1.1
+plan_version: '1.1'
+phase: single
+preconditions: 主阶梯真实source齐全；3A可按未完成标记
+methods: []
+tasks:
+- T_B
+- T_C
+seeds:
+- 0
+- 1
+- 2
+profile: null
+evaluation_episodes: 0
+purpose: 生成主表与曲线，source可重算，不新训练/评价。
+pass_stop_rule: 所有数字来自原始episode，NA/未跑不能填0；图与表的split和seed标清。
+extra: ''
+auto_advance: false
+status: NOT_STARTED
+new_results_claimed: false
+planned_training_rows: []
+profile_values: null

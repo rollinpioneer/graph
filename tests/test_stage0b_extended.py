@@ -37,7 +37,7 @@ def test_T12_fp64_hand_targets():
 def test_T14_gae_continuity_and_reset(snap):
     import math
     n=replace(snap,decision_id=1)
-    t=Transition(snap,n,snap.candidate_ids[0],-.5,.4,2.,.3,math.log(.9)/math.log(.99),1.,False,False,'synthetic',())
+    t=Transition(snap,n,snap.candidate_ids[0],-.5,.4,2.,.3,-math.log2(.9),1.,False,False,'synthetic',())
     t2=Transition(n,replace(n,decision_id=2),snap.candidate_ids[0],-.5,2.,0.,1.,1.,.9,True,False,'synthetic',(snap,))
     a,v,q=scalar_targets([t,t2])
     assert a==pytest.approx((1.7+.9*.95*(-1),-1),abs=1e-10,rel=1e-9)
