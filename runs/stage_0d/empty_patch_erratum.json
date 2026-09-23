@@ -1,0 +1,55 @@
+{
+  "stage": "0D",
+  "kind": "empty_patch_identity_erratum",
+  "created_at": "2026-09-22T14:10:29Z",
+  "overwrites_historical_logs": false,
+  "reran_episodes": false,
+  "original_success_records_retained": true,
+  "bug": "run_episode compared string cid against integer nonempty index list (cid not in nonempty), so selected empty-patch count incremented on every decision",
+  "reconstructable": false,
+  "reconstructable_reason": [
+    "episode log stripped per-decision nonempty/index fields; only slim episode rows remain",
+    "n_empty_patch equals n_decisions on every episode, matching cid-not-in-int-list tautology"
+  ],
+  "denominators": {
+    "selected_action_empty_patch_rate": "n_selected_empty / n_decisions",
+    "legal_candidate_empty_patch_rate": "n_legal_candidates_with_empty_patch / n_legal_candidates",
+    "prior_empty": "episode-start prior_edge_count == 0 (not missing cache)",
+    "missing_cache": "registered cache file absent; never inferred from empty prior",
+    "dp_strict_zero": "neural DP diagnostic, not empty patch",
+    "no_measurement": "perception/fact missing, not empty patch"
+  },
+  "families": {
+    "T_B": {
+      "n_episodes": 100,
+      "n_success": 13,
+      "n_decisions": 1001,
+      "logged_empty_patch_sum": 1001,
+      "prior_empty_episodes": 100,
+      "prior_nonempty_episodes": 0,
+      "prior_edge_count_histogram": {
+        "0": 100
+      },
+      "selected_action_empty_patch_rate": "UNRELIABLE/NOT_RECONSTRUCTABLE",
+      "legal_candidate_empty_patch_rate": "UNRELIABLE/NOT_RECONSTRUCTABLE",
+      "historical_empty_patch_rate_was": 1.0,
+      "historical_empty_patch_rate_status": "UNRELIABLE/NOT_RECONSTRUCTABLE"
+    },
+    "T_C": {
+      "n_episodes": 100,
+      "n_success": 35,
+      "n_decisions": 838,
+      "logged_empty_patch_sum": 838,
+      "prior_empty_episodes": 100,
+      "prior_nonempty_episodes": 0,
+      "prior_edge_count_histogram": {
+        "0": 100
+      },
+      "selected_action_empty_patch_rate": "UNRELIABLE/NOT_RECONSTRUCTABLE",
+      "legal_candidate_empty_patch_rate": "UNRELIABLE/NOT_RECONSTRUCTABLE",
+      "historical_empty_patch_rate_was": 1.0,
+      "historical_empty_patch_rate_status": "UNRELIABLE/NOT_RECONSTRUCTABLE"
+    }
+  },
+  "note": "Uniform action sampling and success events are unaffected. Do not back-out rates from success counts."
+}

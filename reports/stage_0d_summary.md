@@ -22,3 +22,6 @@ Random success is an exposure proxy, not a 5% learnability theorem. No PPO/BC. N
 
 New-profile RL training runs this stage: **0**.
 
+## Empty-patch accounting erratum
+
+See `reports/stage_0d_empty_patch_erratum.md`. Historical `empty_patch_rate=1.0` is UNRELIABLE/NOT_RECONSTRUCTABLE; success counts are unchanged.

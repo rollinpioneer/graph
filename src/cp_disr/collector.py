@@ -20,7 +20,7 @@ class Collector:
             a,b = k.split('|',1)
             self.weights[(a,b)] = float(w)
         self.success_seen = {tuple(x) for x in (payload.get('success_seen') or [])}
-    def step(self,snapshot):
+    def step(self,snapshot,deterministic=False):
         if snapshot.synthetic_unit_fixture:raise DataIntegrityError('Synthetic unit fixtures cannot enter real collection')
         import torch
         from .torch_rl import prefix_hidden
@@ -36,7 +36,7 @@ class Collector:
         if out.distribution is None:
             reason=self.bundle.safety.end_no_candidates(*key)
             return None,{'terminated':True,'reason':reason,'no_transition':True}
-        candidate,index=out.select(False)
+        candidate,index=out.select(bool(deterministic))
         observation=self.bundle.observations.observe()
         if not self.bundle.safety.can_execute(candidate,observation):raise DataIntegrityError('Safety/mask disagreement before execution')
         contract=next(c for c in snapshot.template.contracts if c.id==candidate)

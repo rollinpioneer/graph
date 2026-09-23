@@ -1,7 +1,7 @@
 """Build policy snapshots from verifier facts, cache prior, and public observations."""
 from __future__ import annotations
 
-import json
+import json, os
 from pathlib import Path
 from cp_disr.facts import FactStore, Truth
 from cp_disr.graph import build_template, Goal
@@ -18,7 +18,7 @@ class SnapshotBuilder:
         self.env = env
         self.clock = clock
         self.deadline = float(deadline)
-        self.env_id = "d0-env-0"
+        self.env_id = os.environ.get("CP_DISR_ENV_ID", "d0-env-0")
         self.episode_id = "ep-0"
 
     def _mask(self, facts: FactStore):

@@ -30,11 +30,12 @@ def main(argv=None):
         "validate-d0-cache",
         "stage-1a-preflight",
         "stage-1a-run",
+        "stage-1a-v11-run",
         "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run",
     )
     for name in core:
         sp = sub.add_parser(name)
-        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run"):
+        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-1a-v11-run", "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run"):
             sp.add_argument("--gpu", type=int, default=0)
         if name == "stage-1a-preflight":
             sp.add_argument("--all-p0", action="store_true")
@@ -51,6 +52,16 @@ def main(argv=None):
             sp.add_argument("--only-startup-gates", action="store_true")
             sp.add_argument("--resume", action="store_true")
             sp.add_argument("--max-updates", type=int, default=16)
+        if name == "stage-1a-v11-run":
+            sp.add_argument("--only-startup-gates", action="store_true")
+            sp.add_argument("--resume", action="store_true")
+            sp.add_argument("--max-updates", type=int, default=16)
+            sp.add_argument("--stop-after-updates", type=int, default=None)
+            sp.add_argument("--method", choices=["B2", "Full"], default=None)
+            sp.add_argument("--stamp", default=None)
+            sp.add_argument("--configsha", default=None)
+            sp.add_argument("--skip-startup-gates", action="store_true")
+            sp.add_argument("--num-envs", type=int, default=1)
     cache = sub.add_parser("validate-relation-cache")
     cache.add_argument("--cache-directory", type=Path)
     t = sub.add_parser("run-unit-tests")
@@ -121,6 +132,10 @@ def main(argv=None):
         if a.command == "stage-1a-run":
             from . import stage1a_smoke
             print(canonical(stage1a_smoke.cmd_stage_1a_run(root, gpu=getattr(a, "gpu", 0), only_startup_gates=bool(getattr(a, "only_startup_gates", False)), resume=bool(getattr(a, "resume", False)), max_updates=int(getattr(a, "max_updates", 16)))))
+            return 0
+        if a.command == "stage-1a-v11-run":
+            from . import stage1a_v11
+            print(canonical(stage1a_v11.cmd_stage_1a_v11_run(root, gpu=getattr(a, "gpu", 0), only_startup_gates=bool(getattr(a, "only_startup_gates", False)), resume=bool(getattr(a, "resume", False)), max_updates=int(getattr(a, "max_updates", 16)), stop_after_updates=getattr(a, "stop_after_updates", None), method=getattr(a, "method", None), stamp=getattr(a, "stamp", None), configsha=getattr(a, "configsha", None), skip_startup_gates=bool(getattr(a, "skip_startup_gates", False)), num_envs=int(getattr(a, "num_envs", 1)))))
             return 0
         from . import stage1a
         gpu = getattr(a, "gpu", 0)

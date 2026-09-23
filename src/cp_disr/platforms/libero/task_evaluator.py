@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from cp_disr.adapters import TaskResult
-from .d0_env import CONTAINER_INNER
+from cp_disr.geom_constants import CONTAINER_INNER
 
 
 EVALUATOR_VERSION = "cp-disr-d0-task-evaluator-v1"

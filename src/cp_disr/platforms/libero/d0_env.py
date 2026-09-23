@@ -29,7 +29,7 @@ COLORS = {
 # still be narrower than the Panda gripper opening (~0.08 m).
 OBJECT_HALF = np.array([0.020, 0.020, 0.020])
 LID_HALF = np.array([0.036, 0.036, 0.012])
-CONTAINER_INNER = np.array([0.030, 0.030])
+from cp_disr.geom_constants import CONTAINER_INNER
 CONTAINER_WALL = 0.012
 CONTAINER_H = 0.048
 BUFFER_HALF = np.array([0.08, 0.08, 0.004])

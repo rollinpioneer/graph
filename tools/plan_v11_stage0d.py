@@ -20,6 +20,7 @@ from cp_disr.neural import Policy
 from cp_disr.platforms.libero.runtime_factory import create_task_runtime, PREDICATES, TASK_OBJECTS
 from cp_disr.adapters import EvaluationInput
 from cp_disr.rl import set_suite_half_life, gamma
+from cp_disr.patch_identity import selected_action_empty_patch
 from cp_disr.stage2a_p0 import write_json, _log, _read
 
 OUT = ROOT / "runs" / "stage_0d"
@@ -139,6 +140,8 @@ def run_episode(bundle, case_id, rng, timeouts, contract_aware, diag_policy):
     decisions = []
     n_force = 0
     n_empty_patch = 0
+    n_legal_candidates = 0
+    n_legal_empty_patch = 0
     n_ge2 = 0
     branches = []
     prior_n = len(snap.prior_edges or ())
@@ -167,7 +170,10 @@ def run_episode(bundle, case_id, rng, timeouts, contract_aware, diag_policy):
             reason = bundle.safety.end_no_candidates(snap.env_id, snap.episode_id)
             last_reason = reason
             break
-        if cid not in nonempty:
+        n_legal_candidates += n_legal
+        n_legal_empty_patch += sum(1 for i in legal if i not in nonempty)
+        empty_sel = selected_action_empty_patch(cid, idx, snap, nonempty)
+        if empty_sel:
             n_empty_patch += 1
         loop_guard[cid] += 1
         observation = bundle.observations.observe()
@@ -214,6 +220,8 @@ def run_episode(bundle, case_id, rng, timeouts, contract_aware, diag_policy):
         "n_ge2": n_ge2,
         "n_force": n_force,
         "n_empty_patch": n_empty_patch,
+        "n_legal_candidates": n_legal_candidates,
+        "n_legal_empty_patch": n_legal_empty_patch,
         "mean_branch": statistics.mean(branches) if branches else 0.0,
         "prior_edge_count": prior_n,
         "prior_empty": prior_empty,
@@ -293,6 +301,12 @@ def run_family(task_id, manifest, H, seed, log_path):
             "ge2_rate": (sum(e["n_ge2"] for e in episodes) / max(1, sum(e["n_decisions"] for e in episodes))),
             "force_rate": (sum(e["n_force"] for e in episodes) / max(1, sum(e["n_decisions"] for e in episodes))),
             "empty_patch_rate": (sum(e["n_empty_patch"] for e in episodes) / max(1, sum(e["n_decisions"] for e in episodes))),
+            "selected_action_empty_patch_rate": (sum(e["n_empty_patch"] for e in episodes) / max(1, sum(e["n_decisions"] for e in episodes))),
+            "legal_candidate_empty_patch_rate": (sum(int(e.get("n_legal_empty_patch") or 0) for e in episodes) / max(1, sum(int(e.get("n_legal_candidates") or 0) for e in episodes))),
+            "empty_patch_denominators": {
+                "selected_action": "n_empty_patch / n_decisions",
+                "legal_candidate": "n_legal_empty_patch / n_legal_candidates",
+            },
             "prior_nonempty_rate": sum(1 for e in episodes if not e["prior_empty"]) / max(1, len(episodes)),
             "failure_reasons": dict(Counter(e["reason"] for e in episodes if not e["success"])),
             "success_seconds": [e["episode_seconds"] for e in episodes if e["success"]],

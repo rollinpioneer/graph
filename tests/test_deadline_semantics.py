@@ -1,7 +1,9 @@
 """Stage 2A production tests for frozen deadline semantics. No Method change."""
 from __future__ import annotations
 
+import json
 import math
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -10,10 +12,31 @@ import torch
 from cp_disr.adapters import EvaluationInput
 from cp_disr.collector import Collector
 from cp_disr.platforms.libero.task_evaluator import TaskEvaluator
-from cp_disr.rl import Transition, scalar_targets, gamma
+from cp_disr.rl import Transition, scalar_targets, gamma, set_suite_half_life, clear_suite_half_life, suite_half_life
 from cp_disr.torch_rl import PPO, save_checkpoint, load_checkpoint
 
 
+def _reference_H():
+    root = Path(__file__).resolve().parents[1]
+    path = root / "runs" / "stage_0a" / "reference_execution_manifest.json"
+    return float(json.loads(path.read_text(encoding="utf-8"))["H"])
+
+
+@pytest.fixture(autouse=True)
+def bind_calibrated_H():
+    """Bind Method 2.1.1 suite H for this module; do not inherit leftover global H."""
+    H = _reference_H()
+    set_suite_half_life(H)
+    yield H
+    clear_suite_half_life()
+
+
+@pytest.mark.pure
+def test_deadline_gamma_half_life_is_calibrated_H(bind_calibrated_H):
+    H = bind_calibrated_H
+    assert suite_half_life() == pytest.approx(H)
+    assert gamma(H) == pytest.approx(0.5, abs=1e-12, rel=1e-12)
+    assert gamma(H, H=H) == pytest.approx(0.5, abs=1e-12, rel=1e-12)
 class FakeEnv:
     def __init__(self, goal=False, task_id="T_A"):
         self._goal = bool(goal)
@@ -160,3 +183,4 @@ def test_deadline_10_success_reward_not_repeated():
     r2 = ev.evaluate(EvaluationInput("T_A", "e", "ep", (), 3.0, 2.0, 3.0))
     assert r1.success and r1.reward_events
     assert r2.success and r2.reward_events == ()
+
