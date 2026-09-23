@@ -1,0 +1,117 @@
+diff --git a/src/cp_disr/cli.py b/src/cp_disr/cli.py
+index 4d55218..19de935 100644
+--- a/src/cp_disr/cli.py
++++ b/src/cp_disr/cli.py
+@@ -1,7 +1,7 @@
+ """Offline validations are torch/API independent; execution fails closed on bindings."""
+ import argparse, json, subprocess, sys
+ from pathlib import Path
+-from .common import BindingError, ContractError, canonical
++from .common import BindingError, ContractError, DataIntegrityError, canonical
+ from .runtime import require_runtime, require_cache_configuration
+ 
+ def read(path):
+@@ -32,11 +32,11 @@ def main(argv=None):
+         "stage-1a-run",
+         "stage-1a-v11-run",
+         "stage-1a-v11-final-eval",
+-        "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run",
++        "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run", "stage-2a-v11-run",
+     )
+     for name in core:
+         sp = sub.add_parser(name)
+-        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-1a-v11-run", "stage-1a-v11-final-eval", "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run"):
++        if name in ("validate-controller", "validate-verifier", "validate-evaluator", "stage-1a-preflight", "stage-1a-run", "stage-1a-v11-run", "stage-1a-v11-final-eval", "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run", "stage-2a-v11-run"):
+             sp.add_argument("--gpu", type=int, default=0)
+         if name == "stage-1a-preflight":
+             sp.add_argument("--all-p0", action="store_true")
+@@ -66,6 +66,16 @@ def main(argv=None):
+         if name == "stage-1a-v11-final-eval":
+             sp.add_argument("--phase", choices=["freeze", "register", "materialize", "eval", "report", "all"], default="all")
+             sp.add_argument("--method", choices=["B2", "Full"], default=None)
++
++        if name == "stage-2a-v11-run":
++            sp.add_argument("--phase", choices=["sync-1a", "freeze", "materialize", "startup", "train", "select", "eval", "report", "all"], default="all")
++            sp.add_argument("--task", choices=["T_B", "T_C"], default=None)
++            sp.add_argument("--method", choices=["B0", "B1-K", "B2", "Full"], default=None)
++            sp.add_argument("--stamp", default=None)
++            sp.add_argument("--configsha", default=None)
++            sp.add_argument("--resume", action="store_true")
++            sp.add_argument("--skip-startup-gates", action="store_true")
++            sp.add_argument("--max-updates", type=int, default=64)
+     cache = sub.add_parser("validate-relation-cache")
+     cache.add_argument("--cache-directory", type=Path)
+     t = sub.add_parser("run-unit-tests")
+@@ -164,6 +174,14 @@ def main(argv=None):
+             from . import stage2a_startup_gate
+             print(canonical(stage2a_startup_gate.cmd_stage_2a_startup_gate(root, gpu=gpu)))
+             return 0
++        if a.command == "stage-2a-v11-run":
++            from . import stage2a_v11
++            result = stage2a_v11.cmd_stage_2a_v11_run(root, gpu=getattr(a, "gpu", 0), phase=getattr(a, "phase", "all"), task=getattr(a, "task", None), method=getattr(a, "method", None), stamp=getattr(a, "stamp", None), configsha=getattr(a, "configsha", None), resume=bool(getattr(a, "resume", False)), skip_startup_gates=bool(getattr(a, "skip_startup_gates", False)), max_updates=int(getattr(a, "max_updates", 64)))
++            print(canonical(result))
++            status = result.get("status") if isinstance(result, dict) else None
++            if status in ("BLOCKED", "NEEDS_RERUN"):
++                return 2
++            return 0
+         if a.command == "stage-2a-run":
+             from . import stage2a_explore
+             print(canonical(stage2a_explore.cmd_stage_2a_run(root, a.task, a.method, a.seed, gpu=gpu, max_updates=getattr(a, "max_updates", 64), stop_after_updates=getattr(a, "stop_after_updates", None), resume=bool(getattr(a, "resume", False)))))
+@@ -175,7 +193,7 @@ def main(argv=None):
+         if a.command == "stage-1a-preflight":
+             print(canonical(stage1a.cmd_stage_1a_preflight(root, gpu=gpu, resume=bool(getattr(a, "resume_p0", False)))))
+             return 0
+-    except (BindingError, ContractError, ValueError, FileNotFoundError) as error:
++    except (BindingError, ContractError, DataIntegrityError, ValueError, FileNotFoundError) as error:
+         print(canonical({"status": "BLOCKED", "error": str(error)}))
+         return 2
+ 
+diff --git a/src/cp_disr/platforms/libero/runtime_factory.py b/src/cp_disr/platforms/libero/runtime_factory.py
+index 847d9d6..4d0b719 100644
+--- a/src/cp_disr/platforms/libero/runtime_factory.py
++++ b/src/cp_disr/platforms/libero/runtime_factory.py
+@@ -157,7 +157,7 @@ def create_runtime(manifest: dict):
+     split = _read(root / runtime["task_splits"]["D0"])
+     cases = {}
+     caches = {}
+-    for row in split["train"] + split["dev"]:
++    for row in split["train"] + split["dev"] + list(split.get("test") or []):
+         spec = CaseSpec(
+             case_id=row["case_id"],
+             split=row["split"],
+diff --git a/status/stage_1a.json b/status/stage_1a.json
+index cb967ec..73b4402 100644
+--- a/status/stage_1a.json
++++ b/status/stage_1a.json
+@@ -87,7 +87,14 @@
+       "N": 8192,
+       "T": 39602.150000001166,
+       "selected_checkpoint": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_1a/D0/B2/seed_0/20260922T164616Z_1a2768d8/checkpoints/n_008192.pt",
+-      "test": "NOT_CREATED"
++      "test": {
++        "status": "PASS",
++        "valid": 30,
++        "success": 29,
++        "mean_G": 0.6137862199598949,
++        "final_test_dir": "runs/stage_1a/final_test_id/20260923T105220Z_55e13e1c",
++        "note": "synced from completed Stage 1A final_test; training numbers unchanged"
++      }
+     },
+     "Full": {
+       "planned_id": "v11_1A_D0_Full_s0",
+@@ -96,7 +103,14 @@
+       "N": 8192,
+       "T": 40727.25000000116,
+       "selected_checkpoint": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_1a/D0/Full/seed_0/20260922T164616Z_1a2768d8/checkpoints/n_008192.pt",
+-      "test": "NOT_CREATED"
++      "test": {
++        "status": "PASS",
++        "valid": 30,
++        "success": 29,
++        "mean_G": 0.6137862199598949,
++        "final_test_dir": "runs/stage_1a/final_test_id/20260923T105220Z_55e13e1c",
++        "note": "synced from completed Stage 1A final_test; training numbers unchanged"
++      }
+     }
+   },
+   "issues": [],

@@ -1,0 +1,42 @@
+{
+  "default_plan": "new_attempts_from_scratch_on_clock_integrity_r1",
+  "do_not_execute_until_explicit_resume_authorization": true,
+  "keep_old_attempts": [
+    "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B0/seed_0/20260923T121938Z_79c690f9",
+    "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B1-K/seed_0/20260923T121938Z_79c690f9"
+  ],
+  "restart_from_scratch": [
+    {
+      "planned_id": "v11_2A_T_B_B0_s0",
+      "seed": 0,
+      "reason": "both complete PPO updates trained on padded zero-physics transitions"
+    },
+    {
+      "planned_id": "v11_2A_T_B_B1-K_s0",
+      "seed": 0,
+      "reason": "both complete PPO updates trained on padded zero-physics transitions"
+    }
+  ],
+  "unstarted_use_new_runtime": [
+    "v11_2A_T_B_B2_s0",
+    "v11_2A_T_B_Full_s0",
+    "v11_2A_T_C_B0_s0",
+    "v11_2A_T_C_B1-K_s0",
+    "v11_2A_T_C_B2_s0",
+    "v11_2A_T_C_Full_s0"
+  ],
+  "reuse_uncontaminated_prefix": {
+    "claimed": false,
+    "n_000000": "step0 only; not a trained checkpoint; runtime change anyway",
+    "update_complete_1_or_2": "contaminated"
+  },
+  "budgets_unchanged": {
+    "Ncap": 65536,
+    "max_complete_updates": 64,
+    "Tcap": "Ncap * d_ref(task) from actual manifest"
+  },
+  "H_d_ref": "keep current calibrated values unless later evidence shows reference calibration used padded durations",
+  "old_attempt_cost": "remains on ledger; not a new independent seed",
+  "runtime_revision": "clock_integrity_r1",
+  "stop_must_be_lifted_only_by_new_authorization": true
+}

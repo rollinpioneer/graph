@@ -1,0 +1,473 @@
+diff --git a/src/cp_disr/collector.py b/src/cp_disr/collector.py
+index 5e43369..0cae578 100644
+--- a/src/cp_disr/collector.py
++++ b/src/cp_disr/collector.py
+@@ -1,73 +1,138 @@
+ """One real skill execution per transition; no nominal environment substitute."""
+-from .rl import Transition,interval_reward,gamma
++from .rl import Transition, interval_reward, gamma
+ from .adapters import EvaluationInput
+-from .common import DataIntegrityError
++from .common import DataIntegrityError, DiagnosticAbort, ClockIntegrityError
+ 
+ class Collector:
+-    def __init__(self,bundle,policy):
+-        self.bundle=bundle;self.policy=policy;self.prefixes={};self.weights={};self.success_seen=set();self.last_output=None;self.last_execution=None
+-    def reset_episode(self,env_id,episode_id):
+-        self.prefixes[(env_id,episode_id)]=[];self.weights[(env_id,episode_id)]=1.
++    def __init__(self, bundle, policy):
++        self.bundle = bundle
++        self.policy = policy
++        self.prefixes = {}
++        self.weights = {}
++        self.success_seen = set()
++        self.last_output = None
++        self.last_execution = None
++
++    def reset_episode(self, env_id, episode_id):
++        self.prefixes[(env_id, episode_id)] = []
++        self.weights[(env_id, episode_id)] = 1.
++
+     def state_dict(self):
+         return {
+-            'prefixes_len': {f'{a}|{b}': len(v) for (a,b),v in self.prefixes.items()},
+-            'weights': {f'{a}|{b}': float(w) for (a,b),w in self.weights.items()},
++            'prefixes_len': {f'{a}|{b}': len(v) for (a, b), v in self.prefixes.items()},
++            'weights': {f'{a}|{b}': float(w) for (a, b), w in self.weights.items()},
+             'success_seen': [list(x) for x in self.success_seen],
+         }
++
+     def load_discount_success(self, payload):
+         self.weights = {}
+-        for k,w in (payload.get('weights') or {}).items():
+-            a,b = k.split('|',1)
+-            self.weights[(a,b)] = float(w)
++        for k, w in (payload.get('weights') or {}).items():
++            a, b = k.split('|', 1)
++            self.weights[(a, b)] = float(w)
+         self.success_seen = {tuple(x) for x in (payload.get('success_seen') or [])}
+-    def step(self,snapshot,deterministic=False):
+-        if snapshot.synthetic_unit_fixture:raise DataIntegrityError('Synthetic unit fixtures cannot enter real collection')
++
++    def _episode_elapsed(self, now):
++        start = float(self.bundle.episode_start_seconds)
++        return float(now) - start
++
++    def step(self, snapshot, deterministic=False):
++        if snapshot.synthetic_unit_fixture:
++            raise DataIntegrityError('Synthetic unit fixtures cannot enter real collection')
+         import torch
+         from .torch_rl import prefix_hidden
+-        key=(snapshot.env_id,snapshot.episode_id);prefix=self.prefixes[key]
+-        now=float(self.bundle.clock.now_seconds())
+-        deadline=float(self.bundle.evaluator.deadline)
+-        remaining=deadline-now
+-        if remaining<=0:
+-            actual=self.bundle.evaluator.evaluate(EvaluationInput(self.bundle.task_id,*key,(),max(now,deadline),now,max(now,deadline)))
+-            return None,actual
+-        with torch.no_grad():out=self.policy(snapshot,prefix_hidden(self.policy,prefix))
+-        self.last_output=out
++        key = (snapshot.env_id, snapshot.episode_id)
++        prefix = self.prefixes[key]
++        now = float(self.bundle.clock.now_seconds())
++        deadline = float(self.bundle.evaluator.deadline)
++        elapsed_now = self._episode_elapsed(now)
++        remaining = deadline - elapsed_now
++        if remaining <= 0:
++            actual = self.bundle.evaluator.evaluate(
++                EvaluationInput(self.bundle.task_id, *key, (), max(elapsed_now, deadline), now, now)
++            )
++            return None, actual
++        with torch.no_grad():
++            out = self.policy(snapshot, prefix_hidden(self.policy, prefix))
++        self.last_output = out
+         if out.distribution is None:
+-            reason=self.bundle.safety.end_no_candidates(*key)
+-            return None,{'terminated':True,'reason':reason,'no_transition':True}
+-        candidate,index=out.select(bool(deterministic))
+-        observation=self.bundle.observations.observe()
+-        if not self.bundle.safety.can_execute(candidate,observation):raise DataIntegrityError('Safety/mask disagreement before execution')
+-        contract=next(c for c in snapshot.template.contracts if c.id==candidate)
+-        if not isinstance(contract.timeout_seconds,(int,float)) or contract.timeout_seconds<=0:raise DataIntegrityError('Unbound controller timeout')
+-        start=self.bundle.clock.now_seconds()
+-        skill_timeout=float(contract.timeout_seconds)
+-        capped=min(skill_timeout, max(remaining, 1.0/20.0))
+-        execution=self.bundle.executor.execute(candidate,capped)
+-        self.last_execution=execution
+-        raw=getattr(self.bundle.executor,'last',None)
++            reason = self.bundle.safety.end_no_candidates(*key)
++            return None, {'terminated': True, 'reason': reason, 'no_transition': True}
++        candidate, index = out.select(bool(deterministic))
++        observation = self.bundle.observations.observe()
++        if not self.bundle.safety.can_execute(candidate, observation):
++            raise DataIntegrityError('Safety/mask disagreement before execution')
++        contract = next(c for c in snapshot.template.contracts if c.id == candidate)
++        if not isinstance(contract.timeout_seconds, (int, float)) or contract.timeout_seconds <= 0:
++            raise DataIntegrityError('Unbound controller timeout')
++        start = self.bundle.clock.now_seconds()
++        skill_timeout = float(contract.timeout_seconds)
++        capped = min(skill_timeout, max(remaining, 1.0 / 20.0))
++        execution = self.bundle.executor.execute(candidate, capped)
++        self.last_execution = execution
++        raw = getattr(self.bundle.executor, 'last', None)
+         if isinstance(raw, dict) and raw.get('timeout') and capped < skill_timeout - 1e-9:
+             if isinstance(execution, dict):
+-                execution['controller_exit']='TASK_DEADLINE'
++                execution['controller_exit'] = 'TASK_DEADLINE'
+             else:
+-                object.__setattr__(execution,'controller_exit','TASK_DEADLINE')
+-            if isinstance(raw, dict):
+-                raw['controller_exit']='TASK_DEADLINE'
+-                raw['task_deadline_capped']=True
+-        observation=self.bundle.observations.observe();measured=self.bundle.perception.infer(observation)
+-        facts=self.bundle.verifier.verify(measured,execution)
+-        end=self.bundle.clock.now_seconds();duration=self.bundle.clock.duration_seconds(start,end);gamma(duration)
+-        elapsed=end-self.bundle.episode_start_seconds
+-        actual=self.bundle.evaluator.evaluate(EvaluationInput(self.bundle.task_id,*key,execution.evidence_ids,elapsed,start,end))
+-        if actual.success and key in self.success_seen and any(r for _,r in actual.reward_events):raise DataIntegrityError('Repeated terminal success reward')
+-        if any(r for _,r in actual.reward_events) and not actual.success:raise DataIntegrityError('Reward without independent task success')
+-        if actual.reason=='DEADLINE' and (actual.truncated or not actual.terminated or actual.success or actual.reward_events):
++                object.__setattr__(execution, 'controller_exit', 'TASK_DEADLINE')
++            raw['controller_exit'] = 'TASK_DEADLINE'
++            raw['task_deadline_capped'] = True
++        if isinstance(raw, dict):
++            exit_reason = str(raw.get('controller_exit') or '')
++            if raw.get('interrupted') or raw.get('nan_blocked') or exit_reason.startswith('INTERRUPT'):
++                raise DiagnosticAbort({
++                    'detail': 'technical_controller_failure',
++                    'controller_exit': exit_reason,
++                    'steps': raw.get('steps'),
++                    'sim_duration': raw.get('sim_duration'),
++                    'raw_sim_start': raw.get('raw_sim_start'),
++                    'raw_sim_end': raw.get('raw_sim_end'),
++                })
++        observation = self.bundle.observations.observe()
++        measured = self.bundle.perception.infer(observation)
++        facts = self.bundle.verifier.verify(measured, execution)
++        end = self.bundle.clock.now_seconds()
++        try:
++            duration = self.bundle.clock.duration_seconds(start, end)
++        except ClockIntegrityError as exc:
++            raise DiagnosticAbort({
++                'detail': 'clock_integrity_error',
++                'message': str(exc),
++                'start': start,
++                'end': end,
++            }) from exc
++        if (not isinstance(duration, (int, float))) or (not duration) or duration <= 0:
++            raise DiagnosticAbort({
++                'detail': 'non_positive_duration_rejected',
++                'duration': duration,
++                'start': start,
++                'end': end,
++                'controller_exit': getattr(execution, 'controller_exit', None) if not isinstance(execution, dict) else execution.get('controller_exit'),
++                'steps': None if not isinstance(raw, dict) else raw.get('steps'),
++            })
++        gamma(duration)
++        elapsed = self._episode_elapsed(end)
++        actual = self.bundle.evaluator.evaluate(
++            EvaluationInput(self.bundle.task_id, *key, execution.evidence_ids, elapsed, start, end)
++        )
++        if actual.success and key in self.success_seen and any(r for _, r in actual.reward_events):
++            raise DataIntegrityError('Repeated terminal success reward')
++        if any(r for _, r in actual.reward_events) and not actual.success:
++            raise DataIntegrityError('Reward without independent task success')
++        if actual.reason == 'DEADLINE' and (actual.truncated or not actual.terminated or actual.success or actual.reward_events):
+             raise DataIntegrityError('DEADLINE must be terminated, not truncated, with empty reward')
+-        if actual.success:self.success_seen.add(key)
+-        reward=interval_reward(duration,actual.reward_events)
+-        next_snapshot=self.bundle.snapshot_builder.build(snapshot,facts,observation,execution,end)
+-        with torch.no_grad():next_v=0. if actual.terminated else float(self.policy(next_snapshot,out.hidden).value)
+-        transition=Transition(snapshot,next_snapshot,candidate,float(out.distribution.log_prob(torch.tensor(index,device=out.logits.device))),float(out.value),next_v,reward,duration,self.weights[key],actual.terminated,actual.truncated,actual.reason,tuple(prefix))
+-        prefix.append(snapshot);self.weights[key]*=gamma(duration)
+-        return transition,actual
++        if actual.success:
++            self.success_seen.add(key)
++        reward = interval_reward(duration, actual.reward_events)
++        next_snapshot = self.bundle.snapshot_builder.build(snapshot, facts, observation, execution, end)
++        with torch.no_grad():
++            next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)
++        transition = Transition(
++            snapshot, next_snapshot, candidate,
++            float(out.distribution.log_prob(torch.tensor(index, device=out.logits.device))),
++            float(out.value), next_v, reward, duration, self.weights[key],
++            actual.terminated, actual.truncated, actual.reason, tuple(prefix),
++        )
++        prefix.append(snapshot)
++        self.weights[key] *= gamma(duration)
++        return transition, actual
+diff --git a/src/cp_disr/common.py b/src/cp_disr/common.py
+index bff4a7d..c3f3a60 100644
+--- a/src/cp_disr/common.py
++++ b/src/cp_disr/common.py
+@@ -6,6 +6,15 @@ from enum import Enum
+ class ContractError(ValueError): pass
+ class BindingError(RuntimeError): pass
+ class DataIntegrityError(ValueError): pass
++class ClockIntegrityError(DataIntegrityError): pass
++class DiagnosticAbort(RuntimeError):
++    def __init__(self, payload=None, message=None):
++        self.payload = payload if payload is not None else {}
++        if message is None:
++            message = "DIAGNOSTIC_ABORT"
++            if self.payload:
++                message = "DIAGNOSTIC_ABORT:" + str(self.payload.get("detail") or self.payload.get("controller_exit") or self.payload)
++        super().__init__(message)
+ 
+ def primitive(value):
+     if is_dataclass(value): return {k:primitive(v) for k,v in value.__dict__.items()}
+diff --git a/src/cp_disr/platforms/libero/clock.py b/src/cp_disr/platforms/libero/clock.py
+index 6dc34b5..4ba9b0d 100644
+--- a/src/cp_disr/platforms/libero/clock.py
++++ b/src/cp_disr/platforms/libero/clock.py
+@@ -1,16 +1,32 @@
+ """Simulation-second clock bound to MuJoCo time. Binding unit token is seconds."""
+ from __future__ import annotations
+ 
++import math
++
++from cp_disr.common import ClockIntegrityError
++
++
+ class DurationProvider:
++    """Frozen sim-clock endpoints only. Never invent a positive duration."""
++
+     def __init__(self, env):
+         self.env = env
+         self._origin = float(env.sim.data.time)
+ 
+     def now_seconds(self) -> float:
+-        return float(self.env.sim.data.time) - self._origin
++        now = float(self.env.sim.data.time) - self._origin
++        if not math.isfinite(now):
++            raise ClockIntegrityError("nonfinite clock.now_seconds: %r" % (now,))
++        return now
+ 
+     def duration_seconds(self, start: float, end: float) -> float:
+-        d = float(end) - float(start)
+-        if d <= 0:
+-            d = 1.0 / 20.0
++        start_f = float(start)
++        end_f = float(end)
++        if not math.isfinite(start_f) or not math.isfinite(end_f):
++            raise ClockIntegrityError("nonfinite clock endpoints start=%r end=%r" % (start, end))
++        d = end_f - start_f
++        if not math.isfinite(d):
++            raise ClockIntegrityError("nonfinite duration start=%r end=%r" % (start, end))
++        if d < 0:
++            raise ClockIntegrityError("negative duration start=%r end=%r d=%r" % (start, end, d))
+         return d
+diff --git a/src/cp_disr/platforms/libero/skill_executor.py b/src/cp_disr/platforms/libero/skill_executor.py
+index 4e981c4..08be6f5 100644
+--- a/src/cp_disr/platforms/libero/skill_executor.py
++++ b/src/cp_disr/platforms/libero/skill_executor.py
+@@ -2,6 +2,7 @@
+ from __future__ import annotations
+ 
+ from dataclasses import dataclass, field
++import math
+ import numpy as np
+ 
+ from .d0_env import OBJECT_HALF, LID_HALF, CONTAINER_H
+@@ -95,10 +96,35 @@ class SkillExecutor:
+                 trace.exit_reason = "INTERRUPT_NAN_ACTION"
+             else:
+                 trace.interrupted = True
+-                trace.exit_reason = "INTERRUPT_CONTROLLER_EXCEPTION:" + type(exc).__name__
++                detail = str(exc).splitlines()[0][:120]
++                trace.exit_reason = "INTERRUPT_CONTROLLER_EXCEPTION:%s:%s" % (type(exc).__name__, detail)
++            trace.states.append("EXCEPTION")
+         return self._finish(trace, start, sim_start)
+ 
++    def _maybe_confirm_tick(self, trace):
++        """Legal reject/immediate return may consume one real control tick; never invent time."""
++        if trace.steps != 0 or trace.interrupted or trace.nan_blocked:
++            return
++        if not trace.rejected:
++            return
++        try:
++            self.env.step_osc(np.zeros(3), GRIP_OPEN, n=1)
++            trace.steps += 1
++            trace.states.append("CONFIRM_TICK")
++        except Exception as exc:  # noqa: BLE001
++            trace.interrupted = True
++            detail = str(exc).splitlines()[0][:120]
++            if "NaN" in str(exc) or "Inf" in str(exc):
++                trace.nan_blocked = True
++                trace.exit_reason = "INTERRUPT_NAN_ACTION"
++            else:
++                trace.exit_reason = "INTERRUPT_CONTROLLER_EXCEPTION:%s:%s" % (type(exc).__name__, detail)
++            trace.states.append("CONFIRM_TICK_FAILED")
++
+     def _finish(self, trace, start, sim_start):
++        self._maybe_confirm_tick(trace)
++        sim_end = float(self.env.sim.data.time)
++        elapsed = sim_end - float(sim_start)
+         trace.end_seconds = self.clock.now_seconds()
+         if trace.exit_reason == "IN_PROGRESS":
+             if trace.timeout:
+@@ -107,9 +133,6 @@ class SkillExecutor:
+                 trace.exit_reason = "REJECTED_UNSAFE_OR_INVALID"
+             else:
+                 trace.exit_reason = "INCOMPLETE_MOTION"
+-        elapsed = float(self.env.sim.data.time) - sim_start
+-        if elapsed <= 0:
+-            elapsed = max(0.05, trace.steps / 20.0)
+         return {
+             "execution_id": f"{trace.skill}-{int(start * 1000)}",
+             "controller_exit": trace.exit_reason,
+@@ -120,6 +143,8 @@ class SkillExecutor:
+             "arguments": trace.arguments,
+             "states": list(trace.states),
+             "sim_duration": elapsed,
++            "raw_sim_start": float(sim_start),
++            "raw_sim_end": sim_end,
+             "steps": trace.steps,
+             "rejected": trace.rejected,
+             "timeout": trace.timeout,
+
+# git status --porcelain (repair paths)
+ M src/cp_disr/collector.py
+ M src/cp_disr/common.py
+ M src/cp_disr/platforms/libero/clock.py
+ M src/cp_disr/platforms/libero/skill_executor.py
+?? src/cp_disr/stage2a_v11.py
+?? tests/test_clock_integrity.py
+?? tools/plan_v11_stage2a_continue.sh
+
+# ---- src/cp_disr/stage2a_v11.py vs startup snapshot ----
+--- /home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/20260923T121938Z/source_snapshot/files/src__cp_disr__stage2a_v11.py	2026-09-23 21:34:56.196881946 +0800
++++ /home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage2a_v11.py	2026-09-23 22:20:34.319729734 +0800
+@@ -9,7 +9,7 @@
+ import torch
+ import yaml
+ 
+-from .common import BindingError, DataIntegrityError, canonical, digest
++from .common import BindingError, DataIntegrityError, DiagnosticAbort, canonical, digest
+ from .neural import canonical_method
+ from .rl import gamma, set_suite_half_life, suite_half_life
+ from .platforms.libero.d0_env import CaseSpec, make_env
+@@ -27,7 +27,14 @@
+ RUNTIME_REL = Path("experiments/manifests/runtime_manifest_v211.yaml")
+ REFERENCE_REL = Path("runs/stage_0a/reference_execution_manifest.json")
+ STOP_REL = Path("experiments/part_2_exploration/stage_2a/orchestrator/STOP_SUPERSEDED_BY_PLAN_V1_1.json")
++CLOCK_STOP_REL = Path("runs/stage_2a/orchestrator/STOP_CLOCK_INTEGRITY.json")
++RUNTIME_REVISION = "clock_integrity_r1"
+ OLD_STAGE_DIR = Path("experiments/part_2_exploration/stage_2a")
++
++def refuse_if_clock_stop(root):
++    p = Path(root) / CLOCK_STOP_REL
++    if p.is_file():
++        raise BindingError("CLOCK_INTEGRITY stop present; refusing Stage 2A train/select/eval/report")
+ BASE_COMMIT = "f34789d6a5e6953b9416d06eb43dfaa14b6530e1"
+ N_CAP = 65536
+ ROLLOUT_N = 1024
+@@ -1023,6 +1030,7 @@
+         "test_ids": [r["case_id"] for r in split.get("test") or []], "hashes": hashes_doc,
+         "old_output_dir_unused": str(OLD_STAGE_DIR), "init": "from_scratch", "warm_start": False,
+         "b1_variant": "B1-K" if canonical_method(method) == "B1" else None,
++        "runtime_revision": RUNTIME_REVISION,
+     }
+     write_json(job_dir / "resolved_config.json", cfg)
+     (job_dir / "resolved_config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
+@@ -1173,7 +1181,32 @@
+                     absent_ep += 1
+                 ep_reward = 0.0
+             snap = bundle.current_snapshot
+-            tstep, result = collector.step(snap, deterministic=False)
++            try:
++                tstep, result = collector.step(snap, deterministic=False)
++            except DiagnosticAbort as exc:
++                payload = getattr(exc, "payload", None) or {"message": str(exc)}
++                rec = {
++                    "event": "DIAGNOSTIC_ABORT",
++                    "task": task_id,
++                    "method": mname,
++                    "case_id": case,
++                    "complete_updates": complete_updates,
++                    "fragment_updates": fragment_updates,
++                    "count": count,
++                    "interaction_seconds": interaction_seconds,
++                    "payload": payload,
++                    "note": "attempt stopped; not DEADLINE; incomplete rollout is not a complete update",
++                }
++                s1.append_jsonl(job_dir / "diagnostic_abort.jsonl", rec)
++                write_json(job_dir / "diagnostic_abort.json", rec)
++                write_json(job_dir / "job_summary.json", {
++                    "task": task_id, "method": mname, "planned_id": planned_id, "run_id": run_id,
++                    "hard_fail": True, "stop_reason": "DIAGNOSTIC_ABORT",
++                    "complete_updates": complete_updates, "fragment_updates": fragment_updates,
++                    "valid_transitions": count, "interaction_seconds": interaction_seconds,
++                    "runtime_revision": RUNTIME_REVISION, "diagnostic": rec,
++                })
++                raise
+             ended = False
+             success = False
+             if tstep is None:
+@@ -1188,6 +1221,13 @@
+                 rec = s1.compact_transition(mname, 0, case, tstep, result, collector.last_output, collector.last_execution, prior.audit_mode, prior.original_hash, source_n, cache_key_s, run_id)
+                 rec["H"] = suite_half_life()
+                 rec["actor_episode_discount_weight"] = False
++                rec["runtime_revision"] = RUNTIME_REVISION
++                raw_exec = getattr(bundle.executor, "last", None)
++                if isinstance(raw_exec, dict):
++                    rec["sim_duration"] = raw_exec.get("sim_duration")
++                    rec["control_steps"] = raw_exec.get("steps")
++                    rec["raw_sim_start"] = raw_exec.get("raw_sim_start")
++                    rec["raw_sim_end"] = raw_exec.get("raw_sim_end")
+                 s1.append_jsonl(job_dir / "transition_log.jsonl", rec)
+                 s1.append_jsonl(job_dir / "decision_log.jsonl", {"decision_id": rec["decision_id"], "selected_candidate_id": rec["selected_candidate_id"], "mask_hash": rec["mask_hash"], "prior_mode": rec["prior_mode"], "H": rec["H"]})
+                 rollout.append(tstep)
+@@ -1400,6 +1440,7 @@
+         if phase == "startup":
+             return {"status": "STARTUP_GATES_PASS", "stamp": stamp, "configsha8": configsha8}
+     if phase in ("train", "all"):
++        refuse_if_clock_stop(root)
+         if task not in TASKS or method not in METHODS:
+             raise BindingError("train phase requires --task and --method")
+         hashes_doc = source_hashes(root, task)
+@@ -1408,12 +1449,15 @@
+         write_json(stage_out / ("job_%s_%s.json" % (task, method_dir_name(method))), summary)
+         return {"status": "JOB_COMPLETE" if not summary.get("hard_fail") else "NEEDS_RERUN", "job": summary, "stamp": stamp, "configsha8": configsha8}
+     if phase == "select":
++        refuse_if_clock_stop(root)
+         path = freeze_selection(root, stamp, configsha8)
+         return {"status": "SELECTION_FROZEN", "path": str(path)}
+     if phase == "eval":
++        refuse_if_clock_stop(root)
+         tests = evaluate_final_tests(root, stamp, configsha8, gpu=gpu)
+         return {"status": "TEST_COMPLETE", "final_test": tests}
+     if phase == "report":
++        refuse_if_clock_stop(root)
+         jobs = []
+         for t in TASKS:
+             for m in METHODS:
+
+# ---- tools/plan_v11_stage2a_continue.sh vs startup snapshot ----
+--- /home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/20260923T121938Z/source_snapshot/files/tools__plan_v11_stage2a_continue.sh	2026-09-23 21:34:56.197633020 +0800
++++ /home/__compress_data/xushijie/graph_cp_disr_v2_1/tools/plan_v11_stage2a_continue.sh	2026-09-23 22:20:34.321067945 +0800
+@@ -2,6 +2,12 @@
+ set -euo pipefail
+ ROOT=/home/__compress_data/xushijie/graph_cp_disr_v2_1
+ cd "$ROOT"
++CLOCK_STOP="$ROOT/runs/stage_2a/orchestrator/STOP_CLOCK_INTEGRITY.json"
++if [[ -f "$CLOCK_STOP" ]]; then
++  echo "REFUSING_DISPATCH_STOP_CLOCK_INTEGRITY"
++  cat "$CLOCK_STOP"
++  exit 75
++fi
+ export PYTHONPATH="$ROOT/src:/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages"
+ export MUJOCO_GL=egl
+ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+@@ -50,6 +56,11 @@
+ jobs=("T_B B0" "T_B B1-K" "T_B B2" "T_B Full" "T_C B0" "T_C B1-K" "T_C B2" "T_C Full")
+ i=0
+ while [[ $i -lt ${#jobs[@]} ]]; do
++  if [[ -f "$CLOCK_STOP" ]]; then
++    echo "REFUSING_DISPATCH_STOP_CLOCK_INTEGRITY"
++    cat "$CLOCK_STOP"
++    exit 75
++  fi
+   mapfile -t gpus < <(pick_gpus 2)
+   g0=${gpus[0]:-0}
+   g1=${gpus[1]:-0}

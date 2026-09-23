@@ -1,0 +1,154 @@
+manifest_status: PLAN_V1_1_PART0_RUNTIME
+execution_host_identity: xushijie@gpu03 (172.19.164.160)
+runtime:
+  experiment_root: /home/__compress_data/xushijie/graph_cp_disr_v2_1/experiments
+  repository_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1
+  repository_url: git@github.com:rollinpioneer/graph.git
+  git_hash: c17b52fb2d1c5a2362f9ea4fe3b5df43c18ae189
+  simulator_or_robot:
+    platform: LIBERO_robosuite_mujoco
+    libero_commit: 8f1084e3132a39270c3a13ebe37270a43ece2a01
+    robosuite: 1.4.0
+    mujoco: 3.6.0
+    python: /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages
+      reused read-only into .venv-stage0a
+  environment_version: plan-v1.1-method-2.1.1
+  task_assets:
+    D0: src/cp_disr/platforms/libero/d0_env.py
+    license: assets/cp_disr/LICENSE
+    owned_by: cp_disr_project
+    T_B: src/cp_disr/platforms/libero/d0_env.py
+    T_C: src/cp_disr/platforms/libero/d0_env.py
+  controller_manifest: experiments/part_1_smoke/stage_1a_p0/controller_manifest.yaml
+  camera:
+    name: agentview
+    width: 128
+    height: 128
+    depth: true
+    fixed: true
+  calibration_manifest: src/cp_disr/platforms/libero/perception.py::camera_calibration
+  perception_checkpoint: cp-disr-d0-rgbd-colorseg-v2
+  verifier_thresholds:
+    min_pixels: 8
+    depth_valid:
+    - 0.05
+    - 4.0
+    color_tol: 0.32
+    held_xy: 0.06
+    held_z: 0.07
+    table_z_tol: 0.05
+    inside_margin: 0.02
+    buffer_margin: 0.03
+    open_offset: 0.08
+    gripper_open: 0.022
+  skill_timeouts:
+    D0:
+      OPEN: 16.0
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
+    T_B: &id001
+      OPEN: 16.0
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
+    T_C: *id001
+  task_deadlines:
+    D0: 43.0
+    T_B: 60.0
+    T_C: 60.0
+  actual_interaction_time_unit: seconds
+  reference_skill_seconds_by_task:
+    D0: 4.5500000000015195
+    T_B: 4.199999999997672
+    T_C: 4.399999999997561
+  task_evaluator_version: cp-disr-d0-task-evaluator-v1
+  hardware:
+    host: gpu03
+    cpu_count: 112
+    gpu_inventory:
+    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
+      40960 MiB, 29482 MiB
+    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
+      40960 MiB, 34804 MiB
+    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
+      40960 MiB, 37579 MiB
+    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
+      40960 MiB, 39191 MiB
+    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
+      40960 MiB, 13842 MiB
+    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
+      40960 MiB, 36851 MiB
+    reservation: NOT_RESERVED_FOR_TRAINING
+  gpu_driver: 610.57.04
+  os:
+    distribution: Rocky Linux 10.2
+    kernel: 7.2.2-1.el10.elrepo.x86_64
+    architecture: x86_64
+    container: NOT_APPLICABLE_HOST_EXECUTION
+  safety_authorization: src/cp_disr/platforms/libero/safety.py
+  entrypoints: manifests/entrypoints.yaml
+  task_splits:
+    D0: configs/splits/D0_stage_1a.json
+    T_B: configs/splits/T_B_stage_0a.json
+    T_C: configs/splits/T_C_stage_2a.json
+  git_hash_semantics: Pre-revision base; delivery receipt records resulting commit
+  d0_contract_path: configs/contracts/d0_runtime_skills.yaml
+  actual_clock_source: mujoco_sim_data_time
+  clock_semantics: DurationProvider reads env.sim.data.time (MuJoCo simulation seconds).
+    The required binding token remains seconds.
+  suite_H_seconds: 23.09999999999752
+  stage_2a_contract_path: configs/runtime/stage_2a_contract_registry.yaml
+vlm_runtime:
+  region: cn-beijing
+  base_http_api_url: https://dashscope.aliyuncs.com/api/v1
+  api_account_authorized: MUST_VERIFY_MODEL_ACCESS
+  fewshot_manifest: MUST_BIND
+  model_access_verification_stage: 0C
+  automatic_fallback_allowed: false
+execution_scope: Stage 0A environment reuse, library probe, manifest audit; no API/robot/training/evaluation/Stage
+  0B
+entrypoints_manifest_ref: manifests/entrypoints.yaml
+resource_settings:
+  num_envs: MUST_BIND_AFTER_PLATFORM_BINDING
+  candidate_view_chunk: MUST_BIND_AFTER_MODEL_IMPLEMENTATION
+  clock_unit_required: seconds
+  actual_clock_source: mujoco_sim_data_time
+runtime_factory:
+  module: cp_disr.platforms.libero.runtime_factory
+  factory: create_runtime
+  source_path: /home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/platforms/libero/runtime_factory.py
+  sha256: 3ba733bf460d4927b0e42d183c8b5d9afa33740a00b76bb563ff2b26fb3c78b6
+adapter_protocols:
+  path_from_repository: src/cp_disr/adapters.py
+  sha256: 3db83aeb94dda4729b19a3714ded27e2e2186f5ae542fc954aa359b9683c6299
+  concrete_implementations_bound: false
+stage_0c_r1_platform_audit: experiments/part_0_validation/stage_0c/platform_selection_report.md
+stage_0c_r1_status: BLOCKED_PLATFORM_SKILL_BINDING
+stage_0c_r1_resolved_runtime_fields:
+- mujoco_local_installation
+- robosuite_local_installation
+- libero_repo_path
+- fixed_agentview_rgb_depth_probe
+stage_0c_r1_unresolved_runtime_fields:
+- cp_disr_high_level_controller
+- postcondition_verifier
+- independent_success_verifier
+- task_evaluator
+- safety_authorization
+- skill_timeout_deadline
+- reference_skill_seconds
+- perception_calibration
+- clean_frozen_platform_commit
+stage_0c_r2_platform: LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
+stage_0c_r2_capture_adapter: src/cp_disr/platforms/libero/scene_capture.py
+stage_0c_r2_formal_scene_count: 24
+stage_0c_r2_fewshot_count: 3
+stage_0c_r2_stage_1a_runtime_ready: true
+document_version: '3.1'
+method_version: 2.1.1
+plan_version: '1.1'

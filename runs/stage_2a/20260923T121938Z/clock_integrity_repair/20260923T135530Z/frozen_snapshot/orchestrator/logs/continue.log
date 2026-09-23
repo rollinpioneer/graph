@@ -1,0 +1,104 @@
+waiting for materialize pid if any
+materialize still running t=1
+materialize still running t=2
+materialize still running t=3
+materialize still running t=4
+materialize still running t=5
+materialize still running t=6
+materialize still running t=7
+materialize still running t=8
+materialize still running t=9
+materialize still running t=10
+materialize still running t=11
+materialize still running t=12
+materialize still running t=13
+materialize still running t=14
+materialize still running t=15
+materialize still running t=16
+materialize still running t=17
+materialize still running t=18
+materialize still running t=19
+materialize still running t=20
+materialize still running t=21
+materialize still running t=22
+materialize still running t=23
+materialize still running t=24
+materialize still running t=25
+materialize still running t=26
+materialize still running t=27
+materialize still running t=28
+materialize still running t=29
+materialize still running t=30
+materialize still running t=31
+materialize still running t=32
+materialize still running t=33
+materialize still running t=34
+materialize still running t=35
+materialize still running t=36
+materialize still running t=37
+materialize still running t=38
+materialize still running t=39
+materialize still running t=40
+materialize still running t=41
+materialize still running t=42
+materialize still running t=43
+materialize still running t=44
+materialize still running t=45
+materialize still running t=46
+=== deadline tests ===
+...........                                                              [100%]
+11 passed in 1.83s
+=== startup ===
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/cli.py", line 197, in <module>
+    raise SystemExit(main())
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/cli.py", line 179, in main
+    print(canonical(stage2a_v11.cmd_stage_2a_v11_run(root, gpu=getattr(a, "gpu", 0), phase=getattr(a, "phase", "all"), task=getattr(a, "task", None), method=getattr(a, "method", None), stamp=getattr(a, "stamp", None), configsha=getattr(a, "configsha", None), resume=bool(getattr(a, "resume", False)), skip_startup_gates=bool(getattr(a, "skip_startup_gates", False)), max_updates=int(getattr(a, "max_updates", 64)))))
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage2a_v11.py", line 1387, in cmd_stage_2a_v11_run
+    gates, blocked, prof = startup_hard_checks(root, stage_out, device, t)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage2a_v11.py", line 764, in startup_hard_checks
+    write_json(out / "startup" / task_id / ("%s_dry.json" % method_dir_name(method)), dry)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage1a_v11.py", line 64, in write_json
+    path.write_text(json.dumps(obj, indent=2, ensure_ascii=False, default=s1._json_default) + "\n", encoding="utf-8")
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 201, in encode
+    chunks = list(chunks)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 431, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/home/__compress_data/xushijie/.conda/envs/lerobot/lib/python3.10/json/encoder.py", line 438, in _iterencode
+    o = _default(o)
+  File "/home/__compress_data/xushijie/graph_cp_disr_v2_1/src/cp_disr/stage1a_smoke.py", line 55, in _json_default
+    raise TypeError(type(value))
+TypeError: <class 'torch.Tensor'>
+Warning: make sure gym is installed if you want to use the GymWrapper.
+waiting for materialize pid if any
+=== deadline tests ===
+...........                                                              [100%]
+11 passed in 1.56s
+=== startup ===
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Warning: make sure gym is installed if you want to use the GymWrapper.
+{"configsha8":"79c690f9","stamp":"20260923T121938Z","status":"STARTUP_GATES_PASS"}
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Warning: make sure gym is installed if you want to use the GymWrapper.
+{"configsha8":"79c690f9","stamp":"20260923T121938Z","status":"STARTUP_GATES_PASS"}
+launch T_B B0 gpu=0
+launch T_B B1-K gpu=5

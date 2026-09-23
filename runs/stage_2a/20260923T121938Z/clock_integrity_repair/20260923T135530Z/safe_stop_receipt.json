@@ -1,0 +1,144 @@
+{
+  "document": "safe_stop_receipt",
+  "repair_utc": "20260923T135530Z",
+  "written_at": "2026-09-23T14:26:27Z",
+  "stage": "2A",
+  "status": "NEEDS_RERUN",
+  "execution_reason": "CLOCK_NONADVANCEMENT_AND_DURATION_MISMATCH",
+  "execution_scope": "STAGE_2A_CLOCK_INTEGRITY_STOP_AND_REPAIR",
+  "do_not_resume": true,
+  "do_not_select_eval_report": true,
+  "historical_stop_untouched": "experiments/part_2_exploration/stage_2a/orchestrator/STOP_SUPERSEDED_BY_PLAN_V1_1.json",
+  "new_queue_stop": "runs/stage_2a/orchestrator/STOP_CLOCK_INTEGRITY.json",
+  "process_verification": {
+    "clues_were_not_blind_kill_targets": true,
+    "verified_at": "2026-09-23T13:57:06Z",
+    "identities": [
+      {
+        "pid": 3600295,
+        "role": "leftover_ssh_wrapper",
+        "stat_before": "T",
+        "started": "2026-09-23 20:43:41 +0800"
+      },
+      {
+        "pid": 3600298,
+        "role": "continue.sh_orchestrator",
+        "stat_before": "T",
+        "started": "2026-09-23 20:43:41 +0800",
+        "cwd": "/home/__compress_data/xushijie/graph_cp_disr_v2_1"
+      },
+      {
+        "pid": 3602655,
+        "role": "wait_subshell_B0",
+        "stat_before": "T"
+      },
+      {
+        "pid": 3602656,
+        "role": "wait_subshell_B1K",
+        "stat_before": "T"
+      },
+      {
+        "pid": 3602657,
+        "role": "T_B_B0_train",
+        "stat_before": "Rl",
+        "cmd": "stage-2a-v11-run --phase train --stamp 20260923T121938Z --configsha 79c690f9 --task T_B --method B0 --resume",
+        "gpu_uuid": "GPU-4120c94f-c9c2-6653-a0ec-41957aa85822"
+      },
+      {
+        "pid": 3602658,
+        "role": "T_B_B1-K_train",
+        "stat_before": "Rl",
+        "cmd": "stage-2a-v11-run --phase train --stamp 20260923T121938Z --configsha 79c690f9 --task T_B --method B1-K --resume",
+        "gpu_uuid": "GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384"
+      }
+    ]
+  },
+  "stop_timeline_utc": {
+    "pre_signal_inventory": "2026-09-23T13:57:28Z",
+    "sigstop_python_jobs": "2026-09-23T13:57:44Z",
+    "frozen_snapshot": "2026-09-23T13:59:45Z",
+    "sigint_then_cont_python": "2026-09-23T14:00:56Z",
+    "python_zombies_observed": "2026-09-23T14:01:34Z",
+    "kill_stopped_bash_parents": "2026-09-23T14:01:50Z",
+    "all_target_pids_gone": "2026-09-23T14:01:51Z",
+    "other_users_gpus_untouched": true
+  },
+  "signals": {
+    "3602657_3602658": [
+      "SIGSTOP (halt sampling)",
+      "SIGINT (queued then CONT)",
+      "parents SIGKILLed while still STOP so orchestrator could not dispatch"
+    ],
+    "3600298_and_wait_shells": [
+      "already SIGSTOP from earlier repair step",
+      "SIGKILL without CONT"
+    ],
+    "not_used": [
+      "pkill -f",
+      "git clean",
+      "SIGCONT orchestrator"
+    ]
+  },
+  "did_not_wait_for": [
+    "rollout fill to 1024",
+    "current episode deadline",
+    "another PPO update"
+  ],
+  "complete_update_count_unchanged": true,
+  "in_memory_not_bitwise_restorable": [
+    "live env MuJoCo state",
+    "Fact Store",
+    "GRU prefix tensors",
+    "incomplete rollout buffer",
+    "optimizer in-flight minibatches (none: jobs were sampling, not in PPO)",
+    "PriorSampler live state beyond disk"
+  ],
+  "disk_preserved": {
+    "T_B_B0": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B0/seed_0/20260923T121938Z_79c690f9",
+    "T_B_B1K": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B1-K/seed_0/20260923T121938Z_79c690f9",
+    "frozen_snapshot": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/20260923T121938Z/clock_integrity_repair/20260923T135530Z/frozen_snapshot",
+    "logs_and_checkpoints": "copied/hardlinked under frozen_snapshot/jobs"
+  },
+  "jobs_at_stop": {
+    "T_B_B0": {
+      "resume_N": 2048,
+      "resume_T": 1954.9500000005933,
+      "complete_updates": 2,
+      "fragment_updates": 0,
+      "optimizer_steps": 128,
+      "first_update_ok": true,
+      "transition_log_lines": 2782,
+      "episode_log_lines": 36,
+      "open_case": "T_B_train_36",
+      "last_decision_id": 2431,
+      "last_action": "a:OPEN:container:v1",
+      "last_controller_exit_open_loop": "INTERRUPT_CONTROLLER_EXCEPTION:RuntimeError",
+      "checkpoint": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B0/seed_0/20260923T121938Z_79c690f9/checkpoints/update_complete_2.pt"
+    },
+    "T_B_B1K": {
+      "resume_N": 2048,
+      "resume_T": 2748.8000000011853,
+      "complete_updates": 2,
+      "fragment_updates": 0,
+      "optimizer_steps": 128,
+      "first_update_ok": true,
+      "transition_log_lines": 2910,
+      "episode_log_lines": 53,
+      "open_case": "T_B_train_53",
+      "last_decision_id": 2394,
+      "last_action": "a:OPEN:container:v1",
+      "last_controller_exit_open_loop": "INTERRUPT_CONTROLLER_EXCEPTION:RuntimeError",
+      "checkpoint": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/T_B/B1-K/seed_0/20260923T121938Z_79c690f9/checkpoints/update_complete_2.pt"
+    }
+  },
+  "unstarted_jobs": [
+    "T_B/B2",
+    "T_B/Full",
+    "T_C/B0",
+    "T_C/B1-K",
+    "T_C/B2",
+    "T_C/Full"
+  ],
+  "git_clean_not_run": true,
+  "old_untracked_stage2a_dirs_not_deleted": true
+}

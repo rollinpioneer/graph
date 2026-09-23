@@ -1,0 +1,68 @@
+{
+  "stage": "2A",
+  "status": "NEEDS_RERUN",
+  "execution_reason": "CLOCK_NONADVANCEMENT_AND_DURATION_MISMATCH",
+  "execution_scope": "STAGE_2A_CLOCK_INTEGRITY_STOP_AND_REPAIR",
+  "repair_validation_passed": true,
+  "stage_pass": false,
+  "stamp": "20260923T121938Z",
+  "configsha8": "79c690f9",
+  "runtime_revision": "clock_integrity_r1",
+  "base_commit": "f34789d6a5e6953b9416d06eb43dfaa14b6530e1",
+  "repair_dir": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/runs/stage_2a/20260923T121938Z/clock_integrity_repair/20260923T135530Z",
+  "stop_file": "runs/stage_2a/orchestrator/STOP_CLOCK_INTEGRITY.json",
+  "historical_stop_untouched": "experiments/part_2_exploration/stage_2a/orchestrator/STOP_SUPERSEDED_BY_PLAN_V1_1.json",
+  "do_not_resume_until_explicit_authorization": true,
+  "history_preserved": {
+    "pre_stop_status_file": "status/history/stage_2a.pre_clock_integrity_stop.20260923T140151Z.json",
+    "pre_stop_status": {
+      "stage": "2A",
+      "status": "RUNNING",
+      "phase": "train",
+      "task": "T_B",
+      "method": "B0",
+      "stamp": "20260923T121938Z",
+      "configsha8": "79c690f9",
+      "started_sampling_at": "2026-09-23T12:44:43Z"
+    },
+    "first_update_pass_historical": {
+      "T_B_B0": true,
+      "T_B_B1K": true,
+      "note": "first-update PASS is historical only; it did not prove clock semantics. Both complete updates are contaminated."
+    }
+  },
+  "jobs": {
+    "T_B_B0": {
+      "state": "STOPPED_AFFECTED",
+      "complete_updates": 2,
+      "N": 2048,
+      "T": 1954.9500000005933,
+      "open_case": "T_B_train_36"
+    },
+    "T_B_B1-K": {
+      "state": "STOPPED_AFFECTED",
+      "complete_updates": 2,
+      "N": 2048,
+      "T": 2748.8000000011853,
+      "open_case": "T_B_train_53"
+    },
+    "T_B_B2": {
+      "state": "NOT_STARTED"
+    },
+    "T_B_Full": {
+      "state": "NOT_STARTED"
+    },
+    "T_C_B0": {
+      "state": "NOT_STARTED"
+    },
+    "T_C_B1-K": {
+      "state": "NOT_STARTED"
+    },
+    "T_C_B2": {
+      "state": "NOT_STARTED"
+    },
+    "T_C_Full": {
+      "state": "NOT_STARTED"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ran_at": "2026-09-23T14:26:27Z",
+  "formal_rl": false,
+  "final_test_id": false,
+  "environment": {
+    "python": "/home/__compress_data/xushijie/graph_cp_disr_v2_1/.venv-stage0a/bin/python",
+    "PYTHONPATH": "src + lerobotpi0 site-packages"
+  },
+  "pytest": {
+    "command": "pytest tests/test_clock_integrity.py tests/test_deadline_semantics.py tests/test_duration_discount.py tests/test_zero_prior.py tests/test_stage0d_empty_patch_identity.py tests/test_ppo_masks.py -q --tb=short",
+    "result": "32 passed",
+    "seconds": 5.48
+  },
+  "coverage_map": {
+    "1_zero_physics_rejected": "PASS test_clock_1 / test_clock_11b",
+    "2_negative_nonfinite_error": "PASS test_clock_2",
+    "3_real_0.05_accepted": "PASS test_clock_3",
+    "4_OPEN_PICK_PLACE_PLACE_BUFFER": "PASS test_clock_4 (production SkillExecutor + FakeEnv control ticks; not robosuite full scene)",
+    "5_repeat_action_no_N_T_only_loop": "PASS test_clock_5",
+    "6_perception_reject_class_kept": "PASS test_clock_6",
+    "7_T_B_train_36_fault": "PASS test_clock_7 (reproduced as missing-lid interrupt + zero elapsed; not bitwise env replay)",
+    "8_deadline_short_remaining": "PASS test_clock_8 + test_deadline_semantics",
+    "9_clock_across_fake_update": "PASS test_clock_9",
+    "10_deadline_no_bootstrap": "PASS test_clock_10 + deadline tests",
+    "11_T_vs_sim_and_collector_remaining": "PASS test_clock_11 / 11b",
+    "12_empty_patch_mask_untouched": "PASS test_clock_12 + test_zero_prior + test_stage0d_empty_patch_identity + test_ppo_masks"
+  },
+  "real_libero_env_probe": "NOT_RUN this round; unit/production-component FakeEnv used to avoid hanging the repair. T_B_train_36 live traces preserved instead of exact replay.",
+  "diagnostic_abort_not_deadline": true,
+  "control_step_budget": 400,
+  "wall_budget_s": 20
+}
