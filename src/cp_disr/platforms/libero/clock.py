@@ -1,9 +1,12 @@
-"""Simulation-second clock bound to MuJoCo time. Binding unit token is seconds."""
+"""Simulation-second clock bound to MuJoCo time. Binding unit is seconds."""
 from __future__ import annotations
 
 import math
 
 from cp_disr.common import ClockIntegrityError
+
+# Frozen control period of the registered OSC interface.
+CONTROL_DT = 1.0 / 20.0
 
 
 class DurationProvider:

@@ -2,6 +2,46 @@
 from .rl import Transition, interval_reward, gamma
 from .adapters import EvaluationInput
 from .common import DataIntegrityError, DiagnosticAbort, ClockIntegrityError
+from .platforms.libero.clock import CONTROL_DT
+
+TECHNICAL_EXITS = (
+    "INTERRUPT_NAN_ACTION",
+)
+TECHNICAL_PREFIXES = (
+    "INTERRUPT_CONTROLLER_EXCEPTION",
+    "INTERRUPT_NAN_ACTION",
+    "INTERRUPT_CLOCK",
+)
+
+
+def _raw_dict(execution, raw):
+    if isinstance(raw, dict):
+        return raw
+    if isinstance(execution, dict):
+        return execution
+    return {}
+
+
+def _exit_reason(execution, raw):
+    data = _raw_dict(execution, raw)
+    if data.get("controller_exit"):
+        return str(data.get("controller_exit"))
+    if isinstance(execution, dict):
+        return str(execution.get("controller_exit") or "")
+    return str(getattr(execution, "controller_exit", "") or "")
+
+
+def _is_technical(raw, execution):
+    data = _raw_dict(execution, raw)
+    exit_reason = _exit_reason(execution, raw)
+    if data.get("nan_blocked"):
+        return True
+    if any(exit_reason.startswith(p) for p in TECHNICAL_PREFIXES) or exit_reason in TECHNICAL_EXITS:
+        return True
+    if data.get("interrupted") and exit_reason.startswith("INTERRUPT"):
+        return True
+    return False
+
 
 class Collector:
     def __init__(self, bundle, policy):
@@ -35,6 +75,19 @@ class Collector:
         start = float(self.bundle.episode_start_seconds)
         return float(now) - start
 
+    def _no_transition(self, reason, elapsed, extra=None):
+        payload = {
+            'terminated': True,
+            'truncated': False,
+            'reason': reason,
+            'no_transition': True,
+            'success': False,
+            'elapsed': elapsed,
+        }
+        if extra:
+            payload.update(extra)
+        return None, payload
+
     def step(self, snapshot, deterministic=False):
         if snapshot.synthetic_unit_fixture:
             raise DataIntegrityError('Synthetic unit fixtures cannot enter real collection')
@@ -51,6 +104,12 @@ class Collector:
                 EvaluationInput(self.bundle.task_id, *key, (), max(elapsed_now, deadline), now, now)
             )
             return None, actual
+        if remaining < CONTROL_DT:
+            return self._no_transition(
+                'INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE',
+                elapsed_now,
+                extra={'remaining': remaining, 'truncated': True, 'terminated': True},
+            )
         with torch.no_grad():
             out = self.policy(snapshot, prefix_hidden(self.policy, prefix))
         self.last_output = out
@@ -66,7 +125,8 @@ class Collector:
             raise DataIntegrityError('Unbound controller timeout')
         start = self.bundle.clock.now_seconds()
         skill_timeout = float(contract.timeout_seconds)
-        capped = min(skill_timeout, max(remaining, 1.0 / 20.0))
+        # Never expand remaining up to a control tick.
+        capped = min(skill_timeout, remaining)
         execution = self.bundle.executor.execute(candidate, capped)
         self.last_execution = execution
         raw = getattr(self.bundle.executor, 'last', None)
@@ -77,17 +137,17 @@ class Collector:
                 object.__setattr__(execution, 'controller_exit', 'TASK_DEADLINE')
             raw['controller_exit'] = 'TASK_DEADLINE'
             raw['task_deadline_capped'] = True
-        if isinstance(raw, dict):
-            exit_reason = str(raw.get('controller_exit') or '')
-            if raw.get('interrupted') or raw.get('nan_blocked') or exit_reason.startswith('INTERRUPT'):
-                raise DiagnosticAbort({
-                    'detail': 'technical_controller_failure',
-                    'controller_exit': exit_reason,
-                    'steps': raw.get('steps'),
-                    'sim_duration': raw.get('sim_duration'),
-                    'raw_sim_start': raw.get('raw_sim_start'),
-                    'raw_sim_end': raw.get('raw_sim_end'),
-                })
+        exit_reason = _exit_reason(execution, raw)
+        if _is_technical(raw, execution):
+            data = _raw_dict(execution, raw)
+            raise DiagnosticAbort({
+                'detail': 'technical_controller_failure',
+                'controller_exit': exit_reason,
+                'steps': data.get('steps'),
+                'sim_duration': data.get('sim_duration'),
+                'raw_sim_start': data.get('raw_sim_start'),
+                'raw_sim_end': data.get('raw_sim_end'),
+            })
         observation = self.bundle.observations.observe()
         measured = self.bundle.perception.infer(observation)
         facts = self.bundle.verifier.verify(measured, execution)
@@ -101,19 +161,33 @@ class Collector:
                 'start': start,
                 'end': end,
             }) from exc
+        data = _raw_dict(execution, raw)
         if (not isinstance(duration, (int, float))) or (not duration) or duration <= 0:
-            raise DiagnosticAbort({
-                'detail': 'non_positive_duration_rejected',
-                'duration': duration,
-                'start': start,
-                'end': end,
-                'controller_exit': getattr(execution, 'controller_exit', None) if not isinstance(execution, dict) else execution.get('controller_exit'),
-                'steps': None if not isinstance(raw, dict) else raw.get('steps'),
-            })
+            # Zero-duration normal/safety outcomes are not PPO transitions and not DEADLINE.
+            reason = exit_reason or 'ZERO_DURATION_NO_TRANSITION'
+            if reason.startswith('INTERRUPT'):
+                raise DiagnosticAbort({
+                    'detail': 'non_positive_duration_rejected',
+                    'duration': duration,
+                    'start': start,
+                    'end': end,
+                    'controller_exit': reason,
+                    'steps': data.get('steps'),
+                })
+            return self._no_transition(
+                reason,
+                self._episode_elapsed(end),
+                extra={
+                    'duration': duration,
+                    'controller_exit': reason,
+                    'steps': data.get('steps'),
+                },
+            )
         gamma(duration)
         elapsed = self._episode_elapsed(end)
+        evidence = execution.evidence_ids if not isinstance(execution, dict) else tuple(execution.get('evidence_ids') or ())
         actual = self.bundle.evaluator.evaluate(
-            EvaluationInput(self.bundle.task_id, *key, execution.evidence_ids, elapsed, start, end)
+            EvaluationInput(self.bundle.task_id, *key, evidence, elapsed, start, end)
         )
         if actual.success and key in self.success_seen and any(r for _, r in actual.reward_events):
             raise DataIntegrityError('Repeated terminal success reward')

@@ -28,14 +28,52 @@ RUNTIME_REL = Path("experiments/manifests/runtime_manifest_v211.yaml")
 REFERENCE_REL = Path("runs/stage_0a/reference_execution_manifest.json")
 STOP_REL = Path("experiments/part_2_exploration/stage_2a/orchestrator/STOP_SUPERSEDED_BY_PLAN_V1_1.json")
 CLOCK_STOP_REL = Path("runs/stage_2a/orchestrator/STOP_CLOCK_INTEGRITY.json")
-RUNTIME_REVISION = "clock_integrity_r1"
+RUNTIME_REVISION = "clock_integrity_r2"
 OLD_STAGE_DIR = Path("experiments/part_2_exploration/stage_2a")
 
-def refuse_if_clock_stop(root):
-    p = Path(root) / CLOCK_STOP_REL
-    if p.is_file():
-        raise BindingError("CLOCK_INTEGRITY stop present; refusing Stage 2A train/select/eval/report")
-BASE_COMMIT = "f34789d6a5e6953b9416d06eb43dfaa14b6530e1"
+CLOCK_RECOVERY_ALLOW_REL = Path("runs/stage_2a/orchestrator/CLOCK_RECOVERY_ALLOW.json")
+DENYLISTED_STAMPS = {"20260923T121938Z"}
+DENYLISTED_CONFIGSHA = {"79c690f9"}
+
+
+def _sha256_file(path):
+    import hashlib
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def refuse_if_clock_stop(root, planned_id=None, stamp=None, configsha8=None, job_dir=None, phase=None):
+    root = Path(root)
+    hist = root / STOP_REL
+    stop = root / CLOCK_STOP_REL
+    if not hist.is_file():
+        raise BindingError("historical Stage 2A STOP missing; refusing")
+    if not stop.is_file():
+        raise BindingError("CLOCK_INTEGRITY stop missing; refusing to run without stop evidence")
+    allow_path = root / CLOCK_RECOVERY_ALLOW_REL
+    if not allow_path.is_file():
+        raise BindingError("CLOCK_INTEGRITY stop present; no CLOCK_RECOVERY_ALLOW record")
+    allow = json.loads(allow_path.read_text(encoding="utf-8"))
+    stop_hash = _sha256_file(stop)
+    if allow.get("stop_clock_integrity_sha256") != stop_hash:
+        raise BindingError("recovery allow record does not match STOP_CLOCK_INTEGRITY.json hash")
+    if allow.get("runtime_revision") != RUNTIME_REVISION:
+        raise BindingError("recovery allow runtime_revision mismatch")
+    if allow.get("from_scratch") is not True:
+        raise BindingError("recovery allow must set from_scratch=true")
+    if stamp in DENYLISTED_STAMPS or configsha8 in DENYLISTED_CONFIGSHA:
+        raise BindingError("refusing denylisted contaminated stamp/configsha")
+    allowed_ids = list(allow.get("allowed_planned_ids") or [])
+    if planned_id is not None and planned_id not in allowed_ids:
+        raise BindingError("planned_id not in recovery allow record: %s" % planned_id)
+    allowed_dirs = [str(Path(x)) for x in (allow.get("allowed_attempt_dirs") or [])]
+    if job_dir is not None:
+        jd = str(Path(job_dir))
+        if jd not in allowed_dirs:
+            raise BindingError("job_dir not in recovery allow record: %s" % jd)
+    if phase in ("select", "eval", "report") and not allow.get("allow_select_eval_report"):
+        raise BindingError("recovery allow does not yet permit select/eval/report")
+    return allow
+BASE_COMMIT = "b16fc1619ceb2a1b603a9bf151420bb672239291"
 N_CAP = 65536
 ROLLOUT_N = 1024
 MAX_UPDATES = 64
@@ -73,6 +111,99 @@ PLANNED = {
     ("T_C", "B2"): "v11_2A_T_C_B2_s0",
     ("T_C", "Full"): "v11_2A_T_C_Full_s0",
 }
+
+
+def clock_audit_transitions(records):
+    from .platforms.libero.clock import CONTROL_DT
+    n_logged = len(records)
+    n_valid = 0
+    n_invalid = 0
+    n_unknown = 0
+    exits = {}
+    issues = []
+    normal_failures = 0
+    technical = 0
+    mask_mismatch = 0
+    for rec in records:
+        reason = str(rec.get("reason") or rec.get("controller_exit") or "")
+        exits[reason] = exits.get(reason, 0) + 1
+        if reason in {"EXECUTION_FAILED", "CRITICAL_FACT_LOST", "VERIFICATION_FAILED", "TIMEOUT", "SAFETY_STOP"}:
+            normal_failures += 1
+        if reason.startswith("INTERRUPT_CONTROLLER_EXCEPTION") or reason.startswith("INTERRUPT_NAN") or reason.startswith("INTERRUPT_CLOCK"):
+            technical += 1
+            if len(issues) < 32:
+                issues.append({"kind": "technical_exit_in_ppo", "reason": reason, "decision_id": rec.get("decision_id")})
+        cid = rec.get("selected_candidate_id")
+        ids = list(rec.get("candidate_ids") or [])
+        mask = list(rec.get("mask") or [])
+        if cid not in ids:
+            mask_mismatch += 1
+            if len(issues) < 32:
+                issues.append({"kind": "candidate_not_in_ids", "decision_id": rec.get("decision_id"), "cid": cid})
+        else:
+            idx = ids.index(cid)
+            if idx >= len(mask) or not bool(mask[idx]):
+                mask_mismatch += 1
+                if len(issues) < 32:
+                    issues.append({"kind": "candidate_masked_false", "decision_id": rec.get("decision_id"), "cid": cid})
+        sim_d = rec.get("sim_duration")
+        start = rec.get("raw_sim_start")
+        end = rec.get("raw_sim_end")
+        steps = rec.get("control_steps")
+        dur = rec.get("duration_seconds")
+        if sim_d is None or start is None or end is None or dur is None:
+            n_unknown += 1
+            if len(issues) < 32:
+                issues.append({"kind": "clock_fields_missing", "decision_id": rec.get("decision_id")})
+            continue
+        try:
+            sim_d_f = float(sim_d)
+            start_f = float(start)
+            end_f = float(end)
+            dur_f = float(dur)
+        except (TypeError, ValueError):
+            n_invalid += 1
+            continue
+        endpoint = end_f - start_f
+        ok = (
+            math.isfinite(sim_d_f) and math.isfinite(start_f) and math.isfinite(end_f) and math.isfinite(dur_f)
+            and dur_f > 0.0 and sim_d_f > 0.0
+            and abs(sim_d_f - endpoint) < 1e-9
+            and abs(dur_f - sim_d_f) < 1e-9
+        )
+        if steps is None:
+            ok = False
+        else:
+            try:
+                steps_i = int(steps)
+                ok = ok and steps_i > 0 and abs(sim_d_f - (steps_i * CONTROL_DT)) < 1e-6
+            except (TypeError, ValueError):
+                ok = False
+        if ok:
+            n_valid += 1
+        else:
+            n_invalid += 1
+            if len(issues) < 32:
+                issues.append({
+                    "kind": "clock_mismatch",
+                    "decision_id": rec.get("decision_id"),
+                    "sim_duration": sim_d_f,
+                    "duration_seconds": dur_f,
+                    "raw_delta": endpoint,
+                    "steps": steps,
+                })
+    return {
+        "N_logged": n_logged,
+        "N_used_by_PPO": n_logged,
+        "N_clock_verified_valid": n_valid,
+        "N_clock_invalid": n_invalid,
+        "N_unknown": n_unknown,
+        "exit_counts": exits,
+        "normal_failure_n": normal_failures,
+        "technical_n": technical,
+        "mask_mismatch_n": mask_mismatch,
+        "issues": issues,
+    }
 
 
 def log(msg):
@@ -822,6 +953,10 @@ def source_hashes(root, task_id):
         "neural": root / "src/cp_disr/neural.py",
         "torch_rl": root / "src/cp_disr/torch_rl.py",
         "runtime_factory": root / "src/cp_disr/platforms/libero/runtime_factory.py",
+        "clock": root / "src/cp_disr/platforms/libero/clock.py",
+        "safety": root / "src/cp_disr/platforms/libero/safety.py",
+        "skill_executor": root / "src/cp_disr/platforms/libero/skill_executor.py",
+        "collector": root / "src/cp_disr/collector.py",
         "reference": root / REFERENCE_REL,
     }
     return {k: sha256_file(v) if v.is_file() else None for k, v in files.items()} | {"git_commit": git_commit(root), "base_commit": BASE_COMMIT}
@@ -1052,6 +1187,9 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
     if resume and (job_dir / "resume.json").is_file():
         resume_doc = json.loads((job_dir / "resume.json").read_text(encoding="utf-8"))
         ckpt_load = Path(resume_doc["checkpoint"])
+        ckpt_s = str(ckpt_load)
+        if "20260923T121938Z_79c690f9" in ckpt_s or "clock_integrity_repair" in ckpt_s:
+            raise BindingError("refusing denylisted contaminated checkpoint %s" % ckpt_s)
         load_checkpoint(ckpt_load, policy, trainer.optimizer)
         rngp = json.loads(ckpt_load.with_suffix(".rng.json").read_text(encoding="utf-8"))
         s1.restore_rng({"python": rngp["python_rng"], "numpy": rngp["numpy_rng"], "torch": rngp["torch_rng"], "cuda": rngp["cuda_rng"]})
@@ -1125,16 +1263,24 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
                     fragment_updates += 1
                 if complete and complete_updates == 1 and not first_update_ok:
                     fp_after = param_fingerprint(policy)
+                    audit = clock_audit_transitions(used_buf)
                     check = {
                         "n_transitions": use_n, "required": ROLLOUT_N, "optimizer_steps_this_update": len(logs),
                         "optimizer_steps_total": optimizer_steps, "param_changed": fp_before != fp_after,
                         "init_param_changed": fp_init != fp_after, "losses": logs[:2],
+                        "clock_audit": audit,
+                        "runtime_revision": RUNTIME_REVISION,
                         "note": "first complete update is a real PPO update on this run, not an extra qualification job",
                     }
                     if use_n != ROLLOUT_N:
                         raise DataIntegrityError("first complete update did not use 1024 transitions")
                     if not logs:
                         raise DataIntegrityError("first update produced no optimizer steps")
+                    if not (fp_before != fp_after):
+                        raise DataIntegrityError("first update did not change parameters")
+                    if audit["N_clock_invalid"] or audit["N_unknown"] or audit["technical_n"] or audit["mask_mismatch_n"] or audit["N_clock_verified_valid"] != use_n:
+                        write_json(job_dir / "first_update_selfcheck.json", check)
+                        raise DataIntegrityError("first update clock/mask audit failed")
                     write_json(job_dir / "first_update_selfcheck.json", check)
                     first_update_ok = True
                     log("%s %s first-update self-check PASS" % (task_id, mname))
@@ -1271,7 +1417,15 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
             "hard_fail": hard_fail, "selected_checkpoint": selected, "stop_reason": stop_reason,
             "H": suite_half_life(), "d_ref": cfg["d_ref"], "Tcap": cfg["Tcap"], "eval": eval_rows, "train": train_rows,
             "first_update_ok": first_update_ok,
+            "runtime_revision": RUNTIME_REVISION,
         }
+        tlog = job_dir / "transition_log.jsonl"
+        n_logged = 0
+        if tlog.is_file():
+            n_logged = sum(1 for line in tlog.read_text(encoding="utf-8").splitlines() if line.strip())
+        summary["N_logged"] = n_logged
+        summary["N_used_by_PPO"] = int(count)
+        summary["clock_audit_remainder"] = clock_audit_transitions(trans_buffer) if trans_buffer else {"N_clock_verified_valid": 0, "N_clock_invalid": 0, "N_unknown": 0}
         write_json(job_dir / "job_summary.json", summary)
         return summary
     finally:
@@ -1440,24 +1594,27 @@ def cmd_stage_2a_v11_run(root, gpu=0, phase="all", task=None, method=None, stamp
         if phase == "startup":
             return {"status": "STARTUP_GATES_PASS", "stamp": stamp, "configsha8": configsha8}
     if phase in ("train", "all"):
-        refuse_if_clock_stop(root)
         if task not in TASKS or method not in METHODS:
             raise BindingError("train phase requires --task and --method")
+        mname = method_dir_name(method)
+        planned_id = PLANNED[(task, mname)]
+        job_dir = root / STAGE_DIR / task / mname / "seed_0" / ("%s_%s" % (stamp, configsha8))
+        refuse_if_clock_stop(root, planned_id=planned_id, stamp=stamp, configsha8=configsha8, job_dir=job_dir, phase="train")
         hashes_doc = source_hashes(root, task)
         write_status(root, {"stage": "2A", "status": "RUNNING", "phase": "train", "task": task, "method": method, "stamp": stamp, "configsha8": configsha8, "started_sampling_at": utc_now()})
         summary = train_job(root, task, method, device, device_name, prof, hashes_doc, stamp, configsha8, max_updates=max_updates, resume=resume)
         write_json(stage_out / ("job_%s_%s.json" % (task, method_dir_name(method))), summary)
         return {"status": "JOB_COMPLETE" if not summary.get("hard_fail") else "NEEDS_RERUN", "job": summary, "stamp": stamp, "configsha8": configsha8}
     if phase == "select":
-        refuse_if_clock_stop(root)
+        refuse_if_clock_stop(root, stamp=stamp, configsha8=configsha8, phase="select")
         path = freeze_selection(root, stamp, configsha8)
         return {"status": "SELECTION_FROZEN", "path": str(path)}
     if phase == "eval":
-        refuse_if_clock_stop(root)
+        refuse_if_clock_stop(root, stamp=stamp, configsha8=configsha8, phase="eval")
         tests = evaluate_final_tests(root, stamp, configsha8, gpu=gpu)
         return {"status": "TEST_COMPLETE", "final_test": tests}
     if phase == "report":
-        refuse_if_clock_stop(root)
+        refuse_if_clock_stop(root, stamp=stamp, configsha8=configsha8, phase="report")
         jobs = []
         for t in TASKS:
             for m in METHODS:
