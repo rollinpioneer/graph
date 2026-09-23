@@ -71,7 +71,7 @@ def write_audit_cache(root,manifest,prompt,input_refs,execution):
     """Exclusive creation, completion marker and content hashes; no overwrite path."""
     key=cache_key(manifest)
     split=manifest['split']
-    if split not in ('dev','train'):raise ContractError('Cache split must be train or dev')
+    if split not in ('dev','train','test'):raise ContractError('Cache split must be train, dev or test')
     path=Path(root)/split/key;path.mkdir(parents=True,exist_ok=False)
     (path/'INCOMPLETE').write_text('Cache cannot be consumed until COMPLETE exists.\n')
     processing=execution.get('processing')

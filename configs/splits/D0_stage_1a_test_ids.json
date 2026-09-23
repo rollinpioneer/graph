@@ -1,0 +1,3975 @@
+{
+  "registration_time": "2026-09-23T10:52:46Z",
+  "registration_timing": "post-training, pre-evaluation freeze; NOT a pre-training registration",
+  "task_id": "D0",
+  "version": "d0-runtime-v2.1-p0-test-id-final-eval",
+  "policy": "independent_test_pool_after_smoke",
+  "namespace": "cp_disr_exp_v1_1",
+  "stream_fields": [
+    "namespace",
+    "task",
+    "split",
+    "case_or_episode",
+    "stream"
+  ],
+  "stream_excludes": [
+    "method",
+    "training_seed"
+  ],
+  "pool_n": 50,
+  "active_n": 30,
+  "reserved_n": 20,
+  "distribution": {
+    "target_xy_box": [
+      -0.22,
+      0.0,
+      -0.18,
+      -0.02
+    ],
+    "second_xy_box": [
+      0.04,
+      0.22,
+      -0.18,
+      -0.02
+    ],
+    "min_distance": 0.09,
+    "container_xy": [
+      0.18,
+      0.12
+    ],
+    "buffer_xy": [
+      -0.18,
+      0.12
+    ],
+    "lid_closed": true,
+    "source": "scripts/stage_1a/build_d0_split.py frozen D0 init distribution"
+  },
+  "do_not_rewrite": "configs/splits/D0_stage_1a.json",
+  "train_dev_split_hash": "26e82ba484a2f49bbfba2aa82abaa0cee5c991fdd49514be7311cfeae2b73c1c",
+  "test": [
+    {
+      "case_id": "D0_test_00",
+      "split": "test",
+      "pool_index": 0,
+      "seed": 2562407406,
+      "target_xy": [
+        -0.1782451391673994,
+        -0.034490248867718065
+      ],
+      "second_xy": [
+        0.10133653104288368,
+        -0.03204807161899198
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 0,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_00/rgb.png",
+      "image_sha256": "b0599945c636e1befb2881bebe950a5587aeeaf094a438e8aeb2d00a7e11eda8",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_00",
+      "cache_dir": "experiments/vlm_cache/test/23f8b12a5972d13a8dc6d6f9be2cc0db848183eff7a0d5daecb5896c94598f58",
+      "cache_key": "23f8b12a5972d13a8dc6d6f9be2cc0db848183eff7a0d5daecb5896c94598f58",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_01",
+      "split": "test",
+      "pool_index": 1,
+      "seed": 2285031482,
+      "target_xy": [
+        -0.013701712298648222,
+        -0.1650375578493578
+      ],
+      "second_xy": [
+        0.19452715005614102,
+        -0.11240556713030699
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 1,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_01/rgb.png",
+      "image_sha256": "cbc2e74630853284e64bc8f3cc7bb2dcbb2955f7395ba8e665feb6e71f38af9e",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_01",
+      "cache_dir": "experiments/vlm_cache/test/747d56b72f9e7ddea006e44ce5deda072604c7aa3d6c6d8a450ce899dc43d987",
+      "cache_key": "747d56b72f9e7ddea006e44ce5deda072604c7aa3d6c6d8a450ce899dc43d987",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_02",
+      "split": "test",
+      "pool_index": 2,
+      "seed": 2484443323,
+      "target_xy": [
+        -0.1509708133037937,
+        -0.0876927263907916
+      ],
+      "second_xy": [
+        0.09620596776420459,
+        -0.023388289221847602
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 2,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_02/rgb.png",
+      "image_sha256": "447ef3bbb1a9685fd173ea4fdee374c7df849dcd6442f887bcfaf069f0211df5",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_02",
+      "cache_dir": "experiments/vlm_cache/test/272bbb91a526e22f2f1c587b045f34f112abed94e319b21f184a71f78e6ac675",
+      "cache_key": "272bbb91a526e22f2f1c587b045f34f112abed94e319b21f184a71f78e6ac675",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_03",
+      "split": "test",
+      "pool_index": 3,
+      "seed": 3832692134,
+      "target_xy": [
+        -0.08190762818175473,
+        -0.06964784430797617
+      ],
+      "second_xy": [
+        0.11500828154667886,
+        -0.04822396322083536
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 3,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_03/rgb.png",
+      "image_sha256": "ae213fde07837373035c95f152a2185d8829ca2f487e49e3202661ebdd785300",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_03",
+      "cache_dir": "experiments/vlm_cache/test/ee66a2ac010e9cff39d96fbf7503b35ecadde7a8e3de6ebdd91d41256c05c95e",
+      "cache_key": "ee66a2ac010e9cff39d96fbf7503b35ecadde7a8e3de6ebdd91d41256c05c95e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_04",
+      "split": "test",
+      "pool_index": 4,
+      "seed": 3776737091,
+      "target_xy": [
+        -0.13667714834306233,
+        -0.12877864040344605
+      ],
+      "second_xy": [
+        0.14935333087151562,
+        -0.0646556287461542
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 4,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_04/rgb.png",
+      "image_sha256": "bf0592c894ea55ec0de50fe1d503dd38f7e11571f12dbd84a06ee034fa1a6029",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_04",
+      "cache_dir": "experiments/vlm_cache/test/97026b470d785a9abb94c864a3cdc6bd6696ec77c1c1b738bd6c4bce24e09026",
+      "cache_key": "97026b470d785a9abb94c864a3cdc6bd6696ec77c1c1b738bd6c4bce24e09026",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_05",
+      "split": "test",
+      "pool_index": 5,
+      "seed": 2478534474,
+      "target_xy": [
+        -0.1137219142323395,
+        -0.17259512983825132
+      ],
+      "second_xy": [
+        0.1697899324902391,
+        -0.07440165076159305
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 5,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_05/rgb.png",
+      "image_sha256": "df1bdb274f47fc0186889c30fad406318202f68c5a15b5ac8eb06e366825ed08",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_05",
+      "cache_dir": "experiments/vlm_cache/test/b3f8a2ac263aa3ae4328ce7cf8ec6057988eb63438823dd5ccff1db2f7250b4d",
+      "cache_key": "b3f8a2ac263aa3ae4328ce7cf8ec6057988eb63438823dd5ccff1db2f7250b4d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_06",
+      "split": "test",
+      "pool_index": 6,
+      "seed": 148367005,
+      "target_xy": [
+        -0.06516446710110119,
+        -0.08716648494076452
+      ],
+      "second_xy": [
+        0.18189666515823139,
+        -0.08610580744385538
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 6,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_06/rgb.png",
+      "image_sha256": "283fadd0e61ce079415ec077459c518eb2290645e6d02e47f83ce4327e69436b",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_06",
+      "cache_dir": "experiments/vlm_cache/test/d370ec89fef758bf3e3ddd8b8d7c577092fa6c6647b15a83568d04c22523b64d",
+      "cache_key": "d370ec89fef758bf3e3ddd8b8d7c577092fa6c6647b15a83568d04c22523b64d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_07",
+      "split": "test",
+      "pool_index": 7,
+      "seed": 2503031510,
+      "target_xy": [
+        -0.18016465106593654,
+        -0.08988478687979008
+      ],
+      "second_xy": [
+        0.1616860974937403,
+        -0.02319882865084036
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 7,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_07/rgb.png",
+      "image_sha256": "634c0660e5a3e77f654f5b2fa865c1092b7c52a15a930500588da62a77940d5d",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_07",
+      "cache_dir": "experiments/vlm_cache/test/da5e42ce4c9483ba0043a4f253a43621d0dfa354459674672b5a985c13783663",
+      "cache_key": "da5e42ce4c9483ba0043a4f253a43621d0dfa354459674672b5a985c13783663",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_08",
+      "split": "test",
+      "pool_index": 8,
+      "seed": 3444820629,
+      "target_xy": [
+        -0.10006534086808946,
+        -0.02278254541928501
+      ],
+      "second_xy": [
+        0.07730257121914816,
+        -0.15216947449568996
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 8,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_08/rgb.png",
+      "image_sha256": "35c9df838c0c3ac951a6977814ed2ad812fdaded08043c85b36f29d84ddfa724",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_08",
+      "cache_dir": "experiments/vlm_cache/test/cd0ae3f5a4432d2ecc7ee2fc7253162c6b2567c7904e8062dc0d8958c214279c",
+      "cache_key": "cd0ae3f5a4432d2ecc7ee2fc7253162c6b2567c7904e8062dc0d8958c214279c",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_09",
+      "split": "test",
+      "pool_index": 9,
+      "seed": 1622544806,
+      "target_xy": [
+        -0.08500880898021976,
+        -0.08218975671867326
+      ],
+      "second_xy": [
+        0.19681305317731096,
+        -0.1295187034248544
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 9,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_09/rgb.png",
+      "image_sha256": "7e2ace951cbe2acf3a11e1b05a82fa8e1eb3d19facf70592b65fa6bc72c381ff",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_09",
+      "cache_dir": "experiments/vlm_cache/test/bfc393e5bbe7bfba121ee63966400ea815fb1e959b7a832d03d2fb5275df46a2",
+      "cache_key": "bfc393e5bbe7bfba121ee63966400ea815fb1e959b7a832d03d2fb5275df46a2",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_10",
+      "split": "test",
+      "pool_index": 10,
+      "seed": 3542248273,
+      "target_xy": [
+        -0.015715254232338327,
+        -0.1758106128251669
+      ],
+      "second_xy": [
+        0.1450618976112363,
+        -0.08197864600467906
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 10,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_10/rgb.png",
+      "image_sha256": "d280c46ee44ae20161982aaacb421785a182fbe810e3c6dcbc5846d8b0ddf387",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_10",
+      "cache_dir": "experiments/vlm_cache/test/3bf041b6e620351a48aecea0d583bb8a3eb4f07b58147b066cdcb7c72f3986e7",
+      "cache_key": "3bf041b6e620351a48aecea0d583bb8a3eb4f07b58147b066cdcb7c72f3986e7",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_11",
+      "split": "test",
+      "pool_index": 11,
+      "seed": 1689765329,
+      "target_xy": [
+        -0.04636205746712724,
+        -0.15870874104218533
+      ],
+      "second_xy": [
+        0.10747673593747323,
+        -0.050053689185964506
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 11,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_11/rgb.png",
+      "image_sha256": "0e6fb9e922f211c7a43999aa4b34cb482dc1816d89ec20f1355f8dc38d826f90",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_11",
+      "cache_dir": "experiments/vlm_cache/test/e4a56c25ee9d11397a7f2a69c90040d4c43404d83de923ee9266fb5d255f4d2e",
+      "cache_key": "e4a56c25ee9d11397a7f2a69c90040d4c43404d83de923ee9266fb5d255f4d2e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_12",
+      "split": "test",
+      "pool_index": 12,
+      "seed": 2510201316,
+      "target_xy": [
+        -0.13977296845211218,
+        -0.15771485571870064
+      ],
+      "second_xy": [
+        0.20681627556102708,
+        -0.11215953853119605
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 12,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_12/rgb.png",
+      "image_sha256": "bb8a05658d4a5146c4c4993c1137b359d8b499aaa05da840fcf16215245cca4a",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_12",
+      "cache_dir": "experiments/vlm_cache/test/011124cfba93c3212746e4da1051b778dd15f245e736eb665ed06b78997a52b1",
+      "cache_key": "011124cfba93c3212746e4da1051b778dd15f245e736eb665ed06b78997a52b1",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_13",
+      "split": "test",
+      "pool_index": 13,
+      "seed": 1521213485,
+      "target_xy": [
+        -0.20875464672095306,
+        -0.05866120436542789
+      ],
+      "second_xy": [
+        0.20312017857404727,
+        -0.1719224556823115
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 13,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_13/rgb.png",
+      "image_sha256": "4a1938cff529510f4fee56321de64af449088c8dcd8808f29842f949b011e811",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_13",
+      "cache_dir": "experiments/vlm_cache/test/9333feeb0b5c231bab94766c01f063f2a403c126271fec479b044bffd4db33b9",
+      "cache_key": "9333feeb0b5c231bab94766c01f063f2a403c126271fec479b044bffd4db33b9",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_14",
+      "split": "test",
+      "pool_index": 14,
+      "seed": 3272669780,
+      "target_xy": [
+        -0.08449005968970821,
+        -0.09749303129691593
+      ],
+      "second_xy": [
+        0.17835958229056112,
+        -0.10486858624375256
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 14,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_14/rgb.png",
+      "image_sha256": "66e40fb7adc962a841b2eea3092784de4933de6ad6212ddf34855fc6703ab937",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_14",
+      "cache_dir": "experiments/vlm_cache/test/94a4f9bdb1d61a8b56e1d37f1d071e0c5a1f82103e1753a597587bf54ce40f94",
+      "cache_key": "94a4f9bdb1d61a8b56e1d37f1d071e0c5a1f82103e1753a597587bf54ce40f94",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_15",
+      "split": "test",
+      "pool_index": 15,
+      "seed": 120691378,
+      "target_xy": [
+        -0.0010361743842875748,
+        -0.06509740732543683
+      ],
+      "second_xy": [
+        0.08367302226683106,
+        -0.12323831756757543
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 15,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_15/rgb.png",
+      "image_sha256": "d23619f783619bef0a22700d18744e4f1f0033481d898dcd96119c2d7fe6421b",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_15",
+      "cache_dir": "experiments/vlm_cache/test/9d355be821e75097795679b1055ee683069bd208d196e0ea17d2a4741991eac2",
+      "cache_key": "9d355be821e75097795679b1055ee683069bd208d196e0ea17d2a4741991eac2",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_16",
+      "split": "test",
+      "pool_index": 16,
+      "seed": 2727703428,
+      "target_xy": [
+        -0.0876271452025554,
+        -0.12263014328611477
+      ],
+      "second_xy": [
+        0.05926874151261191,
+        -0.1505390286946197
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 16,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_16/rgb.png",
+      "image_sha256": "2c28476252b282d9b885aae9009769955fb20c50e36cdeb011dda69a054924ee",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_16",
+      "cache_dir": "experiments/vlm_cache/test/44038a2c4b53a7fc28faf8fad4b32e9a5cf96f5ec6a64a65f243ea9504e50bee",
+      "cache_key": "44038a2c4b53a7fc28faf8fad4b32e9a5cf96f5ec6a64a65f243ea9504e50bee",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_17",
+      "split": "test",
+      "pool_index": 17,
+      "seed": 4272358217,
+      "target_xy": [
+        -0.1546233545400381,
+        -0.10576464178210793
+      ],
+      "second_xy": [
+        0.06262326463820433,
+        -0.1544836984723847
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 17,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_17/rgb.png",
+      "image_sha256": "654be4bf76b281b04dd1b78fa80d03e5ada52c8689c44f8d67cd8c34bbf344c4",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_17",
+      "cache_dir": "experiments/vlm_cache/test/83e7294b49091bcea27238d7a0eb6c8397af63993aa1dff77bf468bdc3328b01",
+      "cache_key": "83e7294b49091bcea27238d7a0eb6c8397af63993aa1dff77bf468bdc3328b01",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_18",
+      "split": "test",
+      "pool_index": 18,
+      "seed": 1297079187,
+      "target_xy": [
+        -0.021008565706029686,
+        -0.16159677253277283
+      ],
+      "second_xy": [
+        0.05229241870617966,
+        -0.06228645361628589
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 18,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_18/rgb.png",
+      "image_sha256": "181c525a70b9f8325f18cb2a24c00766fc74605ef97cb0755768f12eccfd3206",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_18",
+      "cache_dir": "experiments/vlm_cache/test/d6e90151e9fee0f65f0c8301360838642176dd3e47a50789008f161425f73c7e",
+      "cache_key": "d6e90151e9fee0f65f0c8301360838642176dd3e47a50789008f161425f73c7e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_19",
+      "split": "test",
+      "pool_index": 19,
+      "seed": 819159806,
+      "target_xy": [
+        -0.0879568060788592,
+        -0.10508426733562015
+      ],
+      "second_xy": [
+        0.13250144763156504,
+        -0.09278946277585003
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 19,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_19/rgb.png",
+      "image_sha256": "24405baeeca2527585b22c25dea67a4e550ded02052f7383e2fda486f382a081",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_19",
+      "cache_dir": "experiments/vlm_cache/test/8917f417a2f0ca8c2cf9c054a5de9c7c8be2e1d486db960086a55af7f68b3989",
+      "cache_key": "8917f417a2f0ca8c2cf9c054a5de9c7c8be2e1d486db960086a55af7f68b3989",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_20",
+      "split": "test",
+      "pool_index": 20,
+      "seed": 1473259406,
+      "target_xy": [
+        -0.07168776020806608,
+        -0.1386558624624181
+      ],
+      "second_xy": [
+        0.0855836495288041,
+        -0.02886857447396196
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 20,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_20/rgb.png",
+      "image_sha256": "59455b4f0f201465f7b528e5f0f564155bfa28066bab46ede0d7aa541ca937ed",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_20",
+      "cache_dir": "experiments/vlm_cache/test/4c778f8f5629b275058ac1a6a988467f02b5bbc0dcc141985c6af371191332ad",
+      "cache_key": "4c778f8f5629b275058ac1a6a988467f02b5bbc0dcc141985c6af371191332ad",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_21",
+      "split": "test",
+      "pool_index": 21,
+      "seed": 414750098,
+      "target_xy": [
+        -0.09521432506321029,
+        -0.11659426094420856
+      ],
+      "second_xy": [
+        0.14043782247729483,
+        -0.15822529268431695
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 21,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_21/rgb.png",
+      "image_sha256": "8c8309e50104d5530acf84b0a01256f10fec69ca6290185460a7a16f7a9fc079",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_21",
+      "cache_dir": "experiments/vlm_cache/test/237da86b77f0a276ecbb356611977e3f85cae1afc621cf4d80d3cc4749517f26",
+      "cache_key": "237da86b77f0a276ecbb356611977e3f85cae1afc621cf4d80d3cc4749517f26",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_22",
+      "split": "test",
+      "pool_index": 22,
+      "seed": 220129152,
+      "target_xy": [
+        -0.1843042939470112,
+        -0.08714068246052534
+      ],
+      "second_xy": [
+        0.13292316183360953,
+        -0.12046063731287471
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 22,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_22/rgb.png",
+      "image_sha256": "52a309425ff382b4d149056d3a388bafa528dc1df99f59efed9bd8590f620588",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_22",
+      "cache_dir": "experiments/vlm_cache/test/31993af116826f20eddd4d5fcb7f4a2f170d542db08a86e9b84e848c239d3cbc",
+      "cache_key": "31993af116826f20eddd4d5fcb7f4a2f170d542db08a86e9b84e848c239d3cbc",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_23",
+      "split": "test",
+      "pool_index": 23,
+      "seed": 2529077848,
+      "target_xy": [
+        -0.19201698598847736,
+        -0.03451681839555518
+      ],
+      "second_xy": [
+        0.07236691028958081,
+        -0.05924286120773556
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 23,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_23/rgb.png",
+      "image_sha256": "98408265388216560b657328b5f8e348fd3e629166f3499ffc43abfc4dc02bd3",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_23",
+      "cache_dir": "experiments/vlm_cache/test/500730a41fc3bf3fd18973225b0e8389a3840a77d8ef07058ea2851ce7327b9a",
+      "cache_key": "500730a41fc3bf3fd18973225b0e8389a3840a77d8ef07058ea2851ce7327b9a",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_24",
+      "split": "test",
+      "pool_index": 24,
+      "seed": 206434083,
+      "target_xy": [
+        -0.19393877378642715,
+        -0.04066803452181128
+      ],
+      "second_xy": [
+        0.13644372533682864,
+        -0.11091816420062531
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 24,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_24/rgb.png",
+      "image_sha256": "bc65c3ec238b307c3c3072f02a8d3664325297e94f3dd0eb807441ef7a67f82e",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_24",
+      "cache_dir": "experiments/vlm_cache/test/df3b66d52b39df99d6163999af556badded311f35532bb1bd7d4ce6acc270632",
+      "cache_key": "df3b66d52b39df99d6163999af556badded311f35532bb1bd7d4ce6acc270632",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_25",
+      "split": "test",
+      "pool_index": 25,
+      "seed": 1593740056,
+      "target_xy": [
+        -0.11191318788202478,
+        -0.08943503163422142
+      ],
+      "second_xy": [
+        0.043716600662272835,
+        -0.03959297363219369
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 25,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_25/rgb.png",
+      "image_sha256": "63155b37df9237ce014a32f587ef6f21706623b47ed16ee915fc29938858347c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_25",
+      "cache_dir": "experiments/vlm_cache/test/21b0b71b2d999c5e4c1730da62958c3a33ee3bb8949aa893e9a20575be21eb31",
+      "cache_key": "21b0b71b2d999c5e4c1730da62958c3a33ee3bb8949aa893e9a20575be21eb31",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_26",
+      "split": "test",
+      "pool_index": 26,
+      "seed": 2397038250,
+      "target_xy": [
+        -0.05435379411670471,
+        -0.16232636291676164
+      ],
+      "second_xy": [
+        0.057195469979733654,
+        -0.1697011113556655
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 26,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_26/rgb.png",
+      "image_sha256": "6afc3dba1e6b857fb0e5f97e1684edcc5b6221c66845d38b01714785430db05c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_26",
+      "cache_dir": "experiments/vlm_cache/test/811beecc191116d4c8c03d3c929e7e5c370a4ed02575c1051166b0efc98290c9",
+      "cache_key": "811beecc191116d4c8c03d3c929e7e5c370a4ed02575c1051166b0efc98290c9",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_27",
+      "split": "test",
+      "pool_index": 27,
+      "seed": 935748498,
+      "target_xy": [
+        -0.19711161864856813,
+        -0.11432222377905255
+      ],
+      "second_xy": [
+        0.1856461452096662,
+        -0.040035153934259604
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 27,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_27/rgb.png",
+      "image_sha256": "665d55e7eee4f28d23e07038395371164121f64dc4c4ec0a203b4d9c2ee7d713",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_27",
+      "cache_dir": "experiments/vlm_cache/test/05b1eae03ff0aad4a9feb68f17b8edb61b9edfacfeffb3a8b9c9dd9ca8b2e34d",
+      "cache_key": "05b1eae03ff0aad4a9feb68f17b8edb61b9edfacfeffb3a8b9c9dd9ca8b2e34d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_28",
+      "split": "test",
+      "pool_index": 28,
+      "seed": 2193238698,
+      "target_xy": [
+        -0.12981005309765742,
+        -0.048484731809658455
+      ],
+      "second_xy": [
+        0.05834940084797807,
+        -0.11435243391971685
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 28,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_28/rgb.png",
+      "image_sha256": "3e7c09df4dbad5b22cb88c4d28e28c05d708d3bd1387599454959451860910b0",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_28",
+      "cache_dir": "experiments/vlm_cache/test/78ce2a43faca0aac3c973b4fbe9014493e983e74e93f72ef83f1d1d4eccf617f",
+      "cache_key": "78ce2a43faca0aac3c973b4fbe9014493e983e74e93f72ef83f1d1d4eccf617f",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_29",
+      "split": "test",
+      "pool_index": 29,
+      "seed": 2218223407,
+      "target_xy": [
+        -0.07988320009686478,
+        -0.05417720241375665
+      ],
+      "second_xy": [
+        0.13083702891638385,
+        -0.1638858117649879
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 29,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_29/rgb.png",
+      "image_sha256": "c69055eff64fa1b65b938ee62755ffaa2cfd5646062301d6e1f4ab680e05864c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_29",
+      "cache_dir": "experiments/vlm_cache/test/ad90e1f6e13e4dc369ca27bf56dab5247e1e05b2c1a207ef58a3171f65eb5679",
+      "cache_key": "ad90e1f6e13e4dc369ca27bf56dab5247e1e05b2c1a207ef58a3171f65eb5679",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_30",
+      "split": "test",
+      "pool_index": 30,
+      "seed": 2572826119,
+      "target_xy": [
+        -0.14521118871914626,
+        -0.09992330137781219
+      ],
+      "second_xy": [
+        0.101320651332137,
+        -0.09014838197300018
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 30,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_31",
+      "split": "test",
+      "pool_index": 31,
+      "seed": 1606941443,
+      "target_xy": [
+        -0.025755248790834268,
+        -0.1454856589488981
+      ],
+      "second_xy": [
+        0.1431792411654827,
+        -0.17349587967024432
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 31,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_32",
+      "split": "test",
+      "pool_index": 32,
+      "seed": 1601569415,
+      "target_xy": [
+        -0.15384426753045963,
+        -0.15683244477229466
+      ],
+      "second_xy": [
+        0.1691947014570765,
+        -0.15986777310021025
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 32,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_33",
+      "split": "test",
+      "pool_index": 33,
+      "seed": 3933958872,
+      "target_xy": [
+        -0.10245053239579999,
+        -0.15974538225354418
+      ],
+      "second_xy": [
+        0.07694165392424022,
+        -0.11063929913533654
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 33,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_34",
+      "split": "test",
+      "pool_index": 34,
+      "seed": 3603946042,
+      "target_xy": [
+        -0.04065703372665594,
+        -0.05349810753664461
+      ],
+      "second_xy": [
+        0.08391460276762946,
+        -0.05275415319071172
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 34,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_35",
+      "split": "test",
+      "pool_index": 35,
+      "seed": 1146662366,
+      "target_xy": [
+        -0.21903331149883115,
+        -0.1149916368123333
+      ],
+      "second_xy": [
+        0.1382132934371985,
+        -0.13639750344572507
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 35,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_36",
+      "split": "test",
+      "pool_index": 36,
+      "seed": 2233343362,
+      "target_xy": [
+        -0.09356589134396776,
+        -0.17367963033246694
+      ],
+      "second_xy": [
+        0.1897691403753743,
+        -0.12830792784104925
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 36,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_37",
+      "split": "test",
+      "pool_index": 37,
+      "seed": 3188732885,
+      "target_xy": [
+        -0.015669262215899538,
+        -0.04106820768223382
+      ],
+      "second_xy": [
+        0.1028361821928295,
+        -0.07653176213961946
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 37,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_38",
+      "split": "test",
+      "pool_index": 38,
+      "seed": 3208774683,
+      "target_xy": [
+        -0.0662619396587027,
+        -0.05245969096592365
+      ],
+      "second_xy": [
+        0.1404459443322716,
+        -0.07280635383803895
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 38,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_39",
+      "split": "test",
+      "pool_index": 39,
+      "seed": 1820616606,
+      "target_xy": [
+        -0.1723444895412092,
+        -0.0672438955197221
+      ],
+      "second_xy": [
+        0.1191017282058186,
+        -0.13237915451096366
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 39,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_40",
+      "split": "test",
+      "pool_index": 40,
+      "seed": 3893627805,
+      "target_xy": [
+        -0.08391246441982733,
+        -0.06157547478154128
+      ],
+      "second_xy": [
+        0.04446079822989621,
+        -0.10942489582721365
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 40,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_41",
+      "split": "test",
+      "pool_index": 41,
+      "seed": 2588012414,
+      "target_xy": [
+        -0.018273912210575144,
+        -0.10135663572568916
+      ],
+      "second_xy": [
+        0.18308608353701697,
+        -0.16765270885670233
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 41,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_42",
+      "split": "test",
+      "pool_index": 42,
+      "seed": 320980310,
+      "target_xy": [
+        -0.13455616531615175,
+        -0.036032586188218724
+      ],
+      "second_xy": [
+        0.14392355023556874,
+        -0.09882413932613435
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 42,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_43",
+      "split": "test",
+      "pool_index": 43,
+      "seed": 4071796614,
+      "target_xy": [
+        -0.1314591096211361,
+        -0.14798094456056848
+      ],
+      "second_xy": [
+        0.08160704094783802,
+        -0.12584132972062567
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 43,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_44",
+      "split": "test",
+      "pool_index": 44,
+      "seed": 1700922718,
+      "target_xy": [
+        -0.20063154999431884,
+        -0.13232766843436364
+      ],
+      "second_xy": [
+        0.20854570767872802,
+        -0.12083636162486996
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 44,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_45",
+      "split": "test",
+      "pool_index": 45,
+      "seed": 1126788703,
+      "target_xy": [
+        -0.07894956345788345,
+        -0.15765970096792561
+      ],
+      "second_xy": [
+        0.13507561087277187,
+        -0.16083342829432004
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 45,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_46",
+      "split": "test",
+      "pool_index": 46,
+      "seed": 3395118315,
+      "target_xy": [
+        -0.043238728843862484,
+        -0.042669952536193934
+      ],
+      "second_xy": [
+        0.0680585640831703,
+        -0.15855173791182836
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 46,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_47",
+      "split": "test",
+      "pool_index": 47,
+      "seed": 1947511480,
+      "target_xy": [
+        -0.1061832107803358,
+        -0.1271179930272365
+      ],
+      "second_xy": [
+        0.15419207326482584,
+        -0.058101121300011827
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 47,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_48",
+      "split": "test",
+      "pool_index": 48,
+      "seed": 711556479,
+      "target_xy": [
+        -0.03130884769139908,
+        -0.07121951155928924
+      ],
+      "second_xy": [
+        0.14683272626147392,
+        -0.1740769209496905
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 48,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_49",
+      "split": "test",
+      "pool_index": 49,
+      "seed": 1741691965,
+      "target_xy": [
+        -0.11849425229014642,
+        -0.17636015137068417
+      ],
+      "second_xy": [
+        0.17171721007910964,
+        -0.07473448551802003
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 49,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    }
+  ],
+  "active": [
+    {
+      "case_id": "D0_test_00",
+      "split": "test",
+      "pool_index": 0,
+      "seed": 2562407406,
+      "target_xy": [
+        -0.1782451391673994,
+        -0.034490248867718065
+      ],
+      "second_xy": [
+        0.10133653104288368,
+        -0.03204807161899198
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 0,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_00/rgb.png",
+      "image_sha256": "b0599945c636e1befb2881bebe950a5587aeeaf094a438e8aeb2d00a7e11eda8",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_00",
+      "cache_dir": "experiments/vlm_cache/test/23f8b12a5972d13a8dc6d6f9be2cc0db848183eff7a0d5daecb5896c94598f58",
+      "cache_key": "23f8b12a5972d13a8dc6d6f9be2cc0db848183eff7a0d5daecb5896c94598f58",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_01",
+      "split": "test",
+      "pool_index": 1,
+      "seed": 2285031482,
+      "target_xy": [
+        -0.013701712298648222,
+        -0.1650375578493578
+      ],
+      "second_xy": [
+        0.19452715005614102,
+        -0.11240556713030699
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 1,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_01/rgb.png",
+      "image_sha256": "cbc2e74630853284e64bc8f3cc7bb2dcbb2955f7395ba8e665feb6e71f38af9e",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_01",
+      "cache_dir": "experiments/vlm_cache/test/747d56b72f9e7ddea006e44ce5deda072604c7aa3d6c6d8a450ce899dc43d987",
+      "cache_key": "747d56b72f9e7ddea006e44ce5deda072604c7aa3d6c6d8a450ce899dc43d987",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_02",
+      "split": "test",
+      "pool_index": 2,
+      "seed": 2484443323,
+      "target_xy": [
+        -0.1509708133037937,
+        -0.0876927263907916
+      ],
+      "second_xy": [
+        0.09620596776420459,
+        -0.023388289221847602
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 2,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_02/rgb.png",
+      "image_sha256": "447ef3bbb1a9685fd173ea4fdee374c7df849dcd6442f887bcfaf069f0211df5",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_02",
+      "cache_dir": "experiments/vlm_cache/test/272bbb91a526e22f2f1c587b045f34f112abed94e319b21f184a71f78e6ac675",
+      "cache_key": "272bbb91a526e22f2f1c587b045f34f112abed94e319b21f184a71f78e6ac675",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_03",
+      "split": "test",
+      "pool_index": 3,
+      "seed": 3832692134,
+      "target_xy": [
+        -0.08190762818175473,
+        -0.06964784430797617
+      ],
+      "second_xy": [
+        0.11500828154667886,
+        -0.04822396322083536
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 3,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_03/rgb.png",
+      "image_sha256": "ae213fde07837373035c95f152a2185d8829ca2f487e49e3202661ebdd785300",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_03",
+      "cache_dir": "experiments/vlm_cache/test/ee66a2ac010e9cff39d96fbf7503b35ecadde7a8e3de6ebdd91d41256c05c95e",
+      "cache_key": "ee66a2ac010e9cff39d96fbf7503b35ecadde7a8e3de6ebdd91d41256c05c95e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_04",
+      "split": "test",
+      "pool_index": 4,
+      "seed": 3776737091,
+      "target_xy": [
+        -0.13667714834306233,
+        -0.12877864040344605
+      ],
+      "second_xy": [
+        0.14935333087151562,
+        -0.0646556287461542
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 4,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_04/rgb.png",
+      "image_sha256": "bf0592c894ea55ec0de50fe1d503dd38f7e11571f12dbd84a06ee034fa1a6029",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_04",
+      "cache_dir": "experiments/vlm_cache/test/97026b470d785a9abb94c864a3cdc6bd6696ec77c1c1b738bd6c4bce24e09026",
+      "cache_key": "97026b470d785a9abb94c864a3cdc6bd6696ec77c1c1b738bd6c4bce24e09026",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_05",
+      "split": "test",
+      "pool_index": 5,
+      "seed": 2478534474,
+      "target_xy": [
+        -0.1137219142323395,
+        -0.17259512983825132
+      ],
+      "second_xy": [
+        0.1697899324902391,
+        -0.07440165076159305
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 5,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_05/rgb.png",
+      "image_sha256": "df1bdb274f47fc0186889c30fad406318202f68c5a15b5ac8eb06e366825ed08",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_05",
+      "cache_dir": "experiments/vlm_cache/test/b3f8a2ac263aa3ae4328ce7cf8ec6057988eb63438823dd5ccff1db2f7250b4d",
+      "cache_key": "b3f8a2ac263aa3ae4328ce7cf8ec6057988eb63438823dd5ccff1db2f7250b4d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_06",
+      "split": "test",
+      "pool_index": 6,
+      "seed": 148367005,
+      "target_xy": [
+        -0.06516446710110119,
+        -0.08716648494076452
+      ],
+      "second_xy": [
+        0.18189666515823139,
+        -0.08610580744385538
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 6,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_06/rgb.png",
+      "image_sha256": "283fadd0e61ce079415ec077459c518eb2290645e6d02e47f83ce4327e69436b",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_06",
+      "cache_dir": "experiments/vlm_cache/test/d370ec89fef758bf3e3ddd8b8d7c577092fa6c6647b15a83568d04c22523b64d",
+      "cache_key": "d370ec89fef758bf3e3ddd8b8d7c577092fa6c6647b15a83568d04c22523b64d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_07",
+      "split": "test",
+      "pool_index": 7,
+      "seed": 2503031510,
+      "target_xy": [
+        -0.18016465106593654,
+        -0.08988478687979008
+      ],
+      "second_xy": [
+        0.1616860974937403,
+        -0.02319882865084036
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 7,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_07/rgb.png",
+      "image_sha256": "634c0660e5a3e77f654f5b2fa865c1092b7c52a15a930500588da62a77940d5d",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_07",
+      "cache_dir": "experiments/vlm_cache/test/da5e42ce4c9483ba0043a4f253a43621d0dfa354459674672b5a985c13783663",
+      "cache_key": "da5e42ce4c9483ba0043a4f253a43621d0dfa354459674672b5a985c13783663",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_08",
+      "split": "test",
+      "pool_index": 8,
+      "seed": 3444820629,
+      "target_xy": [
+        -0.10006534086808946,
+        -0.02278254541928501
+      ],
+      "second_xy": [
+        0.07730257121914816,
+        -0.15216947449568996
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 8,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_08/rgb.png",
+      "image_sha256": "35c9df838c0c3ac951a6977814ed2ad812fdaded08043c85b36f29d84ddfa724",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_08",
+      "cache_dir": "experiments/vlm_cache/test/cd0ae3f5a4432d2ecc7ee2fc7253162c6b2567c7904e8062dc0d8958c214279c",
+      "cache_key": "cd0ae3f5a4432d2ecc7ee2fc7253162c6b2567c7904e8062dc0d8958c214279c",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_09",
+      "split": "test",
+      "pool_index": 9,
+      "seed": 1622544806,
+      "target_xy": [
+        -0.08500880898021976,
+        -0.08218975671867326
+      ],
+      "second_xy": [
+        0.19681305317731096,
+        -0.1295187034248544
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 9,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_09/rgb.png",
+      "image_sha256": "7e2ace951cbe2acf3a11e1b05a82fa8e1eb3d19facf70592b65fa6bc72c381ff",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_09",
+      "cache_dir": "experiments/vlm_cache/test/bfc393e5bbe7bfba121ee63966400ea815fb1e959b7a832d03d2fb5275df46a2",
+      "cache_key": "bfc393e5bbe7bfba121ee63966400ea815fb1e959b7a832d03d2fb5275df46a2",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_10",
+      "split": "test",
+      "pool_index": 10,
+      "seed": 3542248273,
+      "target_xy": [
+        -0.015715254232338327,
+        -0.1758106128251669
+      ],
+      "second_xy": [
+        0.1450618976112363,
+        -0.08197864600467906
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 10,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_10/rgb.png",
+      "image_sha256": "d280c46ee44ae20161982aaacb421785a182fbe810e3c6dcbc5846d8b0ddf387",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_10",
+      "cache_dir": "experiments/vlm_cache/test/3bf041b6e620351a48aecea0d583bb8a3eb4f07b58147b066cdcb7c72f3986e7",
+      "cache_key": "3bf041b6e620351a48aecea0d583bb8a3eb4f07b58147b066cdcb7c72f3986e7",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_11",
+      "split": "test",
+      "pool_index": 11,
+      "seed": 1689765329,
+      "target_xy": [
+        -0.04636205746712724,
+        -0.15870874104218533
+      ],
+      "second_xy": [
+        0.10747673593747323,
+        -0.050053689185964506
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 11,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_11/rgb.png",
+      "image_sha256": "0e6fb9e922f211c7a43999aa4b34cb482dc1816d89ec20f1355f8dc38d826f90",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_11",
+      "cache_dir": "experiments/vlm_cache/test/e4a56c25ee9d11397a7f2a69c90040d4c43404d83de923ee9266fb5d255f4d2e",
+      "cache_key": "e4a56c25ee9d11397a7f2a69c90040d4c43404d83de923ee9266fb5d255f4d2e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_12",
+      "split": "test",
+      "pool_index": 12,
+      "seed": 2510201316,
+      "target_xy": [
+        -0.13977296845211218,
+        -0.15771485571870064
+      ],
+      "second_xy": [
+        0.20681627556102708,
+        -0.11215953853119605
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 12,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_12/rgb.png",
+      "image_sha256": "bb8a05658d4a5146c4c4993c1137b359d8b499aaa05da840fcf16215245cca4a",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_12",
+      "cache_dir": "experiments/vlm_cache/test/011124cfba93c3212746e4da1051b778dd15f245e736eb665ed06b78997a52b1",
+      "cache_key": "011124cfba93c3212746e4da1051b778dd15f245e736eb665ed06b78997a52b1",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_13",
+      "split": "test",
+      "pool_index": 13,
+      "seed": 1521213485,
+      "target_xy": [
+        -0.20875464672095306,
+        -0.05866120436542789
+      ],
+      "second_xy": [
+        0.20312017857404727,
+        -0.1719224556823115
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 13,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_13/rgb.png",
+      "image_sha256": "4a1938cff529510f4fee56321de64af449088c8dcd8808f29842f949b011e811",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_13",
+      "cache_dir": "experiments/vlm_cache/test/9333feeb0b5c231bab94766c01f063f2a403c126271fec479b044bffd4db33b9",
+      "cache_key": "9333feeb0b5c231bab94766c01f063f2a403c126271fec479b044bffd4db33b9",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_14",
+      "split": "test",
+      "pool_index": 14,
+      "seed": 3272669780,
+      "target_xy": [
+        -0.08449005968970821,
+        -0.09749303129691593
+      ],
+      "second_xy": [
+        0.17835958229056112,
+        -0.10486858624375256
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 14,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_14/rgb.png",
+      "image_sha256": "66e40fb7adc962a841b2eea3092784de4933de6ad6212ddf34855fc6703ab937",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_14",
+      "cache_dir": "experiments/vlm_cache/test/94a4f9bdb1d61a8b56e1d37f1d071e0c5a1f82103e1753a597587bf54ce40f94",
+      "cache_key": "94a4f9bdb1d61a8b56e1d37f1d071e0c5a1f82103e1753a597587bf54ce40f94",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_15",
+      "split": "test",
+      "pool_index": 15,
+      "seed": 120691378,
+      "target_xy": [
+        -0.0010361743842875748,
+        -0.06509740732543683
+      ],
+      "second_xy": [
+        0.08367302226683106,
+        -0.12323831756757543
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 15,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_15/rgb.png",
+      "image_sha256": "d23619f783619bef0a22700d18744e4f1f0033481d898dcd96119c2d7fe6421b",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_15",
+      "cache_dir": "experiments/vlm_cache/test/9d355be821e75097795679b1055ee683069bd208d196e0ea17d2a4741991eac2",
+      "cache_key": "9d355be821e75097795679b1055ee683069bd208d196e0ea17d2a4741991eac2",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_16",
+      "split": "test",
+      "pool_index": 16,
+      "seed": 2727703428,
+      "target_xy": [
+        -0.0876271452025554,
+        -0.12263014328611477
+      ],
+      "second_xy": [
+        0.05926874151261191,
+        -0.1505390286946197
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 16,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_16/rgb.png",
+      "image_sha256": "2c28476252b282d9b885aae9009769955fb20c50e36cdeb011dda69a054924ee",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_16",
+      "cache_dir": "experiments/vlm_cache/test/44038a2c4b53a7fc28faf8fad4b32e9a5cf96f5ec6a64a65f243ea9504e50bee",
+      "cache_key": "44038a2c4b53a7fc28faf8fad4b32e9a5cf96f5ec6a64a65f243ea9504e50bee",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_17",
+      "split": "test",
+      "pool_index": 17,
+      "seed": 4272358217,
+      "target_xy": [
+        -0.1546233545400381,
+        -0.10576464178210793
+      ],
+      "second_xy": [
+        0.06262326463820433,
+        -0.1544836984723847
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 17,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_17/rgb.png",
+      "image_sha256": "654be4bf76b281b04dd1b78fa80d03e5ada52c8689c44f8d67cd8c34bbf344c4",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_17",
+      "cache_dir": "experiments/vlm_cache/test/83e7294b49091bcea27238d7a0eb6c8397af63993aa1dff77bf468bdc3328b01",
+      "cache_key": "83e7294b49091bcea27238d7a0eb6c8397af63993aa1dff77bf468bdc3328b01",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_18",
+      "split": "test",
+      "pool_index": 18,
+      "seed": 1297079187,
+      "target_xy": [
+        -0.021008565706029686,
+        -0.16159677253277283
+      ],
+      "second_xy": [
+        0.05229241870617966,
+        -0.06228645361628589
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 18,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_18/rgb.png",
+      "image_sha256": "181c525a70b9f8325f18cb2a24c00766fc74605ef97cb0755768f12eccfd3206",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_18",
+      "cache_dir": "experiments/vlm_cache/test/d6e90151e9fee0f65f0c8301360838642176dd3e47a50789008f161425f73c7e",
+      "cache_key": "d6e90151e9fee0f65f0c8301360838642176dd3e47a50789008f161425f73c7e",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_19",
+      "split": "test",
+      "pool_index": 19,
+      "seed": 819159806,
+      "target_xy": [
+        -0.0879568060788592,
+        -0.10508426733562015
+      ],
+      "second_xy": [
+        0.13250144763156504,
+        -0.09278946277585003
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 19,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_19/rgb.png",
+      "image_sha256": "24405baeeca2527585b22c25dea67a4e550ded02052f7383e2fda486f382a081",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_19",
+      "cache_dir": "experiments/vlm_cache/test/8917f417a2f0ca8c2cf9c054a5de9c7c8be2e1d486db960086a55af7f68b3989",
+      "cache_key": "8917f417a2f0ca8c2cf9c054a5de9c7c8be2e1d486db960086a55af7f68b3989",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_20",
+      "split": "test",
+      "pool_index": 20,
+      "seed": 1473259406,
+      "target_xy": [
+        -0.07168776020806608,
+        -0.1386558624624181
+      ],
+      "second_xy": [
+        0.0855836495288041,
+        -0.02886857447396196
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 20,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_20/rgb.png",
+      "image_sha256": "59455b4f0f201465f7b528e5f0f564155bfa28066bab46ede0d7aa541ca937ed",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_20",
+      "cache_dir": "experiments/vlm_cache/test/4c778f8f5629b275058ac1a6a988467f02b5bbc0dcc141985c6af371191332ad",
+      "cache_key": "4c778f8f5629b275058ac1a6a988467f02b5bbc0dcc141985c6af371191332ad",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_21",
+      "split": "test",
+      "pool_index": 21,
+      "seed": 414750098,
+      "target_xy": [
+        -0.09521432506321029,
+        -0.11659426094420856
+      ],
+      "second_xy": [
+        0.14043782247729483,
+        -0.15822529268431695
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 21,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_21/rgb.png",
+      "image_sha256": "8c8309e50104d5530acf84b0a01256f10fec69ca6290185460a7a16f7a9fc079",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_21",
+      "cache_dir": "experiments/vlm_cache/test/237da86b77f0a276ecbb356611977e3f85cae1afc621cf4d80d3cc4749517f26",
+      "cache_key": "237da86b77f0a276ecbb356611977e3f85cae1afc621cf4d80d3cc4749517f26",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_22",
+      "split": "test",
+      "pool_index": 22,
+      "seed": 220129152,
+      "target_xy": [
+        -0.1843042939470112,
+        -0.08714068246052534
+      ],
+      "second_xy": [
+        0.13292316183360953,
+        -0.12046063731287471
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 22,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_22/rgb.png",
+      "image_sha256": "52a309425ff382b4d149056d3a388bafa528dc1df99f59efed9bd8590f620588",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_22",
+      "cache_dir": "experiments/vlm_cache/test/31993af116826f20eddd4d5fcb7f4a2f170d542db08a86e9b84e848c239d3cbc",
+      "cache_key": "31993af116826f20eddd4d5fcb7f4a2f170d542db08a86e9b84e848c239d3cbc",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_23",
+      "split": "test",
+      "pool_index": 23,
+      "seed": 2529077848,
+      "target_xy": [
+        -0.19201698598847736,
+        -0.03451681839555518
+      ],
+      "second_xy": [
+        0.07236691028958081,
+        -0.05924286120773556
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 23,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_23/rgb.png",
+      "image_sha256": "98408265388216560b657328b5f8e348fd3e629166f3499ffc43abfc4dc02bd3",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_23",
+      "cache_dir": "experiments/vlm_cache/test/500730a41fc3bf3fd18973225b0e8389a3840a77d8ef07058ea2851ce7327b9a",
+      "cache_key": "500730a41fc3bf3fd18973225b0e8389a3840a77d8ef07058ea2851ce7327b9a",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_24",
+      "split": "test",
+      "pool_index": 24,
+      "seed": 206434083,
+      "target_xy": [
+        -0.19393877378642715,
+        -0.04066803452181128
+      ],
+      "second_xy": [
+        0.13644372533682864,
+        -0.11091816420062531
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 24,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_24/rgb.png",
+      "image_sha256": "bc65c3ec238b307c3c3072f02a8d3664325297e94f3dd0eb807441ef7a67f82e",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_24",
+      "cache_dir": "experiments/vlm_cache/test/df3b66d52b39df99d6163999af556badded311f35532bb1bd7d4ce6acc270632",
+      "cache_key": "df3b66d52b39df99d6163999af556badded311f35532bb1bd7d4ce6acc270632",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_25",
+      "split": "test",
+      "pool_index": 25,
+      "seed": 1593740056,
+      "target_xy": [
+        -0.11191318788202478,
+        -0.08943503163422142
+      ],
+      "second_xy": [
+        0.043716600662272835,
+        -0.03959297363219369
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 25,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_25/rgb.png",
+      "image_sha256": "63155b37df9237ce014a32f587ef6f21706623b47ed16ee915fc29938858347c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_25",
+      "cache_dir": "experiments/vlm_cache/test/21b0b71b2d999c5e4c1730da62958c3a33ee3bb8949aa893e9a20575be21eb31",
+      "cache_key": "21b0b71b2d999c5e4c1730da62958c3a33ee3bb8949aa893e9a20575be21eb31",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_26",
+      "split": "test",
+      "pool_index": 26,
+      "seed": 2397038250,
+      "target_xy": [
+        -0.05435379411670471,
+        -0.16232636291676164
+      ],
+      "second_xy": [
+        0.057195469979733654,
+        -0.1697011113556655
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 26,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_26/rgb.png",
+      "image_sha256": "6afc3dba1e6b857fb0e5f97e1684edcc5b6221c66845d38b01714785430db05c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_26",
+      "cache_dir": "experiments/vlm_cache/test/811beecc191116d4c8c03d3c929e7e5c370a4ed02575c1051166b0efc98290c9",
+      "cache_key": "811beecc191116d4c8c03d3c929e7e5c370a4ed02575c1051166b0efc98290c9",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_27",
+      "split": "test",
+      "pool_index": 27,
+      "seed": 935748498,
+      "target_xy": [
+        -0.19711161864856813,
+        -0.11432222377905255
+      ],
+      "second_xy": [
+        0.1856461452096662,
+        -0.040035153934259604
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 27,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_27/rgb.png",
+      "image_sha256": "665d55e7eee4f28d23e07038395371164121f64dc4c4ec0a203b4d9c2ee7d713",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_27",
+      "cache_dir": "experiments/vlm_cache/test/05b1eae03ff0aad4a9feb68f17b8edb61b9edfacfeffb3a8b9c9dd9ca8b2e34d",
+      "cache_key": "05b1eae03ff0aad4a9feb68f17b8edb61b9edfacfeffb3a8b9c9dd9ca8b2e34d",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 1
+    },
+    {
+      "case_id": "D0_test_28",
+      "split": "test",
+      "pool_index": 28,
+      "seed": 2193238698,
+      "target_xy": [
+        -0.12981005309765742,
+        -0.048484731809658455
+      ],
+      "second_xy": [
+        0.05834940084797807,
+        -0.11435243391971685
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 28,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_28/rgb.png",
+      "image_sha256": "3e7c09df4dbad5b22cb88c4d28e28c05d708d3bd1387599454959451860910b0",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_28",
+      "cache_dir": "experiments/vlm_cache/test/78ce2a43faca0aac3c973b4fbe9014493e983e74e93f72ef83f1d1d4eccf617f",
+      "cache_key": "78ce2a43faca0aac3c973b4fbe9014493e983e74e93f72ef83f1d1d4eccf617f",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    },
+    {
+      "case_id": "D0_test_29",
+      "split": "test",
+      "pool_index": 29,
+      "seed": 2218223407,
+      "target_xy": [
+        -0.07988320009686478,
+        -0.05417720241375665
+      ],
+      "second_xy": [
+        0.13083702891638385,
+        -0.1638858117649879
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 29,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      },
+      "image_ref": "experiments/stage_1a_inputs/test/D0/D0_test_29/rgb.png",
+      "image_sha256": "c69055eff64fa1b65b938ee62755ffaa2cfd5646062301d6e1f4ab680e05864c",
+      "input_dir": "experiments/stage_1a_inputs/test/D0/D0_test_29",
+      "cache_dir": "experiments/vlm_cache/test/ad90e1f6e13e4dc369ca27bf56dab5247e1e05b2c1a207ef58a3171f65eb5679",
+      "cache_key": "ad90e1f6e13e4dc369ca27bf56dab5247e1e05b2c1a207ef58a3171f65eb5679",
+      "cache_status": "SUCCESS",
+      "source_relation_count": 0
+    }
+  ],
+  "reserved": [
+    {
+      "case_id": "D0_test_30",
+      "split": "test",
+      "pool_index": 30,
+      "seed": 2572826119,
+      "target_xy": [
+        -0.14521118871914626,
+        -0.09992330137781219
+      ],
+      "second_xy": [
+        0.101320651332137,
+        -0.09014838197300018
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 30,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_31",
+      "split": "test",
+      "pool_index": 31,
+      "seed": 1606941443,
+      "target_xy": [
+        -0.025755248790834268,
+        -0.1454856589488981
+      ],
+      "second_xy": [
+        0.1431792411654827,
+        -0.17349587967024432
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 31,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_32",
+      "split": "test",
+      "pool_index": 32,
+      "seed": 1601569415,
+      "target_xy": [
+        -0.15384426753045963,
+        -0.15683244477229466
+      ],
+      "second_xy": [
+        0.1691947014570765,
+        -0.15986777310021025
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 32,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_33",
+      "split": "test",
+      "pool_index": 33,
+      "seed": 3933958872,
+      "target_xy": [
+        -0.10245053239579999,
+        -0.15974538225354418
+      ],
+      "second_xy": [
+        0.07694165392424022,
+        -0.11063929913533654
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 33,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_34",
+      "split": "test",
+      "pool_index": 34,
+      "seed": 3603946042,
+      "target_xy": [
+        -0.04065703372665594,
+        -0.05349810753664461
+      ],
+      "second_xy": [
+        0.08391460276762946,
+        -0.05275415319071172
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 34,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_35",
+      "split": "test",
+      "pool_index": 35,
+      "seed": 1146662366,
+      "target_xy": [
+        -0.21903331149883115,
+        -0.1149916368123333
+      ],
+      "second_xy": [
+        0.1382132934371985,
+        -0.13639750344572507
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 35,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_36",
+      "split": "test",
+      "pool_index": 36,
+      "seed": 2233343362,
+      "target_xy": [
+        -0.09356589134396776,
+        -0.17367963033246694
+      ],
+      "second_xy": [
+        0.1897691403753743,
+        -0.12830792784104925
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 36,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_37",
+      "split": "test",
+      "pool_index": 37,
+      "seed": 3188732885,
+      "target_xy": [
+        -0.015669262215899538,
+        -0.04106820768223382
+      ],
+      "second_xy": [
+        0.1028361821928295,
+        -0.07653176213961946
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 37,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_38",
+      "split": "test",
+      "pool_index": 38,
+      "seed": 3208774683,
+      "target_xy": [
+        -0.0662619396587027,
+        -0.05245969096592365
+      ],
+      "second_xy": [
+        0.1404459443322716,
+        -0.07280635383803895
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 38,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_39",
+      "split": "test",
+      "pool_index": 39,
+      "seed": 1820616606,
+      "target_xy": [
+        -0.1723444895412092,
+        -0.0672438955197221
+      ],
+      "second_xy": [
+        0.1191017282058186,
+        -0.13237915451096366
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 39,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_40",
+      "split": "test",
+      "pool_index": 40,
+      "seed": 3893627805,
+      "target_xy": [
+        -0.08391246441982733,
+        -0.06157547478154128
+      ],
+      "second_xy": [
+        0.04446079822989621,
+        -0.10942489582721365
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 40,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_41",
+      "split": "test",
+      "pool_index": 41,
+      "seed": 2588012414,
+      "target_xy": [
+        -0.018273912210575144,
+        -0.10135663572568916
+      ],
+      "second_xy": [
+        0.18308608353701697,
+        -0.16765270885670233
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 41,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_42",
+      "split": "test",
+      "pool_index": 42,
+      "seed": 320980310,
+      "target_xy": [
+        -0.13455616531615175,
+        -0.036032586188218724
+      ],
+      "second_xy": [
+        0.14392355023556874,
+        -0.09882413932613435
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 42,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_43",
+      "split": "test",
+      "pool_index": 43,
+      "seed": 4071796614,
+      "target_xy": [
+        -0.1314591096211361,
+        -0.14798094456056848
+      ],
+      "second_xy": [
+        0.08160704094783802,
+        -0.12584132972062567
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 43,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_44",
+      "split": "test",
+      "pool_index": 44,
+      "seed": 1700922718,
+      "target_xy": [
+        -0.20063154999431884,
+        -0.13232766843436364
+      ],
+      "second_xy": [
+        0.20854570767872802,
+        -0.12083636162486996
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 44,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_45",
+      "split": "test",
+      "pool_index": 45,
+      "seed": 1126788703,
+      "target_xy": [
+        -0.07894956345788345,
+        -0.15765970096792561
+      ],
+      "second_xy": [
+        0.13507561087277187,
+        -0.16083342829432004
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 45,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_46",
+      "split": "test",
+      "pool_index": 46,
+      "seed": 3395118315,
+      "target_xy": [
+        -0.043238728843862484,
+        -0.042669952536193934
+      ],
+      "second_xy": [
+        0.0680585640831703,
+        -0.15855173791182836
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 46,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_47",
+      "split": "test",
+      "pool_index": 47,
+      "seed": 1947511480,
+      "target_xy": [
+        -0.1061832107803358,
+        -0.1271179930272365
+      ],
+      "second_xy": [
+        0.15419207326482584,
+        -0.058101121300011827
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 47,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_48",
+      "split": "test",
+      "pool_index": 48,
+      "seed": 711556479,
+      "target_xy": [
+        -0.03130884769139908,
+        -0.07121951155928924
+      ],
+      "second_xy": [
+        0.14683272626147392,
+        -0.1740769209496905
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 48,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    },
+    {
+      "case_id": "D0_test_49",
+      "split": "test",
+      "pool_index": 49,
+      "seed": 1741691965,
+      "target_xy": [
+        -0.11849425229014642,
+        -0.17636015137068417
+      ],
+      "second_xy": [
+        0.17171721007910964,
+        -0.07473448551802003
+      ],
+      "container_xy": [
+        0.18,
+        0.12
+      ],
+      "buffer_xy": [
+        -0.18,
+        0.12
+      ],
+      "lid_closed": true,
+      "stream": {
+        "namespace": "cp_disr_exp_v1_1",
+        "task": "D0",
+        "split": "test",
+        "case_or_episode": 49,
+        "streams": [
+          "case_init",
+          "env_reset"
+        ],
+        "reject_index": 0,
+        "note": "test case stream omits method and training_seed"
+      }
+    }
+  ]
+}
