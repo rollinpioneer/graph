@@ -16,6 +16,7 @@ from .neural import Policy
 from .collector import Collector
 from .rl import Rollout, gamma
 from .torch_rl import PPO, load_checkpoint, save_checkpoint
+from .persistence import GenerationStore
 from .prior import PriorSampler, EpisodePrior
 from .platforms.libero.runtime_factory import create_task_runtime, PREDICATES, TASK_OBJECTS
 from .stage2a_runner import planned_jobs, TRANSITIONS, UPDATES, UPDATE_EVERY, CHECKPOINTS
@@ -282,6 +283,16 @@ def save_full_checkpoint(path, policy, optimizer, extra, rng_payload, prior_samp
     }
     with path.with_suffix(".episode.pkl").open("wb") as f:
         pickle.dump(blob, f, protocol=4)
+    # Phase A may opt into immutable generations without changing legacy eval aliases.
+    store_root = os.environ.get("CP_DISR_GENERATION_STORE")
+    if store_root:
+        store = GenerationStore(store_root)
+        store.publish({
+            "model.pt": path,
+            "manifest.json": manifest,
+            "rng.json": sidecar,
+            "episode.pkl": path.with_suffix(".episode.pkl"),
+        }, manifest)
     return path
 
 

@@ -1,0 +1,3 @@
+# Persistence design
+
+`src/cp_disr/persistence.py` provides `GenerationStore` for Phase A checkpoint publication. It writes model/Adam/RNG/manifest/episode payloads into a temporary same-filesystem generation, fsyncs each file, writes HASHES.json, writes COMPLETE last, fsyncs the generation directory, renames atomically, then atomically replaces LATEST and fsyncs the parent. `verify()` requires COMPLETE and validates every hash before resume. Raw JSONL events are append+fsync and `derive_csv()` is rebuilt only from those immutable events. The Stage 2A checkpoint entry point opts into this store with `CP_DISR_GENERATION_STORE` while retaining legacy evaluation aliases.
