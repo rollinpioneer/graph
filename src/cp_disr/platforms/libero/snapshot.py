@@ -1,7 +1,7 @@
 """Build policy snapshots from verifier facts, cache prior, and public observations."""
 from __future__ import annotations
 
-import json, os
+import hashlib, json, os
 from pathlib import Path
 from cp_disr.facts import FactStore, Truth
 from cp_disr.graph import build_template, Goal
@@ -9,6 +9,15 @@ from cp_disr.contracts import precondition_value
 from cp_disr.common import digest
 from cp_disr.rl import Snapshot
 from cp_disr.adapters import ExecutionResult
+
+
+CANDIDATE_FEATURE_ENCODING_VERSION = "cp_disr_candidate_feature_v1"
+
+def stable_candidate_scalar(namespace: str, value: str) -> float:
+    """Encode public candidate text without Python's process-random hash()."""
+    payload = (CANDIDATE_FEATURE_ENCODING_VERSION + "\x00" + namespace + "\x00" + str(value)).encode("utf-8")
+    raw = hashlib.sha256(payload).digest()[:8]
+    return int.from_bytes(raw, "big") / float(1 << 64)
 
 
 class SnapshotBuilder:
@@ -30,8 +39,8 @@ class SnapshotBuilder:
             ids.append(c.id)
             legal = precondition_value(c, values) == Truth.TRUE
             mask.append(bool(legal))
-            feat = [float(hash(c.name) % 97) / 97.0, float(len(c.bound_arguments)), float(c.timeout_seconds)]
-            feat += [float(hash(a) % 89) / 89.0 for a in c.bound_arguments]
+            feat = [stable_candidate_scalar("contract_name", c.name), float(len(c.bound_arguments)), float(c.timeout_seconds)]
+            feat += [stable_candidate_scalar("bound_argument", a) for a in c.bound_arguments]
             feat += [0.0] * (8 - len(feat))
             feats.append(tuple(feat[:8]))
         return tuple(ids), tuple(mask), tuple(feats)

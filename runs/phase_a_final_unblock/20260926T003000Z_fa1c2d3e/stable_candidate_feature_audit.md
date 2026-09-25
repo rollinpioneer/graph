@@ -1,0 +1,3 @@
+# Stable candidate feature audit
+
+Active production `hash(c.name)` and `hash(argument)` uses were found in `src/cp_disr/platforms/libero/snapshot.py` and replaced. `stable_candidate_scalar()` now uses UTF-8 text with namespace and version `cp_disr_candidate_feature_v1`, SHA-256, and the first eight digest bytes mapped to a deterministic float. It does not use Python process hash, prior data, hidden geometry, oracle labels, or experimental seeds. Candidate IDs and mask semantics are unchanged. Same-process and three fresh-process constructions under `PYTHONHASHSEED=1,2,999` matched bit-for-bit. Older training runs using process-random features are not claimed bitwise comparable.

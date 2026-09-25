@@ -1,0 +1,40 @@
+{
+  "phase_a_e16_ready": true,
+  "phase_a_status": "NOT_STARTED",
+  "physical_state_exact": true,
+  "camera_exact": true,
+  "depth_exact": true,
+  "rgb_exact": false,
+  "semantic_determinism": true,
+  "classification": "RAW_RGB_LSB_VARIANCE_NO_DOWNSTREAM_EFFECT",
+  "gates": {
+    "dashscope": true,
+    "stable_candidate_features": true,
+    "semantic_reset": true,
+    "production_tests": true,
+    "persistence": true,
+    "full_probe": true,
+    "b2_probe": true
+  },
+  "branch": "codex/cp-disr-v1.2-phase-a-final-unblock",
+  "base_commit": "16f27e467c735e7f2699f87378ba1aeb771f109c",
+  "output_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/phase_a_final_unblock/20260926T003000Z_fa1c2d3e",
+  "formal_rl_jobs": 0,
+  "real_environment_ppo_updates": 0,
+  "diagnostic_optimizer_steps": 0,
+  "full_no_learning_probes": 1,
+  "b2_no_learning_probes": 1,
+  "real_decision_attempts": 2,
+  "vlm_requests": 0,
+  "final_test_episodes": 0,
+  "reset_trials": 26,
+  "test_id_used": false,
+  "phase_a_runs": {
+    "v12_E16_T_C_Full_s0": "NOT_STARTED",
+    "v12_E16_T_C_B2_s0": "NOT_STARTED"
+  },
+  "unresolved_items": [
+    "Raw RGB remains non-bit-identical by design: one-LSB raster variation preserved; no downstream perception/fact/mask/snapshot/policy effect.",
+    "Robosuite emitted existing macro deprecation warnings only."
+  ]
+}

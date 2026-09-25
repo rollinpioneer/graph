@@ -1,0 +1,31 @@
+src/cp_disr/platforms/libero/snapshot.py:33:            feat = [float(hash(c.name) % 97) / 97.0, float(len(c.bound_arguments)), float(c.timeout_seconds)]
+src/cp_disr/platforms/libero/snapshot.py:34:            feat += [float(hash(a) % 89) / 89.0 for a in c.bound_arguments]
+src/cp_disr/rl.py:89:    def mask_hash(self):
+src/cp_disr/stage0c.py:13:def file_hash(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+src/cp_disr/stage0c.py:17:    if not path.is_file() or file_hash(path)!=expected:raise BindingError('Missing/hash-mismatched input: '+str(path))
+src/cp_disr/stage0c.py:84:    if scenes_doc.get('prompt_sha256')!=file_hash(prompt_path) or few_doc.get('prompt_sha256')!=file_hash(prompt_path):raise BindingError('Prompt hash not frozen')
+src/cp_disr/stage0c.py:98:          'model_snapshot':config.model,'sdk_api_version':config.sdk_version,'region':config.region,'endpoint':config.endpoint,'prompt_hash':file_hash(prompt_path),'fewshot_hash':digest(few_doc),'schema_hash':file_hash(schema_path),
+src/cp_disr/stage1a.py:339:            mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root))})
+src/cp_disr/stage1a.py:354:        mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root))})
+src/cp_disr/stage1a.py:411:    contract_sha = file_hash(root / "configs/contracts/d0_runtime_skills.yaml")
+src/cp_disr/stage1a.py:413:    task_sha = file_hash(task_path)
+src/cp_disr/stage1a.py:477:            "prompt_hash": file_hash(prompt_path),
+src/cp_disr/stage1a.py:479:            "schema_hash": file_hash(schema_path),
+src/cp_disr/stage1a.py:755:        rows.append({"cache_key": key, "complete_sha256": file_hash(marker), "manifest_sha256": file_hash(dev / key / "manifest.json")})
+src/cp_disr/stage1a_v11_final_eval.py:391:            mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)).replace("\\", "/"), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root)).replace("\\", "/")})
+src/cp_disr/stage1a_v11_final_eval.py:410:        mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)).replace("\\", "/"), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root)).replace("\\", "/")})
+src/cp_disr/stage1a_v11_final_eval.py:448:                existing_rgb.setdefault(file_hash(rgb), []).append(str(rgb.relative_to(root)))
+src/cp_disr/stage1a_v11_final_eval.py:452:            existing_rgb.setdefault(file_hash(rgb), []).append(str(rgb.relative_to(root)))
+src/cp_disr/stage2a_p0.py:594:            mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root))})
+src/cp_disr/stage2a_p0.py:612:        mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root))})
+src/cp_disr/stage2a_p0.py:669:    contract_sha = file_hash(root / "configs/runtime/stage_2a_contract_registry.yaml")
+src/cp_disr/stage2a_p0.py:673:    task_sha = file_hash(task_path)
+src/cp_disr/stage2a_p0.py:739:            "prompt_hash": file_hash(prompt_path),
+src/cp_disr/stage2a_p0.py:741:            "schema_hash": file_hash(schema_path),
+src/cp_disr/stage2a_v11.py:641:            mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)).replace("\\", "/"), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root)).replace("\\", "/")})
+src/cp_disr/stage2a_v11.py:661:        mapping.append({**row, "image_ref": str(rgb_path.relative_to(root)).replace("\\", "/"), "image_sha256": file_hash(rgb_path), "input_dir": str(dest.relative_to(root)).replace("\\", "/")})
+src/cp_disr/stage2a_v11.py:731:    contract_sha = file_hash(root / "configs/runtime/stage_2a_contract_registry.yaml")
+src/cp_disr/stage2a_v11.py:735:    task_sha = file_hash(task_path)
+src/cp_disr/stage2a_v11.py:749:        "prompt_hash": file_hash(prompt_path),
+src/cp_disr/stage2a_v11.py:751:        "schema_hash": file_hash(schema_path),
+src/cp_disr/stage2a_v11.py:797:            "prompt_hash": file_hash(prompt_path), "fewshot_hash": digest(few_doc), "schema_hash": file_hash(schema_path),
