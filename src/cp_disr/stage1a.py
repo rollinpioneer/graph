@@ -29,7 +29,7 @@ from .platforms.libero.runtime_factory import sha_file, PREDICATES, OBJECTS
 from .adapters import EvaluationInput
 
 
-ROOT_DEFAULT = Path("/home/__compress_data/xushijie/graph_cp_disr_v2_1")
+ROOT_DEFAULT = Path("/home/xushijie2/graph_cp_disr_v2_1")
 P0 = Path("experiments/part_1_smoke/stage_1a_p0")
 QUAL_BUDGET = 90.0
 ATTEMPTS_PER_SKILL = 5
@@ -999,7 +999,7 @@ def freeze_manifests(root: Path, timing, split_doc, runtime_ready=False):
         "libero_commit": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
         "robosuite": "1.4.0",
         "mujoco": "3.6.0",
-        "python": "/home/__compress_data/xushijie/.conda/envs/lerobotpi0/lib/python3.10/site-packages reused read-only into .venv-stage0a",
+        "python": "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages",
     }
     rt["runtime"]["environment_version"] = "d0-runtime-v2.1-p0"
     rt["runtime"]["task_assets"] = {

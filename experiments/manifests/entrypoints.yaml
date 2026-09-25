@@ -1,12 +1,12 @@
 status: D0_RUNTIME_BOUND
 implemented_trainer_in_this_kit: false
-repository: /home/__compress_data/xushijie/graph_cp_disr_v2_1
-train_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
-eval_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
-tests_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
+repository: /home/xushijie2/graph_cp_disr_v2_1
+train_cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr train
+eval_cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr evaluate
+tests_cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr run-unit-tests --scope
   full
-cache_cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
-report_cli: .venv-stage0a/bin/python tools/finalize_environment_revision.py
+cache_cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr generate-cache
+report_cli: /home/xushijie2/envs/lerobotpi0-xfs/bin/python tools/finalize_environment_revision.py
 note: Stage 0B PASS. Stage 0C PASS. Stage 1A-P0 binds D0 runtime. Stage 1A training
   remains NOT_STARTED.
 infrastructure_only:
@@ -16,7 +16,7 @@ infrastructure_only:
     sha256: 87bda5cd4a2737d9ec5aca6b0cb559afc0a2ab4582f577ca2339c9b6a6d1a0e1
   software_probe:
     path: tools/stage0a_reuse_software_probe.py
-    cli: .venv-stage0a/bin/python tools/stage0a_reuse_software_probe.py
+    cli: /home/xushijie2/envs/lerobotpi0-xfs/bin/python tools/stage0a_reuse_software_probe.py
     sha256: ebcd7eca0d8709f17fc894044c7323f2f61a84c43a37adcdc0ef16c3b885cd9e
   kit_plan:
     path: experiments/tools/plan_stage.py
@@ -25,28 +25,28 @@ infrastructure_only:
 production_package_added_in_remediation: true
 commands:
   validate-manifests:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-manifests
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-manifests
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-contracts:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-contracts
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-contracts
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-relation-cache:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-relation-cache
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-relation-cache
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   run-unit-tests:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr run-unit-tests --scope
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr run-unit-tests --scope
       pure|full
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
@@ -54,28 +54,28 @@ commands:
     requires_torch: false
     calls_api_this_revision: false
   build-graph-fixture:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-graph-fixture
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr build-graph-fixture
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   train:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr train
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr train
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED_RUNTIME_BOUND_TRAINING_NOT_STARTED
     requires_torch: true
     calls_api_this_revision: false
   evaluate:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr evaluate
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr evaluate
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED_RUNTIME_BOUND_TRAINING_NOT_STARTED
     requires_torch: true
     calls_api_this_revision: false
   generate-cache:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr generate-cache
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr generate-cache
     source_path: src/cp_disr/cli.py
     source_sha256: 0aa6692d3956db01238f5a61af60ad42303be920bf99aa48effbb7b1fe2e69e1
     status: IMPLEMENTED_FORMAL_INPUTS_UNBOUND_GATE_BLOCKED
@@ -84,43 +84,43 @@ commands:
     production_runner: cp_disr.stage0c.run
     offline_validation_ref: ../part_0_validation/stage_0c/offline_validation.json
   validate-runtime:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-runtime
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-runtime
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
     calls_api_this_revision: false
   validate-controller:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-controller
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-controller
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
     calls_api_this_revision: false
   validate-verifier:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-verifier
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-verifier
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
     calls_api_this_revision: false
   validate-evaluator:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-evaluator
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-evaluator
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
     calls_api_this_revision: false
   build-d0-split:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr build-d0-split
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr build-d0-split
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: false
     calls_api_this_revision: false
   validate-d0-cache:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr validate-d0-cache
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr validate-d0-cache
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
     calls_api_this_revision: false
   stage-1a-preflight:
-    cli: PYTHONPATH=src .venv-stage0a/bin/python -m cp_disr stage-1a-preflight
+    cli: PYTHONPATH=src /home/xushijie2/envs/lerobotpi0-xfs/bin/python -m cp_disr stage-1a-preflight
     source_path: src/cp_disr/cli.py
     status: IMPLEMENTED
     requires_torch: true
