@@ -1193,6 +1193,89 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
         load_checkpoint(ckpt_load, policy, trainer.optimizer)
         rngp = json.loads(ckpt_load.with_suffix(".rng.json").read_text(encoding="utf-8"))
         s1.restore_rng({"python": rngp["python_rng"], "numpy": rngp["numpy_rng"], "torch": rngp["torch_rng"], "cuda": rngp["cuda_rng"]})
+        episode_path = ckpt_load.with_suffix(".episode.pkl")
+        if episode_path.is_file():
+            import pickle
+            with episode_path.open("rb") as f:
+                ep = pickle.load(f)
+            sim = bundle.environment.sim
+            sim.data.qpos[:] = ep["qpos"]
+            sim.data.qvel[:] = ep["qvel"]
+            sim.data.ctrl[:] = ep["ctrl"]
+            sim.data.time = float(ep["sim_time"])
+            sim.forward()
+            bundle.clock._origin = float(ep["clock_origin"])
+            bundle.episode_start_seconds = float(ep["episode_start_seconds"])
+            bundle._n = int(ep["case_scheduler_n"])
+            bundle.snapshot_builder.episode_id = ep["snapshot_episode_id"]
+            bundle.evaluator._rewarded = bool(ep["evaluator_rewarded"])
+            bundle.evaluator._success_time = ep["evaluator_success_time"]
+            bundle.evaluator.deadline = float(ep["evaluator_deadline"])
+            bundle.original_prior_edges = ep["original_prior_edges"]
+            bundle.current_snapshot = ep["current_snapshot"]
+            collector.prefixes = ep["prefixes"]
+            collector.weights = ep["weights"]
+            collector.success_seen = ep["success_seen"]
+            bundle._phase_a_case_id = ep.get("case_id")
+            bundle._phase_a_prior = ep.get("prior")
+            bundle._phase_a_source_n = ep.get("source_n")
+            bundle._phase_a_cache_key = ep.get("cache_key")
+            if sampler is not None and rngp.get("prior_sampler"):
+                prior_state = rngp["prior_sampler"]
+                import random
+                streams = {}
+                for k, state in (prior_state.get("rng") or {}).items():
+                    stream = random.Random()
+                    stream.setstate((state[0], tuple(state[1]), state[2]))
+                    streams[k] = stream
+                sampler.streams = streams
+                from .prior import EpisodePrior
+                sampler.active = {
+                    k: EpisodePrior(
+                        v["env_id"], v["episode_id"], tuple(tuple(e) for e in v["edges"]),
+                        v["original_hash"], v["hash"], v["audit_mode"],
+                    )
+                    for k, v in (prior_state.get("active") or {}).items()
+                }
+                sampler.draw_count = int(prior_state.get("draw_count") or 0)
+        episode_path = ckpt_load.with_suffix(".episode.pkl")
+        if episode_path.is_file():
+            import pickle
+            with episode_path.open("rb") as f:
+                ep = pickle.load(f)
+            sim = bundle.environment.sim
+            sim.data.qpos[:] = ep["qpos"]
+            sim.data.qvel[:] = ep["qvel"]
+            sim.data.ctrl[:] = ep["ctrl"]
+            sim.data.time = float(ep["sim_time"])
+            sim.forward()
+            bundle.clock._origin = float(ep["clock_origin"])
+            bundle.episode_start_seconds = float(ep["episode_start_seconds"])
+            bundle._n = int(ep["case_scheduler_n"])
+            bundle.snapshot_builder.episode_id = ep["snapshot_episode_id"]
+            bundle.evaluator._rewarded = bool(ep["evaluator_rewarded"])
+            bundle.evaluator._success_time = ep["evaluator_success_time"]
+            bundle.evaluator.deadline = float(ep["evaluator_deadline"])
+            bundle.original_prior_edges = ep["original_prior_edges"]
+            bundle.current_snapshot = ep["current_snapshot"]
+            collector.prefixes = ep["prefixes"]
+            collector.weights = ep["weights"]
+            collector.success_seen = ep["success_seen"]
+            bundle._phase_a_case_id = ep.get("case_id")
+            bundle._phase_a_prior = ep.get("prior")
+            bundle._phase_a_source_n = ep.get("source_n")
+            bundle._phase_a_cache_key = ep.get("cache_key")
+            if sampler is not None and rngp.get("prior_sampler"):
+                prior_state = rngp["prior_sampler"]
+                import random
+                streams = {}
+                for k, state in (prior_state.get("rng") or {}).items():
+                    stream = random.Random()
+                    stream.setstate((state[0], tuple(state[1]), state[2]))
+                    streams[k] = stream
+                sampler.streams = streams
+                sampler.active = {k: v for k, v in (prior_state.get("active") or {}).items()}
+                sampler.draw_count = int(prior_state.get("draw_count") or 0)
         if (job_dir / "eval_metrics.csv").exists():
             with (job_dir / "eval_metrics.csv").open(encoding="utf-8") as f:
                 eval_rows = list(csv.DictReader(f))
@@ -1219,6 +1302,13 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
     optimizer_steps = int(resume_doc.get("optimizer_steps") or 0)
     ep_reward = 0.0
     case = prior = source_n = cache_key_s = None
+    if resume and bundle.current_snapshot is not None:
+        case = getattr(bundle, "_phase_a_case_id", None)
+        prior = getattr(bundle, "_phase_a_prior", None)
+        source_n = getattr(bundle, "_phase_a_source_n", None)
+        cache_key_s = getattr(bundle, "_phase_a_cache_key", None)
+        if case is None or prior is None or source_n is None:
+            raise BindingError("resume generation missing active episode identity")
     trans_buffer = []
     hard_fail = None
     first_update_ok = bool(resume_doc.get("first_update_ok"))
@@ -1255,7 +1345,9 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
                 fp_before = param_fingerprint(policy)
                 adam_before = trainer.optimizer.state_dict()
                 log("%s %s PPO %s update transitions=%s N=%s T=%s" % (task_id, mname, kind, use_n, count, interaction_seconds))
+                ppo_wall_start = time.perf_counter()
                 logs = trainer.update(rollout)
+                collector._phase_a_ppo_seconds = float(getattr(collector, "_phase_a_ppo_seconds", 0.0)) + (time.perf_counter() - ppo_wall_start)
                 optimizer_steps += len(logs)
                 if complete:
                     complete_updates += 1
@@ -1398,7 +1490,7 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
                 break
         extra_final = dict(extra_base)
         extra_final.update({"complete_updates": complete_updates, "fragment_updates": fragment_updates, "interaction_count": count, "interaction_seconds": interaction_seconds, "N": count, "T": interaction_seconds, "final": True, "optimizer_steps": optimizer_steps})
-        ckpt_final = job_dir / "checkpoints" / "final.pt"
+        ckpt_final = job_dir / "checkpoints" / ("final_n_%06d_u%02d.pt" % (count, complete_updates))
         save_ckpt(ckpt_final, policy, trainer.optimizer, extra_final, s1.capture_rng(), sampler, collector)
         if count not in done_ns:
             evf = eval_episodes(root, task_id, method, ckpt_final, eval_cases, split_index, device, hashes_doc, job_dir / "eval_final.json", n_episodes=DEV_EPISODES, label="dev")

@@ -33,6 +33,10 @@ def main(argv=None):
         "stage-1a-v11-run",
         "stage-1a-v11-final-eval",
         "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run", "stage-2a-v11-run",
+        "phase-a-v12-run",
+        "phase-a-v12-run",
+        "phase-a-v12-run",
+        "phase-a-v12-run",
     )
     for name in core:
         sp = sub.add_parser(name)
@@ -67,6 +71,14 @@ def main(argv=None):
             sp.add_argument("--phase", choices=["freeze", "register", "materialize", "eval", "report", "all"], default="all")
             sp.add_argument("--method", choices=["B2", "Full"], default=None)
 
+        if name == "phase-a-v12-run":
+            sp.add_argument("--phase", choices=["freeze", "train", "first-update-gate", "report-8192", "finalize"], default="freeze")
+            sp.add_argument("--method", choices=["B2", "Full"], default=None)
+            sp.add_argument("--gpu", type=int, default=0)
+            sp.add_argument("--stamp", default=None)
+            sp.add_argument("--configsha", default=None)
+            sp.add_argument("--max-updates", type=int, default=16)
+            sp.add_argument("--resume", action="store_true")
         if name == "stage-2a-v11-run":
             sp.add_argument("--phase", choices=["sync-1a", "freeze", "materialize", "startup", "train", "select", "eval", "report", "all"], default="all")
             sp.add_argument("--task", choices=["T_B", "T_C"], default=None)
@@ -174,6 +186,16 @@ def main(argv=None):
             from . import stage2a_startup_gate
             print(canonical(stage2a_startup_gate.cmd_stage_2a_startup_gate(root, gpu=gpu)))
             return 0
+        if a.command == "phase-a-v12-run":
+            from . import phase_a_v12
+            result = phase_a_v12.cmd_phase_a_v12(
+                root, phase=getattr(a, "phase", "freeze"), method=getattr(a, "method", None),
+                gpu=getattr(a, "gpu", 0), stamp=getattr(a, "stamp", None),
+                configsha=getattr(a, "configsha", None), max_updates=int(getattr(a, "max_updates", 16)),
+                resume=bool(getattr(a, "resume", False)),
+            )
+            print(canonical(result))
+            return 0 if not isinstance(result, dict) or result.get("status") not in ("BLOCKED", "NEEDS_RERUN") else 2
         if a.command == "stage-2a-v11-run":
             from . import stage2a_v11
             result = stage2a_v11.cmd_stage_2a_v11_run(root, gpu=getattr(a, "gpu", 0), phase=getattr(a, "phase", "all"), task=getattr(a, "task", None), method=getattr(a, "method", None), stamp=getattr(a, "stamp", None), configsha=getattr(a, "configsha", None), resume=bool(getattr(a, "resume", False)), skip_startup_gates=bool(getattr(a, "skip_startup_gates", False)), max_updates=int(getattr(a, "max_updates", 64)))
