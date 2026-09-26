@@ -18,7 +18,7 @@ from .common import BindingError, DataIntegrityError, canonical
 from . import phase_a_v12 as v12
 from . import stage2a_v11 as v11
 
-BASE_COMMIT = "66614acb443dcacee2b16c5472d4ecbbd697bf561"
+BASE_COMMIT = "66614acb443dcacee2b16c5472d4ecbd697bf561"
 TASK = "T_B"
 METHODS = ("B1-K", "B2")
 AUTHORIZED = {"B1-K": "v13_R1_T_B_B1K_s0_E16", "B2": "v13_R1_T_B_B2_s0_E16"}
@@ -89,6 +89,10 @@ def _source_hashes(root: Path) -> dict:
         "split": root / SPLIT_REL,
         "split_dev10": root / DEV10_REL,
     }
+    return {k: sha(p) if p.is_file() else None for k, p in files.items()} | {
+        "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
+        "base_commit": BASE_COMMIT,
+    }
 
 
 def _fixed_mechanism_diagnostic(root: Path, method: str, checkpoint: Path, label: str, device) -> None:
@@ -100,10 +104,6 @@ def _fixed_mechanism_diagnostic(root: Path, method: str, checkpoint: Path, label
                            "effective_prior": 0, "test_id_used": False,
                            "used_for_training": False,
                            "note": "B1-K/B2 structure is audited in production transition/update diagnostics"}) + "\n")
-    return {k: sha(p) if p.is_file() else None for k, p in files.items()} | {
-        "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
-        "base_commit": BASE_COMMIT,
-    }
 
 
 def _job_dir(root: Path, method: str, stamp: str, configsha: str) -> Path:
