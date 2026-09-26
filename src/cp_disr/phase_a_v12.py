@@ -96,6 +96,10 @@ def _latest_final_gate(root: Path) -> tuple[Path, dict]:
 
 def _freeze_dev10(root: Path) -> tuple[Path, dict]:
     source = root / v11.ENABLED_SPLITS["T_C"]
+    # The configured v1.2 adapter may already point at the derived dev10 file;
+    # always derive from the immutable stage-2a-v11 train64/dev20 source.
+    if source.name == Path(DEV10_REL).name or not source.is_file():
+        source = root / "configs/splits/T_C_stage_2a_v11.json"
     split = json.loads(source.read_text(encoding="utf-8"))
     if len(split.get("train") or []) != 64 or len(split.get("dev") or []) != 20:
         raise BindingError("T_C split must be train64/dev20")
