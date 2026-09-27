@@ -190,8 +190,8 @@ def freeze(root: Path, stamp: str | None = None) -> dict:
     os.chdir(root)
     configure()
     current = git_head(root)
-    if current != BASE_COMMIT:
-        raise BindingError(f"R2 must freeze from baseline {BASE_COMMIT}, got {current}")
+    if subprocess.run(["git", "merge-base", "--is-ancestor", BASE_COMMIT, current], cwd=root).returncode:
+        raise BindingError(f"R2 source must descend from baseline {BASE_COMMIT}, got {current}")
     startup = _assert_startup(root)
     prof = v11.bind_H(root)
     d_ref = float(prof["d_ref"][TASK])
