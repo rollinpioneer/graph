@@ -151,8 +151,10 @@ def _assert_startup(root: Path) -> dict:
         raise BindingError("T_B source split identity/count mismatch")
     if len(dev10.get("train") or []) != 64 or len(dev10.get("dev") or []) != 10:
         raise BindingError("R1 dev10 split identity/count mismatch")
-    if any(Path(p).exists() for p in root.glob("runs/v13_r2/**/checkpoints/*.pt")):
-        raise BindingError("R2 output already contains a checkpoint")
+    # A prior pre-training launch may have persisted only N=0 evidence before
+    # a cache/input failure. Preserve it, but refuse a completed formal job.
+    for summary in root.glob("runs/v13_r2/**/job_summary.json"):
+        raise BindingError(f"R2 output already contains a formal job summary: {summary}")
     if any(Path(p).exists() for p in root.glob("runs/v13_r1/**/checkpoints/*.pt")):
         raise BindingError("R1 checkpoints unexpectedly present in the baseline worktree")
     return {
