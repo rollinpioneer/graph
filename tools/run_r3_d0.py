@@ -12,7 +12,7 @@ if os.geteuid() == 0:
     pass
 if subprocess.check_output(['id','-un'], text=True).strip() != 'xushijie2': raise SystemExit('IDENTITY_FAIL:user')
 if socket.gethostname().split('.')[0] != 'gpu03': raise SystemExit('IDENTITY_FAIL:host')
-if pathlib.Path(sys.executable).resolve().as_posix() != PY_EXPECTED: raise SystemExit('IDENTITY_FAIL:python:'+sys.executable)
+if sys.executable != PY_EXPECTED and pathlib.Path(sys.executable).resolve() != pathlib.Path(PY_EXPECTED).resolve(): raise SystemExit('IDENTITY_FAIL:python:'+sys.executable)
 if ROOT != pathlib.Path.cwd().resolve(): raise SystemExit('IDENTITY_FAIL:cwd:'+str(pathlib.Path.cwd()))
 if str(ROOT/'src') not in [str(pathlib.Path(x).resolve()) for x in sys.path if x]: raise SystemExit('IDENTITY_FAIL:import_path')
 if not (ROOT/'src/cp_disr/phase_a_v13_r3.py').is_file(): raise SystemExit('IDENTITY_FAIL:module')
