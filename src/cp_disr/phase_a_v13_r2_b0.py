@@ -350,7 +350,7 @@ def train(root: Path, gpu: int, stamp: str | None = None, configsha: str | None 
     status["jobs"][AUTHORIZED["B0"]] = "RUNNING"
     write_json(status_path, status)
     try:
-        result = v11.train_job(root, TASK, "B0", device, torch.cuda.get_device_name(int(gpu)), hashes, stamp, configsha, max_updates=MAX_UPDATES, resume=False)
+        result = v11.train_job(root, TASK, "B0", device, torch.cuda.get_device_name(int(gpu)), prof, hashes, stamp, configsha, max_updates=MAX_UPDATES, resume=False)
     except Exception as exc:
         status = json.loads(status_path.read_text())
         status.update({"status": "FAILED", "phase": "R2", "hard_failure": {"error": repr(exc), "time": utc_now()}})
