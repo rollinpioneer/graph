@@ -51,16 +51,24 @@ runtime:
       PICK: 9.0
       PLACE: 8.0
       PLACE_BUFFER: 8.0
+    T_B:
+      OPEN: 16.0
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
   task_deadlines:
     T_A: 60.0
     T_C: 60.0
+    T_B: 60.0
   actual_interaction_time_unit: seconds
   reference_skill_seconds_by_task:
     T_A: 3.7000000000002355
     T_C: 3.649999999999709
+    T_B: 4.199999999997672
   task_evaluator_version:
     T_A: cp-disr-ta-task-evaluator-v1
     T_C: cp-disr-tc-task-evaluator-v1
+    T_B: cp-disr-tb-task-evaluator-v1
   hardware:
     host: gpu03
     cpu_count: 112
@@ -93,6 +101,7 @@ runtime:
   task_splits:
     T_A: configs/splits/T_A_stage_2a.json
     T_C: configs/splits/T_C_stage_2a.json
+    T_B: configs/splits/T_B_stage_2a_v11.json
   git_hash_semantics: Pre-revision base; delivery receipt records resulting commit
   d0_contract_path: configs/contracts/d0_runtime_skills.yaml
   actual_clock_source: mujoco_sim_data_time
