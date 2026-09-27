@@ -37,6 +37,7 @@ DEV10_REL = Path("configs/splits/T_B_phase_a_v13_r1_dev10.json")
 RUNTIME_REL = Path("experiments/manifests/runtime_manifest_v211_r2.yaml")
 R1_DIR = Path("runs/v13_r1/20260926T112613Z")
 PLAN_VERSION = "1.3-R2-B0"
+_ORIGINAL_COMPACT = None
 
 
 def utc_now() -> str:
@@ -61,6 +62,7 @@ def git_head(root: Path) -> str:
 
 
 def configure() -> None:
+    global _ORIGINAL_COMPACT
     v12.STAGE_DIR = STAGE_DIR
     v12.STATUS_PATH = STATUS_PATH
     v12.EVAL_POINTS = EVAL_POINTS
@@ -74,6 +76,13 @@ def configure() -> None:
     v11.RUNTIME_REL = RUNTIME_REL
     v11.METHODS = METHODS
     v11.PLANNED = {(TASK, "B0"): AUTHORIZED["B0"]}
+    if _ORIGINAL_COMPACT is None:
+        _ORIGINAL_COMPACT = v11.s1.compact_transition
+    def _compact_r2(*args, **kwargs):
+        rec = _ORIGINAL_COMPACT(*args, **kwargs)
+        rec["task"] = TASK
+        return rec
+    v11.s1.compact_transition = _compact_r2
     v11.ENABLED_SPLITS = dict(v11.ENABLED_SPLITS)
     v11.ENABLED_SPLITS[TASK] = DEV10_REL
     v11.save_ckpt = v12._save_ckpt_generation
