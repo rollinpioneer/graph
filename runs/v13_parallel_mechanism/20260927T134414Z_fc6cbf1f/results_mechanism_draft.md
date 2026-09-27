@@ -1,0 +1,3 @@
+# CP-DISR v1.3 mechanism Results draft
+
+R1/R2 independent training comparisons are separate from this P1 inference intervention. P1 reuses the exact R1-selected B2 final checkpoint and frozen dev10 order. Original B2 succeeds on 10/10 frozen cases, while replacing only the second `phi_K` input with zero (DK-Zero) succeeds on 0/10; this is a single-seed, selected-checkpoint development diagnostic, not a new training gain or test result. P2 Full@Absent was not run because the historical Full source/input contract could not be proven identical; it must not be interpreted as B2 or as a training comparison. B0 remains active and has no result filled here.
