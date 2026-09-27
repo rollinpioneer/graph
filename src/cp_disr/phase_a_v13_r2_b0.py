@@ -34,7 +34,7 @@ STAGE_DIR = Path("runs/v13_r2")
 STATUS_PATH = Path("status/v13_r2.json")
 SPLIT_REL = Path("configs/splits/T_B_stage_2a_v11.json")
 DEV10_REL = Path("configs/splits/T_B_phase_a_v13_r1_dev10.json")
-RUNTIME_REL = Path("experiments/manifests/stage_2a_runtime_manifest_r2.yaml")
+RUNTIME_REL = Path("experiments/manifests/runtime_manifest_v211_r2.yaml")
 R1_DIR = Path("runs/v13_r1/20260926T112613Z")
 PLAN_VERSION = "1.3-R2-B0"
 
