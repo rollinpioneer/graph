@@ -34,6 +34,7 @@ STAGE_DIR = Path("runs/v13_r2")
 STATUS_PATH = Path("status/v13_r2.json")
 SPLIT_REL = Path("configs/splits/T_B_stage_2a_v11.json")
 DEV10_REL = Path("configs/splits/T_B_phase_a_v13_r1_dev10.json")
+RUNTIME_REL = Path("experiments/manifests/stage_2a_runtime_manifest_r2.yaml")
 R1_DIR = Path("runs/v13_r1/20260926T112613Z")
 PLAN_VERSION = "1.3-R2-B0"
 
@@ -70,6 +71,7 @@ def configure() -> None:
     v11.MAX_UPDATES = MAX_UPDATES
     v11.DEV_EPISODES = DEV10_N
     v11.TASKS = (TASK,)
+    v11.RUNTIME_REL = RUNTIME_REL
     v11.METHODS = METHODS
     v11.PLANNED = {(TASK, "B0"): AUTHORIZED["B0"]}
     v11.ENABLED_SPLITS = dict(v11.ENABLED_SPLITS)
@@ -211,6 +213,7 @@ def _source_compatibility(root: Path) -> dict:
             "B0 allowlist and v13_r2 output/status routing",
             "R2 plan/provenance files",
             "evaluation records add episode start, first valid success, complete duration, and terminal skill duration",
+            "path-relocated copy of the existing runtime manifest for the isolated checkout",
         ],
         "shared_training_modules_unchanged": shared,
         "shared_module_sha256": {p: sha(root / "src/cp_disr" / p) for p in shared},
@@ -252,6 +255,7 @@ def freeze(root: Path, stamp: str | None = None, gpu: int = 1) -> dict:
         "test_id_used": False, "vlm_requests": 0,
         "training_source_commit": current,
         "runtime_revision": v12.RUNTIME_REVISION,
+        "runtime_manifest": str(RUNTIME_REL),
         "split": str(SPLIT_REL), "split_sha256": split_sha,
         "dev10": str(DEV10_REL), "dev10_sha256": dev10_sha,
         "startup": startup,
