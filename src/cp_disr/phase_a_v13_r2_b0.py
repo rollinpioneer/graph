@@ -154,6 +154,40 @@ def _assert_startup(root: Path) -> dict:
     }
 
 
+def _b0_startup_gate(root: Path, gpu: int = 1) -> dict:
+    """Run only the direct B0 structural gate; no learning or qualification run."""
+    import torch
+    if not torch.cuda.is_available():
+        raise BindingError("CUDA required for B0 startup gate")
+    torch.cuda.set_device(int(gpu))
+    split = json.loads((root / DEV10_REL).read_text(encoding="utf-8"))
+    bundle = v11.make_bundle(root, TASK, DEV10_REL)
+    v11.attach_split_cases(bundle, root, list(split["train"] + split["dev"]), TASK, v11.bind_H(root)["task_deadlines"][TASK])
+    case_id = split["dev"][0]["case_id"]
+    try:
+        dry = v11.local_dry_run(bundle, "B0", torch.device("cuda", int(gpu)), case_id, empty=True)
+    finally:
+        try:
+            bundle.environment.close()
+        except Exception:
+            pass
+    diag = dry.get("diagnostics") or {}
+    issues = []
+    if not dry.get("logits_finite"):
+        issues.append("masked logits nonfinite")
+    if dry.get("effective_prior_relation_count") != 0:
+        issues.append("effective prior not empty")
+    if any(s.get("successor_used") for s in dry.get("forward_structs") or []):
+        issues.append("nominal successor or graph successor used")
+    if diag.get("method") != "B0":
+        issues.append("policy method diagnostic mismatch")
+    dry["gate"] = "PASS" if not issues else "FAIL"
+    dry["issues"] = issues
+    dry["training_update"] = False
+    dry["qualification_run"] = False
+    return dry
+
+
 def _read_r1_manifest(root: Path) -> dict:
     out = {}
     for name in ("r1_summary.md", "job_T_B_B1-K.json", "job_T_B_B2.json", "checkpoint_index.json", "checkpoint_generations.csv", "final_dev_comparison.csv", "dev10_manifest.json", "source_hashes.json", "plan_resolution.json", "Results_draft.md", "cost_ledger.csv", "historical_evidence.md"):
@@ -185,7 +219,7 @@ def _source_compatibility(root: Path) -> dict:
     }
 
 
-def freeze(root: Path, stamp: str | None = None) -> dict:
+def freeze(root: Path, stamp: str | None = None, gpu: int = 1) -> dict:
     root = Path(root).resolve()
     os.chdir(root)
     configure()
@@ -193,6 +227,8 @@ def freeze(root: Path, stamp: str | None = None) -> dict:
     if subprocess.run(["git", "merge-base", "--is-ancestor", BASE_COMMIT, current], cwd=root).returncode:
         raise BindingError(f"R2 source must descend from baseline {BASE_COMMIT}, got {current}")
     startup = _assert_startup(root)
+    b0_gate = _b0_startup_gate(root, gpu)
+    startup["b0_structural_gate"] = b0_gate
     prof = v11.bind_H(root)
     d_ref = float(prof["d_ref"][TASK])
     tcap = N_CAP * d_ref
@@ -431,7 +467,7 @@ def main(argv=None) -> int:
     ap.add_argument("phase", choices=["freeze", "train", "finalize"])
     ap.add_argument("--gpu", type=int, default=1); ap.add_argument("--stamp"); ap.add_argument("--configsha")
     a = ap.parse_args(argv); root = Path.cwd()
-    if a.phase == "freeze": out = freeze(root, a.stamp)
+    if a.phase == "freeze": out = freeze(root, a.stamp, a.gpu)
     elif a.phase == "train": out = train(root, a.gpu, a.stamp, a.configsha)
     else: out = finalize(root, a.stamp, a.configsha, a.gpu)
     print(canonical(out)); return 0
