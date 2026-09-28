@@ -14,7 +14,7 @@ B2 was initialized from fresh model/Adam/RNG/environment state with empty effect
 
 ## Full prior switch
 
-The same Full N=2048 checkpoint was evaluated with an empty prior for the frozen `S_dev=[D0_dev_00]` case and the four frozen S_train cases under both `Full@Original` and `Full@Absent`. Full@Original dev10 was reused from the original persisted evaluation; it was not rerun. The new Full@Absent case succeeded with return 0.6271314720175796. S_train success was 3/4 under both conditions; DP/Delta opportunity and nonzero witnesses were zero in these four cases. Optional same-state shadow forward was not run, therefore action-flip denominator and TV are explicitly NA. Full@Absent is an inference-time switch, not B2 training.
+The same Full N=2048 checkpoint was evaluated with an empty prior for the frozen `S_dev=[D0_dev_00]` case and the four frozen S_train cases under both `Full@Original` and `Full@Absent`. Full@Original dev10 was reused from the original persisted evaluation; it was not rerun. Full@Absent covered all 10 dev10 cases (10/10 success; mean start discounted return 0.6350014580965666). The frozen nonempty-prior stratum remains D0_dev_00. S_train success was 3/4 under both conditions; DP/Delta opportunity and nonzero witnesses were zero in these four cases. Optional same-state shadow forward was not run, therefore action-flip denominator and TV are explicitly NA. Full@Absent is an inference-time switch, not B2 training.
 
 ## Stall reconciliation
 
