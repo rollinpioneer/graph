@@ -611,3 +611,22 @@ def verify_revision_output(root, output_dir):
     value = {"status": "PASS", "previous_s1_unchanged": True, "prior_script_unchanged": True, "prohibited_runs": {"planner_environment_episodes": 0, "rl_transitions": 0, "optimizer_steps": 0, "formal_test_episodes": 0}}
     _atomic_json(output_dir / "verify.json", value)
     return value
+
+
+# The same-revision continuation is kept in a separate module so the original
+# S1 historical audit remains inspectable. These bindings intentionally replace
+# the earlier stop-only placeholders.
+from cp_disr.analysis.s1_revision_resume import (  # noqa: E402,F401
+    execute_registered_branch,
+    finalize_eligibility,
+    materialize_discovery_inputs,
+    offline_rescore_planner,
+    probe_production_representation,
+    provider_case as _provider_case,
+    provider_preflight,
+    register_physical_branches,
+    resume_same_revision,
+    run_provider_call,
+    run_witnesses,
+    validate_discovery_inputs,
+)

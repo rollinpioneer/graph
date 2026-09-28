@@ -1,0 +1,21 @@
+{
+  "contract_registry_ref": "configs/runtime/stage_2a_contract_registry.yaml",
+  "instruction": "Place both the red target cube and the yellow second cube into the openable blue container. Opening the container is a shared prerequisite. The green buffer may be used if needed.",
+  "runtime_factory_ref": "src/cp_disr/platforms/libero/runtime_factory.py",
+  "scene_reset_ref": "reset_config.json",
+  "signed_goals": [
+    {
+      "fact_id": "p:Inside:target:container",
+      "sign": 1
+    },
+    {
+      "fact_id": "p:Inside:second_object:container",
+      "sign": 1
+    }
+  ],
+  "source_task_ref": "configs/tasks/resolved/T_A.yaml",
+  "split_role": "S1_DISCOVERY_ONLY",
+  "task_id": "T_A",
+  "task_version": "cp-disr-v2.1-stage-2a-p0",
+  "test_input": false
+}

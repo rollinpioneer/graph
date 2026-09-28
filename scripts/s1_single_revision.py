@@ -14,18 +14,23 @@ from cp_disr.analysis.s1_revision import (
     freeze_history,
     freeze_source_revision,
     load_revision_config,
+    materialize_discovery_inputs,
     offline_rescore_planner,
     probe_production_representation,
+    provider_preflight,
     register_physical_branches,
+    resume_same_revision,
     run_provider_call,
     run_witnesses,
+    validate_discovery_inputs,
     verify_revision_output,
 )
 
 
 COMMANDS = (
     "freeze-history", "adjudicate-history", "freeze-source-revision",
-    "prepare-discovery", "call-provider", "probe-representation",
+    "prepare-discovery", "resume-same-revision", "materialize-discovery-inputs",
+    "validate-discovery-inputs", "provider-preflight", "call-provider", "probe-representation",
     "register-witnesses", "run-witnesses", "rescore-planner", "finalize", "verify",
 )
 
@@ -38,6 +43,8 @@ def main():
         sub.add_argument("--root", required=True)
         sub.add_argument("--config", required=True)
         sub.add_argument("--output", required=True)
+        if command == "materialize-discovery-inputs":
+            sub.add_argument("--gpu", required=True, type=int)
     args = parser.parse_args()
     root = Path(args.root).resolve()
     config = Path(args.config)
@@ -56,6 +63,15 @@ def main():
         result = freeze_source_revision(root, config, output)
     elif args.command == "prepare-discovery":
         result = freeze_discovery_manifest(root, frozen, output)
+    elif args.command == "resume-same-revision":
+        result = resume_same_revision(root, config, output)
+    elif args.command == "materialize-discovery-inputs":
+        os.environ["CP_DISR_PHYSICAL_GPU_INDEX"] = str(args.gpu)
+        result = materialize_discovery_inputs(root, config, output, args.gpu)
+    elif args.command == "validate-discovery-inputs":
+        result = validate_discovery_inputs(root, config, output)
+    elif args.command == "provider-preflight":
+        result = provider_preflight(root, config, output)
     elif args.command == "call-provider":
         result = run_provider_call(root, None, output)
     elif args.command == "probe-representation":

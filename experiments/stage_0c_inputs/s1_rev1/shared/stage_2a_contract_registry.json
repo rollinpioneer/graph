@@ -1,0 +1,271 @@
+{
+  "contracts": [
+    {
+      "arguments": [
+        {
+          "name": "?c",
+          "type": "container"
+        }
+      ],
+      "controller_ref": "src/cp_disr/platforms/libero/skill_executor.py::OPEN",
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "initiation": {
+        "pre_neg": [],
+        "pre_pos": [
+          {
+            "arguments": [],
+            "predicate": "GripperEmpty"
+          }
+        ]
+      },
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "name": "OPEN",
+      "nominal": {
+        "add": [
+          {
+            "arguments": [
+              "?c"
+            ],
+            "predicate": "Open"
+          }
+        ],
+        "delete": [],
+        "unknown": []
+      },
+      "provenance": "stage-2a-p0-runtime",
+      "timeout_seconds": 16.0,
+      "verification": [
+        "rgb_depth_postcondition"
+      ],
+      "verifier_ref": "src/cp_disr/platforms/libero/verifier.py",
+      "version": "stage-2a-p0"
+    },
+    {
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        }
+      ],
+      "controller_ref": "src/cp_disr/platforms/libero/skill_executor.py::PICK",
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "initiation": {
+        "pre_neg": [],
+        "pre_pos": [
+          {
+            "arguments": [],
+            "predicate": "GripperEmpty"
+          },
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "OnTable"
+          }
+        ]
+      },
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "name": "PICK",
+      "nominal": {
+        "add": [
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "Held"
+          }
+        ],
+        "delete": [
+          {
+            "arguments": [],
+            "predicate": "GripperEmpty"
+          },
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "OnTable"
+          }
+        ],
+        "unknown": []
+      },
+      "provenance": "stage-2a-p0-runtime",
+      "timeout_seconds": 9.0,
+      "verification": [
+        "rgb_depth_postcondition"
+      ],
+      "verifier_ref": "src/cp_disr/platforms/libero/verifier.py",
+      "version": "stage-2a-p0"
+    },
+    {
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        },
+        {
+          "name": "?c",
+          "type": "container"
+        }
+      ],
+      "controller_ref": "src/cp_disr/platforms/libero/skill_executor.py::PLACE",
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "initiation": {
+        "pre_neg": [],
+        "pre_pos": [
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "Held"
+          },
+          {
+            "arguments": [
+              "?c"
+            ],
+            "predicate": "Open"
+          }
+        ]
+      },
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "name": "PLACE",
+      "nominal": {
+        "add": [
+          {
+            "arguments": [
+              "?o",
+              "?c"
+            ],
+            "predicate": "Inside"
+          },
+          {
+            "arguments": [],
+            "predicate": "GripperEmpty"
+          }
+        ],
+        "delete": [
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "Held"
+          }
+        ],
+        "unknown": []
+      },
+      "provenance": "stage-2a-p0-runtime",
+      "timeout_seconds": 8.0,
+      "verification": [
+        "rgb_depth_postcondition"
+      ],
+      "verifier_ref": "src/cp_disr/platforms/libero/verifier.py",
+      "version": "stage-2a-p0"
+    },
+    {
+      "arguments": [
+        {
+          "name": "?o",
+          "type": "object"
+        },
+        {
+          "name": "?b",
+          "type": "buffer"
+        }
+      ],
+      "controller_ref": "src/cp_disr/platforms/libero/skill_executor.py::PLACE_BUFFER",
+      "failures": [
+        "EXECUTION_FAILED",
+        "VERIFICATION_FAILED",
+        "TIMEOUT"
+      ],
+      "initiation": {
+        "pre_neg": [],
+        "pre_pos": [
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "Held"
+          }
+        ]
+      },
+      "interrupts": [
+        "SAFETY_STOP",
+        "CRITICAL_FACT_LOST"
+      ],
+      "name": "PLACE_BUFFER",
+      "nominal": {
+        "add": [
+          {
+            "arguments": [
+              "?o",
+              "?b"
+            ],
+            "predicate": "AtBuffer"
+          },
+          {
+            "arguments": [],
+            "predicate": "GripperEmpty"
+          }
+        ],
+        "delete": [
+          {
+            "arguments": [
+              "?o"
+            ],
+            "predicate": "Held"
+          }
+        ],
+        "unknown": []
+      },
+      "provenance": "stage-2a-p0-runtime",
+      "timeout_seconds": 8.0,
+      "verification": [
+        "rgb_depth_postcondition"
+      ],
+      "verifier_ref": "src/cp_disr/platforms/libero/verifier.py",
+      "version": "stage-2a-p0"
+    }
+  ],
+  "predicate_types": {
+    "AtBuffer": [
+      "object",
+      "buffer"
+    ],
+    "GripperEmpty": [],
+    "Held": [
+      "object"
+    ],
+    "Inside": [
+      "object",
+      "container"
+    ],
+    "OnTable": [
+      "object"
+    ],
+    "Open": [
+      "container"
+    ]
+  }
+}

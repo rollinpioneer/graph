@@ -1,0 +1,110 @@
+{
+  "allowed_action_ids": [
+    "a:OPEN:container:v1",
+    "a:PICK:second_object:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:second_object:container:v1",
+    "a:PLACE:target:container:v1",
+    "a:PLACE_BUFFER:second_object:buffer:v1",
+    "a:PLACE_BUFFER:target:buffer:v1"
+  ],
+  "allowed_proposition_ids": [
+    "p:AtBuffer:second_object:buffer",
+    "p:AtBuffer:target:buffer",
+    "p:GripperEmpty",
+    "p:Held:second_object",
+    "p:Held:target",
+    "p:Inside:second_object:container",
+    "p:Inside:target:container",
+    "p:OnTable:second_object",
+    "p:OnTable:target",
+    "p:Open:container"
+  ],
+  "asset_binding_ref": "experiments/stage_0c_inputs/dev/T_A/scene_15/asset_binding.json",
+  "asset_binding_sha256": "8e08159f0867b57aba1839280f3d44e68f4f61f6a021b38e598ba24e8b15b08a",
+  "camera_config_hash": "7b9611da4f7a9d77d0abc8cff8b600c4214e92c1811a147ece974a99d130f0da",
+  "case_index": 15,
+  "contracts_ref": "experiments/stage_0c_inputs/s1_rev1/shared/stage_2a_contract_registry.json",
+  "contracts_sha256": "86b89b8ea35c972b293ecc80971a8e0a4bb6e31b817fa17b2be0d4486dd1e398",
+  "image_depth_sha256": "15fb890d0906b148fee260a7640764c6256aec8dbfae41ddeb0ea14f67788b17",
+  "image_ref": "experiments/stage_0c_inputs/dev/T_A/scene_15/rgb.png",
+  "image_sha256": "fe0518565e89f6b6ff76527860644e749297bb3ae1609a8b10d36cd14313bad8",
+  "initial_facts": {
+    "p:AtBuffer:second_object:buffer": "FALSE",
+    "p:AtBuffer:target:buffer": "FALSE",
+    "p:GripperEmpty": "TRUE",
+    "p:Held:second_object": "FALSE",
+    "p:Held:target": "FALSE",
+    "p:Inside:second_object:container": "FALSE",
+    "p:Inside:target:container": "FALSE",
+    "p:OnTable:second_object": "TRUE",
+    "p:OnTable:target": "TRUE",
+    "p:Open:container": "FALSE"
+  },
+  "normalized_reset_config_sha256": "6c3ea85ac3f642afbd2f5881d4f9f81230aace46a425431dd8dbab92b58539d0",
+  "object_table": [
+    {
+      "binding_status": "VERIFIED",
+      "id": "buffer",
+      "type": "buffer",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "binding_status": "VERIFIED",
+      "id": "container",
+      "type": "container",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "binding_status": "VERIFIED",
+      "id": "second_object",
+      "type": "object",
+      "visual_evidence_ref": "rgb.png"
+    },
+    {
+      "binding_status": "VERIFIED",
+      "id": "target",
+      "type": "object",
+      "visual_evidence_ref": "rgb.png"
+    }
+  ],
+  "permission": {
+    "evidence_ref": "assets/cp_disr/LICENSE",
+    "vlm_upload_allowed": true
+  },
+  "predicate_version": "CP-DISR-v2.1",
+  "preprocessing": {
+    "content_bytes": "original",
+    "crop": false,
+    "resize": false,
+    "version": "raw-rgb-inline-v1"
+  },
+  "provenance": {
+    "capture_kind": "recorded_simulator_rgb",
+    "initial_frame_verified": true,
+    "source_dataset": "CP-DISR_PROJECT_OWNED_PROCEDURAL_MUJOCO",
+    "split_evidence_ref": "configs/splits/T_A_stage_2a.json",
+    "version": "stage-2a-p0"
+  },
+  "s1_revision": 1,
+  "scene_config_hash": "6c3ea85ac3f642afbd2f5881d4f9f81230aace46a425431dd8dbab92b58539d0",
+  "scene_id": "T_A_dev_15",
+  "signed_goals": [
+    {
+      "fact_id": "p:Inside:target:container",
+      "sign": 1
+    },
+    {
+      "fact_id": "p:Inside:second_object:container",
+      "sign": 1
+    }
+  ],
+  "split": "dev",
+  "split_role": "S1_DISCOVERY_ONLY",
+  "split_row_sha256": "43c289a78a29aca853664b586112f8db8b3082912c72c2017b489aa7e7806aa5",
+  "synthetic_unit_fixture": false,
+  "task_definition_ref": "experiments/stage_0c_inputs/dev/T_A/scene_15/task_definition.json",
+  "task_definition_sha256": "118dc9e0a2d15e9d94f38022e2fa547adf2708a1d4eaa2e1c0f4400b60871694",
+  "task_id": "T_A",
+  "test_overlap": false
+}

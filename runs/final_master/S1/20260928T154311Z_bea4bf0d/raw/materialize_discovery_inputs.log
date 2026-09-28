@@ -1,0 +1,33 @@
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Traceback (most recent call last):
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_single_revision.py", line 95, in <module>
+    main()
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_single_revision.py", line 70, in main
+    result = materialize_discovery_inputs(root, config, output, args.gpu)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_revision_resume.py", line 334, in materialize_discovery_inputs
+    bundle = load_runtime(runtime_manifest)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/runtime.py", line 28, in load_runtime
+    module=importlib.import_module(spec['module'])
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/platforms/libero/runtime_factory.py", line 14, in <module>
+    from .d0_env import CaseSpec, make_env
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/platforms/libero/d0_env.py", line 11, in <module>
+    from robosuite.controllers import load_controller_config
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py", line 11, in <module>
+    from robosuite.environments.base import make
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/environments/__init__.py", line 1, in <module>
+    from .base import REGISTERED_ENVS, MujocoEnv
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/environments/base.py", line 12, in <module>
+    from robosuite.utils.binding_utils import MjRenderContextOffscreen, MjSim
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 34, in <module>
+    MUJOCO_EGL_DEVICE_ID in CUDA_VISIBLE_DEVICES
+AssertionError: MUJOCO_EGL_DEVICE_ID needs to be set to one of the device id specified in CUDA_VISIBLE_DEVICES
