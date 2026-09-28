@@ -1,0 +1,22 @@
+{
+  "status": "FAILED_STALLED",
+  "method": "Full",
+  "safe_persistence_boundary": {
+    "N": 2048,
+    "T": 9771.400000000713,
+    "complete_updates": 2,
+    "checkpoint": "runs/v13_r3/D0/Full/seed_0/20260927T155520Z_0c414f94/checkpoints/update_complete_2.pt"
+  },
+  "reason": "No new transition for >30 minutes while main thread remained CPU-active inside episode ep-444 decision 7; stop performed at last persisted PPO checkpoint boundary.",
+  "process_pid": 2966571,
+  "stopped_at": "2026-09-27T18:26:20.360486+00:00",
+  "evidence": [
+    "runs/v13_r3/D0/Full/seed_0/20260927T155520Z_0c414f94/transition_log.jsonl",
+    "runs/v13_r3/D0/Full/seed_0/20260927T155520Z_0c414f94/update_complete_3.pt",
+    "logs/r3_d0_training.log"
+  ],
+  "auto_restart": false,
+  "r2_b0_touched": false,
+  "observed_transition_log_N": 3072,
+  "stall_point": "PPO update attempt at N=3072; update_complete_3 was not persisted"
+}
