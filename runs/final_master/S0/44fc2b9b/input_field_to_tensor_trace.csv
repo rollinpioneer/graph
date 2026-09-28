@@ -1,0 +1,12 @@
+source_field,source_object,tensor_or_path,consumer,audit_note
+facts/goal signs,FactStore + GraphTemplate.goals,NodeFeatures.fact + GoalReadout.goal/global row,B1-K/B2/Full/A_STAT/A_CAT,current measured facts and signed goals; no future outcome
+PRE_POS/PRE_NEG,SkillContract.pre_pos/pre_neg,EffectTokenReadout roles PRE_POS/PRE_NEG; GraphTemplate PRE edges,B1-K+E and graph encoder,candidate-local read-only contract field
+ADD/DEL/UNKNOWN,SkillContract.effects,EffectTokenReadout roles ADD/DEL/UNKNOWN; GraphTemplate ADD/DEL topology,B1-K+E and graph encoder,"B1-K graph can see topology, but has no explicit candidate effect-token readout"
+conditional guards,SkillContract.conditional positive/negative,EffectTokenReadout roles GUARD_POS/GUARD_NEG/COND_*,B1-K+E,no nominal evaluation or derived closure
+ordered typed arguments,SkillContract.arguments order and TypedArgument.type,EffectTokenReadout ARG role plus position/type buckets,B1-K+E,order is retained by position embedding
+grounded ownership/binding,SkillContract.bound_arguments and grounded Atom.arguments,EffectTokenReadout ACTION/BIND roles keyed by grounded contract id,B1-K+E,candidate id/binding collision is explicit in token key
+candidate feature/mask,Snapshot.candidate_features/mask,Policy.candidate -> candidate context and mask,all policy methods,mask remains independent of prior
+nominal patch,"four_views(..., contract)",Z00/Z10/Z01/Z11 via GraphEncoder; differences(),Full/A_STAT/A_CAT/B2,B1-K and B1-K+E do not call four_views
+prior relation R,Snapshot.prior_edges,GraphView.soft_edges -> H view,Full/A_STAT/A_CAT/B1-H,A_STAT uses S_R=delta.zh-delta.zk; Full uses delta.dp
+Q supervision,selected_candidate_id + Transition,PPO.update selects out.q[selected]; q_targets detached,training objective,truth/R*/Q_ref sidecars are not loaded by this path
+clip metrics,PPO.update gradients,global_grad_norm before/after clip + threshold/trigger/step id,formal PPO update,startup synthetic resume probe is separate from formal update logs

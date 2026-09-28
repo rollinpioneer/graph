@@ -1,0 +1,69 @@
+{
+  "GRAPH_REMOTE_distance_bin": "NOT_APPLICABLE: no pre-registered legal remote-bin metadata in the active source/fixture; no synthetic nodes or predicates added",
+  "candidate_patch_footprints": [
+    {
+      "candidate_id": "a:MOVE:red:buffer:v1",
+      "contract_name": "MOVE",
+      "patch_node_count": 3,
+      "patch_node_ids": [
+        "p:AtBuffer:red:buffer",
+        "p:GripperEmpty",
+        "p:OnTable:red"
+      ]
+    },
+    {
+      "candidate_id": "a:OPEN:box:v1",
+      "contract_name": "OPEN",
+      "patch_node_count": 2,
+      "patch_node_ids": [
+        "p:GripperEmpty",
+        "p:Open:box"
+      ]
+    },
+    {
+      "candidate_id": "a:PICK:red:v1",
+      "contract_name": "PICK",
+      "patch_node_count": 3,
+      "patch_node_ids": [
+        "p:GripperEmpty",
+        "p:Held:red",
+        "p:OnTable:red"
+      ]
+    }
+  ],
+  "component_count": 1,
+  "components": [
+    [
+      "a:MOVE:red:buffer:v1",
+      "a:OPEN:box:v1",
+      "a:PICK:red:v1",
+      "p:AtBuffer:red:buffer",
+      "p:GripperEmpty",
+      "p:Held:red",
+      "p:OnTable:red",
+      "p:Open:box"
+    ]
+  ],
+  "degree_distribution": {
+    "1": 3,
+    "2": 2,
+    "3": 3
+  },
+  "degree_max": 3,
+  "degree_min": 1,
+  "diameter_undirected": 4,
+  "directed_reachability_pairs": 64,
+  "edges_directed_with_reverse": 22,
+  "evidence_class": "engineering",
+  "fixture": "tests/fixtures/contracts_v1.json + facts_tfu.json",
+  "nodes": 8,
+  "relation_edit_footprint": [
+    [
+      "a:MOVE:red:buffer:v1",
+      "a:OPEN:box:v1",
+      "SOFT_SUPPORTS"
+    ]
+  ],
+  "status": "COMPLETE",
+  "synthetic_unit_fixture": true
+}
