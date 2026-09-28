@@ -37,7 +37,7 @@ def main():
  if sha(CKPT)!=EXPECTED: raise SystemExit('FULL_CHECKPOINT_HASH_FAIL')
  sys.path.insert(0,str(ROOT/'src')); import torch
  from cp_disr import phase_a_v13_r3 as m
- m.N_CAP=2048; m.MAX_UPDATES=2; m.STAGE_DIR=pathlib.Path('runs/v13_r3_recovery')/'D0'; m.STATUS_PATH=pathlib.Path('status/v13_r3_recovery.json')
+ m.N_CAP=2048; m.MAX_UPDATES=2; m.STAGE_DIR=pathlib.Path('runs/v13_r3_recovery'); m.STATUS_PATH=pathlib.Path('status/v13_r3_recovery.json')
  prof=m.bind_profile(ROOT); split=prof['split']; split_index={r['case_id']:r for r in split['train']+split['dev']+list(split.get('test') or [])}; bundle=m.make_bundle(ROOT); m.s1.seed_all(0); policy=m.make_policy(bundle.template,'Full',torch.device('cuda',0) if torch.cuda.is_available() else torch.device('cpu')); from cp_disr.torch_rl import load_checkpoint; load_checkpoint(CKPT,policy); policy.eval(); from cp_disr.collector import Collector; collector=Collector(bundle,policy)
  rows=[]
  try:

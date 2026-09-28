@@ -32,7 +32,7 @@ def main():
     sys.path.insert(0,str(ROOT/'src'))
     import torch
     from cp_disr import phase_a_v13_r3 as m
-    m.STAGE_DIR=pathlib.Path('runs/v13_r3_recovery')/'D0'
+    m.STAGE_DIR=pathlib.Path('runs/v13_r3_recovery')
     m.STATUS_PATH=pathlib.Path('status/v13_r3_recovery.json')
     m.N_CAP=2048; m.MAX_UPDATES=2; m.EVAL_EVERY_N=2048; m.PLANNED={'B2':'v13_R3_Recovery_D0_B2_s0_N2048'}
     prof=m.bind_profile(ROOT)
