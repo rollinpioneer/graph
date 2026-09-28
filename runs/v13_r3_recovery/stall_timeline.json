@@ -1,0 +1,21 @@
+{
+  "classification": "PPO_INTERNAL_STALL",
+  "confidence": "HIGH",
+  "rule": "exact PPO update line present immediately before stall; therefore not collection/controller/runtime",
+  "evidence_lines": [
+    "[stage1a_v11] 2026-09-27T16:28:14Z Full PPO complete update transitions=1024 N=1024 T=4950.8000000004395 num_envs=1",
+    "[stage1a_v11] 2026-09-27T17:11:36Z Full eval N=2048",
+    "[stage1a_v11] 2026-09-27T17:12:39Z Full PPO complete update transitions=1024 N=2048 T=9771.400000000713 num_envs=1",
+    "[stage1a_v11] 2026-09-27T18:03:08Z Full PPO complete update transitions=1024 N=3072 T=14758.050000000949 num_envs=1"
+  ],
+  "hard_error_record": "/home/xushijie2/graph_cp_disr_v13_r3/runs/v13_r3/hard_error_full_stall.json",
+  "authoritative_stop": {
+    "N": 2048,
+    "T": 9771.400000000713,
+    "complete_updates": 2
+  },
+  "N3072_transition_log_observed": true,
+  "update_complete_3_persisted": false,
+  "auto_resume": false,
+  "new_reproduction": false
+}
