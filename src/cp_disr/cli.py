@@ -34,9 +34,7 @@ def main(argv=None):
         "stage-1a-v11-final-eval",
         "stage-2a-p0", "stage-2a-startup-gate", "stage-2a-run", "stage-2a-v11-run",
         "phase-a-v12-run",
-        "phase-a-v12-run",
-        "phase-a-v12-run",
-        "phase-a-v12-run",
+        "b-plan-dev",
     )
     for name in core:
         sp = sub.add_parser(name)
@@ -88,6 +86,12 @@ def main(argv=None):
             sp.add_argument("--resume", action="store_true")
             sp.add_argument("--skip-startup-gates", action="store_true")
             sp.add_argument("--max-updates", type=int, default=64)
+        if name == "b-plan-dev":
+            sp.add_argument("--manifest", type=Path, default=Path("experiments/manifests/runtime_manifest_v211.yaml"))
+            sp.add_argument("--split", type=Path, default=Path("configs/splits/T_B_phase_a_v13_r1_dev10.json"))
+            sp.add_argument("--output", type=Path, required=True)
+            sp.add_argument("--max-episodes", type=int, default=10)
+            sp.add_argument("--gpu", type=int, default=0)
     cache = sub.add_parser("validate-relation-cache")
     cache.add_argument("--cache-directory", type=Path)
     t = sub.add_parser("run-unit-tests")
@@ -196,6 +200,21 @@ def main(argv=None):
             )
             print(canonical(result))
             return 0 if not isinstance(result, dict) or result.get("status") not in ("BLOCKED", "NEEDS_RERUN") else 2
+        if a.command == "b-plan-dev":
+            from .baselines.b_plan import run_development
+            manifest = a.manifest if a.manifest.is_absolute() else root / a.manifest
+            split = a.split if a.split.is_absolute() else root / a.split
+            output = a.output if a.output.is_absolute() else root / a.output
+            result = run_development(
+                root,
+                manifest.resolve(),
+                split.resolve(),
+                output.resolve(),
+                max_episodes=int(a.max_episodes),
+                gpu=int(a.gpu),
+            )
+            print(canonical(result))
+            return 0
         if a.command == "stage-2a-v11-run":
             from . import stage2a_v11
             result = stage2a_v11.cmd_stage_2a_v11_run(root, gpu=getattr(a, "gpu", 0), phase=getattr(a, "phase", "all"), task=getattr(a, "task", None), method=getattr(a, "method", None), stamp=getattr(a, "stamp", None), configsha=getattr(a, "configsha", None), resume=bool(getattr(a, "resume", False)), skip_startup_gates=bool(getattr(a, "skip_startup_gates", False)), max_updates=int(getattr(a, "max_updates", 64)))

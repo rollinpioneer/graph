@@ -1,0 +1,70 @@
+{
+  "evidence_class": "positive",
+  "execution_state": "COMPLETE",
+  "pytest_selected": "54 passed (prior selected S0 suite; not rerun in this continuation)",
+  "tests": [
+    {
+      "name": "Full exact R-null",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_a_stat_exact_r_null_matches_full_with_shared_weights + test_zero_prior.py::test_T02_residual_zero"
+    },
+    {
+      "name": "Full empty-patch null",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_full_empty_patch_null_uses_production_four_views"
+    },
+    {
+      "name": "Full bounded Delta",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_full_delta_is_bounded_on_nonempty_prior"
+    },
+    {
+      "name": "Candidate reorder equivariance",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_a_stat_candidate_reorder_equivariance + test_permutation.py"
+    },
+    {
+      "name": "A_STAT exact R-null/bound/permission",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_a_stat_and_a_cat_shared_null_bound_and_permission_isolation"
+    },
+    {
+      "name": "A_CAT exact R-null/bound/permission",
+      "result": "positive",
+      "test": "test_stage0b_v211.py::test_acat_null_prior_is_exact_zero + test_s0_final_variants.py::test_a_stat_and_a_cat_shared_null_bound_and_permission_isolation"
+    },
+    {
+      "name": "B1-K+E effect permission/no successor",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_b1_k_plus_e_reads_effect_tokens_without_successor"
+    },
+    {
+      "name": "Q executed-only and detached targets",
+      "result": "positive",
+      "test": "test_q_executed_only.py + test_q_target_detach.py"
+    },
+    {
+      "name": "Clip pre/post logging",
+      "result": "positive",
+      "test": "test_s0_final_variants.py::test_production_clip_logging_records_pre_and_post_norm"
+    },
+    {
+      "name": "Affected regression suite",
+      "result": "positive",
+      "test": "54 selected tests"
+    }
+  ],
+  "authority_documents_supplied": true,
+  "b_plan_unit_tests": {
+    "result": "positive",
+    "count": 5,
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_b_plan.py",
+    "coverage": [
+      "canonical tie-break and nominal chain",
+      "negative goal",
+      "depth and max-node budgets",
+      "UNKNOWN precondition rejection",
+      "frozen default search contract"
+    ]
+  }
+}

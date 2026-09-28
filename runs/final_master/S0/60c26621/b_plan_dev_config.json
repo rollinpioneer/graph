@@ -1,0 +1,46 @@
+{
+  "authorized_scope": "S0 only",
+  "execution_state": "COMPLETE",
+  "measurement_status": "MEASURED",
+  "task_id": "T_B",
+  "method": "B_PLAN",
+  "dev_split": "configs/splits/T_B_phase_a_v13_r1_dev10.json",
+  "runtime_split": "b_plan_runtime_split.json",
+  "episodes_requested": 10,
+  "episodes_completed": 10,
+  "success_count": 6,
+  "episode_status_counts": {
+    "NO_PLAN": 4,
+    "SUCCESS": 6
+  },
+  "search_status_counts": {
+    "GOAL_ALREADY_SATISFIED": 0,
+    "NO_PLAN": 4,
+    "PLAN_FOUND": 34,
+    "SEARCH_TIMEOUT": 0
+  },
+  "skill_failure_count": 0,
+  "verifier_failure_count": 0,
+  "depth": 6,
+  "max_nodes": 4096,
+  "cpu_search_seconds_per_decision": 2.0,
+  "reference_skill_seconds": 4.199999999997672,
+  "reference_source": "runs/stage_0a/calibration.json::families.T_B.d_ref_median",
+  "execution_policy": "one first real skill, shared Verifier update, replan",
+  "planner_inputs": [
+    "public T/F/U FactStore",
+    "goal",
+    "complete registered SkillContract",
+    "public remaining deadline"
+  ],
+  "planner_exclusions": [
+    "hidden simulator truth",
+    "future result",
+    "VLM relation",
+    "RL Q"
+  ],
+  "relation_cache_loaded": false,
+  "provider_requests": 0,
+  "rl_training_attempts": 0,
+  "formal_test_started": false
+}
