@@ -15,7 +15,8 @@ import yaml
 from cp_disr.baselines.b_plan import BPlanPlanner, SearchConfig
 from cp_disr.contracts import Registry, from_dict
 from cp_disr.graph import Goal, build_template
-from cp_disr.vlm import validate_relations
+from cp_disr.vlm import cache_key, validate_relations
+from cp_disr.vlm_provider import DashScopeProvider, ProviderConfig, redact, validate_payload
 
 
 class RevisionError(RuntimeError):
@@ -362,23 +363,188 @@ def freeze_discovery_manifest(root, config, output_dir):
     return value
 
 
+def _scene_source_for_frozen_id(root, scene):
+    """Resolve only an exact public scene binding; never substitute another ID."""
+    scene_id = scene["scene_id"]
+    suffix = scene_id.rsplit("_", 1)[-1]
+    candidate = Path(root) / "experiments/stage_0c_inputs/dev/T_A" / f"scene_{suffix}" / "scene_manifest.json"
+    if not candidate.is_file():
+        raise RevisionError("DISCOVERY_INPUT_BINDING_MISSING")
+    source = _read_json(candidate)
+    if source.get("scene_id") != scene_id:
+        raise RevisionError("DISCOVERY_INPUT_BINDING_ID_MISMATCH")
+    return source
+
+
+def _provider_case(root, frozen_scene, output_dir, config):
+    """Build the production payload from verified public assets and contracts."""
+    from cp_disr.stage0c import prepare_scene
+
+    source_scene = _scene_source_for_frozen_id(root, frozen_scene)
+    bound = prepare_scene(root, source_scene)
+    few_path = Path(root) / "experiments/stage_0c_inputs/fewshots/few_shot_manifest.json"
+    if not few_path.is_file():
+        raise RevisionError("FEWSHOT_INPUT_BINDING_MISSING")
+    few_doc = _read_json(few_path)
+    examples = [prepare_scene(root, record, fewshot=True) for record in few_doc.get("examples", [])]
+    if len(examples) != 3:
+        raise RevisionError("FEWSHOT_INPUT_BINDING_INCOMPLETE")
+    prompt_path = Path(root) / "experiments/sources/v2.1_interfaces/system_prompt.txt"
+    extra_path = Path(_read_json(Path(output_dir) / "manifests/prompt_manifest.json")["extra_contract"])
+    if not extra_path.is_absolute():
+        extra_path = Path(root) / extra_path
+    prompt = prompt_path.read_text(encoding="utf-8") + "\n\n" + extra_path.read_text(encoding="utf-8")
+    messages = [{"role": "system", "content": [{"text": prompt}]}]
+    for example, record in zip(examples, few_doc["examples"]):
+        messages.extend([
+            {"role": "user", "content": example["content"]},
+            {"role": "assistant", "content": [{"text": json.dumps(record["expected_json"], sort_keys=True, separators=(",", ":"))}]},
+        ])
+    payload = {
+        "model": config["provider"]["model"],
+        "messages": messages + [{"role": "user", "content": bound["content"]}],
+        "temperature": 0,
+        "max_tokens": 2048,
+        "response_format": {"type": "json_object"},
+        "enable_thinking": False,
+        "enable_search": False,
+        "stream": False,
+        "result_format": "message",
+    }
+    validate_payload(payload)
+    manifest = {
+        "split": "dev",
+        "scene_id": frozen_scene["scene_id"],
+        "task_id": frozen_scene["task_id"],
+        "model_snapshot": config["provider"]["model"],
+        "sdk_api_version": config["provider"]["sdk_version"],
+        "region": config["provider"]["region"],
+        "endpoint": config["provider"]["endpoint"],
+        "prompt_hash": hashlib.sha256(prompt.encode()).hexdigest(),
+        "fewshot_hash": _optional_hash(few_path),
+        "schema_hash": _optional_hash(Path(root) / "schemas/relation_schema.json"),
+        "contract_version": source_scene["contracts_sha256"],
+        "predicate_version": source_scene["predicate_version"],
+        "initial_RGB_content_hash": source_scene["image_sha256"],
+        "initial_facts_hash": hashlib.sha256(json.dumps(source_scene["initial_facts"], sort_keys=True).encode()).hexdigest(),
+        "asset_binding_hash": source_scene["asset_binding_sha256"],
+        "request_payload_hash": hashlib.sha256(json.dumps(redact(payload), sort_keys=True).encode()).hexdigest(),
+        "synthetic_unit_fixture": False,
+    }
+    return {
+        "payload": payload,
+        "template": bound["template"],
+        "manifest": manifest,
+        "schema": _read_json(Path(root) / "schemas/relation_schema.json"),
+        "input_refs": {"scene_manifest": source_scene, "frozen_scene": frozen_scene},
+        "provider": DashScopeProvider(ProviderConfig(
+            model=config["provider"]["model"],
+            region=config["provider"]["region"],
+            endpoint=config["provider"]["endpoint"],
+            sdk_version=config["provider"]["sdk_version"],
+        )),
+    }
+
+
+def _provider_row(scene, status, error_code="", attempt_index=0, request_hash="NOT_SENT", result=None, processing=None, retry_reason=""):
+    result = result or {}
+    processing = processing or {}
+    return {
+        "scene_id": scene["scene_id"], "cache_key": scene.get("source_cache_key", ""),
+        "attempt_index": attempt_index, "first_or_retry": "RETRY" if attempt_index else "FIRST",
+        "retry_reason": retry_reason, "model": "qwen3.8-max-0902", "region": "cn-beijing",
+        "endpoint": "https://dashscope.aliyuncs.com/api/v1", "sdk_version": "1.27.6",
+        "request_hash": request_hash, "request_id": result.get("request_id", "NOT_SENT"),
+        "http_status": result.get("status_code", ""), "latency_seconds": result.get("latency_seconds", ""),
+        "token_input": (result.get("usage") or {}).get("input_tokens", ""),
+        "token_output": (result.get("usage") or {}).get("output_tokens", ""),
+        "raw_response_sha256": hashlib.sha256(json.dumps(redact(result), sort_keys=True).encode()).hexdigest() if result else "NOT_SENT",
+        "parsed_count": len(processing.get("parsed", {}).get("relations", [])) if isinstance(processing.get("parsed"), dict) else 0,
+        "rejected_count": len(processing.get("rejected", [])), "admitted_count": len(processing.get("accepted", [])),
+        "status": status, "error_code": error_code,
+    }
+
+
 def run_provider_call(root, scene_ref, output_dir):
-    output_dir = Path(output_dir)
+    """Run only bound production requests, with an explicit one-retry budget."""
+    from cp_disr.vlm_cache_pipeline import process_response, response_text, write_audit_cache
+
+    root, output_dir = Path(root).resolve(), Path(output_dir)
+    config = load_revision_config(root / "configs/final_master/s1_rev1.yaml")
     scenes = _read_json(output_dir / "manifests/frozen_discovery_scene_manifest.json")["scenes"]
-    rows = [{"scene_id": scene["scene_id"], "cache_key": scene.get("source_cache_key", ""), "attempt_index": 0, "first_or_retry": "FIRST", "model": "qwen3.8-max-0902", "region": "cn-beijing", "endpoint": "https://dashscope.aliyuncs.com/api/v1", "sdk_version": "1.27.6", "request_hash": "NOT_SENT", "request_id": "NOT_SENT", "status": "STOPPED_PROVIDER_ACCESS", "error_code": "DASHSCOPE_API_KEY_UNAVAILABLE"} for scene in scenes]
     fields = ["scene_id", "cache_key", "attempt_index", "first_or_retry", "retry_reason", "model", "region", "endpoint", "sdk_version", "request_hash", "request_id", "http_status", "latency_seconds", "token_input", "token_output", "raw_response_sha256", "parsed_count", "rejected_count", "admitted_count", "status", "error_code"]
+    rows, cache_rows, first_calls, retries = [], [], 0, 0
+    for index, scene in enumerate(scenes):
+        try:
+            case = _provider_case(root, scene, output_dir, config)
+        except Exception as error:
+            code = str(error) if isinstance(error, RevisionError) else type(error).__name__
+            rows.append(_provider_row(scene, "STOPPED_DISCOVERY_INPUT_BINDING", code))
+            for remaining in scenes[index + 1:]:
+                rows.append(_provider_row(remaining, "NOT_RUN_AFTER_DISCOVERY_INPUT_BINDING", "UPSTREAM_INPUT_BINDING"))
+            break
+        request_hash = case["manifest"]["request_payload_hash"]
+        cache_path = Path(root) / "experiments/vlm_cache/dev" / cache_key(case["manifest"])
+        if (cache_path / "COMPLETE").is_file():
+            cache_rows.append({"scene_id": scene["scene_id"], "cache_key": cache_path.name, "cache_path": str(cache_path), "status": "CACHE_REUSED"})
+            rows.append(_provider_row(scene, "CACHE_REUSED", "", 0, request_hash))
+            continue
+        reserve_budget(output_dir, "provider_first_calls", 1, scene["scene_id"])
+        first_calls += 1
+        attempts, processing = [], None
+        for attempt_index in range(2):
+            request = json.loads(json.dumps(case["payload"]))
+            if attempt_index:
+                request["messages"].append({"role": "user", "content": [{"text": "Return only one JSON object conforming to the supplied m1_soft_relations_v2 schema. Do not add prose or markdown."}]})
+            result = redact(case["provider"].send(request))
+            attempt = {"attempt": attempt_index, "request_payload_redacted": redact(request), "response": result}
+            try:
+                if result.get("error_type") != "OK":
+                    attempt["processing_error"] = result.get("error_type", "API_ERROR")
+                    attempts.append(attempt)
+                    if attempt_index == 0 and result.get("error_type") in ("TIMEOUT", "TRANSPORT"):
+                        reserve_budget(output_dir, "provider_retries", 1, scene["scene_id"])
+                        retries += 1
+                        continue
+                    rows.append(_provider_row(scene, "STOPPED_PROVIDER_ACCESS", result.get("code", result.get("error_type", "API_ERROR")), attempt_index, request_hash, result))
+                    break
+                processing = process_response(response_text(result), case["template"], case["schema"])
+                attempt["processing_status"] = processing["status"]
+                attempts.append(attempt)
+                if processing["status"] == "SUCCESS":
+                    execution = {"attempts": attempts, "processing": processing, "status": processing["status"]}
+                    cache = write_audit_cache(root / "experiments/vlm_cache", case["manifest"], case["input_refs"], execution)
+                    cache_rows.append({"scene_id": scene["scene_id"], "cache_key": cache.name, "cache_path": str(cache), "status": "SUCCESS"})
+                    rows.append(_provider_row(scene, "SUCCESS", "", attempt_index, request_hash, result, processing))
+                    break
+                rows.append(_provider_row(scene, "JSON_SEMANTIC_REJECTED", "NON_RETRYABLE_SEMANTIC", attempt_index, request_hash, result, processing))
+                break
+            except (ValueError, TypeError, KeyError):
+                attempt["processing_error"] = "JSON_SYNTAX_FAILURE"
+                attempts.append(attempt)
+                if attempt_index == 0:
+                    reserve_budget(output_dir, "provider_retries", 1, scene["scene_id"])
+                    retries += 1
+                    continue
+                rows.append(_provider_row(scene, "JSON_SYNTAX_FAILURE", "JSON_SYNTAX_FAILURE", attempt_index, request_hash, result))
+                break
+        if rows and rows[-1]["status"] == "STOPPED_PROVIDER_ACCESS":
+            break
     _write_csv(output_dir / "provider/provider_call_ledger.csv", fields, rows)
-    _write_csv(output_dir / "provider/cache_index.csv", ["scene_id", "cache_key", "cache_path", "status"], [])
+    _write_csv(output_dir / "provider/cache_index.csv", ["scene_id", "cache_key", "cache_path", "status"], cache_rows)
     stage = _read_json(output_dir / "stage_manifest.json")
-    stage.update({"status": "STOPPED", "stop_reason": "STOPPED_PROVIDER_ACCESS", "provider_first_calls": 0, "provider_retries": 0})
+    stopped = any(row["status"].startswith("STOPPED_") for row in rows)
+    stop_reason = next((row["status"] for row in rows if row["status"].startswith("STOPPED_")), "")
+    stage.update({"status": "STOPPED" if stopped else "IN_PROGRESS", "stop_reason": stop_reason, "provider_first_calls": first_calls, "provider_retries": retries})
     _atomic_json(output_dir / "stage_manifest.json", stage)
-    return {"status": "STOPPED_PROVIDER_ACCESS", "first_calls": 0, "retries": 0}
+    return {"status": stop_reason or "IN_PROGRESS", "first_calls": first_calls, "retries": retries}
 
 
 def probe_production_representation(root, case_ref, output_dir):
     output_dir = Path(output_dir)
     fields = ["case_id", "legal_candidate_count", "changed_patch_candidate_count", "relation_count", "status"]
-    row = {"case_id": case_ref or "NONE", "legal_candidate_count": "NOT_MEASURED", "changed_patch_candidate_count": "NOT_MEASURED", "relation_count": 0, "status": "NOT_MEASURED_PROVIDER_ACCESS_STOPPED"}
+    stage = _read_json(output_dir / "stage_manifest.json")
+    row = {"case_id": case_ref or "NONE", "legal_candidate_count": "NOT_MEASURED", "changed_patch_candidate_count": "NOT_MEASURED", "relation_count": 0, "status": "NOT_MEASURED_" + (stage.get("stop_reason") or "NO_PROVIDER_STOP")}
     _write_csv(output_dir / "representation/e2_representation_entry_rev1.csv", fields, [row])
     _write_csv(output_dir / "representation/e3_candidate_discriminability_rev1.csv", fields, [row])
     _atomic_bytes(output_dir / "representation/gradient_reach.jsonl", b"")
@@ -428,7 +594,7 @@ def finalize_eligibility(root, output_dir):
     for name, gate in (("e1_relation_existence_rev1.csv", "E1"), ("e2_representation_entry_rev1.csv", "E2"), ("e3_candidate_discriminability_rev1.csv", "E3"), ("e4_physical_witnesses_rev1.csv", "E4")):
         _write_csv(output_dir / name, ["gate", "status", "denominator", "notes"], [{"gate": gate, "status": gates[gate], "denominator": 2, "notes": "Provider access stopped; no unobserved claim made."}])
     (output_dir / "e5_contract_insufficiency_rev1.md").write_text("# E5 — Contract insufficiency\n\nStatus: NOT_MEASURED; no claim is made.\n", encoding="utf-8")
-    (output_dir / "e6_prior_classification_rev1.md").write_text("# E6 — Prior classification\n\nClassification: NOT_CLASSIFIED; provider access stopped.\n", encoding="utf-8")
+    (output_dir / "e6_prior_classification_rev1.md").write_text("# E6 — Prior classification\n\nClassification: NOT_CLASSIFIED; " + (stage.get("stop_reason") or "no downstream evidence") + ".\n", encoding="utf-8")
     return final
 
 

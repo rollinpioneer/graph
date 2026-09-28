@@ -1,3 +1,3 @@
 # E6 — Prior classification
 
-Classification: NOT_CLASSIFIED; provider access stopped.
+Classification: NOT_CLASSIFIED; STOPPED_DISCOVERY_INPUT_BINDING.
