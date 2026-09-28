@@ -1,0 +1,26 @@
+# Probe and Rescore Audit
+
+No live execution was performed.
+
+[
+  {
+    "check": "alignment",
+    "found": true,
+    "status": "REQUIRES_REPAIR"
+  },
+  {
+    "check": "separate_gradients",
+    "found": true,
+    "status": "REQUIRES_REPAIR"
+  },
+  {
+    "check": "offline_runtime",
+    "found": true,
+    "status": "REQUIRES_REPAIR"
+  },
+  {
+    "check": "broad_exception",
+    "found": true,
+    "status": "REQUIRES_REPAIR"
+  }
+]

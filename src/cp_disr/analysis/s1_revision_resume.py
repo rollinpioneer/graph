@@ -594,7 +594,7 @@ def register_physical_branches(root, output_dir):
                 snap=bundle.start_case(case_id); legal=[cid for cid,m in zip(snap.candidate_ids,snap.mask) if m][:2]
                 for cid in legal:
                     for repeat in range(2):
-                        identity=f"{case_id}|{cid}|{repeat}"; branches.append({"branch_id":hashlib.sha256(identity.encode()).hexdigest()[:16],"case_id":case_id,"candidate_id":cid,"repeat":repeat,"restore_seed":int(hashlib.sha256(identity.encode()).hexdigest()[:8],16),"selection_hash":hashlib.sha256(identity.encode()).hexdigest(),"status":"REGISTERED"})
+                        identity=f"{case_id}|{cid}|{repeat}"; branches.append({"branch_id":hashlib.sha256(identity.encode()).hexdigest()[:16],"case_id":case_id,"candidate_id":cid,"repeat":repeat,"restore_seed":int(hashlib.sha256(f"{case_id}|{repeat}".encode()).hexdigest()[:8],16),"selection_hash":hashlib.sha256(identity.encode()).hexdigest(),"status":"REGISTERED"})
             finally:
                 try: bundle.environment.close()
                 except Exception: pass
@@ -604,21 +604,139 @@ def register_physical_branches(root, output_dir):
     return value
 
 
-def execute_registered_branch(root, branch_id, output_dir):
-    root,output_dir=Path(root).resolve(),Path(output_dir); reg=_json(output_dir/"witnesses/e4_branch_registration.json"); branch=next((b for b in reg.get("branches",[]) if b["branch_id"]==branch_id),None)
-    if branch is None: raise _base().RevisionError("witness execution requires frozen branch registration")
-    manifest=yaml.safe_load((output_dir/"input_binding/T_A_s1_rev1_runtime_manifest.yaml").read_text()); bundle=load_runtime(manifest)
-    from cp_disr.baselines.b_plan import BPlanPlanner,SearchConfig
-    try:
-        snap=bundle.start_case(branch["case_id"]); start=bundle.clock.now_seconds(); execution=bundle.executor.execute(branch["candidate_id"],next(c.timeout_seconds for c in snap.template.contracts if c.id==branch["candidate_id"])); obs=bundle.environment.public_observation(); measured=bundle.perception.infer(obs); records=bundle.verifier.verify(measured,execution); facts=FactStore(records)
-        planner=BPlanPlanner(SearchConfig(depth_limit=6,max_nodes=4096,cpu_time_limit_seconds=2.0,reference_skill_seconds=3.7000000000002355)); plan=planner.plan(facts,snap.template,max(0.0,60.0-(bundle.clock.now_seconds()-start)))
-        return {"branch_id":branch_id,"case_id":branch["case_id"],"candidate_id":branch["candidate_id"],"controller_exit":execution.controller_exit,"verified_fact_count":len(records),"continuation_status":plan.status,"continuation_first_action":plan.plan[0] if plan.plan else "","status":"DIAGNOSTIC" if execution.controller_exit=="SUCCESS" else "ENGINEERING_NON_DIAGNOSTIC"}
-    except Exception as exc:
-        return {"branch_id":branch_id,"case_id":branch["case_id"],"candidate_id":branch["candidate_id"],"status":"ENGINEERING_NON_DIAGNOSTIC","error_type":type(exc).__name__}
-    finally:
-        try: bundle.environment.close()
-        except Exception: pass
+def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, planner_factory=None):
+    """Execute a registered branch through the real observe/verify/evaluate loop.
 
+    The default path still uses RuntimeFactory; tests may inject only the
+    environment boundary. Controller termination is recorded separately from
+    task success and a PLAN_FOUND result is always consumed.
+    """
+    root, output_dir = Path(root).resolve(), Path(output_dir)
+    reg = _json(output_dir / "witnesses/e4_branch_registration.json")
+    branch = next((b for b in reg.get("branches", []) if b["branch_id"] == branch_id), None)
+    if branch is None:
+        raise _base().RevisionError("witness execution requires frozen branch registration")
+    manifest = yaml.safe_load((output_dir / "input_binding/T_A_s1_rev1_runtime_manifest.yaml").read_text())
+    bundle = bundle_factory(manifest, branch) if bundle_factory else load_runtime(manifest)
+    from cp_disr.adapters import EvaluationInput
+    from cp_disr.baselines.b_plan import BPlanPlanner, SearchConfig
+    trace = []
+    try:
+        seed = branch.get("restore_seed")
+        if seed is None:
+            raise _base().RevisionError("registered branch has no restore_seed")
+        if hasattr(bundle.environment, "set_seed"):
+            bundle.environment.set_seed(int(seed))
+        snap = bundle.start_case(branch["case_id"])
+        episode_start = float(bundle.episode_start_seconds)
+        candidate = branch["candidate_id"]
+        planner = planner_factory() if planner_factory else BPlanPlanner(
+            SearchConfig(
+                depth_limit=6,
+                max_nodes=4096,
+                cpu_time_limit_seconds=2.0,
+                reference_skill_seconds=float(manifest["reference_skill_seconds"]),
+            )
+        )
+        decision_count = 0
+        while decision_count <= 6:
+            index = {cid: i for i, cid in enumerate(snap.candidate_ids)}
+            if candidate not in index or not bool(snap.mask[index[candidate]]):
+                return {
+                    "branch_id": branch_id, "case_id": branch["case_id"],
+                    "candidate_id": branch["candidate_id"],
+                    "controller_exit": "", "execution_status": "REJECTED_MASK",
+                    "termination_reason": "CURRENT_MASK_REJECTED",
+                    "task_success": False, "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+                    "full_episode_completed": False, "trace": trace,
+                }
+            contract = next(c for c in snap.template.contracts if c.id == candidate)
+            now = float(bundle.clock.now_seconds())
+            execution = bundle.executor.execute(candidate, float(contract.timeout_seconds))
+            obs = bundle.observations.observe()
+            measured = bundle.perception.infer(obs)
+            records = bundle.verifier.verify(measured, execution)
+            end = float(bundle.clock.now_seconds())
+            task = bundle.evaluator.evaluate(EvaluationInput(
+                task_id=str(getattr(bundle, "task_id", "T_A")),
+                env_id=snap.env_id,
+                episode_id=snap.episode_id,
+                evidence_refs=tuple(execution.evidence_ids),
+                elapsed_seconds=end - episode_start,
+                interval_start_seconds=now - episode_start,
+                interval_end_seconds=end - episode_start,
+            ))
+            trace.append({
+                "decision": decision_count, "candidate_id": candidate,
+                "execution_id": execution.execution_id,
+                "controller_exit": execution.controller_exit,
+                "verified_fact_count": len(records),
+                "elapsed_seconds": end - episode_start,
+                "task_success": bool(task.success), "task_terminated": bool(task.terminated),
+                "task_reason": task.reason,
+            })
+            snap = bundle.snapshot_builder.build(snap, records, obs, execution, end)
+            if task.terminated:
+                return {
+                    "branch_id": branch_id, "case_id": branch["case_id"],
+                    "candidate_id": branch["candidate_id"],
+                    "controller_exit": execution.controller_exit,
+                    "execution_status": "COMPLETED",
+                    "termination_reason": task.reason,
+                    "task_success": bool(task.success),
+                    "witness_validity": "VALID" if task.reason in ("TASK_SUCCESS", "DEADLINE", "NO_PLAN") else "ENGINEERING_NON_DIAGNOSTIC",
+                    "full_episode_completed": True, "decision_count": decision_count + 1,
+                    "trace": trace,
+                }
+            remaining = max(0.0, float(getattr(bundle, "snapshot_builder").deadline) - (end - episode_start))
+            plan = planner.plan(snap.facts, snap.template, remaining)
+            if plan.status in ("NO_PLAN", "SEARCH_TIMEOUT"):
+                return {
+                    "branch_id": branch_id, "case_id": branch["case_id"],
+                    "candidate_id": branch["candidate_id"],
+                    "controller_exit": execution.controller_exit,
+                    "execution_status": plan.status,
+                    "termination_reason": plan.status,
+                    "task_success": False,
+                    "witness_validity": "VALID", "full_episode_completed": True,
+                    "decision_count": decision_count + 1, "trace": trace,
+                }
+            if plan.status == "GOAL_ALREADY_SATISFIED":
+                return {
+                    "branch_id": branch_id, "case_id": branch["case_id"],
+                    "candidate_id": branch["candidate_id"],
+                    "controller_exit": execution.controller_exit,
+                    "execution_status": plan.status, "termination_reason": plan.status,
+                    "task_success": False, "witness_validity": "VALID",
+                    "full_episode_completed": True, "decision_count": decision_count + 1,
+                    "trace": trace,
+                }
+            if plan.status != "PLAN_FOUND" or not plan.plan:
+                raise _base().RevisionError("planner returned an invalid continuation result")
+            candidate = plan.plan[0]
+            decision_count += 1
+        return {
+            "branch_id": branch_id, "case_id": branch["case_id"],
+            "candidate_id": branch["candidate_id"],
+            "execution_status": "SEARCH_TIMEOUT", "termination_reason": "DECISION_LIMIT",
+            "task_success": False, "witness_validity": "VALID",
+            "full_episode_completed": True, "trace": trace,
+        }
+    except Exception as exc:
+        return {
+            "branch_id": branch_id, "case_id": branch["case_id"],
+            "candidate_id": branch["candidate_id"],
+            "execution_status": "EXCEPTION", "termination_reason": type(exc).__name__,
+            "task_success": False, "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+            "full_episode_completed": False, "error_type": type(exc).__name__,
+            "error_phase": "runner_loop", "traceback": __import__("traceback").format_exc(),
+            "trace": trace,
+        }
+    finally:
+        try:
+            bundle.environment.close()
+        except Exception:
+            pass
 
 def run_witnesses(root, output_dir):
     output_dir=Path(output_dir); reg=_json(output_dir/"witnesses/e4_branch_registration.json"); rows=[]
