@@ -1,0 +1,32 @@
+EXTRA-CONTRACT FILTER — CP-DISR S1 REV1
+
+Return a relation only when the public scene evidence supports a
+scene-specific soft dependency that is not already entailed by any
+registered PRE_POS, PRE_NEG, ADD, DEL, conditional guard, or their
+direct grounded instantiation.
+
+Eligible evidence may concern:
+- additional execution cost;
+- rework risk;
+- resource contention;
+- occlusion or access difficulty;
+- preservation or recovery of a signed goal;
+- a scene-specific consequence that remains soft rather than a hard
+  safety or initiation condition.
+
+Do not output:
+- OPEN -> PLACE when Open(container) is already a registered
+  precondition of PLACE;
+- PICK -> PLACE merely because PICK creates Held(object);
+- any order already forced by PRE/ADD/DEL or guards;
+- a next action or complete plan;
+- a confidence score or probability;
+- a new action, object, proposition, effect, or goal;
+- a relation based on hidden state or future outcomes.
+
+Every accepted relation must cite one registered ADD or DEL effect of
+the source action in effect_fact_ref.
+
+When no publicly supported extra-contract relation exists, return:
+
+{"relations":[]}

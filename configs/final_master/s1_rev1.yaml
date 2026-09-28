@@ -1,0 +1,75 @@
+master_id: CP-DISR-FINAL-EXEC-3.0
+stage: S1
+revision_index: 1
+revision_type: SINGLE_EVIDENCE_BASED_REVISION
+
+base_commit: 08412a27eb26c047a429bd3bbf70f7cf5bace132
+previous_evidence_dir: runs/final_master/S1/20260928T140215Z_538ef55a
+
+method_version: "2.1.1"
+tp_training_authorized: false
+
+historical_cases:
+  - case_id: T_A_dev_01
+    source: stage_0c_historical_diagnostic
+    cache_key: e74e43cd109e21027a8286731d1c4b424c994293ff9907f31b9583ddf3df26b9
+    expected_raw_relation_count: 5
+    expected_parsed_relation_count: 5
+    expected_admitted_relation_count: 2
+  - case_id: T_A_dev_02
+    source: stage_0c_historical_diagnostic
+    cache_key: e176f6c2af052eafcab11b305cff361d4026096a2bad0fdcba98fb9d0368db6e
+    expected_raw_relation_count: 5
+    expected_parsed_relation_count: 5
+    expected_admitted_relation_count: 2
+
+candidate_structure_limit: 2
+default_candidate_structure: T_A
+enable_t_c_dynamic: false
+allow_third_task: false
+
+budgets:
+  planner_environment_episodes: 0
+  physical_witness_episodes: 8
+  discovery_scenes: 12
+  provider_first_calls: 12
+  provider_retries_total: 12
+  provider_retries_per_scene: 1
+  rl_transitions: 0
+  optimizer_steps: 0
+  elastic_attempts: 0
+  formal_test_episodes: 0
+
+provider:
+  model: qwen3.8-max-0902
+  region: cn-beijing
+  endpoint: https://dashscope.aliyuncs.com/api/v1
+  sdk_version: "1.27.6"
+  semantic_retry: false
+  allowed_retry_reasons:
+    - TRANSPORT_FAILURE
+    - TIMEOUT
+    - JSON_SYNTAX_FAILURE
+
+relations:
+  allowed_types:
+    - SOFT_SUPPORTS
+    - SOFT_RELEVANT_TO_GOAL
+  effect_fact_ref_required: true
+  keep_contract_redundancy_filter: true
+  allow_soft_order: false
+  allow_new_action: false
+  allow_new_fact: false
+  allow_new_object: false
+  allow_action_ranking: false
+
+historical_first: true
+new_provider_calls_only_if_historical_gate_fails: true
+
+eligibility:
+  require_independent_natural_configurations: 2
+  require_representation_entry: true
+  require_candidate_discriminability: true
+  require_independent_physical_witnesses: 2
+  require_legitimate_soft_insufficiency: true
+  require_e6_classification: true
