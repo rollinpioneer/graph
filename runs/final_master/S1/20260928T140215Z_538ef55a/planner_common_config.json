@@ -1,0 +1,111 @@
+{
+  "admission": {
+    "contract_redundancy_rejected": true,
+    "duplicate_edge_canonicalized": true,
+    "effect_must_be_registered_add_or_del": true,
+    "handwritten_not_natural_evidence": true,
+    "provider_confidence_ignored": true,
+    "relevant_target_signed_goal": true,
+    "source_action_only": true,
+    "supports_target_action_distinct": true
+  },
+  "base_commit": "342f0047bbae446f14ede0a87bfec10a2a31021a",
+  "branch": "codex/cp-disr-final-s1-prior-existence",
+  "budgets": {
+    "common_cases_max": 12,
+    "elastic_attempts": 0,
+    "existing_legal_dev_or_snapshots_max": 24,
+    "independent_physical_witness_max": 8,
+    "new_provider_calls_max": 12,
+    "optimizer_steps": 0,
+    "planner_episode_max": 36,
+    "provider_retry_max_per_input": 1,
+    "rl_transitions": 0
+  },
+  "common_cases": {
+    "case_ids": [
+      "T_A_dev_00",
+      "T_A_dev_01",
+      "T_A_dev_02",
+      "T_A_dev_03",
+      "T_A_dev_04",
+      "T_A_dev_05",
+      "T_A_dev_06",
+      "T_A_dev_07",
+      "T_A_dev_08",
+      "T_A_dev_09",
+      "T_A_dev_10",
+      "T_A_dev_11"
+    ],
+    "count": 12,
+    "source": "configs/splits/T_A_stage_2a.json",
+    "split": "dev",
+    "t_c_dynamic_execution": false,
+    "task_family": "T_A"
+  },
+  "eligibility_boundary": {
+    "negative_or_insufficient_evidence_can_complete": true,
+    "tb_s0_evidence_not_tp_qualification": true,
+    "tp_bound_required_for_ELIGIBLE": true
+  },
+  "finite_relation_universe": {
+    "effect_anchors": "registered ADD/DEL effect propositions of source action",
+    "enumeration": "canonical sorted Cartesian product filtered by schema and admission rules",
+    "goal_targets": "signed goal fact ids",
+    "max_relations_per_case": 8,
+    "r_star": "same fixed finite universe; no future trajectory, optimal plan, Q_ref, success, or hidden truth",
+    "sources": "registered grounded action ids for the case",
+    "support_targets": "distinct registered grounded action ids"
+  },
+  "mapping": {
+    "B_PLAN": "relation-free finite symbolic search; execute only first action; real Verifier refreshes facts before replanning",
+    "B_PLAN+R": "same hard mask/search/execution; default contract-cost ordering; relation score tie-break only within 0.1*d_ref; SOFT_SUPPORTS plan-internal successor support; SOFT_RELEVANT_TO_GOAL unfinished-goal salience; no truth/confidence/longer budget",
+    "B_PLAN+R*": "same algorithm and bounds; relation collection replaced by frozen finite universe; ORACLE_INFORMED_REFERENCE; not an upper bound"
+  },
+  "master_id": "CP-DISR-FINAL-EXEC-3.0",
+  "method_version": "2.1.1",
+  "output_policy": {
+    "do_not_modify_s0": true,
+    "preserve_denominators": true,
+    "unknown_na_failure_separate": true
+  },
+  "prohibited_planner_inputs": [
+    "hidden simulator truth",
+    "future results",
+    "VLM relation truth/confidence",
+    "RL Q",
+    "training/cache/policy dataset"
+  ],
+  "public_planner_inputs": [
+    "T/F/U FactStore",
+    "signed goal",
+    "complete registered SkillContract",
+    "public remaining deadline"
+  ],
+  "relation_schema": {
+    "fields": [
+      "relation_id",
+      "type",
+      "source_ref",
+      "target_ref",
+      "effect_fact_ref"
+    ],
+    "max_items": 8,
+    "schema_version": "m1_soft_relations_v2",
+    "types": [
+      "SOFT_SUPPORTS",
+      "SOFT_RELEVANT_TO_GOAL"
+    ]
+  },
+  "repository": "rollinpioneer/graph",
+  "s0_evidence": "runs/final_master/S0/60c26621/",
+  "search": {
+    "cpu_time_seconds": 2.0,
+    "depth": 6,
+    "heuristic": "unmet_goal_count plus contract shortest relaxation steps",
+    "max_nodes": 4096,
+    "reference_skill_seconds_raw": 4.199999999997672,
+    "tie_break": "canonical lexicographic"
+  },
+  "stage": "S1_PRIOR_EXISTENCE_E1_E6"
+}

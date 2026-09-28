@@ -1,0 +1,3 @@
+# E6 — Prior classification
+
+Classification: `PROVIDER_SCHEMA_LIMITATION` with `HEURISTIC_NONDISCRIMINATIVE` natural-R behavior. Provider relations are parsed from existing responses, but the common T_A caches admit zero relations because the frozen contract-redundancy rule rejects the proposed edges. B_PLAN+R therefore has no relation signal; this is not evidence for or against a useful imperfect prior. R* is a finite structural reference only, with no future trajectory, optimal action, Q_ref, success, or hidden truth, and no T_P policy binding exists for neural E2* checks. Success, execution cost, rework proxy, search status, and relation status remain in CSV denominators. T_P training remains paused.
