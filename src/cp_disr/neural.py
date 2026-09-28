@@ -4,6 +4,7 @@ Torch/PyG are deliberately optional at import of the package/logic CLI.
 Method profile: CP-DISR v2.1.1.
 """
 from dataclasses import dataclass
+import hashlib
 import math
 import torch
 from torch import nn
@@ -12,7 +13,7 @@ from .graph import RELATIONS, four_views, view
 from .facts import Truth
 from .common import DataIntegrityError
 
-METHODS = ("B0", "B1", "B1-K", "B2", "Full", "A_DD", "A_Q", "A_B", "A_CAT", "B1-H")
+METHODS = ("B0", "B1", "B1-K", "B2", "Full", "A_DD", "A_Q", "A_B", "A_CAT", "B1-H", "B1-K+E", "A_STAT")
 CANONICAL = {"B1-K": "B1", "B1": "B1"}
 
 
@@ -226,6 +227,89 @@ class AnchoredPrior(nn.Module):
         return up, B * s if unbounded else B * torch.tanh(s)
 
 
+def _hash_bucket(value, buckets=4096):
+    digest = hashlib.sha256(str(value).encode("utf-8")).digest()
+    return int.from_bytes(digest[:8], "big") % buckets
+
+
+class EffectTokenReadout(nn.Module):
+    """Candidate-local, permutation-invariant contract/effect encoder.
+
+    This path reads only the grounded contract: preconditions, nominal effects,
+    conditional guards, ordered typed arguments, and grounded bindings. It
+    deliberately does not call ``nominal_overlay`` or construct a successor.
+    Stable hash buckets keep the vocabulary independent of candidate order.
+    """
+
+    ROLES = (
+        "ACTION", "ARG", "BIND", "PRE_POS", "PRE_NEG", "ADD", "DEL",
+        "UNKNOWN", "GUARD_POS", "GUARD_NEG", "COND_ADD", "COND_DEL",
+        "COND_UNKNOWN",
+    )
+
+    def __init__(self, context_dim=384, dim=128, buckets=4096):
+        super().__init__()
+        self.buckets = buckets
+        self.role = nn.Embedding(len(self.ROLES), dim)
+        self.symbol = nn.Embedding(buckets, dim)
+        self.arguments = nn.Embedding(buckets, dim)
+        self.types = nn.Embedding(buckets, dim)
+        self.position = nn.Embedding(64, dim)
+        self.proj = nn.Sequential(nn.Linear(dim * 5, dim), nn.ReLU())
+        self.query = nn.Linear(context_dim, dim, bias=False)
+        self.key = nn.Linear(dim, dim, bias=False)
+        self.value = nn.Linear(dim, dim, bias=False)
+
+    def _token(self, role, contract, symbol, arguments, types, position):
+        role_row = self.role.weight[self.ROLES.index(role)]
+        symbol_row = self.symbol.weight[_hash_bucket(f"{contract.id}|{symbol}", self.buckets)]
+        argument_row = self.arguments.weight[_hash_bucket("|".join(map(str, arguments)) or "<none>", self.buckets)]
+        type_row = self.types.weight[_hash_bucket("|".join(map(str, types)) or "<none>", self.buckets)]
+        position_row = self.position.weight[position % self.position.num_embeddings]
+        return self.proj(torch.cat((role_row, symbol_row, argument_row, type_row, position_row)))
+
+    def tokens(self, contract):
+        tokens = []
+        argument_types = {a.name: a.type for a in contract.arguments}
+
+        def add(role, symbol, arguments=(), types=(), position=0):
+            tokens.append(self._token(role, contract, symbol, arguments, types, position))
+
+        add("ACTION", contract.name, contract.bound_arguments,
+            tuple(a.type for a in contract.arguments))
+        for index, argument in enumerate(contract.arguments):
+            add("ARG", argument.name, (argument.name,), (argument.type,), index)
+        for index, (argument, bound) in enumerate(zip(contract.arguments, contract.bound_arguments)):
+            add("BIND", argument.name, (bound,), (argument.type,), 16 + index)
+
+        def add_atoms(atoms, role, offset):
+            for index, atom in enumerate(atoms):
+                add(role, atom.predicate, atom.arguments,
+                    tuple(argument_types.get(value, "<ground>") for value in atom.arguments),
+                    offset + index)
+
+        add_atoms(contract.pre_pos, "PRE_POS", 24)
+        add_atoms(contract.pre_neg, "PRE_NEG", 32)
+        add_atoms(contract.effects.add, "ADD", 40)
+        add_atoms(contract.effects.delete, "DEL", 48)
+        add_atoms(contract.effects.unknown, "UNKNOWN", 56)
+        for conditional_index, conditional in enumerate(contract.conditional):
+            offset = 64 + conditional_index * 4
+            add_atoms(conditional.positive, "GUARD_POS", offset)
+            add_atoms(conditional.negative, "GUARD_NEG", offset + 1)
+            add_atoms(conditional.effects.add, "COND_ADD", offset + 2)
+            add_atoms(conditional.effects.delete, "COND_DEL", offset + 3)
+            add_atoms(conditional.effects.unknown, "COND_UNKNOWN", offset + 4)
+        return torch.stack(tokens)
+
+    def forward(self, contract, context):
+        tokens = self.tokens(contract).to(device=context.device, dtype=context.dtype)
+        query = self.query(context)
+        score = (self.key(tokens) * query).sum(-1) / math.sqrt(tokens.shape[-1])
+        weights = torch.softmax(score, dim=-1)
+        return (weights[:, None] * self.value(tokens)).sum(0), int(tokens.shape[0])
+
+
 @dataclass
 class PolicyOutput:
     candidate_ids: tuple
@@ -264,6 +348,8 @@ class Policy(nn.Module):
         self.candidate = nn.Linear(candidate_dim, 128)
         self.contract = CandidateReadout(384)
         self.b0_fuse = nn.Sequential(nn.Linear(384, 256), nn.ReLU(), nn.Linear(256, 128), nn.ReLU())
+        self.effect_readout = EffectTokenReadout(384)
+        self.effect_fuse = nn.Sequential(nn.Linear(256, 256), nn.ReLU(), nn.Linear(256, 128), nn.ReLU())
         self.prior = AnchoredPrior(512)
         self.cat_proj = nn.Linear(512, 128, bias=False)
         self.base = nn.Linear(128, 1)
@@ -312,7 +398,7 @@ class Policy(nn.Module):
         uk_all = []
         up_all = []
         logits = []
-        diagnostics = {"differences": {}, "prior_inputs": {}, "up": {}, "delta": {}, "successor_used": False, "method": method, "actor_episode_discount_weight": False}
+        diagnostics = {"differences": {}, "prior_inputs": {}, "up": {}, "delta": {}, "effect_tokens": {}, "stat_relation": {}, "successor_used": False, "method": method, "actor_episode_discount_weight": False}
         for i, cid in enumerate(snapshot.candidate_ids):
             if not snapshot.mask[i]:
                 uk_all.append(zo.new_zeros(128))
@@ -335,6 +421,14 @@ class Policy(nn.Module):
                 uk = self._phi_k(context, zk)
                 prior_input = zh.float() - zk.float() if snapshot.prior_edges else torch.zeros_like(zk)
                 up, residual = self.prior(torch.cat((context, uk)), prior_input, self.B, False)
+            elif method == "B1-K+E":
+                context = torch.cat((zo, ca, zk.mean(0)))
+                base_uk = self._phi_k(context, torch.zeros_like(zk))
+                effect, token_count = self.effect_readout(contracts[cid], context)
+                uk = self.effect_fuse(torch.cat((base_uk, effect)))
+                prior_input = torch.zeros_like(zk)
+                up, residual = self.prior(torch.cat((context, uk)), prior_input, self.B, False)
+                diagnostics["effect_tokens"][cid] = token_count
             else:
                 edges = () if method == "B2" else snapshot.prior_edges
                 delta = differences(self.encoder, four_views(snapshot.template, facts, edges, contracts[cid]))
@@ -356,7 +450,10 @@ class Policy(nn.Module):
                         zero = prior_input.sum() * 0 + cat_ctx.sum() * 0
                         up, residual = zero.expand(128), zero
                 else:
-                    if method == "A_DD":
+                    if method == "A_STAT":
+                        prior_input = delta.zh.float() - delta.zk.float() if edges else torch.zeros_like(delta.dk)
+                        diagnostics["stat_relation"][cid] = prior_input
+                    elif method == "A_DD":
                         prior_input = delta.dh if edges else torch.zeros_like(delta.dk)
                     elif method == "B2":
                         prior_input = torch.zeros_like(delta.dk)

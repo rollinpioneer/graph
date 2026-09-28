@@ -8,6 +8,14 @@ from .common import DataIntegrityError
 def q_targets(rewards,gammas,terminated,old_v_next):
     return (rewards+gammas*(~terminated).to(rewards.dtype)*old_v_next).detach()
 
+
+def global_grad_norm(parameters):
+    """Measure the global L2 norm without mutating gradients."""
+    norms=[p.grad.detach().norm(2) for p in parameters if p.grad is not None]
+    if not norms:
+        return 0.0
+    return float(torch.linalg.vector_norm(torch.stack(norms),2).item())
+
 def value_targets(old_v,advantages):return (old_v+advantages).detach()
 
 def q_loss(values,executed,targets):
@@ -72,6 +80,7 @@ class PPO:
         self.policy=policy;params=list(policy.parameters())
         if len({id(p) for p in params})!=len(params):raise DataIntegrityError('Duplicate shared parameter ownership')
         self.optimizer=torch.optim.Adam(params,lr=lr,eps=1e-8,betas=(.9,.999),weight_decay=0.)
+        self.optimizer_step_id=0
     def update(self,rollout,epochs=4,minibatch=64,sequence_length=16):
         ts=tuple(rollout.transitions)
         if not ts:raise DataIntegrityError('No real transitions')
@@ -95,8 +104,8 @@ class PPO:
                 old=torch.tensor([ts[i].old_logp for i in indices],device=device);weights=torch.tensor([ts[i].weight for i in indices],device=device)
                 losses=ppo_losses(lp,old,targets[0][indices],weights,vs,targets[1][indices],qs,targets[2][indices],ent,self.policy.q_coefficient)
                 if not torch.isfinite(losses['total']):raise DataIntegrityError('Nonfinite PPO objective')
-                self.optimizer.zero_grad();losses['total'].backward();norm=torch.nn.utils.clip_grad_norm_(self.policy.parameters(),.5,error_if_nonfinite=True);self.optimizer.step()
-                logs.append({'epoch':epoch,'valid_transitions':len(indices),'grad_norm':float(norm),**{k:(float(v.detach()) if torch.is_tensor(v) else float(v)) for k,v in losses.items()}});batch=[]
+                self.optimizer.zero_grad();losses['total'].backward();params=tuple(self.policy.parameters());clip_threshold=.5;pre_clip_global_grad_norm=global_grad_norm(params);torch.nn.utils.clip_grad_norm_(params,clip_threshold,error_if_nonfinite=True);post_clip_global_grad_norm=global_grad_norm(params);self.optimizer.step();self.optimizer_step_id+=1
+                logs.append({'epoch':epoch,'valid_transitions':len(indices),'grad_norm':pre_clip_global_grad_norm,'pre_clip_global_grad_norm':pre_clip_global_grad_norm,'post_clip_global_grad_norm':post_clip_global_grad_norm,'clip_threshold':clip_threshold,'clip_triggered':bool(pre_clip_global_grad_norm>clip_threshold),'optimizer_step_id':self.optimizer_step_id,**{k:(float(v.detach()) if torch.is_tensor(v) else float(v)) for k,v in losses.items()}});batch=[]
         rollout.clear();return logs
 
 def save_checkpoint(path,policy,optimizer,manifest):
