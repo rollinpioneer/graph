@@ -10,7 +10,7 @@ def main():
  for r in fo['rows']: rows.append({'condition':'Full@Original','scope':'dev10_reused',**r})
  for r in fa['rows']: rows.append({'condition':'Full@Absent','scope':'dev10_new',**r})
  with (REPORT/'full_original_absent_dev10.csv').open('w',newline='') as f:
-  w=csv.DictWriter(f,fieldnames=sorted(rows[0])); w.writeheader(); w.writerows(rows)
+  fields=sorted({k for r in rows for k in r}); w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(rows)
  shutil.copyfile(REPORT/'full_prior_conditional.csv',REPORT/'full_prior_conditional_train.csv')
  shutil.copyfile(REPORT/'matched_comparison.csv',REPORT/'matched_n2048_comparison.csv')
  with (REPORT/'unresolved_items.csv').open('w',newline='') as f:
