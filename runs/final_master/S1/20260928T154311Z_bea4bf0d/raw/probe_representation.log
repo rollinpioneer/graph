@@ -1,0 +1,20 @@
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Warning: make sure gym is installed if you want to use the GymWrapper.
+Traceback (most recent call last):
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_single_revision.py", line 95, in <module>
+    main()
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_single_revision.py", line 78, in main
+    result = probe_production_representation(root, None, output)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_revision_resume.py", line 559, in probe_production_representation
+    footprint=sum(1 for cid in snap.candidate_ids if four_views(snap.template,snap.facts.values,edges,next(c for c in snap.template.contracts if c.id==cid))[1].edges!=four_views(snap.template,snap.facts.values,(),next(c for c in snap.template.contracts if c.id==cid))[0].edges)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_revision_resume.py", line 559, in <genexpr>
+    footprint=sum(1 for cid in snap.candidate_ids if four_views(snap.template,snap.facts.values,edges,next(c for c in snap.template.contracts if c.id==cid))[1].edges!=four_views(snap.template,snap.facts.values,(),next(c for c in snap.template.contracts if c.id==cid))[0].edges)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/graph.py", line 78, in four_views
+    k=view(template,facts); ki=successor(k,contract,derived,exclusive_groups)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/graph.py", line 74, in successor
+    overlay=nominal_overlay(contract,dict(graph.values),graph.template.derived_rules if derived is None else derived,graph.template.exclusive_groups if exclusive_groups is None else exclusive_groups)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/contracts.py", line 101, in nominal_overlay
+    if precondition_value(contract,facts)!=Truth.TRUE: raise ContractError('required_precondition_not_confirmed: '+contract.id)
+cp_disr.common.ContractError: required_precondition_not_confirmed: a:PLACE:second_object:container:v1

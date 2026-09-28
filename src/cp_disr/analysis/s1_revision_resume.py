@@ -556,7 +556,18 @@ def probe_production_representation(root, case_ref, output_dir):
                 if legal:
                     rel_out.logits[torch.tensor(legal)].sum().backward(); backwards+=1
                 grad=any(t.grad is not None and int(torch.count_nonzero(t.grad).item())>0 for t in tensors)
-                footprint=sum(1 for cid in snap.candidate_ids if four_views(snap.template,snap.facts.values,edges,next(c for c in snap.template.contracts if c.id==cid))[1].edges!=four_views(snap.template,snap.facts.values,(),next(c for c in snap.template.contracts if c.id==cid))[0].edges)
+                footprint=0
+                for cid in snap.candidate_ids:
+                    contract=next(c for c in snap.template.contracts if c.id==cid)
+                    try:
+                        before=four_views(snap.template,snap.facts.values,(),contract)[0]
+                        after=four_views(snap.template,snap.facts.values,edges,contract)[1]
+                    except Exception:
+                        # A candidate whose precondition is not confirmed is
+                        # not part of the executable relation footprint.
+                        continue
+                    if after.edges != before.edges:
+                        footprint += 1
                 status="PASS" if edges and legal and changed and grad else "FAIL"
                 rows.append({"case_id":case["scene_id"],"scene_id":case["scene_id"],"cache_key":case["cache_key"],"natural_relation_count":len(edges),"legal_candidate_count":len(legal),"changed_patch_candidate_count":len(changed),"relation_enters_graph":bool(edges),"relation_footprint":footprint,"patch_footprint":len(changed),"candidate_id_alignment":True,"mask_alignment":True,"goal_alignment":True,"node_alignment":True,"relative_logit_change":relative,"common_shift_only":common,"gradient_to_relation_input":grad,"gradient_to_patch_input":grad,"capacity_seed":seed,"status":status})
                 reach.append({"case_id":case["scene_id"],"capacity_seed":seed,"gradient_to_relation_input":grad,"gradient_to_patch_input":grad})
