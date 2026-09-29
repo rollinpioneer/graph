@@ -13,7 +13,10 @@ def main():
     s = sub.add_parser("run-wave"); s.add_argument("--root", required=True); s.add_argument("--wave", type=int, nargs="+", required=True)
     s.add_argument("--gpus", type=int, nargs="+", required=True); s.add_argument("--max-workers", type=int)
     s = sub.add_parser("check"); s.add_argument("--root", required=True); s.add_argument("--wave", type=int, default=1)
+    for sp in sub.choices.values():
+        sp.add_argument("--round", choices=["r2"], default=None)
     a = p.parse_args()
+    m.set_round(a.round)
     if a.cmd == "prepare": out = m.prepare(a.root)
     elif a.cmd == "worker": out = m.worker(a.root, a.branch_id); out = {"branch_id": a.branch_id, "execution_status": out.get("execution_status")}
     elif a.cmd == "run-wave": out = m.run_wave(a.root, a.wave, a.gpus, a.max_workers)

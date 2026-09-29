@@ -58,9 +58,17 @@ def _rd(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+_ROUND = None  # None -> first recovery directory (r1); "r2" -> compensated retry directory
+
+
+def set_round(rnd):
+    global _ROUND
+    _ROUND = rnd
+
+
 def paths(root):
     root = Path(root).resolve()
-    return root, root / SOURCE_REL, root / RECOVERY_REL
+    return root, root / SOURCE_REL, root / (RECOVERY_REL if _ROUND is None else f"{RECOVERY_REL}_{_ROUND}")
 
 
 def _git(root, *args):
@@ -68,8 +76,34 @@ def _git(root, *args):
 
 
 # --------------------------------------------------------------- prepare
+def preflight_static(manifest_path, case_ids=()):
+    """Zero-cost preflight covering everything the factory does before make_env(): runtime hash gate, module/source
+    identity, factory symbol, contract grounding and split membership. Creates no environment."""
+    import importlib
+    from cp_disr.runtime import require_runtime
+    manifest = yaml.safe_load(Path(manifest_path).read_text(encoding="utf-8"))
+    spec = require_runtime(manifest)
+    mod = importlib.import_module(spec["module"])
+    if Path(mod.__file__).resolve() != Path(spec["source_path"]).resolve():
+        raise RuntimeError("runtime module/source mismatch")
+    if not callable(getattr(mod, spec["factory"], None)):
+        raise RuntimeError("runtime factory symbol missing")
+    runtime = manifest["runtime"]
+    task_id = runtime["active_task_id"]
+    root = Path(runtime["repository_path"])
+    mod._ground_contracts_for(root / runtime.get("stage_2a_contract_path", "configs/runtime/stage_2a_contract_registry.yaml"),
+                              runtime["skill_timeouts"][task_id], mod.TASK_OBJECTS[task_id])
+    split = mod._read(root / runtime["task_splits"][task_id])
+    have = {row["case_id"] for row in split["train"] + split["dev"]}
+    missing = sorted(set(case_ids) - have)
+    if missing:
+        raise RuntimeError("cases missing from split: " + ",".join(missing))
+    return {"task_id": task_id, "factory_sha256": spec["sha256"], "cases_present": sorted(set(case_ids))}
+
+
 def prepare(root):
     root, src, out = paths(root)
+    r2 = _ROUND == "r2"
     head = _git(root, "rev-parse", "HEAD")
     if subprocess.call(["git", "-C", str(root), "merge-base", "--is-ancestor", BASE_COMMIT, head]) != 0:
         raise RuntimeError("HEAD does not descend from baseline commit")
@@ -91,16 +125,33 @@ def prepare(root):
     want = {(c, k, r) for c in cases for k in cands for r in (0, 1)}
     if len(old) != 8 or len(cases) != 2 or len(cands) != 2 or keys != want:
         raise RuntimeError("historical registration is not the 2x2x2 structure")
-    manifest_path = src / "input_binding/T_A_s1_rev1_runtime_manifest.yaml"
     old_by_key = {(b["case_id"], b["candidate_id"], int(b["repeat"])): b for b in old}
+    r1 = {}
+    if r2:
+        r1_dir = root / RECOVERY_REL
+        r1_ledger = _rd(r1_dir / "budget_ledger.json")["physical_witness_episodes"]
+        r1_attempts = _rd(r1_dir / "attempt_registry.json")
+        if not (r1_ledger["used"] == 2 and r1_ledger["cap"] == 8 and sorted(r1_attempts.values()) == ["FAILED", "FAILED"]):
+            raise RuntimeError("r1 recovery record is not the expected 2 FAILED attempts")
+        r1_reg = _rd(r1_dir / "witnesses/e4_branch_registration.json")
+        r1 = {(b["case_id"], b["candidate_id"], int(b["repeat"])): b["branch_id"] for b in r1_reg["branches"]}
+        manifest_src = src / "integration_closeout_10971a4/derived/runtime_manifest.current.json"
+        (out / "input_binding").mkdir(parents=True, exist_ok=True)
+        manifest_path = out / "input_binding/runtime_manifest.current.json"
+        manifest_path.write_bytes(manifest_src.read_bytes())
+        tag = f"{TAG}_r2"
+    else:
+        manifest_path = src / "input_binding/T_A_s1_rev1_runtime_manifest.yaml"
+        tag = TAG
+    pre = preflight_static(manifest_path, cases)  # zero-cost; must pass before anything is registered
     branches = []
     for case in cases:
         for repeat in (0, 1):
             for cand in cands:
                 ob = old_by_key[(case, cand, repeat)]
-                ident = f"{TAG}|{case}|{cand}|{repeat}"
+                ident = f"{tag}|{case}|{cand}|{repeat}"
                 seed = int(hashlib.sha256(f"{case}|{repeat}".encode()).hexdigest()[:8], 16)
-                branches.append({
+                b = {
                     "branch_id": hashlib.sha256(ident.encode()).hexdigest()[:16],
                     "attempt_id": hashlib.sha256(ident.encode()).hexdigest()[:16],
                     "case_id": case, "candidate_id": cand, "repeat": repeat,
@@ -112,8 +163,10 @@ def prepare(root):
                     "selection_hash": hashlib.sha256(ident.encode()).hexdigest(),
                     "manifest_path": str(manifest_path),
                     "authorized": True, "execute_now": True, "status": "REGISTERED",
-                })
-    # pairing sanity: same (case, repeat) -> one seed, different seeds across (case, repeat) allowed
+                }
+                if r2:
+                    b["supersedes_recovery_attempt_r1"] = r1[(case, cand, repeat)]
+                branches.append(b)
     seeds = {}
     for b in branches:
         seeds.setdefault((b["case_id"], b["repeat"]), set()).add(b["restore_seed"])
@@ -122,30 +175,47 @@ def prepare(root):
     out.mkdir(parents=True, exist_ok=True)
     for sub in ("witnesses/branch_receipts", "witnesses/restore_receipts", "witnesses/initial_state_checks", "branch_results", "worker_logs"):
         (out / sub).mkdir(parents=True, exist_ok=True)
-    reg = {"status": "REGISTERED", "recovery_tag": TAG, "physical_witness_episodes_cap": CAP,
+    reg = {"status": "REGISTERED", "recovery_tag": tag, "physical_witness_episodes_cap": CAP,
            "source_registration_path": str(old_reg_path), "source_registration_sha256": sha256_file(old_reg_path),
-           "branches": branches}
+           "static_preflight": pre, "branches": branches}
     _atomic_json(out / "witnesses/e4_branch_registration.json", reg)
     (out / "witnesses/e4_branch_registration.json").chmod(0o444)
     ledger = {k: {"cap": 0, "used": 0} for k in ("discovery_scenes", "elastic_attempts", "optimizer_steps", "planner_environment_episodes", "provider_first_calls", "provider_retries", "rl_transitions")}
     ledger["physical_witness_episodes"] = {"cap": CAP, "used": 0}
-    ledger["references"] = {"original_ledger_path": str(old_ledger_path), "original_ledger_sha256": sha256_file(old_ledger_path),
-                            "original_physical_witness_used": 8, "original_physical_witness_cap": 8,
-                            "budget_amendment": "budget_amendment.json", "cumulative_max_original_plus_recovery": 16,
-                            "note": "separate recovery ledger; original ledger and all earlier records stay read-only"}
+    refs = {"original_ledger_path": str(old_ledger_path), "original_ledger_sha256": sha256_file(old_ledger_path),
+            "original_physical_witness_used": 8, "original_physical_witness_cap": 8, "budget_amendment": "budget_amendment.json",
+            "note": "separate recovery ledger; original ledger and all earlier records stay read-only"}
+    if r2:
+        refs.update({"r1_recovery_ledger_path": str(root / RECOVERY_REL / "budget_ledger.json"),
+                     "r1_recovery_ledger_sha256": sha256_file(root / RECOVERY_REL / "budget_ledger.json"),
+                     "r1_recovery_used": 2, "r1_recovery_states": "2 FAILED (runtime_factory hash gate, no environment created)",
+                     "recovery_total_cap_all_rounds": 10, "cumulative_max_original_plus_recovery": 18})
+    else:
+        refs["cumulative_max_original_plus_recovery"] = 16
+    ledger["references"] = refs
     _atomic_json(out / "budget_ledger.json", ledger)
     (out / "budget_events.jsonl").touch()
     _atomic_json(out / "attempt_registry.json", {})
+    if r2:
+        text = ("补偿2个：因执行侧误用旧 manifest 导致首批2个 attempt 在环境创建前失败（未执行任何 skill）。"
+                "恢复额度总上限由8调整为10（累计原8+恢复10=18），r2 目录以 cap=8、used=0 的独立账本重跑完整8分支；r1 的2次FAILED记录保留。"
+                "其余条件与原批准一致：provider/RL/optimizer/elastic 均为0，不启动S2/S3/正式test。")
+        src_txt = "user reply in the working session (multiple-choice: 补偿2个，重跑完整8分支)"
+    else:
+        text, src_txt = APPROVAL_TEXT, "user reply in the working session (multiple-choice: 批准，最多8个)"
     auth = {"authorized": True, "execute_now": True, "approved_additional_physical_episodes": CAP,
-            "approval_source": "user reply in the working session (multiple-choice: 批准，最多8个)",
-            "approval_text_adopted": APPROVAL_TEXT, "approved_at_utc": _now(),
+            "approval_source": src_txt, "approval_text_adopted": text, "approved_at_utc": _now(),
             "scope": "same S1-REV1, same branch; E4 recovery only",
             "new_provider_calls": 0, "new_rl": 0, "new_optimizer": 0, "new_elastic": 0,
             "s2_s3_formal_test": "NOT_AUTHORIZED", "baseline_commit": BASE_COMMIT, "execution_commit": head}
+    if r2:
+        auth["cumulative_recovery_approved_all_rounds"] = 10
+        auth["cumulative_max_original_plus_recovery"] = 18
     _atomic_json(out / "authorization.json", auth)
     _atomic_json(out / "budget_amendment.json", {
-        "amendment_id": TAG, "original_physical_witness": {"cap": 8, "used": 8, "ledger_unchanged": True},
-        "recovery_physical_witness": {"cap": CAP, "used_at_creation": 0}, "cumulative_max": 16,
+        "amendment_id": tag, "original_physical_witness": {"cap": 8, "used": 8, "ledger_unchanged": True},
+        "recovery_physical_witness": {"cap": CAP, "used_at_creation": 0},
+        "cumulative_max": 18 if r2 else 16,
         "not_a_refund": True, "not_mixed_with_elastic_rl": True, "failures_and_unknown_are_kept": True,
         "authorization_sha256": sha256_file(out / "authorization.json")})
     code_files = ["src/cp_disr/analysis/s1_revision_resume.py", "src/cp_disr/analysis/s1_integration.py",
@@ -156,8 +226,8 @@ def prepare(root):
         "source_manifest_path": str(manifest_path), "source_manifest_sha256": sha256_file(manifest_path),
         "code_sha256": {f: sha256_file(root / f) for f in code_files},
         "python": sys.version, "repository_path": str(root)})
-    _event(out, "prepared", execution_commit=head, branches=len(branches))
-    return {"status": "PREPARED", "branches": len(branches), "execution_commit": head}
+    _event(out, "prepared", execution_commit=head, branches=len(branches), round=_ROUND or "r1")
+    return {"status": "PREPARED", "branches": len(branches), "execution_commit": head, "static_preflight": pre}
 
 
 def _event(out, kind, **fields):
@@ -271,7 +341,7 @@ def run_wave(root, wave, gpus, max_workers=None):
             and _load_attempts(out).get(b["branch_id"]) is None]
     if todo:
         try:
-            preflight_runtime(_rd(out / "witnesses/e4_branch_registration.json")["branches"][0]["manifest_path"])
+            preflight_static(reg["branches"][0]["manifest_path"], {b["case_id"] for b in reg["branches"]})
         except Exception as exc:
             _event(out, "preflight_failed_before_any_reservation", error=f"{type(exc).__name__}: {exc}")
             return {"done": [], "faults": [{"fault": "PREFLIGHT_RUNTIME_BINDING", "error": str(exc)}]}
