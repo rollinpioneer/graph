@@ -1,6 +1,6 @@
 # E4 恢复运行摘要（工程记录，非科学结论）
 
-- 恢复 attempt 已预留 8/8；状态 {'RESERVED': 0, 'STARTED': 0, 'COMPLETED': 8, 'FAILED': 0, 'UNKNOWN': 0}；累计（原8+恢复）16/16。
+- 恢复 attempt 已预留 8/8；状态 {'RESERVED': 0, 'STARTED': 0, 'COMPLETED': 8, 'FAILED': 0, 'UNKNOWN': 0}；累计（原8+各轮恢复）20/20。
 - 新 provider / RL / optimizer / elastic：0 / 0 / 0 / 0。S2、S3、正式 test：NOT_RUN。
 - E1–E6 中六类证据表未在本轮补齐，均标 NOT_ESTABLISHED；tp_training_authorized=false。
 
