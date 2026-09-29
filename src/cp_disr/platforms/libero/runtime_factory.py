@@ -89,13 +89,15 @@ class RuntimeBundle:
     restore_receipt: dict | None = None
     restore_verified: bool = False
     snapshot_identity: str | None = None
+    env_factory: object = None      # optional task-specific env constructor; default make_env (production behaviour)
+    perception_cls: object = None   # optional task-specific PerceptionAdapter subclass; default PerceptionAdapter
 
     def start_case(self, case_id: str, restore_seed: int | None = None):
         spec = self.cases[case_id]
         if restore_seed is not None:
             spec = replace(spec, seed=int(restore_seed))
         self.environment.close()
-        env = make_env(spec)
+        env = (self.env_factory or make_env)(spec)
         # Bind the normalized case before reset so reset and the receipt use
         # the same applied seed and configuration.
         try:
@@ -112,7 +114,7 @@ class RuntimeBundle:
         self.clock = clock
         self.safety = safety
         self.observations = ObservationProvider(env, clock)
-        self.perception = PerceptionAdapter(env)
+        self.perception = (self.perception_cls or PerceptionAdapter)(env)
         env.refresh_perception = lambda e=env, p=self.perception: p.infer(e.public_observation())
         self.verifier = FactVerifier(env)
         deadline = float(spec.__dict__.get("deadline", 90.0))

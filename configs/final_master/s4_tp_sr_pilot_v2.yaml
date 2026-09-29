@@ -1,0 +1,75 @@
+master_id: CP-DISR-FINAL-EXEC-3.0
+card_id: CP-DISR-S4-TP-SR-PILOT-V2-1
+stage: S4
+scope: TASK_MECHANISM_DIAGNOSIS_AND_MINIMAL_GEOMETRY_PROTOTYPE
+method_version: "2.1.1"
+base_branch: codex/cp-disr-s4-tp-soft-relocation-design
+base_commit: fbddf84f9cc3f0d39ce55c4f1f5e81bbddcc8ff6
+new_branch: codex/cp-disr-s4-tp-soft-relocation-pilot-v2
+task_id: T_P_SR
+task_family_id: T_P_SOFT_RELOCATION_V1
+runtime_module: cp_disr.platforms.libero.tp_sr_v2_runtime
+perception_variant_online: TP_SR_V1_NEAREST_PALETTE_COMPAT_LOCAL
+
+authorization:
+  granted_by: user
+  granted_utc: "2026-09-29"
+  text: "批准：总上限20，Wave D 4个立即授权 (answer to the authorization question; equivalent to the card's authorization sentence)"
+  wave_d_authorized: true
+  wave_p_release: CONDITIONAL_ON_WAVE_D_TECHNICAL_GATE_PASS
+  provider_authorized: false
+  rl_authorized: false
+  optimizer_authorized: false
+  s2_authorized: false
+  s3_authorized: false
+  formal_test_authorized: false
+  method_upgrade_authorized: false
+
+budgets:
+  wave_d_branch_attempts: 4
+  wave_p_branch_attempts: 16
+  total_branch_attempts: 20
+  environment_resets: 20
+  standalone_capture_resets: 0
+  provider_first_calls: 0
+  provider_retries: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  training_attempts: 0
+  elastic_attempts: 0
+  formal_test_episodes: 0
+
+wave_d:
+  cases: [T_P_SR_pool_33, T_P_SR_pool_57]
+  routes: {direct: "a:PICK:target:v1", relocation: "a:PICK:interferer:v1"}
+  repeat: 0
+  workers: 2
+  restore_seed_rule: "int(sha256(f'{case}|{repeat}')[:8],16)  (identical to V1 repeat 0)"
+
+wave_p:
+  configs: [V2_A_INTERFERENCE, V2_A_OFFSET_CONTROL, V2_B_INTERFERENCE, V2_B_OFFSET_CONTROL]
+  repeats: 2
+  workers_max: 4
+  offset_control_min_sweep_clearance_m: 0.020
+  bar_short_axis_max_fraction_of_opening: 0.8
+  sweep_samples_per_segment: 21
+
+planner:
+  depth: 6
+  max_nodes: 4096
+  cpu_time_limit_seconds: 2.0
+  decision_cap: 8
+  deadline_seconds: 60.0
+
+sources:
+  v1_output: runs/final_master/S4/tp_soft_relocation_design/20260929T084850Z_b598cfd0
+  v1_review: runs/final_master/S4/tp_soft_relocation_review_416c621e
+  s1_manifest_base: runs/final_master/S1/20260928T154311Z_bea4bf0d/input_binding/T_A_s1_rev1_runtime_manifest.yaml
+
+protected_roots:
+  - runs/final_master/S4/tp_soft_relocation_design/20260929T084850Z_b598cfd0
+  - runs/final_master/S4/tp_soft_relocation_review_416c621e
+  - runs/final_master/S1
+  - experiments/vlm_cache
+  - docs/authoritative

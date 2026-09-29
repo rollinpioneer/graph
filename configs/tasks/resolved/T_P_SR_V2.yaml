@@ -1,0 +1,21 @@
+task_id: T_P_SR
+task_family_id: T_P_SOFT_RELOCATION_V1
+task_variant: V2_MINIMAL_GEOMETRY_PILOT
+status: S4_V2_PILOT_ONLY_NOT_A_DATASET
+derives_from: configs/tasks/resolved/T_P_SR.yaml
+grounded_action_ids:
+- a:PICK:target:v1
+- a:PICK:interferer:v1
+- a:PLACE:target:container:v1
+- a:PLACE_BUFFER:interferer:buffer:v1
+masked_or_absent_groundings:
+- a:OPEN:container:v1
+- a:PLACE:interferer:container:v1
+- a:PLACE_BUFFER:target:buffer:v1
+contract_registry_ref: configs/runtime/tp_sr_v2_contract_registry.yaml
+contract_registry_note: byte-identical action contracts to tp_sr_contract_registry.yaml (no new hard fact, no OPEN)
+interferer_variants:
+  V1_CUBE: {half: [0.02, 0.02, 0.02], density: 200}
+  V2_BAR: "derived from measured gripper geometry at freeze-prototypes (prototype/gripper_geometry.json); half height equals the cube half height"
+deadline_seconds: 60.0
+reference_skill_seconds: 3.649999999999709

@@ -1,0 +1,81 @@
+{
+  "branch_id": "d37aeb52449f5a05",
+  "candidate_id": "a:PICK:interferer:v1",
+  "case_id": "T_P_SR_pool_33",
+  "controller_exit": "NORMAL_TERMINATION",
+  "cuda_visible_devices": "3",
+  "decision_count": 4,
+  "eligible_for_e4": false,
+  "env_counts": {
+    "bootstrap_constructions": 0,
+    "constructions": 1,
+    "env_class": "InstrumentedD0Env",
+    "internal_resets": 2,
+    "reset_calls": 1,
+    "restore_chain": "start_case: make_env -> env.reset() -> _apply_case_poses -> _open_gripper_reset (20 gripper-open steps)"
+  },
+  "execution_status": "TERMINATED",
+  "global_perception_mask_unchanged": true,
+  "paired_effect_status": "NOT_ESTABLISHED",
+  "perception_identity": {
+    "adapter": "TPSRNearestPalettePerceptionAdapter",
+    "base_perception_version": "cp-disr-d0-rgbd-colorseg-v2",
+    "global_monkeypatch": false,
+    "variant": "TP_SR_V1_NEAREST_PALETTE_COMPAT_LOCAL"
+  },
+  "protocol_complete": true,
+  "provider_module_loaded": false,
+  "recorder_errors": 0,
+  "task_success": true,
+  "termination_reason": "TASK_SUCCESS",
+  "trace": [
+    {
+      "candidate_id": "a:PICK:interferer:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 0,
+      "elapsed_seconds": 3.749999999999698,
+      "execution_id": "PICK-0",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    },
+    {
+      "candidate_id": "a:PLACE_BUFFER:interferer:buffer:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 1,
+      "elapsed_seconds": 7.349999999999457,
+      "execution_id": "PLACE_BUFFER-3749",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    },
+    {
+      "candidate_id": "a:PICK:target:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 2,
+      "elapsed_seconds": 12.100000000001044,
+      "execution_id": "PICK-7349",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    },
+    {
+      "candidate_id": "a:PLACE:target:container:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 3,
+      "elapsed_seconds": 15.2000000000019,
+      "execution_id": "PLACE-12100",
+      "reason": "TASK_SUCCESS",
+      "task_success": true,
+      "terminated": true,
+      "truncated": false
+    }
+  ],
+  "wave": "D",
+  "witness_validity": "VALID",
+  "worker_pid": 683840,
+  "worker_wall_seconds": 8.302465677261353
+}

@@ -1,0 +1,81 @@
+{
+  "branches": {
+    "T_P_SR_pool_33|direct": {
+      "branch_id": "094286b08fcf5904",
+      "checks": {
+        "candidate": "a:PICK:target:v1",
+        "controller_exit": "NORMAL_TERMINATION",
+        "hidden_available": true,
+        "hidden_held": true,
+        "interferer_contact_events": 0,
+        "next_action": "a:PLACE:target:container:v1",
+        "next_action_mask": false,
+        "next_action_precondition_true_on_public_facts": false,
+        "planner_status": "NO_PLAN",
+        "public_held": "UNKNOWN"
+      },
+      "evidence": {
+        "capture_dir": "/home/xushijie2/graph_cp_disr_s4_tp_sr_v2/runs/final_master/S4/tp_soft_relocation_pilot_v2/20260929T095821Z_efe8aa02/captures/094286b08fcf5904/action_00",
+        "contact_event": "contacts.jsonl",
+        "controller_event": "controller_trace.jsonl",
+        "evaluator_record": "evaluator.json",
+        "fact_records": "facts.json",
+        "planner_input": "planner.json",
+        "source_frame": "frame_004"
+      },
+      "interferer_contacts": [],
+      "label": "PERCEPTION_VERIFIER_MISMATCH"
+    },
+    "T_P_SR_pool_33|relocation": {
+      "branch_id": "d37aeb52449f5a05",
+      "label": "NOT_APPLICABLE_SUCCESS",
+      "reason": "branch succeeded"
+    },
+    "T_P_SR_pool_57|direct": {
+      "branch_id": "3c4f588df6e91b04",
+      "label": "NOT_APPLICABLE_SUCCESS",
+      "reason": "branch succeeded"
+    },
+    "T_P_SR_pool_57|relocation": {
+      "branch_id": "ec408a4cbde09ce1",
+      "checks": {
+        "evaluator": {
+          "input": {
+            "elapsed_seconds": 4.049999999999665,
+            "interval_end_seconds": 4.049999999999665,
+            "interval_start_seconds": 0.0,
+            "task_id": "T_P_SR"
+          },
+          "reason": "CONTINUE",
+          "task_success": false,
+          "terminated": false,
+          "truncated": false
+        },
+        "hidden_inside_target": false,
+        "planner_status": "GOAL_ALREADY_SATISFIED",
+        "public_inside_target": "TRUE"
+      },
+      "evidence": {
+        "capture_dir": "/home/xushijie2/graph_cp_disr_s4_tp_sr_v2/runs/final_master/S4/tp_soft_relocation_pilot_v2/20260929T095821Z_efe8aa02/captures/ec408a4cbde09ce1/action_00",
+        "contact_event": "contacts.jsonl",
+        "controller_event": "controller_trace.jsonl",
+        "evaluator_record": "evaluator.json",
+        "fact_records": "facts.json",
+        "planner_input": "planner.json",
+        "source_frame": "frame_004"
+      },
+      "kind": "symbolic_goal",
+      "label": "FALSE_SYMBOLIC_GOAL_FROM_PUBLIC_FACTS"
+    }
+  },
+  "labels_allowed": [
+    "PHYSICAL_GRASP_INTERFERENCE",
+    "CONTROLLER_EXECUTION_FAILURE",
+    "PERCEPTION_VERIFIER_MISMATCH",
+    "PLANNER_FACT_INPUT_ERROR",
+    "UNRESOLVED",
+    "FALSE_SYMBOLIC_GOAL_FROM_PUBLIC_FACTS",
+    "EVALUATOR_SYMBOLIC_DISAGREEMENT"
+  ],
+  "rule": "NO_PLAN alone never determines a label; physical interference requires contact and state evidence"
+}
