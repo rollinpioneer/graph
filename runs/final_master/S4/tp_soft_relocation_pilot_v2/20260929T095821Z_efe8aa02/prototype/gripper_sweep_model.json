@@ -1,0 +1,62 @@
+{
+  "bar": {
+    "density": 1000.0,
+    "friction": [
+      1.2,
+      0.005,
+      0.0001
+    ],
+    "hx": 0.05,
+    "hy": 0.03,
+    "hz": 0.02
+  },
+  "bar_short_axis_limit_m": 0.06197026080208998,
+  "bar_short_axis_m": 0.06,
+  "columns_of_gripper_sweep_points_npy": [
+    "config_index",
+    "sweep_kind(0=target pick,1=bar own grasp)",
+    "phase(0 approach,1 descend,2 press,3 close,4 lift_show)",
+    "sample",
+    "eef_x",
+    "eef_y",
+    "eef_z",
+    "opening_fraction"
+  ],
+  "control_min_clearance_m": 0.02,
+  "design_rule": "deterministic search, no outcome data; see design_scene docstring",
+  "family_target_distance_m": 0.19665677449302377,
+  "geometry_basis": "real panda_gripper collision meshes and pad boxes placed with the saved wave D QA geom poses; vertices inside the object slab deeper than the graze margin",
+  "grasp_z": 0.847,
+  "graze_margin_m": 0.004,
+  "hover_dz_above_table": 0.22,
+  "layout_source": {
+    "A": "T_P_SR_pool_33",
+    "B": "T_P_SR_pool_57"
+  },
+  "min_initial_gap_m": 0.002,
+  "object_slab_z": [
+    0.825,
+    0.865
+  ],
+  "own_grasp_min_clearance_m": 0.001,
+  "own_grasp_opening_fraction": 0.41567078835202687,
+  "phases": [
+    "approach",
+    "descend",
+    "press",
+    "close",
+    "lift_show"
+  ],
+  "press_dz": 0.008,
+  "revision_note": "a first AABB-based model over-estimated the palm height by 12 mm and made every scene infeasible; it was replaced by the mesh model BEFORE any wave P attempt (no wave P data existed)",
+  "samples_per_linear_segment": 21,
+  "show_pose": [
+    0.02,
+    -0.08,
+    0.985
+  ],
+  "sides": {
+    "A": 1,
+    "B": -1
+  }
+}

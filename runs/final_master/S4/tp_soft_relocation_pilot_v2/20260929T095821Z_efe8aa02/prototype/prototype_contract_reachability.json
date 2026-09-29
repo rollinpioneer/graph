@@ -1,0 +1,135 @@
+{
+  "both_first_actions_legal": true,
+  "both_routes_reachable": true,
+  "candidate_mask": {
+    "a:PICK:interferer:v1": true,
+    "a:PICK:target:v1": true,
+    "a:PLACE:target:container:v1": false,
+    "a:PLACE_BUFFER:interferer:buffer:v1": false
+  },
+  "hard_blockage_facts": [],
+  "no_hard_blockage_fact": true,
+  "note": "reachability is symbolic on the initial public facts; Blocked/ClearPath facts are not registered so the geometry cannot leak into planning",
+  "pass": true,
+  "routes": {
+    "direct": {
+      "first_action_legal_in_mask": true,
+      "goal_reached_by_nominal_effects": true,
+      "steps": [
+        {
+          "action": "a:PICK:target:v1",
+          "precondition_true": true
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "precondition_true": true
+        }
+      ]
+    },
+    "fact_values_differing_from_template": [],
+    "relocation": {
+      "first_action_legal_in_mask": true,
+      "goal_reached_by_nominal_effects": true,
+      "steps": [
+        {
+          "action": "a:PICK:interferer:v1",
+          "precondition_true": true
+        },
+        {
+          "action": "a:PLACE_BUFFER:interferer:buffer:v1",
+          "precondition_true": true
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "precondition_true": true
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "precondition_true": true
+        }
+      ]
+    }
+  },
+  "variants": {
+    "semantic_template(pool_33 saved facts)": {
+      "direct": {
+        "first_action_legal_in_mask": true,
+        "goal_reached_by_nominal_effects": true,
+        "steps": [
+          {
+            "action": "a:PICK:target:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE:target:container:v1",
+            "precondition_true": true
+          }
+        ]
+      },
+      "fact_values_differing_from_template": [],
+      "relocation": {
+        "first_action_legal_in_mask": true,
+        "goal_reached_by_nominal_effects": true,
+        "steps": [
+          {
+            "action": "a:PICK:interferer:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE_BUFFER:interferer:buffer:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PICK:target:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE:target:container:v1",
+            "precondition_true": true
+          }
+        ]
+      }
+    },
+    "sensitivity(pool_57 saved facts)": {
+      "direct": {
+        "first_action_legal_in_mask": true,
+        "goal_reached_by_nominal_effects": true,
+        "steps": [
+          {
+            "action": "a:PICK:target:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE:target:container:v1",
+            "precondition_true": true
+          }
+        ]
+      },
+      "fact_values_differing_from_template": [
+        "p:Inside:interferer:container"
+      ],
+      "relocation": {
+        "first_action_legal_in_mask": true,
+        "goal_reached_by_nominal_effects": true,
+        "steps": [
+          {
+            "action": "a:PICK:interferer:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE_BUFFER:interferer:buffer:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PICK:target:v1",
+            "precondition_true": true
+          },
+          {
+            "action": "a:PLACE:target:container:v1",
+            "precondition_true": true
+          }
+        ]
+      }
+    }
+  }
+}

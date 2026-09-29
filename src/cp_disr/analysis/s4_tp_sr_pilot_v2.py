@@ -359,7 +359,9 @@ def run_wave(root, config_path, out, wave, gpus, max_workers):
     todo = [b["branch_id"] for b in reg["branches"] if attempts.get(b["branch_id"]) is None]
     if not todo:
         return {"status": "NOTHING_TO_RUN"}
-    if wave == "P" and rd(out / "diagnostics/wave_d_gate.json").get("wave_d_status") != "PASS":
+    gate_file = out / "diagnostics/wave_d_gate_amended.json"
+    gate_file = gate_file if gate_file.is_file() else out / "diagnostics/wave_d_gate.json"
+    if wave == "P" and (rd(gate_file).get("wave_d_status") != "PASS" or rd(gate_file).get("wave_p_released") is not True):
         raise StopRun("STOPPED_WAVE_P_NOT_RELEASED", "Wave D technical gate has not passed")
     try:
         worker_dry_run(root, out, wave, todo[0])
