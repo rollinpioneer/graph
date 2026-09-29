@@ -1,0 +1,90 @@
+....F.F....F........                                                     [100%]
+=================================== FAILURES ===================================
+_____________ test_forged_registration_hash_rejects_before_factory _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-110/test_forged_registration_hash_0')
+
+    def test_forged_registration_hash_rejects_before_factory(tmp_path):
+        setup_fixture(tmp_path,[branch()],1)
+        reserve_branch_attempt(tmp_path,"TEST-branch")
+        reg=json.loads((tmp_path/"witnesses/e4_branch_registration.json").read_text())
+        reg["branches"][0]["candidate_id"]="a:B:x:v1"
+        (tmp_path/"witnesses/e4_branch_registration.json").write_text(json.dumps(reg))
+        called=[]
+        result=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b: called.append(1))
+>       assert result["execution_status"]=="EXCEPTION" and called==[]
+E       AssertionError: assert ('EXCEPTION' == 'EXCEPTION'
+E         
+E           EXCEPTION and [1] == []
+E         
+E         Left contains one more item: 1
+E         Use -v to get more diff)
+
+tests/test_s1_dispatch_integration.py:76: AssertionError
+_________________ test_claim_event_is_written_before_execution _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-110/test_claim_event_is_written_be0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2e10cbd0c0>
+
+    def test_claim_event_is_written_before_execution(tmp_path, monkeypatch):
+        setup_fixture(tmp_path, [branch()], 1)
+        reserve_branch_attempt(tmp_path, "TEST-branch")
+        fake = FakeBundle([{"success": True, "terminated": True, "reason": "TASK_SUCCESS"}], [])
+        monkeypatch.setattr(resume, "load_runtime", lambda manifest: fake)
+        execute_registered_branch(tmp_path, "TEST-branch", tmp_path)
+        events = (tmp_path / "budget_events.jsonl").read_text().splitlines()
+>       assert any('"status": "STARTED"' in line for line in events)
+E       assert False
+E        +  where False = any(<generator object test_claim_event_is_written_before_execution.<locals>.<genexpr> at 0x7f2e10cb0ba0>)
+
+tests/test_s1_dispatch_integration.py:97: AssertionError
+_______________ test_prepare_binding_and_real_loader_source_gate _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-110/test_prepare_binding_and_real_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2e10db7040>
+
+    def test_prepare_binding_and_real_loader_source_gate(tmp_path, monkeypatch):
+        root,out=make_binding(tmp_path)
+        manifest=json.loads((out/"derived/runtime_manifest.current.json").read_text())
+        spec=require_runtime(manifest)
+        assert spec["source_path"].endswith("src/cp_disr/platforms/libero/runtime_factory.py")
+        calls=[]
+        class Bundle:
+            environment=executor=observations=perception=verifier=evaluator=safety=clock=snapshot_builder=object()
+        import cp_disr.platforms.libero.runtime_factory as rf
+        monkeypatch.setattr(rf,"create_stage_2a_runtime",lambda m: calls.append(True) or Bundle())
+>       loaded=load_runtime(manifest)
+
+tests/test_s1_source_binding_integration.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'closeout_binding': {'current_source_blob': 'src/cp_disr/platforms/libero/runtime_factory.py', 'current_source_sha256...NG_NOT_STARTED', 'note': 'Separate Stage 2A runtime manifest. D0 Stage 1A runtime_manifest.yaml is not modified.', ...}
+
+    def load_runtime(manifest):
+        spec=require_runtime(manifest)
+        module=importlib.import_module(spec['module'])
+>       if Path(module.__file__).resolve()!=Path(spec['source_path']).resolve():raise BindingError('Runtime module/source mismatch')
+E       cp_disr.common.BindingError: Runtime module/source mismatch
+
+src/cp_disr/runtime.py:29: BindingError
+----------------------------- Captured stdout call -----------------------------
+{"status": "PASS", "source_sha256": "4bd45b0ab3d8abf17c3cff7ac87c248fa234c38beb0109cabd8c6eb3ceee87b3"}
+=============================== warnings summary ===============================
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("No private macro file found!")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("It is recommended to use a private macro file")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("To setup, run: python {}/scripts/setup_macros.py".format(robosuite.__path__[0]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_s1_dispatch_integration.py::test_forged_registration_hash_rejects_before_factory
+FAILED tests/test_s1_dispatch_integration.py::test_claim_event_is_written_before_execution
+FAILED tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate
+3 failed, 17 passed, 3 warnings in 3.35s

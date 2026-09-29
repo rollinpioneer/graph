@@ -1,0 +1,86 @@
+...........F....F..F                                                     [100%]
+=================================== FAILURES ===================================
+_______________ test_prepare_binding_and_real_loader_source_gate _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-115/test_prepare_binding_and_real_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f73dafe78e0>
+
+    def test_prepare_binding_and_real_loader_source_gate(tmp_path, monkeypatch):
+        root,out=make_binding(tmp_path)
+        manifest=json.loads((out/"derived/runtime_manifest.current.json").read_text())
+        spec=require_runtime(manifest)
+        assert spec["source_path"].endswith("src/cp_disr/platforms/libero/runtime_factory.py")
+        calls=[]
+        class Bundle:
+            environment=executor=observations=perception=verifier=evaluator=safety=clock=snapshot_builder=object()
+        import cp_disr.platforms.libero.runtime_factory as rf
+        monkeypatch.setattr(rf,"create_stage_2a_runtime",lambda m: calls.append(True) or Bundle())
+>       loaded=load_runtime(manifest)
+
+tests/test_s1_source_binding_integration.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'closeout_binding': {'current_source_blob': 'src/cp_disr/platforms/libero/runtime_factory.py', 'current_source_sha256...NG_NOT_STARTED', 'note': 'Separate Stage 2A runtime manifest. D0 Stage 1A runtime_manifest.yaml is not modified.', ...}
+
+    def load_runtime(manifest):
+        spec=require_runtime(manifest)
+        module=importlib.import_module(spec['module'])
+>       if Path(module.__file__).resolve()!=Path(spec['source_path']).resolve():raise BindingError('Runtime module/source mismatch')
+E       cp_disr.common.BindingError: Runtime module/source mismatch
+
+src/cp_disr/runtime.py:29: BindingError
+----------------------------- Captured stdout call -----------------------------
+{"status": "PASS", "source_sha256": "4bd45b0ab3d8abf17c3cff7ac87c248fa234c38beb0109cabd8c6eb3ceee87b3"}
+________ test_finalize_uses_disk_loader_and_test_data_is_not_scientific ________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-115/test_finalize_uses_disk_loader0')
+
+    def test_finalize_uses_disk_loader_and_test_data_is_not_scientific(tmp_path):
+        out=tmp_path/"out"; out.mkdir(); m=make_manifest(out)
+        (out/"evidence_manifest.json").write_text(m.read_text())
+        result=finalize_eligibility(tmp_path,out)
+        assert result["status"]=="COMPLETE"
+        assert result["scientific_admissible"] is False
+        assert result["eligibility_decision"]=="NOT_ELIGIBLE_AFTER_SINGLE_REVISION"
+>       assert result["gates"]["E1"] == "PASS"
+E       AssertionError: assert 'NOT_ESTABLISHED' == 'PASS'
+E         
+E         - PASS
+E         + NOT_ESTABLISHED
+
+tests/test_s1_finalize_loader_integration.py:52: AssertionError
+__________ test_finalize_research_evidence_can_reach_eligible_branch ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-115/test_finalize_research_evidenc0')
+
+    def test_finalize_research_evidence_can_reach_eligible_branch(tmp_path):
+        out = tmp_path / "out"; out.mkdir()
+        m = make_manifest(out)
+        doc = json.loads(m.read_text())
+        doc["evidence_context"] = "RESEARCH"
+        m.write_text(json.dumps(doc), encoding="utf-8")
+        (out / "evidence_manifest.json").write_text(m.read_text())
+        result = finalize_eligibility(tmp_path, out)
+>       assert result["scientific_admissible"] is True
+E       assert False is True
+
+tests/test_s1_finalize_loader_integration.py:74: AssertionError
+=============================== warnings summary ===============================
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("No private macro file found!")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("It is recommended to use a private macro file")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("To setup, run: python {}/scripts/setup_macros.py".format(robosuite.__path__[0]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate
+FAILED tests/test_s1_finalize_loader_integration.py::test_finalize_uses_disk_loader_and_test_data_is_not_scientific
+FAILED tests/test_s1_finalize_loader_integration.py::test_finalize_research_evidence_can_reach_eligible_branch
+3 failed, 17 passed, 3 warnings in 3.52s

@@ -29,6 +29,7 @@ from cp_disr.stage0c import PREPROCESSING, prepare_scene
 from cp_disr.vlm import cache_key
 from cp_disr.vlm_provider import DashScopeProvider, ProviderConfig, redact, validate_payload
 from cp_disr.vlm_cache_pipeline import process_response, response_text, verify_audit_cache, write_audit_cache
+from cp_disr.analysis.s1_integration import (IntegrationError, claim_branch_attempt, finish_branch_attempt, reserve_branch_attempt, restore_receipt_valid)
 
 
 CACHE_FIELDS = (
@@ -660,6 +661,8 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
     sequence = 0
     trace = []
     bundle = None
+    claimed = False
+    finished = False
     phase = "preflight"
 
     def event(name, **fields):
@@ -668,6 +671,7 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
         sequence += 1
 
     def result(**fields):
+        nonlocal finished
         base = {
             "branch_id": branch_id,
             "case_id": branch.get("case_id", ""),
@@ -684,6 +688,15 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
             "trace": trace,
         }
         base.update(fields)
+        if claimed and not finished:
+            final_state = "COMPLETED" if base.get("protocol_complete") and base.get("execution_status") in {"TERMINATED", "TRUNCATED", "DEADLINE", "NO_PLAN", "SEARCH_TIMEOUT"} else "FAILED"
+            try:
+                finish_branch_attempt(output_dir, branch_id, final_state,
+                                      execution_status=base.get("execution_status", ""),
+                                      termination_reason=base.get("termination_reason", ""))
+                finished = True
+            except Exception:
+                pass
         return base
 
     try:
@@ -692,20 +705,19 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
             raise _base().RevisionError("RUNTIME_CONFIG_MISSING: manifest")
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
         runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
-        if branch.get("authorized") is False or branch.get("execute_now") is False:
-            raise _base().RevisionError("EXECUTION_NOT_AUTHORIZED")
+        phase = "claim"
+        receipt_path = output_dir / "witnesses" / "branch_receipts" / f"{branch_id}.json"
         ledger_path = output_dir / "budget_ledger.json"
-        if ledger_path.is_file():
+        if not receipt_path.is_file() and ledger_path.is_file():
             ledger = _json(ledger_path)
             item = ledger.get("physical_witness_episodes", {})
             if int(item.get("used", 0)) >= int(item.get("cap", 0)):
                 raise _base().BudgetExceeded("physical_witness_episodes cap exhausted")
-        attempts = output_dir / "attempt_registry.json"
-        if attempts.is_file():
-            registry = _json(attempts)
-            prior = registry.get(branch_id)
-            if prior in ("STARTED", "COMPLETED", "UNKNOWN"):
-                raise _base().RevisionError("DUPLICATE_OR_UNKNOWN_ATTEMPT:" + str(prior))
+        try:
+            receipt = claim_branch_attempt(output_dir, branch_id)
+        except IntegrationError as exc:
+            raise _base().RevisionError(str(exc)) from exc
+        claimed = True
         seed = branch.get("restore_seed")
         if seed is None:
             raise _base().RevisionError("RESTORE_CONFIG_MISSING: restore_seed")
@@ -720,13 +732,15 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
             snap = bundle.start_case(branch["case_id"], restore_seed=int(seed))
         except TypeError as exc:
             raise _base().RevisionError("RESTORE_UNSUPPORTED: restore_seed") from exc
-        if getattr(bundle, "restore_verified", True) is False:
-            raise _base().RevisionError("RESTORE_NOT_VERIFIED")
+        valid_receipt, receipt_reason = restore_receipt_valid(bundle, branch)
+        if not valid_receipt:
+            raise _base().RevisionError(receipt_reason)
         requested_hash = branch.get("snapshot_hash")
         actual_hash = getattr(bundle, "snapshot_identity", None)
         if requested_hash and actual_hash != requested_hash:
             raise _base().RevisionError("RESTORE_SNAPSHOT_HASH_MISMATCH")
-        event("restore_complete", restore_seed=int(seed), restore_verified=bool(getattr(bundle, "restore_verified", True)), snapshot_hash=actual_hash or "")
+        event("restore_complete", restore_seed=int(seed), restore_verified=True,
+              snapshot_hash=actual_hash or "", restore_receipt_sha256=digest(receipt))
         episode_start = float(getattr(bundle, "episode_start_seconds", bundle.clock.now_seconds()))
         if not math.isfinite(episode_start):
             raise _base().RevisionError("CLOCK_INVALID: episode_start")
@@ -817,7 +831,8 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
             raise _base().RevisionError("PLANNER_INVALID_RESULT:" + str(plan.status))
     except Exception as exc:
         event("error", error_phase=phase, error_type=type(exc).__name__, traceback=__import__("traceback").format_exc())
-        return result(execution_status="EXCEPTION", termination_reason=type(exc).__name__, error_phase=phase, error_type=type(exc).__name__, traceback=__import__("traceback").format_exc(), protocol_complete=False)
+        reason = str(exc) if isinstance(exc, _base().RevisionError) else type(exc).__name__
+        return result(execution_status="EXCEPTION", termination_reason=reason, error_phase=phase, error_type=type(exc).__name__, traceback=__import__("traceback").format_exc(), protocol_complete=False)
     finally:
         if bundle is not None:
             try:
@@ -828,14 +843,27 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
                     event("close_error", error_type=type(close_exc).__name__)
                 except Exception:
                     pass
+        if claimed and not finished:
+            try:
+                finish_branch_attempt(output_dir, branch_id, "UNKNOWN", error_phase=phase)
+            except Exception:
+                pass
 
 def run_witnesses(root, output_dir):
     output_dir=Path(output_dir); reg=_json(output_dir/"witnesses/e4_branch_registration.json"); rows=[]
     for branch in reg.get("branches",[]):
-        _base().reserve_budget(output_dir,"physical_witness_episodes",1,branch["branch_id"]); rows.append(execute_registered_branch(root,branch["branch_id"],output_dir))
+        branch_id = branch["branch_id"]
+        try:
+            reserve_branch_attempt(output_dir, branch_id)
+        except IntegrationError as exc:
+            rows.append({"branch_id": branch_id, "execution_status": "RESERVATION_FAILED",
+                         "termination_reason": str(exc), "protocol_complete": False})
+            continue
+        rows.append(execute_registered_branch(root, branch_id, output_dir))
     fields=sorted({k for row in rows for k in row}) if rows else ["branch_id","status"]
-    _base()._write_csv(output_dir/"witnesses/e4_physical_witnesses_rev1.csv",fields,rows); _base()._write_csv(output_dir/"witnesses/physical_episode_ledger.csv",fields,rows); _write_json(output_dir/"witnesses/restore_integrity.json",{"status":"COMPLETE" if rows else "NOT_RUN_NO_BRANCHES","episodes":len(rows)})
-    return {"status":"COMPLETE" if rows else "NOT_RUN_NO_BRANCHES","episodes":len(rows)}
+    executed = [row for row in rows if row.get("execution_status") != "RESERVATION_FAILED"]
+    _base()._write_csv(output_dir/"witnesses/e4_physical_witnesses_rev1.csv",fields,rows); _base()._write_csv(output_dir/"witnesses/physical_episode_ledger.csv",fields,rows); _write_json(output_dir/"witnesses/restore_integrity.json",{"status":"COMPLETE" if executed else "NOT_RUN_NO_BRANCHES","episodes":len(executed)})
+    return {"status":"COMPLETE" if executed else "NOT_RUN_NO_BRANCHES","episodes":len(executed)}
 
 
 def offline_rescore_planner(root, case_ref, output_dir):
@@ -860,25 +888,57 @@ def offline_rescore_planner(root, case_ref, output_dir):
 def finalize_eligibility(root, output_dir):
     output_dir = Path(output_dir)
     from cp_disr.analysis.s1_evidence_review import evaluate_gate_evidence
-    bundle = {"source_hashes": {}}
-    matrix = output_dir / "audit/gates/gate_evidence_matrix.csv"
-    if matrix.is_file():
-        import csv
-        rows = list(csv.DictReader(matrix.open(encoding="utf-8")))
-        bundle["gate_matrix"] = rows
-    gates = evaluate_gate_evidence(bundle)
+    from cp_disr.analysis.s1_integration import load_gate_evidence_bundle
+    stage_path = output_dir / "stage_manifest.json"
+    stage = _json(stage_path) if stage_path.is_file() else {}
+    manifest_path = output_dir / "evidence_manifest.json"
+    if not manifest_path.is_file():
+        manifest_path = output_dir / "audit/gate_evidence_manifest.json"
+    load_error = ""
+    bundle = {}
+    if manifest_path.is_file():
+        try:
+            bundle = load_gate_evidence_bundle(root, manifest_path)
+        except Exception as exc:
+            load_error = f"{type(exc).__name__}:{exc}"
+    else:
+        load_error = "EVIDENCE_MANIFEST_MISSING"
+    gates = evaluate_gate_evidence(bundle) if not load_error else evaluate_gate_evidence({})
+    stopped = (stage.get("status") == "STOPPED" or bool(load_error) or
+              bool(bundle.get("missing_evidence_tables")) or bool(bundle.get("hash_mismatches")))
+    all_pass = all(item.get("status") == "PASS" for item in gates.values())
+    if stopped:
+        status = "STOPPED"
+        decision = "PENDING_SAME_REVISION"
+        next_action = "EXPLICIT_E4_RECOVERY_BUDGET_REVIEW"
+    elif all_pass and bundle.get("scientific_admissible") is True:
+        status = "COMPLETE"
+        decision = "ELIGIBLE_AFTER_SINGLE_REVISION"
+        next_action = "S4_RESEARCH_DECISION"
+    else:
+        status = "COMPLETE"
+        decision = "NOT_ELIGIBLE_AFTER_SINGLE_REVISION"
+        next_action = "S4_RESEARCH_DECISION"
     final = {
-        "status": "COMPLETE",
-        "eligibility_decision": "NOT_ELIGIBLE_AFTER_SINGLE_REVISION",
-        "gates": {k: v["status"] for k, v in gates.items()},
+        "status": status,
+        "eligibility_decision": decision,
+        "gates": {key: value["status"] for key, value in gates.items()},
         "gate_evidence": gates,
+        "evidence_manifest": str(manifest_path) if manifest_path.is_file() else "",
+        "evidence_load_error": load_error,
+        "missing_evidence_tables": bundle.get("missing_evidence_tables", []),
+        "hash_mismatches": bundle.get("hash_mismatches", []),
+        "scientific_admissible": bool(bundle.get("scientific_admissible", False)),
         "tp_training_authorized": False,
         "method_upgrade_authorized": False,
-        "next_action": "S4_RESEARCH_DECISION",
-        "resume_same_revision_only": False,
+        "additional_physical_episodes_authorized": 0,
+        "next_action": next_action,
+        "resume_same_revision_only": stopped,
         "second_revision_allowed": False,
-        "stop_reason": "",
+        "stop_reason": load_error or stage.get("stop_reason", ""),
     }
     _write_json(output_dir / "final_eligibility.json", final)
     _write_json(output_dir / "eligibility_manifest.json", final)
+    if stage_path.is_file():
+        _write_json(stage_path, {**stage, **final, "finalized_utc": _now()})
     return final

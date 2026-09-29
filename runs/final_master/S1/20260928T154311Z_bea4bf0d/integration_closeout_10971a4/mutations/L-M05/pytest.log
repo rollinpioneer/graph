@@ -1,0 +1,72 @@
+..........FF........                                                     [100%]
+=================================== FAILURES ===================================
+______________ test_restore_measurement_seed_mismatch_is_rejected ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-113/test_restore_measurement_seed_0')
+
+    def test_restore_measurement_seed_mismatch_is_rejected(tmp_path):
+        fixture(tmp_path)
+        bundle=FakeBundle([{"success":True,"terminated":True}],[])
+        original=bundle.start_case
+        def wrong_seed(case_id,restore_seed):
+            snap=original(case_id,restore_seed)
+            bundle.restore_receipt["applied_restore_seed"]=41
+            return snap
+        bundle.start_case=wrong_seed
+        result=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:bundle)
+>       assert result["termination_reason"]=="RESTORE_SEED_APPLIED_MISMATCH"
+E       AssertionError: assert 'CONTINUE' == 'RESTORE_SEED...LIED_MISMATCH'
+E         
+E         - RESTORE_SEED_APPLIED_MISMATCH
+E         + CONTINUE
+
+tests/test_s1_restore_receipt_integration.py:98: AssertionError
+_______________ test_prepare_binding_and_real_loader_source_gate _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-113/test_prepare_binding_and_real_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7a8a787760>
+
+    def test_prepare_binding_and_real_loader_source_gate(tmp_path, monkeypatch):
+        root,out=make_binding(tmp_path)
+        manifest=json.loads((out/"derived/runtime_manifest.current.json").read_text())
+        spec=require_runtime(manifest)
+        assert spec["source_path"].endswith("src/cp_disr/platforms/libero/runtime_factory.py")
+        calls=[]
+        class Bundle:
+            environment=executor=observations=perception=verifier=evaluator=safety=clock=snapshot_builder=object()
+        import cp_disr.platforms.libero.runtime_factory as rf
+        monkeypatch.setattr(rf,"create_stage_2a_runtime",lambda m: calls.append(True) or Bundle())
+>       loaded=load_runtime(manifest)
+
+tests/test_s1_source_binding_integration.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'closeout_binding': {'current_source_blob': 'src/cp_disr/platforms/libero/runtime_factory.py', 'current_source_sha256...NG_NOT_STARTED', 'note': 'Separate Stage 2A runtime manifest. D0 Stage 1A runtime_manifest.yaml is not modified.', ...}
+
+    def load_runtime(manifest):
+        spec=require_runtime(manifest)
+        module=importlib.import_module(spec['module'])
+>       if Path(module.__file__).resolve()!=Path(spec['source_path']).resolve():raise BindingError('Runtime module/source mismatch')
+E       cp_disr.common.BindingError: Runtime module/source mismatch
+
+src/cp_disr/runtime.py:29: BindingError
+----------------------------- Captured stdout call -----------------------------
+{"status": "PASS", "source_sha256": "4bd45b0ab3d8abf17c3cff7ac87c248fa234c38beb0109cabd8c6eb3ceee87b3"}
+=============================== warnings summary ===============================
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("No private macro file found!")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("It is recommended to use a private macro file")
+
+../../home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("To setup, run: python {}/scripts/setup_macros.py".format(robosuite.__path__[0]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_s1_restore_receipt_integration.py::test_restore_measurement_seed_mismatch_is_rejected
+FAILED tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate
+2 failed, 18 passed, 3 warnings in 2.83s

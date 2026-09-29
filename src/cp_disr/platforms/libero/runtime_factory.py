@@ -46,6 +46,10 @@ def sha_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def _json_hash(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+
+
 class _Executor:
     def __init__(self, inner):
         self.inner = inner
@@ -82,6 +86,9 @@ class RuntimeBundle:
     cases: dict = field(default_factory=dict)
     caches: dict = field(default_factory=dict)
     _n: int = 0
+    restore_receipt: dict | None = None
+    restore_verified: bool = False
+    snapshot_identity: str | None = None
 
     def start_case(self, case_id: str, restore_seed: int | None = None):
         spec = self.cases[case_id]
@@ -89,6 +96,12 @@ class RuntimeBundle:
             spec = replace(spec, seed=int(restore_seed))
         self.environment.close()
         env = make_env(spec)
+        # Bind the normalized case before reset so reset and the receipt use
+        # the same applied seed and configuration.
+        try:
+            env.case = spec
+        except Exception:
+            pass
         env.last_perception = {}
         env.reset()
         env._apply_case_poses()
@@ -116,6 +129,61 @@ class RuntimeBundle:
         self._n += 1
         self.episode_start_seconds = clock.now_seconds()
         self.current_snapshot = self.snapshot_builder.initial(facts, obs, f"ep-{self._n}")
+        reset_config = {
+            "target_xy": list(spec.target_xy),
+            "second_xy": list(spec.second_xy),
+            "container_xy": list(spec.container_xy),
+            "buffer_xy": list(spec.buffer_xy),
+            "lid_closed": bool(spec.lid_closed),
+        }
+        public_facts = {
+            record.fact_id: getattr(record.value, "value", str(record.value))
+            for record in facts.records
+        }
+        facts_hash = _json_hash(public_facts)
+        candidate_ids = list(self.current_snapshot.candidate_ids)
+        candidate_mask = [bool(value) for value in self.current_snapshot.mask]
+        candidate_ids_hash = _json_hash(candidate_ids)
+        candidate_mask_hash = _json_hash(candidate_mask)
+        contract_identity = _json_hash([
+            {"id": contract.id, "version": getattr(contract, "version", None)}
+            for contract in self.template.contracts
+        ])
+        state_hash = _json_hash({
+            "case_id": case_id,
+            "reset_config_sha256": _json_hash(reset_config),
+            "public_facts_sha256": facts_hash,
+            "candidate_mask_sha256": candidate_mask_hash,
+            "episode_id": self.current_snapshot.episode_id,
+        })
+        applied_seed = int(spec.seed)
+        requested_seed = int(spec.seed if restore_seed is None else restore_seed)
+        checks = {
+            "case_id_applied": self.current_snapshot.episode_id.startswith("ep-"),
+            "seed_applied": applied_seed == requested_seed,
+            "reset_recipe_bound": True,
+            "public_facts_measured": bool(facts_hash),
+            "candidate_ids_measured": bool(candidate_ids_hash),
+            "candidate_mask_measured": bool(candidate_mask_hash),
+            "state_identity_measured": bool(state_hash),
+        }
+        self.snapshot_identity = state_hash
+        self.restore_receipt = {
+            "requested_case_id": case_id,
+            "applied_case_id": case_id,
+            "requested_restore_seed": requested_seed,
+            "applied_restore_seed": applied_seed,
+            "normalized_reset_config_sha256": _json_hash(reset_config),
+            "runtime_source_sha256": sha_file(Path(__file__)),
+            "task_contract_identity": contract_identity,
+            "state_identity_kind": "public_snapshot",
+            "state_identity_sha256": state_hash,
+            "public_facts_sha256": facts_hash,
+            "candidate_ids_sha256": candidate_ids_hash,
+            "candidate_mask_sha256": candidate_mask_hash,
+            "restore_checks": checks,
+        }
+        self.restore_verified = all(checks.values())
         return self.current_snapshot
 
     def next_case(self, task_cases, seed):
