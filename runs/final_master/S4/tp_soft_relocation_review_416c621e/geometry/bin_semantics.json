@@ -1,0 +1,146 @@
+{
+ "approach_clearance_proxy_definition": "centre_distance - 0.06; NOT a real gripper collision distance",
+ "bin_meaning": "bins order the target-interferer centre distance, not a verified camera occlusion or gripper interference level",
+ "distinguished_notions": {
+  "camera_occlusion_of_target": "camera_projected_overlap (pool_index); a projection proxy, not an observed occlusion",
+  "centre_distance_near": "target_interferer_xy_distance (pool_index)",
+  "real_gripper_interference": "approach/descend/close/lift contact of the finger/palm/held object with the interferer; NOT measured by any recorded field"
+ },
+ "field_renaming": {
+  "derived_name": "distance_bin_originally_named_occlusion",
+  "old_csv_modified": false,
+  "old_name": "occlusion_bin"
+ },
+ "helpful_case_geometry": [
+  {
+   "approach_clearance_proxy": "0.0729954092591169",
+   "axis": "y",
+   "camera_projected_overlap": "0.0",
+   "case_id": "T_P_SR_pool_33",
+   "interferer_buffer_distance": "0.18683328390038004",
+   "occlusion_bin": "1",
+   "target_grasp_margin_proxy": "0.148626",
+   "target_interferer_xy_distance": "0.1329954092591169"
+  }
+ ],
+ "helpful_case_ids": [
+  "T_P_SR_pool_33"
+ ],
+ "nonzero_projected_overlap_physical_count": 3,
+ "nonzero_projected_overlap_pool_count": 7,
+ "outcome_labels_are": "route-level heuristic labels, not verified physical harm or occlusion removal",
+ "overlap_zero_implies_no_mechanical_interference": false,
+ "overlap_zero_note": "zero camera projected overlap says nothing about finger/palm sweep interference; cannot be inferred",
+ "per_bin": {
+  "0": {
+   "approach_clearance_proxy": {
+    "max": 0.144846664676289,
+    "min": 0.09192063297985564,
+    "n": 16
+   },
+   "camera_projected_overlap": {
+    "max": 0.0,
+    "min": 0.0,
+    "n": 16
+   },
+   "direct": {
+    "denominator": 12,
+    "successes": 12
+   },
+   "physical_scene_count": 6,
+   "pool_count": 16,
+   "relocation": {
+    "denominator": 12,
+    "successes": 4
+   },
+   "target_interferer_xy_distance": {
+    "max": 0.204846664676289,
+    "min": 0.15192063297985564,
+    "n": 16
+   }
+  },
+  "1": {
+   "approach_clearance_proxy": {
+    "max": 0.08976078410919194,
+    "min": 0.045444979254585655,
+    "n": 16
+   },
+   "camera_projected_overlap": {
+    "max": 0.0,
+    "min": 0.0,
+    "n": 16
+   },
+   "direct": {
+    "denominator": 12,
+    "successes": 10
+   },
+   "physical_scene_count": 6,
+   "pool_count": 16,
+   "relocation": {
+    "denominator": 12,
+    "successes": 6
+   },
+   "target_interferer_xy_distance": {
+    "max": 0.14976078410919194,
+    "min": 0.10544497925458565,
+    "n": 16
+   }
+  },
+  "2": {
+   "approach_clearance_proxy": {
+    "max": 0.04455052679446431,
+    "min": 0.016973680417399814,
+    "n": 16
+   },
+   "camera_projected_overlap": {
+    "max": 0.08562676479739051,
+    "min": 0.0,
+    "n": 16
+   },
+   "direct": {
+    "denominator": 12,
+    "successes": 12
+   },
+   "physical_scene_count": 6,
+   "pool_count": 16,
+   "relocation": {
+    "denominator": 12,
+    "successes": 12
+   },
+   "target_interferer_xy_distance": {
+    "max": 0.1045505267944643,
+    "min": 0.07697368041739981,
+    "n": 16
+   }
+  },
+  "3": {
+   "approach_clearance_proxy": {
+    "max": 0.014302520441772368,
+    "min": -0.009070965206475788,
+    "n": 16
+   },
+   "camera_projected_overlap": {
+    "max": 0.3249358045666608,
+    "min": 0.0,
+    "n": 16
+   },
+   "direct": {
+    "denominator": 12,
+    "successes": 12
+   },
+   "physical_scene_count": 6,
+   "pool_count": 16,
+   "relocation": {
+    "denominator": 12,
+    "successes": 4
+   },
+   "target_interferer_xy_distance": {
+    "max": 0.07430252044177237,
+    "min": 0.05092903479352421,
+    "n": 16
+   }
+  }
+ },
+ "physical_scene_count": 24,
+ "pool_count": 64
+}
