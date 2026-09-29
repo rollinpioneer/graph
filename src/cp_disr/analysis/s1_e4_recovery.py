@@ -103,7 +103,8 @@ def preflight_static(manifest_path, case_ids=()):
 
 def prepare(root):
     root, src, out = paths(root)
-    r2 = _ROUND == "r2"
+    r2 = _ROUND is not None
+    r3 = _ROUND == "r3"
     head = _git(root, "rev-parse", "HEAD")
     if subprocess.call(["git", "-C", str(root), "merge-base", "--is-ancestor", BASE_COMMIT, head]) != 0:
         raise RuntimeError("HEAD does not descend from baseline commit")
@@ -139,7 +140,15 @@ def prepare(root):
         (out / "input_binding").mkdir(parents=True, exist_ok=True)
         manifest_path = out / "input_binding/runtime_manifest.current.json"
         manifest_path.write_bytes(manifest_src.read_bytes())
-        tag = f"{TAG}_r2"
+        tag = f"{TAG}_{_ROUND}"
+        r2_prev = {}
+        if r3:
+            r2_dir = root / f"{RECOVERY_REL}_r2"
+            r2l = _rd(r2_dir / "budget_ledger.json")["physical_witness_episodes"]
+            r2a = _rd(r2_dir / "attempt_registry.json")
+            if not (r2l["used"] == 2 and r2l["cap"] == 8 and sorted(r2a.values()) == ["UNKNOWN", "UNKNOWN"]):
+                raise RuntimeError("r2 recovery record is not the expected 2 UNKNOWN attempts")
+            r2_prev = {(b["case_id"], b["candidate_id"], int(b["repeat"])): b["branch_id"] for b in _rd(r2_dir / "witnesses/e4_branch_registration.json")["branches"]}
     else:
         manifest_path = src / "input_binding/T_A_s1_rev1_runtime_manifest.yaml"
         tag = TAG
@@ -166,6 +175,8 @@ def prepare(root):
                 }
                 if r2:
                     b["supersedes_recovery_attempt_r1"] = r1[(case, cand, repeat)]
+                    if r3:
+                        b["supersedes_recovery_attempt_r2"] = r2_prev[(case, cand, repeat)]
                 branches.append(b)
     seeds = {}
     for b in branches:
@@ -189,14 +200,23 @@ def prepare(root):
         refs.update({"r1_recovery_ledger_path": str(root / RECOVERY_REL / "budget_ledger.json"),
                      "r1_recovery_ledger_sha256": sha256_file(root / RECOVERY_REL / "budget_ledger.json"),
                      "r1_recovery_used": 2, "r1_recovery_states": "2 FAILED (runtime_factory hash gate, no environment created)",
-                     "recovery_total_cap_all_rounds": 10, "cumulative_max_original_plus_recovery": 18})
+                     "recovery_total_cap_all_rounds": 12 if r3 else 10, "cumulative_max_original_plus_recovery": 20 if r3 else 18})
+        if r3:
+            refs.update({"r2_recovery_ledger_path": str(root / f"{RECOVERY_REL}_r2" / "budget_ledger.json"),
+                         "r2_recovery_ledger_sha256": sha256_file(root / f"{RECOVERY_REL}_r2" / "budget_ledger.json"),
+                         "r2_recovery_used": 2, "r2_recovery_states": "2 UNKNOWN (worker launch fault: round flag not forwarded; no environment created)"})
     else:
         refs["cumulative_max_original_plus_recovery"] = 16
     ledger["references"] = refs
     _atomic_json(out / "budget_ledger.json", ledger)
     (out / "budget_events.jsonl").touch()
     _atomic_json(out / "attempt_registry.json", {})
-    if r2:
+    if r3:
+        text = ("再补偿2个：r1、r2 共4个 attempt 因执行侧工程错误在环境创建前失败或未启动（均未执行任何 skill）。"
+                "恢复额度总上限由10调整为12（累计原8+恢复12=20），r3 目录以 cap=8、used=0 的独立账本重跑完整8分支；r1、r2 记录全部保留。"
+                "其余条件不变：provider/RL/optimizer/elastic 均为0，不启动S2/S3/正式test。")
+        src_txt = "user reply in the working session (approval: 批准 补偿2个至累计上限20)"
+    elif r2:
         text = ("补偿2个：因执行侧误用旧 manifest 导致首批2个 attempt 在环境创建前失败（未执行任何 skill）。"
                 "恢复额度总上限由8调整为10（累计原8+恢复10=18），r2 目录以 cap=8、used=0 的独立账本重跑完整8分支；r1 的2次FAILED记录保留。"
                 "其余条件与原批准一致：provider/RL/optimizer/elastic 均为0，不启动S2/S3/正式test。")
@@ -209,13 +229,13 @@ def prepare(root):
             "new_provider_calls": 0, "new_rl": 0, "new_optimizer": 0, "new_elastic": 0,
             "s2_s3_formal_test": "NOT_AUTHORIZED", "baseline_commit": BASE_COMMIT, "execution_commit": head}
     if r2:
-        auth["cumulative_recovery_approved_all_rounds"] = 10
-        auth["cumulative_max_original_plus_recovery"] = 18
+        auth["cumulative_recovery_approved_all_rounds"] = 12 if r3 else 10
+        auth["cumulative_max_original_plus_recovery"] = 20 if r3 else 18
     _atomic_json(out / "authorization.json", auth)
     _atomic_json(out / "budget_amendment.json", {
         "amendment_id": tag, "original_physical_witness": {"cap": 8, "used": 8, "ledger_unchanged": True},
         "recovery_physical_witness": {"cap": CAP, "used_at_creation": 0},
-        "cumulative_max": 18 if r2 else 16,
+        "cumulative_max": 20 if r3 else (18 if r2 else 16),
         "not_a_refund": True, "not_mixed_with_elastic_rl": True, "failures_and_unknown_are_kept": True,
         "authorization_sha256": sha256_file(out / "authorization.json")})
     code_files = ["src/cp_disr/analysis/s1_revision_resume.py", "src/cp_disr/analysis/s1_integration.py",

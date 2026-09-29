@@ -14,7 +14,7 @@ def main():
     s.add_argument("--gpus", type=int, nargs="+", required=True); s.add_argument("--max-workers", type=int)
     s = sub.add_parser("check"); s.add_argument("--root", required=True); s.add_argument("--wave", type=int, default=1)
     for sp in sub.choices.values():
-        sp.add_argument("--round", choices=["r2"], default=None)
+        sp.add_argument("--round", choices=["r2", "r3"], default=None)
     a = p.parse_args()
     m.set_round(a.round)
     if a.cmd == "prepare": out = m.prepare(a.root)
