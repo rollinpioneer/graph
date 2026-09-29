@@ -1,0 +1,33 @@
+task_id: T_P_SO_MVP
+task_family_id: T_P_SOFT_ORDERING_MVP_V1
+task_variant: FAMILY_A_SOFT_ORDERING_MINIMAL_MECHANISM
+family_version: "1.0"
+status: S4_CONTROLLED_MECHANISM_VALIDATION_NOT_A_DATASET
+dataset_role: CONTROLLED_MECHANISM_VALIDATION
+derives_from: configs/tasks/resolved/T_A.yaml
+grounded_action_ids:
+- a:PICK:target:v1
+- a:PICK:second_object:v1
+- a:PLACE:target:container:v1
+- a:PLACE:second_object:container:v1
+initial_candidate_ids:
+- a:PICK:target:v1
+- a:PICK:second_object:v1
+masked_or_absent_groundings:
+- a:OPEN:container:v1
+- a:PLACE_BUFFER:target:buffer:v1
+- a:PLACE_BUFFER:second_object:buffer:v1
+- a:PLACE:target:buffer:v1
+- a:PLACE:second_object:buffer:v1
+- a:PICK:container:v1
+- a:PICK:buffer:v1
+contract_registry_ref: configs/runtime/tp_so_mvp_contract_registry.yaml
+contract_registry_note: "byte-identical PICK/PLACE contracts to tp_sr_contract_registry.yaml; OPEN, PLACE_BUFFER and MOVE absent; no geometry hard fact registered"
+goals:
+- {fact_id: "p:Inside:target:container", sign: 1}
+- {fact_id: "p:Inside:second_object:container", sign: 1}
+routes:
+  target_first: [a:PICK:target:v1, a:PLACE:target:container:v1, a:PICK:second_object:v1, a:PLACE:second_object:container:v1]
+  second_first: [a:PICK:second_object:v1, a:PLACE:second_object:container:v1, a:PICK:target:v1, a:PLACE:target:container:v1]
+deadline_seconds: 60.0
+reference_skill_seconds: 3.649999999999709

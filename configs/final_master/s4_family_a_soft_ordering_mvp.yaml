@@ -1,0 +1,99 @@
+master_id: CP-DISR-FINAL-EXEC-3.0
+card_id: CP-DISR-S4-FAMILY-A-SOFT-ORDERING-MVP-1
+stage: S4
+scope: CONTROLLED_MECHANISM_VALIDATION
+method_version: "2.1.1"
+base_branch: codex/cp-disr-s4-tp-soft-relocation-pilot-v2
+base_commit: 39baafb8ac937f4f55b6934d2018ba8ec6ba6d84
+new_branch: codex/cp-disr-s4-family-a-soft-ordering-mvp
+task_id: T_P_SO_MVP
+task_family_id: T_P_SOFT_ORDERING_MVP_V1
+family_version: "1.0"
+dataset_role: CONTROLLED_MECHANISM_VALIDATION
+runtime_module: cp_disr.platforms.libero.tp_so_mvp_runtime
+perception_variant_online: TP_SR_V1_NEAREST_PALETTE_COMPAT_LOCAL
+
+authorization:
+  granted_by: user
+  granted_utc: "2026-09-29"
+  text: "批准执行 CP-DISR-S4-FAMILY-A-SOFT-ORDERING-MVP-1。总上限12个branch attempt和12次environment reset。先执行2个技术分支，技术门通过后释放剩余10个。新增provider、representation、RL、optimizer、elastic、S2、S3和formal test均为0。旧S1/S4证据保持只读。"
+  technical_wave_first: 2
+  remaining_released_on_technical_pass: 10
+  provider_authorized: false
+  representation_authorized: false
+  rl_authorized: false
+  optimizer_authorized: false
+  elastic_authorized: false
+  s2_authorized: false
+  s3_authorized: false
+  formal_test_authorized: false
+  method_upgrade_authorized: false
+
+budgets:
+  geometry_configs: 3
+  physical_branch_attempts: 12
+  total_branch_attempts: 12
+  environment_resets: 12
+  technical_wave_branch_attempts: 2
+  remaining_branch_attempts: 10
+  standalone_capture_resets: 0
+  provider_first_calls: 0
+  provider_retries: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  training_attempts: 0
+  elastic_attempts: 0
+  formal_test_episodes: 0
+
+technical_wave:
+  config: SO_TARGET_FIRST
+  repeat: 0
+  workers: 2
+  routes: [target_first, second_first]
+
+remaining:
+  configs: [SO_TARGET_FIRST, SO_SECOND_FIRST, SO_NEUTRAL]
+  routes: [target_first, second_first]
+  repeats: [0, 1]
+  workers_max: 4
+
+planner:
+  depth: 6
+  max_nodes: 4096
+  cpu_time_limit_seconds: 2.0
+  decision_cap: 8
+  deadline_seconds: 60.0
+  reference_skill_seconds: 3.649999999999709
+
+scene:
+  container_xy: [0.18, 0.12]
+  buffer_xy: [-0.18, 0.12]
+  lid_closed: false
+  second_role: second_object
+
+sources:
+  s1_output: runs/final_master/S1/20260928T154311Z_bea4bf0d
+  s1_recovery: runs/final_master/S1/20260928T154311Z_bea4bf0d/e4_recovery_23fab0c_r3
+  s1_manifest_base: runs/final_master/S1/20260928T154311Z_bea4bf0d/input_binding/T_A_s1_rev1_runtime_manifest.yaml
+  s1_split: runs/final_master/S1/20260928T154311Z_bea4bf0d/input_binding/T_A_s1_rev1_runtime_split_no_cache.json
+  pilot_output: runs/final_master/S4/tp_soft_relocation_pilot_v2/20260929T095821Z_efe8aa02
+  v1_output: runs/final_master/S4/tp_soft_relocation_design/20260929T084850Z_b598cfd0
+
+geometry:
+  q0_xy: [-0.1027682938989812, -5.644863233597923e-12]
+  target_first_min_delta_proxy_m: 0.10
+  second_first_max_delta_proxy_m: -0.10
+  neutral_abs_delta_proxy_m: 0.015
+  min_object_separation_m: 0.06
+  workspace_half_extent_m: 0.45
+  expected_delta_proxy_m: 0.32638
+  expected_delta_proxy_neutral_m: -0.01446
+
+protected_roots:
+  - runs/final_master/S1
+  - runs/final_master/S4/tp_soft_relocation_design
+  - runs/final_master/S4/tp_soft_relocation_review_416c621e
+  - runs/final_master/S4/tp_soft_relocation_pilot_v2
+  - experiments/vlm_cache
+  - docs/authoritative
