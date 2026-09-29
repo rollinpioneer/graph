@@ -1,0 +1,73 @@
+{
+  "checked_at_utc": "2026-09-29T06:50:53Z",
+  "checks": {
+    "budget_events_one_reserve_one_start": true,
+    "independent_runtime_processes": true,
+    "ledger_used_matches_attempts": true,
+    "no_attempt_left_reserved_or_started": true,
+    "no_duplicate_consumption": true,
+    "paired_restore_comparable": true,
+    "per_worker_gpu_recorded": true,
+    "registration_hash_matches": true,
+    "source_manifest_hash_matches": true
+  },
+  "paired_restore": {
+    "branch_ids": [
+      "228fb5e50d2a0eba",
+      "ecbbffda7ab725db"
+    ],
+    "case_id": "T_A_dev_14",
+    "hidden_truth_qa_equal": true,
+    "note": "controller internal state and RNG stream are not directly compared",
+    "public_compare_key_equal": true,
+    "qpos_max_abs_diff": 0.0,
+    "qpos_sha256_equal": true,
+    "qvel_max_abs_diff": 0.0,
+    "repeat": 0,
+    "status": "PAIRED_RESTORE_VERIFIED_PUBLIC_AND_SIM_STATE"
+  },
+  "per_branch": {
+    "228fb5e50d2a0eba": {
+      "action_chain_recorded": true,
+      "attempt_state": "COMPLETED",
+      "candidate_id": "a:OPEN:container:v1",
+      "case_id": "T_A_dev_14",
+      "closed": true,
+      "cuda_visible_devices": "1",
+      "execution_status": "TERMINATED",
+      "first_action_recorded": true,
+      "has_error_event": false,
+      "has_result": true,
+      "initial_state_file": true,
+      "journal_events": 33,
+      "journal_restore_hash_is_restore_receipt": true,
+      "protocol_complete": true,
+      "restore_receipt_file": true,
+      "sequence_monotonic": true,
+      "worker_pid": 3058911
+    },
+    "ecbbffda7ab725db": {
+      "action_chain_recorded": true,
+      "attempt_state": "COMPLETED",
+      "candidate_id": "a:PICK:second_object:v1",
+      "case_id": "T_A_dev_14",
+      "closed": true,
+      "cuda_visible_devices": "3",
+      "execution_status": "NO_PLAN",
+      "first_action_recorded": true,
+      "has_error_event": false,
+      "has_result": true,
+      "initial_state_file": true,
+      "journal_events": 10,
+      "journal_restore_hash_is_restore_receipt": true,
+      "protocol_complete": true,
+      "restore_receipt_file": true,
+      "sequence_monotonic": true,
+      "worker_pid": 3059138
+    }
+  },
+  "problems": [],
+  "release_criterion": "technical validity only; success / prior benefit / E4 difference are NOT release conditions",
+  "verdict": "PASS",
+  "wave": 1
+}

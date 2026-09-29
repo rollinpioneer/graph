@@ -592,11 +592,12 @@ def summarize(root):
         dist[str(k)] = dist.get(str(k), 0) + 1
     states = {s: sum(1 for b in reg["branches"] if attempts.get(b["branch_id"]) == s) for s in ("RESERVED", "STARTED", "COMPLETED", "FAILED", "UNKNOWN")}
     used = ledger["physical_witness_episodes"]["used"]
-    summary = {"reserved_total": used, "attempt_states": states, "cumulative_original_plus_recovery": 8 + used, "distribution": dist,
+    summary = {"reserved_total": used, "attempt_states": states, "cumulative_original_plus_recovery": 8 + used + int(ledger.get("references", {}).get("r1_recovery_used", 0)) + int(ledger.get("references", {}).get("r2_recovery_used", 0)), "distribution": dist,
                "case_status": case_status, "paired_restore": {f"{p['case_id']}#{p['repeat']}": p["paired_restore"]["status"] for p in paired}}
+    summary_cum = summary["cumulative_original_plus_recovery"]
     _atomic_json(out / "summary.json", summary)
     lines = ["# E4 恢复运行摘要（工程记录，非科学结论）", "",
-             f"- 恢复 attempt 已预留 {used}/{CAP}；状态 {states}；累计（原8+恢复）{8 + used}/16。",
+             f"- 恢复 attempt 已预留 {used}/{CAP}；状态 {states}；累计（原8+各轮恢复）{summary_cum}/{ledger.get("references", {}).get("cumulative_max_original_plus_recovery", 16)}。",
              "- 新 provider / RL / optimizer / elastic：0 / 0 / 0 / 0。S2、S3、正式 test：NOT_RUN。",
              "- E1–E6 中六类证据表未在本轮补齐，均标 NOT_ESTABLISHED；tp_training_authorized=false。", "",
              "## 分支结果", "", "| case | candidate | repeat | state | exit | status | reason | success |", "|---|---|---|---|---|---|---|---|"]
