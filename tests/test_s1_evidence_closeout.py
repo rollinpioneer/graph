@@ -216,11 +216,143 @@ def test_zero_call_violation_maps_to_exit_code_5(guards, tmp_path, monkeypatch, 
 
 
 # 12 --------------------------------------------------------------- unmet gates cannot authorize anything
-@pytest.mark.parametrize("v3,n_rel,explainable", [("NOT_FOUND", 2, True), ("NOT_FOUND", 0, False), ("FOUND", 2, False), ("FOUND", 4, True)])
-def test_eligibility_never_authorizes_training_s2_or_new_attempts(v3, n_rel, explainable):
-    e = m.build_eligibility(v3, n_rel, explainable, {"E4": "X"})
+@pytest.mark.parametrize("n_rel,explainable", [(2, True), (0, False), (2, False), (4, True)])
+def test_eligibility_never_authorizes_training_s2_or_new_attempts(n_rel, explainable):
+    e = m.build_eligibility("FOUND_AND_RECONCILED", n_rel, explainable, {"E4": "X"})
     assert e["tp_training_authorized"] is False and e["additional_physical_attempts_authorized"] == 0 and e["method_upgrade_authorized"] is False
     assert e["next_action"] == "EXPLICIT_RESEARCH_DECISION_REQUIRED" and e["route_if_key_gate_unmet"] == "S4_RESEARCH_DECISION"
     assert e["eligibility_decision"] == "DERIVED_FROM_AVAILABLE_EVIDENCE"
-    if v3 != "FOUND":
-        assert "not located" in e["plan_condition_citation"]
+    assert "not located" not in e["plan_condition_citation"]
+
+
+# ================================================================ authority reconciliation (A01-A18)
+import shutil
+import subprocess
+
+OUT = ROOT / m.S1_REL / "evidence_closeout_cc1ad64"
+needs_out = pytest.mark.skipif(not (OUT / "evidence/reviewed_eligibility.json").is_file(), reason="closeout evidence not present")
+
+
+def _auth_root(tmp_path, mutate=None):
+    d = tmp_path / "repo" / m.AUTH_DIR
+    d.mkdir(parents=True)
+    for f in ("CP_DISR_Final_Experimental_Plan_v3.md", "CP_DISR_Final_Research_Content_v5.md", "authority_manifest.json"):
+        shutil.copyfile(ROOT / m.AUTH_DIR / f, d / f)
+    if mutate:
+        man = json.loads((d / "authority_manifest.json").read_text(encoding="utf-8"))
+        mutate(man)
+        (d / "authority_manifest.json").write_text(json.dumps(man), encoding="utf-8")
+    return tmp_path / "repo"
+
+
+def _ev(name):
+    return json.loads((OUT / "evidence" / name).read_text(encoding="utf-8"))
+
+
+def test_A01_manifest_matching_gives_found_and_reconciled(tmp_path):
+    r = m.verify_authority(_auth_root(tmp_path))
+    assert r["authority_status"] == "FOUND_AND_RECONCILED" and r["master_id"] == "CP-DISR-FINAL-EXEC-3.0"
+    assert m.verify_authority(ROOT)["authority_status"] == "FOUND_AND_RECONCILED"
+
+
+def test_A02_wrong_v3_hash_fails_closed(tmp_path):
+    root = _auth_root(tmp_path, lambda man: man["experimental_plan"].__setitem__("sha256", "0" * 64))
+    with pytest.raises(m.AuthorityMismatch):
+        m.verify_authority(root)
+
+
+def test_A03_wrong_v5_hash_fails_closed(tmp_path):
+    root = _auth_root(tmp_path, lambda man: man["research_content"].__setitem__("sha256", "f" * 64))
+    with pytest.raises(m.AuthorityMismatch):
+        m.verify_authority(root)
+    root2 = _auth_root(tmp_path / "b", lambda man: man.__setitem__("master_id", "OTHER"))
+    with pytest.raises(m.AuthorityMismatch):
+        m.verify_authority(root2)
+    root3 = _auth_root(tmp_path / "c", lambda man: man["research_content"].__setitem__("document_version", "4.0"))
+    with pytest.raises(m.AuthorityMismatch):
+        m.verify_authority(root3)
+    with pytest.raises(m.AuthorityMismatch):
+        m.build_eligibility("NOT_FOUND", 2, True, {})
+
+
+@needs_out
+def test_A04_historical_command_config_not_found_unchanged():
+    p = OUT / "inventory/command_config.json"
+    cfg = json.loads(p.read_text(encoding="utf-8"))
+    assert cfg["authoritative_definitions"]["Final_Experimental_Plan_v3"]["status"] == "NOT_FOUND"
+    r = subprocess.run(["git", "-C", str(ROOT), "show", "7dc6965cc909cb0a79087e433006d56d6415096c:" + str(p.relative_to(ROOT))], capture_output=True)
+    if r.returncode == 0:
+        assert r.stdout == p.read_bytes()
+    ar = _ev("authority_reconciliation.json")
+    assert ar["execution_time_authority_availability"] == "NOT_FOUND_ON_SERVER" and ar["current_authority_status"] == "FOUND_AND_RECONCILED"
+
+
+@needs_out
+def test_A05_eligibility_has_no_not_located_or_candidate_pending():
+    txt = (OUT / "evidence/reviewed_eligibility.json").read_text(encoding="utf-8")
+    assert "not located" not in txt and "CANDIDATE_SATISFIED_PENDING_AUTHORITATIVE_DEFINITION" not in txt
+    for f in ("reviewed_summary.md", "e4_review.md"):
+        t = (OUT / "evidence" / f).read_text(encoding="utf-8")
+        assert "not located" not in t and "CANDIDATE_SATISFIED_PENDING_AUTHORITATIVE_DEFINITION" not in t
+
+
+@needs_out
+def test_A06_summary_does_not_write_current_authority_as_not_found():
+    t = (OUT / "evidence/reviewed_summary.md").read_text(encoding="utf-8")
+    assert "权威文档 v3 查找结果：NOT_FOUND" not in t
+    assert "已从原始权威附件恢复并完成对照" in t and "历史记录保留不变" in t
+
+
+@needs_out
+def test_A07_to_A11_key_gate_statuses():
+    g = _ev("reviewed_eligibility.json")["key_gate_status"]
+    assert g["E1_relation_existence"] == "NOT_ESTABLISHED"
+    assert g["E2_E3_representation"] == "PRIOR_VALUES_RETAINED_NOT_REVALIDATED"
+    assert g["E4_real_consequence"] == "LIMITED_SUPPORT_FEASIBILITY_ONLY"
+    assert g["E5_contract_insufficiency"] == "NOT_SATISFIED"
+    assert g["E6_prior_classification"] == "UNKNOWN"
+    assert set(_ev("reviewed_eligibility.json")["key_gate_notes"]) == set(g)
+
+
+@needs_out
+def test_A12_to_A15_no_authorization_and_s4_route():
+    e = _ev("reviewed_eligibility.json")
+    assert e["tp_training_authorized"] is False
+    assert e["additional_physical_attempts_authorized"] == 0
+    assert e["method_upgrade_authorized"] is False
+    assert e["next_action"] == "EXPLICIT_RESEARCH_DECISION_REQUIRED" and e["route_if_key_gate_unmet"] == "S4_RESEARCH_DECISION"
+    ar = _ev("authority_reconciliation.json")
+    assert ar["next_action"] == "S4_RESEARCH_DECISION" and ar["tp_training_authorized"] is False and ar["additional_physical_attempts_authorized"] == 0
+    assert ar["new_samples"] == 0 and ar["scientific_result_changed"] is False
+    assert ar["experimental_plan_sections_applied"] == ["5.2", "5.3", "5.4", "5.6"] and ar["research_content_additional_e1_e6_gate_definition"] is False
+
+
+def test_A16_pick_no_plan_not_written_as_evaluator_failure():
+    actions = [{"candidate_id": "p", "evaluator": {"success": False, "terminated": False, "truncated": False, "reason": "CONTINUE"}}]
+    o = m.branch_outcome({"actions": actions, "planner": [{"status": "NO_PLAN"}]})
+    assert o["termination_by_evaluator"] is False and o["planner_stop_status"] == "NO_PLAN"
+    sec = m.E4_V3_SECTION
+    assert "Evaluator为CONTINUE，随后B_PLAN返回NO_PLAN" in sec and "不表示PICK被Evaluator判失败" in sec and "NOT_ESTABLISHED" in sec
+
+
+def test_A17_action_sequence_difference_alone_not_e4_evidence():
+    d = m.pair_difference(_o(["a", "b"]), _o(["a", "c", "b"]))
+    assert d["action_sequence_difference_descriptive_only"] is True and d["e4_outcome_difference_established"] is False
+    review = m.review_e4([], {}, {})
+    assert review["cases_with_reliable_protocol_level_difference"] == 0
+    assert review["frozen_E4_gate_status"] == "NOT_SATISFIED_ON_AVAILABLE_EVIDENCE"
+
+
+@needs_out
+def test_A17b_e4_review_ends_with_v3_section_and_keeps_e4_e5_separate():
+    t = (OUT / "evidence/e4_review.md").read_text(encoding="utf-8")
+    assert t.rstrip().endswith("E4与E5必须保持分离。")
+    assert "## 对照 Final Experimental Plan v3 §5.2" in t and "LIMITED_SUPPORT_FEASIBILITY_ONLY" in t
+
+
+def test_A18_no_automatic_official_e6_classification():
+    e = m.build_eligibility("FOUND_AND_RECONCILED", 2, True, {"E6_prior_classification": "UNKNOWN"})
+    assert "CONTRACT_SUFFICIENT" not in json.dumps(e)
+    assert e["diagnostic_reason"] == "CONTRACT_EXPLAINABLE_BRANCH_DIFFERENCE"
+    assert "no official E6 class is assigned" in e["key_gate_notes"]["E6_prior_classification"]
+    assert e["authoritative_plan_v3_status"] == e["authoritative_research_v5_status"] == "FOUND_AND_RECONCILED"

@@ -38,6 +38,102 @@ class ZeroCallViolation(RuntimeError):
     pass
 
 
+class AuthorityMismatch(RuntimeError):
+    """The authority manifest does not match the installed authoritative documents (fail closed)."""
+
+
+AUTH_DIR = "docs/authoritative"
+AUTH_MASTER_ID = "CP-DISR-FINAL-EXEC-3.0"
+AUTH_SPECS = (("experimental_plan", "3.0", "FROZEN_PLAN"), ("research_content", "5.0", "FROZEN_AFTER_FINAL_AUDIT"))
+AUTH_OK = "FOUND_AND_RECONCILED"
+KEY_GATE_NOTES = {
+    "E1_relation_existence": "Natural validator-admitted nonredundant relations exist in at least two independent configurations, but independent adjudication is absent; truth/utility remain UNKNOWN.",
+    "E2_E3_representation": "Previously saved S1-REV1 representation values are retained as historical evidence but were not revalidated in the zero-sample closeout.",
+    "E4_real_consequence": "Two independent case configurations show repeat-consistent protocol-level outcome differences under paired initialization and shared B_PLAN continuation. Cost and rework are NOT_MEASURED. PICK is evaluator CONTINUE followed by planner NO_PLAN, not evaluator failure or proof of physical infeasibility.",
+    "E5_contract_insufficiency": "The nominal contract already distinguishes OPEN-first from PICK-first reachability. The observed candidate difference therefore does not establish missing soft risk/cost/relevance beyond the contract.",
+    "E6_prior_classification": "Independent truth/utility/opportunity adjudication and R* evidence are absent, so no official E6 class is assigned.",
+}
+E4_V3_SECTION = """## 对照 Final Experimental Plan v3 §5.2
+
+v3 E4要求：
+
+同初始化合法候选真实执行＋共同continuation，并在至少两个独立见证上观察可靠的feasibility、cost或rework差异。
+
+当前证据：
+
+- T_A_dev_14、T_A_dev_18 是两个独立case配置；
+- 每个case有两个paired repeat，repeat不计作独立配置；
+- paired public state、qpos、qvel一致；
+- OPEN分支最终由独立Evaluator确认TASK_SUCCESS；
+- PICK分支首动作后Evaluator为CONTINUE，随后B_PLAN返回NO_PLAN；
+- cost=NOT_MEASURED；
+- rework=NOT_MEASURED；
+- PICK的物理不可行性=NOT_ESTABLISHED；
+- controller内部状态和RNG流=NOT_MEASURED。
+
+因此本收口对E4只记录：
+
+LIMITED_SUPPORT_FEASIBILITY_ONLY
+
+它表示在冻结的共同continuation协议下存在两个独立case的可靠结果差异；
+不表示PICK被Evaluator判失败，不表示物理不可行，也不表示E5的合同外soft差异已经成立。
+
+E4与E5必须保持分离。
+"""
+
+
+def _front_matter(path):
+    txt = Path(path).read_text(encoding="utf-8").split("\n")
+    if not txt or txt[0].strip() != "---":
+        return {}
+    fm = {}
+    for line in txt[1:]:
+        if line.strip() == "---":
+            break
+        if ":" in line:
+            k, v = line.split(":", 1)
+            fm[k.strip()] = v.strip().strip('"').strip("'")
+    return fm
+
+
+def verify_authority(root):
+    """Fail-closed check of docs/authoritative/authority_manifest.json against the installed documents."""
+    root = Path(root)
+    mp = root / AUTH_DIR / "authority_manifest.json"
+    if not mp.is_file():
+        raise AuthorityMismatch("authority manifest missing: " + str(mp))
+    man = json.loads(mp.read_text(encoding="utf-8"))
+    problems = []
+    if man.get("master_id") != AUTH_MASTER_ID:
+        problems.append("manifest master_id mismatch")
+    if man.get("authority_status") != AUTH_OK:
+        problems.append("manifest authority_status is not " + AUTH_OK)
+    docs = {}
+    for key, ver, freeze in AUTH_SPECS:
+        ent = man.get(key) or {}
+        if ent.get("document_version") != ver:
+            problems.append(f"{key} document_version != {ver}")
+        rel = ent.get("path") or ""
+        p = root / rel
+        if not rel or not p.is_file():
+            problems.append(f"{key} file missing: {rel!r}")
+            continue
+        h = sha256_file(p)
+        if h != ent.get("sha256"):
+            problems.append(f"{key} sha256 mismatch (file {h})")
+        fm = _front_matter(p)
+        if fm.get("master_id") != AUTH_MASTER_ID:
+            problems.append(f"{key} header master_id mismatch")
+        if fm.get("document_version") != ver:
+            problems.append(f"{key} header document_version mismatch")
+        if fm.get("freeze_status") != freeze:
+            problems.append(f"{key} header freeze_status != {freeze}")
+        docs[key] = {"path": rel, "sha256": h, "document_version": ver}
+    if problems:
+        raise AuthorityMismatch("; ".join(problems))
+    return {"authority_status": AUTH_OK, "master_id": AUTH_MASTER_ID, "documents": docs, "manifest_sha256": sha256_file(mp)}
+
+
 EXIT_CODES = {"OK": 0, "INPUT_MISSING": 2, "ANALYSIS_INCOMPLETE": 3, "VERIFY_FAILED": 4, "ZERO_CALL_VIOLATION": 5}
 
 
@@ -545,8 +641,8 @@ def review_e4(pairs, outcomes, unit):
                    "physical_infeasibility_of_PICK_branch_established": False}
     n_reliable = sum(1 for v in out.values() if v["protocol_level_reliable_outcome_difference"])
     return {"per_case": out, "cases_with_reliable_protocol_level_difference": n_reliable,
-            "frozen_E4_gate_status": ("CANDIDATE_SATISFIED_PENDING_AUTHORITATIVE_DEFINITION" if n_reliable >= 2 else "NOT_SATISFIED_ON_AVAILABLE_EVIDENCE"),
-            "note": "authoritative Final Experimental Plan v3 §5.2-5.6 not located; E4 stated as in the operation card (>=2 independent witnesses with reliable consequence difference). No E5-style 'beyond contract' condition is added."}
+            "frozen_E4_gate_status": ("LIMITED_SUPPORT_FEASIBILITY_ONLY" if n_reliable >= 2 else "NOT_SATISFIED_ON_AVAILABLE_EVIDENCE"),
+            "note": "derived evidence status against Final Experimental Plan v3 §5.2 (not an official v3 enum); the action-sequence difference is not used as E4 evidence; cost/rework NOT_MEASURED. E4 and E5 stay separate."}
 
 
 def render_e4(review, pairs, outcomes, unit):
@@ -564,9 +660,9 @@ def render_e4(review, pairs, outcomes, unit):
           "## 每 case 结论", ""]
     for cs, v in review["per_case"].items():
         L.append(f"- {cs}：{v['pairs']} 组配对，配对恢复通过 {v['restore_ok']}，结果差 {v['outcome_diff']}；协议层可靠差异={v['protocol_level_reliable_outcome_difference']}。支持范围：{v['supported_scope']}；未比较：{', '.join(v['not_compared'])}。")
-    L += ["", f"冻结 E4 门：{review['frozen_E4_gate_status']}（{review['note']}）", "",
+    L += ["", f"E4 派生证据状态：{review['frozen_E4_gate_status']}（{review['note']}）", "",
           "限制：cost/rework 无可比记录（NOT_MEASURED）；PICK 后真实 post-action facts 未保存，不能声称重演了 NO_PLAN 的运行时原因。"]
-    return "\n".join(L) + "\n"
+    return "\n".join(L) + "\n\n" + E4_V3_SECTION
 
 
 # ----------------------------------------------------------------- contracts (pure symbolic; no environment)
@@ -943,6 +1039,26 @@ def _read_exit_codes(c):
     return codes
 
 
+def cmd_authority_reconcile(c):
+    """Pure-file step: verify the installed v3/v5 against the manifest and record the reconciliation. No analysis is re-run."""
+    a = verify_authority(c.root)
+    hist = c.out / "inventory/command_config.json"
+    doc = {"status": "COMPLETE", "execution_time_authority_availability": "NOT_FOUND_ON_SERVER", "current_authority_status": a["authority_status"],
+           "master_id": a["master_id"],
+           "experimental_plan_version": "3.0", "research_content_version": "5.0",
+           "experimental_plan_path": a["documents"]["experimental_plan"]["path"], "experimental_plan_sha256": a["documents"]["experimental_plan"]["sha256"],
+           "research_content_path": a["documents"]["research_content"]["path"], "research_content_sha256": a["documents"]["research_content"]["sha256"],
+           "authority_manifest_sha256": a["manifest_sha256"],
+           "experimental_plan_sections_applied": ["5.2", "5.3", "5.4", "5.6"], "research_content_additional_e1_e6_gate_definition": False,
+           "historical_command_config_sha256_unchanged_record": sha256_file(hist) if hist.is_file() else None,
+           "note": "Historical execution-time NOT_FOUND records are retained unchanged; this file records the later recovery of the authoritative documents.",
+           "new_samples": 0, "scientific_result_changed": False, "tp_training_authorized": False,
+           "additional_physical_attempts_authorized": 0, "next_action": "S4_RESEARCH_DECISION"}
+    (c.out / "evidence").mkdir(parents=True, exist_ok=True)
+    jwrite(c.out / "evidence/authority_reconciliation.json", doc)
+    return {"status": "OK", "current_authority_status": a["authority_status"]}
+
+
 def cmd_assemble(c):
     codes = _read_exit_codes(c)
     need = [c.out / f for f in ("inventory/source_hashes.json", "audit/budget/budget_check.json", "audit/branches/branch_outcomes.json",
@@ -1005,14 +1121,16 @@ def cmd_assemble(c):
     e5 += ["", "限制：真实 post-action facts 未保存，NO_PLAN 的运行时原因只是限定假设（NOMINAL_DERIVED），未被重演证明。"]
     (c.out / "evidence/e5_review.md").write_text("\n".join(e5) + "\n", encoding="utf-8")
     (c.out / "evidence/e6_review.md").write_text("# E6 复核（先验分类）\n\n没有独立的 truth/utility/opportunity 裁定，也没有 q_R / R* 输入；分类保持 UNKNOWN，不新增官方 E6 类别。诊断字段（如 NOMINAL_RECOVERY_GAP）仅为诊断，不是 E6 类别。\n", encoding="utf-8")
-    auth = jread(c.out / "inventory/command_config.json")["authoritative_definitions"]
-    v3 = auth.get("Final_Experimental_Plan_v3", {}).get("status", "NOT_FOUND")
-    n_rel = sum(1 for v in paired["case_review"]["per_case"].values() if v["protocol_level_reliable_outcome_difference"])
-    key_gates = {"E1_relation_existence": "PENDING_AUTHORITATIVE_DEFINITION" if v3 != "FOUND" else "REVIEW_REQUIRED",
-                 "E2_E3_representation": "PRIOR_VALUES_NOT_REVALIDATED",
-                 "E4_real_consequence": "CANDIDATE_SATISFIED_PENDING_AUTHORITATIVE_DEFINITION" if n_rel >= 2 else "NOT_SATISFIED_ON_AVAILABLE_EVIDENCE",
-                 "E5_contract_insufficiency": "NOT_ESTABLISHED", "E6_prior_classification": "UNKNOWN"}
-    eligibility = build_eligibility(v3, n_rel, explainable, key_gates)
+    auth = verify_authority(c.root)  # fail closed; historical inventory/command_config.json is neither read for status nor modified
+    c.need(c.out / "evidence/authority_reconciliation.json")
+    review_now = review_e4(paired["pairs"], outcomes["branches"], paired["unit_of_analysis"])
+    (c.out / "evidence/e4_review.md").write_text(render_e4(review_now, paired["pairs"], outcomes["branches"], paired["unit_of_analysis"]), encoding="utf-8")
+    n_rel = review_now["cases_with_reliable_protocol_level_difference"]
+    key_gates = {"E1_relation_existence": "NOT_ESTABLISHED",
+                 "E2_E3_representation": "PRIOR_VALUES_RETAINED_NOT_REVALIDATED",
+                 "E4_real_consequence": review_now["frozen_E4_gate_status"],
+                 "E5_contract_insufficiency": "NOT_SATISFIED" if explainable else "NOT_ESTABLISHED", "E6_prior_classification": "UNKNOWN"}
+    eligibility = build_eligibility(auth["authority_status"], n_rel, explainable, key_gates)
     jwrite(c.out / "evidence/reviewed_eligibility.json", eligibility)
     tp = jread(c.r3 / "throughput_report.json") if (c.r3 / "throughput_report.json").is_file() else {}
     jwrite(c.out / "evidence/scheduling_report.json", {"workers": 2, "worker_exit_codes": codes, "gpu_used": False, "speedup": "NOT_MEASURED",
@@ -1043,7 +1161,14 @@ def cmd_assemble(c):
           f"- 合同层：{ {k: v['CONTRACT_ALREADY_DISTINGUISHES_ACTIONS'] for k, v in diag.items()} }；诊断原因 {eligibility['diagnostic_reason']}。",
           f"- 关系：admitted 共 {rels['summary']['total_admitted']} 条（14/18/19 各 2 条：{rels['summary']['expected_14_18_19_two_each_matches']}）；truth/utility/opportunity=UNKNOWN。",
           f"- 关键门状态：{json.dumps(key_gates, ensure_ascii=False)}", "- 资格：tp_training_authorized=false；额外物理尝试=0；方法升级=false；下一步=EXPLICIT_RESEARCH_DECISION_REQUIRED。",
-          f"- 权威文档 v3 查找结果：{v3}（未找到则 E1–E6 终局资格保持待定）。", "- post-action 真实事实未保存；controller 内部状态与 RNG 未比较（NOT_MEASURED）。"]
+          "- 权威文档：Final Experimental Plan v3 与 Research Content v5 已从原始权威附件恢复并完成对照；执行当时服务器未找到文档的历史记录保留不变。",
+          "- E1：NOT_ESTABLISHED；自然合法关系存在，但缺独立可裁定truth证据。",
+          "- E2/E3：沿用历史保存值，本轮未重新验证。",
+          "- E4：LIMITED_SUPPORT_FEASIBILITY_ONLY；两个独立case有配对协议结果差，但cost/rework未测，PICK为Evaluator CONTINUE后planner NO_PLAN。",
+          "- E5：NOT_SATISFIED；当前OPEN/PICK差异可由注册合同长期可达性解释，不满足合同外soft risk/cost/relevance条件。",
+          "- E6：UNKNOWN；缺独立truth/utility/opportunity与R*证据。",
+          "- S1处置不变：tp_training_authorized=false；additional_physical_attempts_authorized=0；next_action=S4_RESEARCH_DECISION。",
+          "- post-action 真实事实未保存；controller 内部状态与 RNG 未比较（NOT_MEASURED）。"]
     (c.out / "evidence/reviewed_summary.md").write_text("\n".join(sm) + "\n", encoding="utf-8")
     man = {}
     for p in sorted((c.out / "evidence").glob("*")):
@@ -1069,12 +1194,15 @@ def compare_protected(c, before):
     return after, changed, missing_files
 
 
-def build_eligibility(v3_status, n_reliable_e4, contract_explainable, key_gates):
-    """No combination of evidence here can authorize training, S2 or new physical attempts."""
+def build_eligibility(authority_status, n_reliable_e4, contract_explainable, key_gates):
+    """No combination of evidence here can authorize training, S2 or new physical attempts. Fails closed without reconciled authority."""
+    if authority_status != AUTH_OK:
+        raise AuthorityMismatch("authority not reconciled: " + str(authority_status))
     return {"eligibility_decision": "DERIVED_FROM_AVAILABLE_EVIDENCE", "scientific_result": "NOT_ESTABLISHED",
-            "key_gate_status": key_gates, "diagnostic_reason": ("CONTRACT_EXPLAINABLE_BRANCH_DIFFERENCE" if contract_explainable else "NOT_DETERMINED"),
-            "authoritative_plan_v3_status": v3_status,
-            "plan_condition_citation": "v3 §5.2–5.6 not located; eligibility pending against the original conditions" if v3_status != "FOUND" else "see v3 §5.2–5.6",
+            "key_gate_status": key_gates, "key_gate_notes": dict(KEY_GATE_NOTES),
+            "diagnostic_reason": ("CONTRACT_EXPLAINABLE_BRANCH_DIFFERENCE" if contract_explainable else "NOT_DETERMINED"),
+            "authoritative_plan_v3_status": authority_status, "authoritative_research_v5_status": authority_status,
+            "plan_condition_citation": "Final Experimental Plan v3 §§5.2–5.6. Research Content v5 provides no additional E1–E6 gate definition.",
             "tp_training_authorized": False, "additional_physical_attempts_authorized": 0, "method_upgrade_authorized": False,
             "next_action": "EXPLICIT_RESEARCH_DECISION_REQUIRED", "route_if_key_gate_unmet": "S4_RESEARCH_DECISION"}
 
@@ -1113,8 +1241,22 @@ def cmd_verify(c):
         if not (c.root / f).is_file() or sha256_file(c.root / f) != h:
             problems.append("evidence hash mismatch " + f)
     head = git(c.root, "rev-parse", "HEAD")
-    if head != BASE_COMMIT:
-        problems.append("HEAD is not the expected delivery commit")
+    anc = subprocess.run(["git", "-C", str(c.root), "merge-base", "--is-ancestor", BASE_COMMIT, head], capture_output=True)
+    if anc.returncode != 0:
+        problems.append("HEAD is not the expected delivery commit or a descendant of it")
+    try:
+        verify_authority(c.root)
+    except AuthorityMismatch as e:
+        problems.append("authority: " + str(e))
+    ar = c.out / "evidence/authority_reconciliation.json"
+    if not ar.is_file():
+        problems.append("missing output evidence/authority_reconciliation.json")
+    else:
+        ard = jread(ar)
+        if ard.get("current_authority_status") != AUTH_OK or ard.get("execution_time_authority_availability") != "NOT_FOUND_ON_SERVER" or ard.get("new_samples") != 0:
+            problems.append("authority_reconciliation content unexpected")
+    if el.get("authoritative_plan_v3_status") != AUTH_OK or "not located" in json.dumps(el, ensure_ascii=False):
+        problems.append("eligibility still carries pre-recovery authority wording")
     res = {"status": "PASS" if not problems else "FAIL", "problems": problems, "protected_entries": len(after), "head": head}
     jwrite(c.out / "verify.json", res)
     if problems:
@@ -1124,7 +1266,7 @@ def cmd_verify(c):
 
 # ----------------------------------------------------------------- CLI
 COMMANDS = {"inventory": cmd_inventory, "budget": cmd_budget, "branches": cmd_branches, "contracts": cmd_contracts,
-            "relations": cmd_relations, "assemble": cmd_assemble, "verify": cmd_verify}
+            "relations": cmd_relations, "authority-reconcile": cmd_authority_reconcile, "assemble": cmd_assemble, "verify": cmd_verify}
 
 
 def main(argv=None):
@@ -1143,7 +1285,7 @@ def main(argv=None):
         print(json.dumps({"status": "ZERO_CALL_VIOLATION", "error": str(e)})); return EXIT_CODES["ZERO_CALL_VIOLATION"]
     except InputMissing as e:
         print(json.dumps({"status": "INPUT_MISSING", "error": str(e)})); return EXIT_CODES["INPUT_MISSING"]
-    except VerifyFailed as e:
+    except (VerifyFailed, AuthorityMismatch) as e:
         print(json.dumps({"status": "VERIFY_FAILED", "error": str(e)})); return EXIT_CODES["VERIFY_FAILED"]
     except AnalysisIncomplete as e:
         print(json.dumps({"status": "ANALYSIS_INCOMPLETE", "error": str(e)})); return EXIT_CODES["ANALYSIS_INCOMPLETE"]
