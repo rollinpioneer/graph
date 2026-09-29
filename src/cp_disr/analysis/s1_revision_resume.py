@@ -740,7 +740,7 @@ def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, 
         if requested_hash and actual_hash != requested_hash:
             raise _base().RevisionError("RESTORE_SNAPSHOT_HASH_MISMATCH")
         event("restore_complete", restore_seed=int(seed), restore_verified=True,
-              snapshot_hash=actual_hash or "", restore_receipt_sha256=digest(receipt))
+              snapshot_hash=actual_hash or "", restore_receipt_sha256=digest(bundle.restore_receipt), budget_receipt_sha256=digest(receipt))
         episode_start = float(getattr(bundle, "episode_start_seconds", bundle.clock.now_seconds()))
         if not math.isfinite(episode_start):
             raise _base().RevisionError("CLOCK_INVALID: episode_start")
