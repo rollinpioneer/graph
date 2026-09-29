@@ -1,0 +1,11 @@
+{
+  "finding": "PERCEPTION_MASK_CROSSTALK",
+  "detail": "Production independent colour-tolerance masks let shaded cyan interferer pixels fire the container and buffer masks; container/buffer blobs were back-projected onto the interferer, so Inside/AtBuffer(interferer) read TRUE at reset (T_P_SR_pool_00 and _01, 2 of 64 static resets).",
+  "affected_rows": [
+    "T_P_SR_pool_00",
+    "T_P_SR_pool_01"
+  ],
+  "consequence": "both resets stay charged and both rows stay FAIL (pre-fix); they are not re-screened because the static reset cap is 64; the remaining 62 configs are screened once each after the fix",
+  "fix": "tp_sr_runtime.install_nearest_palette_mask (per-pixel nearest palette colour; tolerance/palette/back-projection unchanged); production perception.py and old T_A/T_C code untouched",
+  "perception_variant": "cp-disr-d0-rgbd-colorseg-v2+nearest-palette-assignment"
+}

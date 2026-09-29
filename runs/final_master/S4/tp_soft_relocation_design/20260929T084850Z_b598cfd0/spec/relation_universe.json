@@ -1,0 +1,40 @@
+{
+  "accepted_types": [
+    "SOFT_SUPPORTS",
+    "SOFT_RELEVANT_TO_GOAL"
+  ],
+  "explicitly_rejected": [
+    {
+      "reason": "CONTRACT_REDUNDANCY (direct contract precondition Held(interferer))",
+      "source": "a:PICK:interferer:v1",
+      "target": "a:PLACE_BUFFER:interferer:buffer:v1"
+    }
+  ],
+  "hard_relations_admitted": 0,
+  "relations": [
+    {
+      "effect": "p:Held:interferer",
+      "relation_id": "R1",
+      "scope": "soft relevance of moving the interferer to the goal; not a contract precondition",
+      "source": "a:PICK:interferer:v1",
+      "target": "p:Inside:target:container",
+      "type": "SOFT_RELEVANT_TO_GOAL"
+    },
+    {
+      "effect": "p:AtBuffer:interferer:buffer",
+      "relation_id": "R2",
+      "scope": "relocating the interferer softly supports a later PICK(target)",
+      "source": "a:PLACE_BUFFER:interferer:buffer:v1",
+      "target": "a:PICK:target:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "effect": "p:AtBuffer:interferer:buffer",
+      "relation_id": "R3",
+      "scope": "relocation is softly relevant to the goal",
+      "source": "a:PLACE_BUFFER:interferer:buffer:v1",
+      "target": "p:Inside:target:container",
+      "type": "SOFT_RELEVANT_TO_GOAL"
+    }
+  ]
+}

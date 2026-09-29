@@ -1,0 +1,44 @@
+{
+  "action_ids": [
+    "a:PICK:interferer:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:target:container:v1",
+    "a:PLACE_BUFFER:interferer:buffer:v1"
+  ],
+  "direct_reachable": true,
+  "direct_route": [
+    "a:PICK:target:v1",
+    "a:PLACE:target:container:v1"
+  ],
+  "relocation_reachable": true,
+  "relocation_route": [
+    "a:PICK:interferer:v1",
+    "a:PLACE_BUFFER:interferer:buffer:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:target:container:v1"
+  ],
+  "routes": [
+    [
+      "a:PICK:interferer:v1",
+      "a:PLACE_BUFFER:interferer:buffer:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:target:container:v1"
+    ],
+    [
+      "a:PICK:target:v1",
+      "a:PLACE:target:container:v1"
+    ]
+  ],
+  "template_propositions": [
+    "p:AtBuffer:interferer:buffer",
+    "p:AtBuffer:target:buffer",
+    "p:GripperEmpty",
+    "p:Held:interferer",
+    "p:Held:target",
+    "p:Inside:interferer:container",
+    "p:Inside:target:container",
+    "p:OnTable:interferer",
+    "p:OnTable:target",
+    "p:Open:container"
+  ]
+}

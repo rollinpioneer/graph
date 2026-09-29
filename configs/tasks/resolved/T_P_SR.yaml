@@ -1,0 +1,47 @@
+task_id: T_P_SR
+task_family_id: T_P_SOFT_RELOCATION_V1
+family_version: "1.0"
+task_version: cp-disr-v2.1-s4-tp-sr-1.0
+status: S4_DESIGN_FEASIBILITY_ONLY
+dataset_role: CURATED_MECHANISM_DEMONSTRATION
+publication_claim: NOT_AN_UNBIASED_BENCHMARK
+platform_ref: LIBERO_CP_DISR_CLEAN@8f1084e3132a39270c3a13ebe37270a43ece2a01
+typed_entities:
+  target:
+    type: object
+  interferer:
+    type: object
+  container:
+    type: container
+  buffer:
+    type: buffer
+instruction: Place the red target cube into the blue container (already open). A cyan interferer cube
+  may be near the target; it may optionally be relocated to the green buffer first, but moving it
+  is not itself the goal.
+signed_goals:
+- predicate: Inside
+  arguments:
+  - target
+  - container
+  sign: 1
+required_skill_schemas:
+- PICK
+- PLACE
+- PLACE_BUFFER
+grounded_action_ids:
+- a:PICK:target:v1
+- a:PICK:interferer:v1
+- a:PLACE:target:container:v1
+- a:PLACE_BUFFER:interferer:buffer:v1
+masked_or_absent_groundings:
+- a:OPEN:container:v1
+- a:PLACE:interferer:container:v1
+- a:PLACE_BUFFER:target:buffer:v1
+move_decision: REJECTED_FOR_ALL_TASKS
+structural_signature: optional_soft_relocation
+task_evaluator_ref: src/cp_disr/platforms/libero/task_evaluator.py
+controller_ref: src/cp_disr/platforms/libero/skill_executor.py
+verifier_ref: src/cp_disr/platforms/libero/verifier.py
+contract_registry_ref: configs/runtime/tp_sr_contract_registry.yaml
+deadline_seconds: 60.0
+reference_skill_seconds: 3.649999999999709

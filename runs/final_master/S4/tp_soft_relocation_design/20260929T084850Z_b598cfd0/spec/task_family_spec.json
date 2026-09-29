@@ -1,0 +1,43 @@
+{
+  "allowed_action_ids": [
+    "a:PICK:target:v1",
+    "a:PICK:interferer:v1",
+    "a:PLACE:target:container:v1",
+    "a:PLACE_BUFFER:interferer:buffer:v1"
+  ],
+  "card_id": "CP-DISR-S4-TASK-REDESIGN-1",
+  "dataset_role": "CURATED_MECHANISM_DEMONSTRATION",
+  "forbidden_hard_facts": [
+    "ClearPath",
+    "Occluded",
+    "Blocked",
+    "EasyGrasp",
+    "SafeToPick"
+  ],
+  "geometry_fields_scope": "generator/QA only; never policy input, provider payload, relation admission or reward",
+  "goal": {
+    "fact_id": "p:Inside:target:container",
+    "sign": 1
+  },
+  "initial_required_candidates": [
+    "a:PICK:target:v1",
+    "a:PICK:interferer:v1"
+  ],
+  "initial_required_facts": {
+    "p:AtBuffer:interferer:buffer": false,
+    "p:GripperEmpty": true,
+    "p:Inside:target:container": false,
+    "p:OnTable:interferer": true,
+    "p:OnTable:target": true,
+    "p:Open:container": true
+  },
+  "masked_or_absent_groundings": [
+    "a:OPEN:container:v1",
+    "a:PLACE:interferer:container:v1",
+    "a:PLACE_BUFFER:target:buffer:v1"
+  ],
+  "method_version": "2.1.1",
+  "publication_claim": "NOT_AN_UNBIASED_BENCHMARK",
+  "task_family_id": "T_P_SOFT_RELOCATION_V1",
+  "task_id": "T_P_SR"
+}

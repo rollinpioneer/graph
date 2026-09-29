@@ -1,0 +1,73 @@
+master_id: CP-DISR-FINAL-EXEC-3.0
+card_id: CP-DISR-S4-TASK-REDESIGN-1
+
+task_family_id: T_P_SOFT_RELOCATION_V1
+task_id: T_P_SR
+family_version: "1.0"
+
+method_version: "2.1.1"
+dataset_role: CURATED_MECHANISM_DEMONSTRATION
+
+goal:
+  fact_id: p:Inside:target:container
+  sign: 1
+
+initial_required_facts:
+  p:GripperEmpty: TRUE
+  p:OnTable:target: TRUE
+  p:OnTable:interferer: TRUE
+  p:Open:container: TRUE
+  p:Inside:target:container: FALSE
+  p:AtBuffer:interferer:buffer: FALSE
+
+initial_required_candidates:
+  - a:PICK:target:v1
+  - a:PICK:interferer:v1
+
+allowed_action_ids:
+  - a:PICK:target:v1
+  - a:PICK:interferer:v1
+  - a:PLACE:target:container:v1
+  - a:PLACE_BUFFER:interferer:buffer:v1
+
+candidate_pool:
+  total_configs: 64
+  physical_probe_scenes: 24
+
+physical_probe:
+  first_actions:
+    direct: a:PICK:target:v1
+    relocation: a:PICK:interferer:v1
+  repeats_per_branch: 2
+  shared_continuation: B_PLAN
+  depth: 6
+  max_nodes: 4096
+  cpu_time_limit_seconds: 2.0
+
+provider_sample:
+  total: 12
+  target_mix:
+    strong_helpful: 6
+    neutral: 3
+    harmful_or_unknown: 3
+
+budgets:
+  candidate_reset_configs: 64
+  static_capture_resets: 64
+  physical_qualification_scenes: 24
+  physical_branch_episodes: 96
+  provider_first_calls: 12
+  provider_retries: 12
+  representation_forward_cases: 12
+  rl_transitions: 0
+  optimizer_steps: 0
+  training_attempts: 0
+  elastic_attempts: 0
+  formal_test_episodes: 0
+
+parallel:
+  cpu_workers_max: 8
+  physical_workers_initial: 2
+  physical_workers_max: 4
+  provider_workers_initial: 2
+  provider_workers_max: 4
