@@ -1,0 +1,16 @@
+..........................F..                                            [100%]
+=================================== FAILURES ===================================
+________________ test_P01_alignment_requires_actual_comparison _________________
+
+    def test_P01_alignment_requires_actual_comparison():
+        b={"alignment_records":[{"case_id":"c1","candidate_id_alignment":True,"mask_alignment":True,"goal_alignment":True,"node_alignment":True,"actual_comparison":False},{"case_id":"c2","candidate_id_alignment":True,"mask_alignment":True,"goal_alignment":True,"node_alignment":True,"actual_comparison":False}]}
+>       assert evaluate_gate_evidence(b)["E2"]["status"]=="NOT_ESTABLISHED"
+E       AssertionError: assert 'PASS' == 'NOT_ESTABLISHED'
+E         
+E         - NOT_ESTABLISHED
+E         + PASS
+
+tests/test_s1_probe_evidence_behavior.py:5: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_probe_evidence_behavior.py::test_P01_alignment_requires_actual_comparison
+1 failed, 28 passed in 1.15s

@@ -1,0 +1,20 @@
+........................F....                                            [100%]
+=================================== FAILURES ===================================
+__________________ test_B19_concurrent_reserve_has_one_winner __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-96/test_B19_concurrent_reserve_ha0')
+
+    def test_B19_concurrent_reserve_has_one_winner(tmp_path):
+        ledger(tmp_path,0,1)
+        def one():
+            try: reserve_budget(tmp_path,"physical_witness_episodes",1,"id-"+str(object())); return True
+            except BudgetExceeded: return False
+        with ThreadPoolExecutor(max_workers=2) as ex: got=list(ex.map(lambda _:one(),range(2)))
+>       assert sum(got)==1
+E       assert 2 == 1
+E        +  where 2 = sum([True, True])
+
+tests/test_s1_dispatch_behavior.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_dispatch_behavior.py::test_B19_concurrent_reserve_has_one_winner
+1 failed, 28 passed in 1.13s

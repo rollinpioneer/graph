@@ -1,0 +1,26 @@
+..................FF.........                                            [100%]
+=================================== FAILURES ===================================
+________________ test_G01_provider_without_truth_does_not_pass _________________
+
+    def test_G01_provider_without_truth_does_not_pass():
+        r=evaluate_gate_evidence({"relation_adjudications":[],"consequence_comparisons":[],"utility_records":[]})
+>       assert all(r[k]["status"]=="NOT_ESTABLISHED" for k in ("E1","E4","E5","E6"))
+E       assert False
+E        +  where False = all(<generator object test_G01_provider_without_truth_does_not_pass.<locals>.<genexpr> at 0x7fae76353df0>)
+
+tests/test_s1_gate_behavior.py:5: AssertionError
+______________ test_G02_valid_rows_without_pairing_do_not_pass_E4 ______________
+
+    def test_G02_valid_rows_without_pairing_do_not_pass_E4():
+        b={"witness_records":[{"protocol_complete":True,"full_episode_completed":True,"independent_evaluator":False,"paired_restore_verified":False,"eligible_for_e4":False}],"consequence_comparisons":[]}
+>       assert evaluate_gate_evidence(b)["E4"]["status"]=="NOT_ESTABLISHED"
+E       AssertionError: assert 'PASS' == 'NOT_ESTABLISHED'
+E         
+E         - NOT_ESTABLISHED
+E         + PASS
+
+tests/test_s1_gate_behavior.py:9: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_gate_behavior.py::test_G01_provider_without_truth_does_not_pass
+FAILED tests/test_s1_gate_behavior.py::test_G02_valid_rows_without_pairing_do_not_pass_E4
+2 failed, 27 passed in 1.62s

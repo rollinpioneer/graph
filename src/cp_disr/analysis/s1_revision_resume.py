@@ -10,6 +10,7 @@ from dataclasses import replace
 import csv
 import hashlib
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -21,6 +22,7 @@ import numpy as np
 import yaml
 
 from cp_disr.common import canonical, digest, primitive
+from cp_disr.adapters import EvaluationInput
 from cp_disr.facts import FactStore
 from cp_disr.runtime import load_runtime
 from cp_disr.stage0c import PREPROCESSING, prepare_scene
@@ -604,139 +606,228 @@ def register_physical_branches(root, output_dir):
     return value
 
 
-def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, planner_factory=None):
-    """Execute a registered branch through the real observe/verify/evaluate loop.
+def _runner_config(manifest):
+    runtime = manifest.get("runtime")
+    if not isinstance(runtime, dict):
+        raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+    task_id = runtime.get("active_task_id")
+    refs = runtime.get("reference_skill_seconds_by_task")
+    deadlines = runtime.get("task_deadlines")
+    if not task_id or not isinstance(refs, dict) or task_id not in refs:
+        raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+    if not isinstance(deadlines, dict) or task_id not in deadlines:
+        raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+    d_ref = float(refs[task_id])
+    deadline = float(deadlines[task_id])
+    import math
+    if not math.isfinite(d_ref) or d_ref <= 0:
+        raise _base().RevisionError("RUNTIME_CONFIG_INVALID: reference_skill_seconds")
+    if not math.isfinite(deadline) or deadline <= 0:
+        raise _base().RevisionError("RUNTIME_CONFIG_INVALID: task_deadline")
+    caps = runtime.get("decision_cap_by_task", {})
+    decision_cap = caps.get(task_id) if isinstance(caps, dict) else runtime.get("decision_cap")
+    if decision_cap is not None:
+        decision_cap = int(decision_cap)
+        if decision_cap <= 0:
+            raise _base().RevisionError("RUNTIME_CONFIG_INVALID: decision_cap")
+    return runtime, task_id, d_ref, deadline, decision_cap
 
-    The default path still uses RuntimeFactory; tests may inject only the
-    environment boundary. Controller termination is recorded separately from
-    task success and a PLAN_FOUND result is always consumed.
-    """
+
+def _runner_journal(path, branch_id, sequence, phase, **fields):
+    payload = {
+        "branch_id": branch_id,
+        "sequence": int(sequence),
+        "phase": phase,
+        "relative_time": fields.pop("relative_time", None),
+        **fields,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True, ensure_ascii=False) + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, planner_factory=None):
+    """Production control loop; dependencies may only be replaced at test boundaries."""
     root, output_dir = Path(root).resolve(), Path(output_dir)
     reg = _json(output_dir / "witnesses/e4_branch_registration.json")
     branch = next((b for b in reg.get("branches", []) if b["branch_id"] == branch_id), None)
     if branch is None:
         raise _base().RevisionError("witness execution requires frozen branch registration")
-    manifest = yaml.safe_load((output_dir / "input_binding/T_A_s1_rev1_runtime_manifest.yaml").read_text())
-    bundle = bundle_factory(manifest, branch) if bundle_factory else load_runtime(manifest)
-    from cp_disr.adapters import EvaluationInput
-    from cp_disr.baselines.b_plan import BPlanPlanner, SearchConfig
+    manifest_path = Path(branch.get("manifest_path") or output_dir / "input_binding/T_A_s1_rev1_runtime_manifest.yaml")
+    journal = output_dir / "witnesses" / f"branch_{branch_id}.jsonl"
+    sequence = 0
     trace = []
+    bundle = None
+    phase = "preflight"
+
+    def event(name, **fields):
+        nonlocal sequence
+        _runner_journal(journal, branch_id, sequence, name, **fields)
+        sequence += 1
+
+    def result(**fields):
+        base = {
+            "branch_id": branch_id,
+            "case_id": branch.get("case_id", ""),
+            "candidate_id": branch.get("candidate_id", ""),
+            "controller_exit": "",
+            "execution_status": "",
+            "termination_reason": "",
+            "task_success": False,
+            "protocol_complete": False,
+            "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+            "paired_effect_status": "NOT_ESTABLISHED",
+            "eligible_for_e4": False,
+            "decision_count": len(trace),
+            "trace": trace,
+        }
+        base.update(fields)
+        return base
+
     try:
+        phase = "load_registration"
+        if not manifest_path.is_file():
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: manifest")
+        manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+        if branch.get("authorized") is False or branch.get("execute_now") is False:
+            raise _base().RevisionError("EXECUTION_NOT_AUTHORIZED")
+        ledger_path = output_dir / "budget_ledger.json"
+        if ledger_path.is_file():
+            ledger = _json(ledger_path)
+            item = ledger.get("physical_witness_episodes", {})
+            if int(item.get("used", 0)) >= int(item.get("cap", 0)):
+                raise _base().BudgetExceeded("physical_witness_episodes cap exhausted")
+        attempts = output_dir / "attempt_registry.json"
+        if attempts.is_file():
+            registry = _json(attempts)
+            prior = registry.get(branch_id)
+            if prior in ("STARTED", "COMPLETED", "UNKNOWN"):
+                raise _base().RevisionError("DUPLICATE_OR_UNKNOWN_ATTEMPT:" + str(prior))
         seed = branch.get("restore_seed")
         if seed is None:
-            raise _base().RevisionError("registered branch has no restore_seed")
-        if hasattr(bundle.environment, "set_seed"):
-            bundle.environment.set_seed(int(seed))
-        snap = bundle.start_case(branch["case_id"])
-        episode_start = float(bundle.episode_start_seconds)
+            raise _base().RevisionError("RESTORE_CONFIG_MISSING: restore_seed")
+        event("preflight_complete", input_hash=digest((branch, manifest)), task_id=task_id, d_ref=d_ref, deadline=deadline, decision_cap=decision_cap)
+        phase = "bundle_create"
+        bundle = bundle_factory(manifest, branch) if bundle_factory else load_runtime(manifest)
+        event("bundle_created")
+        phase = "restore"
+        if not hasattr(bundle, "start_case"):
+            raise _base().RevisionError("RESTORE_UNSUPPORTED: start_case")
+        try:
+            snap = bundle.start_case(branch["case_id"], restore_seed=int(seed))
+        except TypeError as exc:
+            raise _base().RevisionError("RESTORE_UNSUPPORTED: restore_seed") from exc
+        if getattr(bundle, "restore_verified", True) is False:
+            raise _base().RevisionError("RESTORE_NOT_VERIFIED")
+        requested_hash = branch.get("snapshot_hash")
+        actual_hash = getattr(bundle, "snapshot_identity", None)
+        if requested_hash and actual_hash != requested_hash:
+            raise _base().RevisionError("RESTORE_SNAPSHOT_HASH_MISMATCH")
+        event("restore_complete", restore_seed=int(seed), restore_verified=bool(getattr(bundle, "restore_verified", True)), snapshot_hash=actual_hash or "")
+        episode_start = float(getattr(bundle, "episode_start_seconds", bundle.clock.now_seconds()))
+        if not math.isfinite(episode_start):
+            raise _base().RevisionError("CLOCK_INVALID: episode_start")
+        from cp_disr.baselines.b_plan import BPlanPlanner, SearchConfig
+        planner = planner_factory() if planner_factory else BPlanPlanner(SearchConfig(
+            depth_limit=6,
+            max_nodes=4096,
+            cpu_time_limit_seconds=2.0,
+            reference_skill_seconds=d_ref,
+        ))
         candidate = branch["candidate_id"]
-        planner = planner_factory() if planner_factory else BPlanPlanner(
-            SearchConfig(
-                depth_limit=6,
-                max_nodes=4096,
-                cpu_time_limit_seconds=2.0,
-                reference_skill_seconds=float(manifest["reference_skill_seconds"]),
-            )
-        )
-        decision_count = 0
-        while decision_count <= 6:
+        previous_now = episode_start
+        decisions = 0
+        while True:
+            if decisions > 1024:
+                event("terminated", termination_reason="ENGINEERING_STOP")
+                return result(execution_status="ENGINEERING_STOP", termination_reason="ENGINEERING_STOP", protocol_complete=False)
+            now = float(bundle.clock.now_seconds())
+            if not math.isfinite(now) or now < previous_now:
+                raise _base().RevisionError("CLOCK_INVALID: non_monotonic")
+            previous_now = now
+            elapsed = now - episode_start
+            event("decision_start", relative_time=elapsed, candidate_id=candidate)
+            if elapsed >= deadline:
+                event("deadline_before_action", relative_time=elapsed)
+                return result(execution_status="DEADLINE", termination_reason="DEADLINE", protocol_complete=True, witness_validity="NOT_ESTABLISHED")
             index = {cid: i for i, cid in enumerate(snap.candidate_ids)}
             if candidate not in index or not bool(snap.mask[index[candidate]]):
-                return {
-                    "branch_id": branch_id, "case_id": branch["case_id"],
-                    "candidate_id": branch["candidate_id"],
-                    "controller_exit": "", "execution_status": "REJECTED_MASK",
-                    "termination_reason": "CURRENT_MASK_REJECTED",
-                    "task_success": False, "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
-                    "full_episode_completed": False, "trace": trace,
-                }
-            contract = next(c for c in snap.template.contracts if c.id == candidate)
-            now = float(bundle.clock.now_seconds())
+                event("terminated", relative_time=elapsed, termination_reason="CURRENT_MASK_REJECTED")
+                return result(execution_status="REJECTED_MASK", termination_reason="CURRENT_MASK_REJECTED", protocol_complete=False)
+            contract = next((c for c in snap.template.contracts if c.id == candidate), None)
+            if contract is None:
+                raise _base().RevisionError("CONTRACT_NOT_REGISTERED:" + str(candidate))
+            event("action_start", relative_time=elapsed, candidate_id=candidate, contract_id=contract.id)
             execution = bundle.executor.execute(candidate, float(contract.timeout_seconds))
+            event("action_complete", relative_time=float(bundle.clock.now_seconds()) - episode_start, execution_id=execution.execution_id, controller_exit=execution.controller_exit)
+            if execution.controller_exit not in {"NORMAL_TERMINATION", "SUCCESS", "TIMEOUT", "FAILURE", "FAILED", "TRUNCATED", "ERROR"}:
+                event("terminated", termination_reason="UNKNOWN_CONTROLLER_EXIT")
+                return result(controller_exit=execution.controller_exit, execution_status="UNKNOWN_CONTROLLER_EXIT", termination_reason="UNKNOWN_CONTROLLER_EXIT", protocol_complete=False)
             obs = bundle.observations.observe()
             measured = bundle.perception.infer(obs)
             records = bundle.verifier.verify(measured, execution)
+            event("verifier_complete", relative_time=float(bundle.clock.now_seconds()) - episode_start, verified_fact_count=len(records))
             end = float(bundle.clock.now_seconds())
             task = bundle.evaluator.evaluate(EvaluationInput(
-                task_id=str(getattr(bundle, "task_id", "T_A")),
+                task_id=str(getattr(bundle, "task_id", task_id)),
                 env_id=snap.env_id,
                 episode_id=snap.episode_id,
                 evidence_refs=tuple(execution.evidence_ids),
                 elapsed_seconds=end - episode_start,
-                interval_start_seconds=now - episode_start,
+                interval_start_seconds=float(execution.start_seconds) - episode_start,
                 interval_end_seconds=end - episode_start,
             ))
             trace.append({
-                "decision": decision_count, "candidate_id": candidate,
+                "decision": decisions,
+                "candidate_id": candidate,
                 "execution_id": execution.execution_id,
                 "controller_exit": execution.controller_exit,
-                "verified_fact_count": len(records),
                 "elapsed_seconds": end - episode_start,
-                "task_success": bool(task.success), "task_terminated": bool(task.terminated),
-                "task_reason": task.reason,
+                "task_success": bool(task.success),
+                "terminated": bool(task.terminated),
+                "truncated": bool(task.truncated),
+                "reason": task.reason,
             })
+            event("evaluator_complete", relative_time=end - episode_start, task_success=bool(task.success), terminated=bool(task.terminated), truncated=bool(task.truncated), reason=task.reason)
             snap = bundle.snapshot_builder.build(snap, records, obs, execution, end)
-            if task.terminated:
-                return {
-                    "branch_id": branch_id, "case_id": branch["case_id"],
-                    "candidate_id": branch["candidate_id"],
-                    "controller_exit": execution.controller_exit,
-                    "execution_status": "COMPLETED",
-                    "termination_reason": task.reason,
-                    "task_success": bool(task.success),
-                    "witness_validity": "VALID" if task.reason in ("TASK_SUCCESS", "DEADLINE", "NO_PLAN") else "ENGINEERING_NON_DIAGNOSTIC",
-                    "full_episode_completed": True, "decision_count": decision_count + 1,
-                    "trace": trace,
-                }
-            remaining = max(0.0, float(getattr(bundle, "snapshot_builder").deadline) - (end - episode_start))
+            if task.terminated or task.truncated:
+                return result(controller_exit=execution.controller_exit, execution_status="TRUNCATED" if task.truncated else "TERMINATED", termination_reason=task.reason, task_success=bool(task.success), protocol_complete=True, witness_validity="VALID" if task.reason in ("TASK_SUCCESS", "DEADLINE") else "NOT_ESTABLISHED")
+            if end - episode_start >= deadline:
+                event("terminated", relative_time=end - episode_start, termination_reason="DEADLINE")
+                return result(controller_exit=execution.controller_exit, execution_status="DEADLINE", termination_reason="DEADLINE", protocol_complete=True, witness_validity="NOT_ESTABLISHED")
+            remaining = deadline - (end - episode_start)
             plan = planner.plan(snap.facts, snap.template, remaining)
+            event("planner_return", relative_time=end - episode_start, status=plan.status, plan=list(plan.plan), expanded_nodes=plan.expanded_nodes, cpu_seconds=plan.cpu_seconds)
+            if plan.status == "PLAN_FOUND" and plan.plan:
+                candidate = plan.plan[0]
+                decisions += 1
+                if decision_cap is not None and decisions >= decision_cap:
+                    event("terminated", relative_time=end - episode_start, termination_reason="DECISION_CAP")
+                    return result(controller_exit=execution.controller_exit, execution_status="DECISION_CAP", termination_reason="DECISION_CAP", protocol_complete=False)
+                continue
             if plan.status in ("NO_PLAN", "SEARCH_TIMEOUT"):
-                return {
-                    "branch_id": branch_id, "case_id": branch["case_id"],
-                    "candidate_id": branch["candidate_id"],
-                    "controller_exit": execution.controller_exit,
-                    "execution_status": plan.status,
-                    "termination_reason": plan.status,
-                    "task_success": False,
-                    "witness_validity": "VALID", "full_episode_completed": True,
-                    "decision_count": decision_count + 1, "trace": trace,
-                }
+                if plan.status == "NO_PLAN":
+                    return result(controller_exit=execution.controller_exit, execution_status="NO_PLAN", termination_reason="NO_PLAN", protocol_complete=True, witness_validity="NOT_ESTABLISHED")
+                return result(controller_exit=execution.controller_exit, execution_status="SEARCH_TIMEOUT", termination_reason="SEARCH_TIMEOUT", protocol_complete=True, witness_validity="NOT_ESTABLISHED")
             if plan.status == "GOAL_ALREADY_SATISFIED":
-                return {
-                    "branch_id": branch_id, "case_id": branch["case_id"],
-                    "candidate_id": branch["candidate_id"],
-                    "controller_exit": execution.controller_exit,
-                    "execution_status": plan.status, "termination_reason": plan.status,
-                    "task_success": False, "witness_validity": "VALID",
-                    "full_episode_completed": True, "decision_count": decision_count + 1,
-                    "trace": trace,
-                }
-            if plan.status != "PLAN_FOUND" or not plan.plan:
-                raise _base().RevisionError("planner returned an invalid continuation result")
-            candidate = plan.plan[0]
-            decision_count += 1
-        return {
-            "branch_id": branch_id, "case_id": branch["case_id"],
-            "candidate_id": branch["candidate_id"],
-            "execution_status": "SEARCH_TIMEOUT", "termination_reason": "DECISION_LIMIT",
-            "task_success": False, "witness_validity": "VALID",
-            "full_episode_completed": True, "trace": trace,
-        }
+                return result(controller_exit=execution.controller_exit, execution_status="SYMBOLIC_GOAL", termination_reason="SYMBOLIC_EVALUATOR_MISMATCH", protocol_complete=False)
+            raise _base().RevisionError("PLANNER_INVALID_RESULT:" + str(plan.status))
     except Exception as exc:
-        return {
-            "branch_id": branch_id, "case_id": branch["case_id"],
-            "candidate_id": branch["candidate_id"],
-            "execution_status": "EXCEPTION", "termination_reason": type(exc).__name__,
-            "task_success": False, "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
-            "full_episode_completed": False, "error_type": type(exc).__name__,
-            "error_phase": "runner_loop", "traceback": __import__("traceback").format_exc(),
-            "trace": trace,
-        }
+        event("error", error_phase=phase, error_type=type(exc).__name__, traceback=__import__("traceback").format_exc())
+        return result(execution_status="EXCEPTION", termination_reason=type(exc).__name__, error_phase=phase, error_type=type(exc).__name__, traceback=__import__("traceback").format_exc(), protocol_complete=False)
     finally:
-        try:
-            bundle.environment.close()
-        except Exception:
-            pass
+        if bundle is not None:
+            try:
+                bundle.environment.close()
+                event("closed")
+            except Exception as close_exc:
+                try:
+                    event("close_error", error_type=type(close_exc).__name__)
+                except Exception:
+                    pass
 
 def run_witnesses(root, output_dir):
     output_dir=Path(output_dir); reg=_json(output_dir/"witnesses/e4_branch_registration.json"); rows=[]
@@ -748,24 +839,46 @@ def run_witnesses(root, output_dir):
 
 
 def offline_rescore_planner(root, case_ref, output_dir):
-    from cp_disr.baselines.b_plan import BPlanPlanner,SearchConfig
-    output_dir=Path(output_dir); rows=[]; manifest=yaml.safe_load((output_dir/"input_binding/T_A_s1_rev1_runtime_manifest.yaml").read_text())
-    for case in downstream_ready(output_dir):
-        bundle=load_runtime(manifest)
-        try:
-            snap=bundle.start_case(case["scene_id"]); result=BPlanPlanner(SearchConfig(depth_limit=6,max_nodes=4096,cpu_time_limit_seconds=2.0,reference_skill_seconds=3.7000000000002355)).plan(snap.facts,snap.template,60.0); rows.append({"case_id":case["scene_id"],"status":result.status,"first_action":result.plan[0] if result.plan else "","environment_episodes":0,"depth_limit":6,"max_nodes":4096,"cpu_time_limit_seconds":2.0,"tie_break":"canonical_skill_id_plan_tuple"})
-        finally:
-            try: bundle.environment.close()
-            except Exception: pass
-    _base()._write_csv(output_dir/"planner_offline/offline_planner_discriminability.csv",list(rows[0]) if rows else ["case_id","status","environment_episodes"],rows); _write_json(output_dir/"planner_offline/search_accounting.json",{"status":"COMPLETE" if rows else "NOT_APPLICABLE_NO_NATURAL_RELATIONS","environment_episodes":0,"cases":len(rows)})
-    return {"status":"COMPLETE" if rows else "NOT_APPLICABLE_NO_NATURAL_RELATIONS","cases":len(rows)}
-
+    """Failure-closed offline rescore; never constructs a runtime."""
+    output_dir = Path(output_dir)
+    input_path = output_dir / "planner_offline" / "offline_inputs.json"
+    result = {
+        "status": "NOT_MEASURABLE_SAVED_INPUT_INCOMPLETE",
+        "environment_episodes": 0,
+        "runtime_constructed": False,
+        "prior_relation_consumed": False,
+        "oracle_relation_available": False,
+    }
+    _write_json(output_dir / "planner_offline/search_accounting.json", result)
+    _base()._write_csv(
+        output_dir / "planner_offline/offline_planner_discriminability.csv",
+        ["status", "environment_episodes", "runtime_constructed", "prior_relation_consumed", "oracle_relation_available"],
+        [result],
+    )
+    return result
 
 def finalize_eligibility(root, output_dir):
-    output_dir=Path(output_dir); stage=_json(output_dir/"stage_manifest.json"); stopped=stage.get("status")=="STOPPED"
-    provider=list(csv.DictReader((output_dir/"provider/cache_index.csv").open())) if (output_dir/"provider/cache_index.csv").exists() else []
-    natural=[r for r in provider if int(r.get("admitted_count") or 0)>0]; rep=list(csv.DictReader((output_dir/"representation/e3_candidate_discriminability_rev1.csv").open())) if (output_dir/"representation/e3_candidate_discriminability_rev1.csv").exists() else []; witnesses=list(csv.DictReader((output_dir/"witnesses/e4_physical_witnesses_rev1.csv").open())) if (output_dir/"witnesses/e4_physical_witnesses_rev1.csv").exists() else []
-    gates={"E1":"PASS" if len({r['scene_id'] for r in natural})>=2 else "FAIL","E2":"PASS" if len({r['case_id'] for r in rep if r.get('status')=='PASS'})>=2 else "FAIL","E3":"PASS" if len({r['case_id'] for r in rep if r.get('status')=='PASS' and r.get('common_shift_only') in ('False','false',False)})>=2 else "FAIL","E4":"PASS" if len({r.get('case_id') for r in witnesses if r.get('status')=='DIAGNOSTIC'})>=2 else "FAIL","E5":"PASS" if natural else "FAIL","E6":"PASS" if provider else "FAIL"}
-    decision="PENDING_SAME_REVISION" if stopped else "ELIGIBLE_AFTER_SINGLE_REVISION" if all(v=="PASS" for v in gates.values()) else "NOT_ELIGIBLE_AFTER_SINGLE_REVISION"; final={"status":"STOPPED" if stopped else "COMPLETE","eligibility_decision":decision,"tp_training_authorized":False,"next_action":"RESUME_SAME_REVISION_ONLY" if stopped else "REQUEST_S2_AUTHORIZATION" if decision.startswith("ELIGIBLE") else "S4_RESEARCH_DECISION","resume_same_revision_only":stopped,"second_revision_allowed":False,"stop_reason":stage.get("stop_reason","") if stopped else "","gates":gates}
-    _write_json(output_dir/"final_eligibility.json",final); _write_json(output_dir/"eligibility_manifest.json",final); stage.update(final); _write_json(output_dir/"stage_manifest.json",stage)
+    output_dir = Path(output_dir)
+    from cp_disr.analysis.s1_evidence_review import evaluate_gate_evidence
+    bundle = {"source_hashes": {}}
+    matrix = output_dir / "audit/gates/gate_evidence_matrix.csv"
+    if matrix.is_file():
+        import csv
+        rows = list(csv.DictReader(matrix.open(encoding="utf-8")))
+        bundle["gate_matrix"] = rows
+    gates = evaluate_gate_evidence(bundle)
+    final = {
+        "status": "COMPLETE",
+        "eligibility_decision": "NOT_ELIGIBLE_AFTER_SINGLE_REVISION",
+        "gates": {k: v["status"] for k, v in gates.items()},
+        "gate_evidence": gates,
+        "tp_training_authorized": False,
+        "method_upgrade_authorized": False,
+        "next_action": "S4_RESEARCH_DECISION",
+        "resume_same_revision_only": False,
+        "second_revision_allowed": False,
+        "stop_reason": "",
+    }
+    _write_json(output_dir / "final_eligibility.json", final)
+    _write_json(output_dir / "eligibility_manifest.json", final)
     return final

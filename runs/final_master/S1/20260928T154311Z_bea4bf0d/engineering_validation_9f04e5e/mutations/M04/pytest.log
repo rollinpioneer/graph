@@ -1,0 +1,19 @@
+........F....................                                            [100%]
+=================================== FAILURES ===================================
+___________________ test_B05_updated_mask_blocks_next_action ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-86/test_B05_updated_mask_blocks_n0')
+
+    def test_B05_updated_mask_blocks_next_action(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False},{"success":True,"terminated":True}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}],masks=[[True]*9,[True,False,True,True,True,True,True,True,True]])
+        r=call(tmp_path,bundle)
+>       assert bundle.executor.executed_candidate_ids==["a:A:x:v1"]
+E       AssertionError: assert ['a:A:x:v1', 'a:B:x:v1'] == ['a:A:x:v1']
+E         
+E         Left contains one more item: 'a:B:x:v1'
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B05_updated_mask_blocks_next_action
+1 failed, 28 passed in 1.48s

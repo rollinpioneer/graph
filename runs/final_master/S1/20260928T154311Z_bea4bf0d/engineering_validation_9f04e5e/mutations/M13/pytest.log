@@ -1,0 +1,24 @@
+.........................F...                                            [100%]
+=================================== FAILURES ===================================
+____________ test_B20_duplicate_attempt_is_rejected_before_runtime _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-95/test_B20_duplicate_attempt_is_0')
+
+    def test_B20_duplicate_attempt_is_rejected_before_runtime(tmp_path):
+        ledger(tmp_path,0,1)
+        write_fixture(tmp_path)
+        (tmp_path/"attempt_registry.json").write_text(json.dumps({"TEST-branch":"STARTED"}))
+        called=[]
+        r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,x: called.append(x))
+>       assert r["error_type"]=="RevisionError" and called==[]
+E       AssertionError: assert ('RevisionError' == 'RevisionError'
+E         
+E           RevisionError and [{'branch_id'...re_seed': 42}] == []
+E         
+E         Left contains one more item: {'branch_id': 'TEST-branch', 'candidate_id': 'a:A:x:v1', 'case_id': 'TEST-case', 'restore_seed': 42}
+E         Use -v to get more diff)
+
+tests/test_s1_dispatch_behavior.py:35: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_dispatch_behavior.py::test_B20_duplicate_attempt_is_rejected_before_runtime
+1 failed, 28 passed in 0.93s

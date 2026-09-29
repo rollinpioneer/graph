@@ -1,0 +1,17 @@
+............................F                                            [100%]
+=================================== FAILURES ===================================
+__________________ test_P04_offline_rescore_is_failure_closed __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-102/test_P04_offline_rescore_is_fa0')
+
+    def test_P04_offline_rescore_is_failure_closed(tmp_path):
+        from cp_disr.analysis.s1_revision import offline_rescore_planner
+        r=offline_rescore_planner(tmp_path,"case",tmp_path)
+        assert callable(offline_rescore_planner)
+>       assert r["runtime_constructed"] is False and r["environment_episodes"] == 0
+E       assert (True is False)
+
+tests/test_s1_probe_evidence_behavior.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_probe_evidence_behavior.py::test_P04_offline_rescore_is_failure_closed
+1 failed, 28 passed in 1.49s

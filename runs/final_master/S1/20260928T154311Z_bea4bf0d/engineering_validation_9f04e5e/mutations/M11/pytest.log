@@ -1,0 +1,194 @@
+F.....FFFFFFFFFF.F...........                                            [100%]
+=================================== FAILURES ===================================
+______ test_B01_nested_reference_is_used_and_default_config_can_construct ______
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B01_nested_reference_is_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3f30463c70>
+
+    def test_B01_nested_reference_is_used_and_default_config_can_construct(tmp_path,monkeypatch):
+        bundle=FakeBundle([{"success":False,"terminated":False},{"success":True,"terminated":True,"reason":"TASK_SUCCESS"}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}])
+        seen=[]
+        class SpyPlanner:
+            def __init__(self,config): seen.append(config)
+            def plan(self,*args): return bundle.planner.plan(*args)
+        import cp_disr.baselines.b_plan as bp
+        monkeypatch.setattr(bp,"BPlanPlanner",SpyPlanner)
+        write_fixture(tmp_path)
+        result=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b: bundle)
+>       assert result["task_success"] is True and seen[0].reference_skill_seconds == 3.7
+E       assert (False is True)
+
+tests/test_s1_runner_behavior.py:22: AssertionError
+________ test_B03_plan_found_is_executed_and_success_is_evaluator_only _________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B03_plan_found_is_execute0')
+
+    def test_B03_plan_found_is_executed_and_success_is_evaluator_only(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False,"reason":"CONTINUE"},{"success":True,"terminated":True,"reason":"TASK_SUCCESS"}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}])
+        r=call(tmp_path,bundle)
+>       assert bundle.executor.executed_candidate_ids==["a:A:x:v1","a:B:x:v1"]
+E       AssertionError: assert [] == ['a:A:x:v1', 'a:B:x:v1']
+E         
+E         Right contains 2 more items, first extra item: 'a:A:x:v1'
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:37: AssertionError
+____________ test_B04_normal_controller_does_not_equal_task_success ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B04_normal_controller_doe0')
+
+    def test_B04_normal_controller_does_not_equal_task_success(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False,"reason":"CONTINUE"},{"success":True,"terminated":True,"reason":"TASK_SUCCESS"}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}])
+        r=call(tmp_path,bundle)
+>       assert r["task_success"] is True and r["trace"][0]["controller_exit"]=="NORMAL_TERMINATION"
+E       assert (False is True)
+
+tests/test_s1_runner_behavior.py:43: AssertionError
+___________________ test_B05_updated_mask_blocks_next_action ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B05_updated_mask_blocks_n0')
+
+    def test_B05_updated_mask_blocks_next_action(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False},{"success":True,"terminated":True}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}],masks=[[True]*9,[True,False,True,True,True,True,True,True,True]])
+        r=call(tmp_path,bundle)
+>       assert bundle.executor.executed_candidate_ids==["a:A:x:v1"]
+E       AssertionError: assert [] == ['a:A:x:v1']
+E         
+E         Right contains one more item: 'a:A:x:v1'
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:48: AssertionError
+_______________ test_B06_deadline_before_action_does_not_execute _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B06_deadline_before_actio0')
+
+    def test_B06_deadline_before_action_does_not_execute(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[],deadline=0.5,start_offset=0.5)
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":3.7},"task_deadlines":{"T_A":0.5}}}
+        r=call(tmp_path,bundle,manifest=manifest)
+>       assert bundle.executor.executed_candidate_ids==[] and r["termination_reason"]=="DEADLINE"
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and 'RevisionError' == 'DEADLINE'
+E         
+E         - DEADLINE
+E         + RevisionError)
+
+tests/test_s1_runner_behavior.py:55: AssertionError
+________________ test_B07_elapsed_is_not_reset_between_replans _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B07_elapsed_is_not_reset_0')
+
+    def test_B07_elapsed_is_not_reset_between_replans(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False},{"success":False,"terminated":False},{"success":True,"terminated":True}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]},{"status":"PLAN_FOUND","plan":["a:C:x:v1"]}],durations=[2,3,1])
+        r=call(tmp_path,bundle)
+>       assert [round(x["elapsed_seconds"]) for x in r["trace"]]==[2,5,6]
+E       assert [] == [2, 5, 6]
+E         
+E         Right contains 3 more items, first extra item: 2
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:60: AssertionError
+___________________ test_B08_truncated_stops_without_replan ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B08_truncated_stops_witho0')
+
+    def test_B08_truncated_stops_without_replan(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False,"truncated":True,"reason":"TRUNCATED"}],[])
+        r=call(tmp_path,bundle)
+>       assert r["execution_status"]=="TRUNCATED" and len(bundle.planner.inputs)==0
+E       AssertionError: assert ('EXCEPTION' == 'TRUNCATED'
+E         
+E         - TRUNCATED
+E         + EXCEPTION)
+
+tests/test_s1_runner_behavior.py:67: AssertionError
+_________________ test_B09_more_than_seven_actions_are_allowed _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B09_more_than_seven_actio0')
+
+    def test_B09_more_than_seven_actions_are_allowed(tmp_path):
+        outcomes=[{"success":False,"terminated":False} for _ in range(7)]+[{"success":True,"terminated":True,"reason":"TASK_SUCCESS"}]
+        plans=[{"status":"PLAN_FOUND","plan":[f"a:{x}:x:v1"]} for x in "BCDEFGH"]
+        bundle=FakeBundle(outcomes,plans,durations=[1]*16)
+        r=call(tmp_path,bundle)
+>       assert len(bundle.executor.executed_candidate_ids)==8 and r["task_success"] is True
+E       assert (0 == 8)
+E        +  where 0 = len([])
+E        +    where [] = <tests.helpers.s1_runner_doubles.FakeExecutor object at 0x7f3f2a218340>.executed_candidate_ids
+E        +      where <tests.helpers.s1_runner_doubles.FakeExecutor object at 0x7f3f2a218340> = <tests.helpers.s1_runner_doubles.FakeBundle object at 0x7f3f2a2196c0>.executor
+
+tests/test_s1_runner_behavior.py:74: AssertionError
+___________________ test_B10_search_timeout_is_not_valid_E4 ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B10_search_timeout_is_not0')
+
+    def test_B10_search_timeout_is_not_valid_E4(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[{"status":"SEARCH_TIMEOUT","plan":[]}])
+        r=call(tmp_path,bundle)
+>       assert r["execution_status"]=="SEARCH_TIMEOUT" and r["eligible_for_e4"] is False
+E       AssertionError: assert ('EXCEPTION' == 'SEARCH_TIMEOUT'
+E         
+E         - SEARCH_TIMEOUT
+E         + EXCEPTION)
+
+tests/test_s1_runner_behavior.py:79: AssertionError
+______________ test_B11_symbolic_goal_does_not_override_evaluator ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B11_symbolic_goal_does_no0')
+
+    def test_B11_symbolic_goal_does_not_override_evaluator(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[{"status":"GOAL_ALREADY_SATISFIED","plan":[]}])
+        r=call(tmp_path,bundle)
+>       assert r["termination_reason"]=="SYMBOLIC_EVALUATOR_MISMATCH" and r["task_success"] is False
+E       AssertionError: assert ('RevisionError' == 'SYMBOLIC_EVALUATOR_MISMATCH'
+E         
+E         - SYMBOLIC_EVALUATOR_MISMATCH
+E         + RevisionError)
+
+tests/test_s1_runner_behavior.py:84: AssertionError
+__________________ test_B13_unknown_controller_is_not_success __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B13_unknown_controller_is0')
+
+    def test_B13_unknown_controller_is_not_success(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[])
+        class Unknown(bundle.executor.__class__):
+            def execute(self,*a):
+                out=super().execute(*a); return out.__class__(out.execution_id,"UNKNOWN_CODE",out.start_seconds,out.end_seconds,out.evidence_ids)
+        bundle.executor=Unknown(bundle)
+        r=call(tmp_path,bundle)
+>       assert r["execution_status"]=="UNKNOWN_CONTROLLER_EXIT" and r["task_success"] is False
+E       AssertionError: assert ('EXCEPTION' == 'UNKNOWN_CONTROLLER_EXIT'
+E         
+E         - UNKNOWN_CONTROLLER_EXIT
+E         + EXCEPTION)
+
+tests/test_s1_runner_behavior.py:93: AssertionError
+___________ test_B15_restore_seed_is_paired_and_new_env_receives_it ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-93/test_B15_restore_seed_is_paire0')
+
+    def test_B15_restore_seed_is_paired_and_new_env_receives_it(tmp_path):
+        events=[]
+        b1=FakeBundle([{"success":True,"terminated":True}],[],events=events)
+        r=call(tmp_path,b1)
+>       assert any(item[:2] == ("restore_seed_new_env",42) for item in events) and r["protocol_complete"]
+E       assert (False)
+E        +  where False = any(<generator object test_B15_restore_seed_is_paired_and_new_env_receives_it.<locals>.<genexpr> at 0x7f3f2a271c40>)
+
+tests/test_s1_runner_behavior.py:104: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B01_nested_reference_is_used_and_default_config_can_construct
+FAILED tests/test_s1_runner_behavior.py::test_B03_plan_found_is_executed_and_success_is_evaluator_only
+FAILED tests/test_s1_runner_behavior.py::test_B04_normal_controller_does_not_equal_task_success
+FAILED tests/test_s1_runner_behavior.py::test_B05_updated_mask_blocks_next_action
+FAILED tests/test_s1_runner_behavior.py::test_B06_deadline_before_action_does_not_execute
+FAILED tests/test_s1_runner_behavior.py::test_B07_elapsed_is_not_reset_between_replans
+FAILED tests/test_s1_runner_behavior.py::test_B08_truncated_stops_without_replan
+FAILED tests/test_s1_runner_behavior.py::test_B09_more_than_seven_actions_are_allowed
+FAILED tests/test_s1_runner_behavior.py::test_B10_search_timeout_is_not_valid_E4
+FAILED tests/test_s1_runner_behavior.py::test_B11_symbolic_goal_does_not_override_evaluator
+FAILED tests/test_s1_runner_behavior.py::test_B13_unknown_controller_is_not_success
+FAILED tests/test_s1_runner_behavior.py::test_B15_restore_seed_is_paired_and_new_env_receives_it
+12 failed, 17 passed in 0.82s

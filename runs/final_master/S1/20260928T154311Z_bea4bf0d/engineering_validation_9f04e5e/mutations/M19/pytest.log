@@ -1,0 +1,388 @@
+.FFFFF..........F......F.F...                                            [100%]
+=================================== FAILURES ===================================
+___________ test_B02_invalid_reference_rejected_before_bundle[None] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B02_invalid_reference_rej0')
+value = None
+
+    @pytest.mark.parametrize("value", [None,0,-1,float("nan"),float("inf")])
+    def test_B02_invalid_reference_rejected_before_bundle(tmp_path,value):
+        calls=[]
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":value},"task_deadlines":{"T_A":60.0}}}
+        write_fixture(tmp_path,manifest)
+        from cp_disr.analysis.s1_revision import execute_registered_branch
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:calls.append(1))
+
+tests/test_s1_runner_behavior.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:694: in execute_registered_branch
+    runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'runtime': {'active_task_id': 'T_A', 'reference_skill_seconds_by_task': {'T_A': None}, 'task_deadlines': {'T_A': 60.0}}}
+
+    def _runner_config(manifest):
+        runtime = manifest.get("runtime")
+        if not isinstance(runtime, dict):
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+        task_id = runtime.get("active_task_id")
+        refs = runtime.get("reference_skill_seconds_by_task")
+        deadlines = runtime.get("task_deadlines")
+        if not task_id or not isinstance(refs, dict) or task_id not in refs:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+        if not isinstance(deadlines, dict) or task_id not in deadlines:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+>       d_ref = float(refs[task_id])
+E       TypeError: float() argument must be a string or a real number, not 'NoneType'
+
+src/cp_disr/analysis/s1_revision_resume.py:620: TypeError
+_____________ test_B02_invalid_reference_rejected_before_bundle[0] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B02_invalid_reference_rej1')
+value = 0
+
+    @pytest.mark.parametrize("value", [None,0,-1,float("nan"),float("inf")])
+    def test_B02_invalid_reference_rejected_before_bundle(tmp_path,value):
+        calls=[]
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":value},"task_deadlines":{"T_A":60.0}}}
+        write_fixture(tmp_path,manifest)
+        from cp_disr.analysis.s1_revision import execute_registered_branch
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:calls.append(1))
+
+tests/test_s1_runner_behavior.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:694: in execute_registered_branch
+    runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'runtime': {'active_task_id': 'T_A', 'reference_skill_seconds_by_task': {'T_A': 0}, 'task_deadlines': {'T_A': 60.0}}}
+
+    def _runner_config(manifest):
+        runtime = manifest.get("runtime")
+        if not isinstance(runtime, dict):
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+        task_id = runtime.get("active_task_id")
+        refs = runtime.get("reference_skill_seconds_by_task")
+        deadlines = runtime.get("task_deadlines")
+        if not task_id or not isinstance(refs, dict) or task_id not in refs:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+        if not isinstance(deadlines, dict) or task_id not in deadlines:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+        d_ref = float(refs[task_id])
+        deadline = float(deadlines[task_id])
+        import math
+        if not math.isfinite(d_ref) or d_ref <= 0:
+>           raise _base().RevisionError("RUNTIME_CONFIG_INVALID: reference_skill_seconds")
+E           cp_disr.analysis.s1_revision.RevisionError: RUNTIME_CONFIG_INVALID: reference_skill_seconds
+
+src/cp_disr/analysis/s1_revision_resume.py:624: RevisionError
+____________ test_B02_invalid_reference_rejected_before_bundle[-1] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B02_invalid_reference_rej2')
+value = -1
+
+    @pytest.mark.parametrize("value", [None,0,-1,float("nan"),float("inf")])
+    def test_B02_invalid_reference_rejected_before_bundle(tmp_path,value):
+        calls=[]
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":value},"task_deadlines":{"T_A":60.0}}}
+        write_fixture(tmp_path,manifest)
+        from cp_disr.analysis.s1_revision import execute_registered_branch
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:calls.append(1))
+
+tests/test_s1_runner_behavior.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:694: in execute_registered_branch
+    runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'runtime': {'active_task_id': 'T_A', 'reference_skill_seconds_by_task': {'T_A': -1}, 'task_deadlines': {'T_A': 60.0}}}
+
+    def _runner_config(manifest):
+        runtime = manifest.get("runtime")
+        if not isinstance(runtime, dict):
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+        task_id = runtime.get("active_task_id")
+        refs = runtime.get("reference_skill_seconds_by_task")
+        deadlines = runtime.get("task_deadlines")
+        if not task_id or not isinstance(refs, dict) or task_id not in refs:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+        if not isinstance(deadlines, dict) or task_id not in deadlines:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+        d_ref = float(refs[task_id])
+        deadline = float(deadlines[task_id])
+        import math
+        if not math.isfinite(d_ref) or d_ref <= 0:
+>           raise _base().RevisionError("RUNTIME_CONFIG_INVALID: reference_skill_seconds")
+E           cp_disr.analysis.s1_revision.RevisionError: RUNTIME_CONFIG_INVALID: reference_skill_seconds
+
+src/cp_disr/analysis/s1_revision_resume.py:624: RevisionError
+____________ test_B02_invalid_reference_rejected_before_bundle[nan] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B02_invalid_reference_rej3')
+value = nan
+
+    @pytest.mark.parametrize("value", [None,0,-1,float("nan"),float("inf")])
+    def test_B02_invalid_reference_rejected_before_bundle(tmp_path,value):
+        calls=[]
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":value},"task_deadlines":{"T_A":60.0}}}
+        write_fixture(tmp_path,manifest)
+        from cp_disr.analysis.s1_revision import execute_registered_branch
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:calls.append(1))
+
+tests/test_s1_runner_behavior.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:694: in execute_registered_branch
+    runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'runtime': {'active_task_id': 'T_A', 'reference_skill_seconds_by_task': {'T_A': 'NaN'}, 'task_deadlines': {'T_A': 60.0}}}
+
+    def _runner_config(manifest):
+        runtime = manifest.get("runtime")
+        if not isinstance(runtime, dict):
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+        task_id = runtime.get("active_task_id")
+        refs = runtime.get("reference_skill_seconds_by_task")
+        deadlines = runtime.get("task_deadlines")
+        if not task_id or not isinstance(refs, dict) or task_id not in refs:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+        if not isinstance(deadlines, dict) or task_id not in deadlines:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+        d_ref = float(refs[task_id])
+        deadline = float(deadlines[task_id])
+        import math
+        if not math.isfinite(d_ref) or d_ref <= 0:
+>           raise _base().RevisionError("RUNTIME_CONFIG_INVALID: reference_skill_seconds")
+E           cp_disr.analysis.s1_revision.RevisionError: RUNTIME_CONFIG_INVALID: reference_skill_seconds
+
+src/cp_disr/analysis/s1_revision_resume.py:624: RevisionError
+____________ test_B02_invalid_reference_rejected_before_bundle[inf] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B02_invalid_reference_rej4')
+value = inf
+
+    @pytest.mark.parametrize("value", [None,0,-1,float("nan"),float("inf")])
+    def test_B02_invalid_reference_rejected_before_bundle(tmp_path,value):
+        calls=[]
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":value},"task_deadlines":{"T_A":60.0}}}
+        write_fixture(tmp_path,manifest)
+        from cp_disr.analysis.s1_revision import execute_registered_branch
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b:calls.append(1))
+
+tests/test_s1_runner_behavior.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:694: in execute_registered_branch
+    runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'runtime': {'active_task_id': 'T_A', 'reference_skill_seconds_by_task': {'T_A': 'Infinity'}, 'task_deadlines': {'T_A': 60.0}}}
+
+    def _runner_config(manifest):
+        runtime = manifest.get("runtime")
+        if not isinstance(runtime, dict):
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: runtime")
+        task_id = runtime.get("active_task_id")
+        refs = runtime.get("reference_skill_seconds_by_task")
+        deadlines = runtime.get("task_deadlines")
+        if not task_id or not isinstance(refs, dict) or task_id not in refs:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: reference_skill_seconds_by_task")
+        if not isinstance(deadlines, dict) or task_id not in deadlines:
+            raise _base().RevisionError("RUNTIME_CONFIG_MISSING: task_deadlines")
+        d_ref = float(refs[task_id])
+        deadline = float(deadlines[task_id])
+        import math
+        if not math.isfinite(d_ref) or d_ref <= 0:
+>           raise _base().RevisionError("RUNTIME_CONFIG_INVALID: reference_skill_seconds")
+E           cp_disr.analysis.s1_revision.RevisionError: RUNTIME_CONFIG_INVALID: reference_skill_seconds
+
+src/cp_disr/analysis/s1_revision_resume.py:624: RevisionError
+__________________ test_B14_initialization_failure_is_traced ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B14_initialization_failur0')
+
+    def test_B14_initialization_failure_is_traced(tmp_path):
+        write_fixture(tmp_path)
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b: (_ for _ in ()).throw(RuntimeError("boom")))
+
+tests/test_s1_runner_behavior.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s1_revision_resume.py:714: in execute_registered_branch
+    bundle = bundle_factory(manifest, branch) if bundle_factory else load_runtime(manifest)
+tests/test_s1_runner_behavior.py:97: in <lambda>
+    r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b: (_ for _ in ()).throw(RuntimeError("boom")))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <tuple_iterator object at 0x7fd6025b6bf0>
+
+>   r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,b: (_ for _ in ()).throw(RuntimeError("boom")))
+E   RuntimeError: boom
+
+tests/test_s1_runner_behavior.py:97: RuntimeError
+_______________ test_B18_budget_exhausted_before_direct_runtime ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B18_budget_exhausted_befo0')
+
+    def test_B18_budget_exhausted_before_direct_runtime(tmp_path):
+        ledger(tmp_path,8,8); called=[]
+        try: reserve_budget(tmp_path,"physical_witness_episodes",1,"x")
+        except BudgetExceeded: pass
+        else: assert False
+        write_fixture(tmp_path)
+        b=FakeBundle([{"success":True,"terminated":True}],[])
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,x: called.append(x))
+
+tests/test_s1_dispatch_behavior.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B18_budget_exhausted_befo0')
+branch_id = 'TEST-branch'
+output_dir = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B18_budget_exhausted_befo0')
+bundle_factory = <function test_B18_budget_exhausted_before_direct_runtime.<locals>.<lambda> at 0x7fd604996d40>
+planner_factory = None
+
+    def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, planner_factory=None):
+        """Production control loop; dependencies may only be replaced at test boundaries."""
+        root, output_dir = Path(root).resolve(), Path(output_dir)
+        reg = _json(output_dir / "witnesses/e4_branch_registration.json")
+        branch = next((b for b in reg.get("branches", []) if b["branch_id"] == branch_id), None)
+        if branch is None:
+            raise _base().RevisionError("witness execution requires frozen branch registration")
+        manifest_path = Path(branch.get("manifest_path") or output_dir / "input_binding/T_A_s1_rev1_runtime_manifest.yaml")
+        journal = output_dir / "witnesses" / f"branch_{branch_id}.jsonl"
+        sequence = 0
+        trace = []
+        bundle = None
+        phase = "preflight"
+    
+        def event(name, **fields):
+            nonlocal sequence
+            _runner_journal(journal, branch_id, sequence, name, **fields)
+            sequence += 1
+    
+        def result(**fields):
+            base = {
+                "branch_id": branch_id,
+                "case_id": branch.get("case_id", ""),
+                "candidate_id": branch.get("candidate_id", ""),
+                "controller_exit": "",
+                "execution_status": "",
+                "termination_reason": "",
+                "task_success": False,
+                "protocol_complete": False,
+                "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+                "paired_effect_status": "NOT_ESTABLISHED",
+                "eligible_for_e4": False,
+                "decision_count": len(trace),
+                "trace": trace,
+            }
+            base.update(fields)
+            return base
+    
+        try:
+            phase = "load_registration"
+            if not manifest_path.is_file():
+                raise _base().RevisionError("RUNTIME_CONFIG_MISSING: manifest")
+            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+            runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+            if branch.get("authorized") is False or branch.get("execute_now") is False:
+                raise _base().RevisionError("EXECUTION_NOT_AUTHORIZED")
+            ledger_path = output_dir / "budget_ledger.json"
+            if ledger_path.is_file():
+                ledger = _json(ledger_path)
+                item = ledger.get("physical_witness_episodes", {})
+                if int(item.get("used", 0)) >= int(item.get("cap", 0)):
+>                   raise _base().BudgetExceeded("physical_witness_episodes cap exhausted")
+E                   cp_disr.analysis.s1_revision.BudgetExceeded: physical_witness_episodes cap exhausted
+
+src/cp_disr/analysis/s1_revision_resume.py:702: BudgetExceeded
+____________ test_B20_duplicate_attempt_is_rejected_before_runtime _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B20_duplicate_attempt_is_0')
+
+    def test_B20_duplicate_attempt_is_rejected_before_runtime(tmp_path):
+        ledger(tmp_path,0,1)
+        write_fixture(tmp_path)
+        (tmp_path/"attempt_registry.json").write_text(json.dumps({"TEST-branch":"STARTED"}))
+        called=[]
+>       r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,x: called.append(x))
+
+tests/test_s1_dispatch_behavior.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B20_duplicate_attempt_is_0')
+branch_id = 'TEST-branch'
+output_dir = PosixPath('/tmp/pytest-of-xushijie2/pytest-101/test_B20_duplicate_attempt_is_0')
+bundle_factory = <function test_B20_duplicate_attempt_is_rejected_before_runtime.<locals>.<lambda> at 0x7fd602599fc0>
+planner_factory = None
+
+    def execute_registered_branch(root, branch_id, output_dir, bundle_factory=None, planner_factory=None):
+        """Production control loop; dependencies may only be replaced at test boundaries."""
+        root, output_dir = Path(root).resolve(), Path(output_dir)
+        reg = _json(output_dir / "witnesses/e4_branch_registration.json")
+        branch = next((b for b in reg.get("branches", []) if b["branch_id"] == branch_id), None)
+        if branch is None:
+            raise _base().RevisionError("witness execution requires frozen branch registration")
+        manifest_path = Path(branch.get("manifest_path") or output_dir / "input_binding/T_A_s1_rev1_runtime_manifest.yaml")
+        journal = output_dir / "witnesses" / f"branch_{branch_id}.jsonl"
+        sequence = 0
+        trace = []
+        bundle = None
+        phase = "preflight"
+    
+        def event(name, **fields):
+            nonlocal sequence
+            _runner_journal(journal, branch_id, sequence, name, **fields)
+            sequence += 1
+    
+        def result(**fields):
+            base = {
+                "branch_id": branch_id,
+                "case_id": branch.get("case_id", ""),
+                "candidate_id": branch.get("candidate_id", ""),
+                "controller_exit": "",
+                "execution_status": "",
+                "termination_reason": "",
+                "task_success": False,
+                "protocol_complete": False,
+                "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+                "paired_effect_status": "NOT_ESTABLISHED",
+                "eligible_for_e4": False,
+                "decision_count": len(trace),
+                "trace": trace,
+            }
+            base.update(fields)
+            return base
+    
+        try:
+            phase = "load_registration"
+            if not manifest_path.is_file():
+                raise _base().RevisionError("RUNTIME_CONFIG_MISSING: manifest")
+            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+            runtime, task_id, d_ref, deadline, decision_cap = _runner_config(manifest)
+            if branch.get("authorized") is False or branch.get("execute_now") is False:
+                raise _base().RevisionError("EXECUTION_NOT_AUTHORIZED")
+            ledger_path = output_dir / "budget_ledger.json"
+            if ledger_path.is_file():
+                ledger = _json(ledger_path)
+                item = ledger.get("physical_witness_episodes", {})
+                if int(item.get("used", 0)) >= int(item.get("cap", 0)):
+                    raise _base().BudgetExceeded("physical_witness_episodes cap exhausted")
+            attempts = output_dir / "attempt_registry.json"
+            if attempts.is_file():
+                registry = _json(attempts)
+                prior = registry.get(branch_id)
+                if prior in ("STARTED", "COMPLETED", "UNKNOWN"):
+>                   raise _base().RevisionError("DUPLICATE_OR_UNKNOWN_ATTEMPT:" + str(prior))
+E                   cp_disr.analysis.s1_revision.RevisionError: DUPLICATE_OR_UNKNOWN_ATTEMPT:STARTED
+
+src/cp_disr/analysis/s1_revision_resume.py:708: RevisionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B02_invalid_reference_rejected_before_bundle[None]
+FAILED tests/test_s1_runner_behavior.py::test_B02_invalid_reference_rejected_before_bundle[0]
+FAILED tests/test_s1_runner_behavior.py::test_B02_invalid_reference_rejected_before_bundle[-1]
+FAILED tests/test_s1_runner_behavior.py::test_B02_invalid_reference_rejected_before_bundle[nan]
+FAILED tests/test_s1_runner_behavior.py::test_B02_invalid_reference_rejected_before_bundle[inf]
+FAILED tests/test_s1_runner_behavior.py::test_B14_initialization_failure_is_traced
+FAILED tests/test_s1_dispatch_behavior.py::test_B18_budget_exhausted_before_direct_runtime
+FAILED tests/test_s1_dispatch_behavior.py::test_B20_duplicate_attempt_is_rejected_before_runtime
+8 failed, 21 passed in 1.28s

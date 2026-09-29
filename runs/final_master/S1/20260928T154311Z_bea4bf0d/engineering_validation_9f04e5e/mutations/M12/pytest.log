@@ -1,0 +1,24 @@
+.......................F.....                                            [100%]
+=================================== FAILURES ===================================
+_______________ test_B18_budget_exhausted_before_direct_runtime ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-94/test_B18_budget_exhausted_befo0')
+
+    def test_B18_budget_exhausted_before_direct_runtime(tmp_path):
+        ledger(tmp_path,8,8); called=[]
+        try: reserve_budget(tmp_path,"physical_witness_episodes",1,"x")
+        except BudgetExceeded: pass
+        else: assert False
+        write_fixture(tmp_path)
+        b=FakeBundle([{"success":True,"terminated":True}],[])
+        r=execute_registered_branch(tmp_path,"TEST-branch",tmp_path,bundle_factory=lambda m,x: called.append(x))
+>       assert r["error_type"]=="BudgetExceeded" and called==[]
+E       AssertionError: assert ('RevisionError' == 'BudgetExceeded'
+E         
+E         - BudgetExceeded
+E         + RevisionError)
+
+tests/test_s1_dispatch_behavior.py:19: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_dispatch_behavior.py::test_B18_budget_exhausted_before_direct_runtime
+1 failed, 28 passed in 1.27s

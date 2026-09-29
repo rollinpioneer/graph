@@ -1,0 +1,19 @@
+...........F.................                                            [100%]
+=================================== FAILURES ===================================
+___________________ test_B08_truncated_stops_without_replan ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-89/test_B08_truncated_stops_witho0')
+
+    def test_B08_truncated_stops_without_replan(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False,"truncated":True,"reason":"TRUNCATED"}],[])
+        r=call(tmp_path,bundle)
+>       assert r["execution_status"]=="TRUNCATED" and len(bundle.planner.inputs)==0
+E       AssertionError: assert ('NO_PLAN' == 'TRUNCATED'
+E         
+E         - TRUNCATED
+E         + NO_PLAN)
+
+tests/test_s1_runner_behavior.py:67: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B08_truncated_stops_without_replan
+1 failed, 28 passed in 1.13s

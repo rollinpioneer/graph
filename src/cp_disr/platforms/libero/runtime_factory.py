@@ -1,7 +1,7 @@
 """Concrete D0 RuntimeFactory. Fail closed on missing bindings."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 import hashlib, json, os
 
@@ -83,8 +83,10 @@ class RuntimeBundle:
     caches: dict = field(default_factory=dict)
     _n: int = 0
 
-    def start_case(self, case_id: str):
+    def start_case(self, case_id: str, restore_seed: int | None = None):
         spec = self.cases[case_id]
+        if restore_seed is not None:
+            spec = replace(spec, seed=int(restore_seed))
         self.environment.close()
         env = make_env(spec)
         env.last_perception = {}

@@ -41,3 +41,45 @@ def verify(root,source,out):
         after[rel]=h
     if json.loads((Path(out)/"budget_before.json").read_text())!=json.loads((Path(source)/"budget_ledger.json").read_text()): raise RuntimeError("BUDGET_CHANGED")
     jwrite(Path(out)/"protected_source_files_after.json",after); return {"status":"PASS","protected_files":len(after),"budget_unchanged":True,"training_authorized":False}
+
+
+def evaluate_gate_evidence(evidence_bundle: dict) -> dict:
+    """Pure gate adjudication. Labels alone never satisfy a gate."""
+    out = {}
+    relation = evidence_bundle.get("relation_adjudications", [])
+    align = evidence_bundle.get("alignment_records", [])
+    gradients = evidence_bundle.get("gradient_records", [])
+    witnesses = evidence_bundle.get("witness_records", [])
+    consequences = evidence_bundle.get("consequence_comparisons", [])
+    utility = evidence_bundle.get("utility_records", [])
+    def gate(name, satisfied, missing, refs):
+        out[name] = {
+            "status": "PASS" if satisfied else "NOT_ESTABLISHED",
+            "satisfied": bool(satisfied),
+            "missing": list(missing),
+            "evidence_refs": list(refs),
+            "source_hashes": evidence_bundle.get("source_hashes", {}),
+        }
+    independent = [x for x in relation if x.get("independent_adjudication") is True and x.get("truth_status") == "ADJUDICATED"]
+    gate("E1", len({x.get("case_id") for x in independent}) >= 2,
+         [] if len({x.get("case_id") for x in independent}) >= 2 else ["independent relation truth adjudication for two configurations"],
+         [x.get("evidence_ref","") for x in independent])
+    aligned = [x for x in align if x.get("actual_comparison") is True and all(x.get(k) is True for k in ("candidate_id_alignment","mask_alignment","goal_alignment","node_alignment"))]
+    gate("E2", len({x.get("case_id") for x in aligned}) >= 2,
+         [] if len({x.get("case_id") for x in aligned}) >= 2 else ["actual ID/mask/goal/node comparisons"],
+         [x.get("evidence_ref","") for x in aligned])
+    grads = [x for x in gradients if x.get("relation_gradient_measured") is True and x.get("patch_gradient_measured") is True and x.get("separate_sources") is True]
+    gate("E3", len(grads) >= 2 and any(x.get("relative_response") is not None for x in grads),
+         [] if len(grads) >= 2 else ["separate gradient provenance and relative response"],
+         [x.get("evidence_ref","") for x in grads])
+    full = [x for x in witnesses if x.get("protocol_complete") is True and x.get("full_episode_completed") is True and x.get("independent_evaluator") is True and x.get("paired_restore_verified") is True and x.get("eligible_for_e4") is True]
+    cases = {x.get("case_id") for x in full}
+    effects = [x for x in consequences if x.get("reliable") is True and x.get("outcome_different") is True]
+    gate("E4", len(cases) >= 2 and len(effects) >= 1,
+         [] if len(cases) >= 2 and effects else ["complete paired continuation, restore, evaluator endpoint, and outcome difference"],
+         [x.get("evidence_ref","") for x in full + effects])
+    e5 = [x for x in consequences if x.get("reliable") is True and x.get("contract_ranking_comparable") is True and x.get("outcome_different") is True]
+    gate("E5", bool(e5), [] if e5 else ["controlled contract ranking versus reliable real outcome"], [x.get("evidence_ref","") for x in e5])
+    e6 = [x for x in utility if x.get("truth_adjudicated") is True and x.get("utility_adjudicated") is True and x.get("opportunity_classified") is True and x.get("synthetic_unit_fixture") is not True and x.get("natural") is not False and x.get("provider") is not False]
+    gate("E6", bool(e6), [] if e6 else ["independent truth, utility, and opportunity evidence"], [x.get("evidence_ref","") for x in e6])
+    return out

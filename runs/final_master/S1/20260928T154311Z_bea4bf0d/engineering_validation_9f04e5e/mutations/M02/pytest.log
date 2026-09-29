@@ -1,0 +1,34 @@
+......F.F....................                                            [100%]
+=================================== FAILURES ===================================
+________ test_B03_plan_found_is_executed_and_success_is_evaluator_only _________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-84/test_B03_plan_found_is_execute0')
+
+    def test_B03_plan_found_is_executed_and_success_is_evaluator_only(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False,"reason":"CONTINUE"},{"success":True,"terminated":True,"reason":"TASK_SUCCESS"}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}])
+        r=call(tmp_path,bundle)
+>       assert bundle.executor.executed_candidate_ids==["a:A:x:v1","a:B:x:v1"]
+E       AssertionError: assert ['a:A:x:v1', 'a:A:x:v1'] == ['a:A:x:v1', 'a:B:x:v1']
+E         
+E         At index 1 diff: 'a:A:x:v1' != 'a:B:x:v1'
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:37: AssertionError
+___________________ test_B05_updated_mask_blocks_next_action ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-84/test_B05_updated_mask_blocks_n0')
+
+    def test_B05_updated_mask_blocks_next_action(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False},{"success":True,"terminated":True}],[{"status":"PLAN_FOUND","plan":["a:B:x:v1"]}],masks=[[True]*9,[True,False,True,True,True,True,True,True,True]])
+        r=call(tmp_path,bundle)
+>       assert bundle.executor.executed_candidate_ids==["a:A:x:v1"]
+E       AssertionError: assert ['a:A:x:v1', 'a:A:x:v1'] == ['a:A:x:v1']
+E         
+E         Left contains one more item: 'a:A:x:v1'
+E         Use -v to get more diff
+
+tests/test_s1_runner_behavior.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B03_plan_found_is_executed_and_success_is_evaluator_only
+FAILED tests/test_s1_runner_behavior.py::test_B05_updated_mask_blocks_next_action
+2 failed, 27 passed in 1.39s

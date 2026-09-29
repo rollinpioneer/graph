@@ -1,0 +1,16 @@
+......................F......                                            [100%]
+=================================== FAILURES ===================================
+_____________________ test_G05_synthetic_fixture_separate ______________________
+
+    def test_G05_synthetic_fixture_separate():
+        b={"utility_records":[{"truth_adjudicated":True,"utility_adjudicated":True,"opportunity_classified":True,"synthetic_unit_fixture":True}]}
+>       assert evaluate_gate_evidence(b)["E6"]["status"]=="NOT_ESTABLISHED"
+E       AssertionError: assert 'PASS' == 'NOT_ESTABLISHED'
+E         
+E         - NOT_ESTABLISHED
+E         + PASS
+
+tests/test_s1_gate_behavior.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_gate_behavior.py::test_G05_synthetic_fixture_separate - ...
+1 failed, 28 passed in 0.87s

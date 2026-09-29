@@ -1,0 +1,16 @@
+...........................F.                                            [100%]
+=================================== FAILURES ===================================
+_________________ test_P02_gradients_require_separate_sources __________________
+
+    def test_P02_gradients_require_separate_sources():
+        b={"gradient_records":[{"case_id":"c1","relation_gradient_measured":True,"patch_gradient_measured":True,"separate_sources":False,"relative_response":1.0},{"case_id":"c2","relation_gradient_measured":True,"patch_gradient_measured":True,"separate_sources":False,"relative_response":1.0}]}
+>       assert evaluate_gate_evidence(b)["E3"]["status"]=="NOT_ESTABLISHED"
+E       AssertionError: assert 'PASS' == 'NOT_ESTABLISHED'
+E         
+E         - NOT_ESTABLISHED
+E         + PASS
+
+tests/test_s1_probe_evidence_behavior.py:9: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_probe_evidence_behavior.py::test_P02_gradients_require_separate_sources
+1 failed, 28 passed in 0.73s

@@ -1,0 +1,20 @@
+.........F...................                                            [100%]
+=================================== FAILURES ===================================
+_______________ test_B06_deadline_before_action_does_not_execute _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-87/test_B06_deadline_before_actio0')
+
+    def test_B06_deadline_before_action_does_not_execute(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[],deadline=0.5,start_offset=0.5)
+        manifest={"runtime":{"active_task_id":"T_A","reference_skill_seconds_by_task":{"T_A":3.7},"task_deadlines":{"T_A":0.5}}}
+        r=call(tmp_path,bundle,manifest=manifest)
+>       assert bundle.executor.executed_candidate_ids==[] and r["termination_reason"]=="DEADLINE"
+E       AssertionError: assert (['a:A:x:v1'] == []
+E         
+E         Left contains one more item: 'a:A:x:v1'
+E         Use -v to get more diff)
+
+tests/test_s1_runner_behavior.py:55: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B06_deadline_before_action_does_not_execute
+1 failed, 28 passed in 1.36s

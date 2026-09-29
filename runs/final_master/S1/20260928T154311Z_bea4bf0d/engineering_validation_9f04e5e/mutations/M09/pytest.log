@@ -1,0 +1,18 @@
+.............F...............                                            [100%]
+=================================== FAILURES ===================================
+___________________ test_B10_search_timeout_is_not_valid_E4 ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xushijie2/pytest-91/test_B10_search_timeout_is_not0')
+
+    def test_B10_search_timeout_is_not_valid_E4(tmp_path):
+        bundle=FakeBundle([{"success":False,"terminated":False}],[{"status":"SEARCH_TIMEOUT","plan":[]}])
+        r=call(tmp_path,bundle)
+>       assert r["execution_status"]=="SEARCH_TIMEOUT" and r["eligible_for_e4"] is False
+E       AssertionError: assert ('SEARCH_TIMEOUT' == 'SEARCH_TIMEOUT'
+E         
+E           SEARCH_TIMEOUT and True is False)
+
+tests/test_s1_runner_behavior.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_s1_runner_behavior.py::test_B10_search_timeout_is_not_valid_E4
+1 failed, 28 passed in 0.89s

@@ -149,33 +149,50 @@ def reserve_budget(output_dir, field, amount, identity):
     if int(amount) <= 0:
         raise BudgetExceeded("amount must be positive")
     output_dir = Path(output_dir)
-    path = output_dir / "budget_ledger.json"
-    ledger = _read_json(path)
-    if field not in ledger:
-        raise BudgetExceeded("unknown budget field")
-    item = dict(ledger[field])
-    old_used = int(item["used"])
-    cap = int(item["cap"])
-    if old_used + int(amount) > cap:
-        raise BudgetExceeded(f"{field} cap exceeded")
-    if field == "provider_retries" and _retry_count(output_dir, identity) + int(amount) > int(item.get("per_scene_cap", 1)):
-        raise BudgetExceeded("provider retry per-scene cap exceeded")
-    item["used"] = old_used + int(amount)
-    ledger[field] = item
-    _atomic_json(path, ledger, retain_previous=True)
-    _append_jsonl(output_dir / "budget_events.jsonl", {
-        "timestamp_utc": utc_now(),
-        "budget_field": field,
-        "identity": identity,
-        "amount": int(amount),
-        "old_used": old_used,
-        "new_used": item["used"],
-        "cap": cap,
-        "command": os.environ.get("S1_REV1_COMMAND", "unit"),
-        "source_commit": os.environ.get("S1_REV1_SOURCE_COMMIT", "unit"),
-    })
-    return ledger
-
+    lock_path = output_dir / ".budget_transaction.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    import fcntl
+    with lock_path.open("a+") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        try:
+            path = output_dir / "budget_ledger.json"
+            ledger = _read_json(path)
+            if field not in ledger:
+                raise BudgetExceeded("unknown budget field")
+            events_path = output_dir / "budget_events.jsonl"
+            seen = set()
+            if events_path.exists():
+                for line in events_path.read_text(encoding="utf-8").splitlines():
+                    if line:
+                        try:
+                            event = json.loads(line)
+                        except json.JSONDecodeError:
+                            continue
+                        if event.get("identity") == identity and event.get("budget_field") == field:
+                            seen.add(event.get("status", "RESERVED"))
+            if seen & {"STARTED", "COMPLETED", "UNKNOWN"}:
+                raise BudgetExceeded("duplicate or unknown attempt")
+            item = dict(ledger[field])
+            old_used = int(item["used"])
+            cap = int(item["cap"])
+            if old_used + int(amount) > cap:
+                raise BudgetExceeded(f"{field} cap exceeded")
+            if field == "provider_retries" and _retry_count(output_dir, identity) + int(amount) > int(item.get("per_scene_cap", 1)):
+                raise BudgetExceeded("provider retry per-scene cap exceeded")
+            item["used"] = old_used + int(amount)
+            ledger[field] = item
+            _atomic_json(path, ledger, retain_previous=True)
+            _append_jsonl(events_path, {
+                "timestamp_utc": utc_now(), "budget_field": field,
+                "identity": identity, "amount": int(amount),
+                "old_used": old_used, "new_used": item["used"],
+                "cap": cap, "status": "RESERVED",
+                "command": os.environ.get("S1_REV1_COMMAND", "unit"),
+                "source_commit": os.environ.get("S1_REV1_SOURCE_COMMIT", "unit"),
+            })
+            return ledger
+        finally:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
 
 def resolve_historical_cache(root, cache_key):
     found = set()
