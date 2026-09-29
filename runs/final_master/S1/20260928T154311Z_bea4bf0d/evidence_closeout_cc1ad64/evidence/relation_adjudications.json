@@ -1,0 +1,559 @@
+{
+  "records": [
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_14",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/de4594c0b5f7b6ddec8edf4699109b218d327a3b30c51756d0f619440a2cc28b",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:target:container:v1",
+            "required_by_precondition_of": "a:PICK:second_object:v1"
+          },
+          {
+            "ADD": "p:Held:second_object",
+            "action": "a:PICK:second_object:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_14:rel_open_goal_second",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_goal_second",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:second_object:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "4644553be177b4c04300449bfaafac1a4779e9f9b71358976b3b8bacf49a5635",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "89a29e299fa4e8b32a077161b1dd27bad6a755773102bc1f752237baf7492c8f",
+        "raw_response.json": "31f01c6bc4e027fe33a76d423dfc1d883c0e25bf6f230f49163557f7b7b75e26",
+        "rejected_relations.json": "ec235f452df3d66ca659dd9fba68225104e5198bf145b2a1f736481c3c656d3f"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    },
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_14",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/de4594c0b5f7b6ddec8edf4699109b218d327a3b30c51756d0f619440a2cc28b",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:second_object:container:v1",
+            "required_by_precondition_of": "a:PICK:target:v1"
+          },
+          {
+            "ADD": "p:Held:target",
+            "action": "a:PICK:target:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_14:rel_open_goal_target",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_goal_target",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:target:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "4644553be177b4c04300449bfaafac1a4779e9f9b71358976b3b8bacf49a5635",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "89a29e299fa4e8b32a077161b1dd27bad6a755773102bc1f752237baf7492c8f",
+        "raw_response.json": "31f01c6bc4e027fe33a76d423dfc1d883c0e25bf6f230f49163557f7b7b75e26",
+        "rejected_relations.json": "ec235f452df3d66ca659dd9fba68225104e5198bf145b2a1f736481c3c656d3f"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    },
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_18",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/425f28dd640353ee9b62520bc395940358969ff0c1587035066f75708461673e",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:target:container:v1",
+            "required_by_precondition_of": "a:PICK:second_object:v1"
+          },
+          {
+            "ADD": "p:Held:second_object",
+            "action": "a:PICK:second_object:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_18:rel_open_relevant_goal_second",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_relevant_goal_second",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:second_object:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "845a720bdf51c5d7428d7f6d43b34c5a094c4a6e6e9ed4d9f08602d083b9096b",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "3c3e741390aa6ae8c0856be7c0cbb921163bea9b0e976d7d9541f536c446478e",
+        "raw_response.json": "3cfaa0b207c2fb4c0bd3a5cede333746aa58474cca7bcdb935665640ef53a7fa",
+        "rejected_relations.json": "dbc084d238ecb336cfd65bd30eebdee96f5f30f1d3262a828882eb6a1f7f7ce3"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    },
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_18",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/425f28dd640353ee9b62520bc395940358969ff0c1587035066f75708461673e",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:second_object:container:v1",
+            "required_by_precondition_of": "a:PICK:target:v1"
+          },
+          {
+            "ADD": "p:Held:target",
+            "action": "a:PICK:target:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_18:rel_open_relevant_goal_target",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_relevant_goal_target",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:target:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "845a720bdf51c5d7428d7f6d43b34c5a094c4a6e6e9ed4d9f08602d083b9096b",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "3c3e741390aa6ae8c0856be7c0cbb921163bea9b0e976d7d9541f536c446478e",
+        "raw_response.json": "3cfaa0b207c2fb4c0bd3a5cede333746aa58474cca7bcdb935665640ef53a7fa",
+        "rejected_relations.json": "dbc084d238ecb336cfd65bd30eebdee96f5f30f1d3262a828882eb6a1f7f7ce3"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    },
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_19",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/6104be083c77f65232dcecf0384f03ace5b582bab6d0f16bd8bd68255d28de53",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:target:container:v1",
+            "required_by_precondition_of": "a:PICK:second_object:v1"
+          },
+          {
+            "ADD": "p:Held:second_object",
+            "action": "a:PICK:second_object:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:Inside:second_object:container",
+            "action": "a:PLACE:second_object:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_19:rel_open_relevant_goal_second",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_relevant_goal_second",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:second_object:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "845a720bdf51c5d7428d7f6d43b34c5a094c4a6e6e9ed4d9f08602d083b9096b",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "32d5f35638ef064990e62e9b761ab87a87bcd7b47c8dbb24f69e931cd437ee13",
+        "raw_response.json": "da4e5fcc6d88cc9a5bf0227a6eb246c0e322d37fa8bf933968f97abf28bf4f82",
+        "rejected_relations.json": "dbc084d238ecb336cfd65bd30eebdee96f5f30f1d3262a828882eb6a1f7f7ce3"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    },
+    {
+      "admission_and_multihop_explanation_compatible": true,
+      "admitted_under_frozen_validator": true,
+      "case_id": "T_A_dev_19",
+      "evidence_refs": {
+        "cache_dir": "experiments/vlm_cache/dev/6104be083c77f65232dcecf0384f03ace5b582bab6d0f16bd8bd68255d28de53",
+        "index": "runs/final_master/S1/20260928T154311Z_bea4bf0d/provider/cache_index.csv"
+      },
+      "evidence_scope": "provider_cache_admitted_relation",
+      "extra_contract_information_established": false,
+      "extra_contract_information_reason": "multi-hop contract path explains the relation; not established as information beyond the contract",
+      "limitations": [
+        "truth/utility/opportunity need independent adjudication that is not in the saved data; no R* invented; provider not called"
+      ],
+      "local_contract_redundancy_result": false,
+      "measurement_origin": "verify_audit_cache on saved cache; contract analysis recomputed offline",
+      "missing_fields": [
+        "independent_truth_adjudication",
+        "q_R",
+        "R_star"
+      ],
+      "multihop_contract_explanation": true,
+      "multihop_paths": [
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:second_object:container:v1"
+          },
+          {
+            "ADD": "p:GripperEmpty",
+            "action": "a:PLACE:second_object:container:v1",
+            "required_by_precondition_of": "a:PICK:target:v1"
+          },
+          {
+            "ADD": "p:Held:target",
+            "action": "a:PICK:target:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ],
+        [
+          {
+            "ADD": "p:Open:container",
+            "action": "a:OPEN:container:v1",
+            "required_by_precondition_of": "a:PLACE:target:container:v1"
+          },
+          {
+            "ADD": "p:Inside:target:container",
+            "action": "a:PLACE:target:container:v1"
+          }
+        ]
+      ],
+      "opportunity_label": "UNKNOWN",
+      "record_id": "T_A_dev_19:rel_open_relevant_goal_target",
+      "relation": {
+        "effect_fact_ref": "p:Open:container",
+        "relation_id": "rel_open_relevant_goal_target",
+        "source_ref": "a:OPEN:container:v1",
+        "target_ref": "p:Inside:target:container",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      },
+      "source_hashes": {
+        "accepted_relations.json": "845a720bdf51c5d7428d7f6d43b34c5a094c4a6e6e9ed4d9f08602d083b9096b",
+        "final_edges.json": "29e93fce0d3fff9f37fe366801405bae50fcce52adc93a98daca2ccac72ebaa4",
+        "manifest.json": "32d5f35638ef064990e62e9b761ab87a87bcd7b47c8dbb24f69e931cd437ee13",
+        "raw_response.json": "da4e5fcc6d88cc9a5bf0227a6eb246c0e322d37fa8bf933968f97abf28bf4f82",
+        "rejected_relations.json": "dbc084d238ecb336cfd65bd30eebdee96f5f30f1d3262a828882eb6a1f7f7ce3"
+      },
+      "status": "ADJUDICATION_INCOMPLETE",
+      "truth_label": "UNKNOWN",
+      "utility_label": "UNKNOWN"
+    }
+  ],
+  "summary": {
+    "caches_verified": 8,
+    "case_19_has_physical_branch": false,
+    "case_19_note": "T_A_dev_19 has no r3 branch; consequences of cases 14/18 are not transferred to it",
+    "expected_14_18_19_two_each_matches": true,
+    "nonempty_cases": [
+      "T_A_dev_14",
+      "T_A_dev_18",
+      "T_A_dev_19"
+    ],
+    "nonempty_counts": {
+      "T_A_dev_14": 2,
+      "T_A_dev_18": 2,
+      "T_A_dev_19": 2
+    },
+    "per_case": {
+      "T_A_dev_12": {
+        "accepted_count": 0,
+        "admitted_count_from_final_edges": 0,
+        "admitted_count_index": 0,
+        "cache_key": "9e24250a7828b369699522be1e35241abdb44343358139b26effcaa9bc00a417",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_13": {
+        "accepted_count": 0,
+        "admitted_count_from_final_edges": 0,
+        "admitted_count_index": 0,
+        "cache_key": "357c9b89bc5bca0db01ff157fd9109caa3cec65d359625a9b07a5698f0f4ee9f",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_14": {
+        "accepted_count": 2,
+        "admitted_count_from_final_edges": 2,
+        "admitted_count_index": 2,
+        "cache_key": "de4594c0b5f7b6ddec8edf4699109b218d327a3b30c51756d0f619440a2cc28b",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_15": {
+        "accepted_count": 0,
+        "admitted_count_from_final_edges": 0,
+        "admitted_count_index": 0,
+        "cache_key": "44b9672f1a7a732995eb229908550b151da7bac5187ae001645703c5d48805d1",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_16": {
+        "accepted_count": 0,
+        "admitted_count_from_final_edges": 0,
+        "admitted_count_index": 0,
+        "cache_key": "b8bf8c12b7fca09ad07f46aaf156d8776028316c4e7f52086150c282ca6a7cf0",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_17": {
+        "accepted_count": 0,
+        "admitted_count_from_final_edges": 0,
+        "admitted_count_index": 0,
+        "cache_key": "338ed93940ba6b8da1ddc92fc6049f62eb0e4d84949109145f48b82a93752ec6",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 6,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_18": {
+        "accepted_count": 2,
+        "admitted_count_from_final_edges": 2,
+        "admitted_count_index": 2,
+        "cache_key": "425f28dd640353ee9b62520bc395940358969ff0c1587035066f75708461673e",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 4,
+        "verify_audit_cache": "OK"
+      },
+      "T_A_dev_19": {
+        "accepted_count": 2,
+        "admitted_count_from_final_edges": 2,
+        "admitted_count_index": 2,
+        "cache_key": "6104be083c77f65232dcecf0384f03ace5b582bab6d0f16bd8bd68255d28de53",
+        "counts_consistent": true,
+        "processing_status": "SUCCESS",
+        "rejected_count": 4,
+        "verify_audit_cache": "OK"
+      }
+    },
+    "total_admitted": 6
+  }
+}

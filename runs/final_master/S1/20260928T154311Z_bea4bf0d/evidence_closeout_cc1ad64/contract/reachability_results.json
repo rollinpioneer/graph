@@ -1,0 +1,445 @@
+{
+  "actual_post_action_facts": "NOT_RECORDED_OR_NOT_FOUND",
+  "atom_roles": {
+    "p:AtBuffer:second_object:buffer": {
+      "ADD_by": [
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ],
+      "DEL_by": [],
+      "required_by_precondition": []
+    },
+    "p:GripperEmpty": {
+      "ADD_by": [
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "DEL_by": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "required_by_precondition": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ]
+    },
+    "p:Held:second_object": {
+      "ADD_by": [
+        "a:PICK:second_object:v1"
+      ],
+      "DEL_by": [
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ],
+      "required_by_precondition": [
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ]
+    },
+    "p:Inside:second_object:container": {
+      "ADD_by": [
+        "a:PLACE:second_object:container:v1"
+      ],
+      "DEL_by": [],
+      "required_by_precondition": []
+    },
+    "p:OnTable:second_object": {
+      "ADD_by": [],
+      "DEL_by": [
+        "a:PICK:second_object:v1"
+      ],
+      "required_by_precondition": [
+        "a:PICK:second_object:v1"
+      ]
+    },
+    "p:Open:container": {
+      "ADD_by": [
+        "a:OPEN:container:v1"
+      ],
+      "DEL_by": [],
+      "required_by_precondition": [
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1"
+      ]
+    }
+  },
+  "diagnostic_fields": {
+    "T_A_dev_14": {
+      "CONTRACT_ALREADY_DISTINGUISHES_ACTIONS": true,
+      "EXTRA_CONTRACT_CONSEQUENCE_PLAUSIBLE": "NOT_ESTABLISHED",
+      "INSUFFICIENT_SAVED_STATE": true,
+      "NOMINAL_RECOVERY_GAP": true,
+      "OBSERVATION_CONTRACT_MISMATCH": "NOT_ESTABLISHED",
+      "SEARCH_HORIZON_LIMITATION": false,
+      "SEARCH_NODE_OR_CPU_LIMITATION": false,
+      "runtime_NO_PLAN_reason": "OBSERVED_NOT_REENACTED (actual post-action facts not saved); nominal model reachability reported separately"
+    },
+    "T_A_dev_18": {
+      "CONTRACT_ALREADY_DISTINGUISHES_ACTIONS": true,
+      "EXTRA_CONTRACT_CONSEQUENCE_PLAUSIBLE": "NOT_ESTABLISHED",
+      "INSUFFICIENT_SAVED_STATE": true,
+      "NOMINAL_RECOVERY_GAP": true,
+      "OBSERVATION_CONTRACT_MISMATCH": "NOT_ESTABLISHED",
+      "SEARCH_HORIZON_LIMITATION": false,
+      "SEARCH_NODE_OR_CPU_LIMITATION": false,
+      "runtime_NO_PLAN_reason": "OBSERVED_NOT_REENACTED (actual post-action facts not saved); nominal model reachability reported separately"
+    }
+  },
+  "per_case": {
+    "T_A_dev_14": {
+      "closure": {
+        "a:OPEN:container:v1": {
+          "edge_count": 27,
+          "edges_sha256": "116b6eb50fcfac66421fbe15b31d46aa5a6198d782a499d1d401e049fe19fbe5",
+          "enumeration_limit": 100000,
+          "goal_reachable": true,
+          "goal_state_count": 1,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": [
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "state_count": 15,
+          "state_space_bound": 59049,
+          "states_sha256": "86e31f61ac305e27f758a878824faa57de0067d4b51b24419c8f960f170e666c",
+          "status": "COMPLETE"
+        },
+        "a:PICK:second_object:v1": {
+          "edge_count": 11,
+          "edges_sha256": "878202ba2d8e4835c4df3f249e24d79ade9b0b22e79fe2c9fcfab0c052541488",
+          "enumeration_limit": 100000,
+          "goal_reachable": "PROVEN_UNREACHABLE",
+          "goal_state_count": 0,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": null,
+          "state_count": 8,
+          "state_space_bound": 59049,
+          "states_sha256": "29ea49ebbf36139551cb47244a8476f102eed9ccdf536809f0b1fad729545ff2",
+          "status": "COMPLETE"
+        },
+        "initial_state_reference": {
+          "edge_count": 39,
+          "edges_sha256": "aae1c32350cb42a1f8fc828597ecf886d6b04f64f72bca120705ef83b7784faf",
+          "enumeration_limit": 100000,
+          "goal_reachable": true,
+          "goal_state_count": 1,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": [
+            "a:OPEN:container:v1",
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "state_count": 23,
+          "state_space_bound": 59049,
+          "states_sha256": "38c54726975e45d28b649d596a6462de4df93ac00f734b7b26723f8ef77aa1d9",
+          "status": "COMPLETE"
+        }
+      },
+      "offline_b_plan": {
+        "after_OPEN_nominal": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.0011921779999999327,
+          "expanded_nodes": 4,
+          "generated_nodes": 8,
+          "input_provenance": "NOMINAL_DERIVED",
+          "plan": [
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "remaining_deadline_seconds_from_journal": 52.40000000000046,
+          "status": "PLAN_FOUND"
+        },
+        "after_PICK_second_nominal": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.001852867999999952,
+          "expanded_nodes": 8,
+          "generated_nodes": 8,
+          "input_provenance": "NOMINAL_DERIVED",
+          "plan": [],
+          "remaining_deadline_seconds_from_journal": 55.500000000000384,
+          "status": "NO_PLAN"
+        },
+        "initial_saved_facts": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.0018282299999999863,
+          "expanded_nodes": 5,
+          "generated_nodes": 11,
+          "input_provenance": "SAVED_INITIAL_FACTS",
+          "plan": [
+            "a:OPEN:container:v1",
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "remaining_deadline_seconds_from_journal": 60.0,
+          "status": "PLAN_FOUND"
+        },
+        "observed_runtime_first_planner_return": {
+          "OPEN": {
+            "branch_id": "228fb5e50d2a0eba",
+            "first_action_complete_relative": 7.5999999999995405,
+            "first_planner_return": {
+              "expanded_nodes": 4,
+              "plan": [
+                "a:PICK:second_object:v1",
+                "a:PLACE:second_object:container:v1",
+                "a:PICK:target:v1",
+                "a:PLACE:target:container:v1"
+              ],
+              "relative_time": 7.5999999999995405,
+              "sequence": 8,
+              "status": "PLAN_FOUND"
+            }
+          },
+          "PICK": {
+            "branch_id": "ecbbffda7ab725db",
+            "first_action_complete_relative": 4.499999999999615,
+            "first_planner_return": {
+              "expanded_nodes": 8,
+              "plan": [],
+              "relative_time": 4.499999999999615,
+              "sequence": 8,
+              "status": "NO_PLAN"
+            }
+          }
+        }
+      }
+    },
+    "T_A_dev_18": {
+      "closure": {
+        "a:OPEN:container:v1": {
+          "edge_count": 27,
+          "edges_sha256": "116b6eb50fcfac66421fbe15b31d46aa5a6198d782a499d1d401e049fe19fbe5",
+          "enumeration_limit": 100000,
+          "goal_reachable": true,
+          "goal_state_count": 1,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": [
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "state_count": 15,
+          "state_space_bound": 59049,
+          "states_sha256": "86e31f61ac305e27f758a878824faa57de0067d4b51b24419c8f960f170e666c",
+          "status": "COMPLETE"
+        },
+        "a:PICK:second_object:v1": {
+          "edge_count": 11,
+          "edges_sha256": "878202ba2d8e4835c4df3f249e24d79ade9b0b22e79fe2c9fcfab0c052541488",
+          "enumeration_limit": 100000,
+          "goal_reachable": "PROVEN_UNREACHABLE",
+          "goal_state_count": 0,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": null,
+          "state_count": 8,
+          "state_space_bound": 59049,
+          "states_sha256": "29ea49ebbf36139551cb47244a8476f102eed9ccdf536809f0b1fad729545ff2",
+          "status": "COMPLETE"
+        },
+        "initial_state_reference": {
+          "edge_count": 39,
+          "edges_sha256": "aae1c32350cb42a1f8fc828597ecf886d6b04f64f72bca120705ef83b7784faf",
+          "enumeration_limit": 100000,
+          "goal_reachable": true,
+          "goal_state_count": 1,
+          "predicate_order": [
+            "p:AtBuffer:second_object:buffer",
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty",
+            "p:Held:second_object",
+            "p:Held:target",
+            "p:Inside:second_object:container",
+            "p:Inside:target:container",
+            "p:OnTable:second_object",
+            "p:OnTable:target",
+            "p:Open:container"
+          ],
+          "shortest_nominal_plan": [
+            "a:OPEN:container:v1",
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "state_count": 23,
+          "state_space_bound": 59049,
+          "states_sha256": "38c54726975e45d28b649d596a6462de4df93ac00f734b7b26723f8ef77aa1d9",
+          "status": "COMPLETE"
+        }
+      },
+      "offline_b_plan": {
+        "after_OPEN_nominal": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.0011979599999999424,
+          "expanded_nodes": 4,
+          "generated_nodes": 8,
+          "input_provenance": "NOMINAL_DERIVED",
+          "plan": [
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "remaining_deadline_seconds_from_journal": 52.40000000000046,
+          "status": "PLAN_FOUND"
+        },
+        "after_PICK_second_nominal": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.0018807010000000401,
+          "expanded_nodes": 8,
+          "generated_nodes": 8,
+          "input_provenance": "NOMINAL_DERIVED",
+          "plan": [],
+          "remaining_deadline_seconds_from_journal": 55.65000000000037,
+          "status": "NO_PLAN"
+        },
+        "initial_saved_facts": {
+          "config": {
+            "cpu_time_limit_seconds": 2.0,
+            "depth_limit": 6,
+            "max_nodes": 4096,
+            "reference_skill_seconds": 3.7000000000002355
+          },
+          "cpu_seconds": 0.0018284830000000474,
+          "expanded_nodes": 5,
+          "generated_nodes": 11,
+          "input_provenance": "SAVED_INITIAL_FACTS",
+          "plan": [
+            "a:OPEN:container:v1",
+            "a:PICK:second_object:v1",
+            "a:PLACE:second_object:container:v1",
+            "a:PICK:target:v1",
+            "a:PLACE:target:container:v1"
+          ],
+          "remaining_deadline_seconds_from_journal": 60.0,
+          "status": "PLAN_FOUND"
+        },
+        "observed_runtime_first_planner_return": {
+          "OPEN": {
+            "branch_id": "ae2e7da5882e4b49",
+            "first_action_complete_relative": 7.5999999999995405,
+            "first_planner_return": {
+              "expanded_nodes": 4,
+              "plan": [
+                "a:PICK:second_object:v1",
+                "a:PLACE:second_object:container:v1",
+                "a:PICK:target:v1",
+                "a:PLACE:target:container:v1"
+              ],
+              "relative_time": 7.5999999999995405,
+              "sequence": 8,
+              "status": "PLAN_FOUND"
+            }
+          },
+          "PICK": {
+            "branch_id": "8b7c287746c5df41",
+            "first_action_complete_relative": 4.349999999999632,
+            "first_planner_return": {
+              "expanded_nodes": 8,
+              "plan": [],
+              "relative_time": 4.349999999999632,
+              "sequence": 8,
+              "status": "NO_PLAN"
+            }
+          }
+        }
+      }
+    }
+  },
+  "post_action_scan": {
+    "files_with_fact_values": [],
+    "scanned": "r3 branch journals and branch_results (fact_id/facts keys); sidecars hold hashes and QA coordinates only",
+    "status": "NOT_RECORDED_OR_NOT_FOUND"
+  }
+}

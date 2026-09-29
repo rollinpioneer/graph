@@ -1,0 +1,35 @@
+{
+  "r1": {
+    "approval_external_transcript_verified": false,
+    "approval_record_present": true,
+    "approval_source": "user reply in the working session (multiple-choice: 批准，最多8个)",
+    "approval_text_adopted": "批准在同一个 S1-REV1 内追加最多8个E4物理恢复attempt。原8次已用预算保留，累计上限16次；新增provider、RL、optimizer和elastic均为0。先以2个并行分支检查真实执行链，技术检查通过后在同一8次额度内完成剩余分支。保持原场景、候选对和方法，不启动S2/S3或正式test。",
+    "approved_additional_physical_episodes": 8,
+    "authorization_path": "runs/final_master/S1/20260928T154311Z_bea4bf0d/e4_recovery_23fab0c/authorization.json",
+    "authorization_sha256": "88a35c5a8ce63604d6e6d915d6c74d4a4cd7edc19e5fb79b0c05e0ec5d429fc4",
+    "budget_amendment_sha256": "54b138c3291fbf1fa9693e64dad9c4c8d858bdb4a0837b3f380a1c59320de16c",
+    "note": "recorded in a local authorization file; the originating session transcript was not independently exported or reviewed here"
+  },
+  "r2": {
+    "approval_external_transcript_verified": false,
+    "approval_record_present": true,
+    "approval_source": "user reply in the working session (multiple-choice: 补偿2个，重跑完整8分支)",
+    "approval_text_adopted": "补偿2个：因执行侧误用旧 manifest 导致首批2个 attempt 在环境创建前失败（未执行任何 skill）。恢复额度总上限由8调整为10（累计原8+恢复10=18），r2 目录以 cap=8、used=0 的独立账本重跑完整8分支；r1 的2次FAILED记录保留。其余条件与原批准一致：provider/RL/optimizer/elastic 均为0，不启动S2/S3/正式test。",
+    "approved_additional_physical_episodes": 8,
+    "authorization_path": "runs/final_master/S1/20260928T154311Z_bea4bf0d/e4_recovery_23fab0c_r2/authorization.json",
+    "authorization_sha256": "cb264a3ac254dcccab8ed30f711cf5b1a86ddf99f98d57aa0f37e099e5a8ce5e",
+    "budget_amendment_sha256": "5d00d8ee9491cf7c0ce8683ac57b6e08b7f9b4e056b64f7bff3fe1fc05c36ba1",
+    "note": "recorded in a local authorization file; the originating session transcript was not independently exported or reviewed here"
+  },
+  "r3": {
+    "approval_external_transcript_verified": false,
+    "approval_record_present": true,
+    "approval_source": "user reply in the working session (approval: 批准 补偿2个至累计上限20)",
+    "approval_text_adopted": "再补偿2个：r1、r2 共4个 attempt 因执行侧工程错误在环境创建前失败或未启动（均未执行任何 skill）。恢复额度总上限由10调整为12（累计原8+恢复12=20），r3 目录以 cap=8、used=0 的独立账本重跑完整8分支；r1、r2 记录全部保留。其余条件不变：provider/RL/optimizer/elastic 均为0，不启动S2/S3/正式test。",
+    "approved_additional_physical_episodes": 8,
+    "authorization_path": "runs/final_master/S1/20260928T154311Z_bea4bf0d/e4_recovery_23fab0c_r3/authorization.json",
+    "authorization_sha256": "93167fb331b002acb1002e3445cc3400c1cba182fc3fcf56bd8b32a560c48df6",
+    "budget_amendment_sha256": "ebb4dab2450cc634d18be531787f313acc575c4c13c384eb086e0771db48d5c6",
+    "note": "recorded in a local authorization file; the originating session transcript was not independently exported or reviewed here"
+  }
+}
