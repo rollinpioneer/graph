@@ -241,6 +241,14 @@ def worker(root, branch_id):
     return res
 
 
+
+def preflight_runtime(manifest_path):
+    """Zero-cost gate (no environment, no reset): the manifest's runtime_factory hash must match the source on disk.
+    Must pass before any budget slot is reserved."""
+    from cp_disr.runtime import require_runtime
+    manifest = yaml.safe_load(Path(manifest_path).read_text(encoding="utf-8"))
+    return require_runtime(manifest)
+
 # --------------------------------------------------------------- scheduler
 def _spawn(root, out, branch_id, gpu):
     env = os.environ.copy()
@@ -261,6 +269,12 @@ def run_wave(root, wave, gpus, max_workers=None):
     reg = _rd(out / "witnesses/e4_branch_registration.json")
     todo = [b["branch_id"] for b in reg["branches"] if b["wave"] in (wave if isinstance(wave, (list, tuple, set)) else [wave])
             and _load_attempts(out).get(b["branch_id"]) is None]
+    if todo:
+        try:
+            preflight_runtime(_rd(out / "witnesses/e4_branch_registration.json")["branches"][0]["manifest_path"])
+        except Exception as exc:
+            _event(out, "preflight_failed_before_any_reservation", error=f"{type(exc).__name__}: {exc}")
+            return {"done": [], "faults": [{"fault": "PREFLIGHT_RUNTIME_BINDING", "error": str(exc)}]}
     slots = list(gpus)[: (max_workers or len(gpus))]
     running, faults, done = {}, [], []
     _event(out, "wave_start", wave=wave, branches=todo, gpus=slots)

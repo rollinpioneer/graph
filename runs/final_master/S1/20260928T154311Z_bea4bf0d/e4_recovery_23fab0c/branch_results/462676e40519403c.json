@@ -1,0 +1,21 @@
+{
+  "branch_id": "462676e40519403c",
+  "candidate_id": "a:PICK:second_object:v1",
+  "case_id": "T_A_dev_14",
+  "controller_exit": "",
+  "cuda_visible_devices": "3",
+  "decision_count": 0,
+  "eligible_for_e4": false,
+  "error_phase": "bundle_create",
+  "error_type": "BindingError",
+  "execution_status": "EXCEPTION",
+  "paired_effect_status": "NOT_ESTABLISHED",
+  "protocol_complete": false,
+  "task_success": false,
+  "termination_reason": "BindingError",
+  "trace": [],
+  "traceback": "Traceback (most recent call last):\n  File \"/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_revision_resume.py\", line 726, in execute_registered_branch\n    bundle = bundle_factory(manifest, branch) if bundle_factory else load_runtime(manifest)\n  File \"/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_e4_recovery.py\", line 233, in factory\n    return ProbedBundle(load_runtime(manifest), out, branch)\n  File \"/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/runtime.py\", line 27, in load_runtime\n    spec=require_runtime(manifest)\n  File \"/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/runtime.py\", line 23, in require_runtime\n    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=spec['sha256']:raise BindingError('MUST_BIND: runtime_factory verified source hash')\ncp_disr.common.BindingError: MUST_BIND: runtime_factory verified source hash\n",
+  "witness_validity": "ENGINEERING_NON_DIAGNOSTIC",
+  "worker_pid": 2925491,
+  "worker_wall_seconds": 0.20324921607971191
+}

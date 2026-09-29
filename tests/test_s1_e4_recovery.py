@@ -29,3 +29,20 @@ def test_paired_restore_missing_sidecar_is_not_established(tmp_path):
 def test_seed_rule_is_candidate_independent():
     s = lambda case, rep: int(hashlib.sha256(f"{case}|{rep}".encode()).hexdigest()[:8], 16)
     assert s("T_A_dev_14", 0) == s("T_A_dev_14", 0) and s("T_A_dev_14", 0) != s("T_A_dev_14", 1)
+
+
+def test_preflight_rejects_stale_runtime_factory_hash(tmp_path):
+    import pytest
+    from cp_disr.common import BindingError
+    src = tmp_path / "factory.py"; src.write_text("x=1\n")
+    good = hashlib.sha256(src.read_bytes()).hexdigest()
+    base = {"runtime": {k: "v" for k in ("simulator_or_robot", "environment_version", "task_assets", "controller_manifest", "camera", "calibration_manifest",
+            "perception_checkpoint", "verifier_thresholds", "skill_timeouts", "task_deadlines", "reference_skill_seconds_by_task", "task_evaluator_version",
+            "safety_authorization", "task_splits")}}
+    base["runtime"]["actual_interaction_time_unit"] = "seconds"
+    def write(h):
+        d = {**base, "runtime_factory": {"module": "m", "factory": "f", "source_path": str(src), "sha256": h}}
+        (tmp_path / "m.yaml").write_text(json.dumps(d)); return tmp_path / "m.yaml"
+    assert m.preflight_runtime(write(good))["sha256"] == good
+    with pytest.raises(BindingError):
+        m.preflight_runtime(write("0" * 64))
