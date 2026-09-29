@@ -1,0 +1,35 @@
+{
+  "card_id": "CP-DISR-S4-FAMILY-A-SOFT-ORDERING-MVP-1",
+  "out": "runs/final_master/S4/family_a_soft_ordering_mvp/20260929T172042Z_2f80581b",
+  "status": "STOPPED",
+  "stop_code": "STOPPED_TECHNICAL_WAVE",
+  "next_action": "EXPLICIT_RESEARCH_DECISION",
+  "technical_wave": "FAIL",
+  "remaining_branches_released": false,
+  "branch_attempts_used": 2,
+  "environment_resets_used": 2,
+  "failed_checks": [
+    "T4_both_task_success",
+    "T5_exactly_four_skills",
+    "T6_per_action_records_complete"
+  ],
+  "passing_checks": [
+    "T0_technical_wave_size",
+    "T1_both_terminal",
+    "T2_paired_initial_state_identical",
+    "T3_qpos_qvel_max_diff_le_1e-9",
+    "T7_one_attempt_and_one_reset_each",
+    "T8_no_duplicate_branch",
+    "T9_no_global_perception_residue",
+    "T10_provider_rl_optimizer_zero"
+  ],
+  "diagnosis": "Both technical branches completed exactly one skill (PICK) then the symbolic planner returned NO_PLAN with an empty plan. After PICK the fact store held p:Held:target=TRUE but p:OnTable:target=FALSE, p:GripperEmpty=FALSE, p:Inside:*:container=FALSE and p:Open:container=UNKNOWN, so no PLACE/target candidate was applicable and no 4-skill episode was produced. T4/T5/T6 therefore cannot be satisfied by this run.",
+  "not_executed": [
+    "run-remaining",
+    "classify",
+    "summarize",
+    "verify"
+  ],
+  "gate_a_commit": "ef5ece7d4a8611b42261d025f81f0b27d96181da",
+  "note": "technical FAIL is terminal for this card; no automatic 3rd technical attempt was dispatched."
+}
