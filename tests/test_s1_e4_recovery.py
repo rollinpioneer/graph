@@ -46,3 +46,13 @@ def test_preflight_rejects_stale_runtime_factory_hash(tmp_path):
     assert m.preflight_runtime(write(good))["sha256"] == good
     with pytest.raises(BindingError):
         m.preflight_runtime(write("0" * 64))
+
+
+def test_worker_cmd_forwards_round_and_dry_run():
+    m.set_round("r2")
+    try:
+        cmd = m._worker_cmd("/r", "bid", dry_run=True)
+        assert "--round" in cmd and cmd[cmd.index("--round") + 1] == "r2" and "--dry-run" in cmd
+    finally:
+        m.set_round(None)
+    assert "--round" not in m._worker_cmd("/r", "bid")

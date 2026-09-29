@@ -320,6 +320,27 @@ def preflight_runtime(manifest_path):
     return require_runtime(manifest)
 
 # --------------------------------------------------------------- scheduler
+def _worker_cmd(root, branch_id, dry_run=False):
+    cmd = [sys.executable, str(Path(root) / "scripts/s1_e4_recovery.py"), "worker", "--root", str(root), "--branch-id", branch_id]
+    if _ROUND:
+        cmd += ["--round", _ROUND]
+    if dry_run:
+        cmd += ["--dry-run"]
+    return cmd
+
+
+def worker_dry_run(root, branch_id):
+    """Zero-cost worker launch check: resolves the round directory, finds the registered branch, runs the static preflight.
+    Reserves nothing, claims nothing, creates no environment."""
+    root, src, out = paths(root)
+    reg = _rd(out / "witnesses/e4_branch_registration.json")
+    branch = next((b for b in reg["branches"] if b["branch_id"] == branch_id), None)
+    if branch is None:
+        raise RuntimeError("DRY_RUN: branch not in registration of " + str(out))
+    pre = preflight_static(branch["manifest_path"], {b["case_id"] for b in reg["branches"]})
+    return {"dry_run": "OK", "out_dir": str(out), "branch_id": branch_id, "preflight": pre}
+
+
 def _spawn(root, out, branch_id, gpu):
     env = os.environ.copy()
     env.update({"CUDA_VISIBLE_DEVICES": str(gpu), "MUJOCO_GL": "egl", "CP_DISR_PHYSICAL_GPU_INDEX": str(gpu),
@@ -327,7 +348,7 @@ def _spawn(root, out, branch_id, gpu):
     for k in ("DASHSCOPE_API_KEY", "DASHSCOPE_API_KEY_FILE", "MUJOCO_EGL_DEVICE_ID"):
         env.pop(k, None)
     log = open(Path(out) / "worker_logs" / f"{branch_id}.log", "ab")
-    proc = subprocess.Popen([sys.executable, str(Path(root) / "scripts/s1_e4_recovery.py"), "worker", "--root", str(root), "--branch-id", branch_id],
+    proc = subprocess.Popen(_worker_cmd(root, branch_id),
                             env=env, stdout=log, stderr=subprocess.STDOUT, cwd=str(root), start_new_session=True)
     return proc
 
@@ -345,6 +366,13 @@ def run_wave(root, wave, gpus, max_workers=None):
         except Exception as exc:
             _event(out, "preflight_failed_before_any_reservation", error=f"{type(exc).__name__}: {exc}")
             return {"done": [], "faults": [{"fault": "PREFLIGHT_RUNTIME_BINDING", "error": str(exc)}]}
+    if todo:
+        env = os.environ.copy()
+        env.update({"CUDA_VISIBLE_DEVICES": str(list(gpus)[0]), "MUJOCO_GL": "egl", "PYTHONPATH": f"{root}/src:{root}"})
+        probe = subprocess.run(_worker_cmd(root, todo[0], dry_run=True), env=env, cwd=str(root), capture_output=True, text=True, timeout=120)
+        if probe.returncode != 0:
+            _event(out, "worker_dry_run_failed_before_any_reservation", returncode=probe.returncode, stderr_tail=probe.stderr[-600:])
+            return {"done": [], "faults": [{"fault": "WORKER_DRY_RUN", "stderr_tail": probe.stderr[-600:]}]}
     slots = list(gpus)[: (max_workers or len(gpus))]
     running, faults, done = {}, [], []
     _event(out, "wave_start", wave=wave, branches=todo, gpus=slots)

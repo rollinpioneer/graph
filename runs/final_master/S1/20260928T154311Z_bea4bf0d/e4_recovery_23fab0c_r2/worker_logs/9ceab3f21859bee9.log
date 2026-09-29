@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_e4_recovery.py", line 29, in <module>
+    sys.exit(main())
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/scripts/s1_e4_recovery.py", line 21, in main
+    elif a.cmd == "worker": out = m.worker(a.root, a.branch_id); out = {"branch_id": a.branch_id, "execution_status": out.get("execution_status")}
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_e4_recovery.py", line 306, in worker
+    res = execute_registered_branch(root, branch_id, out, bundle_factory=factory)
+  File "/home/xushijie2/graph_cp_disr_final_s1_rev1/src/cp_disr/analysis/s1_revision_resume.py", line 658, in execute_registered_branch
+    raise _base().RevisionError("witness execution requires frozen branch registration")
+cp_disr.analysis.s1_revision.RevisionError: witness execution requires frozen branch registration
