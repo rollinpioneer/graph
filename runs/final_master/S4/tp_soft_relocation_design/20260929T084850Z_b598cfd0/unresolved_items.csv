@@ -1,0 +1,8 @@
+item,status,detail
+relocation-route measurement,OPEN,22/48 relocation branches stop after PICK(interferer) with NO_PLAN / GOAL_ALREADY_SATISFIED / UNKNOWN_CONTROLLER_EXIT (identical in both repeats). Probable cause: verifier/perception reading of the held or shaded cyan interferer under the nearest-palette mask; NOT verified because no further physical episode is authorized.
+direct-route premise,OPEN,"direct PICK(target) succeeded in 46/48 branches, so the interferer almost never impedes the direct route in the generated geometry; controller/geometry redesign needed for any helpful relocation opportunity."
+perception mask,OPEN,T_P_SR uses a nearest-palette colour assignment (tp_sr_runtime) instead of the production independent tolerance masks; production perception is untouched. Effect on non-T_P_SR tasks: none.
+lost static resets,CLOSED_RECORDED,T_P_SR_pool_00 and _01 were reset before the mask fix (2/64 resets); both stay FAIL and are not re-screened.
+provider and representation phases,NOT_RUN,"gated by the physical opportunity gate; no provider call, no representation forward."
+initial RGB capture,OPEN,static screening did not persist RGB/depth; a provider phase would need a capture reset budget beyond the 64 static resets.
+throughput baseline,OPEN,no matched single-worker baseline was measured; the 4-vs-2 worker comparison uses different branch subsets.
