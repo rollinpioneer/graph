@@ -13,8 +13,9 @@ sys.path.insert(0, str(ROOT))
 
 from cp_disr.analysis import s4_family_a_soft_ordering_mvp as m  # noqa: E402
 
-COMMANDS = ("freeze-spec", "derive-anchor-bank", "freeze-configs", "prepare-branches", "technical-wave", "run-remaining",
-            "classify", "summarize", "verify", "physical-worker", "protected-after")
+COMMANDS = ("freeze-spec", "derive-anchor-bank", "freeze-configs", "prepare-branches", "technical-wave",
+            "amend-technical-gate", "run-remaining", "classify", "summarize", "verify",
+            "physical-worker", "protected-after")
 
 
 def main(argv=None):
@@ -44,6 +45,8 @@ def main(argv=None):
                 res = m.prepare_branches(a.root, a.config, out)
             elif a.command == "technical-wave":
                 res = m.technical_wave(a.root, a.config, out, gpus, a.max_workers)
+            elif a.command == "amend-technical-gate":
+                res = m.amend_technical_gate(a.root, a.config, out)
             elif a.command == "run-remaining":
                 res = m.run_remaining(a.root, a.config, out, gpus, a.max_workers)
             elif a.command == "physical-worker":

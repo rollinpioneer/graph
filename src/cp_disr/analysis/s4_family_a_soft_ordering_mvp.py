@@ -978,14 +978,9 @@ def evaluate_technical_gate(root, out, cfg):
     checks["T3_qpos_qvel_max_diff_le_1e-9"] = bool(pairs and ok3)
     checks["T4_both_task_success"] = bool(results) and all(r.get("task_success") is True for r in results.values())
     checks["T5_exactly_four_skills"] = bool(results) and all(_skill_count(r) == 4 for r in results.values())
-    complete = True
-    for b in tech:
-        cap = Path(out) / "captures" / b["branch_id"]
-        for i in range(4):
-            adir = cap / f"action_{i:02d}"
-            for name in ("facts.json", "evaluator.json", "planner.json", "controller_trace.jsonl", "snapshot.json"):
-                complete &= (adir / name).is_file()
-    checks["T6_per_action_records_complete"] = bool(complete)
+    checks["T6_per_action_records_complete"] = all(
+        _check_terminal_aware_action_records(out, b)["complete"] for b in tech
+    )
     ledger = rd(phys / "budget_ledger.json")
     attempts = _load_attempts(phys)
     checks["T7_one_attempt_and_one_reset_each"] = bool(
@@ -1027,13 +1022,246 @@ def technical_wave(root, config_path, out, gpus, max_workers):
             "checks": doc["checks"], "dispatch": report}
 
 
+
+_ACTION_REQUIRED_FILES = (
+    "before_rgb.png",
+    "before_depth.npy",
+    "after_rgb.png",
+    "after_depth.npy",
+    "controller_trace.jsonl",
+    "facts.json",
+    "evaluator.json",
+    "snapshot.json",
+)
+
+
+def _read_json(path):
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, TypeError, ValueError):
+        return None
+
+
+def _read_jsonl(path):
+    rows = []
+    try:
+        with Path(path).open(encoding="utf-8") as handle:
+            for line in handle:
+                if line.strip():
+                    rows.append(json.loads(line))
+    except (OSError, TypeError, ValueError):
+        return None
+    return rows
+
+
+def _check_terminal_aware_action_records(out, branch):
+    """Check saved action evidence without constructing runtime state."""
+    out = Path(out)
+    branch_id = str(branch["branch_id"])
+    cap = out / "captures" / branch_id
+    result = _read_json(out / "physical" / "branch_results" / f"{branch_id}.json")
+    trace = list((result or {}).get("trace") or [])
+    action_dirs = sorted(cap.glob("action_[0-9][0-9]"))
+    complete = result is not None and len(action_dirs) == len(trace)
+    terminal_seen = False
+    records = []
+    for index, adir in enumerate(action_dirs):
+        missing = [name for name in _ACTION_REQUIRED_FILES if not (adir / name).is_file()]
+        evaluator = _read_json(adir / "evaluator.json")
+        snapshot = _read_json(adir / "snapshot.json")
+        controller = _read_jsonl(adir / "controller_trace.jsonl")
+        step = trace[index] if index < len(trace) else {}
+        candidate_id = step.get("candidate_id")
+        starts = [
+            row for row in (controller or ())
+            if row.get("event") in ("skill_begin", "action_start")
+        ]
+        identity_ok = bool(candidate_id) and any(
+            row.get("candidate_id") == candidate_id for row in starts
+        )
+        planner_ok = False
+        status = "MISSING_EVIDENCE"
+        if evaluator is not None:
+            success = evaluator.get("task_success") is True
+            terminated = evaluator.get("terminated") is True
+            truncated = evaluator.get("truncated") is True
+            reason = str(evaluator.get("reason") or "UNKNOWN")
+            terminal = terminated or truncated or reason != "CONTINUE"
+            if terminal:
+                terminal_seen = True
+                if success and terminated and reason == "TASK_SUCCESS":
+                    status = "NOT_APPLICABLE_TERMINAL_SUCCESS"
+                else:
+                    token = "".join(
+                        ch if (ch.isalnum() or ch == "_") else "_"
+                        for ch in reason.upper().replace("-", "_")
+                    )
+                    status = "NOT_APPLICABLE_TERMINAL_" + token
+                planner_ok = not (adir / "planner.json").exists()
+                planner_ok &= not any(
+                    row.get("event") in ("planner_call", "planner")
+                    for row in (controller or ())
+                )
+                if success and terminated and reason == "TASK_SUCCESS":
+                    planner_ok &= bool((result or {}).get("task_success") is True)
+                    planner_ok &= index == len(action_dirs) - 1
+            else:
+                planner = _read_json(adir / "planner.json")
+                status = "PLANNER_REQUIRED_CONTINUE"
+                planner_ok = isinstance(planner, dict) and all(
+                    key in planner
+                    for key in (
+                        "input_facts", "candidate_ids", "status", "plan",
+                        "expanded_nodes", "cpu_seconds",
+                    )
+                )
+                planner_ok &= isinstance(snapshot, dict) and "candidate_mask" in snapshot
+                planner_ok &= not terminal_seen
+        else:
+            status = "MISSING_EVALUATOR"
+        row_ok = (
+            not missing
+            and evaluator is not None
+            and snapshot is not None
+            and controller is not None
+            and bool(starts)
+            and identity_ok
+            and planner_ok
+        )
+        complete &= bool(row_ok)
+        records.append({
+            "action": adir.name,
+            "candidate_id": candidate_id,
+            "missing_files": missing,
+            "planner_record_status": status,
+            "identity_ok": identity_ok,
+            "complete": bool(row_ok),
+        })
+    return {
+        "branch_id": branch_id,
+        "complete": bool(complete),
+        "actions": records,
+    }
+
+
+def amend_technical_gate(root, config_path, out):
+    """Rejudge T6 from existing evidence only; never constructs an environment."""
+    root, out = Path(root), Path(out)
+    gate_path = out / "physical" / "technical_wave_check.json"
+    stop_path = out / "decision" / "stop_state.json"
+    gate = _read_json(gate_path)
+    stop = _read_json(stop_path)
+    if not isinstance(gate, dict) or not isinstance(stop, dict):
+        raise StopRun(
+            "STOPPED_T6_AMENDMENT_PREFLIGHT",
+            "original gate/stop evidence missing",
+        )
+    if (
+        gate.get("technical_wave") != "FAIL"
+        or gate.get("checks", {}).get("T6_per_action_records_complete") is not False
+    ):
+        raise StopRun(
+            "STOPPED_T6_AMENDMENT_PREFLIGHT",
+            "original gate is not the authorized T6 failure",
+        )
+    amendment = out / "amendment"
+    amendment.mkdir(parents=True, exist_ok=True)
+    original = {
+        "original_gate_sha256": sha256_file(gate_path),
+        "original_stop_state_sha256": sha256_file(stop_path),
+        "original_source_commit": git(root, "rev-parse", "HEAD"),
+        "original_status": gate.get("technical_wave"),
+        "original_failed_check": "T6_per_action_records_complete",
+        "new_attempts": 0,
+        "new_resets": 0,
+    }
+    _atomic_json(amendment / "original_gate_identity.json", original)
+    try:
+        gate_path.chmod(0o444)
+    except OSError:
+        pass
+    reg = _read_json(out / "physical" / "witnesses" / "e4_branch_registration.json")
+    if not isinstance(reg, dict):
+        raise StopRun(
+            "STOPPED_T6_AMENDMENT_PREFLIGHT",
+            "registration evidence missing",
+        )
+    technical = [
+        b for b in reg.get("branches", ()) if b.get("wave") == "technical"
+    ]
+    action_checks = [
+        _check_terminal_aware_action_records(out, b) for b in technical
+    ]
+    amended_t6 = bool(
+        len(technical) == 2 and all(item["complete"] for item in action_checks)
+    )
+    checks = dict(gate.get("checks") or {})
+    checks["T6_per_action_records_complete"] = amended_t6
+    passed = amended_t6 and all(value is True for value in checks.values())
+    amended = {
+        "technical_wave": "PASS" if passed else "FAIL",
+        "technical_wave_detail": (
+            "PASS_AFTER_TERMINAL_PLANNER_NA_AMENDMENT"
+            if passed else "FAIL_AFTER_TERMINAL_PLANNER_NA_AMENDMENT"
+        ),
+        "remaining_branches_released": bool(passed),
+        "checks": checks,
+        "branch_ids": [b["branch_id"] for b in technical],
+        "action_checks": action_checks,
+        "source_gate_sha256": original["original_gate_sha256"],
+        "new_attempts": 0,
+        "new_resets": 0,
+    }
+    _atomic_json(out / "physical" / "technical_wave_check_amended.json", amended)
+    _atomic_json(amendment / "t6_checker_amendment.json", {
+        "amendment_id": "FAMILY_A_T6_TERMINAL_PLANNER_NA_1",
+        "original_gate_status": "FAIL",
+        "original_failed_check": "T6",
+        "branch_execution_changed": False,
+        "runtime_changed_after_execution": False,
+        "branch_results_changed": False,
+        "captures_changed": False,
+        "budget_changed": False,
+        "new_attempts": 0,
+        "new_resets": 0,
+        "reason": "terminal success ends the episode before replanning",
+    })
+    _atomic_json(amendment / "source_identity.json", {
+        "source_commit": git(root, "rev-parse", "HEAD"),
+        "gate_checker": "src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py",
+        "source_sha256": sha256_file(Path(__file__)),
+        "original_gate_sha256": original["original_gate_sha256"],
+    })
+    comparison = [
+        "# T6 amendment comparison",
+        "",
+        f"Original gate: FAIL ({original['original_gate_sha256']})",
+        f"Amended T6: {'PASS' if amended_t6 else 'FAIL'}",
+        f"Amended technical gate: {amended['technical_wave']}",
+        "Terminal success is classified as NOT_APPLICABLE_TERMINAL_SUCCESS; no planner call is synthesized.",
+        "Existing branch results, captures, budget, attempts, and resets were not modified.",
+    ]
+    (amendment / "gate_comparison.md").write_text(
+        "\n".join(comparison) + "\n", encoding="utf-8"
+    )
+    return amended
+
+
 # ------------------------------------------------------------------ remaining 10 branches (hard-blocked until the technical gate passes)
 def run_remaining(root, config_path, out, gpus, max_workers):
     root, out = Path(root), Path(out)
     cfg = load_config(config_path)
-    gate = out / "physical/technical_wave_check.json"
-    if not gate.is_file() or rd(gate).get("technical_wave") != "PASS" or rd(gate).get("remaining_branches_released") is not True:
-        raise StopRun("STOPPED_TECHNICAL_WAVE", "the remaining branches are released only after a technical gate PASS")
+    amended_gate = out / "physical/technical_wave_check_amended.json"
+    gate = amended_gate if amended_gate.is_file() else out / "physical/technical_wave_check.json"
+    if (
+        not gate.is_file()
+        or rd(gate).get("technical_wave") != "PASS"
+        or rd(gate).get("remaining_branches_released") is not True
+    ):
+        raise StopRun(
+            "STOPPED_TECHNICAL_WAVE",
+            "the remaining branches are released only after an amended technical gate PASS",
+        )
     reg = rd(out / "physical/witnesses/e4_branch_registration.json")
     attempts = _load_attempts(out / "physical")
     todo = [b["branch_id"] for b in reg["branches"] if b.get("wave") == "remaining" and attempts.get(b["branch_id"]) is None]
