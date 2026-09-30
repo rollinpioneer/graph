@@ -1,0 +1,169 @@
+authorization:
+  action_first_requests: 6
+  elastic: 0
+  formal_test: 0
+  method_upgrade: false
+  optimizer: 0
+  physical_attempts: 24
+  receipt_required: true
+  relation_first_requests: 4
+  rl: 0
+base_commit: 196c46c7b3ce7b3d6f88935d41707a5c1c2662df
+budgets:
+  action_first_calls: 6
+  branch_attempts: 24
+  branch_env_constructions: 24
+  capacity_initializations: 2
+  elastic_attempts: 0
+  explicit_resets: 24
+  formal_test_episodes: 0
+  optimizer_steps: 0
+  provider_retries_total: 10
+  relation_first_calls: 4
+  remaining_wave: 20
+  representation_contexts: 6
+  retries_per_input: 1
+  rl_transitions: 0
+  standalone_capture_resets: 0
+  technical_wave: 4
+  total_live_skill_calls: 144
+  training_attempts: 0
+candidate_ids:
+- a:PLACE_BUFFER:carrier:pad_u:v1
+- a:PLACE_BUFFER:carrier:pad_v:v1
+card_id: CP-DISR-S4-FAMILY-B-STAGING-1
+contexts:
+  BOTH_PENDING:
+    prefix:
+    - a:PICK:carrier:v1
+  B_PENDING:
+    prefix:
+    - a:PICK:obj_c:v1
+    - a:PLACE:obj_c:receiver:v1
+    - a:PICK:carrier:v1
+  C_PENDING:
+    prefix:
+    - a:PICK:obj_b:v1
+    - a:PLACE:obj_b:receiver:v1
+    - a:PICK:carrier:v1
+goals:
+- fact_id: p:Inside:obj_b:receiver
+  sign: 1
+- fact_id: p:Inside:obj_c:receiver
+  sign: 1
+- fact_id: p:GripperEmpty
+  sign: 1
+handoff:
+  main_performance_result: RESULT_PENDING
+  s2_authorized: false
+  s3_authorized: false
+master_id: CP-DISR-FINAL-EXEC-3.0
+method_version: 2.1.1
+metrics:
+  both_pending_assumed_neutral: false
+  difference_tolerance_seconds: 0.15
+  pilot_primary: decision_to_first_verified_task_success_sim_seconds
+  relative_effect_threshold: null
+  require_repeat_direction_consistency: true
+  requires_both_candidates_success: true
+objects:
+  movable:
+  - carrier
+  - obj_b
+  - obj_c
+  static_buffers:
+  - pad_u
+  - pad_v
+  static_receivers:
+  - receiver
+parallel:
+  coordinator_single_writer: true
+  gpu_policy: IMMEDIATE_CAPABLE_DEVICE_NO_ARBITRARY_MEMORY_THRESHOLD
+  offline_workers: 2
+  provider_workers: 2
+  remaining_workers_max: 4
+  technical_workers: 2
+planner:
+  canonical_tie_break: true
+  cpu_seconds_per_decision: 2.0
+  depth: 6
+  max_nodes: 4096
+  reference_policy: INHERIT_PINNED_INDEPENDENT_REFERENCE_FOR_PILOT_ONLY
+  reference_source_required: true
+platform: CP_DISR_CUSTOM_ROBOSUITE_MUJOCO_LIBERO_COMPATIBLE
+provider:
+  action_input_time: DECISION_BOUNDARY
+  identity_source: PINNED_EXISTING_PROJECT_CONFIG
+  relation_input_time: BEFORE_SETUP
+  relation_schema_version: m1_soft_relations_v2
+  relation_universe_size_max: 8
+  semantic_retry: false
+  valid_empty_is_error: false
+representation:
+  capacity_seeds:
+  - 650001
+  - 650002
+  conditions:
+  - Original
+  - NoPrior
+  - TargetSwap_ANALYSIS_ONLY
+  methods:
+  - Full
+  - B2
+  - A_STAT
+  - A_CAT
+  - A_Q
+  optimizer_steps: 0
+resolved_reference_skill_seconds: 3.649999999999709
+role: MAIN_TASK_CANDIDATE_QUALIFICATION
+runtime:
+  active_task_id: T_P_FB
+  contract_path: configs/runtime/tp_fb_contract_registry.yaml
+  cost_metric_origin: CANDIDATE_START_AFTER_VERIFIED_SETUP
+  deadline_origin: BEFORE_SETUP
+  expected_total_skills_per_successful_branch: 6
+  explicit_reset_per_branch: 1
+  factory_module: cp_disr.platforms.libero.family_b_runtime
+  factory_name: create_family_b_runtime
+  hidden_state_for_policy_or_verifier: false
+  layouts_path: configs/final_master/family_b_layouts.json
+  live_skill_retries: 0
+  stop_on_script_divergence: true
+  task_deadlines:
+    T_P_FB: 60.0
+  task_local_perception: true
+sampling:
+  analytic_geometry_candidates_max: 512
+  excluded_anchor_sources:
+  - T_P_SR_pool_33
+  - T_P_SR_pool_57
+  - T_P_SO_MVP_SO_NEUTRAL
+  initial_seed_scope: layout_and_repeat_only
+  layout_ids:
+  - layout_0
+  - layout_1
+  preserve_all_candidate_denominators: true
+  repeats:
+  - 0
+  - 1
+  select_using_trained_policy_results: false
+stage: S4
+task_family_id: T_P_GOAL_CONDITIONED_STAGING_V1
+task_id: T_P_FB
+technical_wave:
+- candidate: pad_u
+  context: B_PENDING
+  layout: layout_0
+  repeat: 0
+- candidate: pad_v
+  context: B_PENDING
+  layout: layout_0
+  repeat: 0
+- candidate: pad_u
+  context: C_PENDING
+  layout: layout_1
+  repeat: 0
+- candidate: pad_v
+  context: C_PENDING
+  layout: layout_1
+  repeat: 0

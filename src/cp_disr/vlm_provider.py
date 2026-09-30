@@ -53,7 +53,9 @@ def validate_payload(payload):
     return payload
 
 class DashScopeProvider:
-    def __init__(self,config=ProviderConfig()):self.config=config
+    def __init__(self,config=ProviderConfig(),payload_validator=validate_payload):
+        self.config=config
+        self.payload_validator=payload_validator
     def key_present(self):
         # Never read the value or any credential file. SDK owns resolution.
         return 'DASHSCOPE_API_KEY' in os.environ
@@ -61,7 +63,7 @@ class DashScopeProvider:
         from dashscope import MultiModalConversation
         return {'sdk':importlib.metadata.version('dashscope'),'call_signature':str(inspect.signature(MultiModalConversation.call)),'key_present':self.key_present(),'model':self.config.model,'region':self.config.region,'endpoint':self.config.endpoint,'response_format':{'type':'json_object'},'service_behavior':'MUST_VERIFY_NO_API_REQUEST_YET'}
     def send(self,payload):
-        validate_payload(payload)
+        self.payload_validator(payload)
         if importlib.metadata.version('dashscope')!=self.config.sdk_version:raise BindingError('SDK version mismatch')
         if not self.key_present():raise BindingError('SDK environment credential unavailable')
         from dashscope import MultiModalConversation

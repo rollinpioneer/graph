@@ -349,7 +349,13 @@ class SkillExecutor:
         trace.exit_reason = "NORMAL_TERMINATION"
 
     def _place(self, trace, obj, container, timeout, sim_start):
-        c = np.array(self.env.container_center, dtype=float)
+        resolver = getattr(self.env, "resolve_skill_destination", None)
+        c = np.array(
+            resolver("PLACE", obj, container) if resolver is not None
+            else self.env.container_center, dtype=float,
+        )
+        if c.shape != (3,) or not np.all(np.isfinite(c)):
+            raise PerceptionBindingError("invalid_place_destination")
         hover = np.array([c[0], c[1], self._hover_z()])
         drop = np.array([c[0], c[1], self.env.table_top_z + CONTAINER_H + 0.03])
         if not self._move_to(trace, hover, GRIP_CLOSE, timeout, sim_start, tag="APPROACH"):
@@ -362,7 +368,13 @@ class SkillExecutor:
             trace.exit_reason = "NORMAL_TERMINATION"
 
     def _place_buffer(self, trace, obj, buffer, timeout, sim_start):
-        b = np.array(self.env.buffer_center, dtype=float)
+        resolver = getattr(self.env, "resolve_skill_destination", None)
+        b = np.array(
+            resolver("PLACE_BUFFER", obj, buffer) if resolver is not None
+            else self.env.buffer_center, dtype=float,
+        )
+        if b.shape != (3,) or not np.all(np.isfinite(b)):
+            raise PerceptionBindingError("invalid_buffer_destination")
         hover = np.array([b[0], b[1], self._hover_z()])
         drop = np.array([b[0], b[1], self.env.table_top_z + OBJECT_HALF[2] + 0.05])
         if not self._move_to(trace, hover, GRIP_CLOSE, timeout, sim_start, tag="APPROACH"):

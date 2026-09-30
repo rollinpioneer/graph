@@ -1,0 +1,23 @@
+task_id: T_P_FB
+task_family_id: T_P_GOAL_CONDITIONED_STAGING_V1
+status: S4_MAIN_TASK_CANDIDATE
+dataset_role: CURATED_MECHANISM_DEMONSTRATION
+contract_registry_ref: configs/runtime/tp_fb_contract_registry.yaml
+grounded_action_ids:
+  - a:PICK:carrier:v1
+  - a:PICK:obj_b:v1
+  - a:PICK:obj_c:v1
+  - a:PLACE_BUFFER:carrier:pad_u:v1
+  - a:PLACE_BUFFER:carrier:pad_v:v1
+  - a:PLACE:obj_b:receiver:v1
+  - a:PLACE:obj_c:receiver:v1
+goals:
+  - {fact_id: 'p:Inside:obj_b:receiver', sign: 1}
+  - {fact_id: 'p:Inside:obj_c:receiver', sign: 1}
+  - {fact_id: 'p:GripperEmpty', sign: 1}
+context_prefixes:
+  B_PENDING: [a:PICK:obj_c:v1, a:PLACE:obj_c:receiver:v1, a:PICK:carrier:v1]
+  C_PENDING: [a:PICK:obj_b:v1, a:PLACE:obj_b:receiver:v1, a:PICK:carrier:v1]
+  BOTH_PENDING: [a:PICK:carrier:v1]
+deadline_seconds: 60.0
+formal_endpoint: NOT_FROZEN_IN_THIS_PILOT

@@ -154,6 +154,10 @@ class RuntimeBundle:
             "buffer_xy": list(spec.buffer_xy),
             "lid_closed": bool(spec.lid_closed),
         }
+        # Task-local extra coordinates are part of the restore identity.
+        for key in ("obj_c_xy", "pad_v_xy"):
+            if hasattr(spec, key):
+                reset_config[key] = list(getattr(spec, key))
         public_facts = {
             record.fact_id: getattr(record.value, "value", str(record.value))
             for record in facts.records
