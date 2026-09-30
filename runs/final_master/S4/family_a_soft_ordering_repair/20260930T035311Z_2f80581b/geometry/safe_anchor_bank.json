@@ -1,0 +1,153 @@
+{
+  "anchors": [
+    {
+      "anchor": "A_s1_dev18_target",
+      "container_clearance": true,
+      "engineering_exception": false,
+      "no_initial_penetration": true,
+      "pick_success_observed": true,
+      "place_success_observed": true,
+      "same_geometry_clause_used": false,
+      "source_branch": "ae2e7da5882e4b49",
+      "source_case": "T_A_dev_18",
+      "source_hash": "e96a7e4594b3409250d029099090c623edd4b9318482df31760dd677b59e8afc",
+      "workspace_valid": true,
+      "xy": [
+        -0.17095843610874545,
+        -0.02611028067384802
+      ]
+    },
+    {
+      "anchor": "B_s1_dev18_second",
+      "container_clearance": true,
+      "engineering_exception": false,
+      "no_initial_penetration": true,
+      "pick_success_observed": true,
+      "place_success_observed": true,
+      "same_geometry_clause_used": false,
+      "source_branch": "ae2e7da5882e4b49",
+      "source_case": "T_A_dev_18",
+      "source_hash": "e96a7e4594b3409250d029099090c623edd4b9318482df31760dd677b59e8afc",
+      "workspace_valid": true,
+      "xy": [
+        0.1326264077756757,
+        -0.12064967555264455
+      ]
+    },
+    {
+      "anchor": "N_v2_pool33_target",
+      "container_clearance": true,
+      "engineering_exception": false,
+      "no_initial_penetration": true,
+      "pick_success_observed": true,
+      "place_success_observed": true,
+      "same_geometry_clause_used": false,
+      "source_branch": "d37aeb52449f5a05",
+      "source_case": "T_P_SR_pool_33",
+      "source_hash": "f9a261fd0269b5da606371b59a4eda0c8352ae8e0df536074f4e4b4333f03662",
+      "workspace_valid": true,
+      "xy": [
+        -0.135136,
+        -0.191374
+      ]
+    },
+    {
+      "anchor": "N_v2_pool33_second",
+      "container_clearance": true,
+      "engineering_exception": false,
+      "no_initial_penetration": true,
+      "pick_success_observed": true,
+      "place_success_observed": false,
+      "same_geometry_clause_used": true,
+      "source_branch": "d37aeb52449f5a05",
+      "source_case": "T_P_SR_pool_33",
+      "source_hash": "f9a261fd0269b5da606371b59a4eda0c8352ae8e0df536074f4e4b4333f03662",
+      "workspace_valid": true,
+      "xy": [
+        -0.139614,
+        -0.058454
+      ]
+    }
+  ],
+  "environment_constructions": 0,
+  "reference_geometry": {
+    "buffer_xy": [
+      -0.18,
+      0.12
+    ],
+    "container_xy": [
+      0.18,
+      0.12
+    ],
+    "delta_proxy_formula": "C(B->A) - C(A->B); C(A->B) = ||q0-A|| + ||c-B||; positive => A-first predicted faster",
+    "delta_proxy_neutral_layout_m": -0.014460989349368847,
+    "delta_proxy_target_first_layout_m": 0.326384326062223,
+    "derivation": "saved_evidence_only",
+    "environment_constructions": 0,
+    "lid_closed": false,
+    "neutral_buffer_xy": [
+      -0.175277,
+      0.124944
+    ],
+    "neutral_container_xy": [
+      0.031774,
+      0.153252
+    ],
+    "neutral_delta_proxy_container": "own_saved_capture_container",
+    "q0_xy": [
+      -0.1027682938989812,
+      -5.644863233597923e-12
+    ],
+    "s1_source": {
+      "controller_exit": "NORMAL_TERMINATION",
+      "source_branch": "ae2e7da5882e4b49",
+      "source_case": "T_A_dev_18",
+      "source_hash": "e96a7e4594b3409250d029099090c623edd4b9318482df31760dd677b59e8afc",
+      "task_success": true,
+      "termination_reason": "TASK_SUCCESS",
+      "witness_validity": "VALID"
+    },
+    "second_role": "second_object",
+    "v2_source": {
+      "buffer_xy": [
+        -0.175277,
+        0.124944
+      ],
+      "capture": "d37aeb52449f5a05",
+      "case_id": "T_P_SR_pool_33",
+      "container_xy": [
+        0.031774,
+        0.153252
+      ],
+      "executed_trace": [
+        [
+          "a:PICK:interferer:v1",
+          "NORMAL_TERMINATION"
+        ],
+        [
+          "a:PLACE_BUFFER:interferer:buffer:v1",
+          "NORMAL_TERMINATION"
+        ],
+        [
+          "a:PICK:target:v1",
+          "NORMAL_TERMINATION"
+        ],
+        [
+          "a:PLACE:target:container:v1",
+          "NORMAL_TERMINATION"
+        ]
+      ],
+      "pick_place_observed": true,
+      "source_hash": "f9a261fd0269b5da606371b59a4eda0c8352ae8e0df536074f4e4b4333f03662",
+      "task_success_observed": true
+    }
+  },
+  "status": "SAFE",
+  "thresholds": {
+    "min_object_separation_m": 0.06,
+    "neutral_abs_delta_proxy_m": 0.015,
+    "second_first_max_delta_proxy_m": -0.1,
+    "target_first_min_delta_proxy_m": 0.1,
+    "workspace_half_extent_m": 0.45
+  }
+}

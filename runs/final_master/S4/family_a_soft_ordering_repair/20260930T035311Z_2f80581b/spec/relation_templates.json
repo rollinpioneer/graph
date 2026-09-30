@@ -1,0 +1,19 @@
+{
+  "forbidden": [
+    {
+      "pattern": "PICK(object) -> PLACE(object)",
+      "reason": "direct contract redundancy"
+    }
+  ],
+  "provider_calls": 0,
+  "status": "FROZEN_FUTURE_ONLY_NOT_EXECUTED",
+  "templates": [
+    {
+      "effect_fact_ref": "p:Inside:<first_object>:container",
+      "meaning": "completing the first object may make the next PICK easier",
+      "source": "a:PLACE:<first_object>:container:v1",
+      "target": "a:PICK:<second_object>:v1",
+      "type": "SOFT_SUPPORTS"
+    }
+  ]
+}

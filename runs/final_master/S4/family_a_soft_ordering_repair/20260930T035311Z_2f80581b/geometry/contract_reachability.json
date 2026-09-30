@@ -1,0 +1,81 @@
+{
+  "b_plan_nominal_costs_equal": true,
+  "b_plan_nominal_costs_seconds": {
+    "second_first": 14.599999999998836,
+    "target_first": 14.599999999998836
+  },
+  "both_routes_minimal_cost": true,
+  "both_routes_reachable": true,
+  "canonical_first_action": "a:PICK:second_object:v1",
+  "canonical_tie_break": "BPlanPlanner sorts contracts by contract id; no coordinate, camera, proxy or time input",
+  "canonical_tie_break_reads_geometry": false,
+  "environment_constructions": 0,
+  "grounded_action_ids": [
+    "a:PICK:second_object:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:second_object:container:v1",
+    "a:PLACE:target:container:v1"
+  ],
+  "initial_candidate_ids": [
+    "a:PICK:second_object:v1",
+    "a:PICK:target:v1"
+  ],
+  "no_hard_fact_ranks_routes": true,
+  "route_lengths": {
+    "second_first": 4,
+    "target_first": 4
+  },
+  "route_lengths_equal": true,
+  "routes": {
+    "second_first": {
+      "length": 4,
+      "matches_frozen_route": true,
+      "nominal_cost_seconds": 14.599999999998836,
+      "plan": [
+        "a:PICK:second_object:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1"
+      ],
+      "reachability_check": "head-to-tail nominal overlay of the frozen route",
+      "reachable": true,
+      "sets_both_goals": true,
+      "status": "PLAN_FOUND"
+    },
+    "target_first": {
+      "length": 4,
+      "matches_frozen_route": true,
+      "nominal_cost_seconds": 14.599999999998836,
+      "plan": [
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PLACE:second_object:container:v1"
+      ],
+      "reachability_check": "head-to-tail nominal overlay of the frozen route",
+      "reachable": true,
+      "sets_both_goals": true,
+      "status": "PLAN_FOUND"
+    }
+  },
+  "skill_multiset": [
+    "PICK",
+    "PICK",
+    "PLACE",
+    "PLACE"
+  ],
+  "skill_multisets_equal": true,
+  "status": "REACHABLE",
+  "template_propositions": [
+    "p:AtBuffer:second_object:buffer",
+    "p:AtBuffer:target:buffer",
+    "p:GripperEmpty",
+    "p:Held:second_object",
+    "p:Held:target",
+    "p:Inside:second_object:container",
+    "p:Inside:target:container",
+    "p:OnTable:second_object",
+    "p:OnTable:target",
+    "p:Open:container"
+  ]
+}

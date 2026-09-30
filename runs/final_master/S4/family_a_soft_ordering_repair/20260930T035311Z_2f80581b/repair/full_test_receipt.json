@@ -1,0 +1,17 @@
+{
+  "status": "PASS_WITH_KNOWN_PREEXISTING_FAILURE",
+  "targeted_command": "pytest -q tests/test_tp_so_mvp_contract.py tests/test_tp_so_mvp_geometry.py tests/test_tp_so_mvp_runtime.py tests/test_tp_so_mvp_scheduler.py tests/test_tp_so_mvp_gate.py tests/test_tp_so_mvp_runtime_repair.py",
+  "targeted_result": "53 passed",
+  "full_command": "pytest -q tests",
+  "full_result": "429 passed, 1 failed",
+  "known_preexisting_failures": [
+    {
+      "test": "tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate",
+      "trace": "BindingError: Runtime module/source mismatch",
+      "base_commit": "5bae57c24ac062881192a3d6250bb7cbf8d7e568",
+      "repair_commit": "ab2ca2c57934a0fe3f9e3eec4c5447ae7d1b7556"
+    }
+  ],
+  "compileall": "PASS",
+  "environment_execution": false
+}
