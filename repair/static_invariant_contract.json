@@ -1,0 +1,22 @@
+{
+  "task_id": "T_P_SO_MVP",
+  "invariant": "lid_closed=false and no registered action writes p:Open:container",
+  "allowed_source": [
+    "task_manifest",
+    "reset_config",
+    "registered_skill_contracts",
+    "previous_public_confirmation"
+  ],
+  "overlay_fact": "p:Open:container",
+  "overlay_value": "TRUE",
+  "measured_true": "retain TRUE",
+  "measured_false": "STOPPED_STATIC_INVARIANT_CONTRADICTION",
+  "measured_unknown": "overlay TRUE only when public reset identity matches and no writer exists",
+  "forbidden_sources": [
+    "hidden_truth",
+    "future_result",
+    "VLM relation",
+    "RL Q"
+  ],
+  "other_facts": "preserve production records exactly; no inertial fill"
+}

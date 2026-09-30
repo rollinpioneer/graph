@@ -17,11 +17,13 @@ from pathlib import Path
 
 from cp_disr.common import BindingError
 from cp_disr.contracts import Atom
+from cp_disr.facts import Truth
 from cp_disr.graph import Goal, build_template
 
 from .d0_env import CaseSpec
 from .runtime_factory import PREDICATES, RuntimeBundle, _read, _ground_contracts_for
 from .task_evaluator import TaskEvaluator
+from .verifier import FactVerifier
 from .tp_sr_instrumentation import (InstrumentedSkillExecutor, RecordingEvaluatorProxy, RecordingSnapshotBuilderProxy, RecordingVerifier, RunRecorder,
                                     TPSRNearestPalettePerceptionAdapter)
 from .tp_sr_v2_env import InstrumentedD0Env
@@ -49,6 +51,76 @@ INITIAL_FALSE_FACTS = ("p:Inside:target:container", "p:Inside:second_object:cont
 TASK_EVALUATOR_VERSION = "cp-disr-tp-so-mvp-task-evaluator-v1"
 
 
+class StaticInvariantContradiction(RuntimeError):
+    """Public task invariant contradicted by measured evidence."""
+
+
+class TPSOMVPFactVerifier(FactVerifier):
+    """Production verifier with the task's public-open invariant overlay.
+
+    Only the Open fact may be overlaid, and only from public manifest/reset
+    metadata plus the registered contract effects. No hidden simulator state is
+    consulted.
+    """
+
+    def _open_writers(self):
+        writers = []
+        for contract in getattr(self.env, "task_contracts", ()):
+            for attr, label in (("add", "ADD"), ("delete", "DEL"), ("unknown", "UNKNOWN")):
+                for atom in getattr(contract.effects, attr, ()):
+                    if atom.id == "p:Open:container":
+                        writers.append((contract.id, label))
+            for conditional in getattr(contract, "conditional", ()):
+                for attr, label in (("add", "ADD"), ("delete", "DEL"), ("unknown", "UNKNOWN")):
+                    for atom in getattr(conditional.effects, attr, ()):
+                        if atom.id == "p:Open:container":
+                            writers.append((contract.id, label))
+        return tuple(writers)
+
+    def verify(self, measurement, execution=None):
+        recs = list(super().verify(measurement, execution))
+        open_rec = next((r for r in recs if r.fact_id == "p:Open:container"), None)
+        if open_rec is None or open_rec.value != Truth.UNKNOWN:
+            if open_rec is not None and open_rec.value == Truth.FALSE:
+                raise StaticInvariantContradiction("STOPPED_STATIC_INVARIANT_CONTRADICTION")
+            return tuple(recs)
+
+        manifest = getattr(self.env, "task_manifest", None)
+        reset_identity = getattr(self.env, "reset_identity", None)
+        if manifest is None or reset_identity is None or not getattr(self.env, "task_contracts", ()):
+            raise StaticInvariantContradiction("task manifest/reset identity/contracts missing")
+        case = getattr(self.env, "case", None)
+        expected = {"case_id": manifest.case_id, "seed": int(manifest.seed),
+                    "lid_closed": bool(manifest.lid_closed)}
+        if (case is None or reset_identity != expected or case.case_id != manifest.case_id
+                or int(case.seed) != int(manifest.seed) or bool(case.lid_closed) != bool(manifest.lid_closed)
+                or manifest.task_id != TASK_ID or case.task_id != TASK_ID):
+            raise StaticInvariantContradiction("reset identity mismatch")
+        if bool(getattr(manifest, "lid_closed", True)):
+            raise StaticInvariantContradiction("lid_closed=true; static open invariant unavailable")
+        if self._open_writers():
+            raise StaticInvariantContradiction("registered action writes p:Open:container")
+
+        evidence = ["task_manifest", "reset_config"]
+        if self.prev.get("p:Open:container", Truth.UNKNOWN) == Truth.TRUE:
+            evidence.append("previous_public_confirmation")
+        replacement = type(open_rec)(
+            fact_id=open_rec.fact_id, value=Truth.TRUE,
+            capture_time=open_rec.capture_time, available_time=open_rec.available_time,
+            evidence_ids=tuple(evidence), last_confirmed_value=Truth.TRUE,
+            last_confirmed_time=open_rec.available_time,
+            reason="tp-so-mvp-static-public-invariant:container_declared_open_and_no_registered_writer",
+            quality=open_rec.quality, hold_epoch=open_rec.hold_epoch,
+        )
+        self.prev["p:Open:container"] = Truth.TRUE
+        return tuple(replacement if r.fact_id == replacement.fact_id else r for r in recs)
+
+
+def make_tp_so_evaluator(env, deadline, task_id):
+    assert task_id == TASK_ID
+    return TPSOMVPTaskEvaluator(env, deadline, task_id=task_id)
+
+
 class TPSOMVPTaskEvaluator(TaskEvaluator):
     """T_P_SO_MVP goal: BOTH objects inside the container. D0/T_P_SR semantics are not modified.
 
@@ -59,6 +131,16 @@ class TPSOMVPTaskEvaluator(TaskEvaluator):
     def goal_true(self) -> bool:
         h = self.env.hidden_truth()
         return bool(self._inside(h, "target") and self._inside(h, SECOND_ROLE))
+
+
+class RecordingTPSOMVPVerifier(TPSOMVPFactVerifier):
+    recorder = None
+
+    def verify(self, measurement, execution=None):
+        recs = super().verify(measurement, execution)
+        if self.recorder is not None:
+            self.recorder.facts(recs)
+        return recs
 
 
 class _NullEnv:
@@ -89,14 +171,22 @@ class TPSOMVPBundle(RuntimeBundle):
         if self.branch is not None:
             from cp_disr.analysis.s1_e4_recovery import ProbedBundle
             ProbedBundle(self, self.out_root_phys, self.branch)._write_sidecars()
+        if not isinstance(self.evaluator._inner if hasattr(self.evaluator, "_inner") else self.evaluator, TPSOMVPTaskEvaluator):
+            raise BindingError("T_P_SO_MVP evaluator binding lost after start_case")
+        if not isinstance(self.verifier, TPSOMVPFactVerifier):
+            raise BindingError("T_P_SO_MVP verifier binding lost after start_case")
         return snap
 
     def _install_recorders(self):
         rec, env = self.recorder, self.environment
         env.recorder = rec
         self.perception.recorder = rec
-        self.verifier.__class__ = RecordingVerifier          # same instance/state (`prev`), only adds recording
-        self.verifier.recorder = rec
+        if isinstance(self.verifier, TPSOMVPFactVerifier):
+            self.verifier.__class__ = RecordingTPSOMVPVerifier
+            self.verifier.recorder = rec
+        else:
+            self.verifier.__class__ = RecordingVerifier          # generic verifier path
+            self.verifier.recorder = rec
         inner = self.executor.inner
         inner.__class__ = InstrumentedSkillExecutor
         inner.recorder = rec
@@ -164,9 +254,15 @@ def create_tp_so_mvp_runtime(manifest: dict):
                                          target_xy=tuple(row["target_xy"]), second_xy=tuple(row["second_xy"]),
                                          container_xy=tuple(row["container_xy"]), buffer_xy=tuple(row["buffer_xy"]),
                                          lid_closed=False, task_id=TASK_ID, second_role=SECOND_ROLE, deadline=deadline)
-    return TPSOMVPBundle(environment=_NullEnv(), executor=None, observations=None, perception=None, verifier=None, evaluator=None, safety=None,
+    null_env = _NullEnv()
+    bundle = TPSOMVPBundle(environment=null_env, executor=None, observations=None, perception=None,
+                         verifier=TPSOMVPFactVerifier(null_env),
+                         evaluator=make_tp_so_evaluator(null_env, deadline, TASK_ID), safety=None,
                          clock=None, snapshot_builder=None, task_id=TASK_ID, template=template, cases=cases, caches={},
-                         env_factory=InstrumentedD0Env, perception_cls=TPSRNearestPalettePerceptionAdapter)
+                         env_factory=InstrumentedD0Env, perception_cls=TPSRNearestPalettePerceptionAdapter,
+                         verifier_factory=TPSOMVPFactVerifier, evaluator_factory=make_tp_so_evaluator)
+    assert isinstance(bundle.evaluator, TPSOMVPTaskEvaluator)
+    return bundle
 
 
 def create(manifest: dict):

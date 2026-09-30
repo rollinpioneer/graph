@@ -91,6 +91,8 @@ class RuntimeBundle:
     snapshot_identity: str | None = None
     env_factory: object = None      # optional task-specific env constructor; default make_env (production behaviour)
     perception_cls: object = None   # optional task-specific PerceptionAdapter subclass; default PerceptionAdapter
+    verifier_factory: object = None  # optional task-specific FactVerifier factory
+    evaluator_factory: object = None  # optional task-specific TaskEvaluator factory
 
     def start_case(self, case_id: str, restore_seed: int | None = None):
         spec = self.cases[case_id]
@@ -109,6 +111,15 @@ class RuntimeBundle:
         env._apply_case_poses()
         env._open_gripper_reset()
         self.environment = env
+        # Public runtime metadata for task-local bindings; never hidden simulator truth.
+        env.task_id = self.task_id
+        env.task_contracts = tuple(self.template.contracts)
+        env.task_manifest = spec
+        env.reset_identity = {
+            "case_id": spec.case_id,
+            "seed": int(spec.seed),
+            "lid_closed": bool(spec.lid_closed),
+        }
         clock = DurationProvider(env)
         safety = SafetyManager(env)
         self.clock = clock
@@ -116,9 +127,14 @@ class RuntimeBundle:
         self.observations = ObservationProvider(env, clock)
         self.perception = (self.perception_cls or PerceptionAdapter)(env)
         env.refresh_perception = lambda e=env, p=self.perception: p.infer(e.public_observation())
-        self.verifier = FactVerifier(env)
+        verifier_factory = self.verifier_factory or FactVerifier
+        self.verifier = verifier_factory(env)
         deadline = float(spec.__dict__.get("deadline", 90.0))
-        self.evaluator = TaskEvaluator(env, deadline, task_id=self.task_id)
+        evaluator_factory = self.evaluator_factory
+        if evaluator_factory is None:
+            self.evaluator = TaskEvaluator(env, deadline, task_id=self.task_id)
+        else:
+            self.evaluator = evaluator_factory(env, deadline, self.task_id)
         self.evaluator.reset_episode()
         self.executor = _Executor(SkillExecutor(env, safety, clock))
         cache = self.caches.get(case_id)

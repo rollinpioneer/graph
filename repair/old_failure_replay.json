@@ -1,0 +1,56 @@
+{
+  "source_output": "/home/xushijie2/graph_cp_disr_s4_soft_ordering_mvp/runs/final_master/S4/family_a_soft_ordering_mvp/20260929T172042Z_2f80581b",
+  "old_open_value": "UNKNOWN",
+  "old_place_legal": false,
+  "repair_rule_applicable": true,
+  "repaired_open_value": "TRUE",
+  "repaired_place_legal": true,
+  "evidence": [
+    {
+      "branch_id": "0d2f75b6438b2ce8",
+      "input_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:second_object": "TRUE",
+        "p:Held:target": "UNKNOWN",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "FALSE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "planner_status": "NO_PLAN"
+    },
+    {
+      "branch_id": "92d2540cc3279201",
+      "input_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:second_object": "UNKNOWN",
+        "p:Held:target": "TRUE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "FALSE",
+        "p:Open:container": "UNKNOWN"
+      },
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "planner_status": "NO_PLAN"
+    }
+  ],
+  "causal_chain": "Initial public Open was UNKNOWN; after PICK the verifier retained Open UNKNOWN, so PLACE precondition was not TRUE, all candidate mask entries were false, and B_PLAN returned NO_PLAN. The repair applies only the public task invariant (lid_closed=false, no registered Open writer), changing only Open to TRUE; PLACE then has its registered preconditions satisfied.",
+  "hidden_truth_used": false
+}
