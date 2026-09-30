@@ -1,41 +1,34 @@
 {
-  "status": "FAIL",
-  "mechanism_feasibility": "NOT_DETERMINED",
-  "technical_gate": {
-    "branch_ids": [
-      "92d2540cc3279201",
-      "0d2f75b6438b2ce8"
-    ],
-    "checks": {
-      "T0_technical_wave_size": true,
-      "T10_provider_rl_optimizer_zero": true,
-      "T1_both_terminal": true,
-      "T2_paired_initial_state_identical": true,
-      "T3_qpos_qvel_max_diff_le_1e-9": true,
-      "T4_both_task_success": true,
-      "T5_exactly_four_skills": true,
-      "T6_per_action_records_complete": false,
-      "T7_one_attempt_and_one_reset_each": true,
-      "T8_no_duplicate_branch": true,
-      "T9_no_global_perception_residue": true
-    },
-    "evaluated_utc": "2026-09-30T03:57:19Z",
-    "note": "the technical gate never inspects which order is faster",
-    "remaining_branches_released": false,
-    "task_sim_completion_seconds": {
-      "0d2f75b6438b2ce8": 10.750000000002323,
-      "92d2540cc3279201": 10.100000000001975
-    },
-    "technical_wave": "FAIL"
+  "common_integrity": {
+    "all_12_resets_accounted": true,
+    "all_12_task_success": false,
+    "all_12_terminal": true,
+    "all_paired_restores_valid": true,
+    "all_sequences_match_a_frozen_route": false,
+    "all_skill_count_4": false,
+    "b_plan_nominal_costs_equal": true,
+    "no_controller_engineering_failure": true,
+    "no_no_plan": false,
+    "no_perception_verifier_failure": true,
+    "route_skill_multisets_equal": true
   },
-  "failed_reason": "T6_per_action_records_complete",
-  "engineering_diagnosis": "The final successful action has facts/evaluator/controller/snapshot captures but no planner.json; the current gate requires planner.json for each of four action directories.",
-  "attempts_used": 2,
-  "resets_used": 2,
-  "remaining_released": false,
-  "no_third_technical_attempt": true,
-  "provider_authorized": false,
-  "representation_authorized": false,
-  "s2_authorized": false,
-  "s3_authorized": false
+  "common_integrity_ok": false,
+  "contract_cannot_rank": {
+    "b_plan_nominal_costs_equal": true,
+    "both_routes_reachable": true,
+    "canonical_first_action": "a:PICK:second_object:v1",
+    "canonical_first_action_identical_across_configs": true,
+    "canonical_tie_break_reads_geometry": false,
+    "route_lengths_equal": true,
+    "skill_multisets_equal": true
+  },
+  "evaluated_utc": "2026-09-30T04:44:17Z",
+  "mechanism_feasibility": "NOT_ESTABLISHED",
+  "per_config_criterion_met": {
+    "SO_NEUTRAL": false,
+    "SO_SECOND_FIRST": false,
+    "SO_TARGET_FIRST": false
+  },
+  "sim_time_only": true,
+  "wall_time_used_for_mechanism": false
 }

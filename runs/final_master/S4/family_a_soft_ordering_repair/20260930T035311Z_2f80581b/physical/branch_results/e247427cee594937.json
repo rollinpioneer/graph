@@ -1,0 +1,73 @@
+{
+  "branch_id": "e247427cee594937",
+  "candidate_id": "a:PICK:second_object:v1",
+  "case_id": "T_P_SO_MVP_SO_NEUTRAL",
+  "config": "SO_NEUTRAL",
+  "controller_exit": "NORMAL_TERMINATION",
+  "cuda_visible_devices": "3",
+  "decision_count": 3,
+  "eligible_for_e4": false,
+  "env_counts": {
+    "bootstrap_constructions": 0,
+    "constructions": 1,
+    "env_class": "InstrumentedD0Env",
+    "internal_resets": 2,
+    "reset_calls": 1,
+    "restore_chain": "start_case: make_env -> env.reset() -> _apply_case_poses -> _open_gripper_reset (20 gripper-open steps)"
+  },
+  "execution_status": "NO_PLAN",
+  "global_perception_mask_unchanged": true,
+  "paired_effect_status": "NOT_ESTABLISHED",
+  "perception_identity": {
+    "adapter": "TPSRNearestPalettePerceptionAdapter",
+    "base_perception_version": "cp-disr-d0-rgbd-colorseg-v2",
+    "global_monkeypatch": false,
+    "variant": "TP_SR_V1_NEAREST_PALETTE_COMPAT_LOCAL"
+  },
+  "protocol_complete": true,
+  "provider_module_loaded": false,
+  "recorder_errors": 0,
+  "repeat": 1,
+  "route": "second_first",
+  "task_success": false,
+  "termination_reason": "NO_PLAN",
+  "trace": [
+    {
+      "candidate_id": "a:PICK:second_object:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 0,
+      "elapsed_seconds": 3.749999999999698,
+      "execution_id": "PICK-0",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    },
+    {
+      "candidate_id": "a:PLACE:second_object:container:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 1,
+      "elapsed_seconds": 6.849999999999357,
+      "execution_id": "PLACE-3749",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    },
+    {
+      "candidate_id": "a:PICK:target:v1",
+      "controller_exit": "NORMAL_TERMINATION",
+      "decision": 2,
+      "elapsed_seconds": 11.750000000000927,
+      "execution_id": "PICK-6849",
+      "reason": "CONTINUE",
+      "task_success": false,
+      "terminated": false,
+      "truncated": false
+    }
+  ],
+  "wave": "remaining",
+  "witness_validity": "NOT_ESTABLISHED",
+  "worker_pid": 3193348,
+  "worker_wall_seconds": 6.243202447891235
+}

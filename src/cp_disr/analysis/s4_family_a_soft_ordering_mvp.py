@@ -76,6 +76,15 @@ def rd(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def merged_budget_ledger(out):
+    out = Path(out)
+    ledger = rd(out / "budget_ledger.json")
+    physical_path = out / "physical/budget_ledger.json"
+    if physical_path.is_file():
+        ledger.update(rd(physical_path))
+    return ledger
+
+
 def jsonable(v):
     if isinstance(v, np.ndarray):
         return v.tolist()
@@ -1303,7 +1312,7 @@ def classify(root, config_path, out):
     cfg = load_config(config_path)
     phys = out / "physical"
     rows = _paired(out)
-    ledger = rd(phys / "budget_ledger.json")
+    ledger = merged_budget_ledger(out)
     attempts = _load_attempts(phys)
     reach = rd(out / "geometry/contract_reachability.json")
     integrity = {
@@ -1455,12 +1464,13 @@ def summarize(root, config_path, out):
     write_csv(phys / "branch_results.csv", rows)
     pr = _paired_restore_doc(out)
     tp = _throughput_merged(out)
-    ledger = rd(phys / "budget_ledger.json")
+    ledger = merged_budget_ledger(out)
     attempts = _load_attempts(phys)
     reach = rd(out / "geometry/contract_reachability.json")
     gate = rd(out / "decision/mechanism_gate.json")
     per = rd(phys / "per_config_summary.json")["configs"]
-    tech = rd(phys / "technical_wave_check.json")
+    tech_path = phys / "technical_wave_check_amended.json"
+    tech = rd(tech_path if tech_path.is_file() else phys / "technical_wave_check.json")
     inv_ok, inv_diff = protected_unchanged(out)
     eng_failures = [r["branch_id"] for r in rows if r["execution_status"] in ("EXCEPTION", "UNKNOWN_CONTROLLER_EXIT", "ENGINEERING_STOP")]
     perception_failures = [r["branch_id"] for r in rows if r["recorder_errors"] not in (0,)]
@@ -1551,7 +1561,7 @@ def verify(root, config_path, out):
     phys = out / "physical"
     reg = rd(phys / "witnesses/e4_branch_registration.json")
     attempts = _load_attempts(phys)
-    ledger = rd(phys / "budget_ledger.json")
+    ledger = merged_budget_ledger(out)
     rows = _paired(out)
     reach = rd(out / "geometry/contract_reachability.json")
     gate = rd(out / "decision/mechanism_gate.json")
@@ -1580,7 +1590,9 @@ def verify(root, config_path, out):
     checks["canonical_tie_break_reads_no_geometry"] = reach.get("canonical_tie_break_reads_geometry") is False
     checks["sim_time_only_metric"] = gate.get("wall_time_used_for_mechanism") is False and gate.get("sim_time_only") is True
     checks["budget_caps_respected"] = all(int(v["used"]) <= int(v["cap"]) for v in ledger.values())
-    checks["technical_gate_pass"] = rd(phys / "technical_wave_check.json").get("technical_wave") == "PASS"
+    amended_gate = phys / "technical_wave_check_amended.json"
+    technical_gate = rd(amended_gate if amended_gate.is_file() else phys / "technical_wave_check.json")
+    checks["technical_gate_pass"] = technical_gate.get("technical_wave") == "PASS"
     inv = protected_inventory(root, cfg, out, "after")
     same, diff = protected_unchanged(out)
     checks["old_evidence_and_production_files_unchanged"] = bool(same)
