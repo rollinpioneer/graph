@@ -1,0 +1,26 @@
+{
+  "actions": [],
+  "attempt_identity": "FAMILY_B_OBS_V2_ATTEMPT_1:pad_u",
+  "branch_id": "ee7ae7c863a834dc",
+  "candidate": "pad_u",
+  "context": "B_PENDING",
+  "detail": "TypeError:list indices must be integers or slices, not str",
+  "env_counts": {
+    "bootstrap_constructions": 0,
+    "constructions": 1,
+    "internal_resets": -1,
+    "reset_calls": -1
+  },
+  "layout": "layout_0",
+  "observation_profile_sha256": "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917",
+  "receipt_id": "21befb14c3df9bc4e7425967a7c5176efcb41572a379d52d4e47676832f5e9b9",
+  "recorder_errors": [],
+  "repeat": 0,
+  "restore_seed": 1149459277,
+  "status": "EXCEPTION",
+  "task_success": false,
+  "time_to_task_success": null,
+  "traceback": "Traceback (most recent call last):\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/analysis/family_b_obs_v2.py\", line 453, in worker\n    snapshot = bundle.start_case(b[\"case_id\"], restore_seed=int(b[\"restore_seed\"]))\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/family_b_runtime_v2.py\", line 108, in start_case\n    snap = super().start_case(case_id, restore_seed)\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/family_b_runtime.py\", line 100, in start_case\n    snap = RuntimeBundle.start_case(self, case_id, restore_seed)\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/runtime_factory.py\", line 102, in start_case\n    env = (self.env_factory or make_env)(spec)\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/family_b_obs_v2.py\", line 176, in make_family_b_obs_v2_env\n    return FamilyBObsV2Env(case, render_gpu_device_id=gpu)\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/family_b_obs_v2.py\", line 147, in __init__\n    verify_frozen_cameras(self, _PROFILE[\"data\"])\n  File \"/home/xushijie2/graph_cp_disr_s4_family_b_obsv2/src/cp_disr/platforms/libero/family_b_obs_v2.py\", line 109, in verify_frozen_cameras\n    live, ref = live_camera(env, name), frozen[\"cameras\"][name]\nTypeError: list indices must be integers or slices, not str\n",
+  "wave": "obs_v2_technical",
+  "worker_wall_seconds": 5.699943698011339
+}

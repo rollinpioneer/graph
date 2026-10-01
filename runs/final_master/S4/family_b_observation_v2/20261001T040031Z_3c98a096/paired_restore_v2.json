@@ -1,0 +1,47 @@
+{
+  "contract": {
+    "exact": "per camera rgb sha256 and metric-depth sha256 equal -> EXACT",
+    "gpu_policy": "both members of a U/V pair run sequentially on the same GPU",
+    "non_bitwise_allowed_only_if": {
+      "candidate_ids_and_mask_equal": true,
+      "depth_max_abs_diff_m": 0.001,
+      "perception_selected_view_and_presence_equal": true,
+      "perception_xyz_atol_m": 0.0001,
+      "public_facts_equal": true,
+      "qpos_qvel_atol": 1e-08,
+      "rgb_max_abs_diff_uint8": 3,
+      "shape_dtype_equal": true
+    },
+    "otherwise": "FAIL; thresholds are not widened after seeing results",
+    "render_self_repeat": "two direct offscreen renders of the unchanged state compared per camera, plus cached observation vs fresh render (evidence for the non-bitwise cause)"
+  },
+  "pairs": {
+    "layout_0/B_PENDING/0": {
+      "branches": [
+        "ee7ae7c863a834dc",
+        "223b42a03b10bf36"
+      ],
+      "candidates": [
+        "pad_u",
+        "pad_v"
+      ],
+      "pair": "layout_0/B_PENDING/0",
+      "reason": "boundary evidence missing",
+      "status": "FAIL"
+    },
+    "layout_1/C_PENDING/0": {
+      "branches": [
+        "e9b7593e48b4d9e2",
+        "5f5a6ee2ee55dcef"
+      ],
+      "candidates": [
+        "pad_u",
+        "pad_v"
+      ],
+      "pair": "layout_1/C_PENDING/0",
+      "reason": "boundary evidence missing",
+      "status": "FAIL"
+    }
+  },
+  "status": "FAIL"
+}
