@@ -1,0 +1,540 @@
+........................................................................ [ 10%]
+.................................................................F...... [ 20%]
+..........................F............................................. [ 31%]
+....F................................................................... [ 41%]
+........................................................................ [ 52%]
+........................................................................ [ 62%]
+......................F................................................. [ 72%]
+......................................................FFFFFFFFF......... [ 83%]
+........................................................................ [ 93%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+___________________ test_S04_incompatibility_blocks_merging ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_S04_incompatibility_block0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedf99a9300>
+
+    def test_S04_incompatibility_blocks_merging(tmp_path, monkeypatch):
+        real = s.compatibility_manifest(ROOT, tmp_path / "compat")
+>       assert real["status"] == "COMPATIBLE", real["incompatible_components"]
+E       AssertionError: ['runtime_factory_clock_timing', 'unexpected_source_changes']
+E       assert 'STOPPED_RUNT..._INCOMPATIBLE' == 'COMPATIBLE'
+E         
+E         - COMPATIBLE
+E         + STOPPED_RUNTIME_PROFILE_INCOMPATIBLE
+
+tests/test_family_b_staging_v2.py:168: AssertionError
+____________________ test_V11_gate0_passes_on_this_worktree ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_V11_gate0_passes_on_this_0')
+
+    def test_V11_gate0_passes_on_this_worktree(tmp_path):
+>       res = v.gate0(ROOT, tmp_path / "g0")
+
+tests/test_family_b_v3_isochronous.py:287: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/xushijie2/graph_cp_disr_final_tb_launch')
+out = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_V11_gate0_passes_on_this_0/g0')
+
+    def gate0(root, out):
+        root, out = Path(root).resolve(), Path(out)
+        out.mkdir(parents=True, exist_ok=True)
+        src = source_checks(root)
+        inv = invariants()
+        radius = demonstrated_radius(root)
+        geo = geometry_checks(demonstrated_radius=radius)
+        feat = task_feature_checks()
+        cam = camera_audit()
+        layouts_ok = json.loads((root / LAYOUTS_PATH).read_text()) == json.loads(json.dumps(layouts_document()))
+        reach = {k: v for r in geo["rows"] for k, v in r["radial_from_base"].items()}
+        geometry = {"card_id": CARD, "decision_show_xy": list(SHOW), "invariants": inv, "geometry": geo, "task_features": feat,
+                    "layouts_file_matches_frozen_generator": layouts_ok,
+                    "reach": {"demonstrated_max_planar_radius_m": radius, "v3_max_planar_radius_m": max(reach.values()),
+                              "beyond_demonstrated_envelope": max(reach.values()) > radius,
+                              "rule": "all key points within demonstrated radius + 0.05 m; reach beyond the demonstrated "
+                                      "envelope is recorded as a risk, the card forbids moving coordinates",
+                              "note": "analytic fairness is re-verified online by the PLACE_BUFFER duration gate"}}
+        write(out / "geometry_invariants.json", geometry)
+        write(out / "camera_projection_audit.json", cam)
+        ok = src["all_ok"] and inv["all_ok"] and geo["all_ok"] and cam["all_ok"] and layouts_ok and feat["no_fixed_rule_solves_all"] \
+            and feat["layouts_differ_only_by_bc_swap"] and feat["same_object_id_changes_best_pad"]
+        result = {"status": "GATE0_PASS" if ok else "STOPPED_GATE0", "source": src, "invariants_ok": inv["all_ok"],
+                  "geometry_ok": geo["all_ok"], "camera_ok": cam["all_ok"], "layouts_file_ok": layouts_ok,
+                  "task_features_ok": feat["no_fixed_rule_solves_all"]}
+        write(out / "gate0.json", result)
+        if not ok:
+>           raise ValueError("STOPPED_GATE0:" + json.dumps({k: v for k, v in result.items() if v is False}))
+E           ValueError: STOPPED_GATE0:{}
+
+src/cp_disr/analysis/family_b_v3_isochronous.py:367: ValueError
+____________________ test_V11_gate0_passes_on_this_worktree ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_V11_gate0_passes_on_this_1')
+
+    def test_V11_gate0_passes_on_this_worktree(tmp_path):
+>       res = v.gate0(ROOT, tmp_path / "g0")
+
+tests/test_family_b_v3r1_reach_safe_mirror.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/xushijie2/graph_cp_disr_final_tb_launch')
+out = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_V11_gate0_passes_on_this_1/g0')
+
+    def gate0(root, out):
+        root, out = Path(root).resolve(), Path(out)
+        out.mkdir(parents=True, exist_ok=True)
+        src = source_checks(root)
+        base_xy = tuple(src["detail"]["actual_base_xy"])
+        inv = invariants(base_xy=base_xy)
+        radius = demonstrated_radius(root)
+        geo = geometry_checks(base_xy=base_xy)
+        feat = task_feature_checks()
+        cam = camera_audit()
+        layouts_ok = json.loads((root / LAYOUTS_PATH).read_text()) == json.loads(json.dumps(layouts_document()))
+        max_new = max(r["base_radius_m"] for r in geo["reach_rows"])
+        reach = {"card_id": CARD, "base_xy_used": list(base_xy), "base_from_robot_model": src["detail"]["actual_base_detail"],
+                 "rule": f"every new movable / pad point (carrier, obj_b anchor, obj_c anchor, pad_u, pad_v) base radius <= {REACH_CAP} m; "
+                         "the old 'demonstrated + 0.05' rule is retired", "cap_m": REACH_CAP, "points": geo["reach_rows"],
+                 "max_new_point_radius_m": max_new, "demonstrated_max_planar_radius_m": radius,
+                 "margin_to_demonstrated_max_m": radius - max_new, "previous_failed_point_radius_m": 0.80049984384758,
+                 "receiver_radius_recorded_only_m": [r["receiver_radius_recorded_only_m"] for r in geo["rows"]],
+                 "all_ok": all(r["ok"] for r in geo["reach_rows"])}
+        aabb = {"card_id": CARD, "minimum_aabb_clearance_m": AABB_MIN, "half_sizes": {"cube_xy": CUBE_HALF, "pad_xy": PAD_HALF_XY,
+                "receiver_outer_xy": list(RECEIVER_OUTER)}, "pairs": geo["aabb_rows"],
+                "min_gap_m": min(r["aabb_gap_m"] for r in geo["aabb_rows"]), "all_ok": all(r["ok"] for r in geo["aabb_rows"])}
+        write(out / "reach_envelope_audit.json", reach)
+        write(out / "aabb_clearance_audit.json", aabb)
+        write(out / "geometry_invariants.json", {"card_id": CARD, "decision_show_xy": list(SHOW), "invariants": inv,
+                                                  "geometry": geo, "task_features": feat,
+                                                  "layouts_file_matches_frozen_generator": layouts_ok})
+        write(out / "camera_projection_audit.json", cam)
+        ok = src["all_ok"] and inv["all_ok"] and geo["all_ok"] and cam["all_ok"] and layouts_ok and reach["all_ok"] and aabb["all_ok"] \
+            and feat["no_fixed_rule_solves_all"] and feat["layouts_differ_only_by_bc_swap"] and feat["same_object_id_changes_best_pad"] \
+            and feat["geometric_best_matches_prediction"]
+        result = {"status": "GATE0_PASS" if ok else "STOPPED_GATE0", "source": src, "invariants_ok": inv["all_ok"],
+                  "geometry_ok": geo["all_ok"], "reach_ok": reach["all_ok"], "aabb_ok": aabb["all_ok"], "camera_ok": cam["all_ok"],
+                  "layouts_file_ok": layouts_ok, "task_features_ok": feat["no_fixed_rule_solves_all"]}
+        write(out / "gate0.json", result)
+        if not ok:
+>           raise ValueError("STOPPED_GATE0:" + json.dumps({k: v for k, v in result.items() if v is False}))
+E           ValueError: STOPPED_GATE0:{}
+
+src/cp_disr/analysis/family_b_v3r1_reach_safe_mirror.py:433: ValueError
+_______________ test_prepare_binding_and_real_loader_source_gate _______________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_prepare_binding_and_real_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedfdd9a980>
+
+    def test_prepare_binding_and_real_loader_source_gate(tmp_path, monkeypatch):
+        root,out=make_binding(tmp_path)
+        manifest=json.loads((out/"derived/runtime_manifest.current.json").read_text())
+        spec=require_runtime(manifest)
+        assert spec["source_path"].endswith("src/cp_disr/platforms/libero/runtime_factory.py")
+        calls=[]
+        class Bundle:
+            environment=executor=observations=perception=verifier=evaluator=safety=clock=snapshot_builder=object()
+        import cp_disr.platforms.libero.runtime_factory as rf
+        monkeypatch.setattr(rf,"create_stage_2a_runtime",lambda m: calls.append(True) or Bundle())
+>       loaded=load_runtime(manifest)
+
+tests/test_s1_source_binding_integration.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+manifest = {'closeout_binding': {'current_source_blob': 'src/cp_disr/platforms/libero/runtime_factory.py', 'current_source_sha256...NG_NOT_STARTED', 'note': 'Separate Stage 2A runtime manifest. D0 Stage 1A runtime_manifest.yaml is not modified.', ...}
+
+    def load_runtime(manifest):
+        spec=require_runtime(manifest)
+        module=importlib.import_module(spec['module'])
+>       if Path(module.__file__).resolve()!=Path(spec['source_path']).resolve():raise BindingError('Runtime module/source mismatch')
+E       cp_disr.common.BindingError: Runtime module/source mismatch
+
+src/cp_disr/runtime.py:29: BindingError
+----------------------------- Captured stdout call -----------------------------
+{"status": "PASS", "source_sha256": "4bd45b0ab3d8abf17c3cff7ac87c248fa234c38beb0109cabd8c6eb3ceee87b3"}
+_______________________ test_M01_all_routes_must_succeed _______________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M01_all_routes_must_succe0')
+
+    def test_M01_all_routes_must_succeed(tmp_path):
+>       gate, _out, _b = _classify(tmp_path)
+
+tests/test_tp_so_mvp_gate.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M01_all_routes_must_succe0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M01_all_routes_must_succe0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+____________ test_M02_skill_count_difference_cannot_prove_mechanism ____________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M02_skill_count_differenc0')
+
+    def test_M02_skill_count_difference_cannot_prove_mechanism(tmp_path):
+        out, branches = _build_out(tmp_path)
+        bad = branches[0]["branch_id"]
+        p = out / "physical/branch_results" / f"{bad}.json"
+        r = json.loads(p.read_text(encoding="utf-8"))
+        r["trace"] = r["trace"][:3]
+        p.write_text(json.dumps(r), encoding="utf-8")
+>       gate = m.classify(ROOT, CONFIG, out)
+
+tests/test_tp_so_mvp_gate.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M02_skill_count_differenc0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M02_skill_count_differenc0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+___________________ test_M03_no_plan_cannot_prove_mechanism ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M03_no_plan_cannot_prove_0')
+
+    def test_M03_no_plan_cannot_prove_mechanism(tmp_path):
+        out, branches = _build_out(tmp_path)
+        bad = branches[0]["branch_id"]
+        p = out / "physical/branch_results" / f"{bad}.json"
+        r = json.loads(p.read_text(encoding="utf-8"))
+        r["execution_status"] = "NO_PLAN"
+        p.write_text(json.dumps(r), encoding="utf-8")
+>       gate = m.classify(ROOT, CONFIG, out)
+
+tests/test_tp_so_mvp_gate.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M03_no_plan_cannot_prove_0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M03_no_plan_cannot_prove_0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+___________________ test_M04_target_first_reversal_required ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M04_target_first_reversal0')
+
+    def test_M04_target_first_reversal_required(tmp_path):
+        # neutralise the target-first advantage: SO_TARGET_FIRST no longer reverses
+        times = dict(PASS_TIMES)
+        times[("SO_TARGET_FIRST", "target_first")] = [12.0, 12.2]
+        times[("SO_TARGET_FIRST", "second_first")] = [10.0, 10.2]
+>       gate, _out, _b = _classify(tmp_path, times=times)
+
+tests/test_tp_so_mvp_gate.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M04_target_first_reversal0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M04_target_first_reversal0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+___________________ test_M05_second_first_reversal_required ____________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M05_second_first_reversal0')
+
+    def test_M05_second_first_reversal_required(tmp_path):
+        times = dict(PASS_TIMES)
+        times[("SO_SECOND_FIRST", "second_first")] = [12.4, 12.6]
+        times[("SO_SECOND_FIRST", "target_first")] = [10.4, 10.6]
+>       gate, _out, _b = _classify(tmp_path, times=times)
+
+tests/test_tp_so_mvp_gate.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M05_second_first_reversal0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M05_second_first_reversal0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+______________________ test_M06_neutral_control_required _______________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M06_neutral_control_requi0')
+
+    def test_M06_neutral_control_required(tmp_path):
+        times = dict(PASS_TIMES)
+        times[("SO_NEUTRAL", "target_first")] = [8.0, 8.0]
+        times[("SO_NEUTRAL", "second_first")] = [12.0, 12.0]
+>       gate, _out, _b = _classify(tmp_path, times=times)
+
+tests/test_tp_so_mvp_gate.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M06_neutral_control_requi0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M06_neutral_control_requi0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_____________________ test_M07_same_nominal_cost_required ______________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M07_same_nominal_cost_req0')
+
+    def test_M07_same_nominal_cost_required(tmp_path):
+        out, _branches = _build_out(tmp_path)
+        reach = _reach_doc()
+        reach["b_plan_nominal_costs_equal"] = False
+        (out / "geometry/contract_reachability.json").write_text(json.dumps(reach), encoding="utf-8")
+>       gate = m.classify(ROOT, CONFIG, out)
+
+tests/test_tp_so_mvp_gate.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M07_same_nominal_cost_req0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M07_same_nominal_cost_req0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+__________________ test_M08_wall_time_cannot_replace_sim_time __________________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M08_wall_time_cannot_repl0')
+
+    def test_M08_wall_time_cannot_replace_sim_time(tmp_path):
+>       gate, out, _b = _classify(tmp_path)
+
+tests/test_tp_so_mvp_gate.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M08_wall_time_cannot_repl0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M08_wall_time_cannot_repl0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+______________ test_M09_no_automatic_provider_or_s2_authorization ______________
+
+tmp_path = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M09_no_automatic_provider0')
+
+    def test_M09_no_automatic_provider_or_s2_authorization(tmp_path):
+>       gate, out, _b = _classify(tmp_path)
+
+tests/test_tp_so_mvp_gate.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tp_so_mvp_gate.py:76: in _classify
+    return m.classify(ROOT, CONFIG, out), out, branches
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:1315: in classify
+    ledger = merged_budget_ledger(out)
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:81: in merged_budget_ledger
+    ledger = rd(out / "budget_ledger.json")
+src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py:76: in rd
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M09_no_automatic_provider0/budget_ledger.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/xushijie2/tmp/a1/pytest_full2_tmp/test_M09_no_automatic_provider0/budget_ledger.json'
+
+../envs/lerobotpi0-xfs/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=============================== warnings summary ===============================
+../envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:7: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("No private macro file found!")
+
+../envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:8: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("It is recommended to use a private macro file")
+
+../envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/__init__.py:9: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+    ROBOSUITE_DEFAULT_LOGGER.warn("To setup, run: python {}/scripts/setup_macros.py".format(robosuite.__path__[0]))
+
+tests/test_stage0c_pipeline.py::test_provider_sdk_dispatch_no_key_read
+  /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/dashscope/__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
+    from dashscope.assistants import Assistant, AssistantList, Assistants
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_family_b_staging_v2.py::test_S04_incompatibility_blocks_merging
+FAILED tests/test_family_b_v3_isochronous.py::test_V11_gate0_passes_on_this_worktree
+FAILED tests/test_family_b_v3r1_reach_safe_mirror.py::test_V11_gate0_passes_on_this_worktree
+FAILED tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate
+FAILED tests/test_tp_so_mvp_gate.py::test_M01_all_routes_must_succeed - FileN...
+FAILED tests/test_tp_so_mvp_gate.py::test_M02_skill_count_difference_cannot_prove_mechanism
+FAILED tests/test_tp_so_mvp_gate.py::test_M03_no_plan_cannot_prove_mechanism
+FAILED tests/test_tp_so_mvp_gate.py::test_M04_target_first_reversal_required
+FAILED tests/test_tp_so_mvp_gate.py::test_M05_second_first_reversal_required
+FAILED tests/test_tp_so_mvp_gate.py::test_M06_neutral_control_required - File...
+FAILED tests/test_tp_so_mvp_gate.py::test_M07_same_nominal_cost_required - Fi...
+FAILED tests/test_tp_so_mvp_gate.py::test_M08_wall_time_cannot_replace_sim_time
+FAILED tests/test_tp_so_mvp_gate.py::test_M09_no_automatic_provider_or_s2_authorization
+13 failed, 679 passed, 4 warnings in 193.18s (0:03:13)

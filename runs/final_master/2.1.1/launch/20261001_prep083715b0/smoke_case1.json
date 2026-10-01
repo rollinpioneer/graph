@@ -1,0 +1,156 @@
+{
+  "budget_used": {
+    "construction_attempts": 2,
+    "episode_attempts": 1,
+    "explicit_resets": 2,
+    "skill_calls": 1
+  },
+  "case_id": "T_B_dev_00",
+  "engineering_error": "ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan], device='cuda:0')",
+  "episode_verdict": "FAIL:ENGINEERING_FAILURE",
+  "final_task_success": null,
+  "forward_probe": {
+    "B1-K": {
+      "effect_token_counts": {},
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": false,
+      "value_finite": true
+    },
+    "B1-K+E": {
+      "effect_token_counts": {
+        "a:OPEN:container:v1": 5,
+        "a:PICK:second_object:v1": 8,
+        "a:PICK:target:v1": 8
+      },
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": false,
+      "value_finite": true
+    },
+    "B2": {
+      "effect_token_counts": {},
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": true,
+      "value_finite": true
+    }
+  },
+  "gpu_after_factory": {
+    "expected_physical": 2,
+    "gpus": [
+      2
+    ],
+    "graphics_context_seen": true,
+    "on_expected_only": true,
+    "pid": 1788737,
+    "rows": [
+      {
+        "gpu": 2,
+        "type": "G"
+      }
+    ],
+    "types": [
+      "G"
+    ]
+  },
+  "gpu_after_start_case": {
+    "expected_physical": 2,
+    "gpus": [
+      2
+    ],
+    "graphics_context_seen": true,
+    "on_expected_only": true,
+    "pid": 1788737,
+    "rows": [
+      {
+        "gpu": 2,
+        "type": "G"
+      }
+    ],
+    "types": [
+      "G"
+    ]
+  },
+  "index": 1,
+  "initial": {
+    "candidate_ids": [
+      "a:OPEN:container:v1",
+      "a:PICK:second_object:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:second_object:container:v1",
+      "a:PLACE:target:container:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1",
+      "a:PLACE_BUFFER:target:buffer:v1"
+    ],
+    "facts": {
+      "p:AtBuffer:second_object:buffer": "FALSE",
+      "p:AtBuffer:target:buffer": "FALSE",
+      "p:GripperEmpty": "TRUE",
+      "p:Held:second_object": "FALSE",
+      "p:Held:target": "FALSE",
+      "p:Inside:second_object:container": "FALSE",
+      "p:Inside:target:container": "FALSE",
+      "p:OnTable:second_object": "TRUE",
+      "p:OnTable:target": "TRUE",
+      "p:Open:container": "FALSE"
+    },
+    "mask": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "prior_edges": 0,
+    "prior_mode": "absent",
+    "restore_receipt": {
+      "applied_case_id": "T_B_dev_00",
+      "applied_restore_seed": 8100,
+      "candidate_ids_sha256": "2efe5b35dbb3f2be27589327a4bdef67da8db3669936c1cd75bf0dcc1a2d1bc2",
+      "candidate_mask_sha256": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+      "normalized_reset_config_sha256": "02f4481d7d7389b800129687d88b76a5bced0f121ea471c5b0817c5cf8d4288b",
+      "public_facts_sha256": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "requested_case_id": "T_B_dev_00",
+      "requested_restore_seed": 8100,
+      "restore_checks": {
+        "candidate_ids_measured": true,
+        "candidate_mask_measured": true,
+        "case_id_applied": true,
+        "public_facts_measured": true,
+        "reset_recipe_bound": true,
+        "seed_applied": true,
+        "state_identity_measured": true
+      },
+      "runtime_source_sha256": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+      "state_identity_kind": "public_snapshot",
+      "state_identity_sha256": "2551c117db5186dc41a480989caf850505d5942e52ed59b34b1efe680221d75f",
+      "task_contract_identity": "3bda87e3bad0f5a54538cbab4b75f2c9f8c8ee56fb0479be97a567374a8e53bc"
+    },
+    "snapshot_identity": "2551c117db5186dc41a480989caf850505d5942e52ed59b34b1efe680221d75f"
+  },
+  "optimizer_steps": 0,
+  "physical_gpu": 2,
+  "provider_requests": 0,
+  "render_gpu_device_id": 2,
+  "script": [
+    "a:PICK:second_object:v1",
+    "a:PLACE_BUFFER:second_object:buffer:v1",
+    "a:OPEN:container:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:target:container:v1"
+  ],
+  "steps": [],
+  "test_ids_accessed": 0
+}

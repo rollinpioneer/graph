@@ -1,0 +1,123 @@
+{
+ "prep_commit": "083715b0379577fc8b46489538b440aa7675ba95",
+ "tracked_tree_clean_during_run": true,
+ "new_suite": {
+  "file": "tests/test_final_tb_launch.py",
+  "passed": 27,
+  "failed": 0,
+  "tests": [
+   "tests/test_final_tb_launch.py::test_cli_binding_reaches_policy_dir_and_metadata[R-TB-E-0-B1-K+E-0-B1-K+E]",
+   "tests/test_final_tb_launch.py::test_cli_binding_reaches_policy_dir_and_metadata[R-TB-DK-1-B2-1-B2]",
+   "tests/test_final_tb_launch.py::test_cli_binding_reaches_policy_dir_and_metadata[R-TB-K-1-B1-K-1-B1]",
+   "tests/test_final_tb_launch.py::test_illegal_plan_method_seed_combinations_are_rejected",
+   "tests/test_final_tb_launch.py::test_run_config_rejects_placeholders_relative_paths_unknown_keys",
+   "tests/test_final_tb_launch.py::test_training_seed_is_bound_and_reproducible",
+   "tests/test_final_tb_launch.py::test_plus_e_and_siblings_use_empty_R_in_collection_and_evaluation",
+   "tests/test_final_tb_launch.py::test_empty_R_reaches_the_collector_without_prior_sampler[R-TB-E-0-B1-K+E-0-B1-K+E]",
+   "tests/test_final_tb_launch.py::test_empty_R_reaches_the_collector_without_prior_sampler[R-TB-DK-1-B2-1-B2]",
+   "tests/test_final_tb_launch.py::test_empty_R_reaches_the_collector_without_prior_sampler[R-TB-K-1-B1-K-1-B1]",
+   "tests/test_final_tb_launch.py::test_effect_tokens_and_successor_semantics",
+   "tests/test_final_tb_launch.py::test_derived_manifest_and_split_bind_new_root_and_T_B",
+   "tests/test_final_tb_launch.py::test_check_register_help_build_no_environment_and_smoke_train_refuse",
+   "tests/test_final_tb_launch.py::test_two_workers_have_distinct_dirs_rng_and_reservations",
+   "tests/test_final_tb_launch.py::test_workers_get_distinct_context_dirs_and_initialisation",
+   "tests/test_final_tb_launch.py::test_gpu_parameters_reach_first_construction_and_env_factory",
+   "tests/test_final_tb_launch.py::test_frozen_H_Tcap_invariant_and_rejections",
+   "tests/test_final_tb_launch.py::test_checkpoint_save_load_consistency_and_tamper_detection[R-TB-E-0-B1-K+E-0-B1-K+E]",
+   "tests/test_final_tb_launch.py::test_checkpoint_save_load_consistency_and_tamper_detection[R-TB-DK-1-B2-1-B2]",
+   "tests/test_final_tb_launch.py::test_checkpoint_save_load_consistency_and_tamper_detection[R-TB-K-1-B1-K-1-B1]",
+   "tests/test_final_tb_launch.py::test_smoke_classification_separates_controller_held_and_success",
+   "tests/test_final_tb_launch.py::test_smoke_budget_caps_and_case_selection",
+   "tests/test_final_tb_launch.py::test_entry_module_has_no_forbidden_calls",
+   "tests/test_final_tb_launch.py::test_known_regressions_are_detected[inner",
+   "tests/test_final_tb_launch.py::test_known_regressions_are_detected[+E",
+   "tests/test_final_tb_launch.py::test_known_regressions_are_detected[GPU/environment",
+   "tests/test_final_tb_launch.py::test_training_release_requires_smoke_pass_and_predecessor_gate"
+  ],
+  "required_behaviours_covered": [
+   "cli_plan_to_policy_dir_ckpt_metadata_and_illegal_combinations",
+   "seed_not_reset_and_reproducible",
+   "empty_R_all_three_methods_with_sampler_bomb",
+   "effect_tokens_no_successor_B2_keeps_DK",
+   "derived_manifest_binds_new_root_T_B",
+   "check_register_help_no_env_smoke_train_refuse_without_token",
+   "two_workers_distinct_dirs_rng_reservations_gpu_params",
+   "H_Tcap_invariants_and_rejections",
+   "save_load_consistency_tamper_missing_param",
+   "smoke_classification_NORMAL_TERMINATION_held_unknown_not_grasp"
+  ],
+  "mutation_detection": {
+   "inner_seed_forced_to_0": "DETECTED",
+   "plus_E_missing_from_empty_R_set": "DETECTED",
+   "env_or_GPU_bound_before_authorization": "DETECTED",
+   "control_copy": "PASS"
+  }
+ },
+ "full_suite_after_prep": {
+  "passed": 679,
+  "failed": 13,
+  "failed_tests": [
+   "tests/test_family_b_staging_v2.py::test_S04_incompatibility_blocks_merging",
+   "tests/test_family_b_v3_isochronous.py::test_V11_gate0_passes_on_this_worktree",
+   "tests/test_family_b_v3r1_reach_safe_mirror.py::test_V11_gate0_passes_on_this_worktree",
+   "tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate",
+   "tests/test_tp_so_mvp_gate.py::test_M01_all_routes_must_succeed",
+   "tests/test_tp_so_mvp_gate.py::test_M02_skill_count_difference_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M03_no_plan_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M04_target_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M05_second_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M06_neutral_control_required",
+   "tests/test_tp_so_mvp_gate.py::test_M07_same_nominal_cost_required",
+   "tests/test_tp_so_mvp_gate.py::test_M08_wall_time_cannot_replace_sim_time",
+   "tests/test_tp_so_mvp_gate.py::test_M09_no_automatic_provider_or_s2_authorization"
+  ]
+ },
+ "baseline_7776f3a_on_same_failing_files": {
+  "failed_tests": [
+   "tests/test_family_b_staging_v2.py::test_S04_incompatibility_blocks_merging",
+   "tests/test_family_b_v3_isochronous.py::test_V11_gate0_passes_on_this_worktree",
+   "tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate",
+   "tests/test_tp_so_mvp_gate.py::test_M01_all_routes_must_succeed",
+   "tests/test_tp_so_mvp_gate.py::test_M02_skill_count_difference_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M03_no_plan_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M04_target_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M05_second_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M06_neutral_control_required",
+   "tests/test_tp_so_mvp_gate.py::test_M07_same_nominal_cost_required",
+   "tests/test_tp_so_mvp_gate.py::test_M08_wall_time_cannot_replace_sim_time",
+   "tests/test_tp_so_mvp_gate.py::test_M09_no_automatic_provider_or_s2_authorization"
+  ],
+  "note": "run in the clean sibling worktree graph_cp_disr_s4_family_b_v3r1_reach_safe_mirror at 7776f3a"
+ },
+ "failures_not_present_at_baseline": [
+  "tests/test_family_b_v3r1_reach_safe_mirror.py::test_V11_gate0_passes_on_this_worktree"
+ ],
+ "limited_old_baseline_guards": {
+  "pre_existing_at_baseline": [
+   "tests/test_family_b_staging_v2.py::test_S04_incompatibility_blocks_merging",
+   "tests/test_family_b_v3_isochronous.py::test_V11_gate0_passes_on_this_worktree",
+   "tests/test_s1_source_binding_integration.py::test_prepare_binding_and_real_loader_source_gate",
+   "tests/test_tp_so_mvp_gate.py::test_M01_all_routes_must_succeed",
+   "tests/test_tp_so_mvp_gate.py::test_M02_skill_count_difference_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M03_no_plan_cannot_prove_mechanism",
+   "tests/test_tp_so_mvp_gate.py::test_M04_target_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M05_second_first_reversal_required",
+   "tests/test_tp_so_mvp_gate.py::test_M06_neutral_control_required",
+   "tests/test_tp_so_mvp_gate.py::test_M07_same_nominal_cost_required",
+   "tests/test_tp_so_mvp_gate.py::test_M08_wall_time_cannot_replace_sim_time",
+   "tests/test_tp_so_mvp_gate.py::test_M09_no_automatic_provider_or_s2_authorization"
+  ],
+  "new_vs_baseline": [
+   "tests/test_family_b_v3r1_reach_safe_mirror.py::test_V11_gate0_passes_on_this_worktree"
+  ],
+  "explanation": "test_S04/V3 Gate-0 (isochronous)/s1 source binding/tp_so_mvp_gate fail identically at baseline (lineage/whitelist/missing budget ledger). The V3-R1 Gate-0 test compares the tree with its own base and flags the intentional additive runtime_factory/stage2a_v11 changes as unexpected_source_changes; it guards the old Family B V3-R1 lineage and exercises no T_B behaviour. Not edited, not weakened."
+ },
+ "pre_commit_only_failures": [
+  "tests/test_family_b_obs_v2_r2.py::test_R2_01",
+  "::test_R2_02 (tracked tree dirty before the prep commit; pass after it)"
+ ],
+ "optimizer_steps": 0,
+ "environments_constructed": 0,
+ "provider_requests": 0,
+ "test_ids_accessed": 0
+}
