@@ -1,0 +1,64 @@
+# Execution identity and budget only. The frozen observation profile is referenced, never copied or rewritten.
+card_id: CP-DISR-S4-FAMILY-B-V3-R1-REACH-SAFE-MIRROR-PILOT-1
+base_commit: 8dd0e8010dcd42a79acad16633d2614b6d0c8a80
+observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+layouts_ref: configs/final_master/family_b_v3r1_layouts.json
+card_revision: R1_ROLE_BASED_CAMERA_GATE_AND_INITIAL_SUPPORT   # made before the prep commit; see card_revision.json in the evidence
+frozen_scene:
+  robot_base_proxy_xy: [-0.56, 0.0]
+  show_pose_xy: [0.02, -0.08]
+  mirror_radius_m: 0.086
+  mirror_normal: [0.1366374, 0.9906211]
+  carrier_xy: [-0.08, -0.12]
+  receiver_xy: [0.18, 0.12]
+  pad_u_xy: [0.03175082, 0.00519342]
+  pad_v_xy: [0.00824918, -0.16519342]
+  target_anchor_u_xy: [0.04350163, 0.09038683]
+  target_anchor_v_xy: [-0.00350163, -0.25038683]
+  layout_0: {obj_b: anchor_u, obj_c: anchor_v}
+  layout_1: {obj_b: anchor_v, obj_c: anchor_u}
+  predicted_winner:
+    layout_0/B_PENDING: pad_u
+    layout_0/C_PENDING: pad_v
+    layout_1/B_PENDING: pad_v
+    layout_1/C_PENDING: pad_u
+gate0:
+  new_movable_and_pad_radius_cap_m: 0.65
+  minimum_aabb_clearance_m: 0.008
+  camera:
+    center_edge_margin_px_min: 9.0
+    predicted_cube_edge_px_min: {target_anchor: 8.5, pad: 8.5, receiver: 8.5, carrier: 8.0}
+  fairness: {exact_tolerance: 1.0e-9, base_radius_tolerance: 1.0e-6}
+contexts:
+  B_PENDING:
+    prefix: [a:PICK:obj_c:v1, a:PLACE:obj_c:receiver:v1, a:PICK:carrier:v1]
+  C_PENDING:
+    prefix: [a:PICK:obj_b:v1, a:PLACE:obj_b:receiver:v1, a:PICK:carrier:v1]
+branches:
+  order: [A1, A2, B1, B2, C1, C2, C3, C4]
+  repeat: 0
+  both_pending: false
+authorization:
+  branch_attempts: 8
+  environment_construction_attempts: 8
+  successful_explicit_resets: 8
+  live_skill_calls: 48
+  skill_retries: 0
+  provider: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  elastic: 0
+  formal_test: 0
+  s2: false
+  s3: false
+  tp_training: false
+history:
+  v3_original: {attempts_charged: 1, status: STOPPED_SETUP_REACH_TIMEOUT, mechanism_measured: false, unused_slots: RETIRED}
+waves:
+  A: {steps: [A1, A2], gate: {duration_abs_diff_max_s: 0.15, steps_abs_diff_max: 3, v_slower_margin_s: 0.15, a1_initial_carrier_and_setup_target_depth_support_min: 12, a1_remaining_target_depth_support_min: 12}}
+  B: {steps: [B1, B2], gate: {duration_abs_diff_max_s: 0.15, steps_abs_diff_max: 3, u_slower_margin_s: 0.15, delta_sign_reversal_vs_layout_0_B: true}}
+  C: {pairs: [[C1, C2], [C3, C4]], max_pair_workers: 2}
+mechanism_gate: {tolerance_seconds: 0.15, primary_metric: candidate_start_to_first_verified_task_success}
+on_failure: STOP_TP_TASK_SEARCH_AND_ADJUST_CLAIMS
