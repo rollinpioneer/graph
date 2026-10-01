@@ -1,0 +1,39 @@
+# Execution identity and budget only. The frozen observation profile is referenced, never copied or rewritten.
+card_id: CP-DISR-S4-FAMILY-B-STAGING-V2-CONTINUATION-1
+base_commit: 48dc5e3b84f2ab587983dc95e54d27efc29c32e0
+r2_prep_commit: d610cee7ca0608b2ca7383047e4ca15b83922ad3
+r2_evidence: runs/final_master/S4/family_b_observation_v2_r2/20261001T045653Z_3c98a096
+observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+contexts:
+  B_PENDING:
+    prefix: [a:PICK:obj_c:v1, a:PLACE:obj_c:receiver:v1, a:PICK:carrier:v1]
+  C_PENDING:
+    prefix: [a:PICK:obj_b:v1, a:PLACE:obj_b:receiver:v1, a:PICK:carrier:v1]
+  BOTH_PENDING:
+    prefix: [a:PICK:carrier:v1]
+new_logical_branches: 20
+complementary_wave:
+  order: [A, B, C_parallel_D]
+  A: {layout: layout_0, context: C_PENDING, repeat: 0, candidate: pad_v}
+  B: {layout: layout_1, context: B_PENDING, repeat: 0, candidate: pad_v}
+  C: {layout: layout_0, context: C_PENDING, repeat: 0, candidate: pad_u}
+  D: {layout: layout_1, context: B_PENDING, repeat: 0, candidate: pad_u}
+authorization:
+  continuation_branch_attempts: 20
+  environment_construction_attempts: 20
+  successful_explicit_resets: 20
+  live_skill_calls: 120
+  skill_retries: 0
+  standalone_capture_resets: 0
+  provider: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  elastic: 0
+  formal_test: 0
+  s2: false
+  s3: false
+  tp_training: false
+parallel: {remaining16_default_workers: 2, max_workers: 4, speedup: NOT_MEASURED}
+mechanism_gate: {tolerance_seconds: 0.15}
