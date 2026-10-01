@@ -1,0 +1,38 @@
+# Execution identity and budget only. The frozen observation profile is referenced, never copied or rewritten.
+card_id: CP-DISR-S4-FAMILY-B-OBS-V2-R2-VALIDATION-1
+repair_base_commit: 4a84c6a7c6a545c8d74968d3a5c8f6a186de111d
+profile_origin_commit: 55668197091e4d9d24c3025fcc3ec522febb211e
+failed_r1_commit: 1887c305f7bfa9ac489cb355cab2b9e236da4cdd
+observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+base_config_ref: configs/final_master/family_b_obs_v2/config.yaml
+attempt_budget: 4
+canary_attempts: 1
+conditional_remainder_attempts: 3
+canary: {layout: layout_0, context: B_PENDING, repeat: 0, candidate: pad_v}
+remainder_order:
+  - {layout: layout_0, context: B_PENDING, repeat: 0, candidate: pad_u}
+  - {layout: layout_1, context: C_PENDING, repeat: 0, candidate: pad_v}
+  - {layout: layout_1, context: C_PENDING, repeat: 0, candidate: pad_u}
+authorization:
+  v2_r2_branch_attempts: 4
+  environment_construction_attempts: 4
+  successful_explicit_resets: 4
+  live_skill_calls: 24
+  skill_retries: 0
+  standalone_capture_resets: 0
+  provider: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  elastic: 0
+  formal_test: 0
+  s2: false
+  s3: false
+  tp_training: false
+  release_original_remaining_20: false
+history:
+  v1: {attempts: 4, resets: 4, skill_calls: 20, status: PERMANENTLY_CONSUMED}
+  v2_r1: {attempt_slots_charged: 2, unused_slots: 2, unused_slots_status: RETIRED_NOT_TRANSFERABLE,
+          environment_construction_attempts: 2, successful_environment_constructors: 0,
+          actual_explicit_reset_calls: NOT_REACHED, observations: 0, skill_calls: 0}
+parallel: {max_workers: 2, gpu_policy: CANARY_GPU_THEN_ONE_SECOND_GPU_SEQUENTIAL_PER_LAYOUT_1, speedup: NOT_MEASURED}
