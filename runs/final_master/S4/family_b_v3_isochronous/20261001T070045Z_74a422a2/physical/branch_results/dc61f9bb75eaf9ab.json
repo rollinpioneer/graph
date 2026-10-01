@@ -1,0 +1,127 @@
+{
+  "actions": [
+    {
+      "action_id": "a:PICK:obj_c:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "controller_exit": "TIMEOUT",
+      "duration_sim": 9.000000000000009,
+      "end_sim": 9.000000000000009,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "UNKNOWN",
+        "p:AtBuffer:carrier:pad_v": "UNKNOWN",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:carrier": "UNKNOWN",
+        "p:Held:obj_b": "UNKNOWN",
+        "p:Held:obj_c": "TRUE",
+        "p:Inside:carrier:receiver": "UNKNOWN",
+        "p:Inside:obj_b:receiver": "FALSE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "UNKNOWN",
+        "p:OnTable:obj_b": "TRUE",
+        "p:OnTable:obj_c": "FALSE",
+        "p:Open:receiver": "TRUE"
+      },
+      "raw_skill": {
+        "arguments": [
+          "obj_c"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "TIMEOUT",
+        "end_seconds": 9.000000000000009,
+        "evidence_ids": [
+          "trace:PICK"
+        ],
+        "execution_id": "PICK-0",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 10.000000000000009,
+        "raw_sim_start": 1.0000000000000007,
+        "rejected": false,
+        "sim_duration": 9.000000000000009,
+        "skill": "PICK",
+        "start_seconds": 0.0,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT",
+          "RETREAT"
+        ],
+        "steps": 180,
+        "timeout": true
+      },
+      "stage": "setup",
+      "start_sim": 0.0,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    }
+  ],
+  "attempt_identity": "FAMILY_B_V3_ISO_ATTEMPT_1:layout_0:B_PENDING:r0:pad_u",
+  "branch_id": "dc61f9bb75eaf9ab",
+  "candidate": "pad_u",
+  "context": "B_PENDING",
+  "detail": "SKILL_FAILURE:TIMEOUT",
+  "env_counts": {
+    "bootstrap_constructions": 0,
+    "constructions": 1,
+    "internal_resets": 2,
+    "reset_calls": 1
+  },
+  "initial_sim_time": 0.0,
+  "layout": "layout_0",
+  "observation_profile_sha256": "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917",
+  "receipt_id": "caadf9e2fdd5719a1517037de63b2788c5a9a7a5e758f6d8ba9d2a505d3a5fa7",
+  "recorder_errors": [],
+  "repeat": 0,
+  "restore_receipt": {
+    "applied_case_id": "layout_0",
+    "applied_restore_seed": 3499104058,
+    "candidate_ids_sha256": "682ae454a1db35441f6a76e15f79a98f987e1ee07277e32ba3971e52ce9142a0",
+    "candidate_mask_sha256": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+    "normalized_reset_config_sha256": "c9b15e9080b5848227a94ae7a301eb53bb1366e96d2a10e69fc9ea69f374fc54",
+    "public_facts_sha256": "904711c7a5648ba3a750b61a787846a2ea99635be95edc50f68a0550498bbad9",
+    "requested_case_id": "layout_0",
+    "requested_restore_seed": 3499104058,
+    "restore_checks": {
+      "candidate_ids_measured": true,
+      "candidate_mask_measured": true,
+      "case_id_applied": true,
+      "public_facts_measured": true,
+      "reset_recipe_bound": true,
+      "seed_applied": true,
+      "state_identity_measured": true
+    },
+    "runtime_source_sha256": "627cd83b374d16a1bc8dcf1af75ad57d322a40f33f53019975ea57767b8e411c",
+    "state_identity_kind": "public_snapshot",
+    "state_identity_sha256": "65ccf80f65390168e09d42342e3073f206e945deddd592f0ffaa0a20aa5e96c2",
+    "task_contract_identity": "6c4ebda52765bbd0cd78f0497a920c88dd9a4954852246c4cbe5965fca1a7118"
+  },
+  "restore_seed": 3499104058,
+  "status": "SKILL_FAILURE",
+  "task_success": false,
+  "time_to_task_success": null,
+  "wave": "v3_iso_wave_A",
+  "worker_wall_seconds": 8.976709332084283
+}

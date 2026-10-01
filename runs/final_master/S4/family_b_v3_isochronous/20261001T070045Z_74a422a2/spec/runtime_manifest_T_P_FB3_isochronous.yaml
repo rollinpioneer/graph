@@ -1,0 +1,107 @@
+execution_host_identity: xushijie2@gpu03 (172.19.164.160)
+manifest_status: S4_FAMILY_A_SOFT_ORDERING_MVP_RUNTIME_BOUND_TRAINING_NOT_STARTED
+note: S4 Family A soft-ordering MVP runtime; no provider, no training, no formal test.
+runtime:
+  active_task_id: T_P_FB
+  actual_clock_source: mujoco_sim_data_time
+  actual_interaction_time_unit: seconds
+  calibration_manifest: src/cp_disr/platforms/libero/perception.py::camera_calibration
+  camera:
+    depth: true
+    fixed: true
+    height: 128
+    name: agentview
+    width: 128
+  clock_semantics: DurationProvider reads env.sim.data.time (MuJoCo simulation seconds).
+    The required binding token remains seconds.
+  contract_path: configs/runtime/tp_fb_contract_registry.yaml
+  controller_manifest: experiments/part_1_smoke/stage_1a_p0/controller_manifest.yaml
+  d0_contract_path: configs/contracts/d0_runtime_skills.yaml
+  decision_cap_by_task:
+    T_P_FB: 6
+  entrypoints: manifests/entrypoints.yaml
+  environment_version: stage-2a-p0
+  experiment_root: /home/xushijie2/graph_cp_disr_s4_soft_ordering_repair/experiments
+  git_hash: c17b52fb2d1c5a2362f9ea4fe3b5df43c18ae189
+  git_hash_semantics: Pre-revision base; delivery receipt records resulting commit
+  gpu_driver: 610.57.04
+  hardware:
+    cpu_count: 112
+    gpu_inventory:
+    - 0, NVIDIA A100-SXM4-40GB, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 610.57.04,
+      40960 MiB, 29482 MiB
+    - 1, NVIDIA A100-SXM4-40GB, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 610.57.04,
+      40960 MiB, 34804 MiB
+    - 2, NVIDIA A100-SXM4-40GB, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 3, NVIDIA A100-SXM4-40GB, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 610.57.04,
+      40960 MiB, 37579 MiB
+    - 4, NVIDIA A100-SXM4-40GB, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 610.57.04,
+      40960 MiB, 36851 MiB
+    - 5, NVIDIA A100-SXM4-40GB, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 610.57.04,
+      40960 MiB, 39191 MiB
+    - 6, NVIDIA A100-SXM4-40GB, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 610.57.04,
+      40960 MiB, 13842 MiB
+    - 7, NVIDIA A100-SXM4-40GB, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 610.57.04,
+      40960 MiB, 36851 MiB
+    host: gpu03
+    reservation: NOT_RESERVED_FOR_TRAINING
+  layouts_path: configs/final_master/family_b_v3_layouts.json
+  observation_profile_path: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+  os:
+    architecture: x86_64
+    container: NOT_APPLICABLE_HOST_EXECUTION
+    distribution: Rocky Linux 10.2
+    kernel: 7.2.2-1.el10.elrepo.x86_64
+  perception_checkpoint: cp-disr-d0-rgbd-colorseg-v2
+  reference_skill_seconds_by_task:
+    T_P_FB: 3.649999999999709
+  repository_path: /home/xushijie2/graph_cp_disr_s4_family_b_v3_isochronous
+  repository_url: git@github.com:rollinpioneer/graph.git
+  safety_authorization: src/cp_disr/platforms/libero/safety.py
+  simulator_or_robot:
+    libero_commit: 8f1084e3132a39270c3a13ebe37270a43ece2a01
+    mujoco: 3.6.0
+    platform: LIBERO_robosuite_mujoco
+    python: /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages reused
+      read-only into .venv-stage0a
+    robosuite: 1.4.0
+  skill_timeouts:
+    T_P_FB:
+      PICK: 9.0
+      PLACE: 8.0
+      PLACE_BUFFER: 8.0
+  stage_2a_contract_path: configs/runtime/tp_so_mvp_contract_registry.yaml
+  task_assets:
+    T_P_FB: src/cp_disr/platforms/libero/family_b_env.py
+    license: assets/cp_disr/LICENSE
+    owned_by: cp_disr_project
+  task_deadlines:
+    T_P_FB: 60.0
+  task_evaluator_version:
+    T_P_FB: family-b-evaluator-v1
+  task_splits:
+    T_P_FB: configs/final_master/family_b_v3_layouts.json
+  verifier_thresholds:
+    buffer_margin: 0.03
+    color_tol: 0.32
+    depth_valid:
+    - 0.05
+    - 4.0
+    gripper_open: 0.022
+    held_xy: 0.06
+    held_z: 0.07
+    inside_margin: 0.02
+    min_pixels: 8
+    open_offset: 0.08
+    table_z_tol: 0.05
+runtime_factory:
+  factory: create_family_b_obs_v2_runtime
+  module: cp_disr.platforms.libero.family_b_runtime_v2
+  sha256: eee72c0914fedb41b9d477baeced2485d5f199bb225db7f8c1b7b03046ad8412
+  source_path: /home/xushijie2/graph_cp_disr_s4_family_b_v3_isochronous/src/cp_disr/platforms/libero/family_b_runtime_v2.py
+vlm_runtime:
+  api_account_authorized: MUST_VERIFY_MODEL_ACCESS
+  automatic_fallback_allowed: false
+  base_http_api_url: https://dashscope.aliyuncs.com/api/v1
+  region: cn-beijing

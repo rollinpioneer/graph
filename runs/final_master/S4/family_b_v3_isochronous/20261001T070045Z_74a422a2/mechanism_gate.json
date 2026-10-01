@@ -1,0 +1,109 @@
+{
+  "always_u_accuracy": "0/4",
+  "always_v_accuracy": "0/4",
+  "card_id": "CP-DISR-S4-FAMILY-B-V3-ISOCHRONOUS-CROSS-STAGING-PILOT-1",
+  "claims": {
+    "generalization": false,
+    "provider_or_representation_started": false,
+    "significance": false
+  },
+  "conditions": {
+    "10_layout_0_preference_reversal": false,
+    "11_layout_1_preference_reversal": false,
+    "12_same_object_best_pad_changes_with_layout": false,
+    "13_neither_always_u_nor_always_v_reaches_4_of_4": false,
+    "14_provider_representation_rl_optimizer_zero": true,
+    "15_old_evidence_and_frozen_config_unchanged": true,
+    "1_8_of_8_task_success": false,
+    "2_8_of_8_complete_records": false,
+    "3_four_pair_restores_pass": false,
+    "4_place_buffer_duration_diff_le_0.15": false,
+    "5_controller_steps_diff_le_3": false,
+    "6_key_target_support_ge_12": false,
+    "7_no_noplan_timeout_exception_or_recorder_error": false,
+    "8_candidates_equally_legal": false,
+    "9_plan_length_and_skill_multiset_match": false
+  },
+  "failure_policy": "no coordinate change, no lowered 0.15 s gate, no tail-only metric, no ninth attempt, no Family C",
+  "label": "FAMILY_B_V3_ISOCHRONOUS_MECHANISM_PILOT_NOT_ESTABLISHED",
+  "measured_winner": {},
+  "next_action": "S4_CLAIM_ADJUSTMENT_DECISION",
+  "pairs": {
+    "layout_0/B_PENDING": {
+      "branch_u": "dc61f9bb75eaf9ab",
+      "branch_v": "71e4a910ad2e8a0a",
+      "candidate_duration_abs_diff": null,
+      "candidate_match_pass": false,
+      "candidate_steps_abs_diff": null,
+      "context": "B_PENDING",
+      "cost_u": null,
+      "cost_v": null,
+      "delta_u_minus_v": null,
+      "layout": "layout_0",
+      "status_u": "SKILL_FAILURE",
+      "status_v": "NOT_RUN"
+    },
+    "layout_0/C_PENDING": {
+      "branch_u": "ccd870637285b45a",
+      "branch_v": "8d096fc9a0c7f56b",
+      "candidate_duration_abs_diff": null,
+      "candidate_match_pass": false,
+      "candidate_steps_abs_diff": null,
+      "context": "C_PENDING",
+      "cost_u": null,
+      "cost_v": null,
+      "delta_u_minus_v": null,
+      "layout": "layout_0",
+      "status_u": "NOT_RUN",
+      "status_v": "NOT_RUN"
+    },
+    "layout_1/B_PENDING": {
+      "branch_u": "cb4bc3dacf9a1a34",
+      "branch_v": "8a39b32ebaa7265e",
+      "candidate_duration_abs_diff": null,
+      "candidate_match_pass": false,
+      "candidate_steps_abs_diff": null,
+      "context": "B_PENDING",
+      "cost_u": null,
+      "cost_v": null,
+      "delta_u_minus_v": null,
+      "layout": "layout_1",
+      "status_u": "NOT_RUN",
+      "status_v": "NOT_RUN"
+    },
+    "layout_1/C_PENDING": {
+      "branch_u": "c7ce8b13a0d1a8dd",
+      "branch_v": "10455ee8e2565a83",
+      "candidate_duration_abs_diff": null,
+      "candidate_match_pass": false,
+      "candidate_steps_abs_diff": null,
+      "context": "C_PENDING",
+      "cost_u": null,
+      "cost_v": null,
+      "delta_u_minus_v": null,
+      "layout": "layout_1",
+      "status_u": "NOT_RUN",
+      "status_v": "NOT_RUN"
+    }
+  },
+  "predicted_winner": {
+    "layout_0/B_PENDING": "pad_u",
+    "layout_0/C_PENDING": "pad_v",
+    "layout_1/B_PENDING": "pad_v",
+    "layout_1/C_PENDING": "pad_u"
+  },
+  "primary_metric": "C = candidate_start -> first verified task success (tail-only is decomposition only)",
+  "state_conditioned_preference_reversal": false,
+  "status": "NOT_ESTABLISHED",
+  "stop": {
+    "reason": "step A1 did not meet its technical/qualification gate",
+    "step": "A1",
+    "wave": "A"
+  },
+  "technical_status": "STOPPED_BEFORE_ALL_BRANCHES_RAN",
+  "wave_status": {
+    "A": "NOT_EVALUATED",
+    "B": "NOT_EVALUATED",
+    "C": "NOT_EVALUATED"
+  }
+}

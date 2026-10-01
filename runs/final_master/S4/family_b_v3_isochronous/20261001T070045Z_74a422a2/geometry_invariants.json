@@ -1,0 +1,121 @@
+{
+  "card_id": "CP-DISR-S4-FAMILY-B-V3-ISOCHRONOUS-CROSS-STAGING-PILOT-1",
+  "decision_show_xy": [
+    0.02,
+    -0.08
+  ],
+  "geometry": {
+    "all_ok": true,
+    "checks": {
+      "destinations_and_anchors_do_not_alias": true,
+      "layout_0:inside_table_safe_boundary": true,
+      "layout_0:movables_clear_of_statics": true,
+      "layout_0:movables_do_not_touch": true,
+      "layout_0:pads_reachable": true,
+      "layout_0:receiver_slots_hold_b_and_c": true,
+      "layout_0:statics_do_not_touch": true,
+      "layout_1:inside_table_safe_boundary": true,
+      "layout_1:movables_clear_of_statics": true,
+      "layout_1:movables_do_not_touch": true,
+      "layout_1:pads_reachable": true,
+      "layout_1:receiver_slots_hold_b_and_c": true,
+      "layout_1:statics_do_not_touch": true
+    },
+    "layout_pairs_bc": [
+      [
+        [
+          -0.18,
+          0.02
+        ],
+        [
+          0.22,
+          -0.18
+        ]
+      ],
+      [
+        [
+          0.22,
+          -0.18
+        ],
+        [
+          -0.18,
+          0.02
+        ]
+      ]
+    ],
+    "rows": [
+      {
+        "layout": "layout_0",
+        "max_table_extent": 0.262,
+        "min_gap_movable_movable": 0.10557790016547376,
+        "min_gap_movable_static": 0.03499999999999999,
+        "min_gap_static_static": 0.11000000000000003,
+        "radial_from_base": {
+          "carrier": 0.5207144801522112,
+          "obj_b": 0.380525951808809,
+          "obj_c": 0.80049984384758,
+          "pad_u": 0.4804164859785726,
+          "pad_v": 0.703420215802759,
+          "receiver": 0.7496665925596524
+        },
+        "slot_gap": 0.030000000000000002,
+        "slot_inside_receiver": true
+      },
+      {
+        "layout": "layout_1",
+        "max_table_extent": 0.262,
+        "min_gap_movable_movable": 0.10557790016547376,
+        "min_gap_movable_static": 0.03499999999999999,
+        "min_gap_static_static": 0.11000000000000003,
+        "radial_from_base": {
+          "carrier": 0.5207144801522112,
+          "obj_b": 0.80049984384758,
+          "obj_c": 0.380525951808809,
+          "pad_u": 0.4804164859785726,
+          "pad_v": 0.703420215802759,
+          "receiver": 0.7496665925596524
+        },
+        "slot_gap": 0.030000000000000002,
+        "slot_inside_receiver": true
+      }
+    ]
+  },
+  "invariants": {
+    "all_ok": true,
+    "errors": {
+      "AU_plus_AV_equals_2S": 6.938893903907228e-18,
+      "S_to_U_minus_S_to_V": 2.7755575615628914e-17,
+      "U_plus_V_equals_2S": 6.938893903907228e-18,
+      "U_to_AU_minus_V_to_AV": 1.3877787807814457e-17,
+      "U_to_AV_minus_V_to_AU": 0.0
+    },
+    "tolerance": 1e-09,
+    "values": {
+      "S_to_pad": 0.14142135623730953,
+      "pad_to_far_anchor": 0.3605551275463989,
+      "pad_to_near_anchor": 0.09999999999999999
+    }
+  },
+  "layouts_file_matches_frozen_generator": true,
+  "reach": {
+    "beyond_demonstrated_envelope": true,
+    "demonstrated_max_planar_radius_m": 0.7602631123499285,
+    "note": "analytic fairness is re-verified online by the PLACE_BUFFER duration gate",
+    "rule": "all key points within demonstrated radius + 0.05 m; reach beyond the demonstrated envelope is recorded as a risk, the card forbids moving coordinates",
+    "v3_max_planar_radius_m": 0.80049984384758
+  },
+  "task_features": {
+    "always_u_correct": 2,
+    "always_v_correct": 2,
+    "geometric_best": {
+      "layout_0/B_PENDING": "pad_u",
+      "layout_0/C_PENDING": "pad_v",
+      "layout_1/B_PENDING": "pad_v",
+      "layout_1/C_PENDING": "pad_u"
+    },
+    "geometric_best_matches_prediction": true,
+    "layouts_differ_only_by_bc_swap": true,
+    "no_fixed_rule_solves_all": true,
+    "same_object_id_changes_best_pad": true
+  }
+}

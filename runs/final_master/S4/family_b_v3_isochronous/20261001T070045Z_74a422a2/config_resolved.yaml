@@ -1,0 +1,105 @@
+authorization:
+  branch_attempts: 8
+  elastic: 0
+  environment_construction_attempts: 8
+  formal_test: 0
+  live_skill_calls: 48
+  optimizer_steps: 0
+  provider: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  s2: false
+  s3: false
+  skill_retries: 0
+  successful_explicit_resets: 8
+  tp_training: false
+base_commit: cf3e6a3fb4fda47b9d50b7073826daaa78a470ea
+branches:
+  both_pending: false
+  order:
+  - A1
+  - A2
+  - B1
+  - B2
+  - C1
+  - C2
+  - C3
+  - C4
+  repeat: 0
+card_id: CP-DISR-S4-FAMILY-B-V3-ISOCHRONOUS-CROSS-STAGING-PILOT-1
+contexts:
+  B_PENDING:
+    prefix:
+    - a:PICK:obj_c:v1
+    - a:PLACE:obj_c:receiver:v1
+    - a:PICK:carrier:v1
+  C_PENDING:
+    prefix:
+    - a:PICK:obj_b:v1
+    - a:PLACE:obj_b:receiver:v1
+    - a:PICK:carrier:v1
+frozen_scene:
+  carrier_xy:
+  - -0.05465481022352864
+  - -0.12557790016547377
+  layout_0:
+    obj_b: anchor_u
+    obj_c: anchor_v
+  layout_1:
+    obj_b: anchor_v
+    obj_c: anchor_u
+  pad_u_xy:
+  - -0.08
+  - 0.02
+  pad_v_xy:
+  - 0.12
+  - -0.18
+  predicted_winner:
+    layout_0/B_PENDING: pad_u
+    layout_0/C_PENDING: pad_v
+    layout_1/B_PENDING: pad_v
+    layout_1/C_PENDING: pad_u
+  receiver_xy:
+  - 0.18
+  - 0.12
+  show_pose_xy:
+  - 0.02
+  - -0.08
+  target_anchor_u_xy:
+  - -0.18
+  - 0.02
+  target_anchor_v_xy:
+  - 0.22
+  - -0.18
+layouts_ref: configs/final_master/family_b_v3_layouts.json
+mechanism_gate:
+  primary_metric: candidate_start_to_first_verified_task_success
+  tolerance_seconds: 0.15
+observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+waves:
+  A:
+    gate:
+      a1_remaining_target_depth_support_min: 12
+      duration_abs_diff_max_s: 0.15
+      steps_abs_diff_max: 3
+      v_slower_margin_s: 0.15
+    steps:
+    - A1
+    - A2
+  B:
+    gate:
+      delta_sign_reversal_vs_layout_0_B: true
+      duration_abs_diff_max_s: 0.15
+      steps_abs_diff_max: 3
+      u_slower_margin_s: 0.15
+    steps:
+    - B1
+    - B2
+  C:
+    max_pair_workers: 2
+    pairs:
+    - - C1
+      - C2
+    - - C3
+      - C4
