@@ -1,0 +1,147 @@
+{
+  "camera_freeze_atol": 1e-09,
+  "camera_manifest": {
+    "agentview": {
+      "depth_convention": "robosuite normalized depth -> get_real_depth_map metric; image flipud",
+      "fixed_in_world": true,
+      "fovy": 45.0,
+      "height": 128,
+      "mat": [
+        [
+          0.0,
+          -0.706147844353306,
+          0.7080644193257978
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.7080644193257978,
+          0.7061478443533059
+        ]
+      ],
+      "mode": 0,
+      "name": "agentview",
+      "pos": [
+        0.5,
+        0.0,
+        1.35
+      ],
+      "quat": [
+        0.6530979720442611,
+        0.2710406591485372,
+        0.2710406591485372,
+        0.6530979720442611
+      ],
+      "width": 128
+    },
+    "sideview": {
+      "depth_convention": "robosuite normalized depth -> get_real_depth_map metric; image flipud",
+      "fixed_in_world": true,
+      "fovy": 45.0,
+      "height": 128,
+      "mat": [
+        [
+          -0.9997091666008318,
+          -0.007842430312378456,
+          0.022805229686758008
+        ],
+        [
+          0.024108065826954593,
+          -0.3007148974199616,
+          0.9534093305772632
+        ],
+        [
+          -0.00061917392833148,
+          0.95368183727934,
+          0.30081650531037873
+        ]
+      ],
+      "mode": 0,
+      "name": "sideview",
+      "pos": [
+        -0.05651774593317116,
+        1.2761224129427358,
+        1.4879572214102434
+      ],
+      "quat": [
+        0.009905065491771753,
+        0.006877963156909583,
+        0.591222835289388,
+        0.8064180940013642
+      ],
+      "width": 128
+    }
+  },
+  "cameras": [
+    "agentview",
+    "sideview"
+  ],
+  "fusion_contract": {
+    "camera_motion": false,
+    "cameras": [
+      "agentview",
+      "sideview"
+    ],
+    "candidate_dependent_views": false,
+    "dynamic_facts": "p:Held/OnTable/Inside/AtBuffer from the fused public blob only",
+    "extra_robot_observation_action": false,
+    "fusion": {
+      "estimators": {
+        "agentview": "ALL_SURFACE_MEAN (identical to the validated v1 estimator)",
+        "sideview": "EXTENTS_MIDPOINT_XY_MEAN_Z (midpoint of min/max world x and y of valid surface points)"
+      },
+      "none_valid": "UNKNOWN (blob absent); no carry-over from any other frame or source",
+      "ratio": "support/reference if reference>0 else (1.0 if support>=min_pixels else 0.0)",
+      "reference": "support of the same object in the same view at the first perception call of the episode",
+      "rule": "PER_OBJECT_MAX_SUPPORT_RATIO",
+      "select": "valid view with the larger ratio; exact tie -> earlier camera in CAMERAS order",
+      "support": "number of finite depth-valid pixels inside the object's palette mask",
+      "valid_view": "support>=min_pixels and estimator succeeded"
+    },
+    "image_size": 128,
+    "min_pixels": 8,
+    "no_carry_over": [
+      "previous frame",
+      "nominal effect",
+      "hidden QA",
+      "initial coordinates"
+    ],
+    "thresholds": {
+      "buffer_margin": 0.03,
+      "color_tol": 0.32,
+      "depth_valid": [
+        0.05,
+        4.0
+      ],
+      "gripper_open": 0.022,
+      "held_xy": 0.06,
+      "held_z": 0.07,
+      "inside_margin": 0.02,
+      "min_pixels": 8,
+      "open_offset": 0.08,
+      "table_z_tol": 0.05
+    }
+  },
+  "pair_contract": {
+    "exact": "per camera rgb sha256 and metric-depth sha256 equal -> EXACT",
+    "gpu_policy": "both members of a U/V pair run sequentially on the same GPU",
+    "non_bitwise_allowed_only_if": {
+      "candidate_ids_and_mask_equal": true,
+      "depth_max_abs_diff_m": 0.001,
+      "perception_selected_view_and_presence_equal": true,
+      "perception_xyz_atol_m": 0.0001,
+      "public_facts_equal": true,
+      "qpos_qvel_atol": 1e-08,
+      "rgb_max_abs_diff_uint8": 3,
+      "shape_dtype_equal": true
+    },
+    "otherwise": "FAIL; thresholds are not widened after seeing results",
+    "render_self_repeat": "two direct offscreen renders of the unchanged state compared per camera, plus cached observation vs fresh render (evidence for the non-bitwise cause)"
+  },
+  "profile_sha256": "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917",
+  "profile_version": "FAMILY_B_PUBLIC_OBS_V2"
+}

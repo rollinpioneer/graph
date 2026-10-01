@@ -1,0 +1,43 @@
+{
+ "candidate_ids": [
+  "a:PICK:carrier:v1",
+  "a:PICK:obj_b:v1",
+  "a:PICK:obj_c:v1",
+  "a:PLACE:obj_b:receiver:v1",
+  "a:PLACE:obj_c:receiver:v1",
+  "a:PLACE_BUFFER:carrier:pad_u:v1",
+  "a:PLACE_BUFFER:carrier:pad_v:v1"
+ ],
+ "cpu_seconds": 0.000672543000000303,
+ "expanded_nodes": 2,
+ "goal": [
+  "Goal(fact_id='p:Inside:obj_b:receiver', sign=1)",
+  "Goal(fact_id='p:Inside:obj_c:receiver', sign=1)",
+  "Goal(fact_id='p:GripperEmpty', sign=1)"
+ ],
+ "input_facts": {
+  "p:AtBuffer:carrier:pad_u": "TRUE",
+  "p:AtBuffer:carrier:pad_v": "FALSE",
+  "p:AtBuffer:obj_b:pad_u": "FALSE",
+  "p:AtBuffer:obj_b:pad_v": "FALSE",
+  "p:AtBuffer:obj_c:pad_u": "FALSE",
+  "p:AtBuffer:obj_c:pad_v": "FALSE",
+  "p:GripperEmpty": "TRUE",
+  "p:Held:carrier": "FALSE",
+  "p:Held:obj_b": "FALSE",
+  "p:Held:obj_c": "FALSE",
+  "p:Inside:carrier:receiver": "FALSE",
+  "p:Inside:obj_b:receiver": "TRUE",
+  "p:Inside:obj_c:receiver": "FALSE",
+  "p:OnTable:carrier": "FALSE",
+  "p:OnTable:obj_b": "FALSE",
+  "p:OnTable:obj_c": "TRUE",
+  "p:Open:receiver": "TRUE"
+ },
+ "plan": [
+  "a:PICK:obj_c:v1",
+  "a:PLACE:obj_c:receiver:v1"
+ ],
+ "remaining_deadline": 42.299999999999486,
+ "status": "PLAN_FOUND"
+}

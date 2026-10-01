@@ -1,0 +1,530 @@
+{
+  "actions": [
+    {
+      "action_id": "a:PICK:obj_b:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 3.9999999999996705,
+      "end_sim": 3.9999999999996705,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "FALSE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:carrier": "UNKNOWN",
+        "p:Held:obj_b": "TRUE",
+        "p:Held:obj_c": "UNKNOWN",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "FALSE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "TRUE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "TRUE",
+        "p:Open:receiver": "TRUE"
+      },
+      "raw_skill": {
+        "arguments": [
+          "obj_b"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 3.9999999999996705,
+        "evidence_ids": [
+          "trace:PICK"
+        ],
+        "execution_id": "PICK-0",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 4.999999999999671,
+        "raw_sim_start": 1.0000000000000007,
+        "rejected": false,
+        "sim_duration": 3.9999999999996705,
+        "skill": "PICK",
+        "start_seconds": 0.0,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 80,
+        "timeout": false
+      },
+      "stage": "setup",
+      "start_sim": 0.0,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    },
+    {
+      "action_id": "a:PLACE:obj_b:receiver:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 2.849999999999686,
+      "end_sim": 6.849999999999357,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "FALSE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:carrier": "FALSE",
+        "p:Held:obj_b": "FALSE",
+        "p:Held:obj_c": "FALSE",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "TRUE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "TRUE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "TRUE",
+        "p:Open:receiver": "TRUE"
+      },
+      "raw_skill": {
+        "arguments": [
+          "obj_b",
+          "receiver"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 6.849999999999357,
+        "evidence_ids": [
+          "trace:PLACE"
+        ],
+        "execution_id": "PLACE-3999",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 7.8499999999993575,
+        "raw_sim_start": 4.999999999999671,
+        "rejected": false,
+        "sim_duration": 2.849999999999686,
+        "skill": "PLACE",
+        "start_seconds": 3.9999999999996705,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 57,
+        "timeout": false
+      },
+      "stage": "setup",
+      "start_sim": 3.9999999999996705,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    },
+    {
+      "action_id": "a:PICK:carrier:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 4.500000000001437,
+      "end_sim": 11.350000000000794,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "FALSE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:carrier": "TRUE",
+        "p:Held:obj_b": "UNKNOWN",
+        "p:Held:obj_c": "UNKNOWN",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "TRUE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "FALSE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "TRUE",
+        "p:Open:receiver": "TRUE"
+      },
+      "raw_skill": {
+        "arguments": [
+          "carrier"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 11.350000000000794,
+        "evidence_ids": [
+          "trace:PICK"
+        ],
+        "execution_id": "PICK-6849",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 12.350000000000794,
+        "raw_sim_start": 7.8499999999993575,
+        "rejected": false,
+        "sim_duration": 4.500000000001436,
+        "skill": "PICK",
+        "start_seconds": 6.849999999999357,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 90,
+        "timeout": false
+      },
+      "stage": "setup",
+      "start_sim": 6.849999999999357,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    },
+    {
+      "action_id": "a:PLACE_BUFFER:carrier:pad_v:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 3.0500000000010186,
+      "end_sim": 14.400000000001812,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "TRUE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:carrier": "FALSE",
+        "p:Held:obj_b": "FALSE",
+        "p:Held:obj_c": "FALSE",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "TRUE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "FALSE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "TRUE",
+        "p:Open:receiver": "TRUE"
+      },
+      "planner_plan": [
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_c:receiver:v1"
+      ],
+      "planner_status": "PLAN_FOUND",
+      "raw_skill": {
+        "arguments": [
+          "carrier",
+          "pad_v"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 14.400000000001812,
+        "evidence_ids": [
+          "trace:PLACE_BUFFER"
+        ],
+        "execution_id": "PLACE_BUFFER-11350",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 15.400000000001812,
+        "raw_sim_start": 12.350000000000794,
+        "rejected": false,
+        "sim_duration": 3.0500000000010186,
+        "skill": "PLACE_BUFFER",
+        "start_seconds": 11.350000000000794,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 61,
+        "timeout": false
+      },
+      "stage": "candidate",
+      "start_sim": 11.350000000000794,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    },
+    {
+      "action_id": "a:PICK:obj_c:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 3.6999999999984805,
+      "end_sim": 18.100000000000293,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "TRUE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "FALSE",
+        "p:Held:carrier": "UNKNOWN",
+        "p:Held:obj_b": "UNKNOWN",
+        "p:Held:obj_c": "TRUE",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "TRUE",
+        "p:Inside:obj_c:receiver": "FALSE",
+        "p:OnTable:carrier": "FALSE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "FALSE",
+        "p:Open:receiver": "TRUE"
+      },
+      "planner_plan": [
+        "a:PLACE:obj_c:receiver:v1"
+      ],
+      "planner_status": "PLAN_FOUND",
+      "raw_skill": {
+        "arguments": [
+          "obj_c"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 18.100000000000293,
+        "evidence_ids": [
+          "trace:PICK"
+        ],
+        "execution_id": "PICK-14400",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 19.100000000000293,
+        "raw_sim_start": 15.400000000001812,
+        "rejected": false,
+        "sim_duration": 3.6999999999984805,
+        "skill": "PICK",
+        "start_seconds": 14.400000000001812,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 74,
+        "timeout": false
+      },
+      "stage": "continuation",
+      "start_sim": 14.400000000001812,
+      "task_reason": "CONTINUE",
+      "task_success": false
+    },
+    {
+      "action_id": "a:PLACE:obj_c:receiver:v1",
+      "candidate_ids": [
+        "a:PICK:carrier:v1",
+        "a:PICK:obj_b:v1",
+        "a:PICK:obj_c:v1",
+        "a:PLACE:obj_b:receiver:v1",
+        "a:PLACE:obj_c:receiver:v1",
+        "a:PLACE_BUFFER:carrier:pad_u:v1",
+        "a:PLACE_BUFFER:carrier:pad_v:v1"
+      ],
+      "candidate_mask": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "controller_exit": "NORMAL_TERMINATION",
+      "duration_sim": 3.1999999999982265,
+      "end_sim": 21.29999999999852,
+      "facts": {
+        "p:AtBuffer:carrier:pad_u": "FALSE",
+        "p:AtBuffer:carrier:pad_v": "TRUE",
+        "p:AtBuffer:obj_b:pad_u": "FALSE",
+        "p:AtBuffer:obj_b:pad_v": "FALSE",
+        "p:AtBuffer:obj_c:pad_u": "FALSE",
+        "p:AtBuffer:obj_c:pad_v": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:carrier": "FALSE",
+        "p:Held:obj_b": "FALSE",
+        "p:Held:obj_c": "FALSE",
+        "p:Inside:carrier:receiver": "FALSE",
+        "p:Inside:obj_b:receiver": "TRUE",
+        "p:Inside:obj_c:receiver": "TRUE",
+        "p:OnTable:carrier": "FALSE",
+        "p:OnTable:obj_b": "FALSE",
+        "p:OnTable:obj_c": "FALSE",
+        "p:Open:receiver": "TRUE"
+      },
+      "raw_skill": {
+        "arguments": [
+          "obj_c",
+          "receiver"
+        ],
+        "confirm_grip": null,
+        "controller_exit": "NORMAL_TERMINATION",
+        "end_seconds": 21.29999999999852,
+        "evidence_ids": [
+          "trace:PLACE"
+        ],
+        "execution_id": "PLACE-18100",
+        "interrupted": false,
+        "nan_blocked": false,
+        "needs_confirm": false,
+        "raw_sim_end": 22.29999999999852,
+        "raw_sim_start": 19.100000000000293,
+        "rejected": false,
+        "sim_duration": 3.1999999999982265,
+        "skill": "PLACE",
+        "start_seconds": 18.100000000000293,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 64,
+        "timeout": false
+      },
+      "stage": "continuation",
+      "start_sim": 18.100000000000293,
+      "task_reason": "TASK_SUCCESS",
+      "task_success": true
+    }
+  ],
+  "attempt_identity": "FAMILY_B_STAGING_V2_CONT_ATTEMPT_1:layout_0:C_PENDING:r1:pad_v",
+  "boundary_self_repeat": {
+    "agentview": {
+      "depth_equal": true,
+      "rgb_equal": true
+    },
+    "sideview": {
+      "depth_equal": true,
+      "rgb_equal": false
+    }
+  },
+  "boundary_sha256": "98fb1efb913bd04df0af0b688ac2c2e664ab8e833ce9b78cb5eda7669af2ee22",
+  "boundary_sim_time": 12.350000000000794,
+  "boundary_views_sha256": "ce030ce45412f173cc474d90ec60c746a4695380995348f2ac104d4f0ecbfa0a",
+  "branch_id": "8a6a1bd9fa9ba89e",
+  "candidate": "pad_v",
+  "candidate_start_sim_time": 11.350000000000794,
+  "context": "C_PENDING",
+  "env_counts": {
+    "bootstrap_constructions": 0,
+    "constructions": 1,
+    "internal_resets": 2,
+    "reset_calls": 1
+  },
+  "initial_sim_time": 0.0,
+  "layout": "layout_0",
+  "observation_profile_sha256": "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917",
+  "receipt_id": "86abf14677bc2272e0a7a97326159d5ffac583e1c77e68753a57a2b379b9494e",
+  "recorder_errors": [],
+  "repeat": 1,
+  "restore_receipt": {
+    "applied_case_id": "layout_0",
+    "applied_restore_seed": 2821430845,
+    "candidate_ids_sha256": "682ae454a1db35441f6a76e15f79a98f987e1ee07277e32ba3971e52ce9142a0",
+    "candidate_mask_sha256": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+    "normalized_reset_config_sha256": "56028e7d1a9d7ba8b47995f38303e28750845fee9de075b14ee39ea5a9d3fe8f",
+    "public_facts_sha256": "904711c7a5648ba3a750b61a787846a2ea99635be95edc50f68a0550498bbad9",
+    "requested_case_id": "layout_0",
+    "requested_restore_seed": 2821430845,
+    "restore_checks": {
+      "candidate_ids_measured": true,
+      "candidate_mask_measured": true,
+      "case_id_applied": true,
+      "public_facts_measured": true,
+      "reset_recipe_bound": true,
+      "seed_applied": true,
+      "state_identity_measured": true
+    },
+    "runtime_source_sha256": "627cd83b374d16a1bc8dcf1af75ad57d322a40f33f53019975ea57767b8e411c",
+    "state_identity_kind": "public_snapshot",
+    "state_identity_sha256": "b432c63574a44c9ff05d4b28955efa00bb05aeddfb9bbc9ffa3e470289dfdcda",
+    "task_contract_identity": "6c4ebda52765bbd0cd78f0497a920c88dd9a4954852246c4cbe5965fca1a7118"
+  },
+  "restore_seed": 2821430845,
+  "status": "TASK_SUCCESS",
+  "task_success": true,
+  "terminal_planner": "NOT_APPLICABLE_TERMINAL",
+  "terminal_sim_time": 21.29999999999852,
+  "time_to_task_success": 9.949999999997726,
+  "wave": "staging_v2_remaining16",
+  "worker_wall_seconds": 12.5375396090094
+}
