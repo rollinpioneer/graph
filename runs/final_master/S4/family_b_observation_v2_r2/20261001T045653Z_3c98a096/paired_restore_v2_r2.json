@@ -1,0 +1,165 @@
+{
+  "contract": {
+    "exact": "per camera rgb sha256 and metric-depth sha256 equal -> EXACT",
+    "gpu_policy": "both members of a U/V pair run sequentially on the same GPU",
+    "non_bitwise_allowed_only_if": {
+      "candidate_ids_and_mask_equal": true,
+      "depth_max_abs_diff_m": 0.001,
+      "perception_selected_view_and_presence_equal": true,
+      "perception_xyz_atol_m": 0.0001,
+      "public_facts_equal": true,
+      "qpos_qvel_atol": 1e-08,
+      "rgb_max_abs_diff_uint8": 3,
+      "shape_dtype_equal": true
+    },
+    "otherwise": "FAIL; thresholds are not widened after seeing results",
+    "render_self_repeat": "two direct offscreen renders of the unchanged state compared per camera, plus cached observation vs fresh render (evidence for the non-bitwise cause)"
+  },
+  "pairs": {
+    "layout_0/B_PENDING/0": {
+      "branches": [
+        "74a1c3df3d169e6b",
+        "cf26947cfdf5d8f7"
+      ],
+      "camera_set_equal": true,
+      "cameras": {
+        "agentview": {
+          "classification": "EXACT",
+          "depth_finite_mask_equal": true,
+          "depth_max_abs_diff": 0.0,
+          "depth_sha_equal": true,
+          "rgb_max_abs_diff": 0,
+          "rgb_n_diff_pixels": 0,
+          "rgb_sha_equal": true,
+          "self_repeat": {
+            "pad_u": {
+              "depth_equal": true,
+              "rgb_equal": true
+            },
+            "pad_v": {
+              "depth_equal": true,
+              "rgb_equal": true
+            }
+          },
+          "shape_dtype_equal": true
+        },
+        "sideview": {
+          "classification": "NON_BITWISE_WITHIN_CONTRACT",
+          "depth_finite_mask_equal": true,
+          "depth_max_abs_diff": 0.0,
+          "depth_sha_equal": true,
+          "rgb_max_abs_diff": 1,
+          "rgb_n_diff_pixels": 2,
+          "rgb_sha_equal": false,
+          "self_repeat": {
+            "pad_u": {
+              "depth_equal": true,
+              "rgb_equal": false
+            },
+            "pad_v": {
+              "depth_equal": true,
+              "rgb_equal": true
+            }
+          },
+          "shape_dtype_equal": true
+        }
+      },
+      "candidate_ids_equal": true,
+      "candidate_mask_equal": true,
+      "candidates": [
+        "pad_u",
+        "pad_v"
+      ],
+      "initial_images_informational": {
+        "agentview": false,
+        "sideview": true
+      },
+      "non_bitwise_cause": "RENDER_NONDETERMINISTIC_WITHIN_PROCESS",
+      "pair": "layout_0/B_PENDING/0",
+      "perception_selected_view_and_presence_equal": true,
+      "perception_xyz_max_abs_diff_m": 0.0,
+      "perception_xyz_within_tol": true,
+      "pixel_equivalence": "NON_BITWISE_WITHIN_CONTRACT",
+      "profile_identity_equal": true,
+      "public_facts_equal": true,
+      "qpos_max_abs_diff": 0.0,
+      "qpos_within_tol": true,
+      "qvel_max_abs_diff": 0.0,
+      "qvel_within_tol": true,
+      "status": "PASS"
+    },
+    "layout_1/C_PENDING/0": {
+      "branches": [
+        "af6911ea7e4b4f8e",
+        "7ca418154890cccf"
+      ],
+      "camera_set_equal": true,
+      "cameras": {
+        "agentview": {
+          "classification": "NON_BITWISE_WITHIN_CONTRACT",
+          "depth_finite_mask_equal": true,
+          "depth_max_abs_diff": 0.0,
+          "depth_sha_equal": true,
+          "rgb_max_abs_diff": 1,
+          "rgb_n_diff_pixels": 1,
+          "rgb_sha_equal": false,
+          "self_repeat": {
+            "pad_u": {
+              "depth_equal": true,
+              "rgb_equal": true
+            },
+            "pad_v": {
+              "depth_equal": true,
+              "rgb_equal": true
+            }
+          },
+          "shape_dtype_equal": true
+        },
+        "sideview": {
+          "classification": "NON_BITWISE_WITHIN_CONTRACT",
+          "depth_finite_mask_equal": true,
+          "depth_max_abs_diff": 0.0,
+          "depth_sha_equal": true,
+          "rgb_max_abs_diff": 1,
+          "rgb_n_diff_pixels": 5,
+          "rgb_sha_equal": false,
+          "self_repeat": {
+            "pad_u": {
+              "depth_equal": true,
+              "rgb_equal": true
+            },
+            "pad_v": {
+              "depth_equal": true,
+              "rgb_equal": false
+            }
+          },
+          "shape_dtype_equal": true
+        }
+      },
+      "candidate_ids_equal": true,
+      "candidate_mask_equal": true,
+      "candidates": [
+        "pad_u",
+        "pad_v"
+      ],
+      "initial_images_informational": {
+        "agentview": false,
+        "sideview": false
+      },
+      "non_bitwise_cause": "RENDER_NONDETERMINISTIC_WITHIN_PROCESS",
+      "pair": "layout_1/C_PENDING/0",
+      "perception_selected_view_and_presence_equal": true,
+      "perception_xyz_max_abs_diff_m": 0.0,
+      "perception_xyz_within_tol": true,
+      "pixel_equivalence": "NON_BITWISE_WITHIN_CONTRACT",
+      "profile_identity_equal": true,
+      "public_facts_equal": true,
+      "qpos_max_abs_diff": 0.0,
+      "qpos_within_tol": true,
+      "qvel_max_abs_diff": 0.0,
+      "qvel_within_tol": true,
+      "status": "PASS"
+    }
+  },
+  "status": "PASS"
+}

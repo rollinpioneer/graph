@@ -1,0 +1,108 @@
+r2:
+  attempt_budget: 4
+  authorization:
+    elastic: 0
+    environment_construction_attempts: 4
+    formal_test: 0
+    live_skill_calls: 24
+    optimizer_steps: 0
+    provider: 0
+    release_original_remaining_20: false
+    rl_transitions: 0
+    s2: false
+    s3: false
+    skill_retries: 0
+    standalone_capture_resets: 0
+    successful_explicit_resets: 4
+    tp_training: false
+    v2_r2_branch_attempts: 4
+  base_config_ref: configs/final_master/family_b_obs_v2/config.yaml
+  canary:
+    candidate: pad_v
+    context: B_PENDING
+    layout: layout_0
+    repeat: 0
+  canary_attempts: 1
+  card_id: CP-DISR-S4-FAMILY-B-OBS-V2-R2-VALIDATION-1
+  conditional_remainder_attempts: 3
+  failed_r1_commit: 1887c305f7bfa9ac489cb355cab2b9e236da4cdd
+  history:
+    v1:
+      attempts: 4
+      resets: 4
+      skill_calls: 20
+      status: PERMANENTLY_CONSUMED
+    v2_r1:
+      actual_explicit_reset_calls: NOT_REACHED
+      attempt_slots_charged: 2
+      environment_construction_attempts: 2
+      observations: 0
+      skill_calls: 0
+      successful_environment_constructors: 0
+      unused_slots: 2
+      unused_slots_status: RETIRED_NOT_TRANSFERABLE
+  observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+  observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+  parallel:
+    gpu_policy: CANARY_GPU_THEN_ONE_SECOND_GPU_SEQUENTIAL_PER_LAYOUT_1
+    max_workers: 2
+    speedup: NOT_MEASURED
+  profile_origin_commit: 55668197091e4d9d24c3025fcc3ec522febb211e
+  remainder_order:
+  - candidate: pad_u
+    context: B_PENDING
+    layout: layout_0
+    repeat: 0
+  - candidate: pad_v
+    context: C_PENDING
+    layout: layout_1
+    repeat: 0
+  - candidate: pad_u
+    context: C_PENDING
+    layout: layout_1
+    repeat: 0
+  repair_base_commit: 4a84c6a7c6a545c8d74968d3a5c8f6a186de111d
+runtime_and_contexts_from_frozen_v2_config:
+  contexts:
+    B_PENDING:
+      prefix:
+      - a:PICK:obj_c:v1
+      - a:PLACE:obj_c:receiver:v1
+      - a:PICK:carrier:v1
+    C_PENDING:
+      prefix:
+      - a:PICK:obj_b:v1
+      - a:PLACE:obj_b:receiver:v1
+      - a:PICK:carrier:v1
+  method_version: 2.1.1
+  observation_profile_version: FAMILY_B_PUBLIC_OBS_V2
+  parallel:
+    gpu_policy: PAIR_PER_GPU_SEQUENTIAL_ANY_STABLE_DEVICE
+    workers: 2
+  runtime:
+    active_task_id: T_P_FB
+    contract_path: configs/runtime/tp_fb_contract_registry.yaml
+    factory_module: cp_disr.platforms.libero.family_b_runtime_v2
+    factory_name: create_family_b_obs_v2_runtime
+    layouts_path: configs/final_master/family_b_layouts.json
+    observation_profile_path: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+    task_deadlines:
+      T_P_FB: 60.0
+  task_id: T_P_FB
+  technical_wave:
+  - candidate: pad_u
+    context: B_PENDING
+    layout: layout_0
+    repeat: 0
+  - candidate: pad_v
+    context: B_PENDING
+    layout: layout_0
+    repeat: 0
+  - candidate: pad_u
+    context: C_PENDING
+    layout: layout_1
+    repeat: 0
+  - candidate: pad_v
+    context: C_PENDING
+    layout: layout_1
+    repeat: 0
