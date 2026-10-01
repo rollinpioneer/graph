@@ -1,0 +1,47 @@
+{
+  "camera_motion": false,
+  "cameras": [
+    "agentview",
+    "sideview"
+  ],
+  "candidate_dependent_views": false,
+  "dynamic_facts": "p:Held/OnTable/Inside/AtBuffer from the fused public blob only",
+  "extra_robot_observation_action": false,
+  "fusion": {
+    "estimators": {
+      "agentview": "ALL_SURFACE_MEAN (identical to the validated v1 estimator)",
+      "sideview": "EXTENTS_MIDPOINT_XY_MEAN_Z (midpoint of min/max world x and y of valid surface points)"
+    },
+    "none_valid": "UNKNOWN (blob absent); no carry-over from any other frame or source",
+    "ratio": "support/reference if reference>0 else (1.0 if support>=min_pixels else 0.0)",
+    "reference": "support of the same object in the same view at the first perception call of the episode",
+    "rule": "PER_OBJECT_MAX_SUPPORT_RATIO",
+    "select": "valid view with the larger ratio; exact tie -> earlier camera in CAMERAS order",
+    "support": "number of finite depth-valid pixels inside the object's palette mask",
+    "valid_view": "support>=min_pixels and estimator succeeded"
+  },
+  "image_size": 128,
+  "min_pixels": 8,
+  "no_carry_over": [
+    "previous frame",
+    "nominal effect",
+    "hidden QA",
+    "initial coordinates"
+  ],
+  "profile_sha256": "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917",
+  "thresholds": {
+    "buffer_margin": 0.03,
+    "color_tol": 0.32,
+    "depth_valid": [
+      0.05,
+      4.0
+    ],
+    "gripper_open": 0.022,
+    "held_xy": 0.06,
+    "held_z": 0.07,
+    "inside_margin": 0.02,
+    "min_pixels": 8,
+    "open_offset": 0.08,
+    "table_z_tol": 0.05
+  }
+}

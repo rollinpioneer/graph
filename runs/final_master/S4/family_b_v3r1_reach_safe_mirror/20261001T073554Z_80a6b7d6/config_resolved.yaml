@@ -1,0 +1,134 @@
+authorization:
+  branch_attempts: 8
+  elastic: 0
+  environment_construction_attempts: 8
+  formal_test: 0
+  live_skill_calls: 48
+  optimizer_steps: 0
+  provider: 0
+  representation_forwards: 0
+  rl_transitions: 0
+  s2: false
+  s3: false
+  skill_retries: 0
+  successful_explicit_resets: 8
+  tp_training: false
+base_commit: 8dd0e8010dcd42a79acad16633d2614b6d0c8a80
+branches:
+  both_pending: false
+  order:
+  - A1
+  - A2
+  - B1
+  - B2
+  - C1
+  - C2
+  - C3
+  - C4
+  repeat: 0
+card_id: CP-DISR-S4-FAMILY-B-V3-R1-REACH-SAFE-MIRROR-PILOT-1
+card_revision: R1_ROLE_BASED_CAMERA_GATE_AND_INITIAL_SUPPORT
+contexts:
+  B_PENDING:
+    prefix:
+    - a:PICK:obj_c:v1
+    - a:PLACE:obj_c:receiver:v1
+    - a:PICK:carrier:v1
+  C_PENDING:
+    prefix:
+    - a:PICK:obj_b:v1
+    - a:PLACE:obj_b:receiver:v1
+    - a:PICK:carrier:v1
+frozen_scene:
+  carrier_xy:
+  - -0.08
+  - -0.12
+  layout_0:
+    obj_b: anchor_u
+    obj_c: anchor_v
+  layout_1:
+    obj_b: anchor_v
+    obj_c: anchor_u
+  mirror_normal:
+  - 0.1366374
+  - 0.9906211
+  mirror_radius_m: 0.086
+  pad_u_xy:
+  - 0.03175082
+  - 0.00519342
+  pad_v_xy:
+  - 0.00824918
+  - -0.16519342
+  predicted_winner:
+    layout_0/B_PENDING: pad_u
+    layout_0/C_PENDING: pad_v
+    layout_1/B_PENDING: pad_v
+    layout_1/C_PENDING: pad_u
+  receiver_xy:
+  - 0.18
+  - 0.12
+  robot_base_proxy_xy:
+  - -0.56
+  - 0.0
+  show_pose_xy:
+  - 0.02
+  - -0.08
+  target_anchor_u_xy:
+  - 0.04350163
+  - 0.09038683
+  target_anchor_v_xy:
+  - -0.00350163
+  - -0.25038683
+gate0:
+  camera:
+    center_edge_margin_px_min: 9.0
+    predicted_cube_edge_px_min:
+      carrier: 8.0
+      pad: 8.5
+      receiver: 8.5
+      target_anchor: 8.5
+  fairness:
+    base_radius_tolerance: 1.0e-06
+    exact_tolerance: 1.0e-09
+  minimum_aabb_clearance_m: 0.008
+  new_movable_and_pad_radius_cap_m: 0.65
+history:
+  v3_original:
+    attempts_charged: 1
+    mechanism_measured: false
+    status: STOPPED_SETUP_REACH_TIMEOUT
+    unused_slots: RETIRED
+layouts_ref: configs/final_master/family_b_v3r1_layouts.json
+mechanism_gate:
+  primary_metric: candidate_start_to_first_verified_task_success
+  tolerance_seconds: 0.15
+observation_profile_ref: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+observation_profile_sha256: 3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917
+on_failure: STOP_TP_TASK_SEARCH_AND_ADJUST_CLAIMS
+waves:
+  A:
+    gate:
+      a1_initial_carrier_and_setup_target_depth_support_min: 12
+      a1_remaining_target_depth_support_min: 12
+      duration_abs_diff_max_s: 0.15
+      steps_abs_diff_max: 3
+      v_slower_margin_s: 0.15
+    steps:
+    - A1
+    - A2
+  B:
+    gate:
+      delta_sign_reversal_vs_layout_0_B: true
+      duration_abs_diff_max_s: 0.15
+      steps_abs_diff_max: 3
+      u_slower_margin_s: 0.15
+    steps:
+    - B1
+    - B2
+  C:
+    max_pair_workers: 2
+    pairs:
+    - - C1
+      - C2
+    - - C3
+      - C4

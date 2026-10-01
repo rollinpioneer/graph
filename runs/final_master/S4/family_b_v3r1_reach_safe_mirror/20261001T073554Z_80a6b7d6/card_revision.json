@@ -1,0 +1,23 @@
+{
+  "card_id": "CP-DISR-S4-FAMILY-B-V3-R1-REACH-SAFE-MIRROR-PILOT-1",
+  "changes": {
+    "a1_canary_strengthened": "reset-time carrier and setup-target public depth_support >= 12 AND post-candidate remaining-target public depth_support >= 12, else stop (applied to every branch)",
+    "all_key_points_center_edge_margin_px_min": 9.0,
+    "carrier_edge_px_min": 8.0,
+    "pad_and_receiver_edge_px_min": 8.5,
+    "target_anchor_edge_px_min": 8.5
+  },
+  "historical_carrier_agentview_edge_px": 8.256,
+  "made_before": "prep commit and any environment construction (online attempts were 0)",
+  "reason": "Gate 0 on the frozen coordinates gave carrier agentview edge 8.06 px < 8.5 px; the carrier is not the mechanism variable (every branch enters the fixed show pose after PICK) and the historical successful Family B carrier projects to about 8.26 px, so a uniform 8.5 px gate would reject an already successful region.",
+  "revision": "R1_ROLE_BASED_CAMERA_GATE_AND_INITIAL_SUPPORT",
+  "unchanged": [
+    "mirror coordinates",
+    "0.65 m reach cap",
+    "0.008 m AABB clearance",
+    "0.15 s / 3 step fairness gates",
+    "budgets",
+    "primary metric",
+    "controller / timeout / profile / Verifier / planner"
+  ]
+}

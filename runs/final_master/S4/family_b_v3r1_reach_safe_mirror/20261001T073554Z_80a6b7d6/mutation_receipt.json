@@ -1,0 +1,62 @@
+{
+ "R-43_uv_base_radius_diff_gt_1cm": {
+  "killed": true,
+  "mutation": "pad_v moved 1.2 cm radially",
+  "scenario": "base-radius fairness identity fails"
+ },
+ "R-44_target_radius_0.66": {
+  "killed": true,
+  "mutation": "obj_b anchor at 0.66 m",
+  "scenario": "reach cap rejects it"
+ },
+ "R-44b_layout_1_not_swapped": {
+  "killed": true,
+  "mutation": "layout_1 identical to layout_0",
+  "scenario": "task-feature gate fails"
+ },
+ "R-45_old_reach_rule": {
+  "killed": true,
+  "mutation": "cap = demonstrated + 0.05",
+  "scenario": "0.66 m target must fail"
+ },
+ "R-45b_order_gate_deleted": {
+  "killed": true,
+  "mutation": "_gate_ok call removed",
+  "scenario": "A2 reservable before A1 passes"
+ },
+ "R-46_no_target_reach_check": {
+  "killed": true,
+  "mutation": "obj_b/obj_c removed from REACH_POINTS",
+  "scenario": "0.66 m target must fail"
+ },
+ "R-46b_tolerance_loosened": {
+  "killed": true,
+  "mutation": "TOL_T 0.15 -> 5.0",
+  "scenario": "0.5 s PLACE_BUFFER mismatch must fail wave A"
+ },
+ "R-47_euclid_instead_of_aabb": {
+  "killed": true,
+  "mutation": "_box_gap uses centre distance",
+  "scenario": "diagonal carrier/pad overlap fixture"
+ },
+ "R-47b_support_margin_dropped": {
+  "killed": true,
+  "mutation": "SUPPORT_MIN 12 -> 8",
+  "scenario": "support 11 must not qualify"
+ },
+ "R-48_uniform_camera_gate": {
+  "killed": true,
+  "mutation": "carrier edge gate 8.0 -> 8.5",
+  "scenario": "carrier regression"
+ },
+ "R-48b_reversal_forced_true": {
+  "killed": true,
+  "mutation": "conditions 10-13 forced True",
+  "scenario": "always-U data must be NOT_ESTABLISHED"
+ },
+ "R-49_initial_support_dropped": {
+  "killed": true,
+  "mutation": "init['ok'] removed from the verdict",
+  "scenario": "carrier/setup-target support 11 must stop"
+ }
+}
