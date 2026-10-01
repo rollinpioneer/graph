@@ -93,6 +93,7 @@ class RuntimeBundle:
     perception_cls: object = None   # optional task-specific PerceptionAdapter subclass; default PerceptionAdapter
     verifier_factory: object = None  # optional task-specific FactVerifier factory
     evaluator_factory: object = None  # optional task-specific TaskEvaluator factory
+    render_gpu_device_id: int | None = None  # explicit EGL render binding; None keeps the historical default (0)
 
     def start_case(self, case_id: str, restore_seed: int | None = None):
         spec = self.cases[case_id]
@@ -322,8 +323,13 @@ def _ground_contracts_for(contract_path, timeouts, objects):
     return reg.ground(objects)
 
 
-def create_task_runtime(manifest: dict, task_id: str):
-    """Task-parameterized factory shared by T_A/T_C (and optionally D0). No MOVE."""
+def create_task_runtime(manifest: dict, task_id: str, render_gpu_device_id: int | None = None):
+    """Task-parameterized factory shared by T_A/T_C (and optionally D0). No MOVE.
+
+    render_gpu_device_id=None keeps the historical behaviour (make_env default).
+    When given, the same explicit render device is used for this first construction and,
+    through bundle.env_factory, for every later start_case() reconstruction.
+    """
     if task_id not in TASK_OBJECTS:
         raise BindingError("unknown task_id " + task_id)
     root = Path(manifest["runtime"]["repository_path"])
@@ -359,7 +365,13 @@ def create_task_runtime(manifest: dict, task_id: str):
         if row.get("cache_dir"):
             caches[row["case_id"]] = root / row["cache_dir"]
     first = next(iter(cases.values()))
-    env = make_env(first)
+    if render_gpu_device_id is None:
+        env = make_env(first)
+        env_factory = None
+    else:
+        from functools import partial
+        env = make_env(first, gpu=int(render_gpu_device_id))
+        env_factory = partial(make_env, gpu=int(render_gpu_device_id))
     env.last_perception = {}
     env.reset()
     clock = DurationProvider(env)
@@ -378,6 +390,8 @@ def create_task_runtime(manifest: dict, task_id: str):
         template=template,
         cases=cases,
         caches=caches,
+        env_factory=env_factory,
+        render_gpu_device_id=None if render_gpu_device_id is None else int(render_gpu_device_id),
     )
     env.refresh_perception = lambda e=env, p=bundle.perception: p.infer(e.public_observation())
     return bundle

@@ -90,7 +90,20 @@ NAMESPACE = "cp_disr_exp_v1_1"
 CACHE_ROOT = Path("experiments/vlm_cache/stage_2a")
 TASKS = ("T_B", "T_C")
 METHODS = ("B0", "B1-K", "B2", "Full")
-EMPTY_PRIOR_METHODS = {"B0", "B1", "B1-K", "B2"}
+EMPTY_PRIOR_METHODS = {"B0", "B1", "B1-K", "B2", "B1-K+E"}
+# Explicit per-process run context (final T_B launch). None keeps every historical semantic.
+RUN_CONTEXT = None
+
+
+def bind_run_context(ctx):
+    """Bind (or clear with None) the explicit run context for this process."""
+    global RUN_CONTEXT
+    RUN_CONTEXT = ctx
+
+
+def runtime_manifest_path(root):
+    ctx = RUN_CONTEXT
+    return Path(ctx.runtime_manifest) if ctx is not None else Path(root) / RUNTIME_REL
 TASK_ROLE = {"T_B": "second_object", "T_C": "interferer"}
 SOURCE_SPLITS = {"T_B": Path("configs/splits/T_B_stage_0a.json"), "T_C": Path("configs/splits/T_C_stage_2a.json")}
 ENABLED_SPLITS = {"T_B": Path("configs/splits/T_B_stage_2a_v11.json"), "T_C": Path("configs/splits/T_C_stage_2a_v11.json")}
@@ -270,7 +283,7 @@ def dist(a, b):
 def resolve_runtime(root):
     root = Path(root)
     ref = json.loads((root / REFERENCE_REL).read_text(encoding="utf-8"))
-    runtime = load_yaml(root / RUNTIME_REL)
+    runtime = load_yaml(runtime_manifest_path(root))
     H = float(ref["H"])
     rt_h = float(runtime["runtime"]["suite_H_seconds"])
     if H != rt_h:
@@ -291,7 +304,7 @@ def resolve_runtime(root):
         "max_updates": MAX_UPDATES,
         "actor_episode_discount_weight": False,
         "task_deadlines": {t: float(runtime["runtime"]["task_deadlines"][t]) for t in TASKS},
-        "runtime_path": str(RUNTIME_REL).replace("\\", "/"),
+        "runtime_path": str(runtime_manifest_path(root) if RUN_CONTEXT is not None else RUNTIME_REL).replace("\\", "/"),
         "runtime": runtime,
         "ref": ref,
     }
@@ -309,7 +322,7 @@ def bind_H(root):
 
 def make_bundle(root, task_id, split_rel=None):
     from .platforms.libero.runtime_factory import create_task_runtime
-    manifest = load_yaml(root / RUNTIME_REL)
+    manifest = load_yaml(runtime_manifest_path(root))
     runtime = dict(manifest["runtime"])
     runtime["active_task_id"] = task_id
     splits = dict(runtime.get("task_splits") or {})
@@ -317,6 +330,8 @@ def make_bundle(root, task_id, split_rel=None):
     runtime["task_splits"] = splits
     manifest = dict(manifest)
     manifest["runtime"] = runtime
+    if RUN_CONTEXT is not None:
+        return create_task_runtime(manifest, task_id, render_gpu_device_id=RUN_CONTEXT.render_gpu_device_id)
     return create_task_runtime(manifest, task_id)
 
 
@@ -358,6 +373,15 @@ def apply_episode_prior(method, bundle, snapshot, sampler, eval_original=False):
 
 def require_case_cache(root, rec):
     case_id = rec["case_id"]
+    if RUN_CONTEXT is not None:
+        # Explicit no-prior mode: the derived split carries no cache pointers. This is not
+        # 'missing cache == legal empty VLM output'; prior-bearing methods never reach here
+        # (the run context only admits empty-R methods) and keep the fail-closed check below.
+        if RUN_CONTEXT.prior_mode != "absent":
+            raise BindingError("run context requires prior_mode=absent")
+        if rec.get("cache_dir"):
+            raise BindingError("no-prior run split must not carry cache pointers: %s" % case_id)
+        return None
     cache_dir = rec.get("cache_dir")
     if not cache_dir:
         raise BindingError("missing cache for enabled case %s; not a legal empty prior" % case_id)
@@ -1123,7 +1147,7 @@ def start_episode(root, task_id, method, bundle, cases, split_index, sampler, co
     snap, prior, source_n = apply_episode_prior(method, bundle, snap, sampler, eval_original=eval_original)
     bundle.current_snapshot = snap
     collector.reset_episode(snap.env_id, snap.episode_id)
-    cache_key_s = str(root / rec["cache_dir"])
+    cache_key_s = str(root / rec["cache_dir"]) if rec.get("cache_dir") else None
     s1.append_jsonl(job_dir / "episode_priors.jsonl", {
         "env_id": prior.env_id, "episode_id": prior.episode_id, "audit_mode": prior.audit_mode,
         "original_hash": prior.original_hash, "effective_hash": prior.hash,
@@ -1142,22 +1166,30 @@ def param_fingerprint(policy):
 
 
 def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stamp, configsha8, max_updates=MAX_UPDATES, resume=False):
+    ctx = RUN_CONTEXT
+    if ctx is not None:
+        ctx.assert_worker(task_id, method)
     bind_H(root)
     root = Path(root)
     mname = method_dir_name(method)
-    job_dir = root / STAGE_DIR / task_id / mname / "seed_0" / ("%s_%s" % (stamp, configsha8))
-    job_dir.mkdir(parents=True, exist_ok=True)
+    seed = 0 if ctx is None else int(ctx.training_seed)
+    if ctx is None:
+        job_dir = root / STAGE_DIR / task_id / mname / "seed_0" / ("%s_%s" % (stamp, configsha8))
+        job_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        job_dir = Path(ctx.output_directory)
+        job_dir.mkdir(parents=True, exist_ok=False)  # unique attempt directory; never reuse
     (job_dir / "checkpoints").mkdir(exist_ok=True)
     (job_dir / "plots").mkdir(exist_ok=True)
     split = json.loads((root / ENABLED_SPLITS[task_id]).read_text(encoding="utf-8"))
     cases = [r["case_id"] for r in split["train"]]
     eval_cases = [r["case_id"] for r in split["dev"]]
     split_index = {r["case_id"]: r for r in (split["train"] + split["dev"] + list(split.get("test") or []))}
-    planned_id = PLANNED[(task_id, mname)]
-    run_id = "%s_%s_%s" % (planned_id, stamp, configsha8)
+    planned_id = PLANNED[(task_id, mname)] if ctx is None else ctx.plan_id
+    run_id = "%s_%s_%s" % (planned_id, stamp, configsha8) if ctx is None else ctx.attempt_id
     cfg = {
         "planned_id": planned_id, "run_id": run_id, "method": mname, "method_internal": canonical_method(method),
-        "alias": "B1-K" if canonical_method(method) == "B1" else mname, "seed": 0, "task": task_id,
+        "alias": "B1-K" if canonical_method(method) == "B1" else mname, "seed": seed, "training_seed": seed, "task": task_id,
         "H": prof["H"], "d_ref": prof["d_ref"][task_id], "Tcap": prof["Tcap"][task_id], "Ncap": N_CAP,
         "actor_episode_discount_weight": False, "gamma_rule": "2**(-duration_seconds/H)",
         "runtime_path": prof["runtime_path"], "split_path": str(ENABLED_SPLITS[task_id]).replace("\\", "/"),
@@ -1167,16 +1199,18 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
         "b1_variant": "B1-K" if canonical_method(method) == "B1" else None,
         "runtime_revision": RUNTIME_REVISION,
     }
+    if ctx is not None:
+        cfg.update(ctx.config_fields())
     write_json(job_dir / "resolved_config.json", cfg)
     (job_dir / "resolved_config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
-    write_json(job_dir / "environment_snapshot.json", s1.environment_snapshot(device, device_name, 0))
+    write_json(job_dir / "environment_snapshot.json", s1.environment_snapshot(device, device_name, seed))
     write_json(job_dir / "software_snapshot.json", s1.software_snapshot(root))
-    write_json(job_dir / "manifest.json", {"run_id": run_id, "planned_id": planned_id, "method": mname, "seed": 0, "task": task_id, "hashes": hashes_doc, "H": prof["H"], "d_ref": cfg["d_ref"], "Tcap": cfg["Tcap"]})
+    write_json(job_dir / "manifest.json", {"run_id": run_id, "planned_id": planned_id, "method": mname, "seed": seed, "training_seed": seed, "task": task_id, "hashes": hashes_doc, "H": prof["H"], "d_ref": cfg["d_ref"], "Tcap": cfg["Tcap"]})
     from .collector import Collector
     from .torch_rl import PPO, load_checkpoint
     from .prior import PriorSampler
     from .rl import Rollout
-    s1.seed_all(0)
+    s1.seed_all(seed)  # explicit training seed; never reset to 0 by the inner runner
     bundle = make_bundle(root, task_id)
     attach_split_cases(bundle, root, list(split_index.values()), task_id, cfg["task_deadline_seconds"])
     policy = make_policy(bundle.template, method, device)
@@ -1313,7 +1347,7 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
     hard_fail = None
     first_update_ok = bool(resume_doc.get("first_update_ok"))
     done_ns = set(int(r.get("skill_transitions")) for r in eval_rows if r.get("skill_transitions") not in (None, ""))
-    extra_base = {"method": mname, "task": task_id, "complete_updates": complete_updates, "fragment_updates": fragment_updates, **hashes_doc, "device": str(device), "H": prof["H"], "d_ref": cfg["d_ref"], "Tcap": cfg["Tcap"], "Ncap": N_CAP, "actor_episode_discount_weight": False, "planned_id": planned_id}
+    extra_base = {"method": mname, "training_seed": seed, "task": task_id, "complete_updates": complete_updates, "fragment_updates": fragment_updates, **hashes_doc, "device": str(device), "H": prof["H"], "d_ref": cfg["d_ref"], "Tcap": cfg["Tcap"], "Ncap": N_CAP, "actor_episode_discount_weight": False, "planned_id": planned_id}
     log("%s %s training start dir=%s" % (task_id, mname, job_dir))
     rollout = Rollout()
     fp_init = param_fingerprint(policy)
@@ -1456,7 +1490,7 @@ def train_job(root, task_id, method, device, device_name, prof, hashes_doc, stam
                     raise BindingError("Runtime repeatedly exposes no executable skill")
             else:
                 empty_episodes = 0
-                rec = s1.compact_transition(mname, 0, case, tstep, result, collector.last_output, collector.last_execution, prior.audit_mode, prior.original_hash, source_n, cache_key_s, run_id)
+                rec = s1.compact_transition(mname, seed, case, tstep, result, collector.last_output, collector.last_execution, prior.audit_mode, prior.original_hash, source_n, cache_key_s, run_id)
                 rec["H"] = suite_half_life()
                 rec["actor_episode_discount_weight"] = False
                 rec["runtime_revision"] = RUNTIME_REVISION
