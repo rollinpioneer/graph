@@ -1,0 +1,47 @@
+master_id: CP-DISR-FINAL-EXEC-3.0
+card_id: CP-DISR-S4-FAMILY-B-OBS-V2-VALIDATION-1
+stage: S4
+task_id: T_P_FB
+method_version: '2.1.1'
+base_commit: fffb2b073ab28fa4dc55c82fb2ae58c5aa38dc73
+observation_profile_version: FAMILY_B_PUBLIC_OBS_V2
+authorization:
+  v2_validation_attempts: 4
+  environment_constructions: 4
+  explicit_resets: 4
+  standalone_capture_resets: 0
+  live_skill_retries: 0
+  provider: 0
+  rl_transitions: 0
+  optimizer_steps: 0
+  elastic: 0
+  s2: false
+  s3: false
+  formal_test: false
+  release_original_remaining_20: false
+legacy_v1:
+  attempts_consumed: 4
+  resets_consumed: 4
+  skill_calls_consumed: 20
+  original_remaining_20: NOT_RELEASED
+contexts:
+  B_PENDING:
+    prefix: [a:PICK:obj_c:v1, a:PLACE:obj_c:receiver:v1, a:PICK:carrier:v1]
+  C_PENDING:
+    prefix: [a:PICK:obj_b:v1, a:PLACE:obj_b:receiver:v1, a:PICK:carrier:v1]
+technical_wave:
+  - {layout: layout_0, context: B_PENDING, repeat: 0, candidate: pad_u}
+  - {layout: layout_0, context: B_PENDING, repeat: 0, candidate: pad_v}
+  - {layout: layout_1, context: C_PENDING, repeat: 0, candidate: pad_u}
+  - {layout: layout_1, context: C_PENDING, repeat: 0, candidate: pad_v}
+runtime:
+  factory_module: cp_disr.platforms.libero.family_b_runtime_v2
+  factory_name: create_family_b_obs_v2_runtime
+  active_task_id: T_P_FB
+  contract_path: configs/runtime/tp_fb_contract_registry.yaml
+  layouts_path: configs/final_master/family_b_layouts.json
+  observation_profile_path: configs/final_master/family_b_obs_v2/observation_profile_v2.json
+  task_deadlines: {T_P_FB: 60.0}
+parallel:
+  workers: 2
+  gpu_policy: PAIR_PER_GPU_SEQUENTIAL_ANY_STABLE_DEVICE
