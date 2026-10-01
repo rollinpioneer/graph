@@ -1,0 +1,21 @@
+class ScriptedSelector:
+    """Policy proxy: real forward pass, but all probability mass on the next scripted *legal* candidate.
+    Reuses the production Collector path unchanged; a masked candidate is never forced through."""
+
+    def __init__(self, policy):
+        self._policy = policy
+        self.target = None
+
+    def __getattr__(self, name):
+        return getattr(self._policy, name)
+
+    def __call__(self, snapshot, hidden):
+        import dataclasses
+        import torch
+        out = self._policy(snapshot, hidden)
+        idx = out.candidate_ids.index(self.target)
+        logits = torch.full_like(out.logits, float("-inf"))
+        if bool(out.mask[idx]):
+            logits[idx] = 0.0
+        dist = torch.distributions.Categorical(logits=logits)
+        return dataclasses.replace(out, logits=logits, distribution=dist)

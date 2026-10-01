@@ -148,6 +148,7 @@ def run_until_first_step(root, ctx, device="cpu", prior_sampler_raises=True):
         observed["initial_seed_at_step"] = torch.initial_seed()
         observed["step_prior_edges"] = tuple(snapshot.prior_edges)
         observed["step_prior_hash"] = snapshot.prior_hash
+        observed["collector_policy_type"] = type(self.policy)  # R2: training must use the plain Policy, never a smoke selector
         raise Sentinel()
 
     class RaisingSampler:

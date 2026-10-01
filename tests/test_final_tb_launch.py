@@ -376,7 +376,8 @@ def test_known_regressions_are_detected(tmp_path, check, label, edits):
 
 
 # release gating -------------------------------------------------------------------------------------
-def test_training_release_requires_smoke_pass_and_predecessor_gate(tmp_path):
+def test_training_release_refuses_missing_or_unbound_smoke_receipts(tmp_path):
+    """R2: the full pass/storage/predecessor chain is covered in tests/test_final_tb_smoke_r2.py (real smoke pair)."""
     head = "e" * 40
     git = lambda r, *a: head if a[0] == "rev-parse" else ""
     out = tmp_path / "launch"
@@ -387,19 +388,5 @@ def test_training_release_requires_smoke_pass_and_predecessor_gate(tmp_path):
     with pytest.raises(BindingError):
         final_tb.run_release(out, "train", head, "R-TB-E-0")
     (out / "smoke_receipt.json").write_text(json.dumps({"label": "TB_RUNTIME_SMOKE_PASS"}))
-    token = final_tb.run_release(out, "train", head, "R-TB-E-0")
-    assert final_tb.verify_token(str(token), out, "train", head, "R-TB-E-0")
-    with pytest.raises(BindingError):  # token is single-plan
-        final_tb.verify_token(str(token), out, "train", head, "R-TB-DK-1")
-    with pytest.raises(BindingError):  # no second token for the same plan
+    with pytest.raises(BindingError):  # a bare PASS label is not a bound receipt (prep, authorization, case hashes)
         final_tb.run_release(out, "train", head, "R-TB-E-0")
-    with pytest.raises(BindingError):  # B2 waits for the +E first-update gate
-        final_tb.run_release(out, "train", head, "R-TB-DK-1")
-    with pytest.raises(BindingError):  # B1-K waits for B2
-        final_tb.run_release(out, "train", head, "R-TB-K-1")
-    # a method-specific block of a plan that never ran can be bypassed, but only with a recorded reason
-    tok = final_tb.run_release(out, "train", head, "R-TB-DK-1", predecessor_blocked_reason="+E binding issue (test)")
-    assert "predecessor_blocked" in json.loads(Path(tok).read_text())["evidence"]
-    final_tb.Ledger(out).reserve("R-TB-DK-1", "dk", tmp_path / "rdk", 1, 5)
-    with pytest.raises(BindingError):  # a plan that is running (or ran) is never bypassed
-        final_tb.run_release(out, "train", head, "R-TB-K-1", predecessor_blocked_reason="x")
