@@ -498,3 +498,217 @@ def test_C7_timeline_rows_follow_pixels_blob_fact_mask_planner(tmp_path):
     row = next(r for r in data if r["object_id"] == "obj_b" and r["view"] == "sideview")
     assert row["fused_present"] == "True" and row["final_OnTable"] == "TRUE" and row["pick_mask_for_object"] == "True"
     assert row["selected_view"] == "agentview" and row["planner_status"] == "NOT_CALLED"
+
+
+# ---- R-FC: frozen-camera binding repair (CPU, no simulator)
+import importlib.util  # noqa: E402
+import os  # noqa: E402
+
+FREEZE_COMMIT = "55668197091e4d9d24c3025fcc3ec522febb211e"
+FROZEN_SHA = "3c98a09649a73a3d9cee1db7e7a9f67063e515bfe5c3e689cabf4cf09900d917"
+PROD = ROOT / "src/cp_disr/platforms/libero/family_b_obs_v2.py"
+_MUTATION_LOG = {}
+
+
+@pytest.fixture(autouse=True)
+def _no_real_simulator(request, monkeypatch):
+    """R-FC tests must never create MuJoCo sims or EGL contexts."""
+    if not request.node.name.startswith("test_RFC"):
+        return
+    from robosuite.utils import binding_utils
+
+    def boom(*a, **k):
+        raise AssertionError("R-FC tests must not construct a MuJoCo sim / render context")
+    for attr in ("MjSim", "MjRenderContext"):
+        if hasattr(binding_utils, attr):
+            monkeypatch.setattr(getattr(binding_utils, attr), "__init__", boom)
+
+
+def full_model(profile=None, **override):
+    """sim.model stub with every field live_camera reads (cam_mode/bodyid/pos/quat/fovy)."""
+    refs = (profile or PROFILE)["camera_manifest"]
+    names = list(obs.CAMERAS)
+    model = types.SimpleNamespace(
+        camera_name2id=lambda n: names.index(n),
+        cam_mode=np.array([int(refs[c]["mode"]) for c in names]),
+        cam_bodyid=np.zeros(len(names), dtype=int),
+        cam_pos=np.array([refs[c]["pos"] for c in names], dtype=float),
+        cam_quat=np.array([refs[c]["quat"] for c in names], dtype=float),
+        cam_fovy=np.array([refs[c]["fovy"] for c in names], dtype=float))
+    for key, fn in override.items():
+        fn(getattr(model, key))
+    return model
+
+
+def stub_env(model=None):
+    return types.SimpleNamespace(sim=types.SimpleNamespace(model=model or full_model()))
+
+
+def fake_single_arm_init(model_factory=full_model):
+    def init(self, *a, **k):
+        self.sim = types.SimpleNamespace(model=model_factory())
+    return init
+
+
+def construct(module, monkeypatch, model_factory=full_model):
+    monkeypatch.setattr(module.SingleArmEnv, "__init__", fake_single_arm_init(model_factory))
+    return module.FamilyBObsV2Env({"case": "stub"}, render_gpu_device_id=0)
+
+
+def test_RFC01_real_profile_structure():
+    raw = json.loads((ROOT / m.PROFILE_PATH).read_text())
+    assert isinstance(raw["cameras"], list) and raw["cameras"] == ["agentview", "sideview"]
+    assert isinstance(raw["camera_manifest"], dict) and set(raw["camera_manifest"]) == {"agentview", "sideview"}
+    assert raw["profile_sha256"] == FROZEN_SHA
+    standalone = json.loads((ROOT / "configs/final_master/family_b_obs_v2/camera_manifest.json").read_text())
+    assert "cameras" in standalone and isinstance(standalone["cameras"], (list, dict))
+
+
+def test_RFC02_production_verify_passes_with_full_model_stub():
+    assert obs.verify_frozen_cameras(stub_env(), PROFILE) is True
+    refs = obs.selected_camera_refs(PROFILE)
+    assert tuple(refs) == obs.CAMERAS and all(r["fixed_in_world"] for r in refs.values())
+
+
+def test_RFC03_constructor_runs_production_binding(monkeypatch):
+    env = construct(obs, monkeypatch)
+    assert isinstance(env, obs.FamilyBObsV2Env) and env.observation_profile_version == obs.PROFILE_VERSION
+    called = []
+    real = obs.verify_frozen_cameras
+    monkeypatch.setattr(obs, "verify_frozen_cameras", lambda e, p: called.append(p) or real(e, p))
+    construct(obs, monkeypatch)
+    assert len(called) == 1 and called[0] is obs.profile() and "camera_manifest" in called[0]
+
+
+def _mutant(tmp_path, name, old, new):
+    src = PROD.read_text()
+    assert old in src
+    path = tmp_path / f"{name}.py"
+    path.write_text(src.replace(old, new))
+    spec = importlib.util.spec_from_file_location(f"cp_disr.platforms.libero.{name}", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    mod._PROFILE.update(path=None, data=PROFILE)
+    return mod, path
+
+
+@pytest.mark.parametrize("name,old,new", [
+    ("mut_old_bug", "camera_refs = selected_camera_refs(observation_profile)\n",
+     "camera_refs = {n: observation_profile[\"cameras\"][n] for n in CAMERAS}\n"),
+    ("mut_nonexistent_nested", "camera_refs = selected_camera_refs(observation_profile)\n",
+     "camera_refs = {n: observation_profile[\"camera_manifest\"][\"cameras\"][n] for n in CAMERAS}\n"),
+])
+def test_RFC04_reintroduced_old_error_is_killed(tmp_path, monkeypatch, name, old, new):
+    good_ok = construct(obs, monkeypatch) is not None
+    mod, path = _mutant(tmp_path, name, old, new)
+    with pytest.raises((TypeError, KeyError)) as caught:
+        construct(mod, monkeypatch)
+    _MUTATION_LOG[name] = {"mutation": new.strip(), "production_constructor_path": "FamilyBObsV2Env.__init__",
+                           "killed": True, "production_passes": good_ok,
+                           "error": f"{caught.type.__name__}: {caught.value} (raised by the mutant through the production constructor)"}
+    out = os.environ.get("CP_DISR_REPAIR_DIR")
+    if out:
+        Path(out, "mutation_receipt.json").write_text(json.dumps(_MUTATION_LOG, indent=1, sort_keys=True))
+
+
+def test_RFC05_missing_manifest_fails_closed():
+    for bad in ({k: v for k, v in PROFILE.items() if k != "camera_manifest"},
+                {**PROFILE, "camera_manifest": [PROFILE["camera_manifest"]]},
+                {**PROFILE, "cameras": {"agentview": 0, "sideview": 1}}):
+        with pytest.raises(obs.FrozenCameraProfileError):
+            obs.verify_frozen_cameras(stub_env(), bad)
+    with pytest.raises(obs.FrozenCameraProfileError):
+        obs.selected_camera_refs({**PROFILE, "profile_sha256": "0" * 64})
+
+
+def test_RFC06_list_and_manifest_keys_mismatch_fail_closed():
+    extra = {**PROFILE, "camera_manifest": {**PROFILE["camera_manifest"], "birdview": {}}}
+    fewer = {**PROFILE, "camera_manifest": {"agentview": PROFILE["camera_manifest"]["agentview"]}}
+    swapped = {**PROFILE, "cameras": ["sideview", "agentview"]}
+    for bad in (extra, fewer, swapped):
+        with pytest.raises(obs.FrozenCameraProfileError):
+            obs.verify_frozen_cameras(stub_env(), bad)
+    nofield = copy.deepcopy(PROFILE)
+    del nofield["camera_manifest"]["sideview"]["fixed_in_world"]
+    with pytest.raises(obs.FrozenCameraProfileError):
+        obs.selected_camera_refs(nofield)
+
+
+@pytest.mark.parametrize("cam", obs.CAMERAS)
+@pytest.mark.parametrize("field", ["cam_pos", "cam_quat", "cam_fovy"])
+def test_RFC07_drift_beyond_atol_fails_closed(cam, field):
+    idx = obs.CAMERAS.index(cam)
+
+    def shift(delta):
+        def f(arr):
+            arr[idx] = arr[idx] + delta
+        return {field: f}
+    with pytest.raises(RuntimeError, match="live camera drift"):
+        obs.verify_frozen_cameras(stub_env(full_model(**shift(5e-9))), PROFILE)
+    assert obs.verify_frozen_cameras(stub_env(full_model(**shift(5e-10))), PROFILE) is True
+    assert obs.FIXED_ATOL == 1e-9
+
+
+def _git_show(path, commit=FREEZE_COMMIT):
+    return subprocess.run(["git", "-C", str(ROOT), "show", f"{commit}:{path}"], check=True,
+                          capture_output=True).stdout
+
+
+def test_RFC08_frozen_config_bytes_and_hash_match_freeze_commit():
+    for f in ("observation_profile_v2.json", "camera_manifest.json", "fusion_contract.json",
+              "pair_equivalence_contract.json"):
+        rel = f"configs/final_master/family_b_obs_v2/{f}"
+        assert (ROOT / rel).read_bytes() == _git_show(rel), f
+    assert obs.FROZEN_PROFILE_SHA256 == FROZEN_SHA == PROFILE["profile_sha256"]
+    assert obs.CAMERAS == ("agentview", "sideview") and obs.IMAGE_SIZE == 128
+    assert PROFILE["fusion_contract"]["fusion"]["rule"] == "PER_OBJECT_MAX_SUPPORT_RATIO"
+    assert PROFILE["fusion_contract"]["min_pixels"] == 8 and PROFILE["fusion_contract"]["image_size"] == 128
+
+
+def _defs(src):
+    tree = ast.parse(src)
+    out = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+            out[node.name] = node
+        elif isinstance(node, ast.Assign):
+            out["=" + ast.dump(node.targets[0])] = node
+    return out
+
+
+def test_RFC09_repair_changes_only_the_binding():
+    old = _defs(_git_show("src/cp_disr/platforms/libero/family_b_obs_v2.py").decode())
+    new = _defs(PROD.read_text())
+    allowed_new = {"FrozenCameraProfileError", "selected_camera_refs", "=" + ast.dump(ast.Name(id="FROZEN_PROFILE_SHA256", ctx=ast.Store())),
+                   "=" + ast.dump(ast.Name(id="CAMERA_REF_FIELDS", ctx=ast.Store()))}
+    assert set(new) - set(old) == allowed_new
+    assert set(old) <= set(new)
+    for key in old:
+        if key in ("verify_frozen_cameras", "FamilyBObsV2Env"):
+            continue
+        assert ast.dump(old[key]) == ast.dump(new[key]), key
+    # inside the env class only __init__'s final verify statement changes
+    o_cls, n_cls = old["FamilyBObsV2Env"], new["FamilyBObsV2Env"]
+    o_m = {n.name: n for n in o_cls.body if isinstance(n, ast.FunctionDef)}
+    n_m = {n.name: n for n in n_cls.body if isinstance(n, ast.FunctionDef)}
+    assert set(o_m) == set(n_m)
+    for k in o_m:
+        if k == "__init__":
+            assert [ast.dump(x) for x in o_m[k].body[:-1]] == [ast.dump(x) for x in n_m[k].body[:-1]]
+        else:
+            assert ast.dump(o_m[k]) == ast.dump(n_m[k]), k
+    # perception / fusion / runtime / analysis sources are untouched
+    for rel in ("src/cp_disr/platforms/libero/family_b_runtime_v2.py",
+                "src/cp_disr/analysis/family_b_obs_v2.py", "scripts/family_b_obs_v2.py"):
+        assert (ROOT / rel).read_bytes() == _git_show(rel), rel
+
+
+def test_RFC10_repair_tests_do_not_create_a_simulator():
+    from robosuite.utils import binding_utils
+    with pytest.raises(AssertionError):
+        binding_utils.MjSim(None)  # guard fixture is active for every test_RFC*
+    text = Path(__file__).read_text()
+    section = text[text.index("# ---- R-FC:"):text.index("def test_RFC10_")]
+    forbidden = ["make_family_b_obs_v2_env" + "(", "robosuite." + "make(", "start_" + "case(", "run_" + "wave(",
+                 "reserve_" + "attempt", "EGL" + "GLContext("]
+    assert not [f for f in forbidden if f in section]

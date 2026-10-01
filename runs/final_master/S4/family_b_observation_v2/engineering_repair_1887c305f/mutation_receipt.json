@@ -1,0 +1,16 @@
+{
+ "mut_nonexistent_nested": {
+  "error": "KeyError: 'cameras' (raised by the mutant through the production constructor)",
+  "killed": true,
+  "mutation": "camera_refs = {n: observation_profile[\"camera_manifest\"][\"cameras\"][n] for n in CAMERAS}",
+  "production_constructor_path": "FamilyBObsV2Env.__init__",
+  "production_passes": true
+ },
+ "mut_old_bug": {
+  "error": "TypeError: list indices must be integers or slices, not str (raised by the mutant through the production constructor)",
+  "killed": true,
+  "mutation": "camera_refs = {n: observation_profile[\"cameras\"][n] for n in CAMERAS}",
+  "production_constructor_path": "FamilyBObsV2Env.__init__",
+  "production_passes": true
+ }
+}
