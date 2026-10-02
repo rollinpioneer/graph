@@ -1,0 +1,109 @@
+{
+ "registration": "NONTRIVIAL_LEARNING",
+ "subject": {
+  "plan_id": "R-TB-E-0",
+  "task": "T_B",
+  "method": "B1-K+E",
+  "seed": 0,
+  "attempt_id": "R-TB-E-0-20261001T115252Z-cac2fa5b",
+  "run_dir": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b"
+ },
+ "rule": {
+  "document": "docs/authoritative/CP_DISR_Final_Experimental_Plan_v3.md",
+  "section": "3.1",
+  "plan_sha256": "e5df8585811559783666c185f35c5c728e95b952d01b988956f5e1c772283cff",
+  "authority_manifest_sha256_matches": true,
+  "text": "s0\u7684\u4efb\u4e00\u9884\u5148\u56fa\u5b9a\u3001post-update dev10\u8bc4\u4ef7\u70b9\u51fa\u73b0\u81f3\u5c111\u4e2a\u7ecf\u72ec\u7acbEvaluator\u786e\u8ba4\u7684\u5b8c\u6574\u4efb\u52a1\u6210\u529f\uff0c\u5373\u8bb0NONTRIVIAL_LEARNING\uff0c\u5e76\u7533\u8bf7\u540cprofile s1\u4ee5\u964d\u4f4e\u5355seed\u89e3\u91ca\u98ce\u9669\uff1b\u8be5\u65b0\u589e\u4eceelastic4\u62631\uff0c\u5fc5\u987b\u53e6\u6709\u6388\u6743\u3002\u4e0d\u5f97\u4e8b\u540e\u6839\u636e\u5b83\u662f\u5426\u51fb\u8d25B2\u6539\u89c4\u5219\u3002"
+ },
+ "registered_utc": "2026-10-02T02:27:29Z",
+ "registered_by": "Claude (Cowork session), on the user instruction of this turn",
+ "status": "REGISTERED",
+ "trigger_evidence": {
+  "eval_point": "final (post-update; update 14 + 1 fragment update; N=14512, T=68813.30)",
+  "post_update_dev10_file": {
+   "path": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/eval_final.json",
+   "sha256": "b60d6cbd94d5cb45996dcda58bda83bc581b1fa6a81d200ef15735de09fda11c",
+   "success_n": 10,
+   "n": 10,
+   "mean_discounted_return": 0.48934047729248054,
+   "row_reasons": {
+    "TASK_SUCCESS": 10
+   },
+   "eval_action": "deterministic_argmax",
+   "label": "dev"
+  },
+  "eval_metrics_csv": {
+   "path": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/eval_metrics.csv",
+   "sha256": "fdc6b4b5b1f78c8efd5488205ed84c2088e0737e5c300fc12a514e18c8e8edc9"
+  },
+  "bound_checkpoint": {
+   "path": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+   "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+   "generation": "final_n_014512_u14",
+   "weights_and_Adam_state_equal_update_fragment_1": true,
+   "differs_from_update_complete_14_max_abs_diff": 0.012879472225904465,
+   "manifest_N": 14512,
+   "published_utc": "2026-10-01T20:53:02Z"
+  },
+  "fresh_load_evidence": {
+   "path": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/fresh_load_final_n_014512_u14.json",
+   "sha256": "b65a7a831825de231afeb03b7435d639221dc792742d7d7c0ffbab89392005b8",
+   "content": {
+    "adam": true,
+    "fresh_process": true,
+    "generation": "final_n_014512_u14",
+    "model": true
+   }
+  },
+  "job_summary": {
+   "path": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/job_summary.json",
+   "sha256": "7d4ce2199ffef38a9c91c50692c9a3e6a368728bd01f7ff271df5bc4d7b9bd7f"
+  },
+  "source": {
+   "git_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+   "results_commit": "7c2f58c9844c7a8db4cd5a28fe1615e5630dfeff"
+  }
+ },
+ "conditions_checked": {
+  "eval_points_pre_fixed": "yes \u2014 Plan v3 \u00a77.1 lists R-TB-E-0 intermediate observations 0/4k/8k/final, fixed before the run",
+  "post_update": "yes for 4096 (after update 4), 8192 (after update 8) and final; the step-0 point is pre-update and is not counted",
+  "at_least_one_complete_task_success": "yes \u2014 10 of 10 dev10 cases, reason TASK_SUCCESS, at the final point only; 4096 and 8192 were 0/10",
+  "evaluator_independence": "rows come from the Collector evaluator result (`result.success`); the evaluator input schema (adapters.EvaluationInput) carries no prior, graph embedding or nominal facts. The Evaluator implementation itself was not re-audited here -> beyond-schema independence UNVERIFIED"
+ },
+ "other_post_update_points": [
+  {
+   "file": "eval_n_000000.json",
+   "N": 0,
+   "success_n": 0
+  },
+  {
+   "file": "eval_n_004096.json",
+   "N": 4096,
+   "success_n": 0
+  },
+  {
+   "file": "eval_n_008192.json",
+   "N": 8192,
+   "success_n": 0
+  },
+  {
+   "file": "eval_final.json",
+   "N": 14512,
+   "success_n": 10
+  }
+ ],
+ "not_implied": [
+  "no statement that +E is better than, worse than, or equal to B2 (the rule is not conditioned on it and must not be changed after the fact)",
+  "no statement that learning is reliable across seeds (single seed, dev10, success only at the final point)",
+  "no change to Method 2.1.1",
+  "this registration allocates nothing: no elastic slot is allocated, no run is authorized or started"
+ ],
+ "elastic_pool_accounting": {
+  "pool": "ELASTIC-01..04 (Plan v3 \u00a77.2, 4 attempts, initially UNALLOCATED / authorized=false)",
+  "allocation_records_found": "none \u2014 no ELASTIC-0x allocation, no unified elastic ledger, in this worktree or the 15 sibling graph_cp_disr_* worktrees (grep of runs/final_master and docs)",
+  "recorded_usage": "elastic attempts used 0: S0 stage_manifest (elastic_attempts 0), five S1 budget ledgers (elastic_attempts cap 0 used 0), T_B launch ledgers of this card (elastic 0; the three T_B runs are base MUST runs, not elastic)",
+  "remaining_by_recorded_evidence": 4,
+  "verification_status": "UNVERIFIED against an external Master Ledger (referenced by Plan v3 \u00a71.1, not present on the server)",
+  "after_the_proposed_request_if_approved": 3
+ }
+}

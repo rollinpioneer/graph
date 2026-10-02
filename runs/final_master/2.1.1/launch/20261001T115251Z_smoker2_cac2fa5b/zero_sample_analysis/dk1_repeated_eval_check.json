@@ -1,0 +1,103 @@
+{
+ "run": "R-TB-DK-1",
+ "eval_points": [
+  {
+   "file": "eval_n_000000.json",
+   "file_sha256": "9dec99916a3efa5ac315e5342a4eece477fff09e41f40b2780d2964ef3846843",
+   "checkpoint": "n_000000.pt",
+   "checkpoint_sha256": "916a08b08c2933670bfdd3ec13fe9536790955815b4a854f36355a02a7fe79bf",
+   "success_n": 0,
+   "mean_discounted_return": 0.0,
+   "mean_success_seconds_field": null
+  },
+  {
+   "file": "eval_n_004096.json",
+   "file_sha256": "e18d0b536d790019d2ba03f97311bb6825ed76bc73b1febb29ba362ea66cc418",
+   "checkpoint": "n_004096.pt",
+   "checkpoint_sha256": "0c8da7c604d45116bb79e2df4147f196e50484477d1c7b260d565b9312c23b5e",
+   "success_n": 10,
+   "mean_discounted_return": 0.4988490585995873,
+   "mean_success_seconds_field": 3.54
+  },
+  {
+   "file": "eval_n_008192.json",
+   "file_sha256": "f3350c1994bcec0d1ca7dc228fa6b80588d8df6f90044df5af6a6286d3a8a9eb",
+   "checkpoint": "n_008192.pt",
+   "checkpoint_sha256": "ffb932a0131bda2a84b990c94cf0d6576c9c323077c3e773216c6dadf7976721",
+   "success_n": 10,
+   "mean_discounted_return": 0.4988490585995873,
+   "mean_success_seconds_field": 3.54
+  },
+  {
+   "file": "eval_final.json",
+   "file_sha256": "8527b6b823bec03291739a2667fb64879ed71cd1e0918aa958c291e20020ef58",
+   "checkpoint": "final_n_014170_u13.pt",
+   "checkpoint_sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+   "success_n": 10,
+   "mean_discounted_return": 0.4988490585995873,
+   "mean_success_seconds_field": 3.54
+  }
+ ],
+ "per_case_rows_identical_4096_vs_8192": true,
+ "per_case_rows_identical_8192_vs_final": true,
+ "checkpoint_sha256_all_distinct": true,
+ "model_weight_diffs": [
+  {
+   "pair": [
+    "n_000000.pt",
+    "n_004096.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.055448561906814575
+  },
+  {
+   "pair": [
+    "n_000000.pt",
+    "n_008192.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.07081383466720581
+  },
+  {
+   "pair": [
+    "n_000000.pt",
+    "final_n_014170_u13.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.12203240394592285
+  },
+  {
+   "pair": [
+    "n_004096.pt",
+    "n_008192.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.046452656388282776
+  },
+  {
+   "pair": [
+    "n_004096.pt",
+    "final_n_014170_u13.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.11697988957166672
+  },
+  {
+   "pair": [
+    "n_008192.pt",
+    "final_n_014170_u13.pt"
+   ],
+   "tensors_differing": 66,
+   "of": 141,
+   "max_abs_diff": 0.09943097829818726
+  }
+ ],
+ "eval_code_and_split_hashes_identical_across_all_12_eval_files": true,
+ "per_case_action_sequences_recorded": false,
+ "identical_trajectories": "UNVERIFIED"
+}
