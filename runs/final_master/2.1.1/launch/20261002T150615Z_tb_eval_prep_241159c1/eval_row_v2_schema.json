@@ -1,0 +1,294 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "eval_row_v2 evaluation payload (CP-DISR-TB-EVAL-PREP-LITE-01)",
+ "x_card_scope": "evaluation-only recorder; additive to the old eval payload; old fields keep their values and meaning",
+ "type": "object",
+ "required": [
+  "schema_version",
+  "task",
+  "method",
+  "checkpoint",
+  "success_n",
+  "n",
+  "success_rate",
+  "mean_discounted_return",
+  "rows",
+  "hashes",
+  "isolated_rng",
+  "eval_action",
+  "label",
+  "optimizer_steps",
+  "success_seconds_label",
+  "time_to_first_confirmed_success_label",
+  "evaluated_model",
+  "evaluated_generation",
+  "case_order",
+  "eval_rng_isolation",
+  "status"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "eval_row_v2"
+  },
+  "rows": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "case_id",
+     "success",
+     "G",
+     "steps",
+     "reason",
+     "success_seconds",
+     "source_n",
+     "prior_mode",
+     "episode_start_clock_s",
+     "time_to_first_confirmed_success_s",
+     "time_to_first_confirmed_success_label",
+     "first_confirmed_success_decision_index",
+     "episode_end_elapsed_s",
+     "actions",
+     "inter_step_clock_gap_s",
+     "no_transition_exit",
+     "success_seconds_label",
+     "outcome_class"
+    ],
+    "properties": {
+     "case_id": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     },
+     "G": {
+      "type": "number"
+     },
+     "steps": {
+      "type": "integer"
+     },
+     "reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "success_seconds": {
+      "type": [
+       "number",
+       "null"
+      ],
+      "description": "OLD field, unchanged: duration of the final (successful) skill only"
+     },
+     "source_n": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "prior_mode": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "success_seconds_label": {
+      "const": "FINAL_SKILL_DURATION_ONLY"
+     },
+     "episode_start_clock_s": {
+      "type": "number"
+     },
+     "time_to_first_confirmed_success_s": {
+      "type": [
+       "number",
+       "null"
+      ],
+      "description": "simulated seconds from episode start to the end of the first interval in which the independent evaluator confirmed success"
+     },
+     "time_to_first_confirmed_success_label": {
+      "const": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+     },
+     "first_confirmed_success_decision_index": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "episode_end_elapsed_s": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "actions": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "decision_index",
+        "candidate_id",
+        "clock_start",
+        "clock_end",
+        "duration",
+        "reward",
+        "weight",
+        "controller_exit",
+        "terminated",
+        "truncated",
+        "reason",
+        "success_confirmed"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "decision_index": {
+         "type": "integer"
+        },
+        "candidate_id": {
+         "type": "string"
+        },
+        "clock_start": {
+         "type": "number"
+        },
+        "clock_end": {
+         "type": "number"
+        },
+        "duration": {
+         "type": "number"
+        },
+        "reward": {
+         "type": "number"
+        },
+        "weight": {
+         "type": "number"
+        },
+        "controller_exit": {
+         "type": "string"
+        },
+        "terminated": {
+         "type": "boolean"
+        },
+        "truncated": {
+         "type": "boolean"
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "success_confirmed": {
+         "type": "boolean"
+        }
+       }
+      }
+     },
+     "inter_step_clock_gap_s": {
+      "type": [
+       "number",
+       "null"
+      ],
+      "description": "time_to_success minus sum of action durations up to the confirmed success; never assumed zero"
+     },
+     "no_transition_exit": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "outcome_class": {
+      "enum": [
+       "NORMAL_POLICY_OUTCOME"
+      ]
+     }
+    }
+   }
+  },
+  "hashes": {
+   "type": "object",
+   "description": "source / split / manifest identity"
+  },
+  "evaluated_model": {
+   "type": "object",
+   "required": [
+    "path",
+    "bytes",
+    "sha256"
+   ],
+   "properties": {
+    "path": {
+     "type": "string"
+    },
+    "bytes": {
+     "type": "integer"
+    },
+    "sha256": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{64}$"
+    }
+   }
+  },
+  "model_sha256_after_last_episode": {
+   "type": "string",
+   "description": "present only if the post-run re-hash equals the pre-load hash"
+  },
+  "evaluated_generation": {
+   "type": "object",
+   "required": [
+    "generation",
+    "N",
+    "T",
+    "update"
+   ]
+  },
+  "case_order": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "eval_rng_isolation": {
+   "type": "object",
+   "required": [
+    "rng_captured_before",
+    "rng_restored_after",
+    "seed_all"
+   ]
+  },
+  "isolated_rng": {
+   "const": true
+  },
+  "eval_action": {
+   "const": "deterministic_argmax"
+  },
+  "optimizer_steps": {
+   "const": 0
+  },
+  "success_seconds_label": {
+   "const": "FINAL_SKILL_DURATION_ONLY"
+  },
+  "time_to_first_confirmed_success_label": {
+   "const": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+  },
+  "status": {
+   "enum": [
+    "COMPLETE",
+    "ABORTED_MODEL_HASH_CHANGED",
+    "INFRASTRUCTURE_FAILURE_STOPPED"
+   ]
+  },
+  "infrastructure_failure": {
+   "type": "object"
+  }
+ },
+ "x_old_fields_preserved": [
+  "case_id",
+  "success",
+  "G",
+  "steps",
+  "reason",
+  "success_seconds",
+  "source_n",
+  "prior_mode"
+ ],
+ "x_old_schema_rule": "rows without time_to_first_confirmed_success_s are labelled FINAL_SKILL_DURATION_ONLY and the episode total time stays UNVERIFIED; they never enter a time-to-success column"
+}

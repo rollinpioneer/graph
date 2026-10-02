@@ -1,0 +1,701 @@
+{
+ "card": "CP-DISR-TB-EVAL-PREP-LITE-01",
+ "phase": "A",
+ "baseline": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+ "constraints_observed": {
+  "environments": 0,
+  "episodes": 0,
+  "optimizers": 0,
+  "providers": 0,
+  "weights_converted": 0,
+  "checkpoints_replaced": 0,
+  "non_strict_loads": 0
+ },
+ "method": "sha256 of checkpoint bytes vs frozen list and sidecar; sidecar N/T identity; torch.load(cpu) key/shape/dtype listing; strict load_state_dict into Policy built exactly as stage2a_v11.make_policy (actions from the grounded contract registry, no environment)",
+ "classes": {
+  "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE": [
+   "TB-M1",
+   "TB-M2",
+   "TB-M4"
+  ],
+  "A_CURRENT_EVAL_EXACT_LOAD": [
+   "TB-M3",
+   "TB-M5",
+   "TB-M6",
+   "TB-C1"
+  ]
+ },
+ "historical": [
+  {
+   "slot": "TB-M1",
+   "plan_run": "R2-B0-s0",
+   "method": "B0",
+   "seed": 0,
+   "origin": "historical",
+   "tier": "SYSTEM_REFERENCE",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+    "bytes": 13673874,
+    "sha256": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+    "N": 14705,
+    "T_s": 68814.80000002464,
+    "generation": "final_n_014705_u14"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 127,
+    "n_param_elements": 1694275,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "7b406fd128d8cb0100e3bf0ffcd41726cb52dc54a585e8960780f8b23b20a56a"
+   },
+   "current_tree_strict_load": {
+    "strict_load": false,
+    "error": "RuntimeError: Error(s) in loading state_dict for Policy:\n\tMissing key(s) in state_dict: \"effect_readout.role.weight\", \"effect_readout.symbol.weight\", \"effect_readout.arguments.weight\", \"effect_readout.types.weight\", \"effect_readout.position.weight\", \"effect_readout.proj.0.weight\", \"effect_readout.proj.0.bias\", \"effect_readout.query.weight\", \"effect_readout.key.weight\", \"effect_readout.value.weight\", \"effect_fuse.0.weight\", \"effect_fuse.0.bias\", \"effect_fuse.2.weight\", \"effect_fuse.2.bias\". ",
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [
+      "effect_fuse.0.bias",
+      "effect_fuse.0.weight",
+      "effect_fuse.2.bias",
+      "effect_fuse.2.weight",
+      "effect_readout.arguments.weight",
+      "effect_readout.key.weight",
+      "effect_readout.position.weight",
+      "effect_readout.proj.0.bias",
+      "effect_readout.proj.0.weight",
+      "effect_readout.query.weight",
+      "effect_readout.role.weight",
+      "effect_readout.symbol.weight",
+      "effect_readout.types.weight",
+      "effect_readout.value.weight"
+     ],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 14,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "archived_identity": {
+    "source_commit": "228517ed214e18bd75ab11b84f3edff6b07f14b7",
+    "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5",
+    "recorded_vs_source": {
+     "stage2a_v11": {
+      "recorded_in_run_manifest": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "archived_commit_blob": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "v2_1_worktree_file": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "collector": {
+      "recorded_in_run_manifest": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "archived_commit_blob": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "v2_1_worktree_file": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "neural": {
+      "recorded_in_run_manifest": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "archived_commit_blob": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "v2_1_worktree_file": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "torch_rl": {
+      "recorded_in_run_manifest": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "archived_commit_blob": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "v2_1_worktree_file": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "persistence": {
+      "recorded_in_run_manifest": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "archived_commit_blob": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "v2_1_worktree_file": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "runtime_factory": {
+      "recorded_in_run_manifest": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "archived_commit_blob": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "v2_1_worktree_file": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "clock": {
+      "recorded_in_run_manifest": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+      "archived_commit_blob": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+      "v2_1_worktree_file": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "safety": {
+      "recorded_in_run_manifest": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+      "archived_commit_blob": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+      "v2_1_worktree_file": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "skill_executor": {
+      "recorded_in_run_manifest": "06d3741723c5236afc9e1234a3229164b33e1609114fcfa82d023a672fd37ff6",
+      "archived_commit_blob": "06d3741723c5236afc9e1234a3229164b33e1609114fcfa82d023a672fd37ff6",
+      "v2_1_worktree_file": "06d3741723c5236afc9e1234a3229164b33e1609114fcfa82d023a672fd37ff6",
+      "match_commit": true,
+      "match_worktree": true
+     }
+    },
+    "all_recorded_hashes_match_commit": true,
+    "all_recorded_hashes_match_v2_1_worktree": true
+   },
+   "archived_tree_strict_load": {
+    "source": "archived_228517ed214e18bd75ab11b84f3edff6b07f14b7",
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 127,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    },
+    "evidence_file": "phase_a/load_check_archived_228517ed.json"
+   },
+   "conversion_requirements": {
+    "weight_conversion": false,
+    "non_strict_load": false,
+    "adapter_needed": false,
+    "forward_semantics_modified": false,
+    "retraining": false,
+    "checkpoint_replaced": false
+   },
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "note": "fails strict load under the current 2.1.1 Policy (14 effect_readout.* keys absent from the old state_dict) and is NOT converted; strict load succeeds only under the unmodified archived source whose hashes equal the run manifest"
+  },
+  {
+   "slot": "TB-M2",
+   "plan_run": "R1-B1K-s0",
+   "method": "B1-K",
+   "seed": 0,
+   "origin": "historical",
+   "tier": "HISTORICAL_EXTENSION",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+    "bytes": 13784375,
+    "sha256": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+    "N": 13623,
+    "T_s": 68813.40000002344,
+    "generation": "final_n_013623_u13"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 127,
+    "n_param_elements": 1694275,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "7b406fd128d8cb0100e3bf0ffcd41726cb52dc54a585e8960780f8b23b20a56a"
+   },
+   "current_tree_strict_load": {
+    "strict_load": false,
+    "error": "RuntimeError: Error(s) in loading state_dict for Policy:\n\tMissing key(s) in state_dict: \"effect_readout.role.weight\", \"effect_readout.symbol.weight\", \"effect_readout.arguments.weight\", \"effect_readout.types.weight\", \"effect_readout.position.weight\", \"effect_readout.proj.0.weight\", \"effect_readout.proj.0.bias\", \"effect_readout.query.weight\", \"effect_readout.key.weight\", \"effect_readout.value.weight\", \"effect_fuse.0.weight\", \"effect_fuse.0.bias\", \"effect_fuse.2.weight\", \"effect_fuse.2.bias\". ",
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [
+      "effect_fuse.0.bias",
+      "effect_fuse.0.weight",
+      "effect_fuse.2.bias",
+      "effect_fuse.2.weight",
+      "effect_readout.arguments.weight",
+      "effect_readout.key.weight",
+      "effect_readout.position.weight",
+      "effect_readout.proj.0.bias",
+      "effect_readout.proj.0.weight",
+      "effect_readout.query.weight",
+      "effect_readout.role.weight",
+      "effect_readout.symbol.weight",
+      "effect_readout.types.weight",
+      "effect_readout.value.weight"
+     ],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 14,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "archived_identity": {
+    "source_commit": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+    "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09",
+    "recorded_vs_source": {
+     "stage2a_v11": {
+      "recorded_in_run_manifest": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "archived_commit_blob": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "v2_1_worktree_file": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "collector": {
+      "recorded_in_run_manifest": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "archived_commit_blob": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "v2_1_worktree_file": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "neural": {
+      "recorded_in_run_manifest": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "archived_commit_blob": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "v2_1_worktree_file": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "torch_rl": {
+      "recorded_in_run_manifest": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "archived_commit_blob": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "v2_1_worktree_file": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "persistence": {
+      "recorded_in_run_manifest": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "archived_commit_blob": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "v2_1_worktree_file": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "runtime_factory": {
+      "recorded_in_run_manifest": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "archived_commit_blob": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "v2_1_worktree_file": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "match_commit": true,
+      "match_worktree": true
+     }
+    },
+    "all_recorded_hashes_match_commit": true,
+    "all_recorded_hashes_match_v2_1_worktree": true
+   },
+   "archived_tree_strict_load": {
+    "source": "archived_0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 127,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    },
+    "evidence_file": "phase_a/load_check_archived_0eb3776d.json"
+   },
+   "conversion_requirements": {
+    "weight_conversion": false,
+    "non_strict_load": false,
+    "adapter_needed": false,
+    "forward_semantics_modified": false,
+    "retraining": false,
+    "checkpoint_replaced": false
+   },
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "note": "fails strict load under the current 2.1.1 Policy (14 effect_readout.* keys absent from the old state_dict) and is NOT converted; strict load succeeds only under the unmodified archived source whose hashes equal the run manifest"
+  },
+  {
+   "slot": "TB-M4",
+   "plan_run": "R1-B2-s0",
+   "method": "B2",
+   "seed": 0,
+   "origin": "historical",
+   "tier": "HISTORICAL_EXTENSION",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+    "bytes": 13861879,
+    "sha256": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+    "N": 14464,
+    "T_s": 68818.75000000885,
+    "generation": "final_n_014464_u14"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 127,
+    "n_param_elements": 1694275,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "7b406fd128d8cb0100e3bf0ffcd41726cb52dc54a585e8960780f8b23b20a56a"
+   },
+   "current_tree_strict_load": {
+    "strict_load": false,
+    "error": "RuntimeError: Error(s) in loading state_dict for Policy:\n\tMissing key(s) in state_dict: \"effect_readout.role.weight\", \"effect_readout.symbol.weight\", \"effect_readout.arguments.weight\", \"effect_readout.types.weight\", \"effect_readout.position.weight\", \"effect_readout.proj.0.weight\", \"effect_readout.proj.0.bias\", \"effect_readout.query.weight\", \"effect_readout.key.weight\", \"effect_readout.value.weight\", \"effect_fuse.0.weight\", \"effect_fuse.0.bias\", \"effect_fuse.2.weight\", \"effect_fuse.2.bias\". ",
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [
+      "effect_fuse.0.bias",
+      "effect_fuse.0.weight",
+      "effect_fuse.2.bias",
+      "effect_fuse.2.weight",
+      "effect_readout.arguments.weight",
+      "effect_readout.key.weight",
+      "effect_readout.position.weight",
+      "effect_readout.proj.0.bias",
+      "effect_readout.proj.0.weight",
+      "effect_readout.query.weight",
+      "effect_readout.role.weight",
+      "effect_readout.symbol.weight",
+      "effect_readout.types.weight",
+      "effect_readout.value.weight"
+     ],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 14,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "archived_identity": {
+    "source_commit": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+    "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09",
+    "recorded_vs_source": {
+     "stage2a_v11": {
+      "recorded_in_run_manifest": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "archived_commit_blob": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "v2_1_worktree_file": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "collector": {
+      "recorded_in_run_manifest": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "archived_commit_blob": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "v2_1_worktree_file": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "neural": {
+      "recorded_in_run_manifest": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "archived_commit_blob": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "v2_1_worktree_file": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "torch_rl": {
+      "recorded_in_run_manifest": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "archived_commit_blob": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "v2_1_worktree_file": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "persistence": {
+      "recorded_in_run_manifest": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "archived_commit_blob": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "v2_1_worktree_file": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+      "match_commit": true,
+      "match_worktree": true
+     },
+     "runtime_factory": {
+      "recorded_in_run_manifest": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "archived_commit_blob": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "v2_1_worktree_file": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+      "match_commit": true,
+      "match_worktree": true
+     }
+    },
+    "all_recorded_hashes_match_commit": true,
+    "all_recorded_hashes_match_v2_1_worktree": true
+   },
+   "archived_tree_strict_load": {
+    "source": "archived_0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 127,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 127,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    },
+    "evidence_file": "phase_a/load_check_archived_0eb3776d.json"
+   },
+   "conversion_requirements": {
+    "weight_conversion": false,
+    "non_strict_load": false,
+    "adapter_needed": false,
+    "forward_semantics_modified": false,
+    "retraining": false,
+    "checkpoint_replaced": false
+   },
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "note": "fails strict load under the current 2.1.1 Policy (14 effect_readout.* keys absent from the old state_dict) and is NOT converted; strict load succeeds only under the unmodified archived source whose hashes equal the run manifest"
+  }
+ ],
+ "core": [
+  {
+   "slot": "TB-M3",
+   "plan_run": "R-TB-K-1",
+   "method": "B1-K",
+   "seed": 1,
+   "origin": "final_master_2.1.1",
+   "tier": "CORE",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+    "bytes": 21169909,
+    "sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+    "N": 14531,
+    "T_s": 68813.45000002472,
+    "generation": "final_n_014531_u14"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 141,
+    "n_param_elements": 3539651,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "d2f65689658e1b944f41326af84611fb593a0a365a716907f8d8d61f2e63c542"
+   },
+   "current_tree_strict_load": {
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 141,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD"
+  },
+  {
+   "slot": "TB-M5",
+   "plan_run": "R-TB-DK-1",
+   "method": "B2",
+   "seed": 1,
+   "origin": "final_master_2.1.1",
+   "tier": "CORE",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+    "bytes": 21264821,
+    "sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+    "N": 14170,
+    "T_s": 68817.10000000504,
+    "generation": "final_n_014170_u13"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 141,
+    "n_param_elements": 3539651,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "d2f65689658e1b944f41326af84611fb593a0a365a716907f8d8d61f2e63c542"
+   },
+   "current_tree_strict_load": {
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 141,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD"
+  },
+  {
+   "slot": "TB-M6",
+   "plan_run": "R-TB-E-0",
+   "method": "B1-K+E",
+   "seed": 0,
+   "origin": "final_master_2.1.1",
+   "tier": "CORE",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+    "bytes": 35989871,
+    "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+    "N": 14512,
+    "T_s": 68813.30000001457,
+    "generation": "final_n_014512_u14"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 141,
+    "n_param_elements": 3539651,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "d2f65689658e1b944f41326af84611fb593a0a365a716907f8d8d61f2e63c542"
+   },
+   "current_tree_strict_load": {
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 141,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD"
+  },
+  {
+   "slot": "TB-C1",
+   "plan_run": "R-TB-E-1",
+   "method": "B1-K+E",
+   "seed": 1,
+   "origin": "final_master_2.1.1",
+   "tier": "CORE",
+   "checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+    "bytes": 35989487,
+    "sha256": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+    "N": 14309,
+    "T_s": 68820.25000001468,
+    "generation": "final_n_014309_u13"
+   },
+   "checks": {
+    "sha256_matches_frozen_list": true,
+    "bytes_match_frozen_list": true,
+    "sidecar_sha256_matches": true,
+    "manifest_N_matches": true,
+    "manifest_T_matches": true
+   },
+   "key_shape_dtype": {
+    "n_param_tensors": 141,
+    "n_param_elements": 3539651,
+    "dtypes": [
+     "torch.float32"
+    ],
+    "state_signature_sha256": "d2f65689658e1b944f41326af84611fb593a0a365a716907f8d8d61f2e63c542"
+   },
+   "current_tree_strict_load": {
+    "strict_load": true,
+    "error": null,
+    "key_diff": {
+     "ckpt_keys": 141,
+     "dtype_mismatch": [],
+     "missing_in_ckpt": [],
+     "model_keys": 141,
+     "n_dtype_mismatch": 0,
+     "n_missing_in_ckpt": 0,
+     "n_shape_mismatch": 0,
+     "n_unexpected_in_ckpt": 0,
+     "shape_mismatch": [],
+     "unexpected_in_ckpt": []
+    }
+   },
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD"
+  }
+ ],
+ "archived_execution_class": {
+  "name": "ARCHIVED_V13_EXECUTION_CLASS",
+  "source_tree": "/home/xushijie2/graph_cp_disr_v2_1",
+  "v2_1_head": "b11eb0dc9ef0b500a120527a60dda2871c217b2a",
+  "commits": {
+   "R1_B1-K_B2": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+   "R2_B0": "228517ed214e18bd75ab11b84f3edff6b07f14b7"
+  },
+  "execution_hashes_identical_between_R1_and_R2_runs": true,
+  "per_key_identical": {
+   "collector": true,
+   "neural": true,
+   "persistence": true,
+   "runtime_factory": true,
+   "stage2a_v11": true,
+   "torch_rl": true
+  },
+  "consequence": "B1-K s0, B2 s0 and B0 s0 form ONE archived execution class; no third class exists"
+ },
+ "current_execution_class": {
+  "name": "CURRENT_2_1_1_EXECUTION_CLASS",
+  "source_tree": "/home/xushijie2/graph_cp_disr_final_tb_launch",
+  "head_at_build": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+  "execution_hashes": {
+   "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+   "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+   "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+   "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+   "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+   "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+   "clock": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+   "safety": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+   "skill_executor": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed"
+  }
+ },
+ "decision_rule_reminder": "class C stops immediately: no converter, no adapter branch, no retraining, no checkpoint replacement"
+}

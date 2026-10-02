@@ -1,0 +1,173 @@
+{
+ "card": "CP-DISR-TB-EVAL-PREP-LITE-01",
+ "phase": "B",
+ "environments": 0,
+ "episodes": 0,
+ "gpu": 0,
+ "optimizer": 0,
+ "provider": 0,
+ "pytest_returncode": 0,
+ "summary_tail": "20 passed, 3 warnings in 4.72s",
+ "n_tests": 20,
+ "n_passed": 20,
+ "n_failed": 0,
+ "n_skipped": 0,
+ "test_cases": {
+  "test_multistep_success_actions_clock_and_first_success_once": "passed",
+  "test_success_on_single_confirmed_step_time_matches_end": "passed",
+  "test_deadline_exit_is_normal_failure": "passed",
+  "test_no_candidate_exit": "passed",
+  "test_insufficient_remaining_control_cycle_exit": "passed",
+  "test_case_order_and_rng_isolation_recorded": "passed",
+  "test_payload_identity_blocks": "passed",
+  "test_old_fields_identical_to_real_old_eval_loop": "passed",
+  "test_registered_sha_mismatch_fails_before_load": "passed",
+  "test_model_hash_change_during_evaluation_fails_closed": "passed",
+  "test_infrastructure_failure_stops_and_is_not_retried": "passed",
+  "test_environment_closed_and_rng_restored_on_failure": "passed",
+  "test_normal_policy_outcomes_never_become_infrastructure_failures": "passed",
+  "test_old_schema_rows_stay_unverified_and_never_enter_time_column": "passed",
+  "test_labels_are_the_frozen_strings": "passed",
+  "test_module_imports_no_optimizer_and_writes_no_training_artifact": "passed",
+  "test_evaluation_writes_only_its_eval_file": "passed",
+  "test_protected_production_files_unchanged_vs_baseline": "passed",
+  "test_recorder_loads_standalone_by_file_path": "passed",
+  "test_no_prior_case_gate_rejects_cache_pointers_and_reads_nothing": "passed"
+ },
+ "required_checks": {
+  "multi_step_success": {
+   "tests": [
+    "test_multistep_success_actions_clock_and_first_success_once",
+    "test_success_on_single_confirmed_step_time_matches_end"
+   ],
+   "all_passed": true
+  },
+  "deadline": {
+   "tests": [
+    "test_deadline_exit_is_normal_failure"
+   ],
+   "all_passed": true
+  },
+  "no_candidate": {
+   "tests": [
+    "test_no_candidate_exit"
+   ],
+   "all_passed": true
+  },
+  "insufficient_control_cycle": {
+   "tests": [
+    "test_insufficient_remaining_control_cycle_exit"
+   ],
+   "all_passed": true
+  },
+  "first_confirmed_success_recorded_once": {
+   "tests": [
+    "test_multistep_success_actions_clock_and_first_success_once"
+   ],
+   "all_passed": true
+  },
+  "action_order": {
+   "tests": [
+    "test_multistep_success_actions_clock_and_first_success_once"
+   ],
+   "all_passed": true
+  },
+  "clock_duration_accounting": {
+   "tests": [
+    "test_multistep_success_actions_clock_and_first_success_once",
+    "test_deadline_exit_is_normal_failure"
+   ],
+   "all_passed": true
+  },
+  "old_fields_unchanged_vs_real_old_loop": {
+   "tests": [
+    "test_old_fields_identical_to_real_old_eval_loop"
+   ],
+   "all_passed": true
+  },
+  "model_hash_change_fails_closed": {
+   "tests": [
+    "test_registered_sha_mismatch_fails_before_load",
+    "test_model_hash_change_during_evaluation_fails_closed"
+   ],
+   "all_passed": true
+  },
+  "old_schema_total_time_unverified": {
+   "tests": [
+    "test_old_schema_rows_stay_unverified_and_never_enter_time_column"
+   ],
+   "all_passed": true
+  },
+  "no_optimizer_import": {
+   "tests": [
+    "test_module_imports_no_optimizer_and_writes_no_training_artifact"
+   ],
+   "all_passed": true
+  },
+  "no_training_artifact_written": {
+   "tests": [
+    "test_module_imports_no_optimizer_and_writes_no_training_artifact",
+    "test_evaluation_writes_only_its_eval_file"
+   ],
+   "all_passed": true
+  },
+  "collector_stage2a_v11_rl_hash_unchanged": {
+   "tests": [
+    "test_protected_production_files_unchanged_vs_baseline"
+   ],
+   "all_passed": true
+  },
+  "infrastructure_failure_stops_no_rerun": {
+   "tests": [
+    "test_infrastructure_failure_stops_and_is_not_retried",
+    "test_environment_closed_and_rng_restored_on_failure"
+   ],
+   "all_passed": true
+  },
+  "normal_policy_outcomes_not_infrastructure": {
+   "tests": [
+    "test_normal_policy_outcomes_never_become_infrastructure_failures"
+   ],
+   "all_passed": true
+  },
+  "case_order_and_rng_isolation": {
+   "tests": [
+    "test_case_order_and_rng_isolation_recorded"
+   ],
+   "all_passed": true
+  }
+ },
+ "all_required_checks_pass": true,
+ "mutation_checks": {
+  "first_success_recorded_every_time": {
+   "mutation_detected_by_tests": true,
+   "pytest_returncode": 1,
+   "summary": "1 failed, 18 passed, 1 skipped, 3 warnings in 5.13s"
+  },
+  "G_drops_weight": {
+   "mutation_detected_by_tests": true,
+   "pytest_returncode": 1,
+   "summary": "2 failed, 17 passed, 1 skipped, 3 warnings in 4.63s"
+  },
+  "post_run_hash_check_removed": {
+   "mutation_detected_by_tests": true,
+   "pytest_returncode": 1,
+   "summary": "1 failed, 18 passed, 1 skipped, 3 warnings in 4.75s"
+  },
+  "success_seconds_uses_total_time": {
+   "mutation_detected_by_tests": true,
+   "pytest_returncode": 1,
+   "summary": "3 failed, 16 passed, 1 skipped, 3 warnings in 4.77s"
+  },
+  "infra_exception_swallowed": {
+   "mutation_detected_by_tests": true,
+   "pytest_returncode": 1,
+   "summary": "2 failed, 17 passed, 1 skipped, 3 warnings in 4.70s"
+  }
+ },
+ "all_mutations_detected": true,
+ "test_file_sha256": "96f53f2f97c84f6e5014c9cb87030ec797cae42f0f68ad19fd6c4453625ab048",
+ "module_sha256": "eecb08b6a641da303b93cc521f55ca49fbe6d8f45183badded614b686110d7db",
+ "head_at_run": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+ "old_loop_comparison": "tests drive the REAL stage2a_v11.eval_episodes and the recorder with the same scripted collector and require identical old fields"
+}
