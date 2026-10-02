@@ -1,0 +1,22 @@
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+Warning: make sure gym is installed if you want to use the GymWrapper.
+Traceback (most recent call last):
+  File "/home/xushijie2/graph_cp_disr_final_tb_launch/scripts/final_tb_eval_prep_dev_check.py", line 123, in <module>
+    sys.exit(main())
+  File "/home/xushijie2/graph_cp_disr_final_tb_launch/scripts/final_tb_eval_prep_dev_check.py", line 97, in main
+    payload = rec.evaluate_checkpoint_recorded(
+  File "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr/final_tb_eval_record.py", line 335, in evaluate_checkpoint_recorded
+    _write_json_atomic(out_eval, payload)
+  File "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr/final_tb_eval_record.py", line 248, in _write_json_atomic
+    tmp.write_text(json.dumps(payload, indent=1, sort_keys=False, default=str) + "\n", encoding="utf-8")
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/pathlib.py", line 1154, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: 'runs/final_master/2.1.1/launch/20261002T150615Z_tb_eval_prep_241159c1/phase_c/eval_row_v2_archived_T_B_dev_00.json.tmp'
+
+real	0m20.112s
+user	0m15.272s
+sys	0m2.765s

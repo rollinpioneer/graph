@@ -1,0 +1,437 @@
+{
+ "document": "candidate_holdout_release_manifest",
+ "card": "CP-DISR-TB-EVAL-PREP-LITE-01",
+ "status": "CANDIDATE_NOT_EXECUTED_NOT_AUTHORIZED",
+ "baseline": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+ "task": "T_B",
+ "test_label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+ "not_strict_blind_test": true,
+ "scope_statement": "T_B-specific evaluation preparation; GLOBAL_S4 = NOT_COMPLETE; GLOBAL_S5 = NOT_COMPLETE; this is not the project-wide S6",
+ "authorization": {
+  "formal_holdout_authorized": false,
+  "no_episode_launched": true,
+  "requires": "a separate formal holdout release card stating the S4 / S5 status for T_B and approving this manifest"
+ },
+ "plan_revision": {
+  "original_plan_v3": "6 x 30 base + conditional B1-K+E seed1 x 30 (210 maximum; the conditional model is outside the 628 cap)",
+  "current_local_priority_revision": "CORE 120 first (4 models x 30); historical models are a conditional extension decided by the compatibility classification of this card, never by CORE test results",
+  "disclosure": "This is a revision of the local evaluation priority made in CP-DISR-TB-EVAL-PREP-LITE-01. It is NOT what Plan v3 originally said and must not be reported as such.",
+  "forbidden": "retraining, weight conversion, checkpoint replacement or a complex historical adapter in order to reach 210"
+ },
+ "tiers": {
+  "CORE": {
+   "models": 4,
+   "episodes_per_model": 30,
+   "episodes": 120,
+   "status": "MUST",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "consistent": true
+  },
+  "HISTORICAL_EXTENSION": {
+   "models": 2,
+   "episodes": 60,
+   "status": "INCLUDED (decided by this card, before any test result)",
+   "condition": "compatibility PASS only; never retrain, convert weights or replace a checkpoint to obtain it",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS"
+  },
+  "SYSTEM_REFERENCE": {
+   "models": 1,
+   "episodes": 30,
+   "status": "INCLUDED (no new engineering branch)",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS"
+  }
+ },
+ "episode_budget": {
+  "core": 120,
+  "historical_extension_max": 60,
+  "system_reference_max": 30,
+  "maximum_if_all_included": 210,
+  "retraining_or_conversion_to_reach_210": "forbidden"
+ },
+ "extension_decision": {
+  "decided_by": "compatibility classification (Phase A) + dev consistency (Phase C) of this card",
+  "decided_before_any_test_result": true,
+  "must_not_be_changed_after_seeing_CORE_test_results": true
+ },
+ "models": [
+  {
+   "slot": "TB-M3",
+   "plan_run": "R-TB-K-1",
+   "method": "B1-K",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+    "bytes": 21169909,
+    "sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+    "N": 14531,
+    "T_s": 68813.45000002472,
+    "generation": "final_n_014531_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M5",
+   "plan_run": "R-TB-DK-1",
+   "method": "B2",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+    "bytes": 21264821,
+    "sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+    "N": 14170,
+    "T_s": 68817.10000000504,
+    "generation": "final_n_014170_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014170_u13.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M6",
+   "plan_run": "R-TB-E-0",
+   "method": "B1-K+E",
+   "seed": 0,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+    "bytes": 35989871,
+    "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+    "N": 14512,
+    "T_s": 68813.30000001457,
+    "generation": "final_n_014512_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014512_u14.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-C1",
+   "plan_run": "R-TB-E-1",
+   "method": "B1-K+E",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+    "bytes": 35989487,
+    "sha256": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+    "N": 14309,
+    "T_s": 68820.25000001468,
+    "generation": "final_n_014309_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014309_u13.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M2",
+   "plan_run": "R1-B1K-s0",
+   "method": "B1-K",
+   "seed": 0,
+   "tier": "HISTORICAL_EXTENSION",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+    "bytes": 13784375,
+    "sha256": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+    "N": 13623,
+    "T_s": 68813.40000002344,
+    "generation": "final_n_013623_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_BY_THIS_CARD_COMPATIBILITY_PASS",
+   "open_gaps": [
+    "UC2",
+    "UC4",
+    "UC5"
+   ]
+  },
+  {
+   "slot": "TB-M4",
+   "plan_run": "R1-B2-s0",
+   "method": "B2",
+   "seed": 0,
+   "tier": "HISTORICAL_EXTENSION",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+    "bytes": 13861879,
+    "sha256": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+    "N": 14464,
+    "T_s": 68818.75000000885,
+    "generation": "final_n_014464_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014464_u14.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_BY_THIS_CARD_COMPATIBILITY_PASS",
+   "open_gaps": [
+    "UC2",
+    "UC4",
+    "UC5"
+   ]
+  },
+  {
+   "slot": "TB-M1",
+   "plan_run": "R2-B0-s0",
+   "method": "B0",
+   "seed": 0,
+   "tier": "SYSTEM_REFERENCE",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+    "bytes": 13673874,
+    "sha256": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+    "N": 14705,
+    "T_s": 68814.80000002464,
+    "generation": "final_n_014705_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_NO_NEW_ENGINEERING_BRANCH",
+   "open_gaps": [
+    "UC2",
+    "UC3",
+    "UC4",
+    "UC5",
+    "UC7"
+   ]
+  }
+ ],
+ "evaluation_model_rule": "each run's last valid post-update final checkpoint; selected / best-dev appear only in a separate column and never replace final",
+ "execution_classes": {
+  "CURRENT_2_1_1_EXECUTION_CLASS": {
+   "source_tree": "/home/xushijie2/graph_cp_disr_final_tb_launch",
+   "execution_hashes": {
+    "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+    "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+    "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+    "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+    "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+    "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "clock": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+    "safety": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+    "skill_executor": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed"
+   },
+   "runtime_manifest": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T031938Z_e1_elastic01_e4dc34ae/runtime_manifest_tb_resolved.yaml",
+   "runtime_manifest_sha256": "a0c5006336ed13b404a1596e6cf8dd4b96783445ada7f8eb17a64762550d3f5f",
+   "binding": "stage2a_v11.bind_run_context(duck-typed context: runtime_manifest, render_gpu_device_id=0, prior_mode=absent) + ENABLED_SPLITS[T_B] set; recorder imported normally",
+   "dev_consistency": "CONSISTENT"
+  },
+  "ARCHIVED_V13_EXECUTION_CLASS": {
+   "source_tree": "/home/xushijie2/graph_cp_disr_v2_1",
+   "v2_1_head": "b11eb0dc9ef0b500a120527a60dda2871c217b2a",
+   "commits": {
+    "R1_B1-K_B2": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+    "R2_B0": "228517ed214e18bd75ab11b84f3edff6b07f14b7"
+   },
+   "execution_hashes_recorded_in_run_manifests": {
+    "stage2a_v11": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+    "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+    "neural": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+    "torch_rl": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+    "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+    "runtime_factory": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b"
+   },
+   "runtime_manifest_in_tree": "experiments/manifests/runtime_manifest_v211.yaml",
+   "binding": "root = the archived tree (read-only use); PYTHONPATH = its src; ENABLED_SPLITS[T_B] set to an absolute no-prior split; the recorder is loaded BY FILE PATH from the new worktree; no archived file is modified and no run context exists in that source",
+   "dev_consistency": "CONSISTENT"
+  }
+ },
+ "reporting_rules": [
+  "results are reported per tier and per execution class; seed-0 historical models are listed apart from the seed-1 / current models and never pooled without an explicit statement",
+  "time columns: time_to_first_confirmed_success_s is the only episode-level success time; success_seconds is FINAL_SKILL_DURATION_ONLY",
+  "label every test table PREMATERIALIZED_INDEPENDENT_HOLDOUT"
+ ],
+ "evaluator_settings": {
+  "action": "deterministic argmax",
+  "episode_deadline_sim_seconds": 60,
+  "passes_per_model": 1,
+  "case_order": "fixed (test_cases.order), identical for every model",
+  "rng": "isolated (captured, seed_all(0), restored)",
+  "optimizer_steps": 0,
+  "provider_calls": 0,
+  "recorder": "src/cp_disr/final_tb_eval_record.py (schema eval_row_v2)",
+  "model_hash": "sha256 before load and after the last episode; mismatch stops",
+  "prior": "absent for every model (effective R empty); no-prior test split without cache pointers"
+ },
+ "test_cases": {
+  "label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+  "n": 30,
+  "order": [
+   "T_B_test_00",
+   "T_B_test_01",
+   "T_B_test_02",
+   "T_B_test_03",
+   "T_B_test_04",
+   "T_B_test_05",
+   "T_B_test_06",
+   "T_B_test_07",
+   "T_B_test_08",
+   "T_B_test_09",
+   "T_B_test_10",
+   "T_B_test_11",
+   "T_B_test_12",
+   "T_B_test_13",
+   "T_B_test_14",
+   "T_B_test_15",
+   "T_B_test_16",
+   "T_B_test_17",
+   "T_B_test_18",
+   "T_B_test_19",
+   "T_B_test_20",
+   "T_B_test_21",
+   "T_B_test_22",
+   "T_B_test_23",
+   "T_B_test_24",
+   "T_B_test_25",
+   "T_B_test_26",
+   "T_B_test_27",
+   "T_B_test_28",
+   "T_B_test_29"
+  ],
+  "source": "configs/splits/T_B_stage_2a_test30.json",
+  "scene_set_sha256": "db01aa572d9f852935bc52da8ce8bbaf8b35bb6c82c126a703b6ca4a6a183d9e",
+  "freeze_record": "test_source_freeze.json"
+ },
+ "invalid_episode_rule": {
+  "NORMAL_POLICY_OUTCOME": {
+   "counted": "as failure",
+   "rerun": false,
+   "examples": [
+    "DEADLINE",
+    "NO_CANDIDATE_SAFE_TERMINATION (NO_SAFE_CANDIDATES)",
+    "legal skill failure",
+    "verifier-confirmed task failure",
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE"
+   ]
+  },
+  "INFRASTRUCTURE_FAILURE": {
+   "examples": [
+    "CUDA / EGL / process crash",
+    "filesystem / checkpoint read error",
+    "evaluation code exception",
+    "environment construction failure"
+   ],
+   "action": "stop that release and report",
+   "forbidden": [
+    "automatic scene swap",
+    "rerun until satisfied",
+    "partial-result cherry-picking"
+   ],
+   "implemented_in_recorder": "any exception escaping an episode writes a partial payload (status INFRASTRUCTURE_FAILURE_STOPPED) and raises InfrastructureFailure"
+  }
+ },
+ "prerequisites_before_release": [
+  {
+   "id": "P1",
+   "item": "S4 / S5 status for T_B stated explicitly by the user",
+   "state": "NOT_CONFIRMED (GLOBAL_S4 / GLOBAL_S5 = NOT_COMPLETE)"
+  },
+  {
+   "id": "P3",
+   "item": "recorder implemented, offline-tested, committed",
+   "state": "DONE in this card (engineering commit)"
+  },
+  {
+   "id": "P4",
+   "item": "test_release_manifest with model/Adam index, input hashes, evaluator and RNG settings",
+   "state": "THIS FILE is the candidate; the release card must bind it to a committed source and fill UC5 items"
+  },
+  {
+   "id": "P6",
+   "item": "runner that takes the frozen list (old evaluate_final_tests needs an 8-checkpoint selection manifest)",
+   "state": "NOT DONE - a small runner around evaluate_checkpoint_recorded is the only new code; no production module edit"
+  },
+  {
+   "id": "P7",
+   "item": "no-prior test split without cache pointers",
+   "state": "RULE FROZEN, split not built (see test_source_freeze.json)"
+  },
+  {
+   "id": "P9",
+   "item": "compute / GPU / disk plan",
+   "state": "measured here: ~15-35 s per dev episode incl. environment build; GPU chosen at release time (shared host)"
+  },
+  {
+   "id": "U1",
+   "item": "source qualification of test30 (prematerialized)",
+   "state": "ACCEPTED AS LABEL PREMATERIALIZED_INDEPENDENT_HOLDOUT, not strict blind test"
+  }
+ ],
+ "recorder_hardening_for_release_card": "evaluate_checkpoint_recorded does not pre-check that its output path is writable before running episodes (one dev attempt lost its result this way); add a pre-flight probe in the release runner or recorder (changes the module hash; re-test)",
+ "open_gaps_carried": [
+  "UC2 (two stage2a_v11 evaluators; reduced by one-case dev consistency per class, not eliminated)",
+  "UC3 (R2 B0 original location inaccessible; local copy internally consistent)",
+  "UC4 (commit pointers differ between manifests and ledger text)",
+  "UC5 (weights-to-input chain for historical runs, built at release)",
+  "UC7 (R2 B0 common_dev20 file holds 10 cases)"
+ ],
+ "hard_stops": [
+  "any model hash change",
+  "any infrastructure failure",
+  "any execution-class inconsistency",
+  "any attempt to read test VLM cache / relation truth",
+  "no selection, tuning or retraining on test"
+ ]
+}

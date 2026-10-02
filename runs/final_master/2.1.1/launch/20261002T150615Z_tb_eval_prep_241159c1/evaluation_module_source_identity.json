@@ -1,7 +1,7 @@
 {
  "card": "CP-DISR-TB-EVAL-PREP-LITE-01",
  "baseline": "241159c1ceca3b53f0ba8423879524c6b2668e07",
- "head_at_build": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+ "head_at_build": "f297f538f9f813ed7a8df39cb710b00b50068406",
  "new_files": {
   "src/cp_disr/final_tb_eval_record.py": {
    "sha256": "eecb08b6a641da303b93cc521f55ca49fbe6d8f45183badded614b686110d7db",
@@ -16,12 +16,16 @@
    "git_blob_sha1": "c99725def1367835e91286f7fb726eab3e710a5a"
   },
   "scripts/final_tb_eval_prep_dev_check.py": {
-   "sha256": "510ff87c96fb189a3070f345656b83371b574d92253fe44736f80b98ae353c13",
-   "git_blob_sha1": "d24761bf8dbd7ad6711327c766191ddb66fe1581"
+   "sha256": "a01bfe236b92e4ead42b27f231ea2dae246a4cdfd946b1307ac2f7d5c879de6e",
+   "git_blob_sha1": "a052d587abda7f81b5120fbb4a3ee3c3f0e00783"
   },
   "scripts/final_tb_eval_prep_build.py": {
    "sha256": "4bce23531d54794fac61dd1e95941c5f0a6990cf22c5855c842913767d9aaaec",
    "git_blob_sha1": "763598aebff409acdf1166d3939773eb96189cc6"
+  },
+  "scripts/final_tb_eval_prep_finish.py": {
+   "sha256": "d558c4273254b83f02d87973bcc166fc75bd8cada41582178a8ebf5587267926",
+   "git_blob_sha1": "0ad1425408d5a8dfca59e55c6c39626db8a26e6b"
   }
  },
  "protected_production_files": {
@@ -117,7 +121,9 @@
   }
  },
  "all_protected_unchanged": true,
- "tracked_changes_under_src_configs_experiments_vs_baseline": [],
+ "tracked_changes_under_src_configs_experiments_vs_baseline": [
+  "src/cp_disr/final_tb_eval_record.py"
+ ],
  "module_imports": [
   "from __future__ import annotations",
   "from cp_disr import stage2a_v11 as v11  # noqa: PLC0415 - lazy: importing this module must stay light",

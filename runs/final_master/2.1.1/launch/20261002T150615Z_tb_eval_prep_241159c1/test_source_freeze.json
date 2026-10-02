@@ -1,0 +1,845 @@
+{
+ "card": "CP-DISR-TB-EVAL-PREP-LITE-01",
+ "label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+ "not_strict_blind_test": true,
+ "label_note": "scenes and 30 VLM-cache entries were materialized by the old stage_2a flow before any release step; no T_B test result or development use was found in accessible worktrees (committed provenance), but use outside them cannot be shown from files",
+ "allowed_reads_only": [
+  "test id list",
+  "reset seed / reset config identity",
+  "scene file hashes (committed provenance)",
+  "committed provenance"
+ ],
+ "files_read": [
+  "/home/xushijie2/graph_cp_disr_final_tb_launch/configs/splits/T_B_stage_2a_test30.json",
+  "/home/xushijie2/graph_cp_disr_final_tb_launch/configs/splits/T_B_stage_2a_test_ids.json",
+  "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T125454Z_tb_dev_closure_e1_477de5de/06_test_source_provenance_check.json"
+ ],
+ "split_configs_sha256": {
+  "configs/splits/T_B_stage_2a_test30.json": "8eed9da517c6d37664c90f70c9cadcd78b97b8e96a568ae9d321161f5694e0bf",
+  "configs/splits/T_B_stage_2a_test_ids.json": "03264a3d7511eb7e9d6f7fee6398f90acc280297d9f6154920e58cc251dd3beb"
+ },
+ "not_done": {
+  "test_rgb_or_depth_opened": false,
+  "old_test_vlm_cache_opened": false,
+  "relation_truth_read": false,
+  "test_episode_run": false,
+  "test_score_generated": false,
+  "scene_generated_or_regenerated": false,
+  "test_result_file_opened": false
+ },
+ "scene_set": {
+  "dir": "/home/xushijie2/graph_cp_disr_v2_1/experiments/stage_2a_inputs/T_B/test",
+  "scene_count": 30,
+  "scene_set_sha256": "db01aa572d9f852935bc52da8ce8bbaf8b35bb6c82c126a703b6ca4a6a183d9e",
+  "source": "committed 06_test_source_provenance_check.json (byte hashes; scene contents never parsed)",
+  "scene_names_equal_active_ids": true
+ },
+ "active_cases": {
+  "n": 30,
+  "order": [
+   "T_B_test_00",
+   "T_B_test_01",
+   "T_B_test_02",
+   "T_B_test_03",
+   "T_B_test_04",
+   "T_B_test_05",
+   "T_B_test_06",
+   "T_B_test_07",
+   "T_B_test_08",
+   "T_B_test_09",
+   "T_B_test_10",
+   "T_B_test_11",
+   "T_B_test_12",
+   "T_B_test_13",
+   "T_B_test_14",
+   "T_B_test_15",
+   "T_B_test_16",
+   "T_B_test_17",
+   "T_B_test_18",
+   "T_B_test_19",
+   "T_B_test_20",
+   "T_B_test_21",
+   "T_B_test_22",
+   "T_B_test_23",
+   "T_B_test_24",
+   "T_B_test_25",
+   "T_B_test_26",
+   "T_B_test_27",
+   "T_B_test_28",
+   "T_B_test_29"
+  ],
+  "same_order_in_both_registered_lists": true,
+  "reserved_pool_unused": [
+   "T_B_test_30",
+   "T_B_test_31",
+   "T_B_test_32",
+   "T_B_test_33",
+   "T_B_test_34",
+   "T_B_test_35",
+   "T_B_test_36",
+   "T_B_test_37",
+   "T_B_test_38",
+   "T_B_test_39",
+   "T_B_test_40",
+   "T_B_test_41",
+   "T_B_test_42",
+   "T_B_test_43",
+   "T_B_test_44",
+   "T_B_test_45",
+   "T_B_test_46",
+   "T_B_test_47",
+   "T_B_test_48",
+   "T_B_test_49"
+  ],
+  "rows": [
+   {
+    "case_id": "T_B_test_00",
+    "pool_index": 0,
+    "reset_seed": 3120619661,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 0,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "5e2ad7f27e0e2b71b45803e2e97e09724b7cbf9ea94d2ea2ad21dbb5499248cf",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "22ffbdc97d8c0b34eb0a2b7c7cd072f1071092c71efb7b6ead380bddafa79a13",
+     "reset_config.json": "b16b5551b309ae332d033ee486c93f6c7875c0b9e95ed5e5dbd80f79f95ae59c",
+     "rgb.png": "e9b6873c458f342885d85a786c3867c25f3d15b1098a698e94614f95cbd12b51"
+    }
+   },
+   {
+    "case_id": "T_B_test_01",
+    "pool_index": 1,
+    "reset_seed": 1424214846,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 1,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "8ad8ee159de83e8db85dce5abb87eeaf8bc157c19852e6c903989710ffecbddd",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "481f16c6816924ef2bd19d0d7c8599e12e0a0788f376f8ece6360d58ea3c800c",
+     "reset_config.json": "7f3fa410283866007a03053ec7bcc4f4e9c98ddd92ac1f555c50bd935f495a24",
+     "rgb.png": "a30c0f0b65bdb42df4a37ee3dce0da80b75503efd38752b67dc5f2e54f197847"
+    }
+   },
+   {
+    "case_id": "T_B_test_02",
+    "pool_index": 2,
+    "reset_seed": 1721228238,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 2,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "cd8d3f8acd067e15f4d52e8a7c22e7597082aadeee5b55744862bca798acf129",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "6d1999f276bfc5242c1a542ab4afe76ac296be4b6683b060455cb7a110218517",
+     "reset_config.json": "b84ab2cbb2486f661a56f892f4cae0a775a1377d0513733ed5302c4607860a43",
+     "rgb.png": "c108a88d32b13de87854c404eb49c94c9700ae64c79df463d968413bc1aac1e8"
+    }
+   },
+   {
+    "case_id": "T_B_test_03",
+    "pool_index": 3,
+    "reset_seed": 1411411956,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 3,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "8f82f91e50645107cef05d7535b2ec32fe87e18670d7d076d09593b90359f526",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "bad119df961416348564f17fe987371b12b6ce4402d51347d2fab2cd88a9661a",
+     "reset_config.json": "9de368daef42ae386b6a789d95c57f8f89e3b2a3f1d97a438dcb866a719f7ece",
+     "rgb.png": "05e2d8be7f93dc2db638a07ef825b7bd2f8d1b0491540fab6631575ee742ec26"
+    }
+   },
+   {
+    "case_id": "T_B_test_04",
+    "pool_index": 4,
+    "reset_seed": 1814349979,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 4,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "341b90e6db25f575ff48bc67b68825794dd199f617c4257a1a2b5e2a9cf142a7",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "8c56e42d890231f566d0f0ee5f6f47827c7cb215fbefe12fe8adc467c870359b",
+     "reset_config.json": "ef408142a367afbd7d641f65bc97b7a481be935e75b7d015d4ba5377ec0f8be0",
+     "rgb.png": "03379b85ca3e1cb4cb6147d1a10ec6a290ad49a74525c4ceedc8d23d5c0ef4cf"
+    }
+   },
+   {
+    "case_id": "T_B_test_05",
+    "pool_index": 5,
+    "reset_seed": 2028275928,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 5,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "6be53717a3edfdcad3a4327f6a0285043caa96b8c4cb00f6a6ee116b5001d81f",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "8e236ed9601c584a1a4c056ee4ab7859fa9a4d3ba765310aec390b2c9c96d486",
+     "reset_config.json": "c410e3f374e8c90989de96292eae86996acb59a1b228a2a42fa728f70267b2b2",
+     "rgb.png": "183d8c6543468faeb17161369719ea713f7890e36c950fc22a311422f98df294"
+    }
+   },
+   {
+    "case_id": "T_B_test_06",
+    "pool_index": 6,
+    "reset_seed": 3981968806,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 6,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "f33fc5a698dd9ff40d60166b709d9bd88ee4a9f49634b845a2314ee4f0d7c43d",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "49b69e309923d402371b9f59054b6f8f6508c5f6d7d2ad70ee9937cd0f8be9fa",
+     "reset_config.json": "c456ecda4f1247fe0df1e82245a0006c647ad7b80fc0fb7d73a1efedb71cd297",
+     "rgb.png": "87b2c410b7a4c2f80ec813619b299f5ad8faca56f8431bc7a174509e0aa80530"
+    }
+   },
+   {
+    "case_id": "T_B_test_07",
+    "pool_index": 7,
+    "reset_seed": 4155634606,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 7,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "b34e93ff6e8a941474c461444a32e85c95f81d1c69907d61c0696524c9eb1ad4",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "244aebf79248ee66af2ac27e07d6822952684325593cb40c9c1ba87c3280026b",
+     "reset_config.json": "19b4fa5abe988c2e25ba70ebe78822cd242370d972291d953350ebee6340a74f",
+     "rgb.png": "ff426188e496ecbf591501f573dd5a49c8b444f4f26e8037d03f3fc57facde32"
+    }
+   },
+   {
+    "case_id": "T_B_test_08",
+    "pool_index": 8,
+    "reset_seed": 2731186447,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 8,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "c409a8d6ebfb027cfef7c3bcf382a77177f8a0aefe88c20df4a90626c3fdcc79",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "2e0e523231dd5cb3e300777ed5fd2711bc50708b2d00a44f4b547a7b11c10d03",
+     "reset_config.json": "7bc678ab3b32fc35eb9727c281ce086d9d85ef44cd9abc4142d548f527332de6",
+     "rgb.png": "26af6c6117710e6d3a2d7bc59f635a90470ff23f5dea35ff08ebbbe2335c85fd"
+    }
+   },
+   {
+    "case_id": "T_B_test_09",
+    "pool_index": 9,
+    "reset_seed": 2794530235,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 9,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "f2afa060cf41fe6d2032578bc45f2d2fb3ab1914324cf018ad9f8cfc1f39fc45",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "56859133b059b4af425f3b29afa072d360500b6869bcad9704e4292c7e95d17c",
+     "reset_config.json": "7c752b6b88d4a9bacd7e8ffd8c0ed6c0a0a30f9aa487a92b2733472231fb6f74",
+     "rgb.png": "8ac180e655d6e88f7448d47c36753b42d6c2f7572753c9f6d919966708d19446"
+    }
+   },
+   {
+    "case_id": "T_B_test_10",
+    "pool_index": 10,
+    "reset_seed": 3416272988,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 10,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "df177419456a3ecf84aa76d24e02cdb8a5e8c417a956786faf57746243e51612",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "09dcf829a7b5c717881295956601000e4cbe5a8cf267792d7812168bc0e639fd",
+     "reset_config.json": "454b9d9e4dd7b2774e6f87eca3c950e5abffebec24bd647f95c627f70d800ba8",
+     "rgb.png": "0e8d30181cf81278ba74c16c729a138a994af94d0838ffe8acfc8f6bf8afaffd"
+    }
+   },
+   {
+    "case_id": "T_B_test_11",
+    "pool_index": 11,
+    "reset_seed": 459512373,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 11,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "debbfe0b6904373e257a3738d87358dce1782ba3c64ab2d330c4c77125c522be",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "0adb87070f17426c2ddb20ab393c85cdd8a9fdc1111f7e76b7d5f8c84d22c3bf",
+     "reset_config.json": "c0b3b074d54fa6aac1130ed9e76729f317aad72474e30497343870017ad0db94",
+     "rgb.png": "aab4011053ebb146d5e20fd2c70cf1acd6761eac5efe8c25be57547b9b20d3b5"
+    }
+   },
+   {
+    "case_id": "T_B_test_12",
+    "pool_index": 12,
+    "reset_seed": 4286136708,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 12,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "ea715eb2453aae0b7f278129d1519743e720fcd09a0e730eaf52fac202ebf45e",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "1ed299047896048ba893e1e9ea1220ac665ce5a663dc17ee42c02b800dbf5ebb",
+     "reset_config.json": "b7a103661c424a6603563c0f0bf954ca8a8398a1c56c3214a14e5922c7f1a2c4",
+     "rgb.png": "949b85cc0b36f79960aac77891ba3f24f01feebb91bd6686dfc31ae4ba930156"
+    }
+   },
+   {
+    "case_id": "T_B_test_13",
+    "pool_index": 13,
+    "reset_seed": 3759013031,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 13,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "9a91b3f6a98a1014f96653cab8c3f5199ad9d1b4ae9a12a8d1c4db329e8745d0",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "7f09b1669fd164b6a3572164018fcd84928c14efadb3b997fe00d22211e9c8cc",
+     "reset_config.json": "7fc81be3d9ab009b3bdfe73213709f704e59ea2e4ed6b709c5c4ff6ccfcca631",
+     "rgb.png": "0e89c55362190a9761f6af4174502eb7937f71e1322c10759cb40cbc77533515"
+    }
+   },
+   {
+    "case_id": "T_B_test_14",
+    "pool_index": 14,
+    "reset_seed": 830306914,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 14,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "23bc61b52f60b135b4ff4c7a344eb5929a023f5ef49629ace76c82eb102c6169",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "bf6246f44e68400f476d1ab3fdbff6b65baebb79bb0ce243afdf9c497e70c672",
+     "reset_config.json": "03ff5e820d2ca3ded50efd6ecaeef94b3e6f2027f83e2180dfc57d479938d0b8",
+     "rgb.png": "b4dc34c6e7fc611abb677453d8d7a10bb7f633e2ed906fe1c1bfa5b9316a311d"
+    }
+   },
+   {
+    "case_id": "T_B_test_15",
+    "pool_index": 15,
+    "reset_seed": 1046487728,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 15,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "bbb6d5c2f7af44a18bcd57829f82c3bc07e76750bcc72785fab5ab2b1e09c9b1",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "f88b17ed8684415e1824f9090eed9e0a96aefa906bc3b66d6c2c5cbaf710606c",
+     "reset_config.json": "9ffed3ec942427120c7bda44ca089ade6bc2a30e78720cb14b8c65fd9535c49c",
+     "rgb.png": "ac7799117238424974ae73f2df815a9a17e9f1687bdf855f1496ba9864c1b565"
+    }
+   },
+   {
+    "case_id": "T_B_test_16",
+    "pool_index": 16,
+    "reset_seed": 396088334,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 16,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "55c477a7076a05e957cd04bfec4c53f50e55bb429c41dd370036ca7fea777c7a",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "91d1b31f2224f237c9c317b566969451b6fba2dd3e19f063cf97e57823f01e70",
+     "reset_config.json": "3c6beee25f7298a6eab0d7e5c97a81f79030c2819739609d8eae0ecd6558a614",
+     "rgb.png": "00c2ceb5c096b72942c88c8e3a23e98082e84cc422e59efdc4de6abb7fe86188"
+    }
+   },
+   {
+    "case_id": "T_B_test_17",
+    "pool_index": 17,
+    "reset_seed": 2319458687,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 17,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "4e5eb9589bac2c406ee631e8225e828d5912f57e7b0edee5fa6e651b2567a3fb",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "cdd93ca9773866003c4b9f0f14fc00c471d3d03f548c1171059f1b3932090331",
+     "reset_config.json": "a9433e82a0f2b2d0cfb0562dd999d623d645ee225802909408403b32691bd3f9",
+     "rgb.png": "3666098832aca6fd3b786c0f87c35a39597d07062ef9099035f89bf79ac532f5"
+    }
+   },
+   {
+    "case_id": "T_B_test_18",
+    "pool_index": 18,
+    "reset_seed": 2305404715,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 18,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "2b4a8ee39504bc38c3ab68f3c2f95a579407f2f93012bc5d0200c48e7274d5fd",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "534e8695b44bf077737971d00579d3c0e254ea91aefaab3fbbafd37099170c91",
+     "reset_config.json": "3cfcd606916a4c04d50666c6dd4f0932fabb714d0dafb217ba560919b5637cb1",
+     "rgb.png": "175756e24d65618fb031eb7a6a08112e455776cc4d3c191fd83679536be6c155"
+    }
+   },
+   {
+    "case_id": "T_B_test_19",
+    "pool_index": 19,
+    "reset_seed": 1985311908,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 19,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "20630d4cba30650d2bb202ff53974420f7fb9cbbb9beb005e013aa81115e4f4e",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "0917c07e5600fc104983b169dc0db40f45ca3c1962a639ec3f58d03dc361f20f",
+     "reset_config.json": "4400fb8ad22bc6425559b8326969f66491a9c03755b7ce5c13f9d830b109116c",
+     "rgb.png": "b0d23ac317780c0c891a69428870e857ea87abb176c27f442742358b14dec0e7"
+    }
+   },
+   {
+    "case_id": "T_B_test_20",
+    "pool_index": 20,
+    "reset_seed": 39006390,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 20,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "483fac48ef1b3c30ab516a114b2243ecfa902aee112a95b79e47c6edc528b2b8",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "d528507be14cfe0635de80a628e8f0d4f62aa5a4bd8b328ec649a83df2ca5e52",
+     "reset_config.json": "2b824907698b1569afd90e54b8d092cd614569a8e11bee800b062c6cdbf4f6e1",
+     "rgb.png": "8aa2b823fcdcb58627e68b570c2209380024857e13933b32e2043a92d2e94e58"
+    }
+   },
+   {
+    "case_id": "T_B_test_21",
+    "pool_index": 21,
+    "reset_seed": 450144748,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 21,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "8d8e881ad41bf048d580e90f11dfb7cf16c88647ff99c7fa50522cbbfc19d1b7",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "5192138938842162e6921dc86d0f0bcf686a6a11c0d34fa0ca7e1a4f00eba929",
+     "reset_config.json": "ddb7d73a1d106e1d619f6644de8b9f76f3547f6fea255be05030d691642bd771",
+     "rgb.png": "1fac63ac9445eb195d9e5406ec67addd62da84129961f24027971606ee464135"
+    }
+   },
+   {
+    "case_id": "T_B_test_22",
+    "pool_index": 22,
+    "reset_seed": 203316610,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 22,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "fb482af6e74c00750f9255b54521e1c4f80095da2f522871dba44d317c3af251",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "8039201ed66c7c7dd2b0190576f83297c8f78e379b150349b39a53071e7e4bb7",
+     "reset_config.json": "3b3bff9625a0ae3ad3a09743c0f242b94306d7e7b80a05a6e43d35f4b20bdcfa",
+     "rgb.png": "d783a3042711b41660925d7ab585f0b1cbd663b3b3a20e1895f4e1c60eb09af4"
+    }
+   },
+   {
+    "case_id": "T_B_test_23",
+    "pool_index": 23,
+    "reset_seed": 3993838330,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 23,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "85832efb28eaee699647960d72ff3c96cdf61d2b76fcaf26557c90d882be9d38",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "68dd18435716d40498d76b34b998e3a6e250774044c6e5ddcc15b210c85a7e36",
+     "reset_config.json": "4f9bfb82137c82449db0311f1cde1b981562dcc51bc50c354262d7dd9ca2fa6f",
+     "rgb.png": "b2a148596a7506d82a0124e64a5b0ef741b3055d61ddb7d8e5d9a906a233973e"
+    }
+   },
+   {
+    "case_id": "T_B_test_24",
+    "pool_index": 24,
+    "reset_seed": 1269218602,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 24,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "356a561be8839c93d3d09762c0b07189452a4a321e06452eb79f2a7eac78e7b6",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "83c8d00e750e5a1098f83ab5967891eab5bc5b01fdb77eb83421a8129ede6852",
+     "reset_config.json": "4b96fcf1e98281a15cd14771fbea932b50cfe6c8014c678821f27ea541f4c524",
+     "rgb.png": "7f41252afa4a1b1adad453e7bad7a1dea3af7e4bd0a2f5ae913ca2a5783ee7fa"
+    }
+   },
+   {
+    "case_id": "T_B_test_25",
+    "pool_index": 25,
+    "reset_seed": 654046766,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 25,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "125c9b4845b67b453fc01634acc6b0cf64430a3228ce5f22db63183f6c59ae2d",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "1767d118d7b6158111f6fb544df459df28e0156eba23136f41b84c1c4cefcc04",
+     "reset_config.json": "8ef242f16a8b58c308a0a4ea845302f2b4de8a65c8ba08f8b43b639459e10914",
+     "rgb.png": "cba7b2eb2385343b9a54acad96388c61d8803036cbba67cab9dc5b802a90fdda"
+    }
+   },
+   {
+    "case_id": "T_B_test_26",
+    "pool_index": 26,
+    "reset_seed": 3209394504,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 26,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "c9b48e91ca65aea936680c8903c4cc13766ea2eff2aa1633f1f0ef52406307d8",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "56ebf84b20c36654874435e54741b28abb5112f12200cf9c4a1e86d7fdeacd43",
+     "reset_config.json": "46cd0415426c4844cdbd128f838cceb3ef9079ae3cce066cb7f9ebba2134a5a7",
+     "rgb.png": "52bcf9c79b5df497091497bf5655a841fda5cd40a127b896de965818a31f4d9c"
+    }
+   },
+   {
+    "case_id": "T_B_test_27",
+    "pool_index": 27,
+    "reset_seed": 2137727285,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 27,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "e670167fe3ac385d9df768a20bfab789c2e72325d98560eb93a5275d529bf11a",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "ce64c1813f89fded694fed2d09e9b1c868f75a39a9101dc22775da96b056f9e4",
+     "reset_config.json": "684ace22eb4bab8281f2feac2856e6bc7eedfdca4c8d067fb6262928c0354e49",
+     "rgb.png": "caef794908116dd4e9a0db341175ac303a58867f466c07b4a896a82bbd4a2138"
+    }
+   },
+   {
+    "case_id": "T_B_test_28",
+    "pool_index": 28,
+    "reset_seed": 1483311252,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 28,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "8c6981499f37ad7585160c4e0ec5ac90aac44a9f7dbb9dae655930977b4ef177",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "6e873b557594bd48a3e7a9ecaab7828578dbf154426bde0142d95795c4d24dd2",
+     "reset_config.json": "3143dde360fc12da5dcd6d8711b9febe3576be09b3ccb60208284f9d233d2bff",
+     "rgb.png": "46dbaa0952a90496cc9c98db0e1ca52ae7f9df1fdf7c8d0a6a2d39d47b356dd6"
+    }
+   },
+   {
+    "case_id": "T_B_test_29",
+    "pool_index": 29,
+    "reset_seed": 96069211,
+    "stream": {
+     "namespace": "cp_disr_exp_v1_1",
+     "task": "T_B",
+     "split": "test",
+     "case_or_episode": 29,
+     "streams": [
+      "case_init",
+      "env_reset"
+     ],
+     "reject_index": 0,
+     "note": "test case stream omits method and training_seed"
+    },
+    "reset_config_row_sha256": "8f5dab6e3fc9d4246a374cd3f3b7752609715869711c6ec08d802b6a9e1b01ad",
+    "scene_files_sha256_from_committed_provenance": {
+     "CAPTURE_COMPLETE": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+     "depth.npy": "4b2233542989fd5e275e9ebbde671f30b44d5da9315f6557a9628125f33e497e",
+     "reset_config.json": "fa96d5555f622c5e316555e26eb6bae7bb9ab32d100c2562a64f6a3bbe9f260d",
+     "rgb.png": "2de2e2b53cc18e27bbdc9ac1fbc24c68a00919a7d8c97a0e5e7086e4b7c9188f"
+    }
+   }
+  ]
+ },
+ "registered_properties_quoted": {
+  "registration_timing": "pre-training freeze; not a pre-training claim for unused historical stages",
+  "frozen_before_main_training": true,
+  "frozen_before_any_stage2a_test_model_result": true,
+  "same_order": true,
+  "same_reset_seed": true,
+  "stream_omits_method_and_training_seed": true,
+  "filtered_by_model_performance": false,
+  "filtered_by_scripted_success": false,
+  "filtered_by_nonempty_prior": false
+ },
+ "no_prior_requirement": {
+  "cache_pointer_keys_present_in_test30_active_rows": [],
+  "forbidden_source": "configs/splits/T_B_stage_2a_v11.json test rows (they carry cache_dir/cache_key/cache_status)",
+  "future_runner_split_rule": "case rows come from configs/splits/T_B_stage_2a_test30.json `active` (no cache pointer keys); the runner's split_index = the derived no-prior dev10 rows (needed only to bootstrap the first environment) + these 30 rows; every row passes no_prior_case_gate (rejects cache_dir/cache_key/cache_status) and no cache path is ever constructed",
+  "split_not_built_by_this_card": true
+ },
+ "vlm_cache_test": {
+  "entries_counted_by_name_only": 30,
+  "contents_read": false
+ },
+ "provenance_assessment_quoted": {
+  "T_B_test_used_in_final_master_training_or_dev": false,
+  "T_B_test_result_files_present_in_accessible_worktrees": false,
+  "test_scenes_and_caches_materialized_before_release": true,
+  "reading": "inside the accessible worktrees no T_B test result and no development use of the T_B test scenes was found; the scenes and 30 prior-cache entries were materialized earlier by the old stage_2a flow (before the S6 release step of Plan v3 12.1). Whether any process outside the accessible worktrees ever evaluated models on them cannot be shown from files.",
+  "decision_needed": "Source-qualification decision for the T_B test30 set (accept as independent test with the old materialization documented, or re-draw from the reserved pool entries T_B_test_30..49 under a new freeze) - not made here."
+ }
+}

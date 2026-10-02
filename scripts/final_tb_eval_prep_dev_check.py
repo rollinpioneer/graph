@@ -62,6 +62,14 @@ def main():
     ap.add_argument("--runtime-manifest", default=None, help="current mode only")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
+    # resolve every path BEFORE chdir (an earlier archived attempt lost its result to a relative --out after chdir)
+    for k in ("checkpoint", "old_eval", "root", "recorder", "split", "runtime_manifest", "out"):
+        if getattr(a, k):
+            setattr(a, k, str(Path(getattr(a, k)).resolve()))
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    probe = Path(a.out) / ".write_probe"
+    probe.write_text("ok")  # pre-flight: the result file must be writable before any environment is built
+    probe.unlink()
     t0 = time.time()
     os.environ["MUJOCO_GL"] = "egl"
     for k in ("DASHSCOPE_API_KEY", "DASHSCOPE_API_KEY_FILE", "MUJOCO_EGL_DEVICE_ID"):
