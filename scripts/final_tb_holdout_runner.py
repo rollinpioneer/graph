@@ -43,8 +43,8 @@ CURRENT, ARCHIVED = "CURRENT_2_1_1_EXECUTION_CLASS", "ARCHIVED_V13_EXECUTION_CLA
 CLASS_ORDER = {CURRENT: ["TB-M3", "TB-M5", "TB-M6", "TB-C1"], ARCHIVED: ["TB-M2", "TB-M4", "TB-M1"]}
 TIER_OF = {"TB-M3": "CORE", "TB-M5": "CORE", "TB-M6": "CORE", "TB-C1": "CORE", "TB-M2": "HISTORICAL_EXTENSION", "TB-M4": "HISTORICAL_EXTENSION", "TB-M1": "SYSTEM_REFERENCE"}
 PLANNED = 210
-FORBIDDEN_OPEN = ("vlm_cache", "relation_truth", "accepted_relations", "final_edges.json", "test_metrics", "final_test_summary", "selection_manifest",
-                  "stage_2a_inputs/T_B/test", "T_B_stage_2a_v11.json")
+FORBIDDEN_OPEN = (r"(^|/)vlm_cache(/|$)", r"(^|/)relation_truth", r"(^|/)accepted_relations", r"(^|/)final_edges\.json", r"(^|/)test_metrics", r"(^|/)final_test_summary",
+                  r"(^|/)selection_manifest", r"stage_2a_inputs/T_B/test", r"T_B_stage_2a_v11\.json")
 CACHE_KEYS = ("cache_dir", "cache_key", "cache_status")
 
 
@@ -292,7 +292,10 @@ def load_recorder(path):
 
 
 def is_forbidden_path(s):
-    return any(n in s for n in FORBIDDEN_OPEN)
+    """Data paths only: python source files (e.g. src/cp_disr/vlm_cache_pipeline.py) are code, never a test cache."""
+    if s.endswith((".py", ".pyc", ".so")):
+        return False
+    return any(re.search(n, s) for n in FORBIDDEN_OPEN)
 
 
 def install_open_guard():

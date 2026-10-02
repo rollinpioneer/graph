@@ -51,6 +51,8 @@ def test_forbidden_paths_and_stop_exception_type():
     for p in ("a/vlm_cache/test/x.json", "r/relation_truth/a", "configs/splits/T_B_stage_2a_v11.json", "x/test_metrics.json"):
         assert R.is_forbidden_path(p)
     assert not R.is_forbidden_path("configs/splits/T_B_stage_2a_test30.json")
+    assert not R.is_forbidden_path("/home/x/src/cp_disr/vlm_cache_pipeline.py")  # code, not a cache
+    assert not R.is_forbidden_path("/home/x/runs/final_master/2.1.1/launch/y_tb_indep_holdout/worker_current/progress.json")
     assert not issubclass(R.ReleaseStopRequested, Exception) and issubclass(R.ReleaseStopRequested, BaseException)
 
 
