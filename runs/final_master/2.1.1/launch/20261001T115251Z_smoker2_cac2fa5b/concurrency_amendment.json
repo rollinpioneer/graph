@@ -1,0 +1,82 @@
+{
+ "amendment": "R2-1-CONCURRENCY-3",
+ "authorization_quote": "本次变更只修改 `max_training_workers: 2 → 3`。",
+ "authorization_text_file": "concurrency_amendment_text.txt",
+ "authorization_text_sha256": "5f66558637ad572fbb8361fecad8b3f52903a2ed417b1deb510a4ab81d038adb",
+ "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+ "change": {
+  "applies_to_plans": [
+   "R-TB-E-0",
+   "R-TB-DK-1",
+   "R-TB-K-1"
+  ],
+  "max_training_workers": {
+   "new": 3,
+   "old": 2
+  },
+  "unchanged": [
+   "run identity",
+   "seed",
+   "Ncap/Tcap",
+   "eval points",
+   "optimizer",
+   "single-GPU binding",
+   "scientific budget",
+   "new RL attempts cap",
+   "elastic/provider/T_P/formal test = 0"
+  ]
+ },
+ "launch_preconditions": [
+  "R-TB-DK-1 first_update_gate PASS",
+  "K-1 source/config/token identity unchanged (HEAD==prep, tracked tree clean, config sha256 == launch_plan, token bound to this registration)",
+  "GPU distinct from E-0 and DK-1 (ledger also refuses a GPU that already holds a RUNNING worker)",
+  "live storage gate: remaining output of the three active runs + >=2 GiB reserve",
+  "no OOM / EGL conflict / I-O saturation observed",
+  "no additional benchmark attempt (new_rl_attempts_used stays <= cap 3)"
+ ],
+ "measurement": {
+  "k1_startup_note": "K-1 spends its first minutes in the N=0 dev10 evaluation (no transitions); reported separately, not hidden",
+  "ppo_update_wall_time": "from 'PPO complete update' log line to checkpoint_generation_published time in persistence/raw_events.jsonl",
+  "sampler": "throughput_monitor.py, one sample / 30 s -> throughput/samples.jsonl (per-run transition_log line counts, GPU util+mem, /proc/stat iowait, loadavg, /home free bytes)",
+  "window_minutes": [
+   15,
+   30
+  ]
+ },
+ "mechanism": {
+  "launch_plan_registered_envelope": "launch_plan.json still says workers=2 (registration hash unchanged); this amendment supersedes it for this card only",
+  "what_was_done": "no tracked file, registration file or token was modified; only the K-1 launch wrapper (sha256 recorded in k1_launch_record.json) sets the in-process value to 3 after asserting it is 2, only for plan R-TB-K-1 and only if this file is present with the recorded hash; E-0 and DK-1 processes are untouched and keep their own value",
+  "where_the_cap_lives": "module constant cp_disr.final_tb.MAX_WORKERS = 2, enforced inside Ledger.reserve() (final_tb.py)",
+  "why_not_a_source_edit": "a source edit needs a commit: HEAD would leave prep cac2fa5b3cafb46f1f74370314189f4bca4878fa, which breaks the prep/registration/token identity binding that every train invocation verifies, and the runbook forbids HEAD-changing commits while workers run"
+ },
+ "operational_thresholds_chosen_by_executor": {
+  "aggregate_rule": "3-worker aggregate transitions/min over the evaluation window (all-in, same sampler) must be >= the 2-worker aggregate baseline (same sampler, pre-launch window; cross-checked with completed 2-worker update cycles)",
+  "baseline_from_completed_cycles_2_workers": {
+   "R-TB-DK-1": {
+    "all_in_transitions_per_min": 26.9,
+    "cycle1_min_incl_N0_eval": 38.0,
+    "ppo_wall_min": [
+     27.1
+    ]
+   },
+   "R-TB-E-0": {
+    "all_in_transitions_per_min": [
+     26.9,
+     27.6
+    ],
+    "ppo_wall_min": [
+     5.9,
+     6.0,
+     3.8
+    ],
+    "update2_cycle_min": 38.0,
+    "update3_cycle_min": 37.1
+   }
+  },
+  "degrade_rule": "an existing worker is 'persistently degraded' if its all-in rate over the second half of the window is < 70% of its own 2-worker baseline AND this is not explained by a PPO/eval phase, or if a PPO update during the window takes > 1.5x its previous update",
+  "note": "the authorization gave no numbers for 'markedly' / 'stable'; these are fixed BEFORE the third worker starts and are reported as my operationalization"
+ },
+ "prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+ "recorded_utc": "2026-10-01T13:56:48Z",
+ "stop_rule_as_authorized": "if aggregate transitions/min with 3 workers < the stable 2-worker window, or an existing worker's sampling/update keeps degrading markedly: stop the K-1 worker and resume it from its latest complete verifiable checkpoint into a later free slot; never kill E-0/DK-1, never reset their N/T/wall clock"
+}

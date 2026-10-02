@@ -1,0 +1,120 @@
+test_complete_script_five_steps (__main__.Tests) ... ERROR
+test_current_masked_action_fails_before_executor (__main__.Tests) ... ERROR
+test_current_missing_action_fails_before_executor (__main__.Tests) ... ERROR
+test_next_no_candidates_is_not_old_target_error (__main__.Tests) ... ERROR
+test_next_value_does_not_force_previous_action (__main__.Tests) ... ERROR
+test_nondeterministic_use_is_rejected (__main__.Tests) ... ERROR
+test_output_identity_and_no_cursor_mutation (__main__.Tests) ... FAIL
+test_real_policy_nan_after_execution_is_not_hidden (__main__.Tests) ... ok
+test_real_policy_nan_before_execution_is_not_hidden (__main__.Tests) ... ok
+test_terminal_skips_next_value (__main__.Tests) ... ok
+
+======================================================================
+ERROR: test_complete_script_five_steps (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 199, in test_complete_script_five_steps
+    for i,a in enumerate(SCRIPT): s.target=a; t,r=c.step(ss[i],True)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 203, in step
+    next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 20, in __call__
+    dist = torch.distributions.Categorical(logits=logits)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py", line 73, in __init__
+    super().__init__(batch_shape, validate_args=validate_args)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py", line 72, in __init__
+    raise ValueError(
+ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:
+tensor([nan, nan, nan, nan, nan, nan, nan])
+
+======================================================================
+ERROR: test_current_masked_action_fails_before_executor (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 205, in test_current_masked_action_fails_before_executor
+    with self.assertRaises(SmokeSelectionError): c.step(ss[0],True)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 114, in step
+    out = self.policy(snapshot, prefix_hidden(self.policy, prefix))
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 20, in __call__
+    dist = torch.distributions.Categorical(logits=logits)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py", line 73, in __init__
+    super().__init__(batch_shape, validate_args=validate_args)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py", line 72, in __init__
+    raise ValueError(
+ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:
+tensor([nan, nan, nan, nan, nan, nan, nan])
+
+======================================================================
+ERROR: test_current_missing_action_fails_before_executor (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 209, in test_current_missing_action_fails_before_executor
+    with self.assertRaises(SmokeSelectionError): c.step(ss[0],True)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 114, in step
+    out = self.policy(snapshot, prefix_hidden(self.policy, prefix))
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 16, in __call__
+    idx = out.candidate_ids.index(self.target)
+ValueError: tuple.index(x): x not in tuple
+
+======================================================================
+ERROR: test_next_no_candidates_is_not_old_target_error (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 216, in test_next_no_candidates_is_not_old_target_error
+    c,s,p,e,ss,_=harness(TARGET,masks=masks); t,r=c.step(ss[0],True)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 203, in step
+    next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 20, in __call__
+    dist = torch.distributions.Categorical(logits=logits)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py", line 73, in __init__
+    super().__init__(batch_shape, validate_args=validate_args)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py", line 72, in __init__
+    raise ValueError(
+ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:
+tensor([nan, nan, nan, nan, nan, nan, nan])
+
+======================================================================
+ERROR: test_next_value_does_not_force_previous_action (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 194, in test_next_value_does_not_force_previous_action
+    c,s,p,e,ss,_=harness(TARGET); t,r=c.step(ss[0],True)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 203, in step
+    next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 20, in __call__
+    dist = torch.distributions.Categorical(logits=logits)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py", line 73, in __init__
+    super().__init__(batch_shape, validate_args=validate_args)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py", line 72, in __init__
+    raise ValueError(
+ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:
+tensor([nan, nan, nan, nan, nan, nan, nan])
+
+======================================================================
+ERROR: test_nondeterministic_use_is_rejected (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 234, in test_nondeterministic_use_is_rejected
+    with self.assertRaises(SmokeSelectionError): c.step(ss[0],False)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py", line 203, in step
+    next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py", line 20, in __call__
+    dist = torch.distributions.Categorical(logits=logits)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py", line 73, in __init__
+    super().__init__(batch_shape, validate_args=validate_args)
+  File "/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py", line 72, in __init__
+    raise ValueError(
+ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:
+tensor([nan, nan, nan, nan, nan, nan, nan])
+
+======================================================================
+FAIL: test_output_identity_and_no_cursor_mutation (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py", line 222, in test_output_identity_and_no_cursor_mutation
+    self.assertIs(getattr(o,name),getattr(raw,name))
+AssertionError: tensor([-inf, 0., -inf, -inf, -inf, -inf, -inf]) is not tensor([0.0000, 0.0100, 0.0200,   -inf,   -inf,   -inf,   -inf])
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.051s
+
+FAILED (failures=1, errors=6)

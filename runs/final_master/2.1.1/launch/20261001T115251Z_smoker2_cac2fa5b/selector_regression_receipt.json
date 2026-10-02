@@ -1,0 +1,143 @@
+{
+  "all_checks_passed": true,
+  "baseline": "329652cab865a1b189135dc63f3971816f5f941e",
+  "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "checks": {
+    "01_stale_target_next_value": {
+      "observations": {
+        "executor_calls": 1,
+        "forward_calls": 2,
+        "old_v_next": 0.04792732000350952
+      },
+      "passed": true
+    },
+    "02_five_action_script_cursor": {
+      "observations": {
+        "events": 48,
+        "executor_calls": 5,
+        "forward_calls": 9
+      },
+      "passed": true
+    },
+    "03_masked_missing_target_fails_closed": {
+      "observations": {
+        "masked": "SCRIPT_TARGET_MASKED",
+        "missing": "SCRIPT_TARGET_MISSING_OR_AMBIGUOUS",
+        "none": "SCRIPT_TARGET_MISSING_OR_AMBIGUOUS"
+      },
+      "passed": true
+    },
+    "04_terminal_no_candidate_semantics": {
+      "observations": {
+        "no_legal_next": {
+          "old_v_next": 0.0
+        },
+        "no_legal_now": "NO_SAFE_CANDIDATES",
+        "terminal": {
+          "forward_calls": 1
+        }
+      },
+      "passed": true
+    },
+    "05_stale_action_still_legal": {
+      "observations": {
+        "select_events": 1
+      },
+      "passed": true
+    },
+    "06_nonfinite_not_hidden": {
+      "observations": {
+        "current_forward_nan": {
+          "executor_calls": 0
+        },
+        "nan_value_head": {
+          "executor_calls": 1
+        },
+        "next_value_probe_nan": {
+          "executor_calls": 1,
+          "transitions": 0
+        }
+      },
+      "passed": true
+    },
+    "07_output_fields_unchanged": {
+      "observations": {
+        "n_legal": 3
+      },
+      "passed": true
+    },
+    "08_post_execution_failure_recorded": {
+      "observations": {
+        "stage_a": "NEXT_SNAPSHOT_BUILD",
+        "stage_b": "NEXT_STATE_VALUE_PROBE"
+      },
+      "passed": true
+    }
+  },
+  "device": "cpu",
+  "engineering_only_test_data": true,
+  "files_changed_vs_baseline": [
+    "src/cp_disr/final_tb.py",
+    "tests/fixtures/r2_selector_original.txt",
+    "tests/helpers/final_tb_checks.py",
+    "tests/helpers/smoke_r2_checks.py",
+    "tests/test_final_tb_launch.py",
+    "tests/test_final_tb_smoke_r2.py"
+  ],
+  "final_tb_sha256": "80e12c58a4de37b9b82a29deb321c16e7f02301971734b871ffdf07948eecffd",
+  "forbidden_calls_attempted": [],
+  "optimizer_steps": 0,
+  "paper_performance_eligible": false,
+  "prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "protected_components": {
+    "src/cp_disr/adapters.py": {
+      "baseline_blob": "c53d37f812c250d0fd7fe2642dfc3a41ad5f9d53",
+      "head_blob": "c53d37f812c250d0fd7fe2642dfc3a41ad5f9d53",
+      "unchanged": true
+    },
+    "src/cp_disr/collector.py": {
+      "baseline_blob": "932eae6431a3aab6a9b97b357998c63a429ccdc5",
+      "head_blob": "932eae6431a3aab6a9b97b357998c63a429ccdc5",
+      "unchanged": true
+    },
+    "src/cp_disr/common.py": {
+      "baseline_blob": "c3f3a60fe72bc671bcf43b71ebc6544bdae8b892",
+      "head_blob": "c3f3a60fe72bc671bcf43b71ebc6544bdae8b892",
+      "unchanged": true
+    },
+    "src/cp_disr/facts.py": {
+      "baseline_blob": "622f0983f2688bd9e54c1e59c8266811d38e7e20",
+      "head_blob": "622f0983f2688bd9e54c1e59c8266811d38e7e20",
+      "unchanged": true
+    },
+    "src/cp_disr/neural.py": {
+      "baseline_blob": "fdd99209be50bd20933cc98c3250c3ff6c381ea6",
+      "head_blob": "fdd99209be50bd20933cc98c3250c3ff6c381ea6",
+      "unchanged": true
+    },
+    "src/cp_disr/rl.py": {
+      "baseline_blob": "dff8ebce61db09b88390ccd78bf9e667d84f7324",
+      "head_blob": "dff8ebce61db09b88390ccd78bf9e667d84f7324",
+      "unchanged": true
+    },
+    "src/cp_disr/torch_rl.py": {
+      "baseline_blob": "8962b2524ee8ac6a52ab3f4669e5465eda82d780",
+      "head_blob": "8962b2524ee8ac6a52ab3f4669e5465eda82d780",
+      "unchanged": true
+    }
+  },
+  "real_environment_constructions": 0,
+  "real_resets": 0,
+  "scope": "CPU engineering regression: ACTUAL repaired ScriptedSelector + ACTUAL Collector.step + production Policy (B1-K) on the REAL T_B template; only the physical boundary (clock/executor/observation/perception/verifier/evaluator/safety/successor builder) is a test double. Not a physical, algorithmic or performance result.",
+  "targeted_suite": {
+    "log": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001T115251Z_smoker2_cac2fa5b/targeted.log",
+    "log_sha256": "cc00646c090a89e4a05d0c3518d550b627ebd47fb3a082eac48e19690b2c1028",
+    "returncode": 0,
+    "seconds": 115.4,
+    "summary": [
+      "44 passed, 3 warnings in 89.32s (0:01:29)"
+    ]
+  },
+  "torch_version": "2.7.1+cu126",
+  "tracked_tree_clean": true
+}

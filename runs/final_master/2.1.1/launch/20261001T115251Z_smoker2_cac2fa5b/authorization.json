@@ -1,0 +1,43 @@
+{
+  "amendment_authorization_sha256": "6ac1f6976d1c556ed56e044532948cb9691e11c0c9797bfbf758b8a1109b999b",
+  "authorization_text": "\u6279\u51c6 CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1\uff0c\u57fa\u7ebf 329652cab865a1b189135dc63f3971816f5f941e\uff0c\u7ee7\u7eed\u539fT_B launch\u5206\u652f\u3002 \u5148\u4fee\u590d\u5df2\u786e\u8ba4\u7684ScriptedSelector/next-value\u63a2\u9488\u8026\u5408\uff1a\u53ea\u5728\u771f\u6b63select\u65f6\u6307\u5b9a\u811a\u672c\u52a8\u4f5c\uff0cpolicy forward/value/hidden/logits/distribution\u4fdd\u6301\u539f\u6837\uff1b\u4e0d\u6539Policy\u3001Collector\u3001PPO\u3001\u63a7\u5236\u5668\u6216\u4efb\u52a1\u3002\u5148\u7528\u5b9e\u9645Collector.step\u7684CPU\u56de\u5f52\u91cd\u73b0\u65e7bug\u3001\u9a8c\u8bc1\u4fee\u590d\u4e0emutation\uff0c\u518d\u63d0\u4ea4\u65b0prep\u5e76\u91cd\u65b0\u6ce8\u518c\u3002 \u4fdd\u7559\u65e7\u5931\u8d25\u76ee\u5f55\uff0c\u8865\u5145\u7ea0\u6b63\u201c\u5c1a\u65e0Transition\u4e0d\u7b49\u4e8e\u672a\u8c03\u7528executor\u201d\u7684\u53e3\u5f84\u3002\u65e71/2/2/1\u9884\u7b97\u4e0d\u9000\u6b3e\uff1b\u5141\u8bb8\u628a\u539f\u672a\u7528\u76841\u4e2aepisode\u989d\u5ea6\u8f6c\u5165\u6b64\u6b21\u590d\u9a8c\uff0c\u53e6\u589e\u52a01 episode\u30012 constructions\u30012 explicit resets\uff0c\u4e0d\u589e\u52a0skill\u603b\u989d\u3002\u65b0\u65e7\u7d2f\u8ba1\u4e0a\u96503 episodes\u30016 constructions\u30016 explicit resets\u300124 skill\u6263\u8d26\uff1b\u672c\u8f6e\u4e0a\u96502/4/4/23\u3002\u53ea\u5141\u8bb8\u5148\u590d\u9a8cT_B_dev_00\uff0cPASS\u540e\u518d\u8fd0\u884cT_B_dev_04\u3002 \u4e24\u4e2acase\u540c\u4e00\u65b0prep\u4e0b\u771f\u5b9ePASS\u4e14\u78c1\u76d8\u9884\u7b97\u901a\u8fc7\u540e\uff0c\u6062\u590d\u7236\u5361\u539f\u4e09\u683cR-TB-E-0\u3001R-TB-DK-1\u3001R-TB-K-1\u7684\u6761\u4ef6\u8bad\u7ec3\u6388\u6743\uff1b\u4ecd\u53d7\u9996\u4e2a1024\u8f6c\u79fb/PPO\u5de5\u7a0b\u95e8\u3001\u6700\u591a2worker\u4e0e\u539fN/T\u9884\u7b97\u9650\u5236\uff0c\u4e0d\u989d\u5916\u589e\u52a0RL attempt\u6216elastic\u3002\u4efb\u4e00smoke\u5931\u8d25\u6216\u771f\u5b9ePolicy\u51fa\u73b0NaN\u5219\u505c\u6b62\uff0c\u5b8c\u6574\u4fdd\u5b58traceback\u3001\u9636\u6bb5\u548c\u5b9e\u9645executor\u8ba1\u6570\uff1b\u4e0d\u80fd\u9760nan_to_num\u3001\u53d6\u6d88mask\u6216\u8df3\u8fc7next-V\u4fee\u901a\u3002 Family B\u3001RoboCasa\u3001provider\u3001T_P\u4e0eformal test\u672c\u8f6e\u5747\u4e0d\u6267\u884c\u3002\n",
+  "authorization_text_sha256": "7113b74fa70e49586f6a8ad1bf0c2776833d5a16a0c52e4bbd50403a15dbf67c",
+  "baseline": "329652cab865a1b189135dc63f3971816f5f941e",
+  "budget_reconciliation_sha256": "6916a4bd535e7052481d0397fdec6c58ff57e84458fea2671605b2d035a142c8",
+  "caps": {
+    "ncap": 16384,
+    "new_rl_attempts": 3,
+    "smoke_cumulative": {
+      "construction_attempts": 6,
+      "episode_attempts": 3,
+      "explicit_resets": 6,
+      "skill_calls": 24
+    },
+    "smoke_local": {
+      "construction_attempts": 4,
+      "episode_attempts": 2,
+      "explicit_resets": 4,
+      "skill_calls": 23
+    },
+    "tcap": 68812.79999996186,
+    "workers": 2
+  },
+  "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "not_authorized": [
+    "provider",
+    "T_P training",
+    "automatic S2/S3",
+    "formal test",
+    "method upgrade",
+    "elastic",
+    "Family B",
+    "RoboCasa",
+    "extra RL attempts",
+    "third smoke case"
+  ],
+  "parent_card": "CP-DISR-NEXT-ENGINEERING-FIRST-TB-1",
+  "prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "prior_evidence_tree_digest_sha256": "30122be2f589309ccbcfbc136744a47f1c720e93e9f923f4a31ba5c19d6b4072",
+  "prior_smoke_reconciliation_sha256": "73f3df17a91981ff608f3b5b5d453c47b6833386555c0318912d63f5a41b0e73",
+  "registered": "2026-10-01T11:52:52Z"
+}

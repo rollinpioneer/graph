@@ -1,0 +1,20 @@
+将本卡并发上限从 2 个训练 worker 临时提高到 3 个，仅用于已经注册的三条 T_B 基础 run，不增加任何 RL attempt 或训练配置。
+当 `R-TB-DK-1` 的 first-update engineering gate PASS 后，可立即启动 `R-TB-K-1`，无需等待 E-0 或 DK-1 完整结束。
+启动前必须再次核验：
+
+* K-1 的 source/config/token identity 不变；
+* 有独立 GPU，禁止与 E-0/DK-1 共用同一 GPU；
+* `/home` 实时剩余空间足以容纳三个活跃 run 的剩余输出并保留 ≥2 GiB 安全空间；
+* 无 OOM、EGL 冲突或明显 I/O 饱和；
+* 不增加新的 benchmark attempt。
+
+第三个 worker 启动后，记录 15–30 分钟窗口内：
+
+* 每个 worker 的 transitions/min；
+* aggregate transitions/min；
+* PPO update wall time；
+* GPU utilization / memory；
+* I/O wait。
+
+如果三 worker 下总吞吐反而低于两 worker 的稳定窗口，或任一已有 worker 的采样/更新持续恶化明显，则停止 K-1 worker 并从其最近完整可核验 checkpoint 恢复到之后的空闲槽；不得杀掉已稳定运行的 E-0/DK-1，也不得清零其 N/T/墙钟。
+本次变更只修改 `max_training_workers: 2 → 3`。三条 run identity、seed、Ncap/Tcap、评价点、optimizer、GPU 单卡绑定和科学预算全部不变。

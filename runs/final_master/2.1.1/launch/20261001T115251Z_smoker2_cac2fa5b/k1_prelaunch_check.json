@@ -1,0 +1,118 @@
+{
+ "all_passed": true,
+ "checks": {
+  "attempts": {
+   "K1_status_before": "NOT_STARTED",
+   "cap": 3,
+   "new_rl_attempts_used_before": 2,
+   "note": "K-1 is the third of the three registered plans; no attempt beyond the registered three"
+  },
+  "gate_dk1": {
+   "optimizer_steps": 60,
+   "passed": true,
+   "reasons": []
+  },
+  "gpu_compute_apps": [
+   "3095675, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 1210 MiB",
+   "3227574, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 3168 MiB",
+   "3752769, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 1712 MiB",
+   "3383484, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 2414 MiB",
+   "3498327, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 2670 MiB",
+   "3762025, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 1712 MiB",
+   "2321796, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 21662 MiB",
+   "3764783, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 1770 MiB",
+   "2321797, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 21662 MiB",
+   "3763378, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 1770 MiB",
+   "3698097, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 39888 MiB",
+   "3698099, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 40292 MiB",
+   "3918545, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 15450 MiB",
+   "2353808, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 3168 MiB"
+  ],
+  "gpu_independent": {
+   "chosen_gpu": 1,
+   "running_workers": {
+    "R-TB-DK-1": {
+     "gpu": 2,
+     "pid": 3383484
+    },
+    "R-TB-E-0": {
+     "gpu": 0,
+     "pid": 3095675
+    }
+   },
+   "shared_with_my_workers": false
+  },
+  "gpu_state": [
+   "0, 1241 MiB, 40960 MiB, 1 %",
+   "1, 4906 MiB, 40960 MiB, 99 %",
+   "2, 7331 MiB, 40960 MiB, 99 %",
+   "3, 23476 MiB, 40960 MiB, 78 %",
+   "4, 23467 MiB, 40960 MiB, 87 %",
+   "5, 39897 MiB, 40960 MiB, 0 %",
+   "6, 40301 MiB, 40960 MiB, 0 %",
+   "7, 18189 MiB, 40960 MiB, 100 %"
+  ],
+  "identity": {
+   "authorization_sha256": "c3f977fe1e1e51fa88bafdeb73b9c88483ff2a1dc39baff0fffa7b3e7d0d6a20",
+   "config_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001T115251Z_smoker2_cac2fa5b/run_configs/R-TB-K-1.yaml",
+   "config_sha256_now": "e902d5d0ec71e3d123a6963019a0a0df185c20b714eb56bfe5a02f4a391a8212",
+   "config_sha256_registered": "e902d5d0ec71e3d123a6963019a0a0df185c20b714eb56bfe5a02f4a391a8212",
+   "config_unchanged": true,
+   "head": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+   "head_equals_prep": true,
+   "plan_identity": {
+    "method": "B1-K",
+    "planned_run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b",
+    "release_order": 3,
+    "seed": 1
+   },
+   "prep": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+   "registration_files_unchanged": {
+    "amendment_authorization.json": "6ac1f6976d1c556ed56e044532948cb9691e11c0c9797bfbf758b8a1109b999b",
+    "budget_reconciliation.json": "6916a4bd535e7052481d0397fdec6c58ff57e84458fea2671605b2d035a142c8",
+    "launch_plan.json": "06af99b9b2c2ae519a4521452e8a928bfca3a31e1c78dda217703a530cbae9bf",
+    "prior_smoke_reconciliation.json": "73f3df17a91981ff608f3b5b5d453c47b6833386555c0318912d63f5a41b0e73",
+    "smoke_selection.json": "402294dfc0bebc144ad2cb67ba6b51739af1fc9ae4d9bc3921bef16c668a173e"
+   },
+   "smoke_receipt_verified": true,
+   "token_sha256": "54f057dd0ccaa3760c2146efe7c0af986ad51993562b070a45958536e16a944d",
+   "token_verified": true,
+   "tracked_tree_clean": true
+  },
+  "oom_egl_io": {
+   "dmesg_oom_lines": [],
+   "dmesg_stderr": "",
+   "egl_note": "K-1 gets its own physical GPU via bind_worker_gpu (one visible device); EGL/graphics-context evidence is taken from nvidia-smi after start",
+   "iowait_frac_last10_samples": [
+    0.0,
+    0.0378,
+    0.0458,
+    0.0375,
+    0.0449,
+    0.042
+   ],
+   "iowait_max": 0.0458,
+   "loadavg": [
+    43.90283203125,
+    44.259765625,
+    43.56884765625
+   ],
+   "mem_free_gb": "Mem:             503          75           4           1         429         428"
+  },
+  "storage_live": {
+   "free_bytes": 20547174400,
+   "passed": true,
+   "per_plan_remaining_estimate": {
+    "R-TB-DK-1": 2070305512,
+    "R-TB-E-0": 1858263784,
+    "R-TB-K-1": 2151430888
+   },
+   "required_bytes": 8227483832,
+   "reserve_ge_2GiB_included": true,
+   "time": "2026-10-01T13:57:37Z"
+  }
+ },
+ "gpu": 1,
+ "plan": "R-TB-K-1",
+ "time": "2026-10-01T13:58:26Z"
+}

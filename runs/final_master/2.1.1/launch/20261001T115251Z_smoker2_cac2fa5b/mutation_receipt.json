@@ -1,0 +1,60 @@
+{
+  "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "first_check_fails_on_old_selector": true,
+  "first_check_passes_on_repaired": true,
+  "matrix": {
+    "01_stale_target_next_value": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "t/src/cp_disr/final_tb.py\", line 905, in __call__\n    dist = torch.distributions.Categorical(logits=logits)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py\", line 73, in __init__\n    super().__init__(batch_shape, validate_args=validate_args)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py\", line 72, in __init__\n    raise ValueError(\nValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan])\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "02_five_action_script_cursor": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "t/src/cp_disr/final_tb.py\", line 905, in __call__\n    dist = torch.distributions.Categorical(logits=logits)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py\", line 73, in __init__\n    super().__init__(batch_shape, validate_args=validate_args)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py\", line 72, in __init__\n    raise ValueError(\nValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan])\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "03_masked_missing_target_fails_closed": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "t/src/cp_disr/final_tb.py\", line 905, in __call__\n    dist = torch.distributions.Categorical(logits=logits)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py\", line 73, in __init__\n    super().__init__(batch_shape, validate_args=validate_args)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py\", line 72, in __init__\n    raise ValueError(\nValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan])\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "04_terminal_no_candidate_semantics": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "[robosuite WARNING] No private macro file found! (__init__.py:7)\n[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)\n[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\n  File \"/tmp/tmpdzak0xpr/mutant/tests/helpers/smoke_r2_checks.py\", line 255, in check_terminal_and_no_candidate_semantics\n    assert t.terminated and t.old_v_next == 0.0 and r.rec.forward_calls == 1 and r.executor.calls == [SCRIPT[0]]\nAssertionError\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "05_stale_action_still_legal": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "[robosuite WARNING] No private macro file found! (__init__.py:7)\n[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)\n[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\n  File \"/tmp/tmpdzak0xpr/mutant/tests/helpers/smoke_r2_checks.py\", line 280, in check_stale_action_still_legal\n    assert [e[\"event\"] for e in events].count(\"SELECT\") == 1, \"the next-V probe must never call select()\"\nAssertionError: the next-V probe must never call select()\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "06_nonfinite_not_hidden": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "[robosuite WARNING] No private macro file found! (__init__.py:7)\n[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)\n[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\n  File \"/tmp/tmpdzak0xpr/mutant/tests/helpers/smoke_r2_checks.py\", line 293, in check_nonfinite_policy_not_masked\n    assert r.executor.calls == [] and r.rec.executor_entered == 0 and r.rec.stage == \"CURRENT_DECISION_FORWARD\"\nAssertionError\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "07_output_fields_unchanged": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "[robosuite WARNING] No private macro file found! (__init__.py:7)\n[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)\n[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\n  File \"/tmp/tmpdzak0xpr/mutant/tests/helpers/smoke_r2_checks.py\", line 326, in check_output_fields_unchanged\n    assert torch.equal(getattr(out, name), getattr(ref, name)), name\nAssertionError: logits\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    },
+    "08_post_execution_failure_recorded": {
+      "old_selector_detected": true,
+      "old_selector_error_tail": "[robosuite WARNING] No private macro file found! (__init__.py:7)\n[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)\n[robosuite WARNING] To setup, run: python /home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\n  File \"/tmp/tmpdzak0xpr/mutant/tests/helpers/smoke_r2_checks.py\", line 401, in check_post_execution_failure_is_recorded\n    assert res2[\"failure\"][\"stage\"] == \"NEXT_STATE_VALUE_PROBE\" and res2[\"counters\"][\"executor_calls_entered\"] == 1\nAssertionError\n",
+      "old_selector_returncode": 1,
+      "repaired_returncode": 0
+    }
+  },
+  "mutation": "restore the OLD ScriptedSelector (blob-identical text in tests/fixtures/r2_selector_original.txt) into a temporary copy of src/",
+  "old_selector_fixture_git_blob": "544fe05ea6e1d6a66fc94ab89816eab7a4246957",
+  "prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "production_final_tb_unchanged_by_mutation": true,
+  "required_first_check": "01_stale_target_next_value"
+}

@@ -1,0 +1,54 @@
+{
+  "baseline": "329652cab865a1b189135dc63f3971816f5f941e",
+  "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "code_defect_confirmed": "SCRIPT_TARGET_APPLIED_DURING_NEXT_VALUE_PROBE",
+  "cpu_controlled_reproduction_phase": "AFTER_ONE_FAKE_EXECUTION_DURING_NEXT_VALUE_PROBE",
+  "interpretation": {
+    "empty_steps_or_no_transition_means_executor_not_called": false,
+    "local_fake_executor_calls_charged_to_physical_ledger": false,
+    "note": "An empty `steps` array and no returned Transition do not show that the controller/executor was not called: Collector.step executes the skill before it builds the successor snapshot and probes the next value, so the failing probe can run after a real execution. The persisted receipt carries no direct executor counter, hence the count stays unverified.",
+    "refund": "NONE"
+  },
+  "parent_card": "CP-DISR-NEXT-ENGINEERING-FIRST-TB-1",
+  "previous_actual_executor_calls": "UNVERIFIED_FROM_PERSISTED_RECEIPT",
+  "previous_completed_transitions": 0,
+  "previous_construction_attempts_charged": 2,
+  "previous_engineering_error": "ValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan], device='cuda:0')",
+  "previous_episode_attempts_charged": 1,
+  "previous_explicit_resets_charged": 2,
+  "previous_failure_phase": "UNVERIFIED_FROM_PERSISTED_TRACEBACK",
+  "previous_skill_budget_charged": 1,
+  "previous_smoke_label": "TB_LAUNCH_BLOCKED_RUNTIME",
+  "prior_evidence": {
+    "directory": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0",
+    "files": {
+      "authorization.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/authorization.json",
+        "sha256": "b9909318f45c911d0c9c13b28a9ab4dc728c47abfebfb13b8d6e72ea0bae56b4"
+      },
+      "launch_state.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/launch_state.json",
+        "sha256": "4c3cabd3b4201c058583e31fbfebab77c44e2adc749c1d8fb3294aabbb8928c7"
+      },
+      "smoke_budget.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/smoke_budget.json",
+        "sha256": "cd23ed037218327bde5e371f0adaa8aff2ce74807a30f5f6c86e3ae7564b56c8"
+      },
+      "smoke_case1.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/smoke_case1.json",
+        "sha256": "343e283a25727742ecd0ac9a384350625042fe87c84d948a2a70e394cdba10b7"
+      },
+      "smoke_receipt.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/smoke_receipt.json",
+        "sha256": "03b51e0550f6990263183a8777c1f00f74c8a52e13465e772181e049e9424f6d"
+      },
+      "smoke_selection.json": {
+        "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001_prep083715b0/smoke_selection.json",
+        "sha256": "10873a3a70da6f82d22aa15f90d49d6fade8c078ac89536c3829f92f582094fc"
+      }
+    },
+    "tree_digest_sha256": "30122be2f589309ccbcfbc136744a47f1c720e93e9f923f4a31ba5c19d6b4072",
+    "tree_file_count": 26
+  },
+  "registered": "2026-10-01T11:52:52Z"
+}

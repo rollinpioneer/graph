@@ -1,0 +1,332 @@
+{
+  "authorization_sha256": "c3f977fe1e1e51fa88bafdeb73b9c88483ff2a1dc39baff0fffa7b3e7d0d6a20",
+  "budget_used": {
+    "construction_attempts": 4,
+    "episode_attempts": 2,
+    "explicit_resets": 4,
+    "skill_calls": 10
+  },
+  "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "case_id": "T_B_dev_04",
+  "counters": {
+    "budget_charged_this_attempt": {
+      "construction_attempts": 2,
+      "episode_attempts": 1,
+      "explicit_resets": 2,
+      "skill_calls": 5
+    },
+    "budget_used_local_cumulative": {
+      "construction_attempts": 4,
+      "episode_attempts": 2,
+      "explicit_resets": 4,
+      "skill_calls": 10
+    },
+    "event_log_errors": [],
+    "executor_calls_entered": 5,
+    "executor_calls_raised": 0,
+    "executor_calls_returned": 5,
+    "internal_reset_calls_measured": 4,
+    "policy_forward_calls": 9,
+    "sim_steps_measured": 479,
+    "transitions_returned": 5
+  },
+  "engineering_error": null,
+  "episode_verdict": "PASS",
+  "events_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001T115251Z_smoker2_cac2fa5b/smoke_case2_events.jsonl",
+  "failure": null,
+  "final_task_success": true,
+  "forward_probe": {
+    "B1-K": {
+      "effect_token_counts": {},
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": false,
+      "value_finite": true
+    },
+    "B1-K+E": {
+      "effect_token_counts": {
+        "a:OPEN:container:v1": 5,
+        "a:PICK:second_object:v1": 8,
+        "a:PICK:target:v1": 8
+      },
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": false,
+      "value_finite": true
+    },
+    "B2": {
+      "effect_token_counts": {},
+      "effective_prior_edges": 0,
+      "logits_finite_on_legal": true,
+      "n_candidates": 7,
+      "n_legal": 3,
+      "prior_inputs_all_zero": true,
+      "successor_used": true,
+      "value_finite": true
+    }
+  },
+  "gpu_after_factory": {
+    "expected_physical": 2,
+    "gpus": [
+      2
+    ],
+    "graphics_context_seen": true,
+    "on_expected_only": true,
+    "pid": 3071488,
+    "rows": [
+      {
+        "gpu": 2,
+        "type": "G"
+      }
+    ],
+    "types": [
+      "G"
+    ]
+  },
+  "gpu_after_start_case": {
+    "expected_physical": 2,
+    "gpus": [
+      2
+    ],
+    "graphics_context_seen": true,
+    "on_expected_only": true,
+    "pid": 3071488,
+    "rows": [
+      {
+        "gpu": 2,
+        "type": "G"
+      }
+    ],
+    "types": [
+      "G"
+    ]
+  },
+  "gpu_end": {
+    "expected_physical": 2,
+    "gpus": [
+      2
+    ],
+    "graphics_context_seen": true,
+    "on_expected_only": true,
+    "pid": 3071488,
+    "rows": [
+      {
+        "gpu": 2,
+        "type": "C+G"
+      }
+    ],
+    "types": [
+      "C+G"
+    ]
+  },
+  "index": 2,
+  "initial": {
+    "candidate_ids": [
+      "a:OPEN:container:v1",
+      "a:PICK:second_object:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:second_object:container:v1",
+      "a:PLACE:target:container:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1",
+      "a:PLACE_BUFFER:target:buffer:v1"
+    ],
+    "facts": {
+      "p:AtBuffer:second_object:buffer": "FALSE",
+      "p:AtBuffer:target:buffer": "FALSE",
+      "p:GripperEmpty": "TRUE",
+      "p:Held:second_object": "FALSE",
+      "p:Held:target": "FALSE",
+      "p:Inside:second_object:container": "FALSE",
+      "p:Inside:target:container": "FALSE",
+      "p:OnTable:second_object": "TRUE",
+      "p:OnTable:target": "TRUE",
+      "p:Open:container": "FALSE"
+    },
+    "mask": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "prior_edges": 0,
+    "prior_mode": "absent",
+    "restore_receipt": {
+      "applied_case_id": "T_B_dev_04",
+      "applied_restore_seed": 8104,
+      "candidate_ids_sha256": "2efe5b35dbb3f2be27589327a4bdef67da8db3669936c1cd75bf0dcc1a2d1bc2",
+      "candidate_mask_sha256": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+      "normalized_reset_config_sha256": "8cd8c4adba1d8deec0d0eea5a2d3dbc1af9c075874b80c890b3ac93205d1e413",
+      "public_facts_sha256": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "requested_case_id": "T_B_dev_04",
+      "requested_restore_seed": 8104,
+      "restore_checks": {
+        "candidate_ids_measured": true,
+        "candidate_mask_measured": true,
+        "case_id_applied": true,
+        "public_facts_measured": true,
+        "reset_recipe_bound": true,
+        "seed_applied": true,
+        "state_identity_measured": true
+      },
+      "runtime_source_sha256": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+      "state_identity_kind": "public_snapshot",
+      "state_identity_sha256": "b10c4ed7b0ba6ecc96c7c87c189c2af9bbd0414efb753ed2f94430130eeea5d5",
+      "task_contract_identity": "3bda87e3bad0f5a54538cbab4b75f2c9f8c8ee56fb0479be97a567374a8e53bc"
+    },
+    "snapshot_identity": "b10c4ed7b0ba6ecc96c7c87c189c2af9bbd0414efb753ed2f94430130eeea5d5"
+  },
+  "optimizer_steps": 0,
+  "physical_gpu": 2,
+  "prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "provider_requests": 0,
+  "render_gpu_device_id": 2,
+  "script": [
+    "a:PICK:second_object:v1",
+    "a:PLACE_BUFFER:second_object:buffer:v1",
+    "a:OPEN:container:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:target:container:v1"
+  ],
+  "steps": [
+    {
+      "action": "a:PICK:second_object:v1",
+      "clock_end": 4.499999999999615,
+      "clock_monotonic": true,
+      "clock_start": 0.0,
+      "controller_exit": "NORMAL_TERMINATION",
+      "counters": {
+        "executor_entered": 1,
+        "executor_raised": 0,
+        "executor_returned": 1,
+        "policy_forward_calls": 2,
+        "transitions_returned": 1
+      },
+      "duration": 4.499999999999615,
+      "evaluator_reason": "CONTINUE",
+      "held_fact": "TRUE",
+      "historic_duration_match": true,
+      "index": 0,
+      "mask_hash": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+      "sim_duration": 4.499999999999615,
+      "steps": 90,
+      "task_success": false,
+      "terminated": false,
+      "truncated": false,
+      "verdict": "STEP_OK"
+    },
+    {
+      "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+      "clock_end": 8.049999999999692,
+      "clock_monotonic": true,
+      "clock_start": 4.499999999999615,
+      "controller_exit": "NORMAL_TERMINATION",
+      "counters": {
+        "executor_entered": 2,
+        "executor_raised": 0,
+        "executor_returned": 2,
+        "policy_forward_calls": 4,
+        "transitions_returned": 2
+      },
+      "duration": 3.550000000000076,
+      "evaluator_reason": "CONTINUE",
+      "held_fact": null,
+      "historic_duration_match": true,
+      "index": 1,
+      "mask_hash": "c919591c8f3aa22786524aeb3b364702812485b6ff0ec00365a1e5d5bce4e719",
+      "sim_duration": 3.5500000000000753,
+      "steps": 71,
+      "task_success": false,
+      "terminated": false,
+      "truncated": false,
+      "verdict": "STEP_OK"
+    },
+    {
+      "action": "a:OPEN:container:v1",
+      "clock_end": 16.1000000000014,
+      "clock_monotonic": true,
+      "clock_start": 8.049999999999692,
+      "controller_exit": "NORMAL_TERMINATION",
+      "counters": {
+        "executor_entered": 3,
+        "executor_raised": 0,
+        "executor_returned": 3,
+        "policy_forward_calls": 6,
+        "transitions_returned": 3
+      },
+      "duration": 8.05000000000171,
+      "evaluator_reason": "CONTINUE",
+      "held_fact": null,
+      "historic_duration_match": true,
+      "index": 2,
+      "mask_hash": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+      "sim_duration": 8.05000000000171,
+      "steps": 161,
+      "task_success": false,
+      "terminated": false,
+      "truncated": false,
+      "verdict": "STEP_OK"
+    },
+    {
+      "action": "a:PICK:target:v1",
+      "clock_end": 20.999999999998685,
+      "clock_monotonic": true,
+      "clock_start": 16.1000000000014,
+      "controller_exit": "NORMAL_TERMINATION",
+      "counters": {
+        "executor_entered": 4,
+        "executor_raised": 0,
+        "executor_returned": 4,
+        "policy_forward_calls": 8,
+        "transitions_returned": 4
+      },
+      "duration": 4.899999999997284,
+      "evaluator_reason": "CONTINUE",
+      "held_fact": "TRUE",
+      "historic_duration_match": true,
+      "index": 3,
+      "mask_hash": "0937c69a5f45ef207e8edad04f1a94a38e7c499b91d78149df8dcae4f96e734d",
+      "sim_duration": 4.899999999997284,
+      "steps": 98,
+      "task_success": false,
+      "terminated": false,
+      "truncated": false,
+      "verdict": "STEP_OK"
+    },
+    {
+      "action": "a:PLACE:target:container:v1",
+      "clock_end": 23.94999999999705,
+      "clock_monotonic": true,
+      "clock_start": 20.999999999998685,
+      "controller_exit": "NORMAL_TERMINATION",
+      "counters": {
+        "executor_entered": 5,
+        "executor_raised": 0,
+        "executor_returned": 5,
+        "policy_forward_calls": 9,
+        "transitions_returned": 5
+      },
+      "duration": 2.949999999998365,
+      "evaluator_reason": "TASK_SUCCESS",
+      "held_fact": null,
+      "historic_duration_match": true,
+      "index": 4,
+      "mask_hash": "bd71538da695da2da38758712c526fd46ae1420d038ab17e4e7cca60bcf800e3",
+      "sim_duration": 2.949999999998365,
+      "steps": 59,
+      "task_success": true,
+      "terminated": true,
+      "truncated": false,
+      "verdict": "STEP_OK"
+    }
+  ],
+  "test_ids_accessed": 0
+}

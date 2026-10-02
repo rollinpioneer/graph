@@ -1,0 +1,12 @@
+{
+ "addendum": 1,
+ "amendment": "R2-1-CONCURRENCY-3",
+ "card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+ "ppo_wall_time": "reported per update inside the window; E-0 baseline 3.8-6.0 min, DK-1 baseline 27.1 min",
+ "primary_comparison": "phase-matched collection-phase rate: per worker, transitions/min over consecutive 30 s samples in which that worker's transition count increased, summed over workers; compared with the 2-worker collection-phase baseline (pre-launch samples 13:55:53-13:59:06 plus completed 2-worker collection spans: E-0 ~30.8/min, DK-1 ~30.1/min)",
+ "reason": "After the third worker started I saw that E-0 (N=3072 collected 13:51Z, next PPO ~14:22Z) and DK-1 (update_1 done 13:45Z, next PPO ~14:17Z, previous PPO took 27 min) will each enter a PPO phase inside the 15-30 min window. PPO phases write no transitions, so an all-in rate drop there is a phase effect, not contention.",
+ "recorded_utc": "2026-10-01T14:01:55Z",
+ "secondary_comparison": "all-in rates over the same window (reported unchanged from the original amendment rule); a shortfall that coincides with a PPO/eval phase is reported as such",
+ "unchanged": "stop rule, who may be stopped (K-1 only), and the ban on touching E-0/DK-1 N/T/wall clock",
+ "written_before_any_3_worker_window_was_analysed": true
+}

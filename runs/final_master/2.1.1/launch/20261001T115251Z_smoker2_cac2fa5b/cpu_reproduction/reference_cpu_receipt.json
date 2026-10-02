@@ -1,0 +1,42 @@
+{
+  "reviewed_ref": "329652cab865a1b189135dc63f3971816f5f941e",
+  "collector_git_blob_sha": "932eae6431a3aab6a9b97b357998c63a429ccdc5",
+  "collector_unmodified": true,
+  "torch_version": "2.7.1+cu126",
+  "device": "cpu",
+  "production_neural_policy_executed": false,
+  "bundle_policy_snapshot": "CONTROLLED_TEST_DOUBLES_NOT_SAVED_SERVER_REPLAY",
+  "real_environment_constructions": 0,
+  "real_resets": 0,
+  "real_skills": 0,
+  "optimizer_steps": 0,
+  "old_bug": {
+    "reproduced": true,
+    "exception": "Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan])",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/reproduce_selector_bootstrap.py\", line 180, in old_bug\n    try: c.step(snaps[0], deterministic=True)\n  File \"/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/collector.py\", line 203, in step\n    next_v = 0. if actual.terminated else float(self.policy(next_snapshot, out.hidden).value)\n  File \"/home/xushijie2/tmp/r2_pack/CP_DISR_TB_Smoke_Repair_R2/source_evidence/selector_original.py\", line 20, in __call__\n    dist = torch.distributions.Categorical(logits=logits)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/categorical.py\", line 73, in __init__\n    super().__init__(batch_shape, validate_args=validate_args)\n  File \"/home/xushijie2/envs/lerobotpi0-xfs/lib/python3.10/site-packages/torch/distributions/distribution.py\", line 72, in __init__\n    raise ValueError(\nValueError: Expected parameter logits (Tensor of shape (7,)) of distribution Categorical(logits: torch.Size([7])) to satisfy the constraint IndependentConstraint(Real(), 1), but found invalid values:\ntensor([nan, nan, nan, nan, nan, nan, nan])\n",
+    "events": [
+      {
+        "event": "policy_forward",
+        "decision_id": 0,
+        "pick_second_legal": true
+      },
+      {
+        "event": "FAKE_execute",
+        "candidate": "a:PICK:second_object:v1"
+      },
+      {
+        "event": "policy_forward",
+        "decision_id": 1,
+        "pick_second_legal": false
+      }
+    ],
+    "fake_executor_calls_before_exception": 1,
+    "real_environment_calls": 0,
+    "all_base_policy_legal_logits_and_values_finite": true
+  },
+  "selector": "REPAIR_REFERENCE",
+  "tests_run": 10,
+  "failures": 0,
+  "errors": 0,
+  "passed": true
+}
