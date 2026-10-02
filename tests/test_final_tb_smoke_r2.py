@@ -185,7 +185,7 @@ def test_10b_two_passes_on_the_same_prep_release_training_only_with_storage(tmp_
         final_tb.run_release(out, "train", HEAD_A, "R-TB-K-1", predecessor_blocked_reason="x", free_bytes_fn=lambda p: 10 ** 13)
     # the live gate counts the bytes that unfinished plans still need; a shrunken disk blocks the next release
     live = final_tb.storage_gate(out, free_bytes_fn=lambda p: 10 ** 13)["live_check"]
-    assert live["passed"] and set(live["per_plan_remaining_estimate"]) == set(final_tb.PLAN_TABLE)
+    assert live["passed"] and set(live["per_plan_remaining_estimate"]) == set(final_tb.BASE_PLAN_TABLE)
     with pytest.raises(BindingError, match="STORAGE_BUDGET_NOT_PASSED"):
         final_tb.storage_gate(out, free_bytes_fn=lambda p: 1 << 20)
     assert all(json.loads(line)["time"] for line in (out / "storage_checks.jsonl").read_text().splitlines())

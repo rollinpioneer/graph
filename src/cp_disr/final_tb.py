@@ -30,13 +30,18 @@ import yaml
 from .common import BindingError, canonical
 
 TASK = "T_B"
-PLAN_TABLE = {
+BASE_PLAN_TABLE = {  # the three base-17 T_B runs of the first cycle (R2 registration); identities never change
     "R-TB-E-0": {"method": "B1-K+E", "seed": 0, "release_order": 1},
     "R-TB-DK-1": {"method": "B2", "seed": 1, "release_order": 2},
     "R-TB-K-1": {"method": "B1-K", "seed": 1, "release_order": 3},
 }
+ELASTIC_PLAN_TABLE = {  # Plan v3 3.1/7.2: same-profile s1 of B1-K+E; spends exactly one elastic slot, authorised separately
+    "R-TB-E-1": {"method": "B1-K+E", "seed": 1, "release_order": 4, "budget_slot": "ELASTIC-01"},
+}
+PLAN_TABLE = {**BASE_PLAN_TABLE, **ELASTIC_PLAN_TABLE}
 METHODS = tuple(sorted({v["method"] for v in PLAN_TABLE.values()}))
-MAX_NEW_RL_ATTEMPTS = 3
+BASE_RL_ATTEMPTS = 3        # attempts of the base registration (R2 ledger cap)
+MAX_NEW_RL_ATTEMPTS = 4     # cumulative cap: 3 base + ELASTIC-01 (R-TB-E-1)
 MAX_WORKERS = 2
 
 # Frozen T_B runtime values (exact floats; never recomputed or recalibrated).
@@ -415,7 +420,7 @@ class Ledger:
         with self.locked():
             if self.state_path.exists():
                 raise BindingError("ledger already initialised: %s" % self.state_path)
-            state = {"created": utc_now(), "new_rl_attempts_used": 0, "new_rl_attempts_cap": MAX_NEW_RL_ATTEMPTS,
+            state = {"created": utc_now(), "new_rl_attempts_used": 0, "new_rl_attempts_cap": BASE_RL_ATTEMPTS,
                      "plans": {pid: dict(v) for pid, v in plans.items()}}
             write_json_atomic(self.state_path, state)
             return state
@@ -1458,7 +1463,7 @@ def run_check(root, out_dir, search_roots=(), baseline_ref=None, process_cmdline
               "plan_status": status, "storage": storage_report([root, out_dir]),
               "processes_checked": process_cmdlines, "environment_constructions": 0, "provider_requests": 0}
     write_json_atomic(out_dir / "run_status_and_budget.json", {"plans": status, "budget": {
-        "new_rl_attempts_cap": MAX_NEW_RL_ATTEMPTS, "new_rl_attempts_used": 0, "smoke": dict(SMOKE_CAPS_R2),
+        "new_rl_attempts_cap": BASE_RL_ATTEMPTS, "new_rl_attempts_used": 0, "smoke": dict(SMOKE_CAPS_R2),
         "provider": 0, "tp_training": 0, "formal_test": 0, "elastic": 0}, "storage": report["storage"]})
     write_json_atomic(out_dir / "binding_and_source_review.json", {"review": review, "report": report})
     return report
@@ -1559,8 +1564,8 @@ def budget_reconciliation(prior_charged, prior_rl_used=0) -> dict:
         "newly_authorised_by_r2": added, "r2_local_caps": dict(SMOKE_CAPS_R2), "cumulative_hard_caps": cumulative,
         "refund": "NONE", "registration_may_zero_history": False, "old_registration_may_release_independently": False,
         "expected_full_revalidation_skill_calls": 2 * SMOKE_PER_EPISODE_SKILLS_SCRIPTED,
-        "rl_attempts": {"parent_cap": MAX_NEW_RL_ATTEMPTS, "prior_used": int(prior_rl_used),
-                        "r2_not_additional": MAX_NEW_RL_ATTEMPTS, "elastic": 0},
+        "rl_attempts": {"parent_cap": BASE_RL_ATTEMPTS, "prior_used": int(prior_rl_used),
+                        "r2_not_additional": BASE_RL_ATTEMPTS, "elastic": 0},
     }
 
 
@@ -1616,7 +1621,7 @@ def run_register(root, out_dir, prep_commit, authorization_text, stamp=None, git
             "budget_reconciliation_sha256": amendment["budget_reconciliation_sha256"],
             "prior_evidence_tree_digest_sha256": prior_facts["tree"]["digest_sha256"],
             "caps": {"smoke_local": dict(SMOKE_CAPS_R2), "smoke_cumulative": dict(SMOKE_CAPS_CUMULATIVE),
-                     "new_rl_attempts": MAX_NEW_RL_ATTEMPTS, "workers": MAX_WORKERS, "ncap": N_CAP, "tcap": TCAP_SECONDS},
+                     "new_rl_attempts": BASE_RL_ATTEMPTS, "workers": MAX_WORKERS, "ncap": N_CAP, "tcap": TCAP_SECONDS},
             "not_authorized": list(AMENDMENT_NOT_AUTHORIZED), "registered": utc_now()}
     write_json_atomic(out_dir / "authorization.json", auth)
     write_json_atomic(out_dir / "smoke_selection.json", {
@@ -1629,7 +1634,7 @@ def run_register(root, out_dir, prep_commit, authorization_text, stamp=None, git
     split = derive_noprior_split(root, out_dir / "train_split_tb_noprior.json")
     manifest = derive_runtime_manifest(root, out_dir / "runtime_manifest_tb_resolved.yaml", split["path"])
     plans, configs = {}, {}
-    for pid, row in sorted(PLAN_TABLE.items(), key=lambda kv: kv[1]["release_order"]):
+    for pid, row in sorted(BASE_PLAN_TABLE.items(), key=lambda kv: kv[1]["release_order"]):
         attempt = "%s-%s-%s" % (pid, stamp, prep_commit[:8])
         run_dir = root / "runs/final_master/2.1.1/T_B" / row["method"] / ("seed_%d" % row["seed"]) / attempt
         cfg = {"plan_id": pid, "attempt_id": attempt, "method": row["method"], "training_seed": row["seed"],
@@ -1648,7 +1653,7 @@ def run_register(root, out_dir, prep_commit, authorization_text, stamp=None, git
     launch_plan = {"prep_commit": prep_commit, "stamp": stamp, "card": R2_CARD, "plans": plans, "configs": configs,
                    "derived": {"runtime_manifest": manifest, "train_split": split}, "frozen_runtime": FROZEN_RUNTIME,
                    "envelope": envelope(), "eval_points": list(EVAL_POINTS),
-                   "release_order": [p for p, _ in sorted(PLAN_TABLE.items(), key=lambda kv: kv[1]["release_order"])]}
+                   "release_order": [p for p, _ in sorted(BASE_PLAN_TABLE.items(), key=lambda kv: kv[1]["release_order"])]}
     write_json_atomic(out_dir / "launch_plan.json", launch_plan)
     token = issue_token(out_dir, "smoke", prep_commit)
     launch_plan["smoke_token"] = str(token)
@@ -1920,6 +1925,8 @@ def run_release(out_dir, stage, prep_commit, plan_id=None, evidence_dir=None, gi
     if stage == "train":
         if plan_id not in PLAN_TABLE:
             raise BindingError("unknown plan %r" % (plan_id,))
+        if plan_id in ELASTIC_PLAN_TABLE:
+            raise BindingError("%s spends an elastic slot; it is released only by the E1 elastic entry (final_tb_e1)" % plan_id)
         verify_smoke_receipt(out_dir, prep_commit)
         order = PLAN_TABLE[plan_id]["release_order"]
         evidence = {"smoke_receipt_sha256": sha256_file(out_dir / "smoke_receipt.json")}
