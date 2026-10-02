@@ -1,0 +1,52 @@
+{
+  "authorization_text": "\u6279\u51c6 R-TB-E-1\uff1a\n\ntask: T_B\nmethod: B1-K+E\nseed: 1\nbudget: ELASTIC-01\nprofile: \u4e0eR-TB-E-0\u5b8c\u5168\u76f8\u540c\nprovider: 0\nT_P training: 0\nformal test: 0\n\n\u4e00\u3001\u5148\u5b8c\u6210\u5df2\u6709\u8bc1\u636e\u4ea4\u4ed8\n\n1. \u4fdd\u6301\u7ed3\u679c\u63d0\u4ea4\uff1a\n   7c2f58c9844c7a8db4cd5a28fe1615e5630dfeff\n   \u4e0damend\u3001\u4e0d\u91cd\u5199\u3002\n\n2. \u5c06\u672c\u8f6e\u96f6\u6837\u672c\u5206\u6790\u6587\u4ef6\u63d0\u4ea4\u4e3a\u5355\u72eccommit\uff1a\n   analysis: close T_B base runs and register B1-K+E nontrivial learning\n\n3. \u63a8\u9001\uff1a\n   codex/cp-disr-final-tb-engineering-launch\n\n4. \u63a8\u9001\u540e\u786e\u8ba4\u8fdc\u7aef\u5305\u542b\u4e0a\u8ff0\u4e24\u4e2acommit\uff0c\n   \u5927checkpoint\u4ecd\u4fdd\u7559\u670d\u52a1\u5668\u771f\u5b9e\u6587\u4ef6\u548chash\uff0c\u4e0d\u63d0\u4ea4Git\u3002\n\n\u4e8c\u3001\u5efa\u7acbE1\u72ec\u7acb\u6267\u884c\u5206\u652f\n\n\u4ece\u6700\u65b0\u5206\u6790commit\u521b\u5efa\uff1a\n\ncodex/cp-disr-final-tb-e1-elastic\n\n\u65b0plan\uff1a\n\nR-TB-E-1\nmethod: B1-K+E\nseed: 1\nbudget_slot: ELASTIC-01\ninit: FROM_SCRATCH\nwarm_start: false\n\n\u6cbf\u7528\uff1a\n\n- T_B frozen train64/dev10\n- empty R\n- H = 23.09999999999752\n- d_ref = 4.199999999997672\n- Ncap = 16384\n- Tcap = 16384*d_ref\n- rollout = 1024\n- max complete updates envelope = 16\n- evaluation = 0/4096/8192/final\n- \u540coptimizer\u3001PPO\u3001controller\u3001reward\u548cdeadline\n\n\u4e09\u3001\u6700\u5c0fsource\u53d8\u66f4\n\n\u53ea\u5141\u8bb8\uff1a\n\n- \u589e\u52a0R-TB-E-1\u6ce8\u518c\u884c\uff1b\n- \u5c06\u7d2f\u8ba1RL attempt cap 3\u6539\u4e3a4\uff1b\n- \u65b0\u589eelastic ledger/release\u914d\u7f6e\uff1b\n- \u65b0\u589e\u6d4b\u8bd5\u548cE1\u5165\u53e3\u8bc1\u636e\u3002\n\n\u4e0d\u5f97\u4fee\u6539\uff1a\n\n- ScriptedSelector\uff1b\n- run_smoke\u6267\u884c\u903b\u8f91\uff1b\n- production run_train\u8def\u5f84\uff1b\n- Policy\uff1b\n- Collector\uff1b\n- PPO\uff1b\n- runtime_factory\uff1b\n- SkillExecutor\uff1b\n- perception\u3001Verifier\u3001Evaluator\uff1b\n- T_B split\u3001task\u3001reward\u3001timeout\uff1b\n- H/d_ref/Ncap/Tcap/eval schedule\u3002\n\n\u63d0\u4ea4\uff1a\n\nengineering: add R-TB-E-1 elastic launch binding\n\n\u8bb0\u5f55\u5b8c\u6574prep SHA\u5e76push\u3002\n\n\u56db\u3001Smoke\u4f7f\u7528A2\u517c\u5bb9\u6027\u91cd\u7ed1\u5b9a\n\n\u4e0d\u8fd0\u884c\u65b0\u73af\u5883smoke\u3002\n\n\u751f\u6210smoke_compatibility_rebind.json\uff0c\u6bd4\u8f83\u65e7prep cac2fa5b\u4e0e\u65b0prep\uff1a\n\n- run_smoke AST/hash\uff1b\n- ScriptedSelector AST/hash\uff1b\n- run_train production-call AST/hash\uff1b\n- stage2a_v11.py\uff1b\n- collector.py\uff1b\n- neural.py\uff1b\n- torch_rl.py\uff1b\n- runtime_factory.py\uff1b\n- controller\uff1b\n- Verifier/Evaluator\uff1b\n- split\u548cprofile\u3002\n\n\u4ee5\u4e0a\u6267\u884c\u8def\u5f84\u5fc5\u987b\u5168\u90e8\u76f8\u540c\u3002\n\n\u65e7\u4e24\u4e2asmoke receipt\u4fdd\u6301\u53ea\u8bfb\u3002\n\u521b\u5efa\u65b0\u7684derived compatibility receipt\u5e76\u7b7e\u53d1\u65b0prep\u4e13\u7528release token\u3002\n\u4e0d\u5f97\u590d\u7528\u65e7token\u3002\n\n\u4efb\u4e00\u6267\u884c\u8def\u5f84\u53d1\u751f\u53d8\u5316\uff1a\n\u505c\u6b62\uff0c\u4e0d\u81ea\u52a8\u8fd0\u884cA1\u3002\n\n\u4e94\u3001Evaluator\u89e6\u53d1\u8d44\u683c\u7684\u9759\u6001\u6838\u5bf9\n\n\u96f6\u73af\u5883\u6838\u5bf9\uff1a\n\n- evaluator\u6e90\u7801hash\u4e0e\u5df2\u6709\u8bad\u7ec3\u8bc4\u4ef7\u8eab\u4efd\u4e00\u81f4\uff1b\n- Evaluator\u8f93\u5165\u4e0d\u5305\u542bmethod\u3001prior\u3001logits\u3001policy hidden\u6216nominal facts\uff1b\n- eval_final\u786e\u5b9e\u5305\u542b10/10 independent TASK_SUCCESS\uff1b\n- \u7ed1\u5b9aeval_final\u548cfinal checkpoint hash\u3002\n\n\u901a\u8fc7\u540e\u786e\u8ba4\uff1a\n\nR-TB-E-0:\n  NONTRIVIAL_LEARNING\n\n\u516d\u3001Elastic\u8d26\u672c\n\n\u82e5\u4e0d\u5b58\u5728\u65e2\u6709Master elastic ledger\uff0c\u751f\u6210\uff1a\n\nelastic_pool_ledger_reconstructed.json\n\n\u660e\u786e\uff1a\n\n- \u8fd9\u662f\u4f9d\u636e\u5f53\u524dProject/Git/\u5df2\u77e5worktree\u91cd\u5efa\uff1b\n- prior allocations found = 0\uff1b\n- external ledger = NOT_AVAILABLE\uff1b\n- \u672c\u6b21\u7528\u6237\u660e\u786e\u6388\u6743ELASTIC-01\uff1b\n- ELASTIC-02..04\u4fdd\u6301UNALLOCATED\u3002\n\n\u4e0d\u5f97\u81ea\u52a8\u5206\u914d+E seed2\u6216\u5176\u4ed6control\u3002\n\n\u4e03\u3001\u5b58\u50a8\u95e8\n\n\u5b9e\u9645\u8f93\u51fa\u6302\u8f7d\u70b9\uff1a\n\nstart_free_space >= 6 GiB\nhard_reserved_margin = 2 GiB\npause_trigger = 3 GiB\nresume_trigger = 5 GiB\nsampling_interval = 5 seconds\n\n\u4f4e\u4e8e3 GiB\u65f6SIGSTOP\u8be5E1 worker\u5e76\u8bb0\u5f55\uff1b\n\u6062\u590d\u52305 GiB\u540e\u624dSIGCONT\u3002\n\u4e0dkill\u3001\u4e0d\u5220\u9664\u5386\u53f2\u3001\u4e0d\u964d\u4f4echeckpoint\u4fdd\u5b58\u9891\u7387\u3002\n\n\u516b\u3001\u79bb\u7ebf\u6d4b\u8bd5\n\n\u81f3\u5c11\u8986\u76d6\uff1a\n\n- E1 plan/method/seed\u4e25\u683c\u7ed1\u5b9a\uff1b\n- old three plan identities\u4e0d\u53d8\uff1b\n- total attempt cap\u6070\u4e3a4\uff1b\n- ELASTIC-01\u53ea\u80fd\u88abE1\u5360\u7528\uff1b\n- seed1\u8d2f\u7a7fPolicy\u3001sampler\u3001checkpoint\u548cmetadata\uff1b\n- +E\u4ecdempty-R\u4e14\u65e0provider\uff1b\n- E1\u72ec\u7acb\u521d\u59cb\u5316\uff0c\u4e0d\u52a0\u8f7dE-0\u6743\u91cd\uff1b\n- smoke compatibility\u4efb\u4e00\u5173\u952e\u51fd\u6570\u53d8\u5316\u65f6rebind\u5931\u8d25\uff1b\n- \u65e7smoke token\u4e0d\u80fd\u7528\u4e8e\u65b0prep\uff1b\n- \u65b0release token\u7ed1\u5b9a\u65b0prep\u548ccompatibility receipt\uff1b\n- storage\u95e8\u89e6\u53d1/\u6062\u590d\u903b\u8f91\uff1b\n- start free<6GiB\u65f6\u62d2\u7edd\uff1b\n- success_seconds\u4e0d\u88ab\u5192\u79f0episode\u603b\u8017\u65f6\u3002\n\n\u8fd0\u884c\u76ee\u6807\u6d4b\u8bd5\u548c\u539ffinal_tb/smoke R2\u6d4b\u8bd5\u3002\n\u4e0d\u9700\u8981\u91cd\u8dd1\u65e0\u5173\u7684\u5168\u4ed3\u65e7lineage\u6d4b\u8bd5\u3002\n\n\u4e5d\u3001\u6267\u884c\n\n\u53ea\u542f\u52a8\u4e00\u4e2aE1 worker\uff0c\u4f7f\u7528\u72ec\u7acbGPU\u3002\n\u4e0d\u4e0e\u5176\u4ed6\u65b0\u8bad\u7ec3\u5e76\u884c\u542f\u52a8\u3002\n\n\u9996\u4e2a1024 transition\u540e\u68c0\u67e5\u65e2\u6709first-update gate\uff1b\n\u901a\u8fc7\u540e\u5728\u540c\u4e00attempt\u5185\u7ee7\u7eed\u5230Tcap/Ncap\u3002\n\u4e0d\u56e00/4k/8k\u6210\u7ee9\u63d0\u524d\u505c\u6b62\u6216\u6362seed\u3002\n\n\u5341\u3001\u7ed3\u679c\n\n\u4fdd\u5b58\u5e76\u62a5\u544a\uff1a\n\n- actual N/T\uff1b\n- complete + fragment updates\uff1b\n- optimizer steps\uff1b\n- 0/4096/8192/final dev10\uff1b\n- mean discounted return\uff1b\n- checkpoint/generation/fresh-load hashes\uff1b\n- storage pause events\uff1b\n- NaN/hard failure\uff1b\n- wall time\u3002\n\nrecorded success_seconds\u6807\u4e3aFINAL_SKILL_DURATION_ONLY\uff0c\n episode\u603b\u6210\u529f\u8017\u65f6\u6807UNVERIFIED\u3002\n\n\u5b8c\u6210\u540e\u63d0\u4ea4\uff1a\n\nresearch: record T_B B1-K+E seed1 elastic run\n\n\u63a8\u9001\u65b0\u5206\u652f\u540e\u505c\u6b62\u3002\n\u4e0d\u81ea\u52a8\u6267\u884cformal test\u3001T_P\u3001Family B\u6216RoboCasa\u3002\n",
+  "authorization_text_sha256": "a704c230f551cad2b91de5da8df65ecc686583b9adb95fa115f8cd75b4c520fb",
+  "base_results_commit": "7c2f58c9844c7a8db4cd5a28fe1615e5630dfeff",
+  "budget_slot": "ELASTIC-01",
+  "caps": {
+    "cumulative_cap": 4,
+    "formal_test": 0,
+    "ncap": 16384,
+    "new_rl_attempts_used_before": 3,
+    "provider": 0,
+    "tcap": 68812.79999996186,
+    "tp_training": 0,
+    "workers": 1
+  },
+  "card": "CP-DISR-TB-E1-ELASTIC-01",
+  "method": "B1-K+E",
+  "not_authorized": [
+    "provider",
+    "T_P training",
+    "formal test",
+    "Family B",
+    "RoboCasa",
+    "automatic +E seed 2 or any other control",
+    "ELASTIC-02",
+    "ELASTIC-03",
+    "ELASTIC-04",
+    "a second R-TB-E-1 attempt",
+    "a different seed or early stop of R-TB-E-1",
+    "parallel new training",
+    "Method 2.1.1 change"
+  ],
+  "old_prep_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "parent_card": "CP-DISR-TB-SMOKE-SELECTOR-REPAIR-R2-1",
+  "plan_id": "R-TB-E-1",
+  "plan_v3_sha256": "e5df8585811559783666c185f35c5c728e95b952d01b988956f5e1c772283cff",
+  "prep_commit": "e4dc34ae5ba7ddc8158424a9afae438cd211498a",
+  "registered": "2026-10-02T03:19:38Z",
+  "seed": 1,
+  "storage_gate": {
+    "hard_reserved_margin_bytes": 2147483648,
+    "pause_trigger_bytes": 3221225472,
+    "resume_trigger_bytes": 5368709120,
+    "sampling_interval_seconds": 5.0,
+    "start_free_min_bytes": 6442450944
+  },
+  "trigger": {
+    "registration_file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001T115251Z_smoker2_cac2fa5b/zero_sample_analysis/registration_NONTRIVIAL_LEARNING_R-TB-E-0.json",
+    "registration_sha256": "c1c6e84a364731b9a98da9eb54bc5f3dc2feed08bc6b104873276fdbbe0d386b",
+    "rule": "Plan v3 section 3.1 NONTRIVIAL_LEARNING"
+  }
+}

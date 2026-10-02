@@ -1,0 +1,77 @@
+{
+  "base_out": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261001T115251Z_smoker2_cac2fa5b",
+  "card": "CP-DISR-TB-E1-ELASTIC-01",
+  "configs": {
+    "R-TB-E-1": {
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T031938Z_e1_elastic01_e4dc34ae/run_configs/R-TB-E-1.yaml",
+      "sha256": "ed5122c75373d36e9f79f980aba46f38d6c3995bf779c97b9c737af51a588ac9"
+    }
+  },
+  "derived": {
+    "runtime_manifest": {
+      "bound_root": "/home/xushijie2/graph_cp_disr_final_tb_launch",
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T031938Z_e1_elastic01_e4dc34ae/runtime_manifest_tb_resolved.yaml",
+      "rebound": [
+        {
+          "new": "/home/xushijie2/graph_cp_disr_final_tb_launch/experiments",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery/experiments"
+        },
+        {
+          "new": "/home/xushijie2/graph_cp_disr_final_tb_launch",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery"
+        },
+        {
+          "new": "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr/platforms/libero/runtime_factory.py",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery/src/cp_disr/platforms/libero/runtime_factory.py"
+        }
+      ],
+      "sha256": "a0c5006336ed13b404a1596e6cf8dd4b96783445ada7f8eb17a64762550d3f5f"
+    },
+    "train_split": {
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T031938Z_e1_elastic01_e4dc34ae/train_split_tb_noprior.json",
+      "sha256": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+      "source_sha256": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079"
+    }
+  },
+  "envelope": {
+    "H": 23.09999999999752,
+    "d_ref": 4.199999999997672,
+    "ncap": 16384,
+    "tcap": 68812.79999996186
+  },
+  "eval_points": [
+    0,
+    4096,
+    8192,
+    16384
+  ],
+  "frozen_runtime": {
+    "H_seconds": 23.09999999999752,
+    "d_ref_seconds": 4.199999999997672,
+    "max_complete_updates": 16,
+    "prior_mode": "absent",
+    "rollout_n": 1024,
+    "study_envelope_ncap": 16384,
+    "study_envelope_tcap_definition": "16384 * frozen_d_ref",
+    "task_deadline_seconds": 60.0,
+    "task_id": "T_B"
+  },
+  "init": "FROM_SCRATCH",
+  "plans": {
+    "R-TB-E-1": {
+      "attempt_id": "R-TB-E-1-20261002T031938Z-e4dc34ae",
+      "budget_slot": "ELASTIC-01",
+      "method": "B1-K+E",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae",
+      "release_order": 4,
+      "seed": 1,
+      "status": "NOT_STARTED"
+    }
+  },
+  "prep_commit": "e4dc34ae5ba7ddc8158424a9afae438cd211498a",
+  "release_order": [
+    "R-TB-E-1"
+  ],
+  "stamp": "20261002T031938Z",
+  "warm_start": false
+}

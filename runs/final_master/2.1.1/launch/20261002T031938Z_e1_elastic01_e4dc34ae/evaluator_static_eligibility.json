@@ -1,0 +1,156 @@
+{
+  "checked_utc": "2026-10-02T03:20:01Z",
+  "collector_evaluation_calls": {
+    "calls": [
+      {
+        "forbidden_hits": [],
+        "function": "step",
+        "identifiers": [
+          "bundle",
+          "elapsed",
+          "end",
+          "evidence",
+          "key",
+          "self",
+          "start",
+          "task_id"
+        ],
+        "key_defined_from": [
+          "env_id",
+          "episode_id",
+          "snapshot"
+        ],
+        "key_only_ids": true,
+        "n_args": 6
+      },
+      {
+        "forbidden_hits": [],
+        "function": "step",
+        "identifiers": [
+          "bundle",
+          "deadline",
+          "elapsed_now",
+          "key",
+          "max",
+          "now",
+          "self",
+          "task_id"
+        ],
+        "key_defined_from": [
+          "env_id",
+          "episode_id",
+          "snapshot"
+        ],
+        "key_only_ids": true,
+        "n_args": 6
+      }
+    ],
+    "ok": true
+  },
+  "evaluation_input_fields": [
+    "task_id",
+    "env_id",
+    "episode_id",
+    "evidence_refs",
+    "elapsed_seconds",
+    "interval_start_seconds",
+    "interval_end_seconds"
+  ],
+  "evaluator_identity": {
+    "evaluator_blob_sha256_new_prep": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
+    "evaluator_blob_sha256_old_prep": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
+    "runtime_factory_constructs_TaskEvaluator": true,
+    "runtime_factory_sha256_old_prep": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "runtime_manifest_task_evaluator_version": "cp-disr-d0-task-evaluator-v1",
+    "training_run_recorded_git_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+    "training_run_recorded_runtime_factory_sha256": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "training_run_software_snapshot_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa"
+  },
+  "evaluator_input_reads": {
+    "attributes_read": [
+      "elapsed_seconds",
+      "interval_end_seconds",
+      "interval_start_seconds"
+    ],
+    "bare_uses_of_input": 0,
+    "evaluator_version": "cp-disr-d0-task-evaluator-v1",
+    "forbidden_identifiers_present": [],
+    "input_argument": "value",
+    "module_imports": [
+      "__future__:annotations",
+      "cp_disr.adapters:TaskResult",
+      "cp_disr.geom_constants:CONTAINER_INNER"
+    ],
+    "ok": true
+  },
+  "kind": "evaluator_static_eligibility",
+  "limits": [
+    "static source and recorded-file check only: no episode was re-run and no environment was built",
+    "the loaded evaluator module object was not hashed at training time; identity rests on the clean tracked tree at the recorded prep commit (check_source_identity) and on the recorded runtime_factory hash",
+    "correctness of the hidden MuJoCo truth predicate is not re-audited here"
+  ],
+  "new_ref": "e4dc34ae5ba7ddc8158424a9afae438cd211498a",
+  "old_ref": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+  "problems": [],
+  "success_seconds_semantics": {
+    "episode_total_success_time": "UNVERIFIED",
+    "guarded_by_hasattr": true,
+    "label": "FINAL_SKILL_DURATION_ONLY",
+    "recorded_value_is_final_skill_duration_only": true,
+    "snapshot_fields": [
+      "env_id",
+      "episode_id",
+      "decision_id",
+      "template",
+      "facts",
+      "candidate_ids",
+      "mask",
+      "prior_edges",
+      "prior_hash",
+      "base_input",
+      "candidate_features",
+      "observation_ref",
+      "clock_seconds",
+      "execution_summary",
+      "synthetic_unit_fixture"
+    ],
+    "snapshot_has_elapsed_seconds": false
+  },
+  "task_success_producers": [
+    "src/cp_disr/platforms/libero/task_evaluator.py"
+  ],
+  "trigger_eval": {
+    "eval_final": {
+      "mean_discounted_return": 0.48934047729248054,
+      "n": 10,
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/eval_final.json",
+      "reasons": [
+        "TASK_SUCCESS"
+      ],
+      "sha256": "b60d6cbd94d5cb45996dcda58bda83bc581b1fa6a81d200ef15735de09fda11c",
+      "success_n": 10
+    },
+    "final_checkpoint": {
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+      "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba"
+    },
+    "fresh_load": {
+      "content": {
+        "adam": true,
+        "fresh_process": true,
+        "generation": "final_n_014512_u14",
+        "model": true
+      },
+      "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/fresh_load_final_n_014512_u14.json"
+    },
+    "ok": true,
+    "problems": [],
+    "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b",
+    "success_seconds": {
+      "episode_total_success_time": "UNVERIFIED",
+      "label": "FINAL_SKILL_DURATION_ONLY",
+      "recorded_success_seconds": "per-row values in eval_final.json"
+    }
+  },
+  "verdict": "ELIGIBLE_STATIC"
+}
