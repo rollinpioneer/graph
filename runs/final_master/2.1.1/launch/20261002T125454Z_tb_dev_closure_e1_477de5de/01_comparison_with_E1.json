@@ -1,0 +1,1326 @@
+{
+  "document": "comparison_with_E1",
+  "created": "2026-10-02T13:08:20Z",
+  "labels": {
+    "success_seconds": "FINAL_SKILL_DURATION_ONLY",
+    "episode_total_success_time": "UNVERIFIED"
+  },
+  "statements_permitted": [
+    "B2 seed 1 (R-TB-DK-1) was 10/10 on frozen dev10 at N = 4096 and N = 8192 (and at final).",
+    "B1-K+E seed 0 (R-TB-E-0) and seed 1 (R-TB-E-1) were 0/10 at N = 4096 and N = 8192 and 10/10 at final.",
+    "B1-K seed 1 (R-TB-K-1) was 0/10 at all four evaluation points.",
+    "Historical B2 seed 0 (R1, original execution identity, listed apart) was 0/10 at N = 4096 and 10/10 at N = 8192 and at final.",
+    "Historical B1-K seed 0 (R1) and B0 seed 0 (R2) were 0/10 at all four evaluation points."
+  ],
+  "not_claimed": [
+    "No learning-speed ratio or multiple is stated.",
+    "No statistical-significance statement is made (one or two seeds per method, ten dev cases).",
+    "No statement of method equivalence and none of general superiority of any method is made.",
+    "The 4096 / 8192 points are pre-registered learning-process evidence on dev10; the registered primary endpoint stays the final point.",
+    "No change to Method 2.1.1, the training configuration, the profile or any budget follows from these numbers."
+  ],
+  "base_csv_crosscheck": {
+    "rows_compared": 12,
+    "all_equal": true,
+    "detail": [
+      {
+        "plan": "R-TB-E-0",
+        "eval_file": "eval_n_000000.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-E-0",
+        "eval_file": "eval_n_004096.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-E-0",
+        "eval_file": "eval_n_008192.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-E-0",
+        "eval_file": "eval_final.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-DK-1",
+        "eval_file": "eval_n_000000.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-DK-1",
+        "eval_file": "eval_n_004096.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-DK-1",
+        "eval_file": "eval_n_008192.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-DK-1",
+        "eval_file": "eval_final.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-K-1",
+        "eval_file": "eval_n_000000.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-K-1",
+        "eval_file": "eval_n_004096.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-K-1",
+        "eval_file": "eval_n_008192.json",
+        "equal": true
+      },
+      {
+        "plan": "R-TB-K-1",
+        "eval_file": "eval_final.json",
+        "equal": true
+      }
+    ]
+  },
+  "runs": {
+    "R2-B0-s0": {
+      "id": "R2-B0-s0",
+      "model_slot": "TB-M1",
+      "origin": "historical R2 (v13_r2), original old-account run, copy under graph_cp_disr_v2_1",
+      "method": "B0",
+      "task": "T_B",
+      "seed": 0,
+      "planned_id": "v13_R2_T_B_B0_s0_E16",
+      "run_id": "v13_R2_T_B_B0_s0_E16_20260927T070500Z_826fe5c5",
+      "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5",
+      "recorded_job_dir": "/home/__compress_data/xushijie/graph_cp_disr_v2_1_r2_b0/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5",
+      "manifest_hashes": {
+        "r2_adapter": "0776c018584725390215edb952e5656ce2c93ce637ac5b5ab5e32418987df2a0",
+        "r1_adapter": "e8d46b4b2c56a7441a9ec0e66bd05f2d1dc99d3bad76bdbfb956d76bce1ef906",
+        "stage2a_v11": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+        "neural": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+        "clock": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+        "safety": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+        "skill_executor": "06d3741723c5236afc9e1234a3229164b33e1609114fcfa82d023a672fd37ff6",
+        "runtime_manifest": "c186584cbf2a8d0803da251311d1c6b64b9d8f44501d139c138b318d4af1d6d1",
+        "split": "b14f0098b6331f527a3e7cd69c834d1da7679c702a4830f4bf0b45d37776abe9",
+        "split_dev10": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "228517ed214e18bd75ab11b84f3edff6b07f14b7",
+        "baseline_commit": "55a3b7ce35edebbbb8a587fe1e3a98ca1967db07"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14705,
+      "actual_T_s": 68814.80000002464,
+      "stop_reason": "Tcap",
+      "complete_updates": 14,
+      "fragment_updates": 1,
+      "optimizer_steps": 876,
+      "train_success_episodes": 187,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+        "checkpoint_name": "final_n_014705_u14.pt",
+        "bytes": 13673874,
+        "sha256_recomputed_now": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+        "generation": {
+          "generation": "final_n_014705_u14",
+          "complete_marker": true,
+          "N": 14705,
+          "T": 68814.80000002464,
+          "update": 14,
+          "complete_updates": 14,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014705_u14",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014705_u14",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": {
+        "checkpoint": "n_000000.pt",
+        "success_n": 0,
+        "n": 10,
+        "mean_discounted_return": 0.0,
+        "label": "common_dev20"
+      },
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "e8b463aec197b6747e65dfdd9037d54ffa425491081f049d9053dc6e9e679925",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/__compress_data/xushijie/graph_cp_disr_v2_1_r2_b0/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "bc0bd250b585b1eb891eb96adc73679fc07f7b3e12bb0fbcce5912ec8ce42e8b"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 18867.300000006286,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "7b18c9b663617e483beb80f8fd40b46326998cd538b07440210ef14c57eb6988",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/__compress_data/xushijie/graph_cp_disr_v2_1_r2_b0/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "fd9bf1fe2ff370619aac266da171ac9ce29822bbb13d83a05ae0ba184b701e76"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 39081.25000001344,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "4b856fc7b95a1c6c6d2623be5ce5ef601320cdfcf5e1e33bbc4ebcab10d879f8",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/__compress_data/xushijie/graph_cp_disr_v2_1_r2_b0/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "2a17817aec1c76c8516613d0f63105ba44d7c8b51c7bd3fcac1066d561a202eb"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 14,
+          "N_actual": 14705,
+          "T_actual_s": 68814.80000002464,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "NO_CANDIDATE_SAFE_TERMINATION": 10
+          },
+          "checkpoint": "final_n_014705_u14.pt",
+          "checkpoint_sha256_recorded": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/__compress_data/xushijie/graph_cp_disr_v2_1_r2_b0/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "5a1a9542ad15b8057cf8b48e5d2e6c41cd06cc827ec793eb6f9e9733a0f31ea0"
+        }
+      ]
+    },
+    "R1-B1K-s0": {
+      "id": "R1-B1K-s0",
+      "model_slot": "TB-M2",
+      "origin": "historical R1 (v13_r1)",
+      "method": "B1-K",
+      "task": "T_B",
+      "seed": 0,
+      "planned_id": "v13_R1_T_B_B1K_s0_E16",
+      "run_id": "v13_R1_T_B_B1K_s0_E16_20260926T112613Z_9e64dd09",
+      "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09",
+      "manifest_hashes": {
+        "r1_runner": "e8d46b4b2c56a7441a9ec0e66bd05f2d1dc99d3bad76bdbfb956d76bce1ef906",
+        "stage2a_v11": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+        "neural": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+        "runtime_manifest": "3947a484b1a3dd54fc5920a121128c1835a27007082a7179497773ed4b9b0950",
+        "split": "b14f0098b6331f527a3e7cd69c834d1da7679c702a4830f4bf0b45d37776abe9",
+        "split_dev10": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+        "base_commit": "66614acb443dcacee2b16c5472d4ecbd697bf561"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 13623,
+      "actual_T_s": 68813.40000002344,
+      "stop_reason": "Tcap",
+      "complete_updates": 13,
+      "fragment_updates": 1,
+      "optimizer_steps": 812,
+      "train_success_episodes": 206,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+        "checkpoint_name": "final_n_013623_u13.pt",
+        "bytes": 13784375,
+        "sha256_recomputed_now": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+        "generation": {
+          "generation": "final_n_013623_u13",
+          "complete_marker": true,
+          "N": 13623,
+          "T": 68813.40000002344,
+          "update": 13,
+          "complete_updates": 13,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_013623_u13",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_013623_u13",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": {
+        "checkpoint": "n_000000.pt",
+        "success_n": 0,
+        "n": 20,
+        "mean_discounted_return": 0.0,
+        "label": "common_dev20"
+      },
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "bc2aaa3425b2fa1ecb7011b9c06336bc0d55ad458fdb1febd0b1a35a6df5f8c6",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "b30e441c02c936a49e3b207ad51d9b9a52ef554f5705f6858d6ac9c7a69914f2"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 20543.40000000682,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "44311905d0deca4a50891d91f68ca04917de592cf76c111dbd49c63ad336eb64",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "b3bc48de1000c3fb4f6e9367a96537edfa0d0dc9742c3faf5754d2db3cdcd433"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 41451.200000013545,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "f313b73f653a8a597ef8d12e26b85510fe16f200b8e3b23e76eefb307f89a132",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "0cf7a69f85c0cc6ac26df4b587852424875a62d1caea549f7cb7416b03503a01"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 13,
+          "N_actual": 13623,
+          "T_actual_s": 68813.40000002344,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "final_n_013623_u13.pt",
+          "checkpoint_sha256_recorded": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "e2009425efddc1ea474ba3de9274c7664db82fcb3b2c75c3a9bc540c38dc2784"
+        }
+      ]
+    },
+    "R-TB-K-1": {
+      "id": "R-TB-K-1",
+      "model_slot": "TB-M3",
+      "origin": "final_master 2.1.1 (prep cac2fa5b)",
+      "method": "B1-K",
+      "task": "T_B",
+      "seed": 1,
+      "planned_id": "R-TB-K-1",
+      "run_id": "R-TB-K-1-20261001T115252Z-cac2fa5b",
+      "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b",
+      "manifest_hashes": {
+        "final_tb": "80e12c58a4de37b9b82a29deb321c16e7f02301971734b871ffdf07948eecffd",
+        "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+        "phase_a_v12_persistence": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+        "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+        "runtime_manifest_derived": "f00acfb1cf8fde462472f2219380413993c01910dbd6bfef585daba58cde1226",
+        "train_split_derived": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+        "dev10_split_original": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "plan_id": "R-TB-K-1",
+        "attempt_id": "R-TB-K-1-20261001T115252Z-cac2fa5b"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14531,
+      "actual_T_s": 68813.45000002472,
+      "stop_reason": "Tcap",
+      "complete_updates": 14,
+      "fragment_updates": 1,
+      "optimizer_steps": 864,
+      "train_success_episodes": 194,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+        "checkpoint_name": "final_n_014531_u14.pt",
+        "bytes": 21169909,
+        "sha256_recomputed_now": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+        "generation": {
+          "generation": "final_n_014531_u14",
+          "complete_marker": true,
+          "N": 14531,
+          "T": 68813.45000002472,
+          "update": 14,
+          "complete_updates": 14,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014531_u14",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014531_u14",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": null,
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "a8e43efd5546148fe06ad85c599182ad90bf669e1d4820dcb0b56c9bb1f179fa",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "dbc197cca52c82fe10324117a27c0dce39c48a4e6618a3b2f7537251524212fc"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 18022.500000005977,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "3ccec569b0009f1fc3fe58b129a133f111548f57ceb722ce30639b72acf4ff23",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "d6cd60a1f3b77f0cebcd2c8bf916bee5de4ac237a1147c298964000adec15dcf"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 37574.70000001293,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "796f28feafca5c50b8a99d440a1dd32b26eadbaa3f0631da6a0c2032ef7144e4",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "117ebc823f9bebeca9e46cbb9695da7f08e50d1b9f6b9b552e87c02c4eab7c9a"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 14,
+          "N_actual": 14531,
+          "T_actual_s": 68813.45000002472,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "final_n_014531_u14.pt",
+          "checkpoint_sha256_recorded": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "132d26afb41c07eae9e51878eebfc9dec2e98da1921eeeb1a50020e351f940ec"
+        }
+      ]
+    },
+    "R1-B2-s0": {
+      "id": "R1-B2-s0",
+      "model_slot": "TB-M4",
+      "origin": "historical R1 (v13_r1)",
+      "method": "B2",
+      "task": "T_B",
+      "seed": 0,
+      "planned_id": "v13_R1_T_B_B2_s0_E16",
+      "run_id": "v13_R1_T_B_B2_s0_E16_20260926T112613Z_9e64dd09",
+      "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09",
+      "manifest_hashes": {
+        "r1_runner": "e8d46b4b2c56a7441a9ec0e66bd05f2d1dc99d3bad76bdbfb956d76bce1ef906",
+        "stage2a_v11": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+        "neural": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b",
+        "runtime_manifest": "3947a484b1a3dd54fc5920a121128c1835a27007082a7179497773ed4b9b0950",
+        "split": "b14f0098b6331f527a3e7cd69c834d1da7679c702a4830f4bf0b45d37776abe9",
+        "split_dev10": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+        "base_commit": "66614acb443dcacee2b16c5472d4ecbd697bf561"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14464,
+      "actual_T_s": 68818.75000000885,
+      "stop_reason": "Tcap",
+      "complete_updates": 14,
+      "fragment_updates": 1,
+      "optimizer_steps": 892,
+      "train_success_episodes": 1379,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+        "checkpoint_name": "final_n_014464_u14.pt",
+        "bytes": 13861879,
+        "sha256_recomputed_now": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+        "generation": {
+          "generation": "final_n_014464_u14",
+          "complete_marker": true,
+          "N": 14464,
+          "T": 68818.75000000885,
+          "update": 14,
+          "complete_updates": 14,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014464_u14",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014464_u14",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "final_n_014464_u14.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": {
+        "checkpoint": "final_n_014464_u14.pt",
+        "success_n": 20,
+        "n": 20,
+        "mean_discounted_return": 0.5003397510935734,
+        "label": "common_dev20"
+      },
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "8f4d0b6048db7c51b8d7953690d8639042a9dcb3b9f8f0c6a8ee59930c68943c",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "7afadb06ec99b3706ae33a3aa36b0375da58aba599e915b907ebb855df299cea"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 19430.050000006013,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 8,
+            "NO_CANDIDATE_SAFE_TERMINATION": 2
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "3e376237f3e57065d52a7536493c1a918064409b03974d3af5a2ea4ce7a85786",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "226f899c09d698b570549ccea393896539039e026928b968158c21559835797f"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 38697.950000008495,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.49997668452379446,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "f7c62ff104cd3982ce53ee341247e53bdc15727f38f2f4a49460d5e1c8707808",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": 2.9199999999983817,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "8b58944510176f99b65bf7276871674a383098e5465758a3b5800bf7adf2296b"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 14,
+          "N_actual": 14464,
+          "T_actual_s": 68818.75000000885,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.49997668452379446,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "final_n_014464_u14.pt",
+          "checkpoint_sha256_recorded": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+          "mean_recorded_success_seconds": 2.9199999999983817,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "f63978cf1a83b713e92aa56a88769e8f13e38c3699d5eac898bd39b74022b62f"
+        }
+      ]
+    },
+    "R-TB-DK-1": {
+      "id": "R-TB-DK-1",
+      "model_slot": "TB-M5",
+      "origin": "final_master 2.1.1 (prep cac2fa5b)",
+      "method": "B2",
+      "task": "T_B",
+      "seed": 1,
+      "planned_id": "R-TB-DK-1",
+      "run_id": "R-TB-DK-1-20261001T115252Z-cac2fa5b",
+      "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b",
+      "manifest_hashes": {
+        "final_tb": "80e12c58a4de37b9b82a29deb321c16e7f02301971734b871ffdf07948eecffd",
+        "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+        "phase_a_v12_persistence": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+        "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+        "runtime_manifest_derived": "f00acfb1cf8fde462472f2219380413993c01910dbd6bfef585daba58cde1226",
+        "train_split_derived": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+        "dev10_split_original": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "plan_id": "R-TB-DK-1",
+        "attempt_id": "R-TB-DK-1-20261001T115252Z-cac2fa5b"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14170,
+      "actual_T_s": 68817.10000000504,
+      "stop_reason": "Tcap",
+      "complete_updates": 13,
+      "fragment_updates": 1,
+      "optimizer_steps": 876,
+      "train_success_episodes": 1644,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+        "checkpoint_name": "final_n_014170_u13.pt",
+        "bytes": 21264821,
+        "sha256_recomputed_now": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+        "generation": {
+          "generation": "final_n_014170_u13",
+          "complete_marker": true,
+          "N": 14170,
+          "T": 68817.10000000504,
+          "update": 13,
+          "complete_updates": 13,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014170_u13",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014170_u13",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "final_n_014170_u13.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": null,
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "916a08b08c2933670bfdd3ec13fe9536790955815b4a854f36355a02a7fe79bf",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "9dec99916a3efa5ac315e5342a4eece477fff09e41f40b2780d2964ef3846843"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 20565.60000000577,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.4988490585995873,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "0c8da7c604d45116bb79e2df4147f196e50484477d1c7b260d565b9312c23b5e",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": 3.539999999998038,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "e18d0b536d790019d2ba03f97311bb6825ed76bc73b1febb29ba362ea66cc418"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 40370.00000000647,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.4988490585995873,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "ffb932a0131bda2a84b990c94cf0d6576c9c323077c3e773216c6dadf7976721",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": 3.539999999998038,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "f3350c1994bcec0d1ca7dc228fa6b80588d8df6f90044df5af6a6286d3a8a9eb"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 13,
+          "N_actual": 14170,
+          "T_actual_s": 68817.10000000504,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.4988490585995873,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "final_n_014170_u13.pt",
+          "checkpoint_sha256_recorded": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+          "mean_recorded_success_seconds": 3.539999999998038,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "8527b6b823bec03291739a2667fb64879ed71cd1e0918aa958c291e20020ef58"
+        }
+      ]
+    },
+    "R-TB-E-0": {
+      "id": "R-TB-E-0",
+      "model_slot": "TB-M6",
+      "origin": "final_master 2.1.1 (prep cac2fa5b)",
+      "method": "B1-K+E",
+      "task": "T_B",
+      "seed": 0,
+      "planned_id": "R-TB-E-0",
+      "run_id": "R-TB-E-0-20261001T115252Z-cac2fa5b",
+      "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b",
+      "manifest_hashes": {
+        "final_tb": "80e12c58a4de37b9b82a29deb321c16e7f02301971734b871ffdf07948eecffd",
+        "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+        "phase_a_v12_persistence": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+        "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+        "runtime_manifest_derived": "f00acfb1cf8fde462472f2219380413993c01910dbd6bfef585daba58cde1226",
+        "train_split_derived": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+        "dev10_split_original": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "plan_id": "R-TB-E-0",
+        "attempt_id": "R-TB-E-0-20261001T115252Z-cac2fa5b"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14512,
+      "actual_T_s": 68813.30000001457,
+      "stop_reason": "Tcap",
+      "complete_updates": 14,
+      "fragment_updates": 1,
+      "optimizer_steps": 872,
+      "train_success_episodes": 981,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+        "checkpoint_name": "final_n_014512_u14.pt",
+        "bytes": 35989871,
+        "sha256_recomputed_now": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+        "generation": {
+          "generation": "final_n_014512_u14",
+          "complete_marker": true,
+          "N": 14512,
+          "T": 68813.30000001457,
+          "update": 14,
+          "complete_updates": 14,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014512_u14",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014512_u14",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "final_n_014512_u14.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": null,
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "1882e819ac5d889912ee72e3484a2cda172adea7ee54b44aa1addf15b2c10426",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "b9fdab38c2d919752c2091d715e7d411b20cf885ec975b657630edb2d870da1c"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 18784.950000006032,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "9260b4b665229a3706759eaae9de33359d30711b73f5345dd1ec3815dbdbc335",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "6253eae88ef3893af2853cadf33130549211290272725a34ac69425d529c45fd"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 38777.10000001072,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 7,
+            "NO_CANDIDATE_SAFE_TERMINATION": 3
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "461e9b65bd2fb78572e36b0714a0592a4aa75131274ff9d04bd50e857339dc90",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "686971c809537019ffbdb8f41d0b495a898640a7d76e5d3277315884f649d4d0"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 14,
+          "N_actual": 14512,
+          "T_actual_s": 68813.30000001457,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.48934047729248054,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "final_n_014512_u14.pt",
+          "checkpoint_sha256_recorded": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+          "mean_recorded_success_seconds": 2.9149999999983844,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "b60d6cbd94d5cb45996dcda58bda83bc581b1fa6a81d200ef15735de09fda11c"
+        }
+      ]
+    },
+    "R-TB-E-1": {
+      "id": "R-TB-E-1",
+      "model_slot": "TB-C1",
+      "origin": "final_master 2.1.1 (prep e4dc34ae, ELASTIC-01, conditional)",
+      "method": "B1-K+E",
+      "task": "T_B",
+      "seed": 1,
+      "planned_id": "R-TB-E-1",
+      "run_id": "R-TB-E-1-20261002T031938Z-e4dc34ae",
+      "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae",
+      "recorded_job_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae",
+      "manifest_hashes": {
+        "final_tb": "0536ff754ddf63a277ba87a5bf4d8c7e64c10a40394f5326a23439519d96013a",
+        "stage2a_v11": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+        "phase_a_v12_persistence": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
+        "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+        "torch_rl": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+        "neural": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+        "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+        "runtime_factory": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+        "runtime_manifest_derived": "a0c5006336ed13b404a1596e6cf8dd4b96783445ada7f8eb17a64762550d3f5f",
+        "train_split_derived": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+        "dev10_split_original": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+        "git_commit": "e4dc34ae5ba7ddc8158424a9afae438cd211498a",
+        "plan_id": "R-TB-E-1",
+        "attempt_id": "R-TB-E-1-20261002T031938Z-e4dc34ae"
+      },
+      "H": 23.09999999999752,
+      "d_ref": 4.199999999997672,
+      "Tcap": 68812.79999996186,
+      "actual_N": 14309,
+      "actual_T_s": 68820.25000001468,
+      "stop_reason": "Tcap",
+      "complete_updates": 13,
+      "fragment_updates": 1,
+      "optimizer_steps": 876,
+      "train_success_episodes": 950,
+      "NaN_n": 0,
+      "hard_fail": null,
+      "final": {
+        "checkpoint_file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+        "checkpoint_name": "final_n_014309_u13.pt",
+        "bytes": 35989487,
+        "sha256_recomputed_now": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+        "generation": {
+          "generation": "final_n_014309_u13",
+          "complete_marker": true,
+          "N": 14309,
+          "T": 68820.25000001468,
+          "update": 13,
+          "complete_updates": 13,
+          "fragment_updates": 1,
+          "model_pt_sha256_recorded": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+          "files_recorded": [
+            "episode.pkl",
+            "manifest.json",
+            "model.json",
+            "model.pt",
+            "rng.json"
+          ]
+        },
+        "persistence_LATEST": "final_n_014309_u13",
+        "fresh_load_record": {
+          "adam": true,
+          "fresh_process": true,
+          "generation": "final_n_014309_u13",
+          "model": true
+        },
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_checkpoint_by_job_rule": {
+        "name": "final_n_014309_u13.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection": null,
+      "points": [
+        {
+          "point": "0",
+          "eval_file": "eval_n_000000.json",
+          "eval_label": "dev",
+          "update": 0,
+          "N_actual": 0,
+          "T_actual_s": 0.0,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_000000.pt",
+          "checkpoint_sha256_recorded": "a83c64bef762fe00b75ffea2a59b747ef296674d776d471f902c5d49b32d5920",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/n_000000.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "0ae69e1dfc2c511aa3d6947ec93d85825fe5158b61d88ae28b5007aca5b0e93d"
+        },
+        {
+          "point": "4096",
+          "eval_file": "eval_n_004096.json",
+          "eval_label": "dev10",
+          "update": 4,
+          "N_actual": 4096,
+          "T_actual_s": 20583.30000000609,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 10
+          },
+          "checkpoint": "n_004096.pt",
+          "checkpoint_sha256_recorded": "c606ebeae8fe5d82517ecc1ca71bf33432892b4d2e29e513cc18aaae0876d4d7",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/n_004096.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "dbac22ddf73662c28288fd8247e616207ff4cfd4888defc3e8cdce570007ffa6"
+        },
+        {
+          "point": "8192",
+          "eval_file": "eval_n_008192.json",
+          "eval_label": "dev10",
+          "update": 8,
+          "N_actual": 8192,
+          "T_actual_s": 40920.85000001079,
+          "success_n": 0,
+          "n": 10,
+          "mean_discounted_return": 0.0,
+          "exit_reason_families": {
+            "NO_CANDIDATE_SAFE_TERMINATION": 10
+          },
+          "checkpoint": "n_008192.pt",
+          "checkpoint_sha256_recorded": "04238a0b116c6ecd6eec0f018e5c89eab6748117abad091496ce5a6bca3dba31",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/n_008192.pt",
+          "mean_recorded_success_seconds": null,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "a6e940df2fcc62e43f7481e70327f12f3c02788e5daaf6c83203cee1cfeed6eb"
+        },
+        {
+          "point": "final",
+          "eval_file": "eval_final.json",
+          "eval_label": "dev",
+          "update": 13,
+          "N_actual": 14309,
+          "T_actual_s": 68820.25000001468,
+          "success_n": 10,
+          "n": 10,
+          "mean_discounted_return": 0.49997668452379446,
+          "exit_reason_families": {
+            "TASK_SUCCESS": 10
+          },
+          "checkpoint": "final_n_014309_u13.pt",
+          "checkpoint_sha256_recorded": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+          "generation_complete": true,
+          "recorded_checkpoint_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+          "mean_recorded_success_seconds": 2.9199999999983817,
+          "success_seconds_label": "FINAL_SKILL_DURATION_ONLY",
+          "eval_json_sha256": "c6fc05d3d43e37303250a122bb55bbd4c1489ae48a0bf0fa0e404c37423429e8"
+        }
+      ]
+    }
+  }
+}

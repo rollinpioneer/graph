@@ -1,0 +1,431 @@
+{
+  "document": "frozen_main_evaluation_model_list_T_B",
+  "frozen_at_utc": "2026-10-02T13:08:18Z",
+  "repo_head_at_freeze": "477de5dec2d59e22eaa0f6a840bb0d1b80f0a687",
+  "rules": [
+    "R1 Main-evaluation model of every run = its last valid post-update checkpoint (the final_n_*_u* generation), the registered primary endpoint.",
+    "R2 The checkpoint selected by the job rule (max_mean3_then_max_worst_then_earlier_N) and any best-dev / common-dev20 selection are listed in separate columns; they are never a substitute for the final model. A method whose selected checkpoint is n_000000 is evaluated at its final model, never at N = 0.",
+    "R3 Intermediate evaluation points (N = 4096, 8192) are dev learning-process evidence, not members of this list.",
+    "R4 Existing hash verification is reused: intermediate checkpoint hashes are cited from the runs' own generation HASHES.json and the earlier checkpoint_identity records; no intermediate model is loaded or re-hashed. Only the final checkpoint files are re-hashed (bytes only, no model load) as the freeze-time stat check.",
+    "R5 A model whose usability cannot be shown stays listed with its gap; no sidecar stands in for it and no automatic retraining follows (Plan v3 12.2).",
+    "R6 The list is frozen as a candidate list for the later release; it does not release any test, and the test_release_manifest is not built here."
+  ],
+  "models": [
+    {
+      "slot": "TB-M1",
+      "plan_run": "R2-B0-s0",
+      "task": "T_B",
+      "method": "B0",
+      "seed": 0,
+      "list": "BASE_6x30",
+      "origin": "historical",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+        "name": "final_n_014705_u14.pt",
+        "bytes": 13673874,
+        "sha256": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+        "generation": "final_n_014705_u14",
+        "N": 14705,
+        "T_s": 68814.80000002464,
+        "update_index": 14,
+        "complete_updates": 14,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": {
+        "checkpoint": "n_000000.pt",
+        "success_n": 0,
+        "n": 10,
+        "mean_discounted_return": 0.0,
+        "label": "common_dev20"
+      },
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "NOT_CHECKED (see UC1)",
+        "identity_gaps": [
+          "UC1",
+          "UC2",
+          "UC4",
+          "UC5",
+          "UC3",
+          "UC7"
+        ]
+      },
+      "execution_identity": {
+        "planned_id": "v13_R2_T_B_B0_s0_E16",
+        "run_id": "v13_R2_T_B_B0_s0_E16_20260927T070500Z_826fe5c5",
+        "source_commits": "228517ed214e18bd75ab11b84f3edff6b07f14b7",
+        "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5"
+      }
+    },
+    {
+      "slot": "TB-M2",
+      "plan_run": "R1-B1K-s0",
+      "task": "T_B",
+      "method": "B1-K",
+      "seed": 0,
+      "list": "BASE_6x30",
+      "origin": "historical",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+        "name": "final_n_013623_u13.pt",
+        "bytes": 13784375,
+        "sha256": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+        "generation": "final_n_013623_u13",
+        "N": 13623,
+        "T_s": 68813.40000002344,
+        "update_index": 13,
+        "complete_updates": 13,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": {
+        "checkpoint": "n_000000.pt",
+        "success_n": 0,
+        "n": 20,
+        "mean_discounted_return": 0.0,
+        "label": "common_dev20"
+      },
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "NOT_CHECKED (see UC1)",
+        "identity_gaps": [
+          "UC1",
+          "UC2",
+          "UC4",
+          "UC5"
+        ]
+      },
+      "execution_identity": {
+        "planned_id": "v13_R1_T_B_B1K_s0_E16",
+        "run_id": "v13_R1_T_B_B1K_s0_E16_20260926T112613Z_9e64dd09",
+        "source_commits": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+        "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09"
+      }
+    },
+    {
+      "slot": "TB-M3",
+      "plan_run": "R-TB-K-1",
+      "task": "T_B",
+      "method": "B1-K",
+      "seed": 1,
+      "list": "BASE_6x30",
+      "origin": "final_master_2.1.1",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+        "name": "final_n_014531_u14.pt",
+        "bytes": 21169909,
+        "sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+        "generation": "final_n_014531_u14",
+        "N": 14531,
+        "T_s": 68813.45000002472,
+        "update_index": 14,
+        "complete_updates": 14,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "n_000000.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": false,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": null,
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "TRAINED_AND_FRESH_LOADED_ON_THE_2.1.1_PATH",
+        "identity_gaps": []
+      },
+      "execution_identity": {
+        "planned_id": "R-TB-K-1",
+        "run_id": "R-TB-K-1-20261001T115252Z-cac2fa5b",
+        "source_commits": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b"
+      }
+    },
+    {
+      "slot": "TB-M4",
+      "plan_run": "R1-B2-s0",
+      "task": "T_B",
+      "method": "B2",
+      "seed": 0,
+      "list": "BASE_6x30",
+      "origin": "historical",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+        "name": "final_n_014464_u14.pt",
+        "bytes": 13861879,
+        "sha256": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+        "generation": "final_n_014464_u14",
+        "N": 14464,
+        "T_s": 68818.75000000885,
+        "update_index": 14,
+        "complete_updates": 14,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "final_n_014464_u14.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": {
+        "checkpoint": "final_n_014464_u14.pt",
+        "success_n": 20,
+        "n": 20,
+        "mean_discounted_return": 0.5003397510935734,
+        "label": "common_dev20"
+      },
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "NOT_CHECKED (see UC1)",
+        "identity_gaps": [
+          "UC1",
+          "UC2",
+          "UC4",
+          "UC5"
+        ]
+      },
+      "execution_identity": {
+        "planned_id": "v13_R1_T_B_B2_s0_E16",
+        "run_id": "v13_R1_T_B_B2_s0_E16_20260926T112613Z_9e64dd09",
+        "source_commits": "0eb3776d143d2142eb2893e2a12a4d85f2d14fc1",
+        "run_dir": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09"
+      }
+    },
+    {
+      "slot": "TB-M5",
+      "plan_run": "R-TB-DK-1",
+      "task": "T_B",
+      "method": "B2",
+      "seed": 1,
+      "list": "BASE_6x30",
+      "origin": "final_master_2.1.1",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+        "name": "final_n_014170_u13.pt",
+        "bytes": 21264821,
+        "sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+        "generation": "final_n_014170_u13",
+        "N": 14170,
+        "T_s": 68817.10000000504,
+        "update_index": 13,
+        "complete_updates": 13,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "final_n_014170_u13.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": null,
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "TRAINED_AND_FRESH_LOADED_ON_THE_2.1.1_PATH",
+        "identity_gaps": []
+      },
+      "execution_identity": {
+        "planned_id": "R-TB-DK-1",
+        "run_id": "R-TB-DK-1-20261001T115252Z-cac2fa5b",
+        "source_commits": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b"
+      }
+    },
+    {
+      "slot": "TB-M6",
+      "plan_run": "R-TB-E-0",
+      "task": "T_B",
+      "method": "B1-K+E",
+      "seed": 0,
+      "list": "BASE_6x30",
+      "origin": "final_master_2.1.1",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+        "name": "final_n_014512_u14.pt",
+        "bytes": 35989871,
+        "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+        "generation": "final_n_014512_u14",
+        "N": 14512,
+        "T_s": 68813.30000001457,
+        "update_index": 14,
+        "complete_updates": 14,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "final_n_014512_u14.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": null,
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "TRAINED_AND_FRESH_LOADED_ON_THE_2.1.1_PATH",
+        "identity_gaps": []
+      },
+      "execution_identity": {
+        "planned_id": "R-TB-E-0",
+        "run_id": "R-TB-E-0-20261001T115252Z-cac2fa5b",
+        "source_commits": "cac2fa5b3cafb46f1f74370314189f4bca4878fa",
+        "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b"
+      }
+    },
+    {
+      "slot": "TB-C1",
+      "plan_run": "R-TB-E-1",
+      "task": "T_B",
+      "method": "B1-K+E",
+      "seed": 1,
+      "list": "CONDITIONAL_OUTSIDE_628",
+      "origin": "final_master_2.1.1",
+      "main_eval_checkpoint": {
+        "rule": "last valid post-update checkpoint (final generation, after the fragment update)",
+        "file": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+        "name": "final_n_014309_u13.pt",
+        "bytes": 35989487,
+        "sha256": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+        "generation": "final_n_014309_u13",
+        "N": 14309,
+        "T_s": 68820.25000001468,
+        "update_index": 13,
+        "complete_updates": 13,
+        "fragment_updates": 1,
+        "recorded_model_pt_sha256": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+        "checks": {
+          "latest_is_final_generation": true,
+          "generation_complete_marker": true,
+          "generation_N_equals_job_summary": true,
+          "generation_T_equals_job_summary": true,
+          "generation_update_equals_complete_updates": true,
+          "recorded_model_sha_equals_recomputed": true,
+          "eval_final_checkpoint_is_final": true,
+          "fresh_load_ok": true
+        },
+        "all_checks_true": true
+      },
+      "selected_by_job_rule_separate_column": {
+        "name": "final_n_014309_u13.pt",
+        "rule": "max_mean3_then_max_worst_then_earlier_N",
+        "is_final": true,
+        "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+      },
+      "common_dev20_selection_separate_column": null,
+      "status": {
+        "file_and_hash_consistency": "OK",
+        "load_under_current_2.1.1_code": "TRAINED_AND_FRESH_LOADED_ON_THE_2.1.1_PATH",
+        "identity_gaps": []
+      },
+      "execution_identity": {
+        "planned_id": "R-TB-E-1",
+        "run_id": "R-TB-E-1-20261002T031938Z-e4dc34ae",
+        "source_commits": "e4dc34ae5ba7ddc8158424a9afae438cd211498a",
+        "run_dir": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "item": "R2 B0 first start folder 20260927T065500Z_ac37e5e4",
+      "reason": "n_000000 only, no job_summary (UC6)"
+    },
+    {
+      "item": "all n_000000 / n_004096 / n_008192 checkpoints and all update_complete_* / update_fragment_1 generations",
+      "reason": "R3, not main-evaluation models"
+    }
+  ],
+  "counts": {
+    "base_models": 6,
+    "base_episodes_if_released": 180,
+    "conditional_models": 1,
+    "conditional_episodes_if_approved": 30,
+    "plan_v3_note": "base T_B 6x30 = 180 is part of the 628 cap; conditional +E s1 is counted outside it (Plan v3 12.2)"
+  }
+}
