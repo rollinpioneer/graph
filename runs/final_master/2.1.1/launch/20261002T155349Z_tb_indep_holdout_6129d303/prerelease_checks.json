@@ -1,0 +1,111 @@
+{
+ "card": "CP-DISR-TB-INDEP-HOLDOUT-01",
+ "created": "2026-10-02T15:54:00Z",
+ "all_pass": true,
+ "checks": {
+  "branch_is_release_branch": true,
+  "prep_head_is_ancestor": true,
+  "recorder_commit_is_ancestor": true,
+  "tracked_tree_clean": true,
+  "changes_since_prep_head_are_only_runner_files": true,
+  "no_src_configs_experiments_change_since_prep": true,
+  "recorder_blob_equals_verified_f297f538": true,
+  "protected_production_files_match_prep_record": true,
+  "seven_models_in_candidate_manifest": true,
+  "inclusion_matches_frozen_prep": true,
+  "classes_match_card": true,
+  "seven_final_checkpoints_exist": true,
+  "seven_sha256_match_candidate_manifest": true,
+  "sidecar_json_exists": true,
+  "current_class_execution_hashes_match_manifest": true,
+  "archived_class_source_hashes_match_run_manifests": true,
+  "current_four_strict_load_pass_current_tree": true,
+  "archived_three_strict_load_pass_archived_tree": true,
+  "test30_files_sha_equal_frozen": true,
+  "test30_id_order_equals_frozen": true,
+  "reset_seed_order_equals_frozen": true,
+  "reset_config_row_hashes_equal_frozen": true,
+  "test30_rows_have_no_cache_pointer_keys": true,
+  "derived_no_prior_test_split_built_without_cache_pointers": true,
+  "derived_split_test_order_equals_frozen": true,
+  "provider_zero_no_api_key_env": true,
+  "output_path_absolute_and_fsync_ok": true,
+  "two_distinct_gpus_selected": true,
+  "disk_free_over_20GiB": true
+ },
+ "detail": {
+  "branch_is_release_branch": "codex/cp-disr-tb-indep-holdout",
+  "tracked_tree_clean": "",
+  "changes_since_prep_head_are_only_runner_files": [
+   "scripts/final_tb_holdout_runner.py",
+   "tests/test_final_tb_holdout_runner.py"
+  ],
+  "no_src_configs_experiments_change_since_prep": [],
+  "recorder_blob_equals_verified_f297f538": "16ef89a12aa661964e3caa638b06ff4336890139",
+  "protected_production_files_match_prep_record": {
+   "n": 15,
+   "bad": []
+  },
+  "seven_models_in_candidate_manifest": [
+   "TB-M3",
+   "TB-M5",
+   "TB-M6",
+   "TB-C1",
+   "TB-M2",
+   "TB-M4",
+   "TB-M1"
+  ],
+  "seven_final_checkpoints_exist": {
+   "TB-M3": true,
+   "TB-M5": true,
+   "TB-M6": true,
+   "TB-C1": true,
+   "TB-M2": true,
+   "TB-M4": true,
+   "TB-M1": true
+  },
+  "seven_sha256_match_candidate_manifest": {
+   "TB-M3": true,
+   "TB-M5": true,
+   "TB-M6": true,
+   "TB-C1": true,
+   "TB-M2": true,
+   "TB-M4": true,
+   "TB-M1": true
+  },
+  "archived_class_source_hashes_match_run_manifests": [],
+  "current_four_strict_load_pass_current_tree": {
+   "TB-M3": true,
+   "TB-M5": true,
+   "TB-M6": true,
+   "TB-C1": true
+  },
+  "archived_three_strict_load_pass_archived_tree": {
+   "TB-M2": true,
+   "TB-M4": true,
+   "TB-M1": true
+  },
+  "derived_no_prior_test_split_built_without_cache_pointers": {
+   "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/no_prior_test_split_T_B.json",
+   "sha256": "e707b3e3a9844c60e1e85a85a4aee5888ab8ae11a05a22067e14c7c805c81b99",
+   "n_test": 30
+  },
+  "output_path_absolute_and_fsync_ok": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303",
+  "two_distinct_gpus_selected": [
+   {
+    "index": 2,
+    "memory_used_mib": 12,
+    "utilization_pct": 0
+   },
+   {
+    "index": 1,
+    "memory_used_mib": 15,
+    "utilization_pct": 0
+   }
+  ],
+  "disk_free_over_20GiB": 1041958928384
+ },
+ "head": "6129d303813752a626dcabba2558d7452b92f42b",
+ "test_episodes_run": 0,
+ "environments_constructed": 0
+}

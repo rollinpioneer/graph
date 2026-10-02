@@ -1,0 +1,465 @@
+{
+ "document": "test_release_manifest",
+ "card": "CP-DISR-TB-INDEP-HOLDOUT-01",
+ "created": "2026-10-02T15:54:00Z",
+ "task": "T_B",
+ "test_label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+ "not_strict_blind_test": true,
+ "scope_statement": "GLOBAL_S4 = NOT_COMPLETE; GLOBAL_S5 = NOT_COMPLETE; this is not GLOBAL S6",
+ "bindings": {
+  "release_branch": "codex/cp-disr-tb-indep-holdout",
+  "release_head": "6129d303813752a626dcabba2558d7452b92f42b",
+  "prep_evidence_head": "d64d59c65daac61bc1633276b3e1b4439068c259",
+  "verified_recorder_source_commit": "f297f538f9f813ed7a8df39cb710b00b50068406",
+  "baseline": "241159c1ceca3b53f0ba8423879524c6b2668e07",
+  "note": "verify.json of the prep branch records head f297f538 (recorder / offline-test identity); d64d59c65 is the later branch HEAD with Phase C / release evidence; files are kept as written, this release binds both",
+  "candidate_manifest_sha256": "c48d797a8585427c0948f5bfcadfbc5f3d1286d0f737f81ba2f9e37c92b48215",
+  "recorder_blob": "16ef89a12aa661964e3caa638b06ff4336890139",
+  "no_prior_test_split_sha256": "e707b3e3a9844c60e1e85a85a4aee5888ab8ae11a05a22067e14c7c805c81b99",
+  "no_prior_test_split": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/no_prior_test_split_T_B.json"
+ },
+ "authorization": {
+  "formal_holdout_authorized_by": "CP-DISR-TB-INDEP-HOLDOUT-01",
+  "planned_episodes": 210,
+  "inclusion_frozen_before_any_test_score_by": "CP-DISR-TB-EVAL-PREP-LITE-01",
+  "inclusion_not_redecided_here": true
+ },
+ "tiers": {
+  "CORE": {
+   "models": 4,
+   "episodes": 120
+  },
+  "HISTORICAL_EXTENSION": {
+   "models": 2,
+   "episodes": 60
+  },
+  "SYSTEM_REFERENCE": {
+   "models": 1,
+   "episodes": 30
+  }
+ },
+ "models": [
+  {
+   "slot": "TB-M3",
+   "plan_run": "R-TB-K-1",
+   "method": "B1-K",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+    "bytes": 21169909,
+    "sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385",
+    "N": 14531,
+    "T_s": 68813.45000002472,
+    "generation": "final_n_014531_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M5",
+   "plan_run": "R-TB-DK-1",
+   "method": "B2",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+    "bytes": 21264821,
+    "sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca",
+    "N": 14170,
+    "T_s": 68817.10000000504,
+    "generation": "final_n_014170_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014170_u13.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M6",
+   "plan_run": "R-TB-E-0",
+   "method": "B1-K+E",
+   "seed": 0,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+    "bytes": 35989871,
+    "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba",
+    "N": 14512,
+    "T_s": 68813.30000001457,
+    "generation": "final_n_014512_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014512_u14.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-C1",
+   "plan_run": "R-TB-E-1",
+   "method": "B1-K+E",
+   "seed": 1,
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "phase_a_class": "A_CURRENT_EVAL_EXACT_LOAD",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae/checkpoints/final_n_014309_u13.pt",
+    "bytes": 35989487,
+    "sha256": "62099c437dabd361412ae2fe3b5b6fadcf785bc88661e32ac7d35564f79522e7",
+    "N": 14309,
+    "T_s": 68820.25000001468,
+    "generation": "final_n_014309_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014309_u13.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "MUST",
+   "open_gaps": []
+  },
+  {
+   "slot": "TB-M2",
+   "plan_run": "R1-B1K-s0",
+   "method": "B1-K",
+   "seed": 0,
+   "tier": "HISTORICAL_EXTENSION",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B1-K/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_013623_u13.pt",
+    "bytes": 13784375,
+    "sha256": "2c93d96f3999b5192f5ceb7c817e9a00a94937dfa1a22db9e76ac02cf7d0c99a",
+    "N": 13623,
+    "T_s": 68813.40000002344,
+    "generation": "final_n_013623_u13"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_BY_THIS_CARD_COMPATIBILITY_PASS",
+   "open_gaps": [
+    "UC2",
+    "UC4",
+    "UC5"
+   ]
+  },
+  {
+   "slot": "TB-M4",
+   "plan_run": "R1-B2-s0",
+   "method": "B2",
+   "seed": 0,
+   "tier": "HISTORICAL_EXTENSION",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r1/T_B/B2/seed_0/20260926T112613Z_9e64dd09/checkpoints/final_n_014464_u14.pt",
+    "bytes": 13861879,
+    "sha256": "976f70102ee993a639edd4572eebe2053ad8ac6d7b450bd43dc3576a367b413e",
+    "N": 14464,
+    "T_s": 68818.75000000885,
+    "generation": "final_n_014464_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "final_n_014464_u14.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": true,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_BY_THIS_CARD_COMPATIBILITY_PASS",
+   "open_gaps": [
+    "UC2",
+    "UC4",
+    "UC5"
+   ]
+  },
+  {
+   "slot": "TB-M1",
+   "plan_run": "R2-B0-s0",
+   "method": "B0",
+   "seed": 0,
+   "tier": "SYSTEM_REFERENCE",
+   "execution_class": "ARCHIVED_V13_EXECUTION_CLASS",
+   "phase_a_class": "B_ARCHIVED_EXECUTION_CLASS_COMPATIBLE",
+   "final_checkpoint": {
+    "path": "/home/xushijie2/graph_cp_disr_v2_1/runs/v13_r2/T_B/B0/seed_0/20260927T070500Z_826fe5c5/checkpoints/final_n_014705_u14.pt",
+    "bytes": 13673874,
+    "sha256": "f50a857ce9b589e65b9b7b4d9e983b7e3babb1b9e93d54875f3e383e99b837f0",
+    "N": 14705,
+    "T_s": 68814.80000002464,
+    "generation": "final_n_014705_u14"
+   },
+   "evaluation_model_rule": "last valid post-update final checkpoint",
+   "selected_best_dev_separate_column": {
+    "name": "n_000000.pt",
+    "rule": "max_mean3_then_max_worst_then_earlier_N",
+    "is_final": false,
+    "role": "SEPARATE_SELECTED_COLUMN_NOT_A_SUBSTITUTE_FOR_FINAL"
+   },
+   "episodes": 30,
+   "inclusion": "INCLUDED_NO_NEW_ENGINEERING_BRANCH",
+   "open_gaps": [
+    "UC2",
+    "UC3",
+    "UC4",
+    "UC5",
+    "UC7"
+   ]
+  }
+ ],
+ "evaluation_model_rule": "bound final checkpoint + SHA256 only; selected/best-dev never substitutes final",
+ "execution_classes": {
+  "CURRENT_2_1_1_EXECUTION_CLASS": {
+   "source_tree": "/home/xushijie2/graph_cp_disr_final_tb_launch",
+   "recorder_loaded_by_file_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr/final_tb_eval_record.py",
+   "runtime_manifest": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T031938Z_e1_elastic01_e4dc34ae/runtime_manifest_tb_resolved.yaml",
+   "runtime_manifest_sha256": "a0c5006336ed13b404a1596e6cf8dd4b96783445ada7f8eb17a64762550d3f5f",
+   "binding": "stage2a_v11.bind_run_context(duck-typed context: runtime_manifest, render_gpu_device_id=0, prior_mode=absent) + ENABLED_SPLITS[T_B] set; recorder imported normally",
+   "models": [
+    "TB-M3",
+    "TB-M5",
+    "TB-M6",
+    "TB-C1"
+   ],
+   "worker": "A",
+   "gpu": {
+    "index": 2,
+    "memory_used_mib": 12,
+    "utilization_pct": 0
+   }
+  },
+  "ARCHIVED_V13_EXECUTION_CLASS": {
+   "source_tree": "/home/xushijie2/graph_cp_disr_v2_1",
+   "v2_1_head": "b11eb0dc9ef0b500a120527a60dda2871c217b2a",
+   "recorder_loaded_by_file_path": "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr/final_tb_eval_record.py",
+   "execution_hashes_recorded_in_run_manifests": {
+    "stage2a_v11": "543cb10cbeb374e18c7d6e8678944ad37665a3f5c603d8bd8f0b913efab90bc3",
+    "collector": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+    "neural": "d7a2838d7cc09918d041e6ec4627f0ee94e1f5273528d21f3805309e6f05bd96",
+    "torch_rl": "ae19526b240a778a13934c0b663ef137be45751e886412b0d75e0c5ffde7a31c",
+    "persistence": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+    "runtime_factory": "5db83fe64e582b9d30c0b79134d9a34cfd9da0e42222b0617c47c1074ca12e0b"
+   },
+   "binding": "root = the archived tree (read-only use); PYTHONPATH = its src; ENABLED_SPLITS[T_B] set to an absolute no-prior split; the recorder is loaded BY FILE PATH from the new worktree; no archived file is modified and no run context exists in that source",
+   "models": [
+    "TB-M2",
+    "TB-M4",
+    "TB-M1"
+   ],
+   "worker": "B",
+   "gpu": {
+    "index": 1,
+    "memory_used_mib": 15,
+    "utilization_pct": 0
+   },
+   "result_label": "ARCHIVED_EXECUTION_CLASS"
+  }
+ },
+ "test_cases": {
+  "label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+  "n": 30,
+  "order": [
+   "T_B_test_00",
+   "T_B_test_01",
+   "T_B_test_02",
+   "T_B_test_03",
+   "T_B_test_04",
+   "T_B_test_05",
+   "T_B_test_06",
+   "T_B_test_07",
+   "T_B_test_08",
+   "T_B_test_09",
+   "T_B_test_10",
+   "T_B_test_11",
+   "T_B_test_12",
+   "T_B_test_13",
+   "T_B_test_14",
+   "T_B_test_15",
+   "T_B_test_16",
+   "T_B_test_17",
+   "T_B_test_18",
+   "T_B_test_19",
+   "T_B_test_20",
+   "T_B_test_21",
+   "T_B_test_22",
+   "T_B_test_23",
+   "T_B_test_24",
+   "T_B_test_25",
+   "T_B_test_26",
+   "T_B_test_27",
+   "T_B_test_28",
+   "T_B_test_29"
+  ],
+  "reset_seeds": [
+   3120619661,
+   1424214846,
+   1721228238,
+   1411411956,
+   1814349979,
+   2028275928,
+   3981968806,
+   4155634606,
+   2731186447,
+   2794530235,
+   3416272988,
+   459512373,
+   4286136708,
+   3759013031,
+   830306914,
+   1046487728,
+   396088334,
+   2319458687,
+   2305404715,
+   1985311908,
+   39006390,
+   450144748,
+   203316610,
+   3993838330,
+   1269218602,
+   654046766,
+   3209394504,
+   2137727285,
+   1483311252,
+   96069211
+  ],
+  "source": "configs/splits/T_B_stage_2a_test30.json",
+  "scene_set_sha256": "db01aa572d9f852935bc52da8ce8bbaf8b35bb6c82c126a703b6ca4a6a183d9e"
+ },
+ "evaluator_settings": {
+  "action": "deterministic argmax",
+  "episode_deadline_sim_seconds": 60,
+  "passes_per_model": 1,
+  "case_order": "fixed (test_cases.order), identical for every model",
+  "rng": "isolated (captured, seed_all(0), restored)",
+  "optimizer_steps": 0,
+  "provider_calls": 0,
+  "recorder": "src/cp_disr/final_tb_eval_record.py (schema eval_row_v2)",
+  "model_hash": "sha256 before load and after the last episode; mismatch stops",
+  "prior": "absent for every model (effective R empty); no-prior test split without cache pointers"
+ },
+ "invalid_episode_rule": {
+  "NORMAL_POLICY_OUTCOME": {
+   "counted": "as failure",
+   "rerun": false,
+   "examples": [
+    "DEADLINE",
+    "NO_CANDIDATE_SAFE_TERMINATION (NO_SAFE_CANDIDATES)",
+    "legal skill failure",
+    "verifier-confirmed task failure",
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE"
+   ]
+  },
+  "INFRASTRUCTURE_FAILURE": {
+   "examples": [
+    "CUDA / EGL / process crash",
+    "filesystem / checkpoint read error",
+    "evaluation code exception",
+    "environment construction failure"
+   ],
+   "action": "stop that release and report",
+   "forbidden": [
+    "automatic scene swap",
+    "rerun until satisfied",
+    "partial-result cherry-picking"
+   ],
+   "implemented_in_recorder": "any exception escaping an episode writes a partial payload (status INFRASTRUCTURE_FAILURE_STOPPED) and raises InfrastructureFailure"
+  }
+ },
+ "planned_slots": {
+  "total": 210,
+  "per_model": 30,
+  "slot_id": "<model slot>|<case id>",
+  "statuses": [
+   "MEASURED",
+   "TECHNICAL_NOT_MEASURED",
+   "NOT_EXECUTED_RELEASE_STOPPED"
+  ]
+ },
+ "parallel": {
+  "max_workers": 2,
+  "workers": [
+   {
+    "id": "A",
+    "class": "CURRENT_2_1_1_EXECUTION_CLASS",
+    "gpu": {
+     "index": 2,
+     "memory_used_mib": 12,
+     "utilization_pct": 0
+    },
+    "out": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/worker_current"
+   },
+   {
+    "id": "B",
+    "class": "ARCHIVED_V13_EXECUTION_CLASS",
+    "gpu": {
+     "index": 1,
+     "memory_used_mib": 15,
+     "utilization_pct": 0
+    },
+    "out": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/worker_archived"
+   }
+  ],
+  "note": "parallelism shortens wall time only; models, cases, seeds and order are unchanged; a technical error stops the whole release (no automatic resource change / resume)"
+ },
+ "visibility_rule": "no model / checkpoint / protocol / seed / control decision before all 210 planned slots are complete; health monitoring only",
+ "interpretation_boundary_C1": "final holdout performance is not the development learning process (0/4096/8192/final); it cannot by itself show that B2 early-learning advantage generalizes; development results are not deleted or replaced by holdout results; checkpoints are never swapped after test",
+ "forbidden": [
+  "training",
+  "optimizer",
+  "provider",
+  "old test VLM cache",
+  "relation truth",
+  "tuning",
+  "checkpoint change after test",
+  "model add/remove after test",
+  "automatic retry"
+ ],
+ "outputs": [
+  "test_release_manifest.json",
+  "holdout_accounting.json",
+  "core_results.json",
+  "historical_results.json",
+  "system_reference_results.json",
+  "per_episode_eval_row_v2.jsonl",
+  "model_hash_receipts.json",
+  "technical_events.jsonl",
+  "holdout_summary.md",
+  "verify.json"
+ ]
+}

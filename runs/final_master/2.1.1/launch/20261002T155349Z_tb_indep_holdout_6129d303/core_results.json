@@ -1,0 +1,1483 @@
+{
+ "card": "CP-DISR-TB-INDEP-HOLDOUT-01",
+ "label": "PREMATERIALIZED_INDEPENDENT_HOLDOUT",
+ "not_strict_blind_test": true,
+ "GLOBAL_S4": "NOT_COMPLETE",
+ "GLOBAL_S5": "NOT_COMPLETE",
+ "not_GLOBAL_S6": true,
+ "all_planned_slots_measured": true,
+ "r_prior": "absent",
+ "evaluator": "deterministic argmax, isolated RNG, optimizer_steps 0, provider 0",
+ "no_best_test_checkpoint_selected": true,
+ "no_selected_dev_checkpoint_in_this_table": true,
+ "tier": "CORE",
+ "planned_episodes": 120,
+ "models": {
+  "TB-M3": {
+   "slot": "TB-M3",
+   "method": "B1-K",
+   "seed": 1,
+   "plan_run": "R-TB-K-1",
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "result_label": "CURRENT_EXECUTION_CLASS",
+   "counts": {
+    "planned": 30,
+    "measured_valid": 30,
+    "technical_not_measured": 0,
+    "not_executed": 0
+   },
+   "success": {
+    "n": 0,
+    "of": 30,
+    "rate": 0.0,
+    "text": "0/30"
+   },
+   "mean_start_discounted_return_G": 0.0,
+   "G_distribution": {
+    "n": 30,
+    "mean": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "q25": 0.0,
+    "q75": 0.0,
+    "max": 0.0
+   },
+   "time_to_first_confirmed_success_s": {
+    "denominator": "successes only",
+    "n_success": 0,
+    "n_with_time": 0,
+    "mean": null,
+    "median": null,
+    "label": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+   },
+   "skill_count": {
+    "mean": 10.3,
+    "median": 10.0,
+    "distribution": {
+     "9": 3,
+     "10": 15,
+     "11": 12
+    }
+   },
+   "reason_distribution_all": {
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 27,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "failure_reason_distribution": {
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 27,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "task_duration_s": {
+    "n": 30,
+    "mean": 59.65000000002816,
+    "median": 59.950000000028524,
+    "min": 56.50000000002431,
+    "q25": 59.950000000028524,
+    "q75": 59.950000000028524,
+    "max": 59.950000000028524
+   },
+   "action_sequence_summary": {
+    "distinct_sequences": 3,
+    "top_sequences": [
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1"
+      ],
+      "count": 15
+     },
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1",
+       "a:PICK:target:v1"
+      ],
+      "count": 12
+     },
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1"
+      ],
+      "count": 3
+     }
+    ],
+    "first_action_distribution": {
+     "a:OPEN:container:v1": 30
+    },
+    "controller_exit_distribution": {
+     "NORMAL_TERMINATION": 283,
+     "TASK_DEADLINE": 26
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "T_B_test_00",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_01",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_02",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_03",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_04",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_05",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_06",
+     "success": false,
+     "G": 0.0,
+     "steps": 9,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_07",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_08",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_09",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_10",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_11",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_12",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_13",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_14",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_15",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_16",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_17",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_18",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_19",
+     "success": false,
+     "G": 0.0,
+     "steps": 9,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_20",
+     "success": false,
+     "G": 0.0,
+     "steps": 9,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_21",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_22",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_23",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_24",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_25",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_26",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_27",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_28",
+     "success": false,
+     "G": 0.0,
+     "steps": 10,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_29",
+     "success": false,
+     "G": 0.0,
+     "steps": 11,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    }
+   ]
+  },
+  "TB-M5": {
+   "slot": "TB-M5",
+   "method": "B2",
+   "seed": 1,
+   "plan_run": "R-TB-DK-1",
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "result_label": "CURRENT_EXECUTION_CLASS",
+   "counts": {
+    "planned": 30,
+    "measured_valid": 30,
+    "technical_not_measured": 0,
+    "not_executed": 0
+   },
+   "success": {
+    "n": 26,
+    "of": 30,
+    "rate": 0.8666666666666667,
+    "text": "26/30"
+   },
+   "mean_start_discounted_return_G": 0.4347822245189292,
+   "G_distribution": {
+    "n": 30,
+    "mean": 0.4347822245189292,
+    "median": 0.5007507223068097,
+    "min": 0.0,
+    "q25": 0.4957052409065965,
+    "q75": 0.506607274493645,
+    "max": 0.5129167309487299
+   },
+   "time_to_first_confirmed_success_s": {
+    "denominator": "successes only",
+    "n_success": 26,
+    "n_with_time": 26,
+    "mean": 22.99230769230527,
+    "median": 22.974999999997593,
+    "label": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+   },
+   "skill_count": {
+    "mean": 4.833333333333333,
+    "median": 5.0,
+    "distribution": {
+     "2": 3,
+     "5": 26,
+     "9": 1
+    }
+   },
+   "reason_distribution_all": {
+    "TASK_SUCCESS": 26,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "failure_reason_distribution": {
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "task_duration_s": {
+    "n": 30,
+    "mean": 23.13999999999896,
+    "median": 22.924999999997617,
+    "min": 11.70000000000091,
+    "q25": 22.56249999999782,
+    "q75": 23.29999999999741,
+    "max": 59.950000000028524
+   },
+   "action_sequence_summary": {
+    "distinct_sequences": 3,
+    "top_sequences": [
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1",
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1"
+      ],
+      "count": 26
+     },
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1"
+      ],
+      "count": 3
+     },
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1",
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1"
+      ],
+      "count": 1
+     }
+    ],
+    "first_action_distribution": {
+     "a:OPEN:container:v1": 30
+    },
+    "controller_exit_distribution": {
+     "NORMAL_TERMINATION": 139,
+     "TIMEOUT": 5,
+     "TASK_DEADLINE": 1
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "T_B_test_00",
+     "success": true,
+     "G": 0.49925040317131114,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.149999999997494
+    },
+    {
+     "case_id": "T_B_test_01",
+     "success": true,
+     "G": 0.5106133031576774,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.39999999999791
+    },
+    {
+     "case_id": "T_B_test_02",
+     "success": true,
+     "G": 0.506797221288578,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.64999999999777
+    },
+    {
+     "case_id": "T_B_test_03",
+     "success": true,
+     "G": 0.507558149246679,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.5999999999978
+    },
+    {
+     "case_id": "T_B_test_04",
+     "success": true,
+     "G": 0.5106133031576773,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.39999999999791
+    },
+    {
+     "case_id": "T_B_test_05",
+     "success": true,
+     "G": 0.5060374341088457,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_06",
+     "success": false,
+     "G": 0.0,
+     "steps": 2,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_07",
+     "success": true,
+     "G": 0.5022555501167009,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.949999999997605
+    },
+    {
+     "case_id": "T_B_test_08",
+     "success": true,
+     "G": 0.5007507223068096,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_09",
+     "success": true,
+     "G": 0.5007507223068097,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_10",
+     "success": true,
+     "G": 0.5083202196959641,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.549999999997826
+    },
+    {
+     "case_id": "T_B_test_11",
+     "success": false,
+     "G": 0.0,
+     "steps": 9,
+     "reason": "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_12",
+     "success": true,
+     "G": 0.49700834869351734,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.29999999999741
+    },
+    {
+     "case_id": "T_B_test_13",
+     "success": true,
+     "G": 0.49700834869351745,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.29999999999741
+    },
+    {
+     "case_id": "T_B_test_14",
+     "success": true,
+     "G": 0.5090834343518202,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.499999999997854
+    },
+    {
+     "case_id": "T_B_test_15",
+     "success": true,
+     "G": 0.5129167309487299,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.249999999997993
+    },
+    {
+     "case_id": "T_B_test_16",
+     "success": true,
+     "G": 0.5060374341088457,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_17",
+     "success": true,
+     "G": 0.5052787859972341,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.749999999997716
+    },
+    {
+     "case_id": "T_B_test_18",
+     "success": true,
+     "G": 0.49403459734211386,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.4999999999973
+    },
+    {
+     "case_id": "T_B_test_19",
+     "success": false,
+     "G": 0.0,
+     "steps": 2,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_20",
+     "success": false,
+     "G": 0.0,
+     "steps": 2,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_21",
+     "success": true,
+     "G": 0.5030096590070839,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.899999999997632
+    },
+    {
+     "case_id": "T_B_test_22",
+     "success": true,
+     "G": 0.48015045224242214,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 24.449999999996773
+    },
+    {
+     "case_id": "T_B_test_23",
+     "success": true,
+     "G": 0.5075581492466791,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.5999999999978
+    },
+    {
+     "case_id": "T_B_test_24",
+     "success": true,
+     "G": 0.4955192422322979,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.399999999997355
+    },
+    {
+     "case_id": "T_B_test_25",
+     "success": true,
+     "G": 0.48814036674196903,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.89999999999708
+    },
+    {
+     "case_id": "T_B_test_26",
+     "success": true,
+     "G": 0.49999999999999994,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.09999999999752
+    },
+    {
+     "case_id": "T_B_test_27",
+     "success": true,
+     "G": 0.4970083486935173,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.29999999999741
+    },
+    {
+     "case_id": "T_B_test_28",
+     "success": true,
+     "G": 0.49626323692949237,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.349999999997383
+    },
+    {
+     "case_id": "T_B_test_29",
+     "success": true,
+     "G": 0.5015025717815832,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.999999999997577
+    }
+   ]
+  },
+  "TB-M6": {
+   "slot": "TB-M6",
+   "method": "B1-K+E",
+   "seed": 0,
+   "plan_run": "R-TB-E-0",
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "result_label": "CURRENT_EXECUTION_CLASS",
+   "counts": {
+    "planned": 30,
+    "measured_valid": 30,
+    "technical_not_measured": 0,
+    "not_executed": 0
+   },
+   "success": {
+    "n": 27,
+    "of": 30,
+    "rate": 0.9,
+    "text": "27/30"
+   },
+   "mean_start_discounted_return_G": 0.4423751160781119,
+   "G_distribution": {
+    "n": 30,
+    "mean": 0.4423751160781119,
+    "median": 0.49144730253352,
+    "min": 0.0,
+    "q25": 0.48250566611456114,
+    "q75": 0.4985019301334336,
+    "max": 0.5045212752460594
+   },
+   "time_to_first_confirmed_success_s": {
+    "denominator": "successes only",
+    "n_success": 27,
+    "n_with_time": 27,
+    "mean": 23.67592592592313,
+    "median": 23.4999999999973,
+    "label": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+   },
+   "skill_count": {
+    "mean": 4.9,
+    "median": 5.0,
+    "distribution": {
+     "4": 3,
+     "5": 27
+    }
+   },
+   "reason_distribution_all": {
+    "TASK_SUCCESS": 27,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "failure_reason_distribution": {
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21": 1
+   },
+   "task_duration_s": {
+    "n": 30,
+    "mean": 23.354999999997382,
+    "median": 23.42499999999734,
+    "min": 19.949999999999267,
+    "q25": 23.08749999999753,
+    "q75": 23.849999999997106,
+    "max": 25.299999999996302
+   },
+   "action_sequence_summary": {
+    "distinct_sequences": 2,
+    "top_sequences": [
+     {
+      "sequence": [
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1"
+      ],
+      "count": 27
+     },
+     {
+      "sequence": [
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:OPEN:container:v1",
+       "a:PICK:target:v1"
+      ],
+      "count": 3
+     }
+    ],
+    "first_action_distribution": {
+     "a:PICK:second_object:v1": 30
+    },
+    "controller_exit_distribution": {
+     "NORMAL_TERMINATION": 147
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "T_B_test_00",
+     "success": true,
+     "G": 0.4947763629272347,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.449999999997328
+    },
+    {
+     "case_id": "T_B_test_01",
+     "success": true,
+     "G": 0.4985019301334335,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.199999999997466
+    },
+    {
+     "case_id": "T_B_test_02",
+     "success": true,
+     "G": 0.49551924223229776,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.399999999997355
+    },
+    {
+     "case_id": "T_B_test_03",
+     "success": true,
+     "G": 0.4985019301334336,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.199999999997466
+    },
+    {
+     "case_id": "T_B_test_04",
+     "success": true,
+     "G": 0.5007507223068096,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_05",
+     "success": true,
+     "G": 0.5045212752460594,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.799999999997688
+    },
+    {
+     "case_id": "T_B_test_06",
+     "success": false,
+     "G": 0.0,
+     "steps": 4,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-7",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_07",
+     "success": true,
+     "G": 0.49034241686431146,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.74999999999716
+    },
+    {
+     "case_id": "T_B_test_08",
+     "success": true,
+     "G": 0.49107863884494135,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.69999999999719
+    },
+    {
+     "case_id": "T_B_test_09",
+     "success": true,
+     "G": 0.48887328246630385,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.849999999997106
+    },
+    {
+     "case_id": "T_B_test_10",
+     "success": true,
+     "G": 0.5007507223068096,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_11",
+     "success": true,
+     "G": 0.47158326105598347,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 25.04999999999644
+    },
+    {
+     "case_id": "T_B_test_12",
+     "success": true,
+     "G": 0.4888732824663038,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.849999999997106
+    },
+    {
+     "case_id": "T_B_test_13",
+     "success": true,
+     "G": 0.4918159662220986,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.649999999997217
+    },
+    {
+     "case_id": "T_B_test_14",
+     "success": true,
+     "G": 0.5037649001501985,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.84999999999766
+    },
+    {
+     "case_id": "T_B_test_15",
+     "success": true,
+     "G": 0.4985019301334336,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.199999999997466
+    },
+    {
+     "case_id": "T_B_test_16",
+     "success": true,
+     "G": 0.4955192422322978,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.399999999997355
+    },
+    {
+     "case_id": "T_B_test_17",
+     "success": true,
+     "G": 0.5007507223068096,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_18",
+     "success": true,
+     "G": 0.4808713715526684,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 24.3999999999968
+    },
+    {
+     "case_id": "T_B_test_19",
+     "success": false,
+     "G": 0.0,
+     "steps": 4,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-20",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_20",
+     "success": false,
+     "G": 0.0,
+     "steps": 4,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-21",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_21",
+     "success": true,
+     "G": 0.4985019301334336,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.199999999997466
+    },
+    {
+     "case_id": "T_B_test_22",
+     "success": true,
+     "G": 0.46805887122681633,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 25.299999999996302
+    },
+    {
+     "case_id": "T_B_test_23",
+     "success": true,
+     "G": 0.49403459734211375,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.4999999999973
+    },
+    {
+     "case_id": "T_B_test_24",
+     "success": true,
+     "G": 0.4772775667869036,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 24.649999999996663
+    },
+    {
+     "case_id": "T_B_test_25",
+     "success": true,
+     "G": 0.4744218706744378,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 24.84999999999655
+    },
+    {
+     "case_id": "T_B_test_26",
+     "success": true,
+     "G": 0.48740854980023945,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.94999999999705
+    },
+    {
+     "case_id": "T_B_test_27",
+     "success": true,
+     "G": 0.49034241686431146,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.74999999999716
+    },
+    {
+     "case_id": "T_B_test_28",
+     "success": true,
+     "G": 0.48740854980023945,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.94999999999705
+    },
+    {
+     "case_id": "T_B_test_29",
+     "success": true,
+     "G": 0.4985019301334336,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.199999999997466
+    }
+   ]
+  },
+  "TB-C1": {
+   "slot": "TB-C1",
+   "method": "B1-K+E",
+   "seed": 1,
+   "plan_run": "R-TB-E-1",
+   "tier": "CORE",
+   "execution_class": "CURRENT_2_1_1_EXECUTION_CLASS",
+   "result_label": "CURRENT_EXECUTION_CLASS",
+   "counts": {
+    "planned": 30,
+    "measured_valid": 30,
+    "technical_not_measured": 0,
+    "not_executed": 0
+   },
+   "success": {
+    "n": 28,
+    "of": 30,
+    "rate": 0.9333333333333333,
+    "text": "28/30"
+   },
+   "mean_start_discounted_return_G": 0.46865676762252734,
+   "G_distribution": {
+    "n": 30,
+    "mean": 0.46865676762252734,
+    "median": 0.5026326045618923,
+    "min": 0.0,
+    "q25": 0.4992504031713112,
+    "q75": 0.5060374341088457,
+    "max": 0.5129167309487298
+   },
+   "time_to_first_confirmed_success_s": {
+    "denominator": "successes only",
+    "n_success": 28,
+    "n_with_time": 28,
+    "mean": 22.960714285711884,
+    "median": 22.874999999997648,
+    "label": "EPISODE_START_TO_FIRST_INDEPENDENT_CONFIRMED_SUCCESS_SIM_SECONDS"
+   },
+   "skill_count": {
+    "mean": 4.933333333333334,
+    "median": 5.0,
+    "distribution": {
+     "4": 2,
+     "5": 28
+    }
+   },
+   "reason_distribution_all": {
+    "TASK_SUCCESS": 28,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-23": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-26": 1
+   },
+   "failure_reason_distribution": {
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-23": 1,
+    "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-26": 1
+   },
+   "task_duration_s": {
+    "n": 30,
+    "mean": 22.826666666664337,
+    "median": 22.824999999997672,
+    "min": 20.499999999998963,
+    "q25": 22.662499999997763,
+    "q75": 23.1374999999975,
+    "max": 23.999999999997023
+   },
+   "action_sequence_summary": {
+    "distinct_sequences": 2,
+    "top_sequences": [
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PICK:target:v1",
+       "a:PLACE:target:container:v1"
+      ],
+      "count": 28
+     },
+     {
+      "sequence": [
+       "a:OPEN:container:v1",
+       "a:PICK:second_object:v1",
+       "a:PLACE_BUFFER:second_object:buffer:v1",
+       "a:PICK:target:v1"
+      ],
+      "count": 2
+     }
+    ],
+    "first_action_distribution": {
+     "a:OPEN:container:v1": 30
+    },
+    "controller_exit_distribution": {
+     "NORMAL_TERMINATION": 148
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "T_B_test_00",
+     "success": true,
+     "G": 0.49999999999999994,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.09999999999752
+    },
+    {
+     "case_id": "T_B_test_01",
+     "success": true,
+     "G": 0.5106133031576772,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.39999999999791
+    },
+    {
+     "case_id": "T_B_test_02",
+     "success": true,
+     "G": 0.508320219695964,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.549999999997826
+    },
+    {
+     "case_id": "T_B_test_03",
+     "success": true,
+     "G": 0.5075581492466791,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.5999999999978
+    },
+    {
+     "case_id": "T_B_test_04",
+     "success": true,
+     "G": 0.5075581492466791,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.5999999999978
+    },
+    {
+     "case_id": "T_B_test_05",
+     "success": true,
+     "G": 0.5060374341088456,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_06",
+     "success": true,
+     "G": 0.5022555501167008,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.949999999997605
+    },
+    {
+     "case_id": "T_B_test_07",
+     "success": true,
+     "G": 0.5037649001501986,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.84999999999766
+    },
+    {
+     "case_id": "T_B_test_08",
+     "success": true,
+     "G": 0.5030096590070838,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.899999999997632
+    },
+    {
+     "case_id": "T_B_test_09",
+     "success": true,
+     "G": 0.5015025717815832,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.999999999997577
+    },
+    {
+     "case_id": "T_B_test_10",
+     "success": true,
+     "G": 0.5052787859972341,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.749999999997716
+    },
+    {
+     "case_id": "T_B_test_11",
+     "success": true,
+     "G": 0.48667782999382736,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.999999999997023
+    },
+    {
+     "case_id": "T_B_test_12",
+     "success": true,
+     "G": 0.4992504031713113,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.149999999997494
+    },
+    {
+     "case_id": "T_B_test_13",
+     "success": true,
+     "G": 0.49775457920158694,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.24999999999744
+    },
+    {
+     "case_id": "T_B_test_14",
+     "success": true,
+     "G": 0.5060374341088457,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_15",
+     "success": true,
+     "G": 0.5129167309487298,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.249999999997993
+    },
+    {
+     "case_id": "T_B_test_16",
+     "success": true,
+     "G": 0.5060374341088458,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_17",
+     "success": true,
+     "G": 0.5060374341088456,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.699999999997743
+    },
+    {
+     "case_id": "T_B_test_18",
+     "success": true,
+     "G": 0.4918159662220987,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.649999999997217
+    },
+    {
+     "case_id": "T_B_test_19",
+     "success": true,
+     "G": 0.48887328246630385,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.849999999997106
+    },
+    {
+     "case_id": "T_B_test_20",
+     "success": true,
+     "G": 0.5067972212885782,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.64999999999777
+    },
+    {
+     "case_id": "T_B_test_21",
+     "success": true,
+     "G": 0.5045212752460596,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.799999999997688
+    },
+    {
+     "case_id": "T_B_test_22",
+     "success": false,
+     "G": 0.0,
+     "steps": 4,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-23",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_23",
+     "success": true,
+     "G": 0.5052787859972341,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 22.749999999997716
+    },
+    {
+     "case_id": "T_B_test_24",
+     "success": true,
+     "G": 0.49255440065547484,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.599999999997245
+    },
+    {
+     "case_id": "T_B_test_25",
+     "success": false,
+     "G": 0.0,
+     "steps": 4,
+     "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-26",
+     "time_to_first_confirmed_success_s": null
+    },
+    {
+     "case_id": "T_B_test_26",
+     "success": true,
+     "G": 0.5007507223068097,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.04999999999755
+    },
+    {
+     "case_id": "T_B_test_27",
+     "success": true,
+     "G": 0.4992504031713112,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.149999999997494
+    },
+    {
+     "case_id": "T_B_test_28",
+     "success": true,
+     "G": 0.4992504031713113,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.149999999997494
+    },
+    {
+     "case_id": "T_B_test_29",
+     "success": true,
+     "G": 0.5000000000000001,
+     "steps": 5,
+     "reason": "TASK_SUCCESS",
+     "time_to_first_confirmed_success_s": 23.09999999999752
+    }
+   ]
+  }
+ },
+ "paired_same_case": [
+  {
+   "comparison": "B2 s1 vs B1-K s1",
+   "a": "TB-M5",
+   "b": "TB-M3",
+   "n_paired_cases": 30,
+   "a_success_b_fail": 26,
+   "a_fail_b_success": 0,
+   "both_success": 0,
+   "both_fail": 4,
+   "success_diff_a_minus_b": 0.8666666666666667,
+   "mean_delta_G_a_minus_b": 0.4347822245189292,
+   "sd_delta_G": 0.17358825228574104,
+   "se_delta_G": 0.03169273383159936,
+   "exact_two_sided_sign_test_p_on_discordant_success": 2.9802322387695312e-08,
+   "note": "descriptive; one training seed per cell, 30 same-case pairs; not a seed-level generalisation test"
+  },
+  {
+   "comparison": "B2 s1 vs B1-K+E s0",
+   "a": "TB-M5",
+   "b": "TB-M6",
+   "n_paired_cases": 30,
+   "a_success_b_fail": 0,
+   "a_fail_b_success": 1,
+   "both_success": 26,
+   "both_fail": 3,
+   "success_diff_a_minus_b": -0.03333333333333333,
+   "mean_delta_G_a_minus_b": -0.007592891559182713,
+   "sd_delta_G": 0.08776239688925591,
+   "se_delta_G": 0.016023148158988892,
+   "exact_two_sided_sign_test_p_on_discordant_success": 1.0,
+   "note": "descriptive; one training seed per cell, 30 same-case pairs; not a seed-level generalisation test"
+  },
+  {
+   "comparison": "B2 s1 vs B1-K+E s1",
+   "a": "TB-M5",
+   "b": "TB-C1",
+   "n_paired_cases": 30,
+   "a_success_b_fail": 2,
+   "a_fail_b_success": 4,
+   "both_success": 24,
+   "both_fail": 0,
+   "success_diff_a_minus_b": -0.06666666666666667,
+   "mean_delta_G_a_minus_b": -0.033874543103598116,
+   "sd_delta_G": 0.22123791263114917,
+   "se_delta_G": 0.04039233177447917,
+   "exact_two_sided_sign_test_p_on_discordant_success": 0.6875,
+   "note": "descriptive; one training seed per cell, 30 same-case pairs; not a seed-level generalisation test"
+  },
+  {
+   "comparison": "B1-K+E s0 vs s1",
+   "a": "TB-M6",
+   "b": "TB-C1",
+   "n_paired_cases": 30,
+   "a_success_b_fail": 2,
+   "a_fail_b_success": 3,
+   "both_success": 25,
+   "both_fail": 0,
+   "success_diff_a_minus_b": -0.03333333333333333,
+   "mean_delta_G_a_minus_b": -0.026281651544415398,
+   "sd_delta_G": 0.20121558311179435,
+   "se_delta_G": 0.03673677126396177,
+   "exact_two_sided_sign_test_p_on_discordant_success": 1.0,
+   "note": "descriptive; one training seed per cell, 30 same-case pairs; not a seed-level generalisation test"
+  }
+ ]
+}
