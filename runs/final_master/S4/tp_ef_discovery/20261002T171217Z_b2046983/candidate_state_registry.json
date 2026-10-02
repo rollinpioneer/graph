@@ -1,0 +1,3287 @@
+{
+  "cap": 24,
+  "card": "CP-DISR-TP-EF-DISCOVERY-1",
+  "state_count": 20,
+  "states": [
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "4f545532b2dc2152f7a3b3dc7e9736e629455c841e630ae06d5ce3d47be74dda",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "c790d8073e40fef686c89a28799563f2f683d129733502e2456bb7e505743467",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "62301dd31e7ff9efa6521018892ad8d84440f2d00195e837d3268689626c7879",
+      "restore_receipt_sha256": "84e7dc8bee63778ae8c86a8e0200080cb26c4d4f5a0800c5ae508d5df74ee89d",
+      "restore_seed": 8100,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_00",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "84e7dc8bee63778ae8c86a8e0200080cb26c4d4f5a0800c5ae508d5df74ee89d",
+      "source_role": "existing_dev",
+      "state_id": "45cdf08ea49f1f7a"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "c61a58c9081682324a6bb6d5acf85d4a6f98ca39837424cf5ddfc213d19c8080",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "5fa2351f3988b3736fb46a52c0ca7180f84674702a3d8f73fc89b7d1d845d426",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "bf16a839fa098a839916bf4258d4885f1c72ed76853f2b748a5414ab71fdd8cf",
+      "restore_receipt_sha256": "b37d1277d042b5557e96e05a7bf4384e7ce2097c0c0fbb4e53eedf771837452f",
+      "restore_seed": 8101,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_01",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "b37d1277d042b5557e96e05a7bf4384e7ce2097c0c0fbb4e53eedf771837452f",
+      "source_role": "existing_dev",
+      "state_id": "d4fe04611f72f44d"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "1f2d3fd8e8e77a5ffc8d7c9cefe8a26af21d1f767daf6b003abc5813a892080e",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "2fe053044a65a1e641cfae6eb604e5002f5bf36ec821ddbc43ab8a7d7a982ea9",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "7f109841b32f974371d02b7bb37108d55d8b55f60a8ccbf661caccd8f0b262b9",
+      "restore_receipt_sha256": "0121d9607a1ed747ec1422d9d2e5df54ed26b41feed90ece5fc785611d6a33e3",
+      "restore_seed": 8102,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_02",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "0121d9607a1ed747ec1422d9d2e5df54ed26b41feed90ece5fc785611d6a33e3",
+      "source_role": "existing_dev",
+      "state_id": "c6f6125734efa08f"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "58a81505a71304941e0c89ba47d29d447d35acd9b669f8bfafdb383f7825303f",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "da742076eae88d1bfc4d295608701681a23131f51897f9f34d60c0977ebfb3d1",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "2286de3072cff31ebde36b9d8ebefff192085a67b2a9adc05cccd214e36e3e3a",
+      "restore_receipt_sha256": "8cdb81b7a43cc663ff935f765fa64632010e790f57536cf52de9931fb6596cac",
+      "restore_seed": 8103,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_03",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "8cdb81b7a43cc663ff935f765fa64632010e790f57536cf52de9931fb6596cac",
+      "source_role": "existing_dev",
+      "state_id": "d0b39206dbbc52d9"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "fbb7ad0ce668039b050bcb1f39206b924c82ccb7b92e83833679a57abaa8f134",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "e0c88f6df1a83e511a78e94a90495c17712c6c8e23b21de4d8db71beaba9bda9",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "eeeef4f703b2b23730e586f2664bb79aac272d2805309ed77caa5e2b1a501b02",
+      "restore_receipt_sha256": "36041aa700f61c95d1cc64afa2ca4856cc3ab0aad7edbcb13e1a98adefb59a13",
+      "restore_seed": 8104,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_04",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "36041aa700f61c95d1cc64afa2ca4856cc3ab0aad7edbcb13e1a98adefb59a13",
+      "source_role": "existing_dev",
+      "state_id": "0f833a84027e4ea6"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "e316dab20eeacb454bde60afe92291df59d911efb6201c9b75d02e9427275641",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "11a943810d6fb4434e27a098beaf006638a56e0468c58a9f11cce05ff07cd6af",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "339d40aae9ac31d5a5e4d3951baa79e4dc2a6e3ffeb6c73337a4023a62b74ea9",
+      "restore_receipt_sha256": "a5e6e1dad6d73fbee554559d62d2c02ad59eca023e1ebaad8dd8d383d7d1f48d",
+      "restore_seed": 8105,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_05",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "a5e6e1dad6d73fbee554559d62d2c02ad59eca023e1ebaad8dd8d383d7d1f48d",
+      "source_role": "existing_dev",
+      "state_id": "59876bc431e8eee8"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "74dbd1249e690d95cf279e0bdf41743d4b4b27fef95b18aa9c90c13287d006f5",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "489d337938edfd4753f64ad9ec0825edd9afbac58c79c564f74cd56004c31e83",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "9e80359f10faa98a9eb6d0e3eef4907c5497c53430276667b3ef503ae16de19c",
+      "restore_receipt_sha256": "f54dde59a8918dfd93d840fa6d843f47a186b53273dc632d1540df67fd15028c",
+      "restore_seed": 8106,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_06",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "f54dde59a8918dfd93d840fa6d843f47a186b53273dc632d1540df67fd15028c",
+      "source_role": "existing_dev",
+      "state_id": "2e7519593ad8a2d2"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "8b3c7642f0831fe0ea59ee98efbbbefb591845de7757929cd631f5c8e492fa12",
+        "cache_status": "MATERIALIZED",
+        "contract_redundant": 5,
+        "raw": 5,
+        "rejected": 5
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "4309cb20657235944a596976d20584a5e2d2e175c2c388f031957a98ad730b54",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "63ecb19a8f715d2374bc042c174e956d8ffb7174a9e753d8a08b211c92d26385",
+      "restore_receipt_sha256": "425c37c8fc9f880d94c1bee901785ab3357dca2a1f249a9c240a5f20a4c2864b",
+      "restore_seed": 8107,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_07",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "425c37c8fc9f880d94c1bee901785ab3357dca2a1f249a9c240a5f20a4c2864b",
+      "source_role": "existing_dev",
+      "state_id": "323d745876039565"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "8554e2209801fae4fa199ab9af07b94ff051b7499ff9df61af1f7d129764c37d",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "5b61033c64adc20398c4156690f59548da3a170d02ece7efd80fd11fa0d1980c",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "a598f3a5226f4cfc566dcab16029332636b996c3db4bd7c85e4c78368df10f17",
+      "restore_receipt_sha256": "ae756bd57a437f1e7ffda262b517a2449f31faceee2a29832360a3cf7dc853aa",
+      "restore_seed": 8108,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_08",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "ae756bd57a437f1e7ffda262b517a2449f31faceee2a29832360a3cf7dc853aa",
+      "source_role": "existing_dev",
+      "state_id": "f486ec3d587e78a2"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "e49ae70611d39b7179b0c97dd65ee5c9774f0cbebe986e421473706f1cba8859",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "83f71f137160ad204948ca7b92463fe9a1a2daad9b0b057bd4b07f62c7c7f24d",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "dd7bee31f701a6512732d93a2498e34aaafb72f2d2c16077f0246a6f4f67f295",
+      "restore_receipt_sha256": "bbf0bcc33081879ef13033b76807c720d2748107c6a4f7484bb4111dc11fb61d",
+      "restore_seed": 8109,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_09",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "bbf0bcc33081879ef13033b76807c720d2748107c6a4f7484bb4111dc11fb61d",
+      "source_role": "existing_dev",
+      "state_id": "b2b02687747a5988"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "f57603e58bebe6f8a8c69348540a3197a2f269708c01dcea10305dcfc5f28af0",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "0ca08b87199111cf4ab226579a00e6eb78cc73093963b18bc66b4095b1f48af7",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "ed8fa7f4ee32e0dcde528f8da2e1f801d93ba0fa497612a168b7c8eb7cd2357d",
+      "restore_receipt_sha256": "789347a257ef34528940d4ca285e30b06acff70e50ddbff51ca77fb0634e9617",
+      "restore_seed": 8110,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_10",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "789347a257ef34528940d4ca285e30b06acff70e50ddbff51ca77fb0634e9617",
+      "source_role": "existing_dev",
+      "state_id": "e22d1ebb522a4749"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "9ba95b9b5e59795c1d0e7f43f578444538f236c9412a5427a103d1353ba20a08",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "d255eb7a01b997fc2f5eb2489017642c94a989fe8b166cb159b8fc75e2437c0a",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "da559e1b1b5c4a05b4bc39315b1fa01c4e632b300d531ec4145f637f373e7a96",
+      "restore_receipt_sha256": "4e211c7dd62b152c0cd571445db27550e7404e1cad930f0132a834182e8eda0c",
+      "restore_seed": 8111,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_11",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "4e211c7dd62b152c0cd571445db27550e7404e1cad930f0132a834182e8eda0c",
+      "source_role": "existing_dev",
+      "state_id": "598c7beb1d9842e0"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "11282cd2227582f25a5a226f88d77090125440a86ece353b805e77859788c067",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "4d1c7eda343f484c659495d6a6469969bba8c2eca65551f7977b656e4c7837cb",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "8c18ba83c805155f1fdd6887b7e23d0865c291162a3bf05cd3b938a693160c54",
+      "restore_receipt_sha256": "647d4a3689600f00756881d0f7a251caf94012d92f87dfe57a2f8902aaf995ac",
+      "restore_seed": 8112,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_12",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "647d4a3689600f00756881d0f7a251caf94012d92f87dfe57a2f8902aaf995ac",
+      "source_role": "existing_dev",
+      "state_id": "610a40cb48d10bfe"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "3302b331a01a906ef2d1d43233b8110d6759cc26e3532a0309078a4f6b21abeb",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "155e5e5be3cc04f61d4efa0fd7b88304cdf7772ece8c899b1f1b2f8e514ec1ca",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "cfc2325847aaf325deddd29cf7b43e74d91df5a024ca0b640829ab8eb465dba9",
+      "restore_receipt_sha256": "8e3789eec389619d4078701285c940d40eb8de2aa31685f24a86f6dbf6ef8439",
+      "restore_seed": 8113,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_13",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "8e3789eec389619d4078701285c940d40eb8de2aa31685f24a86f6dbf6ef8439",
+      "source_role": "existing_dev",
+      "state_id": "9d2a4b95a24a6ffa"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "da8bcd8c39ae0d6637d8c474618f0528d00a7019a57c4038a8c616f7d29efb1a",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "2602b11c9e7e4d3df7e0fd86aba2803ec42038c63c99d4c3243229a7d055a39e",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "bf6ce0590e696f68a0aec9c4e3d2afcad3f6828a20e36789a2bf48b84a77093c",
+      "restore_receipt_sha256": "b57a52106d3d111c5c70f060fbf3aa323eea9b053047e31930518f1918c464ec",
+      "restore_seed": 8114,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_14",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "b57a52106d3d111c5c70f060fbf3aa323eea9b053047e31930518f1918c464ec",
+      "source_role": "existing_dev",
+      "state_id": "bc037f15a11ef117"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "4999a26cf7cc7457a441f70fc88ba758ae0373f556e208478dc6188048bd805e",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "4f222046af7c26a6644c75535039dd0cdb4a15509c2180e5263793a2262bb053",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "93fbb1452c37541e1e67a335d46248e6b98d8fcb42de81ec8e9fb9d94adb2fe5",
+      "restore_receipt_sha256": "21b61b1f64f170d0453883362b3aad4122ead58bb48f3dcd8afe345b4fd37c13",
+      "restore_seed": 8115,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_15",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "21b61b1f64f170d0453883362b3aad4122ead58bb48f3dcd8afe345b4fd37c13",
+      "source_role": "existing_dev",
+      "state_id": "6be5c49c006b2be6"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "8e8a1cfa1e7c7e67d8be86b198087f484447ac42e61a94500278d0be18cf6b4e",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "960f4190a716ccc8e870b1223557a5c9bc647605827a6d06edb13f1751a2e74f",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "8f2a44ff0e17a7a1ad924494b010eb626c7b1d857a3be2f2957e3c4e6537222e",
+      "restore_receipt_sha256": "757bd35d45c44d2a2ac323a8988d86a9654d1767d08175cb002d9bcfa6908bf3",
+      "restore_seed": 8116,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_16",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "757bd35d45c44d2a2ac323a8988d86a9654d1767d08175cb002d9bcfa6908bf3",
+      "source_role": "existing_dev",
+      "state_id": "72745d5e656cade0"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "12fb64d9a6597325938583d217a63c1c87e2916b9dd78c7ebb95881e4f679915",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "9e1921b26bfb5ab4f1c34838eb0f9291135140185c9643677024648402af090f",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "abda2fae59a6328571f8e84a841aa7773a6b076cfa166df6bd8d0887ab9f4068",
+      "restore_receipt_sha256": "9112e9438ddf13baff6b1d006fcdccaa17ab02e412047fcf48f37c953e4466f3",
+      "restore_seed": 8117,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_17",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "9112e9438ddf13baff6b1d006fcdccaa17ab02e412047fcf48f37c953e4466f3",
+      "source_role": "existing_dev",
+      "state_id": "d6689be946f11be6"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "cd21cb1b184f1e9b9c98f70af83768fe548ff1694f866aa56aa7519301716e09",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "de757672ab4ce67f7d3cbc5bfd1fb82aa42485bc6194b7facb0fb3d9f87c1e5c",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "5719cf3b3a4a986e00d9976592f4ab8a8a002f6012deec289796cc0a2cd40ea8",
+      "restore_receipt_sha256": "7d54c299ec726053ee648f139b100347724d01fcb3477bda4bf7fe8e4fb1ed40",
+      "restore_seed": 8118,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_18",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "7d54c299ec726053ee648f139b100347724d01fcb3477bda4bf7fe8e4fb1ed40",
+      "source_role": "existing_dev",
+      "state_id": "12e617c1cce0acee"
+    },
+    {
+      "b_plan": {
+        "depth": 5,
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "status": "PLAN_FOUND"
+      },
+      "candidate_count": 3,
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "candidate_mask": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "facts_hash": "90433b30f22396dcd056eb5b39a006f46d07f482a589b2763b111ceb25bbaa2b",
+      "g1_pair_legal": true,
+      "goal_hash": "5f447b30176a28bf39f57757a2867ccc51897c1fd1af341cb569a760047f1a51",
+      "natural_relations": {
+        "admitted": 0,
+        "admitted_relations": [],
+        "cache_key": "d52d78e49667a5110b720ae9817e0ed265ad2c601846ae96df1267af81852bb2",
+        "cache_status": "SUCCESS",
+        "contract_redundant": 0,
+        "raw": 0,
+        "rejected": 0
+      },
+      "nominal_patches": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": [
+            "FALSE",
+            "TRUE"
+          ]
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:second_object": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:second_object": [
+            "TRUE",
+            "FALSE"
+          ]
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": [
+            "TRUE",
+            "FALSE"
+          ],
+          "p:Held:target": [
+            "FALSE",
+            "TRUE"
+          ],
+          "p:OnTable:target": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "public_observation_hash": "c42e140b03abdf58d7e3c548d435dfbcb0df26428b816c7faecef1de667ffcb7",
+      "qpos_hash": "93293b5f741f2dad18039060073f807175b0e62cc0bbbf50405b560184423816",
+      "r_star_plan": {
+        "plan": [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:target:container:v1"
+        ],
+        "score": 0.75,
+        "status": "PLAN_FOUND"
+      },
+      "r_star_relations": [
+        [
+          "a:OPEN:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:Open:container"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:second_object:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PICK:target:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:AtBuffer:second_object:buffer",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ],
+        [
+          "a:PLACE:second_object:container:v1",
+          "p:Inside:target:container",
+          "SOFT_RELEVANT_TO_GOAL",
+          "p:GripperEmpty"
+        ]
+      ],
+      "rank_key": "c3bfc703a25a40fe4894140d7ad10a9bb95807cdec059e3b0dee00f8cca8c6e7",
+      "restore_receipt_sha256": "89d902b024073881a7dc1b95621ab2d7f57f5e4a0d17904055bac8ddf384186f",
+      "restore_seed": 8119,
+      "restore_verified": true,
+      "scene_id": "T_B_dev_19",
+      "setup_trace": "start_case(case_id) reset recipe; no skill executed",
+      "snapshot_hash": "89d902b024073881a7dc1b95621ab2d7f57f5e4a0d17904055bac8ddf384186f",
+      "source_role": "existing_dev",
+      "state_id": "20acd051a93279c9"
+    }
+  ]
+}

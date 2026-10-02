@@ -1,0 +1,64 @@
+{
+  "authorized_by": "user chat instruction: execute the design-file experiment (Discovery card scope only)",
+  "budget": {
+    "optimizer_steps": 0,
+    "physical_episode_cap": 8,
+    "provider_first_requests": 0,
+    "provider_retries": 0,
+    "rl_transitions": 0
+  },
+  "card": "CP-DISR-TP-EF-DISCOVERY-1",
+  "design_document_id": "CP-DISR-TP-EF-DESIGN-1",
+  "forbidden": [
+    "RL",
+    "optimizer",
+    "test",
+    "new provider requests without credential+authorization",
+    "Family B/RoboCasa",
+    "80-config family"
+  ],
+  "frozen_protocol": {
+    "H": 23.09999999999752,
+    "continuation": "B_PLAN replanning after the forced first candidate (public facts only; no prior, no VLM, no RL)",
+    "deadline": 60.0,
+    "eps_g_floor": 0.02,
+    "eps_t_floor": 2.099999999998836,
+    "epsilon_rule": "max(floor, within-candidate repeat range); computed before cross-candidate comparison",
+    "pair": [
+      "a:OPEN:container:v1",
+      "a:PICK:second_object:v1"
+    ],
+    "rank_namespace": "CP-DISR-TP-EF-DISCOVERY-1|state-rank|",
+    "return": "G=2^(-tau_success/H) if first success in time else 0",
+    "rework": "executed skills minus nominal B_PLAN plan depth at the initial state (successful branches)",
+    "search": {
+      "cpu_time_limit_seconds": 2.0,
+      "depth_limit": 6,
+      "max_nodes": 4096,
+      "reference_skill_seconds": 4.199999999997672
+    },
+    "source_state_cap": 24,
+    "split": "configs/splits/T_B_stage_2a_v11.json",
+    "split_role": "dev",
+    "witness_states": 3
+  },
+  "method_version": "2.1.1",
+  "prior_attempts": [
+    {
+      "attempt": 1,
+      "dir": "runs/final_master/S4/tp_ef_discovery/20261002T170706Z_88110a77",
+      "outcome_seen": false,
+      "restore_only_attempts": 8,
+      "skill_executions": 0,
+      "status": "STOPPED_ENGINEERING_RESTORE_IDENTITY_COMPARISON"
+    }
+  ],
+  "problems": [],
+  "scope": [
+    "registry+G1 on existing T_B dev states",
+    "paired physical branches (<=8 episodes)",
+    "E1-E6 offline gates",
+    "verdict"
+  ],
+  "status": "PASS"
+}

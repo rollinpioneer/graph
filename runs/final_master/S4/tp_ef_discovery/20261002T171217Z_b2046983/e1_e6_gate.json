@@ -1,0 +1,301 @@
+{
+  "E1": {
+    "empty_cache_states": [
+      "T_B_dev_08",
+      "T_B_dev_09",
+      "T_B_dev_10",
+      "T_B_dev_11",
+      "T_B_dev_12",
+      "T_B_dev_13",
+      "T_B_dev_14",
+      "T_B_dev_15",
+      "T_B_dev_16",
+      "T_B_dev_17",
+      "T_B_dev_18",
+      "T_B_dev_19"
+    ],
+    "failure_class": "NATURAL_RELATIONS_EMPTY_OR_CONTRACT_REDUNDANT",
+    "oracle_or_handwritten_used_for_gate": false,
+    "raw_relations_total": 40,
+    "rejected_contract_redundancy_total": 40,
+    "states_screened": 20,
+    "states_with_admitted_nonredundant_relation": 0,
+    "status": "FAIL"
+  },
+  "E2": {
+    "changed_nominal_patch_states": 20,
+    "failure_class": "NO_ADMITTED_R_TO_ENTER_REPRESENTATION",
+    "legal_candidates_ge_2_states": 20,
+    "natural_R_entering_representation_states": 0,
+    "status": "FAIL"
+  },
+  "E3": {
+    "natural_R_signal": "NONE",
+    "neural_policy_forward_probe": "NOT_RUN_NO_ADMITTED_R_AND_NO_POLICY_BOUND_IN_THIS_CARD",
+    "note": "E2*/E3 oracle capacity probe is structural only here; it does not substitute for natural-R gates",
+    "r_star_structural_candidate_relative_signal_states": 0,
+    "status": "FAIL"
+  },
+  "E4": {
+    "paired": [
+      {
+        "artefact_planner_or_constraint": true,
+        "candidates": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1"
+        ],
+        "case_id": "T_B_dev_03",
+        "delta_q": 0.0,
+        "delta_t": 8.00000000000134,
+        "direction": "NONE",
+        "n_a": 2,
+        "n_b": 2,
+        "q_ref_a": 0.0,
+        "q_ref_b": 0.0,
+        "reasons": [
+          "time",
+          "skill_count_or_rework"
+        ],
+        "reliable": false,
+        "skills_a": 2.0,
+        "skills_b": 1.0,
+        "status": "ARTEFACT_EXCLUDED",
+        "success_a": false,
+        "success_b": false,
+        "time_a": 12.00000000000101,
+        "time_b": 3.9999999999996705
+      },
+      {
+        "artefact_planner_or_constraint": true,
+        "candidates": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1"
+        ],
+        "case_id": "T_B_dev_05",
+        "delta_q": 0.0,
+        "delta_t": 7.200000000001517,
+        "direction": "NONE",
+        "n_a": 1,
+        "n_b": 1,
+        "q_ref_a": 0.0,
+        "q_ref_b": 0.0,
+        "reasons": [
+          "time",
+          "skill_count_or_rework"
+        ],
+        "reliable": false,
+        "skills_a": 2.0,
+        "skills_b": 1.0,
+        "status": "ARTEFACT_EXCLUDED",
+        "success_a": false,
+        "success_b": false,
+        "time_a": 12.200000000001078,
+        "time_b": 4.99999999999956
+      },
+      {
+        "artefact_planner_or_constraint": false,
+        "candidates": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1"
+        ],
+        "case_id": "T_B_dev_18",
+        "delta_q": 0.014936369132922511,
+        "delta_t": -0.9999999999994458,
+        "direction": "NONE",
+        "n_a": 1,
+        "n_b": 1,
+        "q_ref_a": 0.505278785997234,
+        "q_ref_b": 0.49034241686431146,
+        "reasons": [],
+        "reliable": false,
+        "skills_a": 5.0,
+        "skills_b": 5.0,
+        "status": "LOW_DIAGNOSTIC_VALUE",
+        "success_a": true,
+        "success_b": true,
+        "time_a": 22.749999999997716,
+        "time_b": 23.74999999999716
+      }
+    ],
+    "witnesses": []
+  },
+  "E5": {
+    "b_plan_depth_values": [
+      5
+    ],
+    "b_plan_finds_registered_nominal_plan_all_states": true,
+    "both_candidates_in_same_real_mask": true,
+    "differences_not_from_hard_constraint_or_planner": false,
+    "k_abstract_tie": "both candidates have identical nominal-length plans (depth 5) under the registered contracts",
+    "reliable_witness_states": [],
+    "status": "FAIL"
+  },
+  "E6": {
+    "classification": "CONTRACT_SUFFICIENT",
+    "note": "B_PLAN/B_PLAN+R/B_PLAN+R* compared via first-action vs paired physical Q_ref; no extra planner episodes",
+    "physical_planner_episodes_run": 0,
+    "rstar_is_reference_not_upper_bound": true,
+    "status": "FAIL",
+    "witness_comparison": []
+  },
+  "epsilon": {
+    "epsilon_q": 0.02,
+    "epsilon_t": 2.099999999998836,
+    "repeat_g_range": 0.0,
+    "repeat_time_range": 0.0
+  },
+  "gates": {
+    "E1": "FAIL",
+    "E2": "FAIL",
+    "E3": "FAIL",
+    "E4": "FAIL",
+    "E5": "FAIL",
+    "E6": "FAIL",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "FAIL"
+  },
+  "r_star_vs_b_plan": [
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_00"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_01"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_02"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_03"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_04"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_05"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_06"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_07"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_08"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_09"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_10"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_11"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_12"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_13"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_14"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_15"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_16"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_17"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_18"
+    },
+    {
+      "b_plan_first": "a:PICK:second_object:v1",
+      "differs": false,
+      "r_star_first": "a:PICK:second_object:v1",
+      "r_star_relation_count": 8,
+      "scene_id": "T_B_dev_19"
+    }
+  ]
+}
