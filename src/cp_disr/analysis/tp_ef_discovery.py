@@ -220,11 +220,15 @@ def _qpos_hash(env):
 def pre_state_identity(bundle, snap):
     facts = {k: v.value for k, v in snap.facts.values.items()}
     obs = bundle.observations.observe()
-    return {"snapshot_hash": bundle.snapshot_identity, "facts_hash": digest(facts), "goal_hash": digest([[g.fact_id, g.sign] for g in snap.template.goals]),
+    # bundle.snapshot_identity embeds the per-process episode counter ("ep-N"), so it is not comparable across
+    # processes. The restore identity compared here is the case-level receipt (episode counter removed).
+    receipt = {k: v for k, v in bundle.restore_receipt.items() if k != "state_identity_sha256"}
+    return {"snapshot_hash": digest(receipt), "episode_bound_identity": bundle.snapshot_identity,
+            "facts_hash": digest(facts), "goal_hash": digest([[g.fact_id, g.sign] for g in snap.template.goals]),
             "candidate_ids": list(snap.candidate_ids), "candidate_mask": [bool(m) for m in snap.mask],
             "candidate_hash": digest([list(snap.candidate_ids), [bool(m) for m in snap.mask]]),
             "qpos_hash": _qpos_hash(bundle.environment), "proprio_hash": digest([round(float(x), 8) for x in obs.proprioception]),
-            "restore_receipt_sha256": digest(bundle.restore_receipt), "restore_verified": bool(bundle.restore_verified), "facts": facts}
+            "restore_receipt_sha256": digest(receipt), "restore_verified": bool(bundle.restore_verified), "facts": facts}
 
 
 def nominal_patch(template, values, contract):
@@ -281,6 +285,7 @@ def gate0(root, out):
                                 "return": "G=2^(-tau_success/H) if first success in time else 0",
                                 "rework": "executed skills minus nominal B_PLAN plan depth at the initial state (successful branches)",
                                 "epsilon_rule": "max(floor, within-candidate repeat range); computed before cross-candidate comparison"},
+            "prior_attempts": read_json(out / "prior_attempt_note.json") if (out / "prior_attempt_note.json").is_file() else [],
             "problems": problems, "status": "PASS" if not problems else "STOPPED_GATE0"}
     write_json(out / "authorization.json", auth)
     write_json(out / "budget_ledger.json", {"physical_episodes": {"cap": PHYSICAL_EPISODE_CAP, "reserved": [], "used": 0},
@@ -370,8 +375,10 @@ def _gpu_pick(n):
     return free[:n], {i: list(v) for i, v in uuid.items()}
 
 
-def worker(root, out, branch_id):
-    """One registered physical branch: restore -> forced candidate -> postcondition -> fixed B_PLAN continuation."""
+def worker(root, out, branch_id, bundle_factory=None, planner_factory=None):
+    """One registered physical branch: restore -> forced candidate -> postcondition -> fixed B_PLAN continuation.
+
+    `bundle_factory` / `planner_factory` exist only so the control loop can be unit-tested with a mock runtime."""
     from cp_disr.adapters import EvaluationInput
     from cp_disr.baselines.b_plan import BPlanPlanner, SearchConfig
     from cp_disr.facts import FactStore
@@ -400,7 +407,7 @@ def worker(root, out, branch_id):
     bundle = None
     wall0 = time.monotonic()
     try:
-        bundle, _ = build_runtime(root, out)
+        bundle = bundle_factory() if bundle_factory else build_runtime(root, out)[0]
         snap = bundle.start_case(b["case_id"], restore_seed=int(b["restore_seed"]))
         ident = pre_state_identity(bundle, snap)
         match = {k: ident[k] == b[k] for k in ("snapshot_hash", "facts_hash", "candidate_hash", "qpos_hash")}
@@ -410,7 +417,7 @@ def worker(root, out, branch_id):
         if not res["restore_matches_registry"]:
             res["termination"] = "RESTORE_MISMATCH"
             return res
-        planner = BPlanPlanner(SearchConfig(**SEARCH))
+        planner = planner_factory() if planner_factory else BPlanPlanner(SearchConfig(**SEARCH))
         contracts = {c.id: c for c in snap.template.contracts}
         start = float(bundle.episode_start_seconds)
         candidate, stage = b["candidate_id"], "candidate"
