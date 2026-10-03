@@ -1,0 +1,177 @@
+{
+  "all_criteria_met": false,
+  "always_direct_static_audit": {
+    "direct_route": "FINISH(p,G_p) + FINISH(q,G_q) = PICK,PLACE,PICK,PLACE",
+    "direct_skills": 4,
+    "direct_time_s": 15.47499999999642,
+    "duration_source": "runs/final_master/S4/tp_bsi_preflight (clean-log means)",
+    "note": "staging adds PICK + PLACE_BUFFER per staged object; with no downstream saving it is pure overhead, so always-direct dominates by skill count and by time",
+    "staging_extra_time_s_per_staged_object": 8.387499999999074,
+    "staging_skills": {
+      "both_objects_staged": 8,
+      "one_object_staged": 6
+    }
+  },
+  "authority": {
+    "experimental_plan": {
+      "actual_sha256": "e5df8585811559783666c185f35c5c728e95b952d01b988956f5e1c772283cff",
+      "manifest_sha256": "e5df8585811559783666c185f35c5c728e95b952d01b988956f5e1c772283cff",
+      "path": "docs/authoritative/CP_DISR_Final_Experimental_Plan_v3.md"
+    },
+    "hashes_match": true,
+    "manifest_status": "FOUND_AND_RECONCILED",
+    "method_default": "2.1.1",
+    "research_content": {
+      "actual_sha256": "44fc2b9b663491c282da57ad7a3115ee6a924e7eba5eec2ad5b06ea2182063d6",
+      "manifest_sha256": "44fc2b9b663491c282da57ad7a3115ee6a924e7eba5eec2ad5b06ea2182063d6",
+      "path": "docs/authoritative/CP_DISR_Final_Research_Content_v5.md"
+    }
+  },
+  "criteria": {
+    "benefit_enters_existing_cost_or_skill_count": {
+      "evidence": "TaskEvaluator goals depend only on Inside/AtBuffer of fixed regions (T_A, T_B); no location-quality term exists; PLACE_BUFFER only ADDs AtBuffer and DELs Held; no PRE of any skill mentions a buffer or region",
+      "met": false
+    },
+    "existing_downstream_operation_that_staging_can_remove": {
+      "evidence": "skills in every registry and in the executor are PICK, PLACE, PLACE_BUFFER, OPEN (and the unused MOVE); none is a re-seat, re-grasp, reposition or recovery skill; recovery-like names found only in analysis/module/path names",
+      "met": false
+    },
+    "not_hard_precondition": {
+      "evidence": "not reached: there is no mechanism to classify",
+      "met": null
+    },
+    "not_merely_closer_to_goal": {
+      "evidence": "not reached",
+      "met": null
+    },
+    "not_new_reward_hidden_truth_or_must_pass_W": {
+      "evidence": "a 'premium' W is only meaningful if some operation is cheaper for an object staged there; creating that is a new Evaluator/reward condition, a hard PRE, a controller feature or a hidden label",
+      "met": false
+    }
+  },
+  "evaluator_task_ids": [
+    "T_A",
+    "T_B"
+  ],
+  "executor_dispatch": [
+    "MOVE",
+    "OPEN",
+    "PICK",
+    "PLACE",
+    "PLACE_BUFFER"
+  ],
+  "gate": "STOP gate 1 (section 1)",
+  "place_buffer_contract": {
+    "add": [
+      "AtBuffer",
+      "GripperEmpty"
+    ],
+    "conditional_effects": 0,
+    "del": [
+      "Held"
+    ],
+    "pre_neg": [],
+    "pre_pos": [
+      "Held"
+    ]
+  },
+  "predicate_types_d0": [
+    "AtBuffer",
+    "GripperEmpty",
+    "Held",
+    "Inside",
+    "OnTable",
+    "Open"
+  ],
+  "prior_physical_evidence": {
+    "family_b_staging_v2": {
+      "file": "runs/final_master/S4/family_b_staging_v2/20261001T053917Z_3064ee8b/final_summary.md",
+      "physical_mechanism": "NOT_ESTABLISHED",
+      "reading": "pad_u and pad_v differ by seconds only (all 24 branches succeed with matching skill multisets): a path/time difference, not a discrete rework"
+    },
+    "family_b_v3r1": {
+      "file": "runs/final_master/S4/family_b_v3r1_reach_safe_mirror/20261001T073554Z_80a6b7d6/final_summary.md",
+      "mechanism": "FAMILY_B_V3_R1_REACH_SAFE_MECHANISM_PILOT_NOT_ESTABLISHED",
+      "next_action": "STOP_TP_TASK_SEARCH_AND_ADJUST_CLAIMS"
+    },
+    "soft_relocation_design": {
+      "direct_success": "46/48",
+      "feasibility": "NOT_ESTABLISHED",
+      "file": "runs/final_master/S4/tp_soft_relocation_design/20260929T084850Z_b598cfd0/final_summary.md",
+      "reading": "the direct route rarely fails and relocation takes about twice the simulated time: no discrete rework to save",
+      "relocation_success": "26/48",
+      "scene_opportunity": "STRONG_HELPFUL 1, COST_HELPFUL 0, NEUTRAL 0, HARMFUL 20, UNKNOWN 3"
+    },
+    "soft_relocation_pilot_v2": {
+      "file": "runs/final_master/S4/tp_soft_relocation_pilot_v2/20260929T095821Z_efe8aa02/final_summary.md",
+      "mechanism": "NOT_ESTABLISHED",
+      "next_action": "ABANDON_OR_REDESIGN_RELOCATION_MECHANISM"
+    }
+  },
+  "recovery_like_function_definitions": [
+    "src/cp_disr/analysis/tp_bsi_preflight.py:798:def recoverability_audit(scenes, geom):"
+  ],
+  "recovery_like_skill_names": [],
+  "registries_read": [
+    "configs/contracts/d0_runtime_skills.yaml",
+    "configs/contracts/skills.yaml",
+    "configs/runtime/stage_2a_contract_registry.yaml",
+    "configs/runtime/tp_fb_contract_registry.yaml",
+    "configs/runtime/tp_so_mvp_contract_registry.yaml",
+    "configs/runtime/tp_sr_contract_registry.yaml",
+    "configs/runtime/tp_sr_v2_contract_registry.yaml"
+  ],
+  "skills_by_registry": {
+    "configs/contracts/d0_runtime_skills.yaml": [
+      "OPEN",
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ],
+    "configs/contracts/skills.yaml": [
+      "MOVE",
+      "OPEN",
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ],
+    "configs/runtime/stage_2a_contract_registry.yaml": [
+      "OPEN",
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ],
+    "configs/runtime/tp_fb_contract_registry.yaml": [
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ],
+    "configs/runtime/tp_so_mvp_contract_registry.yaml": [
+      "PICK",
+      "PLACE"
+    ],
+    "configs/runtime/tp_sr_contract_registry.yaml": [
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ],
+    "configs/runtime/tp_sr_v2_contract_registry.yaml": [
+      "PICK",
+      "PLACE",
+      "PLACE_BUFFER"
+    ]
+  },
+  "skills_with_buffer_or_region_in_precondition": [],
+  "terms_searched": [
+    "RESEAT",
+    "RE_SEAT",
+    "REGRASP",
+    "RE_GRASP",
+    "REPOSITION",
+    "REHANDLE",
+    "REPICK",
+    "RE_PICK",
+    "RELOCATE",
+    "RECOVER"
+  ]
+}
