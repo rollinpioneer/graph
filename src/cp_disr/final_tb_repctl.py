@@ -245,7 +245,7 @@ def configure_v11(root, ctx):
 
 # ----------------------------------------------------------------------------- registration / release
 def fs_free(path) -> int:
-    return ftb.fs_free_bytes(path)
+    return ftb.fs_free_bytes(ftb._nearest_existing(path))
 
 
 def start_gate(path, free_fn=None) -> dict:

@@ -311,3 +311,16 @@ def test_prep_receipt_gate_blocks_missing_receipts(tmp_path):
     from cp_disr import final_tb_repctl as R
     with pytest.raises(Exception, match="missing"):
         R.verify_prep_receipts(ROOT, tmp_path)
+
+
+def test_start_gate_uses_the_nearest_existing_ancestor_and_refuses_low_space(tmp_path):
+    from cp_disr import final_tb_repctl as R
+    assert R.start_gate(tmp_path / "not" / "yet" / "created")["free_bytes"] > 0
+    with pytest.raises(Exception, match="start gate"):
+        R.start_gate(tmp_path, free_fn=lambda p: 1)
+
+
+def test_supervisor_spawn_command_parses_with_the_real_cli():
+    from cp_disr import final_tb_repctl as R
+    args = R.build_parser().parse_args(["train", "--root", "/r", "--out", "/o", "--plan", "R-TB-NC-1", "--gpu", "3", "--token", "/o/release_tokens/train_R-TB-NC-1.json"])
+    assert (args.command, args.plan, args.gpu) == ("train", "R-TB-NC-1", 3)
