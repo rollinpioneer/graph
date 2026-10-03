@@ -84,7 +84,6 @@ def test_hard_precondition_ignores_initially_open_container():
     opened = [{"skill": "PICK", "source": {"support_kind": "DRAWER_INTERIOR", "container_open_initially": True}}]
     assert a.hard_precondition(closed, None, None)
     assert not a.hard_precondition(opened, None, None)
-    assert a.hard_precondition([{"skill": "OPEN", "object": "x"}], None, None)
 
 
 def test_rect_gap_ranges():
@@ -141,3 +140,55 @@ def test_public_validation_rates():
     rows, s = a.public_validation(tasks, {})
     assert s["total_tasks"] == 3 and s["binding_supported"] == 1 and s["exactly_supported"] == 0 and s["unsupported"] == 2
     assert s["label_if_future_run"] == "LIBERO_COMPATIBLE_SUBSET" and abs(s["upper_bound_if_orientation_verified"] - 2 / 3) < 1e-3
+
+
+def test_hard_precondition_needs_a_gated_placement():
+    pure_open = [{"skill": "OPEN", "object": "cab_middle"}]
+    assert a.hard_precondition(pure_open, None, None) == []
+    gated = [{"skill": "PICK", "source": None}, {"skill": "PLACE", "dest": "cab_top", "dest_kind": "DRAWER_INTERIOR"}, {"skill": "OPEN", "object": "cab_top"}]
+    flags = a.hard_precondition(gated, None, None)
+    assert any("gates a placement" in f for f in flags) and any("destination inside a closed articulated container" in f for f in flags)
+
+
+def test_baseline_identity_uses_branch_ref(tmp_path_factory):
+    repo = tmp_path_factory.mktemp("gitrepo")
+
+    def git(*args):
+        return subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", *args], cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+    git("init", "-q")
+    (repo / "f.txt").write_text("1")
+    git("add", "f.txt")
+    git("commit", "-q", "-m", "base")
+    git("branch", "-M", "codex/cp-disr-tp-vis-preflight")
+    base = git("rev-parse", "HEAD")
+    git("checkout", "-q", "-b", "codex/cp-disr-tp-libero-opportunity-audit")
+    (repo / "g.txt").write_text("2")
+    git("add", "g.txt")
+    git("commit", "-q", "-m", "engineering")
+    head = git("rev-parse", "HEAD")
+    ident = a.baseline_identity(repo, head)
+    assert ident["baseline_head_full"] == base != head and len(base) == 40
+    assert ident["run_head_full"] == head and ident["run_head_descends_from_baseline"] is True
+    assert ident["baseline_full_matches_expected"] is False
+
+
+def test_protected_hash_exclusion_matches_output_dir(tmp_path_factory):
+    root = tmp_path_factory.mktemp("proot")
+    own = root / "runs/final_master/S4/tp_libero_opportunity_audit/run1"
+    other = root / "runs/final_master/S4/tp_vis_preflight/run1"
+    own.mkdir(parents=True)
+    other.mkdir(parents=True)
+    (own / "a.json").write_text("{}")
+    (other / "b.json").write_text("{}")
+    assert a.OWN_OUTPUT.search("runs/final_master/S4/tp_libero_opportunity_audit/x/a.json")
+    assert not a.OWN_OUTPUT.search("runs/final_master/S4/tp_vis_preflight/x/a.json")
+    hashed = a.protected_hashes(root)
+    assert list(hashed) == ["runs/final_master/S4/tp_vis_preflight/run1/b.json"]
+
+
+def test_capacity_counts_duplicate_item_types():
+    assets = {"flat_stove": {"sites": {"cook_region": {"pos": [0, 0, 0], "size": [0.075, 0.075, 0.0025]}}}, "moka_pot": {"resolved": True, "collision_extent_xyz": [0.08, 0.15, 0.15]}}
+    one = a.capacity("flat_stove", "cook_region", ["moka_pot"], assets)
+    two = a.capacity("flat_stove", "cook_region", ["moka_pot", "moka_pot"], assets)
+    assert abs(two["fill_ratio_max"] - 2 * one["fill_ratio_max"]) < 1e-6 and two["fill_ratio_max"] > 1.0
+    assert a.capacity("flat_stove", "cook_region", [], assets)["fill_ratio_max"] == 0.0

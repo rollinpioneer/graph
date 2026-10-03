@@ -685,18 +685,22 @@ def open_action(res, assets, why, close=False):
 
 
 def hard_precondition(actions, parsed, task_inst):
-    """Hard preconditions: access to an articulated interior, or Close after In (container gating)."""
+    """Hard preconditions: access to a closed articulated interior, or a Close that must follow an insertion.
+
+    A pure Open/Close/TurnOn goal is the goal itself, not a precondition of something else, so OPEN/CLOSE actions are
+    flagged only when a placement into an articulated interior exists in the same task."""
+    interior = ("DRAWER_INTERIOR", "ENCLOSED_APPLIANCE_INTERIOR")
+    gated_placement = any(a.get("dest_kind") in interior for a in actions)
     flags = []
     for a in actions:
-        if a["skill"] in ("OPEN", "CLOSE"):
-            flags.append("articulated %s on %s" % (a["skill"], a["object"]))
-        if a.get("dest_kind") in ("DRAWER_INTERIOR", "ENCLOSED_APPLIANCE_INTERIOR"):
+        if a["skill"] in ("OPEN", "CLOSE") and gated_placement:
+            flags.append("articulated %s on %s gates a placement into its interior" % (a["skill"], a["object"]))
+        if a.get("dest_kind") in interior:
             flags.append("destination inside a closed articulated container: %s" % a["dest"])
         src = a.get("source") or {}
-        if a["skill"] == "PICK" and src.get("support_kind") in ("DRAWER_INTERIOR", "ENCLOSED_APPLIANCE_INTERIOR") and not src.get("container_open_initially"):
+        if a["skill"] == "PICK" and src.get("support_kind") in interior and not src.get("container_open_initially"):
             flags.append("object starts inside a closed articulated container")
     return flags
-
 
 def rect_gap(r1, r2):
     """min/max centre displacement components between two axis-aligned sampling rectangles [x1,y1,x2,y2]."""
@@ -928,41 +932,44 @@ def build_public_cards(tasks, labels_by, assets, iface):
         restore = {"status": "PASS", "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new"}
         f = {"card_id": mid, "origin": "UNMODIFIED_PUBLIC_TASK", "host": "LIBERO_ENV", "tasks": ids, "task_names": [t["name"] for t in members], "canary_episodes": 4,
              "skills": skills, "verifier": verifier, "evaluator": evaluator, "restore": restore}
-        if mid == "M1_BASKET_TWO_ITEMS":
+        if mid in ("M1_BASKET_TWO_ITEMS", "M2_STOVE_TWO_POTS"):
+            dest_type, dest_region = ("basket", "contain_region") if mid == "M1_BASKET_TWO_ITEMS" else ("flat_stove", "cook_region")
             cap = []
             for t in members:
-                items = sorted({a["object"] for a in t["actions"] if a["skill"] == "PLACE"})
-                types = [next(a for a in t["actions"] if a["skill"] == "PICK" and a["object"] == o)["type"] for o in items]
-                cap.append({"task": t["name"], "items": types, "capacity": capacity("basket", "contain_region", types, assets)})
+                objs = sorted({a["object"] for a in t["actions"] if a.get("dest") and a["skill"] in ("PLACE", "PLACE_BUFFER")})
+                types = [next(a for a in t["actions"] if a["skill"] == "PICK" and a["object"] == o)["type"] for o in objs]
+                cap.append({"task": t["name"], "items": types, "capacity": capacity(dest_type, dest_region, types, assets)})
             f["capacity_by_task"] = cap
-            worst_fill = max((c["capacity"]["fill_ratio_max"] for c in cap if c["capacity"]), default=None)
-            f.update(n_legal_first_actions=2, legal_first_actions_note="PICK item one or PICK item two; both are on the table",
-                     hard_precondition=False, hard_precondition_note="", contract_gives_winner=False,
-                     contract_note="PICK/PLACE contracts have no PRE/ADD/DEL that distinguishes the two orders; B_PLAN ties and breaks by id",
-                     persistent_effect={"material": (worst_fill is not None and worst_fill >= CAPACITY_MATERIAL), "note": "first item occupies the basket, but the items fill at most %s of the contain_region (threshold %.2f)" % (worst_fill, CAPACITY_MATERIAL)},
-                     downstream_dependence={"value": False, "note": "both orders give the same end state and skill set; only the path differs"},
-                     path_only=True, not_path_note="", relation_expressible=False, relation_note="no relation separates the two orders", relation_is_contract_renaming=False, renaming_note="no relation",
-                     covers={"classes": ["neutral"], "established": True, "note": "only the neutral case exists in the public tasks"},
-                     fixed_rule_solves=True, fixed_rule_note="any fixed order is optimal: COMMUTATIVE_MULTI_GOAL")
-            f["template"] = {"state": "both items on the table, basket empty", "candidate_A": "PICK/PLACE first item into the basket", "candidate_B": "PICK/PLACE second item first", "persistent_effect": "first item inside the basket",
-                             "downstream_effect": "none beyond path; basket capacity is not binding"}
-        elif mid == "M2_STOVE_TWO_POTS":
-            cap = []
-            for t in members:
-                types = sorted({next(a for a in t["actions"] if a["skill"] == "PICK" and a["object"] == o)["type"] for o in {a["object"] for a in t["actions"] if a["skill"] == "PLACE"}})
-                cap.append({"task": t["name"], "items": types, "capacity": capacity("flat_stove", "cook_region", types, assets)})
-            f["capacity_by_task"] = cap
-            fill = max((c["capacity"]["fill_ratio_max"] for c in cap if c["capacity"]), default=None)
-            f.update(n_legal_first_actions=2, legal_first_actions_note="place pot one or pot two first; the goal also contains Turnon, which is a separate action",
-                     hard_precondition=False, hard_precondition_note="", contract_gives_winner=False,
-                     contract_note="no contract relation orders the two pots; Turnon is outside the current predicate vocabulary",
-                     persistent_effect={"material": None if fill is None else (fill >= CAPACITY_MATERIAL), "note": "cook_region fill ratio up to %s for two pots; whether a pot on the burner blocks knob access is a physical question" % fill},
-                     downstream_dependence={"value": None, "note": "knob-access and pot-collision effects cannot be established without a simulator"},
-                     path_only=False, not_path_note="Turnon and the two placements interact only through physical access", relation_expressible=False, relation_note="the two pots are identical in role; the only candidate relation is knob access, which is geometric",
-                     relation_is_contract_renaming=False, renaming_note="would be a geometric access relation, i.e. a safety/contract precondition if it exists",
-                     covers={"classes": ["neutral"], "established": True, "note": "symmetric pots give only the neutral case"},
-                     fixed_rule_solves=True, fixed_rule_note="symmetric objects: any fixed order, with Turnon first, dominates")
-            f["skills"]["note"] += "; Turnon needs a rotary knob skill (NEW_LOW_LEVEL_CONTROLLER_REQUIRED)"
+            fills = [c["capacity"]["fill_ratio_max"] for c in cap if c["capacity"]]
+            material_tasks = [c["task"] for c in cap if c["capacity"] and c["capacity"]["fill_ratio_max"] >= CAPACITY_MATERIAL]
+            fmax = max(fills, default=None)
+            fill_note = "pessimistic fill ratio of the %s %s by the two items: %s (material threshold %.2f); material in %d of %d tasks" % (dest_type, dest_region, ", ".join("%.3f" % x for x in fills), CAPACITY_MATERIAL, len(material_tasks), len(cap))
+            if mid == "M1_BASKET_TWO_ITEMS":
+                f.update(n_legal_first_actions=2, legal_first_actions_note="PICK item one or PICK item two; both are on the table",
+                         hard_precondition=False, hard_precondition_note="", contract_gives_winner=False,
+                         contract_note="PICK/PLACE contracts have no PRE/ADD/DEL that distinguishes the two orders; B_PLAN ties and breaks by id",
+                         persistent_effect={"material": bool(material_tasks), "note": fill_note},
+                         downstream_dependence={"value": None if material_tasks else False,
+                                                "note": "basket occupancy matters only if both items are dropped at one fixed site; with a free-site destination binding (absent from the current PLACE) the orders are interchangeable and a fill below 1.0 leaves room for both"},
+                         path_only=not bool(material_tasks), not_path_note="occupancy of the basket, not only path, if the drop site is fixed",
+                         relation_expressible=True, relation_note="packing order (bulky or flat item last) is a commonsense relation, but the official tasks fix no relation, no label and no goal variation",
+                         relation_is_contract_renaming=False, renaming_note="site occupancy is not a contract predicate",
+                         covers={"classes": ["neutral", "helpful"], "established": False, "note": "neutral where the fill is small; helpful only if the pile effect is real, which needs a physical probe"},
+                         fixed_rule_solves=True, fixed_rule_note="free-site placement or 'larger first' removes the effect in every member task (pessimistic fill %s < 1.0)" % fmax)
+                f["template"] = {"state": "two items on the table, basket empty", "candidate_A": "PICK/PLACE the first item into the basket", "candidate_B": "PICK/PLACE the second item first", "persistent_effect": "first item inside the basket",
+                                 "downstream_effect": "second item may land on the first if the drop site is fixed"}
+            else:
+                f.update(n_legal_first_actions=2, legal_first_actions_note="place pot one or pot two first; the goal also contains Turnon, which is a separate action",
+                         hard_precondition=False, hard_precondition_note="", contract_gives_winner=False,
+                         contract_note="no contract relation orders the two pots; Turnon is outside the current predicate vocabulary",
+                         persistent_effect={"material": bool(material_tasks), "note": fill_note + "; a ratio above 1.0 means the two pots cannot both fit inside one cook_region footprint, so the On predicate semantics decide feasibility"},
+                         downstream_dependence={"value": None, "note": "overlap, knob access and pot collision need a simulator"},
+                         path_only=False, not_path_note="Turnon and the two placements interact through physical access",
+                         relation_expressible=False, relation_note="the two pots play identical roles; the only candidate relation is geometric access",
+                         relation_is_contract_renaming=False, renaming_note="geometric access would be a safety/contract precondition if it existed",
+                         covers={"classes": ["neutral"], "established": True, "note": "symmetric pots give only the neutral case"},
+                         fixed_rule_solves=True, fixed_rule_note="symmetric objects: any fixed order, with Turnon first, is as good as any other")
+                f["skills"]["note"] += "; Turnon needs a rotary knob skill (NEW_LOW_LEVEL_CONTROLLER_REQUIRED)"
         elif mid == "M3_TWO_TARGETS_DISTINCT_DESTINATIONS":
             f.update(n_legal_first_actions=2, legal_first_actions_note="either object can be picked first",
                      hard_precondition=False, hard_precondition_note="", contract_gives_winner=False, contract_note="independent PICK/PLACE pairs; B_PLAN ties",
@@ -1123,9 +1130,20 @@ def protected_hashes(root):
         if not base.exists():
             continue
         for p in sorted(base.rglob("*")):
-            if p.is_file() and "tp_libero_audit" not in str(p) and "__pycache__" not in p.parts and not re.search(r"holdout|test30|test_id|final_test", str(p).replace("\\", "/"), re.I):
+            if p.is_file() and not OWN_OUTPUT.search(str(p)) and "__pycache__" not in p.parts and not re.search(r"holdout|test30|test_id|final_test", str(p).replace("\\", "/"), re.I):
                 out[str(p.relative_to(root))] = sha_file(p)
     return out
+
+
+OWN_OUTPUT = re.compile(r"tp_libero_audit|tp_libero_opportunity_audit")
+
+
+def baseline_identity(root, head):
+    """Full SHA of the baseline branch (not the run-time HEAD, which carries this card's own engineering commit)."""
+    base = git_out(["rev-parse", "codex/cp-disr-tp-vis-preflight"], root)
+    desc = subprocess.run(["git", "merge-base", "--is-ancestor", base, head], cwd=root).returncode == 0 if base else False
+    return {"baseline_branch": "codex/cp-disr-tp-vis-preflight", "baseline_head_full": base, "baseline_prefix_expected": BASELINE_PREFIX, "baseline_prefix_matches": base.startswith(BASELINE_PREFIX),
+            "baseline_full_matches_expected": base == BASELINE_FULL, "run_head_full": head, "run_head_descends_from_baseline": desc}
 
 
 def prior_card_evidence(root):
@@ -1299,7 +1317,18 @@ def run(root, libero_root, out, pip_root=None):
     out.mkdir(parents=True, exist_ok=True)
     guard = Guard()
     events = [{"event": "registry_key_rule_aligned_with_upstream", "technical_reason": "upstream register_object splits class names at digits as well as capitals (Chefmate8Frypan -> chefmate_8_frypan); the first parser probe left that type unresolved",
-               "science_unchanged": True, "regression_test": "test_registry_key_rule_matches_upstream"}]
+               "science_unchanged": True, "regression_test": "test_registry_key_rule_matches_upstream"},
+              {"event": "source_identity_records_baseline_branch_head", "technical_reason": "the first run recorded the run-time HEAD (which carries this card's engineering commit) instead of the baseline branch HEAD, so verify failed",
+               "science_unchanged": True, "regression_test": "test_baseline_identity_uses_branch_ref"},
+              {"event": "protected_hash_excludes_own_output_directory", "technical_reason": "the exclusion matched 'tp_libero_audit' but the output directory is named tp_libero_opportunity_audit, so this card's own files were hashed before and after",
+               "science_unchanged": True, "regression_test": "test_protected_hash_exclusion_matches_output_dir"},
+              {"event": "hard_precondition_label_definition_corrected", "kind": "label_definition_correction",
+               "technical_reason": "a pure Open/Close goal was labelled HARD_PRECONDITION_DOMINATED although it is the goal and gates nothing; OPEN/CLOSE are now flagged only when a placement into the same articulated interior exists",
+               "first_run_effect": "libero_goal#0 (open the middle drawer) moved from mechanism M4B to M7; no gate outcome of any candidate changed", "science_unchanged": True, "regression_test": "test_hard_precondition_needs_a_gated_placement"},
+              {"event": "mechanism_fact_correction_basket_and_stove", "kind": "analysis_correction",
+               "technical_reason": "the first run asserted that basket occupancy has no downstream effect although the asset geometry gives a pessimistic fill of up to 0.636 of the basket contain_region for two grocery items; the stove capacity was empty because the placement action is PLACE_BUFFER, not PLACE",
+               "first_run_statuses": {"M1_BASKET_TWO_ITEMS": {"failed": ["G4", "G5", "G6", "G8", "G9", "G10"], "unverifiable": ["G11"]}, "M2_STOVE_TWO_POTS": {"failed": ["G3", "G6", "G8", "G9", "G10"], "unverifiable": ["G4", "G11"]}},
+               "direction": "toward less rejection of M1/M2; no candidate passes either way", "science_unchanged": True, "regression_test": "test_capacity_counts_duplicate_item_types"}]
     before = protected_hashes(root)
     write_json(out / "protected_before.json", before)
     head = git_out(["rev-parse", "HEAD"], root)
@@ -1312,8 +1341,7 @@ def run(root, libero_root, out, pip_root=None):
                                            "FINGER_OUTER_Y": FINGER_OUTER_Y, "HIGH_COVERAGE": HIGH_COVERAGE, "ROUND_RATIO": ROUND_RATIO},
         "gate_rule": "all of G1-G15 must be PASS; FAIL and UNVERIFIABLE_STATICALLY both block selection",
         "g10_scope": "skill coverage AND platform binding: a LIBERO-hosted task needs a new environment/perception/Evaluator binding that is not limited"})
-    write_json(out / "source_identity.json", {"project_head_full": head, "expected_prefix": BASELINE_PREFIX, "prefix_matches": head.startswith(BASELINE_PREFIX), "expected_full": BASELINE_FULL,
-                                              "full_matches": head == BASELINE_FULL, "branch": git_out(["branch", "--show-current"], root), "dirty_tracked_files": len([l for l in dirty.splitlines() if l.strip()])})
+    write_json(out / "source_identity.json", dict(baseline_identity(root, head), branch=git_out(["branch", "--show-current"], root), dirty_tracked_files=len([l for l in dirty.splitlines() if l.strip()])))
     ident = upstream_identity(libero_root, guard, pip_root)
     write_json(out / "upstream_libero_identity.json", ident)
     if not ident["sha_matches_expected"]:
@@ -1407,9 +1435,10 @@ def run(root, libero_root, out, pip_root=None):
         ts = [t for t in tasks if t["suite"] == s]
         rej = Counter(rejection_reason(t, cards, mech_of).split(":")[0] for t in ts)
         den.append({"suite": s, "task_count": len(tmap[s]), "parsed": len(ts), "unsupported": sum(1 for t in ts if t["coverage"] in ("NEW_LOW_LEVEL_CONTROLLER_REQUIRED", "NOT_MAPPABLE")),
+                    "needs_new_skill_or_controller": sum(1 for t in ts if t["coverage"] not in ("CURRENT_SKILL_EXACT", "CURRENT_SKILL_WITH_NEW_BINDING")),
                     "candidate": sum(1 for t in ts if not cards[mech_of[(t["suite"], t["index"])]]["failed_gates"]), "rejected": sum(1 for t in ts if cards[mech_of[(t["suite"], t["index"])]]["failed_gates"]),
                     "rejection_reason": dict(rej)})
-    write_csv(out / "audit_denominator.csv", den, ["suite", "task_count", "parsed", "unsupported", "candidate", "rejected", "rejection_reason"])
+    write_csv(out / "audit_denominator.csv", den, ["suite", "task_count", "parsed", "unsupported", "needs_new_skill_or_controller", "candidate", "rejected", "rejection_reason"])
     # ---- public validation
     prow, psum = public_validation(tasks, iface)
     write_csv(out / "public_validation_coverage.csv", prow + [{"suite": "ALL", "task_index": "", "task_name": json.dumps(psum), "coverage_class": "SUMMARY"}],
@@ -1482,7 +1511,7 @@ def verify(root, out):
     secrets = sum(1 for p in out.rglob("*") if p.is_file() and p.suffix in {".json", ".md", ".csv", ".jsonl"} and bool(re.search(r"sk-[A-Za-z0-9]{16,}|Authorization:|Bearer [A-Za-z0-9._-]{16,}|DASHSCOPE_API_KEY=", p.read_text(errors="ignore"))))
     checks = {"outputs_present": {n: (out / n).is_file() for n in need}, "zero_resources": all(led[k] == 0 for k in RESOURCE_KEYS), "guard_refusals_zero": led["guard_refusals"] == 0,
               "no_sim_stack_imported": led["forbidden_modules_loaded"] == [], "upstream_sha_pinned": ident["sha_matches_expected"] and len(ident["head_sha"]) == 40,
-              "project_full_head_recorded": len(src["project_head_full"]) == 40 and src["prefix_matches"], "protected_unchanged": before == after, "protected_files_hashed": len(before),
+              "project_full_head_recorded": len(src["baseline_head_full"]) == 40 and src["baseline_full_matches_expected"] and src["run_head_descends_from_baseline"], "protected_unchanged": before == after, "protected_files_hashed": len(before),
               "all_frozen_tasks_parsed": len(inv["tasks"]) == 40 and not inv["parse_errors"],
               "request_label_consistent": ("NOT_REQUESTED" in (out / "next_mechanism_canary_request.md").read_text()) == (sel["status"] == "NO_LOW_COST_TP_CANDIDATE_FOUND"),
               "no_secret_shaped_content": secrets == 0}
