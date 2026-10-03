@@ -50,6 +50,8 @@ def event(kind, detail, scientific_change=False):
     EVENTS.append({"event": kind, "detail": detail, "scientific_change": scientific_change})
 
 
+event("production_surface_rules_completed", "the first offline test run found 29 production-surface rows without a classification rule (role naming, helper arguments, fixed table-relative heights, threshold lines); "
+      "rules were added so that every matched line is classified; no production file or threshold was touched", False)
 sha_file = bsi.sha_file
 
 
@@ -415,6 +417,27 @@ def regression(cam):
             "tall_0p12_max_top_face_occluded_fraction_same_layouts": worst_tall, "machinery_can_occlude": worst_tall > 0.0}
 
 
+def unconstrained_ceiling(cam, heights):
+    """Physical ceiling of the occlusion bias per tall height with EVERY safety constraint removed (objects only forbidden to overlap)."""
+    d = o.pixel_rays(cam)
+    out = {}
+    for H in heights:
+        worst, minvis, n = 0.0, 1.0, 0
+        for bx, by in itertools.product(o.GRID_B_X, o.GRID_B_Y):
+            for dx, dy in itertools.product([x * 0.01 for x in range(-12, 13)], repeat=2):
+                if max(abs(dx), abs(dy)) < 2 * CUBE_HALF - 1e-9:
+                    continue
+                if not o.bbox_overlap(o.proj_bbox(cam, (bx, by)), tall_bbox(cam, (bx + dx, by + dy), H)):
+                    continue
+                m = metrics_vis(cam, d, (bx, by), (bx + dx, by + dy), H)
+                n += 1
+                if m["visible_top_px"] >= o.MIN_PIXELS:
+                    worst = max(worst, m["centroid_shift_world_m"] or 0.0)
+                minvis = min(minvis, m["visible_fraction_top"])
+        out[str(H)] = {"layouts_with_overlapping_silhouettes": n, "max_centroid_shift_world_m_while_detected": worst, "min_visible_fraction_top": minvis}
+    return out
+
+
 def not_run(out, name, reason):
     p = Path(out) / name
     if p.exists():
@@ -542,6 +565,7 @@ def run(root, out):
         bsi.write_json(out / "vis_a_soft_band_audit.json", {"card": CARD, "zone_lower_bound_m": zone_lb, "zone_upper_bound_m": zone_ub, "zone_upper_derivation": "spread-axis slack %.4f m + controller tolerance %.3f m (%s)" % (slack, o.CTRL_TOL, ZONE_UB_NOTE),
                                                            "severity_bins": {"WEAK": [zone_lb, slack], "MODERATE": [slack, zone_ub]}, "gating_heights": survivors, "soft_candidates_gating": len(soft), "bins": dict(bins),
                                                            "per_height_including_informational": info, "classification_counts_gating": dict(Counter(r["cls"] for r in gating)),
+                                                           "unconstrained_ceiling_by_height": unconstrained_ceiling(cam, TALL_TOTAL_HEIGHTS),
                                                            "explanation_hint": "see world_safe reasons in layout_denominator.json: the hand body (lowest point 0.031 m above the grip site) forbids a tall object within 0.0516 m in front of the picked cube, which is where its shadow reaches",
                                                            "status": "PASS" if ok_a else "FAIL"})
         bsi.write_json(out / "camera_margin_audit.json", {"card": CARD, "margin_px_min": bsi.SAFETY_MARGIN_PX, "rule": "all projected corners of both objects at least margin px inside the image", "rejected_for_camera_edge": {h: denom[h]["rejected_by_reason"].get("CAMERA_EDGE", 0) for h in denom}})
@@ -592,7 +616,8 @@ def final_summary(out, verdict):
         L += ["## G/H. VIS-A layouts and soft band", ""]
         for h, v in d["per_height"].items():
             L.append(f"- H={h}: total {v['layout_total']}, world-safe {v['world_safe']}, camera-visible {v['camera_visible']}, partial occlusion {v['partial_occlusion']}, soft band {v['soft_band']}, classes {v['classes']}; top rejection reasons {dict(Counter(v['rejected_by_reason']).most_common(4))}")
-        L += ["", f"- zone [{a['zone_lower_bound_m']:.4f}, {a['zone_upper_bound_m']:.4f}) m; gating heights {a['gating_heights']}; WEAK/MODERATE bins {a['bins']}", f"- max centroid shift per height (informational included): " + str({h: round(v['max_centroid_shift_world_m'], 4) for h, v in a['per_height_including_informational'].items()}), ""]
+        L += ["", "- ceiling with EVERY safety constraint removed (overlap forbidden only), max centroid shift while the cube is still detected: " + str({h: round(x["max_centroid_shift_world_m_while_detected"], 4) for h, x in a["unconstrained_ceiling_by_height"].items()}),
+              f"- zone [{a['zone_lower_bound_m']:.4f}, {a['zone_upper_bound_m']:.4f}) m; gating heights {a['gating_heights']}; WEAK/MODERATE bins {a['bins']}", f"- max centroid shift per height (informational included): " + str({h: round(v['max_centroid_shift_world_m'], 4) for h, v in a['per_height_including_informational'].items()}), ""]
     L += ["Budget: environment constructions 0, skills 0, episodes 0, provider 0, RL 0, optimizer 0, test reads 0.", ""]
     (out / "final_preflight_summary.md").write_text("\n".join(L), encoding="utf-8")
 
