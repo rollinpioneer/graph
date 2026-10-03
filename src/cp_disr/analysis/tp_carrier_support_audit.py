@@ -249,6 +249,49 @@ def grip_ext():
     return g
 
 
+def stl_volume(path, scale):
+    """Volume of a closed STL (binary or ASCII), scaled."""
+    import struct
+    data = Path(path).read_bytes()
+    if data[:5] == b"solid" and b"facet" in data[:600]:
+        v = np.array([[float(x) for x in mm.groups()] for mm in re.finditer(rb"vertex\s+(\S+)\s+(\S+)\s+(\S+)", data)]).reshape(-1, 3, 3)
+    else:
+        n = struct.unpack("<I", data[80:84])[0]
+        arr = np.frombuffer(data[84:84 + n * 50], dtype=np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")]))
+        v = arr["v"].astype(float)
+    v = v * np.array(scale)
+    return abs(float(np.einsum("ij,ij->i", v[:, 0], np.cross(v[:, 1], v[:, 2])).sum()) / 6.0)
+
+
+def safe_mass_inertia(parsed, xml_dir):
+    """dv.mass_inertia with the visual-mesh part made robust: .msh via the binary reader, .stl via stl_volume, anything else is recorded as UNPARSED and
+    the mass range then reports the box-only mass as its upper end with the flag set (never a guess)."""
+    boxes_only = dict(parsed, visual_meshes=[])
+    mi = dv.mass_inertia(boxes_only, xml_dir)
+    m_mesh, info, unparsed = 0.0, [], 0
+    for vm in parsed["visual_meshes"]:
+        fn = vm.get("file")
+        if not fn:
+            unparsed += 1
+            info.append({"file": None, "status": "UNPARSED_NO_FILE"})
+            continue
+        p = Path(xml_dir) / fn
+        try:
+            vol = dv.mesh_volume(p, vm["scale"])[0] if p.suffix.lower() == ".msh" else stl_volume(p, vm["scale"]) if p.suffix.lower() == ".stl" else None
+        except Exception:
+            vol = None
+        if vol is None:
+            unparsed += 1
+            info.append({"file": fn, "status": "UNPARSED"})
+        else:
+            m_mesh += vol * vm["density"]
+            info.append({"file": fn, "volume_m3": vol, "mass_kg": vol * vm["density"], "status": "OK"})
+    mi["visual_meshes"] = info
+    mi["visual_mesh_unparsed"] = unparsed
+    mi["mass_boxes_plus_visual_mesh_kg"] = mi["mass_boxes_only_kg"] + m_mesh
+    mi["mass_ratio_high_over_low"] = mi["mass_boxes_plus_visual_mesh_kg"] / max(mi["mass_boxes_only_kg"], 1e-12)
+    return mi
+
 def registered_record(lib, reg, name, policy):
     """Geometry in the registered orientation, resting on z = 0. policy: 'carrier' -> identity (asset frame z-up); 'carried' -> class source orientation
     when it is explicit or the Hope default, else identity. Every record states its orientation basis and status."""
@@ -258,7 +301,7 @@ def registered_record(lib, reg, name, policy):
     base = {"name": name, "class": rec["class"], "xml": rec["xml"], "xml_sha256": sha_file(xml), "ok": False}
     if not parsed["boxes"]:
         return dict(base, reason="NO_BOX_COLLISION_PROXY", orientation_basis="n/a", orientation_status="n/a")
-    mi = dv.mass_inertia(parsed, xml.parent)
+    mi = safe_mass_inertia(parsed, xml.parent)
     spawn = dv.spawn_orientation(lib, rec["class"])
     defined_in = (spawn.get("rotation_source") or {}).get("defined_in")
     if policy == "carried" and spawn["status"] == "DETERMINED_BY_SOURCE" and defined_in != "GoogleScannedObject":
@@ -729,7 +772,8 @@ def reviewer_md(facts):
 def run_stage2(root, libero_root, out):
     root, out = Path(root).resolve(), Path(out).resolve()
     guard = la.Guard()
-    events = []
+    events = [{"event": "mass_parser_made_robust_for_stl_and_missing_mesh_files", "technical_reason": "stage 2 first failed on the stove (an STL visual mesh) and on a mesh element without a file; the visual-mesh mass parser only knew the binary .msh format",
+               "science_unchanged": True, "regression_test": "test_safe_mass_inertia_handles_stl_and_missing_mesh_file", "first_run": "ValueError in dv.mesh_volume before any gate was evaluated"}]
     before = la_protected(root)
     la.write_json(out / "protected_before.json", before)
     man = json.loads((out / "universe_manifest.json").read_text())

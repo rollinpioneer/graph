@@ -177,3 +177,19 @@ def test_protected_hash_excludes_own_outputs(tmp_path_factory):
     (own / "a.json").write_text("{}")
     (other / "b.json").write_text("{}")
     assert list(m.la_protected(root)) == ["runs/final_master/S4/tp_vis_preflight/run1/b.json"]
+
+
+def test_safe_mass_inertia_handles_stl_and_missing_mesh_file(tmp_path_factory):
+    import struct
+    d = tmp_path_factory.mktemp("meshes")
+    cube = np.array(list(__import__("itertools").product((0, 1), repeat=3)), dtype=float)
+    faces = [[0, 1, 3], [0, 3, 2], [4, 6, 7], [4, 7, 5], [0, 4, 5], [0, 5, 1], [2, 3, 7], [2, 7, 6], [0, 2, 6], [0, 6, 4], [1, 5, 7], [1, 7, 3]]
+    tri = np.zeros(12, dtype=np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")]))
+    tri["v"] = cube[np.array(faces)]
+    (d / "c.stl").write_bytes(b"\0" * 80 + struct.pack("<I", 12) + tri.tobytes())
+    assert abs(m.stl_volume(d / "c.stl", [0.1, 0.1, 0.1]) - 0.001) < 1e-9
+    box_ = {"center": np.zeros(3), "R": np.eye(3), "half": np.array([0.01, 0.01, 0.01]), "density": 100.0, "solref": [0.001, 1.0], "friction": [1, 1, 1]}
+    parsed = {"boxes": [box_], "visual_meshes": [{"file": "c.stl", "scale": [0.1, 0.1, 0.1], "density": 100.0, "collides": False}, {"file": None, "scale": [1, 1, 1], "density": 100.0, "collides": False},
+                                                  {"file": "missing.obj", "scale": [1, 1, 1], "density": 100.0, "collides": False}], "sites": {}}
+    mi = m.safe_mass_inertia(parsed, d)
+    assert mi["visual_mesh_unparsed"] == 2 and abs(mi["mass_boxes_plus_visual_mesh_kg"] - (mi["mass_boxes_only_kg"] + 0.1)) < 1e-9
