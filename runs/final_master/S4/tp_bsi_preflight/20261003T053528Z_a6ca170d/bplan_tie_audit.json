@@ -1,0 +1,79 @@
+{
+  "blocking_or_geometry_predicates_present": [],
+  "bplan_free_choice": {
+    "cost": 16.79999999999069,
+    "depth": 4,
+    "plan": [
+      "a:PICK:second_object:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:target:container:v1"
+    ],
+    "status": "PLAN_FOUND"
+  },
+  "card": "CP-DISR-TP-BSI-PREFLIGHT-1",
+  "category_if_fail": "PREFLIGHT_FAIL_CONTRACT_REVEALED",
+  "depth_S": 4,
+  "depth_T": 4,
+  "facts": {
+    "p:AtBuffer:second_object:buffer": "FALSE",
+    "p:AtBuffer:target:buffer": "FALSE",
+    "p:GripperEmpty": "TRUE",
+    "p:Held:second_object": "FALSE",
+    "p:Held:target": "FALSE",
+    "p:Inside:second_object:container": "FALSE",
+    "p:Inside:target:container": "FALSE",
+    "p:OnTable:second_object": "TRUE",
+    "p:OnTable:target": "TRUE",
+    "p:Open:container": "TRUE"
+  },
+  "forced_first_S": {
+    "min_skills": 4,
+    "plan_found": true,
+    "route": [
+      "a:PICK:second_object:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:target:container:v1"
+    ]
+  },
+  "forced_first_T": {
+    "min_skills": 4,
+    "plan_found": true,
+    "route": [
+      "a:PICK:target:v1",
+      "a:PLACE:target:container:v1",
+      "a:PICK:second_object:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1"
+    ]
+  },
+  "modes_indistinguishable_to_planner": true,
+  "nominal_cost_S": 16.79999999999069,
+  "nominal_cost_T": 16.79999999999069,
+  "per_mode_planner_input": {
+    "BLOCK_BUFFER": {
+      "facts_hash": "a091ae297deddab2144ab6ccff602297a8d8a025b91b22b69ecf2b9e512ce6a3",
+      "scene_geometry_in_facts": false
+    },
+    "BLOCK_CONTAINER": {
+      "facts_hash": "a091ae297deddab2144ab6ccff602297a8d8a025b91b22b69ecf2b9e512ce6a3",
+      "scene_geometry_in_facts": false
+    }
+  },
+  "pick_second_legal": true,
+  "pick_target_legal": true,
+  "post_open_facts_source": "SCRIPTED-WITNESS-1 snapshot_identity_manifest (Verifier-confirmed T_B_dev_03 post-OPEN facts)",
+  "predicates_present": [
+    "AtBuffer",
+    "GripperEmpty",
+    "Held",
+    "Inside",
+    "OnTable",
+    "Open"
+  ],
+  "scripted_S_legal_reaches_goal": true,
+  "scripted_T_legal_reaches_goal": true,
+  "skill_multiset_equal": true,
+  "status": "PASS",
+  "tie": true
+}

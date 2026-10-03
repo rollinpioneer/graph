@@ -1,0 +1,501 @@
+{
+  "answers": {
+    "1_held_object_size": "0.04 m cube for both objects",
+    "2_descent_paths": "PLACE / PLACE_BUFFER hover at table_top+0.22 over the destination centre, then a straight vertical descent to the drop height and release",
+    "3_blocker_held_object_collision_space": "container: blocker must sit inside the 0.06 m opening (walls are 0.048 high, held cube bottom clears the wall top by 0.009 m at drop); buffer: blocker rests on the 0.008 m pad and the held cube bottom clears its top by only 0.001 m",
+    "4_blocker_vs_finger": "closed fingers stay above the blocker top by 0.021 m (container) / 0.013 m (buffer) at the drop: the held cube, not a finger, is the lowest solid",
+    "5_blocker_pickable_from_above": "evaluated per candidate in static_sweep_audit.json",
+    "6_wrong_order_recovery_region": "evaluated per candidate in static_sweep_audit.json (informational) - Phase H is only run if Phase F passes"
+  },
+  "card": "CP-DISR-TP-BSI-PREFLIGHT-1",
+  "controller_modification_needed": false,
+  "derived": {
+    "container_opening_edge": 0.06,
+    "container_wall_span_from_centre": [
+      0.03,
+      0.054
+    ],
+    "finger_bottom_at_grasp_rel_table": 0.012750965988636016,
+    "finger_clearance_above_buffer_pad_top_pick": 0.004750965988636016,
+    "finger_clearance_above_table_skin_standard_pick": 0.009750965988636017,
+    "held_cube_bottom_over_target_top_on_pad_at_buffer_drop": 0.0010000000000000009,
+    "held_cube_bottom_over_wall_top_at_container_drop": 0.008999999999999994,
+    "open_finger_inner_face": 0.03986735726997722,
+    "open_finger_outer_face": 0.06640338242053986
+  },
+  "destination_resolver": {
+    "T_B": "env.resolve_skill_destination is defined only by the Family B env; the T_B env therefore uses env.container_center / env.buffer_center (the fixed destination centres)",
+    "buffer_center_xy": [
+      -0.18,
+      0.12
+    ],
+    "container_center_xy": [
+      0.18,
+      0.12
+    ]
+  },
+  "evaluator": {
+    "at_buffer": "|dx|,|dy| <= 0.06 from the buffer centre, z <= table_top + 0.10",
+    "inside": "|dx|,|dy| <= CONTAINER_INNER (=0.030) from the container centre, z <= table_top + 0.12, lid away > 0.10"
+  },
+  "gripper_solids": {
+    "eef_site_hand_z": 0.097,
+    "finger_body_hand_z": 0.0524,
+    "finger_half_width_orthogonal": 0.010494818910956383,
+    "finger_highest_point_rel_site_z": 0.044468303755647504,
+    "finger_inner_face_closed_on_cube": 0.02,
+    "finger_inner_face_open": 0.03986735726997722,
+    "finger_lowest_point_rel_site_z": -0.009249034011363982,
+    "finger_mesh_bounds_finger_frame": {
+      "max": [
+        0.010494818910956383,
+        0.026403382420539856,
+        0.05384903401136398
+      ],
+      "min": [
+        -0.010479453019797802,
+        -0.0001326427300227806,
+        0.00013169624435249716
+      ]
+    },
+    "finger_outer_face_closed_on_cube": 0.04640338242053986,
+    "finger_outer_face_open": 0.06640338242053986,
+    "hand_half_span_spread_axis": 0.10398972034454346,
+    "hand_lowest_point_rel_site_z": 0.031037849307060245,
+    "hand_mesh_bounds": {
+      "max": [
+        0.03161578252911568,
+        0.10042587667703629,
+        0.06596215069293976
+      ],
+      "min": [
+        -0.031635917723178864,
+        -0.10398972034454346,
+        -0.02592480182647705
+      ]
+    },
+    "pad_center_spread_open": 0.043500000000000004,
+    "pad_half_extents": [
+      0.008,
+      0.004,
+      0.008
+    ],
+    "pad_inner_face_open": 0.03950000000000001,
+    "pad_lowest_rel_site_z": -0.004399999999999987,
+    "pad_outer_face_open": 0.0475,
+    "slide_max_each_finger": 0.04,
+    "source": "robosuite panda_gripper.xml + finger.stl + hand.stl",
+    "spread_axis_note": "fingers slide along hand x (finger frames rotated +90 deg about z); world orientation of the spread axis is not verified offline, so both world axes are tested"
+  },
+  "heights_relative_to_table_top_z": {
+    "buffer_pad_top": 0.008,
+    "container_floor_top": 0.008,
+    "container_wall_top": 0.048,
+    "drop_site_z_buffer": 0.07,
+    "drop_site_z_container": 0.078,
+    "grasp_site_z": 0.022,
+    "hover": 0.22,
+    "press_site_z": 0.013999999999999999,
+    "show_pose_xy": [
+      0.02,
+      -0.08
+    ],
+    "show_pose_z": 0.16,
+    "table_skin_top": 0.003
+  },
+  "held_and_blocker_objects": {
+    "cube_edge": 0.04,
+    "cube_half": 0.02,
+    "grasp_rule": "site z = min(perceived_z - 0.012, table_top + 0.02 + 0.002) -> hard-coded relative to the TABLE, not the support under the object",
+    "target_and_second_object_identical": true
+  },
+  "safety": {
+    "margin_note": "+/-0.05 slack in _workspace_ok",
+    "workspace_xy": [
+      [
+        -0.45,
+        0.45
+      ],
+      [
+        -0.45,
+        0.45
+      ]
+    ]
+  },
+  "source_files": {
+    "configs/runtime/stage_2a_contract_registry.yaml": "e5914909eb1d91a7cdffa11c18a91a0748edafc44dd06a2da1404d0bc151d00b",
+    "src/cp_disr/platforms/libero/d0_env.py": "acca983f058d2061d737603a91df9acc98310e4bc9ee713659d66ab6c92b7c6e",
+    "src/cp_disr/platforms/libero/runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "src/cp_disr/platforms/libero/safety.py": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+    "src/cp_disr/platforms/libero/skill_executor.py": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed",
+    "src/cp_disr/platforms/libero/task_evaluator.py": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
+    "src/cp_disr/platforms/libero/verifier.py": "e342d9bcd0b6e3f2dddaf4aeb3da171e7b9e9cb56b946b216c74d568c7aa2482"
+  },
+  "stages": {
+    "OPEN": {
+      "assignments": {
+        "drop": "np.array([park_xy[0], park_xy[1], float(self.env.table_top_z + LID_HALF[2] + 0.012)])",
+        "eef": "np.asarray(self.env.public_observation()['eef_pos'], dtype=float)",
+        "grasp": "np.array([lid[0], lid[1], float(lid[2]) - 0.008])",
+        "hover": "np.array([lid[0], lid[1], self._hover_z()])",
+        "lid": "self._object_xyz('lid')",
+        "lift": "np.array([lid[0], lid[1], float(self.env.table_top_z + 0.16)])",
+        "park": "np.array([park_xy[0], park_xy[1], self._hover_z()])",
+        "park_xy": "np.array([0.02, 0.18])",
+        "reached": "self._move_to(trace, grasp, GRIP_OPEN, timeout, sim_start, tag='INTERACT', tol=0.016, max_steps=300)"
+      },
+      "defined_at_line": 302,
+      "function": "_open",
+      "stages": [
+        {
+          "args": [
+            "hover",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "200",
+            "tag": "'APPROACH'",
+            "tol": "0.025"
+          },
+          "line": 310
+        },
+        {
+          "args": [
+            "grasp",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "300",
+            "tag": "'INTERACT'",
+            "tol": "0.016"
+          },
+          "line": 312
+        },
+        {
+          "args": [
+            "GRIP_CLOSE",
+            "36",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_hold",
+          "keywords": {},
+          "line": 316
+        },
+        {
+          "args": [
+            "lift",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "180",
+            "tag": "'RETREAT'",
+            "tol": "0.02"
+          },
+          "line": 319
+        },
+        {
+          "args": [
+            "park",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "220",
+            "tag": "'INTERACT'",
+            "tol": "0.025"
+          },
+          "line": 321
+        },
+        {
+          "args": [
+            "drop",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "180",
+            "tag": "'INTERACT'",
+            "tol": "0.015"
+          },
+          "line": 323
+        },
+        {
+          "args": [
+            "GRIP_OPEN",
+            "24",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_hold",
+          "keywords": {},
+          "line": 325
+        },
+        {
+          "args": [
+            "park",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "160",
+            "tag": "'RETREAT'",
+            "tol": "0.03"
+          },
+          "line": 327
+        }
+      ]
+    },
+    "PICK": {
+      "assignments": {
+        "grasp": "np.array([xyz[0], xyz[1], self._grasp_z(float(xyz[2]), OBJECT_HALF[2])])",
+        "hover": "np.array([xyz[0], xyz[1], self._hover_z()])",
+        "press": "np.array([grasp[0], grasp[1], grasp[2] - 0.008])",
+        "show": "np.array([0.02, -0.08, float(self.env.table_top_z + 0.16)])",
+        "xyz": "self._object_xyz(obj)"
+      },
+      "defined_at_line": 330,
+      "function": "_pick",
+      "stages": [
+        {
+          "args": [
+            "hover",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "180",
+            "tag": "'APPROACH'",
+            "tol": "0.02"
+          },
+          "line": 335
+        },
+        {
+          "args": [
+            "grasp",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "260",
+            "tag": "'INTERACT'",
+            "tol": "0.008"
+          },
+          "line": 337
+        },
+        {
+          "args": [
+            "press",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "80",
+            "tag": "'INTERACT'",
+            "tol": "0.01"
+          },
+          "line": 339
+        },
+        {
+          "args": [
+            "GRIP_CLOSE",
+            "36",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_hold",
+          "keywords": {},
+          "line": 341
+        },
+        {
+          "args": [
+            "show",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "200",
+            "tag": "'RETREAT'",
+            "tol": "0.03"
+          },
+          "line": 345
+        },
+        {
+          "args": [
+            "hover",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "max_steps": "120",
+            "tag": "'RETREAT'",
+            "tol": "0.04"
+          },
+          "line": 346
+        }
+      ]
+    },
+    "PLACE": {
+      "assignments": {
+        "c": "np.array(resolver('PLACE', obj, container) if resolver is not None else self.env.container_center, dtype=float)",
+        "drop": "np.array([c[0], c[1], self.env.table_top_z + CONTAINER_H + 0.03])",
+        "hover": "np.array([c[0], c[1], self._hover_z()])",
+        "resolver": "getattr(self.env, 'resolve_skill_destination', None)"
+      },
+      "defined_at_line": 351,
+      "function": "_place",
+      "stages": [
+        {
+          "args": [
+            "hover",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'APPROACH'"
+          },
+          "line": 361
+        },
+        {
+          "args": [
+            "drop",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'INTERACT'"
+          },
+          "line": 363
+        },
+        {
+          "args": [
+            "GRIP_OPEN",
+            "16",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_hold",
+          "keywords": {},
+          "line": 365
+        },
+        {
+          "args": [
+            "hover",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'RETREAT'"
+          },
+          "line": 367
+        }
+      ]
+    },
+    "PLACE_BUFFER": {
+      "assignments": {
+        "b": "np.array(resolver('PLACE_BUFFER', obj, buffer) if resolver is not None else self.env.buffer_center, dtype=float)",
+        "drop": "np.array([b[0], b[1], self.env.table_top_z + OBJECT_HALF[2] + 0.05])",
+        "hover": "np.array([b[0], b[1], self._hover_z()])",
+        "resolver": "getattr(self.env, 'resolve_skill_destination', None)"
+      },
+      "defined_at_line": 370,
+      "function": "_place_buffer",
+      "stages": [
+        {
+          "args": [
+            "hover",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'APPROACH'"
+          },
+          "line": 380
+        },
+        {
+          "args": [
+            "drop",
+            "GRIP_CLOSE",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'INTERACT'"
+          },
+          "line": 382
+        },
+        {
+          "args": [
+            "GRIP_OPEN",
+            "16",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_hold",
+          "keywords": {},
+          "line": 384
+        },
+        {
+          "args": [
+            "hover",
+            "GRIP_OPEN",
+            "timeout",
+            "sim_start"
+          ],
+          "call": "_move_to",
+          "keywords": {
+            "tag": "'RETREAT'"
+          },
+          "line": 386
+        }
+      ]
+    }
+  },
+  "sweep_volume_sources": [
+    "open finger mesh boxes (spread axis, both world axes tested) from the hover to the grasp height",
+    "held cube 0.04 x 0.04 x 0.04 carried along the straight line to the show pose",
+    "closed finger meshes about the held cube during the PLACE / PLACE_BUFFER descent",
+    "hand mesh (lowest point 0.0310 m above the grip site)"
+  ],
+  "verifier_thresholds": {
+    "buffer_margin": 0.03,
+    "held_xy": 0.06,
+    "held_z": 0.07,
+    "inside_margin": 0.02,
+    "table_z_tol": 0.05
+  }
+}

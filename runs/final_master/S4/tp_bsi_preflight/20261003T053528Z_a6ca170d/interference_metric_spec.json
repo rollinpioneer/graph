@@ -1,0 +1,39 @@
+{
+  "bins": [
+    [
+      "CLEAR",
+      0.0,
+      0.05
+    ],
+    [
+      "WEAK",
+      0.05,
+      0.4
+    ],
+    [
+      "MODERATE",
+      0.4,
+      0.75
+    ],
+    [
+      "HARD_BLOCKING_RISK",
+      0.75,
+      1.0001
+    ]
+  ],
+  "definition": "score = area(blocker footprint ∩ nominal drop footprint) / area(cube footprint); drop footprint = held-cube footprint centred on the destination centre",
+  "pilot_bins_allowed": [
+    "WEAK",
+    "MODERATE"
+  ],
+  "safety_status_values": [
+    "SAFE",
+    "UNSAFE_COLLISION",
+    "UNCERTIFIED",
+    "INVALID_REST_POSE"
+  ],
+  "valid_rest_rule": {
+    "BLOCK_BUFFER": "blocker on the pad (|offset| <= half - cube = 0.060) or off the pad (|offset| >= half + cube = 0.100)",
+    "BLOCK_CONTAINER": "blocker footprint fully inside the opening (|offset| <= inner - cube = 0.010) or disjoint from the wall boxes"
+  }
+}

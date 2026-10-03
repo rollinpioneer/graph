@@ -1,0 +1,51 @@
+{
+  "authorized_by": "user chat instruction approving CP-DISR-TP-BSI-PREFLIGHT-1",
+  "baseline": "c9743877af26086c684d5e429565845524350cbc",
+  "card": "CP-DISR-TP-BSI-PREFLIGHT-1",
+  "design_doc": "CP_DISR_TP_Bidirectional_Soft_Interference_Design_v2.md",
+  "holdout_note": "the design lists T_B independent holdout episodes as a duration source, but the card also forbids reading T_B test30 results; the prohibition was applied and the holdout was not opened",
+  "limits": {
+    "env_reset": 0,
+    "environment_constructions": 0,
+    "optimizer_steps": 0,
+    "physical_episodes": 0,
+    "provider_requests": 0,
+    "rl_transitions": 0,
+    "skill_calls": 0,
+    "start_case": 0,
+    "test_reads": 0
+  },
+  "phase_order": "A,B,C,D,E,F evaluated in order; the first failing phase stops the card (G-J NOT_RUN)",
+  "thresholds_declared_before_run": {
+    "H": 23.1,
+    "clearance_certification": "finger-bottom clearance above the supporting surface must be >= the clearance of the standard table pick (the geometry exercised by every clean execution)",
+    "eps_G": 0.02,
+    "eps_T": 2.1,
+    "grid_half": 0.1,
+    "grid_step": 0.01,
+    "min_top_face_pixels": 24,
+    "safety_margin_px": 6,
+    "score_bins": [
+      [
+        "CLEAR",
+        0.0,
+        0.05
+      ],
+      [
+        "WEAK",
+        0.05,
+        0.4
+      ],
+      [
+        "MODERATE",
+        0.4,
+        0.75
+      ],
+      [
+        "HARD_BLOCKING_RISK",
+        0.75,
+        1.0001
+      ]
+    ]
+  }
+}

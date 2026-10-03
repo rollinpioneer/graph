@@ -1,0 +1,54 @@
+{
+  "card": "CP-DISR-TP-BSI-PREFLIGHT-1",
+  "category": "PREFLIGHT_FAIL_NO_SAFE_SOFT_INTERFERENCE_BAND",
+  "limitations": [
+    "static necessary-condition model; contact dynamics are not simulated",
+    "finger spread axis tested on both world axes (orientation unverified offline)",
+    "release xy error of the controller (tol 0.018 m) is not modelled in the score"
+  ],
+  "outcome_analysis_informational": {
+    "BLOCK_BUFFER": {
+      "blocker_pick": "grasp height is fixed relative to the table: finger bottoms are 0.0048 m above the 0.008 m pad top vs 0.0098 m above the table skin in the standard pick",
+      "evaluator_at_buffer_half": 0.06,
+      "first_placement_unconfirmed_requires": "second_object final centre more than 0.06 m from the buffer centre; it is released at the centre of a 0.16 m pad, on or beside the blocker, so almost every non-colliding outcome is confirmed (stack on the target or resting beside it)",
+      "stack_hazard": "released cube bottom clears a target resting on the pad by only 0.0010 m; a stacked blocker cannot be re-picked, which is a hard (not soft) dead end"
+    },
+    "BLOCK_CONTAINER": {
+      "blocker_pick": "open finger meshes span 0.0399-0.0664 m from the gripper centre; the container walls span 0.030-0.054 m from the container centre, so every blocker pose inside the opening makes both fingers descend onto the wall tops",
+      "evaluator_inside_region_half": 0.03,
+      "first_placement_unconfirmed_requires": "target final centre more than 0.030 m from the container centre; the blocker (a 0.04 cube) fits only INSIDE the 0.06 opening, so the released target lands on it or tilts against it still inside the walls; failure needs a rim-resting pose that the static model cannot certify"
+    }
+  },
+  "per_mode": {
+    "BLOCK_BUFFER": {
+      "all_failures_are_collisions": false,
+      "interfering_valid_candidates": 49,
+      "root_cause_counts": {
+        "UNCERTIFIED_FINGER_CLEARANCE_BELOW_PROVEN_ENVELOPE": 48
+      },
+      "safe_weak_or_moderate": 0,
+      "weak_or_moderate_valid": 48
+    },
+    "BLOCK_CONTAINER": {
+      "all_failures_are_collisions": true,
+      "interfering_valid_candidates": 9,
+      "root_cause_counts": {
+        "COLLISION_FINGERS_WITH_container_wall": 8,
+        "COLLISION_HELD_BLOCKER_LIFT_WITH_container_wall": 8
+      },
+      "safe_weak_or_moderate": 0,
+      "weak_or_moderate_valid": 8
+    }
+  },
+  "proven_clearance_envelope": 0.009750965988636017,
+  "reason_histogram_all_valid_interfering": {
+    "BLOCK_BUFFER": {
+      "UNCERTIFIED_FINGER_CLEARANCE_BELOW_PROVEN_ENVELOPE": 48
+    },
+    "BLOCK_CONTAINER": {
+      "COLLISION_FINGERS_WITH_container_wall": 8,
+      "COLLISION_HELD_BLOCKER_LIFT_WITH_container_wall": 8
+    }
+  },
+  "status": "FAIL"
+}
