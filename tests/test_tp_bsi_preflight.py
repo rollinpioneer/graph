@@ -97,3 +97,23 @@ def test_zero_env_guard_raises():
     with pytest.raises(RuntimeError, match="ZERO_ENV_GUARD"):
         rf.make_env(None)
     assert zg.calls == 1
+
+
+def test_duration_inventory_reads_both_clean_sources(tmp_path):
+    import json
+    sw = tmp_path / b.SW1_REL / "20260101T000000Z_scripted_witness"
+    sw.mkdir(parents=True)
+    pre = {"index": 0, "action": "a:PICK:target:v1"}
+    ok = {"controller_exit": "NORMAL_TERMINATION", "duration": 5.0}
+    bad = {"controller_exit": "TIMEOUT", "duration": 9.0}
+    (sw / "per_skill_facts_and_masks.jsonl").write_text("\n".join(json.dumps(x) for x in [
+        {"order": "A1", "case_id": "c", "route": "T", "pre": pre, "post": ok}, {"order": "A2", "case_id": "c", "route": "T", "pre": pre, "post": bad}]))
+    db = tmp_path / b.DISC_REL / "branches"
+    db.mkdir(parents=True)
+    (db / "b1.json").write_text(json.dumps({"success": True, "valid": True, "termination": "TASK_SUCCESS", "case_id": "d", "trace": [
+        {"action": "a:OPEN:container:v1", "elapsed_start": 0, "elapsed_end": 7.6, "controller_exit": "NORMAL_TERMINATION"},
+        {"action": "a:PICK:second_object:v1", "elapsed_start": 7.6, "elapsed_end": 12.1, "controller_exit": "NORMAL_TERMINATION"}]}))
+    (db / "b2.json").write_text(json.dumps({"success": False, "valid": True, "termination": "NO_PLAN", "case_id": "d", "trace": [{"action": "a:PICK:second_object:v1", "elapsed_start": 0, "elapsed_end": 4, "controller_exit": "NORMAL_TERMINATION"}]}))
+    rows = b.collect_durations(tmp_path, b.Guard())
+    assert sorted((r["source"], r["role"]) for r in rows) == [("DISCOVERY-1", "PICK_second"), ("SCRIPTED-WITNESS-1", "PICK_target")]
+    assert [r["duration"] for r in rows if r["source"] == "DISCOVERY-1"] == [4.5]

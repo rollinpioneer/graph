@@ -202,7 +202,7 @@ def collect_durations(root, guard):
                          "duration": float(p["duration"]), "controller_exit": p["controller_exit"], "episode_success": True})
     for p in sorted((root / DISC_REL / "branches").glob("*.json")):
         d = json.loads(guard.read(p))
-        if not (d.get("task_success") and d.get("valid") and d.get("termination") == "TASK_SUCCESS"):
+        if not (d.get("success", d.get("task_success")) and d.get("valid") and d.get("termination") == "TASK_SUCCESS"):
             continue
         for i, t in enumerate(d["trace"]):
             if t["action"] in ROLE and t["controller_exit"] == "NORMAL_TERMINATION":
