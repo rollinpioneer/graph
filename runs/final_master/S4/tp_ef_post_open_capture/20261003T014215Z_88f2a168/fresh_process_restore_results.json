@@ -1,0 +1,166 @@
+{
+  "card": "CP-DISR-TP-EF-POST-OPEN-CAPTURE-1",
+  "results": {
+    "T_B_dev_03": {
+      "bootstrap_env_reused_for_start_case": true,
+      "card": "CP-DISR-TP-EF-POST-OPEN-CAPTURE-1",
+      "case_id": "T_B_dev_03",
+      "checks": {
+        "clock": {
+          "origin_restored": 1.0000000000000007,
+          "origin_saved": 1.0000000000000007,
+          "pass": true,
+          "restored_now": 7.5999999999995405,
+          "saved_now": 7.5999999999995405,
+          "sim_time_restored": 8.599999999999541,
+          "sim_time_saved": 8.599999999999541
+        },
+        "controller_gripper_state": {
+          "diffs_total": 0,
+          "entries_saved": 314,
+          "first_diffs": [],
+          "named_diffs": [],
+          "named_paths_saved": [
+            ".@robot0.controller/.goal_ori",
+            ".@robot0.controller/.goal_pos",
+            ".@robot0.controller/.new_update",
+            ".@robot0.controller/.torques",
+            ".@robot0.gripper/.current_action",
+            ".@robot0/.controller/.goal_ori",
+            ".@robot0/.controller/.goal_pos",
+            ".@robot0/.controller/.new_update",
+            ".@robot0/.controller/.torques",
+            ".@robot0/.gripper/.current_action",
+            ".@robot0/.torques"
+          ],
+          "pass": true
+        },
+        "facts": {
+          "pass": true,
+          "restored": {
+            "p:AtBuffer:second_object:buffer": "FALSE",
+            "p:AtBuffer:target:buffer": "FALSE",
+            "p:GripperEmpty": "TRUE",
+            "p:Held:second_object": "FALSE",
+            "p:Held:target": "FALSE",
+            "p:Inside:second_object:container": "FALSE",
+            "p:Inside:target:container": "FALSE",
+            "p:OnTable:second_object": "TRUE",
+            "p:OnTable:target": "TRUE",
+            "p:Open:container": "TRUE"
+          }
+        },
+        "facts_forced_render": {
+          "pass": true,
+          "restored": {
+            "p:AtBuffer:second_object:buffer": "FALSE",
+            "p:AtBuffer:target:buffer": "FALSE",
+            "p:GripperEmpty": "TRUE",
+            "p:Held:second_object": "FALSE",
+            "p:Held:target": "FALSE",
+            "p:Inside:second_object:container": "FALSE",
+            "p:Inside:target:container": "FALSE",
+            "p:OnTable:second_object": "TRUE",
+            "p:OnTable:target": "TRUE",
+            "p:Open:container": "TRUE"
+          },
+          "saved": {
+            "p:AtBuffer:second_object:buffer": "FALSE",
+            "p:AtBuffer:target:buffer": "FALSE",
+            "p:GripperEmpty": "TRUE",
+            "p:Held:second_object": "FALSE",
+            "p:Held:target": "FALSE",
+            "p:Inside:second_object:container": "FALSE",
+            "p:Inside:target:container": "FALSE",
+            "p:OnTable:second_object": "TRUE",
+            "p:OnTable:target": "TRUE",
+            "p:Open:container": "TRUE"
+          }
+        },
+        "forced_render_obs": {
+          "depth_max_abs": 0.0,
+          "pass": false,
+          "proprio_max_abs": 0.0,
+          "rgb_exact": false
+        },
+        "goal_candidates_mask": {
+          "candidates_pass": true,
+          "goal_pass": true,
+          "pass": true
+        },
+        "identity": {
+          "includes_episode_counter": false,
+          "saved_state_identity": "799193dd819e28028d844b6c12a665eb0abf5e18258f26fe896f4e0ee61cb501"
+        },
+        "no_skill_executed": {
+          "pass": true
+        },
+        "post_open_requirements": {
+          "facts": {
+            "p:GripperEmpty": "TRUE",
+            "p:OnTable:second_object": "TRUE",
+            "p:OnTable:target": "TRUE",
+            "p:Open:container": "TRUE"
+          },
+          "pass": true,
+          "pick_masks": {
+            "a:PICK:second_object:v1": true,
+            "a:PICK:target:v1": true
+          }
+        },
+        "public_obs_cached": {
+          "depth_max_abs": 0.0,
+          "pass": true,
+          "proprio_max_abs": 0.0,
+          "rgb_exact": true
+        },
+        "rng": {
+          "pass": true,
+          "restored": "0812516f9932994b7081ca00415d14397cb6e8d739d426e260190eb612cff97b",
+          "saved": "0812516f9932994b7081ca00415d14397cb6e8d739d426e260190eb612cff97b"
+        },
+        "sim_arrays": {
+          "max_abs": 0.0,
+          "mismatched_fields": [],
+          "pass": true,
+          "warmstart_after_forward_max_abs": 0.0
+        },
+        "sim_arrays_raw": {
+          "max_abs": 0.0,
+          "mismatched_fields": [],
+          "pass": true
+        }
+      },
+      "env_reset_calls_total": 2,
+      "environment_constructions": 1,
+      "failures": [
+        "forced_render_obs"
+      ],
+      "pid": 1730198,
+      "role": "fresh_process_restore",
+      "skill_calls": 0,
+      "snapshot_file_sha256_at_restore": {
+        "manifest.json": "6f7e6e316ed4622ac62ad3a349d0b77db012ec4c66364e22a609b7929a9a8eb1",
+        "obs_forced_render.npz": "7ad0e913db522b08cec3dd98f61b79de62d5d07123273adb6372d32f6bab934f",
+        "obs_public_cached.npz": "82aed296f0d7a3a771c132b8931c252b5252ce274c8dc94f03b4a87d846bc39c",
+        "python_state.npz": "6ae69c83186f53d7fdf52c256f08d0010e24a099207626fa8e5f3350b529ced0",
+        "rng_numpy.npz": "deeaf783fd8da2a77160d9e85f910fc68fecd4631b5951150335938dd0a0bfd6",
+        "sim_state.npz": "2aa9a8675e611166ee4b6ab2ef533ba20f1a1cfaa096a1d17b75b0bbe1f98cbd"
+      },
+      "start_case_calls": 1,
+      "state_paths_not_applied": [],
+      "status": "FAIL"
+    }
+  },
+  "tolerances": {
+    "clock_abs": 1e-12,
+    "controller_gripper_named_paths": "exact",
+    "depth_abs": 1e-06,
+    "facts": "exact value+reason",
+    "mask_goal_candidates": "exact",
+    "proprio_abs": 1e-09,
+    "rgb": "exact_uint8",
+    "rng": "exact sha256",
+    "sim_arrays_abs": 1e-12
+  }
+}

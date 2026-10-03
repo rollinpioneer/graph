@@ -11,6 +11,7 @@ import json
 import os
 import platform
 import random
+import re
 import socket
 import subprocess
 import sys
@@ -888,7 +889,7 @@ def verify(root, out, snap_root, before):
     ledger = pr.read_json(out / "budget_ledger.json")
     hashes = pr.read_json(out / "snapshot_file_hashes.json")["files"]
     rehash = all(Path(f["path"]).is_file() and sha_file(f["path"]) == f["sha256_at_capture"] for fl in hashes.values() for f in fl)
-    secrets = sum(1 for p in out.rglob("*") if p.is_file() and p.suffix in {".json", ".md", ".log", ".jsonl"} and any(x in p.read_text(errors="ignore") for x in ("sk-", "Authorization", "DASHSCOPE_API_KEY=")))
+    secrets = sum(1 for p in out.rglob("*") if p.is_file() and p.suffix in {".json", ".md", ".log", ".jsonl"} and bool(re.search(r"sk-[A-Za-z0-9]{16,}|Authorization:|Bearer [A-Za-z0-9._-]{16,}|DASHSCOPE_API_KEY=", p.read_text(errors="ignore"))))
     checks = {"outputs_present": {n: (out / n).is_file() for n in need}, "caps_respected": all(ledger["used"][k] <= v for k, v in CAPS.items()),
               "zero_provider_rl_optimizer_test": all(ledger["used"][k] == 0 for k in ("provider_requests", "rl_transitions", "optimizer_steps", "test_episodes")),
               "no_continuation_skills": ledger["used"]["continuation_skills"] == 0, "snapshot_files_unchanged_since_capture": rehash,

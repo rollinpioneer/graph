@@ -1,0 +1,46 @@
+{
+  "authorized_by": "user chat instruction approving CP-DISR-TP-EF-POST-OPEN-CAPTURE-1",
+  "caps": {
+    "continuation_skills": 0,
+    "environment_constructions": 4,
+    "fresh_restore_validations": 2,
+    "open_skill_calls": 2,
+    "optimizer_steps": 0,
+    "provider_requests": 0,
+    "rl_transitions": 0,
+    "setup_episodes": 2,
+    "start_case_calls": 4,
+    "test_episodes": 0
+  },
+  "card": "CP-DISR-TP-EF-POST-OPEN-CAPTURE-1",
+  "cases": [
+    "T_B_dev_03",
+    "T_B_dev_05"
+  ],
+  "forbidden": [
+    "candidate branches",
+    "continuation skills",
+    "provider",
+    "RL",
+    "optimizer",
+    "test"
+  ],
+  "gpu": 0,
+  "problems": [],
+  "retry_allowed": false,
+  "reuse_rule": "each process makes exactly one real environment construction (bootstrap env reused as the start_case env)",
+  "status": "PASS",
+  "stop_rule": "any setup or restore failure stops the card; no replacement case; no next physical card",
+  "substitution_allowed": false,
+  "tolerances_frozen_before_first_env": {
+    "clock_abs": 1e-12,
+    "controller_gripper_named_paths": "exact",
+    "depth_abs": 1e-06,
+    "facts": "exact value+reason",
+    "mask_goal_candidates": "exact",
+    "proprio_abs": 1e-09,
+    "rgb": "exact_uint8",
+    "rng": "exact sha256",
+    "sim_arrays_abs": 1e-12
+  }
+}
