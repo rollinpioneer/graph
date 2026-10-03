@@ -1,0 +1,731 @@
+{
+  "card": "CP-DISR-TP-VIS-PREFLIGHT-1",
+  "class_counts": {
+    "NEW_COLOR_BINDING_REQUIRED": 17,
+    "NO_CHANGE_REQUIRED": 78,
+    "PER_OBJECT_GEOMETRY_LOOKUP_REQUIRED": 4,
+    "SEMANTIC_CHANGE_REQUIRED": 2
+  },
+  "files": {
+    "d0_env.py": "acca983f058d2061d737603a91df9acc98310e4bc9ee713659d66ab6c92b7c6e",
+    "perception.py": "32b2ad455dbb418e13a4cd9cc16e8995b1bb5dc0f4bdd08d6ab1913c63930c7c",
+    "runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "safety.py": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+    "scene_capture.py": "a245761beefdfe2559f348ddf75656396e44423b388100c5534e6dbc00d4abe4",
+    "skill_executor.py": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed",
+    "snapshot.py": "9362e36758e2b01a037d492bdb7fddb052c4040b916f353814e172c938a18729",
+    "task_evaluator.py": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
+    "verifier.py": "e342d9bcd0b6e3f2dddaf4aeb3da171e7b9e9cb56b946b216c74d568c7aa2482"
+  },
+  "note": "classification is per location; SEMANTIC_CHANGE_REQUIRED applies only to total heights above the Verifier OnTable bound, see tall_height_grid.json",
+  "rows": [
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 19,
+      "text": "COLORS = {",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 20,
+      "text": "\"target\": np.array([0.85, 0.20, 0.15, 1.0]),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 21,
+      "text": "\"second_object\": np.array([0.92, 0.72, 0.12, 1.0]),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "PER_OBJECT_GEOMETRY_LOOKUP_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 30,
+      "text": "OBJECT_HALF = np.array([0.020, 0.020, 0.020])",
+      "why": "single global half size constant"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 50,
+      "text": "second_role: str = \"second_object\"",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 103,
+      "text": "self.second_role = getattr(self.case, \"second_role\", \"second_object\")",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 104,
+      "text": "second_rgba = COLORS.get(self.second_role, COLORS[\"second_object\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "PER_OBJECT_GEOMETRY_LOOKUP_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 105,
+      "text": "self.target = BoxObject(name=\"target\", size=OBJECT_HALF, rgba=COLORS[\"target\"], friction=(1.2, 0.005, 0.0001), density=200)",
+      "why": "the tall object needs its own box size at env construction"
+    },
+    {
+      "class": "PER_OBJECT_GEOMETRY_LOOKUP_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 106,
+      "text": "self.second_object = BoxObject(name=self.second_role, size=OBJECT_HALF, rgba=second_rgba, friction=(1.2, 0.005, 0.0001), density=200)",
+      "why": "the tall object needs its own box size at env construction"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 107,
+      "text": "self.lid = BoxObject(name=\"lid\", size=LID_HALF, rgba=COLORS[\"lid\"], friction=(1.8, 0.005, 0.0001), density=80)",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 111,
+      "text": "mujoco_objects=[self.target, self.second_object, self.lid],",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 150,
+      "text": "add_box(container, \"container_floor\", [cx, cy, z0 + 0.004], [inner[0] + wall, inner[1] + wall, 0.004], COLORS[\"container\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 151,
+      "text": "add_box(container, \"container_back\", [cx, cy + inner[1] + wall, z0 + h / 2], [inner[0] + wall, wall, h / 2], COLORS[\"container\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 152,
+      "text": "add_box(container, \"container_front\", [cx, cy - inner[1] - wall, z0 + h / 2], [inner[0] + wall, wall, h / 2], COLORS[\"container\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 153,
+      "text": "add_box(container, \"container_left\", [cx - inner[0] - wall, cy, z0 + h / 2], [wall, inner[1], h / 2], COLORS[\"container\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 154,
+      "text": "add_box(container, \"container_right\", [cx + inner[0] + wall, cy, z0 + h / 2], [wall, inner[1], h / 2], COLORS[\"container\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 160,
+      "text": "add_box(buffer, \"buffer_pad\", [bx, by, z0 + BUFFER_HALF[2]], list(BUFFER_HALF), COLORS[\"buffer\"])",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 164,
+      "text": "self.table_top_z = z0",
+      "why": "table reference height"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 169,
+      "text": "role = getattr(self, \"second_role\", getattr(self.case, \"second_role\", \"second_object\"))",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 170,
+      "text": "self.second_role = role",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 172,
+      "text": "\"target\": self.sim.model.body_name2id(self.target.root_body),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 173,
+      "text": "role: self.sim.model.body_name2id(self.second_object.root_body),",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "PER_OBJECT_GEOMETRY_LOOKUP_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 189,
+      "text": "z_cube = self.table_top_z + OBJECT_HALF[2] + 0.001",
+      "why": "initial pose height uses the global half height"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 190,
+      "text": "z_lid = self.table_top_z + CONTAINER_H + LID_HALF[2] + 0.001",
+      "why": "table reference height"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 192,
+      "text": "\"target\": (*self.case.target_xy, z_cube),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 193,
+      "text": "\"second_object\": (*self.case.second_xy, z_cube),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 196,
+      "text": "objs = {\"target\": self.target, \"second_object\": self.second_object, \"lid\": self.lid}",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 211,
+      "text": "\"table_top_z\": float(self.table_top_z),",
+      "why": "table reference height"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 250,
+      "text": "role = getattr(self, \"second_role\", \"second_object\")",
+      "why": "role naming / object registration / body-id lookup, no geometry"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 252,
+      "text": "\"target\": pos(\"target\"),",
+      "why": "the tall object needs its own colour entry (COLORS is looked up by role)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/d0_env.py",
+      "line": 257,
+      "text": "\"table_top_z\": float(self.table_top_z),",
+      "why": "table reference height"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 8,
+      "text": "from .d0_env import OBJECT_HALF, LID_HALF, CONTAINER_H",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 58,
+      "text": "def _toward(current, target, gain=6.0, clip=0.06):",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 59,
+      "text": "err = np.asarray(target, dtype=float) - np.asarray(current, dtype=float)",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 72,
+      "text": "def _hover_z(self):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 73,
+      "text": "return float(self.env.table_top_z + 0.22)",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 297,
+      "text": "def _grasp_z(self, perc_z, half_z):",
+      "why": "grasp height = min(perceived_z - 0.012, table_top + 0.022): constant for every object taller than 0.044, so the tall object is grasped by the same rule"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 298,
+      "text": "table = float(self.env.table_top_z)",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 305,
+      "text": "hover = np.array([lid[0], lid[1], self._hover_z()])",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 308,
+      "text": "park = np.array([park_xy[0], park_xy[1], self._hover_z()])",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 309,
+      "text": "drop = np.array([park_xy[0], park_xy[1], float(self.env.table_top_z + LID_HALF[2] + 0.012)])",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 310,
+      "text": "if not self._move_to(trace, hover, GRIP_OPEN, timeout, sim_start, tag=\"APPROACH\", tol=0.025, max_steps=200):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 318,
+      "text": "lift = np.array([lid[0], lid[1], float(self.env.table_top_z + 0.16)])",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 332,
+      "text": "hover = np.array([xyz[0], xyz[1], self._hover_z()])",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 333,
+      "text": "grasp = np.array([xyz[0], xyz[1], self._grasp_z(float(xyz[2]), OBJECT_HALF[2])])",
+      "why": "grasp height = min(perceived_z - 0.012, table_top + 0.022): constant for every object taller than 0.044, so the tall object is grasped by the same rule"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 335,
+      "text": "if not self._move_to(trace, hover, GRIP_OPEN, timeout, sim_start, tag=\"APPROACH\", tol=0.02, max_steps=180):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 344,
+      "text": "show = np.array([0.02, -0.08, float(self.env.table_top_z + 0.16)])",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 346,
+      "text": "if not self._move_to(trace, hover, GRIP_CLOSE, timeout, sim_start, tag=\"RETREAT\", tol=0.04, max_steps=120):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 359,
+      "text": "hover = np.array([c[0], c[1], self._hover_z()])",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 360,
+      "text": "drop = np.array([c[0], c[1], self.env.table_top_z + CONTAINER_H + 0.03])",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 361,
+      "text": "if not self._move_to(trace, hover, GRIP_CLOSE, timeout, sim_start, tag=\"APPROACH\"):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 367,
+      "text": "if self._move_to(trace, hover, GRIP_OPEN, timeout, sim_start, tag=\"RETREAT\"):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 378,
+      "text": "hover = np.array([b[0], b[1], self._hover_z()])",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 379,
+      "text": "drop = np.array([b[0], b[1], self.env.table_top_z + OBJECT_HALF[2] + 0.05])",
+      "why": "import line, generic helper arguments, fixed table-relative heights for the lid / container / hover (cube-independent)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 380,
+      "text": "if not self._move_to(trace, hover, GRIP_CLOSE, timeout, sim_start, tag=\"APPROACH\"):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/skill_executor.py",
+      "line": 386,
+      "text": "if self._move_to(trace, hover, GRIP_OPEN, timeout, sim_start, tag=\"RETREAT\"):",
+      "why": "show / hover poses are fixed heights; the held tall object keeps a positive margin above the table"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 8,
+      "text": "from .d0_env import COLORS",
+      "why": "segmentation iterates the COLORS table; a new entry is segmented automatically but must exist"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 15,
+      "text": "\"held_xy\": 0.06,",
+      "why": "XY / Z distance thresholds and segmentation thresholds, valid for the tall object"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 16,
+      "text": "\"held_z\": 0.07,",
+      "why": "XY / Z distance thresholds and segmentation thresholds, valid for the tall object"
+    },
+    {
+      "class": "SEMANTIC_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 17,
+      "text": "\"table_z_tol\": 0.05,",
+      "why": "the OnTable tolerance bounds the blob top height (table_top + 0.075); only heights above 0.072 m would need it changed"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 18,
+      "text": "\"inside_margin\": 0.02,",
+      "why": "XY / Z distance thresholds and segmentation thresholds, valid for the tall object"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 19,
+      "text": "\"buffer_margin\": 0.03,",
+      "why": "XY / Z distance thresholds and segmentation thresholds, valid for the tall object"
+    },
+    {
+      "class": "NEW_COLOR_BINDING_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/perception.py",
+      "line": 114,
+      "text": "for name, color in COLORS.items():",
+      "why": "segmentation iterates the COLORS table; a new entry is segmented automatically but must exist"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 56,
+      "text": "role = getattr(self.env, \"second_role\", \"second_object\")",
+      "why": "role loop, table reference and the use of the OnTable result"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 58,
+      "text": "for name in (\"target\", role, \"lid\"):",
+      "why": "role loop, table reference and the use of the OnTable result"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 62,
+      "text": "if dxy < THRESHOLDS[\"held_xy\"] and abs(p[2] - eef[2]) < THRESHOLDS[\"held_z\"]:",
+      "why": "held / gripper-empty tests use XY / Z distances to the end effector, valid for the tall object"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 73,
+      "text": "table_z = float(self.env.public_layout()[\"table_top_z\"])",
+      "why": "role loop, table reference and the use of the OnTable result"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 75,
+      "text": "for obj in (\"target\", role):",
+      "why": "role loop, table reference and the use of the OnTable result"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 87,
+      "text": "close = eef is not None and ((p[0]-eef[0])**2+(p[1]-eef[1])**2)**0.5 < THRESHOLDS[\"held_xy\"] and abs(p[2]-eef[2]) < THRESHOLDS[\"held_z\"]",
+      "why": "held / gripper-empty tests use XY / Z distances to the end effector, valid for the tall object"
+    },
+    {
+      "class": "SEMANTIC_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 95,
+      "text": "on_table = abs(p[2] - (table_z + 0.025)) < THRESHOLDS[\"table_z_tol\"]",
+      "why": "OnTable uses |blob_z - (table_z + 0.025)| < 0.05, i.e. blob top height must stay below table_top + 0.075; a total height above 0.072 m makes OnTable UNKNOWN (PICK mask FALSE) - only the 0.06 m height is compatible with the unmodified Verifier"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 96,
+      "text": "if on_table and not ((not grip_open) and close):",
+      "why": "role loop, table reference and the use of the OnTable result"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 106,
+      "text": "inside = abs(p[0]-container[0]) <= (CONTAINER_INNER[0] + THRESHOLDS[\"inside_margin\"]) and abs(p[1]-container[1]) <= (CONTAINER_INNER[1] + THRESHOLDS[\"inside_mar",
+      "why": "held / gripper-empty tests use XY / Z distances to the end effector, valid for the tall object"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 107,
+      "text": "add(inside_id, Truth.TRUE if inside else Truth.FALSE, \"xy_inside_container_estimate\", [\"rgb\", \"depth\"])",
+      "why": "container / buffer membership uses blob XY"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 112,
+      "text": "atb = abs(p[0]-buffer[0]) <= (BUFFER_HALF[0] + THRESHOLDS[\"buffer_margin\"]) and abs(p[1]-buffer[1]) <= (BUFFER_HALF[1] + THRESHOLDS[\"buffer_margin\"])",
+      "why": "held / gripper-empty tests use XY / Z distances to the end effector, valid for the tall object"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/verifier.py",
+      "line": 113,
+      "text": "add(buf_id, Truth.TRUE if atb else Truth.FALSE, \"xy_inside_buffer_estimate\", [\"rgb\", \"depth\"])",
+      "why": "container / buffer membership uses blob XY"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 33,
+      "text": "OBJECTS = {\"target\": \"object\", \"second_object\": \"object\", \"container\": \"container\", \"buffer\": \"buffer\"}",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 247,
+      "text": "goals = (Goal(\"p:Inside:target:container\", 1),)",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 294,
+      "text": "\"D0\": {\"target\": \"object\", \"second_object\": \"object\", \"container\": \"container\", \"buffer\": \"buffer\"},",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 295,
+      "text": "\"T_A\": {\"target\": \"object\", \"second_object\": \"object\", \"container\": \"container\", \"buffer\": \"buffer\"},",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 296,
+      "text": "\"T_C\": {\"target\": \"object\", \"interferer\": \"object\", \"container\": \"container\", \"buffer\": \"buffer\"},",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 297,
+      "text": "\"T_B\": {\"target\": \"object\", \"second_object\": \"object\", \"container\": \"container\", \"buffer\": \"buffer\"},",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 300,
+      "text": "\"D0\": (\"p:Inside:target:container\",),",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 301,
+      "text": "\"T_A\": (\"p:Inside:target:container\", \"p:Inside:second_object:container\"),",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 302,
+      "text": "\"T_C\": (\"p:Inside:target:container\",),",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 303,
+      "text": "\"T_B\": (\"p:Inside:target:container\", \"p:AtBuffer:second_object:buffer\"),",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 305,
+      "text": "TASK_SECOND_ROLE = {\"D0\": \"second_object\", \"T_A\": \"second_object\", \"T_B\": \"second_object\", \"T_C\": \"interferer\"}",
+      "why": "object types and goals are unchanged (object / container / buffer)"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/runtime_factory.py",
+      "line": 361,
+      "text": "second_role=role,",
+      "why": "factory wiring"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 37,
+      "text": "def _inside(self, h, name: str) -> bool:",
+      "why": "Inside is only evaluated for the small cube"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 41,
+      "text": "inside_z = obj[2] <= float(h[\"table_top_z\"]) + 0.12",
+      "why": "Inside is evaluated for the small cube only; role lookup is naming"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 44,
+      "text": "def _at_buffer(self, h, name: str) -> bool:",
+      "why": "AtBuffer needs centre z <= table_top + 0.10; a 0.12 m tall box rests with its centre at about 0.063"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 47,
+      "text": "return bool(abs(obj[0] - b[0]) <= 0.06 and abs(obj[1] - b[1]) <= 0.06 and obj[2] <= float(h[\"table_top_z\"]) + 0.10)",
+      "why": "AtBuffer needs centre z <= table_top + 0.10; a 0.12 m tall box rests with its centre at about 0.063"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 49,
+      "text": "def _second_role(self) -> str:",
+      "why": "Inside is evaluated for the small cube only; role lookup is naming"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 50,
+      "text": "return getattr(self.env, \"second_role\", getattr(getattr(self.env, \"case\", None), \"second_role\", \"second_object\"))",
+      "why": "Inside is evaluated for the small cube only; role lookup is naming"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 55,
+      "text": "return self._inside(h, \"target\") and self._inside(h, self._second_role())",
+      "why": "Inside is evaluated for the small cube only; role lookup is naming"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 57,
+      "text": "return self._inside(h, \"target\") and self._at_buffer(h, self._second_role())",
+      "why": "Inside is evaluated for the small cube only; role lookup is naming"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/task_evaluator.py",
+      "line": 58,
+      "text": "return self._inside(h, \"target\")",
+      "why": "Inside is only evaluated for the small cube"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/snapshot.py",
+      "line": 128,
+      "text": "dst = r.get(\"target\") or r.get(\"dst\") or r.get(\"to\")",
+      "why": "snapshot builder uses facts and the mask only"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/scene_capture.py",
+      "line": 27,
+      "text": "{box('target',obj['target'],(.10,.10,.10),(.85,.20,.15,1))}",
+      "why": "scene capture is a recorder"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "src/cp_disr/platforms/libero/scene_capture.py",
+      "line": 28,
+      "text": "{box('second_object',obj.get('second_object',obj.get('interferer')), (.10,.10,.10),(.92,.72,.12,1))}",
+      "why": "scene capture is a recorder"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "configs/runtime/stage_2a_contract_registry.yaml",
+      "line": 0,
+      "text": "registered contracts / action ids",
+      "why": "object ids and predicates are unchanged; the tall object keeps the second_object id"
+    },
+    {
+      "class": "NO_CHANGE_REQUIRED",
+      "file": "configs/runtime/stage_2a_action_registry.yaml",
+      "line": 0,
+      "text": "registered contracts / action ids",
+      "why": "object ids and predicates are unchanged; the tall object keeps the second_object id"
+    }
+  ],
+  "unknown_rows": []
+}

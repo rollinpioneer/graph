@@ -1,0 +1,84 @@
+{
+  "bins": {},
+  "card": "CP-DISR-TP-VIS-PREFLIGHT-1",
+  "classification_counts_gating": {
+    "CLEAR": 165
+  },
+  "explanation_hint": "see world_safe reasons in layout_denominator.json: the hand body (lowest point 0.031 m above the grip site) forbids a tall object within 0.0516 m in front of the picked cube, which is where its shadow reaches",
+  "gating_heights": [
+    0.06
+  ],
+  "per_height_including_informational": {
+    "0.06": {
+      "classes": {
+        "CLEAR": 165
+      },
+      "max_centroid_shift_world_m": 0.0,
+      "soft_band": 0
+    },
+    "0.08": {
+      "classes": {
+        "CLEAR": 269
+      },
+      "max_centroid_shift_world_m": 0.006489966270781427,
+      "soft_band": 0
+    },
+    "0.1": {
+      "classes": {
+        "CLEAR": 316,
+        "HARD_DETECTION_LOSS": 1,
+        "SOFT_OCCLUSION_CANDIDATE": 8,
+        "UNKNOWN": 1
+      },
+      "max_centroid_shift_world_m": 0.019935811813710066,
+      "soft_band": 8
+    },
+    "0.12": {
+      "classes": {
+        "CLEAR": 296,
+        "HARD_DETECTION_LOSS": 15,
+        "SOFT_OCCLUSION_CANDIDATE": 27,
+        "UNKNOWN": 4
+      },
+      "max_centroid_shift_world_m": 0.028090155284458754,
+      "soft_band": 27
+    }
+  },
+  "severity_bins": {
+    "MODERATE": [
+      0.01986735726997722,
+      0.02786735726997722
+    ],
+    "WEAK": [
+      0.01186735726997722,
+      0.01986735726997722
+    ]
+  },
+  "soft_candidates_gating": 0,
+  "status": "FAIL",
+  "unconstrained_ceiling_by_height": {
+    "0.06": {
+      "layouts_with_overlapping_silhouettes": 5000,
+      "max_centroid_shift_world_m_while_detected": 0.017297536026491207,
+      "min_visible_fraction_top": 0.2
+    },
+    "0.08": {
+      "layouts_with_overlapping_silhouettes": 5358,
+      "max_centroid_shift_world_m_while_detected": 0.01988452212524851,
+      "min_visible_fraction_top": 0.0
+    },
+    "0.1": {
+      "layouts_with_overlapping_silhouettes": 5657,
+      "max_centroid_shift_world_m_while_detected": 0.021212345461323424,
+      "min_visible_fraction_top": 0.0
+    },
+    "0.12": {
+      "layouts_with_overlapping_silhouettes": 5800,
+      "max_centroid_shift_world_m_while_detected": 0.021212345461323424,
+      "min_visible_fraction_top": 0.0
+    }
+  },
+  "zone_lower_bound_m": 0.01186735726997722,
+  "zone_upper_bound_m": 0.02786735726997722,
+  "zone_upper_derivation": "spread-axis slack 0.0199 m + controller tolerance 0.008 m (hard grasp miss when the bias minus the controller tolerance exceeds the slack)"
+}

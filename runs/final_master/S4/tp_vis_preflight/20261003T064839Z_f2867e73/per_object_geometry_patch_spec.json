@@ -1,0 +1,39 @@
+{
+  "answers": {
+    "1_grasp_z": "unchanged: min(perceived_z - 0.012, table_top + 0.022) already equals table_top + 0.022 for any object taller than 0.044",
+    "2_place_buffer_drop": "unchanged: fixed 0.07 above the table; the tall object falls a shorter distance",
+    "3_tall_geom_creation": "d0_env: BoxObject size taken from a per-object half-size table instead of the global OBJECT_HALF (env construction only)",
+    "4_snapshot_restore": "no change: the saved state is simulator qpos/qvel plus runtime python state",
+    "5_perception_binding": "one new COLORS entry; the segmentation loop already iterates the table",
+    "6_safety": "no change: workspace limits on the end effector",
+    "7_verifier_evaluator": "no change for total height 0.06 m; heights above 0.072 m would need a Verifier OnTable change and are eliminated",
+    "8_contract": "unchanged: same action ids, predicates and nominal effects"
+  },
+  "applied": false,
+  "card": "CP-DISR-TP-VIS-PREFLIGHT-1",
+  "note": "'height per object' is a future shared execution correction; this card applies nothing",
+  "object_geometry": {
+    "cube": {
+      "color_identity": "target",
+      "grasp_half_height": 0.02,
+      "half_size_xyz": [
+        0.02,
+        0.02,
+        0.02
+      ],
+      "place_half_height": 0.02
+    },
+    "tall": {
+      "color_identity": "tall (new colour entry)",
+      "grasp_half_height": "unchanged rule: grasp site = table_top + 0.022",
+      "half_size_xyz": [
+        0.02,
+        0.02,
+        "H/2"
+      ],
+      "place_half_height": "unchanged rule: drop site = table_top + 0.07"
+    }
+  },
+  "requires_new_low_level_behavior": false,
+  "shared_by_all_methods": true
+}

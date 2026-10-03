@@ -1,0 +1,146 @@
+{
+  "authorized_by": "user chat instruction approving CP-DISR-TP-VIS-PREFLIGHT-1",
+  "baseline": "ea20fa6b38d36ca14a2ff04be87f3f77736395b3",
+  "card": "CP-DISR-TP-VIS-PREFLIGHT-1",
+  "forbidden_reads": "T_B test30, holdout images and future T_P test were not opened (guarded reader)",
+  "frozen_grids": {
+    "color_candidates": {
+      "c1_interferer_cyan": [
+        0.1,
+        0.78,
+        0.78
+      ],
+      "c2_orange": [
+        0.95,
+        0.5,
+        0.05
+      ],
+      "c3_pink": [
+        0.95,
+        0.45,
+        0.7
+      ],
+      "c4_white": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "c5_black": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "c6_grey": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "c7_brown": [
+        0.5,
+        0.3,
+        0.1
+      ]
+    },
+    "container_buffer_layouts": {
+      "default": {
+        "buffer": [
+          -0.18,
+          0.12
+        ],
+        "container": [
+          0.18,
+          0.12
+        ]
+      },
+      "swapped": {
+        "buffer": [
+          0.18,
+          0.12
+        ],
+        "container": [
+          -0.18,
+          0.12
+        ]
+      }
+    },
+    "cube_total_height_m": 0.04,
+    "layout": {
+      "cube_x": [
+        -0.2,
+        -0.15,
+        -0.1,
+        -0.05,
+        0.0,
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ],
+      "cube_y": [
+        -0.17,
+        -0.1,
+        -0.03
+      ],
+      "gap_min_m": 0.005,
+      "tall_offset_half_m": 0.12,
+      "tall_offset_step_m": 0.01,
+      "workspace_box": [
+        [
+          -0.215,
+          0.218
+        ],
+        [
+          -0.18,
+          -0.02
+        ]
+      ]
+    },
+    "tall_total_heights_m": [
+      0.06,
+      0.08,
+      0.1,
+      0.12
+    ]
+  },
+  "limits": {
+    "elastic_attempts": 0,
+    "env_reset": 0,
+    "environment_constructions": 0,
+    "optimizer_steps": 0,
+    "physical_episodes": 0,
+    "provider_first_requests": 0,
+    "provider_retries": 0,
+    "rl_transitions": 0,
+    "skill_calls": 0,
+    "start_case": 0,
+    "test_episodes": 0,
+    "test_reads": 0
+  },
+  "per_height_elimination": "a total height whose support needs a Verifier change (OnTable bound) is eliminated at Phase D; no production file is modified",
+  "phase_order": "A..M evaluated in order; the first failing phase stops the card",
+  "prior_results_unchanged": [
+    "BSI",
+    "OCC"
+  ],
+  "thresholds": {
+    "camera_margin_px": 6,
+    "grasp_affecting_lower_bound_m": "bound from OCC evidence (0.0119)",
+    "min_pixels": 8,
+    "screening": {
+      "also": [
+        "mean extra skill count >= 0.5",
+        "good-order final success >= 0.9"
+      ],
+      "paper_primary_endpoint": "J (unchanged; this screening mean is not an endpoint)",
+      "primary": "mean paired delta_T = bad-order completion time - good-order completion time > 2.1 s",
+      "recorded": [
+        "mean paired delta_J",
+        "rework probability",
+        "success probability"
+      ],
+      "removed": "the 'median delta_T' gate and the 'at least 3 of 5 seeds must fail' rule of the BSI design (incompatible with probabilistic soft failures)"
+    },
+    "severity_bins": "WEAK = [lower bound, spread-axis slack), MODERATE = [slack, upper bound)",
+    "soft_band_upper_bound": "hard grasp miss when the bias minus the controller tolerance exceeds the slack"
+  }
+}
