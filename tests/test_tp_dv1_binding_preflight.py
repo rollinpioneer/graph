@@ -9,7 +9,7 @@ import pytest
 from cp_disr.analysis import tp_dv1_binding_preflight as m
 
 GRIP = {"finger_inner_face_open": 0.0399, "finger_outer_face_open": 0.0664, "finger_half_width_orthogonal": 0.01, "finger_lowest_rel_site_z": -0.0085, "pad_lowest_rel_site_z": -0.0085, "pad_height_m": 0.02,
-        "hand_lowest_rel_site_z": 0.031, "eef_site_hand_z": 0.1, "hand_mesh_bounds": {"min": [-0.1, -0.03, 0.0], "max": [0.1, 0.03, 0.07]}}
+        "hand_lowest_rel_site_z": 0.031, "eef_site_hand_z": 0.1, "hand_mesh_bounds": {"min": [-0.03, -0.1, 0.0], "max": [0.03, 0.1, 0.07]}}
 
 
 def box(c, half, R=None):
@@ -158,3 +158,9 @@ def test_module_import_pulls_no_simulator_stack():
     code = "import sys; import cp_disr.analysis.tp_dv1_binding_preflight as x; print([k for k in ('robosuite','mujoco','libero','torch','gym') if k in sys.modules])"
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
     assert out.stdout.strip() == "[]", out.stdout + out.stderr
+
+
+def test_hand_box_wide_axis_is_world_y():
+    hb = m.hand_box(GRIP, (0.0, 0.0), 1.0)
+    assert hb["half"][1] > hb["half"][0]
+    assert abs(hb["half"][1] - 0.1) < 1e-9 and abs(hb["half"][0] - 0.03) < 1e-9

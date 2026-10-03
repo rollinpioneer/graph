@@ -442,7 +442,7 @@ def hand_box(grip, site_xy, site_z):
     hmin, hmax = np.array(grip["hand_mesh_bounds"]["min"]), np.array(grip["hand_mesh_bounds"]["max"])
     eef = grip["eef_site_hand_z"]
     zlo, zhi = site_z - (hmax[2] - eef), site_z - (hmin[2] - eef)
-    hx, hy = max(abs(hmin[1]), abs(hmax[1])), max(abs(hmin[0]), abs(hmax[0]))       # spread axis = world y at yaw 0
+    hx, hy = max(abs(hmin[0]), abs(hmax[0])), max(abs(hmin[1]), abs(hmax[1]))       # the hand mesh y axis is the wide palm = the finger spread axis = world y at yaw 0
     return {"center": np.array([site_xy[0], site_xy[1], 0.5 * (zlo + zhi)]), "R": np.eye(3), "half": np.array([hx, hy, 0.5 * (zhi - zlo)])}
 
 
@@ -495,7 +495,8 @@ def run(root, libero_root, out, pip_root=None):
     root, out = Path(root).resolve(), Path(out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     guard = la.Guard()
-    events = []
+    events = [{"event": "hand_occluder_axes_corrected", "technical_reason": "the first run assigned the hand mesh wide (spread) axis to world x instead of world y, which hid every held object; found by calibrating against the standard cube",
+               "science_unchanged": True, "regression_test": "test_hand_box_wide_axis_is_world_y", "first_run": {"verdict": "DV1_FAIL_VERIFIER_NOT_PUBLICLY_IMPLEMENTABLE", "held_pixels": {"bbq_sauce": 22, "butter": 0, "chocolate_pudding": 0, "cream_cheese": 0}}}]
     before = protected_hashes(root)
     write_json(out / "protected_before.json", before)
     head = git_out(["rev-parse", "HEAD"], root)
@@ -609,7 +610,6 @@ def run(root, libero_root, out, pip_root=None):
         o = objs[n]
         sa = pixel_support(cam, d, o, A_XY, occ.SKIN_TOP)
         sb = pixel_support(cam, d, o, B_XY, occ.SKIN_TOP)
-        site_held = occ.SKIN_TOP + STD_GRASP_SITE - STD_PRESS - 0.0 + 0.0
         held_site_z = occ.Z0 + SHOW_Z
         item_bottom = held_site_z - (STD_GRASP_SITE - STD_PRESS)
         hb = hand_box(grip, HELD_SHOW_XY, held_site_z)
@@ -632,10 +632,15 @@ def run(root, libero_root, out, pip_root=None):
             vals = {n: pixel_support(cam, d, objs[n], fxy, occ.SKIN_TOP + floor_top, extra={"basket": basket_world(bk, (x, y))}) for n in OBJECTS}
             grid.append({"basket_xy": [x, y], "pixels": vals})
             best_in = max(best_in, max(vals.values()))
+    ref_cube = {"name": "reference_cube", "boxes": [{"center": np.array([0, 0, 0.02]), "R": np.eye(3), "half": np.array([0.02, 0.02, 0.02])}], "height": 0.04, "top_rect": [-0.02, 0.02, -0.02, 0.02]}
+    hs_z = occ.Z0 + SHOW_Z
+    ref_px = pixel_support(cam, d, ref_cube, HELD_SHOW_XY, hs_z - (STD_GRASP_SITE - STD_PRESS), extra={"hand": [hand_box(grip, HELD_SHOW_XY, hs_z)]})
+    hand_model_valid = ref_px >= MIN_PIXELS
     per_ok_table = all(per[n]["marker_pixels_at_A"] >= MIN_PIXELS and per[n]["marker_pixels_at_B"] >= MIN_PIXELS for n in OBJECTS)
     visible_in_basket = max(per[n]["marker_pixels_in_basket_at_registered_drop"] for n in OBJECTS)
     tex = texture_audit(lib, OBJECTS)
-    percep = {"option_A_texture_segmentation": {"status": "NOT_DEMONSTRABLE_OFFLINE", "reason": "a deterministic mask of a textured, shaded top face can only be validated on rendered pixels, which this card may not produce; texture-cluster statistics below are informational", "texture": tex},
+    percep = {"hand_occluder_calibration": {"reference_cube_held_pixels": ref_px, "min_pixels": MIN_PIXELS, "valid": bool(hand_model_valid), "why": "the standard 0.04 m cube is detected while held in every clean run, so the occluder model must keep it visible"},
+              "option_A_texture_segmentation": {"status": "NOT_DEMONSTRABLE_OFFLINE", "reason": "a deterministic mask of a textured, shaded top face can only be validated on rendered pixels, which this card may not produce; texture-cluster statistics below are informational", "texture": tex},
               "option_B_marker": {"status": "SELECTED", "label": "LIBERO-derived instrumentation (public, shared by every method)", "marker": {"geom": "thin box on the top plateau", "cover_fraction_per_axis": MARKER_COVER, "thickness_m": MARKER_THICK, "contype": 0, "conaffinity": 0,
                                   "group": "visual (rendered)", "mass_kg": MARKER_MASS, "collision_geometry_changed": False, "colours": {"first_role (target)": "perception COLORS['target']", "second_role (second_object)": "perception COLORS['second_object']"}}},
               "option_C_sim_segmentation": {"status": "NOT_USED", "reason": "forbidden: a simulator segmentation mask is not public RGB-D perception"},
@@ -743,7 +748,7 @@ def run(root, libero_root, out, pip_root=None):
           "caveat": "the classes come from a tipping-margin model; section 'basket_place_binding_spec' shows that no ordering changes the Evaluator, so these classes would not carry a physical consequence"}
     write_json(out / "condition_set_design.json", cc)
     cat["DV1_FAIL_NO_HELPFUL_NEUTRAL_REVERSED_SET"] = {"fails": not cc["helpful_neutral_reversed_all_present"] or cc["always_A_first_or_larger_first_only"], "evidence": cc["counts"]}
-    cat["ENGINEERING_UNRESOLVED"] = {"fails": False, "evidence": {}}
+    cat["ENGINEERING_UNRESOLVED"] = {"fails": not hand_model_valid, "evidence": {"hand_occluder_valid": bool(hand_model_valid), "reference_cube_held_pixels": ref_px}}
     failing = [k for k in FAIL_ORDER if cat[k]["fails"]]
     verdict = failing[0] if failing else "DV1_BINDING_PREFLIGHT_PASS"
     (out / "fixed_rule_attack.md").write_text(fixed_rule_md(prow, fx, cc), encoding="utf-8")
