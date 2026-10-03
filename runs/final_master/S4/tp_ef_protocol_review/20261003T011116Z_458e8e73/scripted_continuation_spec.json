@@ -1,0 +1,32 @@
+{
+  "card": "CP-DISR-TP-EF-PROTOCOL-REVIEW-1",
+  "no_stepwise_b_plan": true,
+  "offline_gate": {
+    "classification_counts": {
+      "CONTRACT_REVEALED_PAIR": 20
+    },
+    "first_illegal_step_a": [
+      "a:PLACE:target:container:v1"
+    ],
+    "passes": false,
+    "route_a_reachable_states": 0,
+    "skills_without_observed_success": []
+  },
+  "reason": "requested continuation A starts PICK(target) then PLACE(target, container); PLACE requires Open(container) which is FALSE in all saved dev states, OPEN requires GripperEmpty, and PLACE_BUFFER does not restore OnTable, so no legal continuation of candidate A reaches the goal under the registered contracts",
+  "requested_protocol": "PICK_target_vs_PICK_second",
+  "requested_scripts": {
+    "A": [
+      "pt",
+      "plt",
+      "ps",
+      "pbs"
+    ],
+    "B": [
+      "ps",
+      "pbs",
+      "pt",
+      "plt"
+    ]
+  },
+  "status": "NOT_FROZEN_OFFLINE_GATE_FAILED"
+}

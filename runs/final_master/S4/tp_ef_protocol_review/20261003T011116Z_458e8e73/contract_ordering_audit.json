@@ -1,0 +1,154 @@
+{
+  "card": "CP-DISR-TP-EF-PROTOCOL-REVIEW-1",
+  "contract_facts": {
+    "OPEN_pre": "GripperEmpty",
+    "PICK_effects": "adds Held(o); deletes GripperEmpty, OnTable(o)",
+    "PICK_pre": "GripperEmpty & OnTable(o)",
+    "PLACE_BUFFER_effects": "adds AtBuffer, GripperEmpty; deletes Held (no OnTable re-add)",
+    "PLACE_BUFFER_pre": "Held(o)",
+    "PLACE_pre": "Held(o) & Open(c)",
+    "initial_container": "Open FALSE in every saved dev state (lid_closed)"
+  },
+  "observed_skill_support_attempt2": {
+    "a:OPEN:container:v1": {
+      "executions": 5,
+      "normal_termination": 5
+    },
+    "a:PICK:second_object:v1": {
+      "executions": 8,
+      "normal_termination": 8
+    },
+    "a:PICK:target:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    },
+    "a:PLACE:target:container:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    },
+    "a:PLACE_BUFFER:second_object:buffer:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    }
+  },
+  "pair_types": {
+    "OPEN_vs_PICK_second": {
+      "all_both_legal": true,
+      "classification_counts": {
+        "CONTRACT_TIED_SCRIPTABLE": 20
+      },
+      "first_illegal_step_a": [
+        ""
+      ],
+      "first_illegal_step_b": [
+        ""
+      ],
+      "passes_offline_gate": true,
+      "route_a_min_skills": [
+        5
+      ],
+      "route_a_reachable_states": 20,
+      "route_b_min_skills": [
+        5
+      ],
+      "route_b_reachable_states": 20,
+      "scripted_a_legal_states": 20,
+      "scripted_b_legal_states": 20,
+      "scripts": {
+        "A": [
+          "open",
+          "ps",
+          "pbs",
+          "pt",
+          "plt"
+        ],
+        "B": [
+          "ps",
+          "pbs",
+          "open",
+          "pt",
+          "plt"
+        ]
+      },
+      "skills_without_observed_success": []
+    },
+    "OPEN_vs_PICK_target": {
+      "all_both_legal": true,
+      "classification_counts": {
+        "CONTRACT_REVEALED_PAIR": 20
+      },
+      "first_illegal_step_a": [
+        ""
+      ],
+      "first_illegal_step_b": [
+        "a:PLACE:target:container:v1"
+      ],
+      "passes_offline_gate": false,
+      "route_a_min_skills": [
+        5
+      ],
+      "route_a_reachable_states": 20,
+      "route_b_min_skills": [
+        ""
+      ],
+      "route_b_reachable_states": 0,
+      "scripted_a_legal_states": 20,
+      "scripted_b_legal_states": 0,
+      "scripts": {
+        "A": [
+          "open",
+          "ps",
+          "pbs",
+          "pt",
+          "plt"
+        ],
+        "B": [
+          "pt",
+          "plt",
+          "ps",
+          "pbs"
+        ]
+      },
+      "skills_without_observed_success": []
+    },
+    "PICK_target_vs_PICK_second": {
+      "all_both_legal": true,
+      "classification_counts": {
+        "CONTRACT_REVEALED_PAIR": 20
+      },
+      "first_illegal_step_a": [
+        "a:PLACE:target:container:v1"
+      ],
+      "first_illegal_step_b": [
+        "a:PLACE:target:container:v1"
+      ],
+      "passes_offline_gate": false,
+      "route_a_min_skills": [
+        ""
+      ],
+      "route_a_reachable_states": 0,
+      "route_b_min_skills": [
+        5
+      ],
+      "route_b_reachable_states": 20,
+      "scripted_a_legal_states": 0,
+      "scripted_b_legal_states": 0,
+      "scripts": {
+        "A": [
+          "pt",
+          "plt",
+          "ps",
+          "pbs"
+        ],
+        "B": [
+          "ps",
+          "pbs",
+          "pt",
+          "plt"
+        ]
+      },
+      "skills_without_observed_success": []
+    }
+  },
+  "states": 20
+}
