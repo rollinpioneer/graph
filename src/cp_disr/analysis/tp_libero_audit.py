@@ -1192,7 +1192,8 @@ def fill_template(c):
     tp["candidate_consequence_role"] = "none: a fixed rule already decides" if c["fixed_rule_solves"] else "needed: no single rule decides every state"
     tp["semantic_relation"] = c["relation_note"]
     for k, lab in (("helpful_case", "helpful"), ("neutral_case", "neutral"), ("reversed_or_harmful_case", "harmful")):
-        tp[k] = ("present: " if lab in cls else "absent: ") + c["covers"]["note"]
+        tp[k] = "present" if lab in cls else "absent"
+    tp["case_coverage_note"] = c["covers"]["note"] + (" (established)" if c["covers"]["established"] else " (not established statically)")
     if c["path_only"]:
         tp["expected_extra_skills"] = "0: the orders differ only by path"
         tp["expected_effect_on_J"] = "path time only"
@@ -1209,7 +1210,7 @@ def cards_markdown(cards):
         tp = fill_template(c)
         L += ["## %s" % cid, "", "origin: %s, host: %s" % (c["origin"], c["host"]), "tasks: %s" % ("; ".join(c["tasks"]) if len(c["tasks"]) <= 12 else "%d tasks" % len(c["tasks"])), ""]
         for k in ("state", "candidate_A", "candidate_B", "both_legal", "persistent_effect", "downstream_effect", "hard_precondition_or_not", "candidate_consequence_role", "semantic_relation",
-                  "helpful_case", "neutral_case", "reversed_or_harmful_case", "expected_extra_skills", "expected_effect_on_J", "simple_rule_attack"):
+                  "helpful_case", "neutral_case", "reversed_or_harmful_case", "case_coverage_note", "expected_extra_skills", "expected_effect_on_J", "simple_rule_attack"):
             L.append("- %s: %s" % (k, tp.get(k, "")))
         L += ["", "| gate | status | reason |", "|---|---|---|"]
         for g in GATES:
@@ -1312,6 +1313,13 @@ def write_not_requested(out):
     (Path(out) / "next_mechanism_canary_request.md").write_text("# next_mechanism_canary_request\n\nNOT_REQUESTED\n", encoding="utf-8")
 
 
+DECISIONS = [
+    "authorise a physical probe (environment construction) so that the unverifiable persistent-effect gates of DV1 and M1 can be measured; this card is forbidden to do so",
+    "authorise new scripted skills (yaw-aligned grasp, rim grasp, drawer pull, knob) and a LIBERO environment binding; without them G10 fails for every LIBERO-hosted task in the four audited suites",
+    "authorise hosting a derived family inside the D0 platform with LIBERO assets (still needs the physical probe)",
+    "authorise a LIBERO-90 audit: it was not audited here, so nothing is claimed about it; the failures found in the four suites are skill- and mechanism-level, which more tasks of the same kind would not remove by themselves",
+]
+
 def run(root, libero_root, out, pip_root=None):
     root, out = Path(root).resolve(), Path(out).resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -1328,7 +1336,9 @@ def run(root, libero_root, out, pip_root=None):
               {"event": "mechanism_fact_correction_basket_and_stove", "kind": "analysis_correction",
                "technical_reason": "the first run asserted that basket occupancy has no downstream effect although the asset geometry gives a pessimistic fill of up to 0.636 of the basket contain_region for two grocery items; the stove capacity was empty because the placement action is PLACE_BUFFER, not PLACE",
                "first_run_statuses": {"M1_BASKET_TWO_ITEMS": {"failed": ["G4", "G5", "G6", "G8", "G9", "G10"], "unverifiable": ["G11"]}, "M2_STOVE_TWO_POTS": {"failed": ["G3", "G6", "G8", "G9", "G10"], "unverifiable": ["G4", "G11"]}},
-               "direction": "toward less rejection of M1/M2; no candidate passes either way", "science_unchanged": True, "regression_test": "test_capacity_counts_duplicate_item_types"}]
+               "direction": "toward less rejection of M1/M2; no candidate passes either way", "science_unchanged": True, "regression_test": "test_capacity_counts_duplicate_item_types"},
+              {"event": "report_wording_corrected", "kind": "wording", "technical_reason": "the helpful/neutral/harmful lines of a card concatenated a label with an unrelated note, and the decision list claimed a result for the unaudited LIBERO-90 suite",
+               "science_unchanged": True, "regression_test": "test_fill_template_cases_are_labels_and_decisions_claim_nothing_unaudited"}]
     before = protected_hashes(root)
     write_json(out / "protected_before.json", before)
     head = git_out(["rev-parse", "HEAD"], root)
@@ -1455,11 +1465,7 @@ def run(root, libero_root, out, pip_root=None):
     sel = {"status": verdict, "passing_cards": passing, "hard_gate_rule": "all G1-G15 PASS",
            "nearest_misses_not_selected": [{"card": c["card_id"], "failed": c["failed_gates"], "unverifiable": c["unverifiable_gates"]} for c in near[:3]],
            "ranking": "not applicable: no card passes the hard gates, so no ranking was produced",
-           "decisions_that_would_change_the_outcome": [
-               "authorise a physical probe (environment construction) so that the unverifiable persistent-effect gates of DV1 can be measured; this card is forbidden to do so",
-               "authorise new scripted skills (yaw-aligned grasp, rim grasp, drawer pull, knob) and a LIBERO environment binding; without them G10 fails for every LIBERO-hosted task",
-               "authorise hosting a derived family inside the D0 platform with LIBERO assets (still needs the physical probe)",
-               "authorise LIBERO-90 (does not help: the failures are mechanism-level and skill-level, not coverage-level)"]}
+           "decisions_that_would_change_the_outcome": DECISIONS}
     write_json(out / "selected_candidate.json", sel)
     (out / "selected_tp_design_draft.md").write_text("# selected_tp_design_draft\n\n%s\n\nNo design draft was produced because no candidate passed all hard gates.\n" % verdict, encoding="utf-8")
     write_not_requested(out)

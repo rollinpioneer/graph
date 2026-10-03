@@ -192,3 +192,11 @@ def test_capacity_counts_duplicate_item_types():
     two = a.capacity("flat_stove", "cook_region", ["moka_pot", "moka_pot"], assets)
     assert abs(two["fill_ratio_max"] - 2 * one["fill_ratio_max"]) < 1e-6 and two["fill_ratio_max"] > 1.0
     assert a.capacity("flat_stove", "cook_region", [], assets)["fill_ratio_max"] == 0.0
+
+def test_fill_template_cases_are_labels_and_decisions_claim_nothing_unaudited():
+    card = dict(facts(), card_id="X", origin="UNMODIFIED_PUBLIC_TASK", tasks=["t1"], covers={"classes": ["neutral"], "established": False, "note": "some note"})
+    tp = a.fill_template(card)
+    assert tp["neutral_case"] == "present" and tp["helpful_case"] == "absent" and tp["reversed_or_harmful_case"] == "absent"
+    assert "some note" in tp["case_coverage_note"] and "not established statically" in tp["case_coverage_note"]
+    joined = " ".join(a.DECISIONS)
+    assert "does not help" not in joined and "not audited here" in joined
