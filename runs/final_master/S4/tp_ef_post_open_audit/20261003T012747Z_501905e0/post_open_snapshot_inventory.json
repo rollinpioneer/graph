@@ -1,0 +1,242 @@
+{
+  "card": "CP-DISR-TP-EF-POST-OPEN-AUDIT-1",
+  "discovery1_open_confirmed_distinct_cases": [
+    "T_B_dev_03",
+    "T_B_dev_05",
+    "T_B_dev_18"
+  ],
+  "discovery1_open_postcondition_events": [
+    {
+      "attempt": "20261002T171217Z_b2046983",
+      "branch": "51f15f6f5006eedf",
+      "case_id": "T_B_dev_05",
+      "journal": "runs/final_master/S4/tp_ef_discovery/20261002T171217Z_b2046983/branches/51f15f6f5006eedf.jsonl",
+      "open_postcondition_true": true,
+      "postcondition_fact": "p:Open:container",
+      "recorded_fields": [
+        "action",
+        "controller_exit",
+        "decision",
+        "elapsed_end",
+        "elapsed_start",
+        "kind",
+        "postcondition_fact",
+        "postcondition_true",
+        "reason",
+        "stage",
+        "t",
+        "task_success",
+        "terminated"
+      ],
+      "snapshot_record_present": false
+    },
+    {
+      "attempt": "20261002T171217Z_b2046983",
+      "branch": "982fe553d929682c",
+      "case_id": "T_B_dev_18",
+      "journal": "runs/final_master/S4/tp_ef_discovery/20261002T171217Z_b2046983/branches/982fe553d929682c.jsonl",
+      "open_postcondition_true": true,
+      "postcondition_fact": "p:Open:container",
+      "recorded_fields": [
+        "action",
+        "controller_exit",
+        "decision",
+        "elapsed_end",
+        "elapsed_start",
+        "kind",
+        "postcondition_fact",
+        "postcondition_true",
+        "reason",
+        "stage",
+        "t",
+        "task_success",
+        "terminated"
+      ],
+      "snapshot_record_present": false
+    },
+    {
+      "attempt": "20261002T171217Z_b2046983",
+      "branch": "a64024b85f872d54",
+      "case_id": "T_B_dev_03",
+      "journal": "runs/final_master/S4/tp_ef_discovery/20261002T171217Z_b2046983/branches/a64024b85f872d54.jsonl",
+      "open_postcondition_true": true,
+      "postcondition_fact": "p:Open:container",
+      "recorded_fields": [
+        "action",
+        "controller_exit",
+        "decision",
+        "elapsed_end",
+        "elapsed_start",
+        "kind",
+        "postcondition_fact",
+        "postcondition_true",
+        "reason",
+        "stage",
+        "t",
+        "task_success",
+        "terminated"
+      ],
+      "snapshot_record_present": false
+    },
+    {
+      "attempt": "20261002T171217Z_b2046983",
+      "branch": "fcd0a7d4c30ecd67",
+      "case_id": "T_B_dev_03",
+      "journal": "runs/final_master/S4/tp_ef_discovery/20261002T171217Z_b2046983/branches/fcd0a7d4c30ecd67.jsonl",
+      "open_postcondition_true": true,
+      "postcondition_fact": "p:Open:container",
+      "recorded_fields": [
+        "action",
+        "controller_exit",
+        "decision",
+        "elapsed_end",
+        "elapsed_start",
+        "kind",
+        "postcondition_fact",
+        "postcondition_true",
+        "reason",
+        "stage",
+        "t",
+        "task_success",
+        "terminated"
+      ],
+      "snapshot_record_present": false
+    }
+  ],
+  "excluded_forbidden_directories_listed_not_opened": [
+    "runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303",
+    "runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/logs",
+    "runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/worker_archived",
+    "runs/final_master/2.1.1/launch/20261002T155349Z_tb_indep_holdout_6129d303/worker_current",
+    "runs/final_master/S1/20260928T154311Z_bea4bf0d/engineering_review_f0d3e18/tests",
+    "runs/final_master/S1/20260928T154311Z_bea4bf0d/engineering_validation_9f04e5e/tests",
+    "runs/final_master/S1/20260928T154311Z_bea4bf0d/evidence_closeout_cc1ad64/tests",
+    "runs/final_master/S1/20260928T154311Z_bea4bf0d/integration_closeout_10971a4/tests",
+    "runs/final_master/S4/tp_soft_relocation_pilot_v2/20260929T095821Z_efe8aa02/inventory/test_logs",
+    "runs/stage_1a/final_test_id",
+    "runs/stage_1a/final_test_id/20260923T105220Z_55e13e1c",
+    "runs/stage_1a/final_test_id/20260923T105220Z_55e13e1c/B2",
+    "runs/stage_1a/final_test_id/20260923T105220Z_55e13e1c/Full",
+    "runs/stage_1a/final_test_id/logs"
+  ],
+  "files_opened_by_scan": 322,
+  "finding": "T_B training/eval logs hold episode summaries only (no per-transition facts, no states); DISCOVERY-1 logged Open(container)=TRUE postconditions in journals but not the remaining snapshot properties or any restore state, so none qualifies",
+  "forbidden_reads": 0,
+  "qualifying_snapshot_count": 0,
+  "qualifying_snapshots": [],
+  "recoverable_post_open_snapshots_ge_2": false,
+  "rejected_other_task_sources": [
+    {
+      "reason": "interferer task, not T_B",
+      "source": "runs/phase_a_final_unblock (T_C probes)",
+      "task": "T_C"
+    },
+    {
+      "reason": "interferer/relocation task, not T_B",
+      "source": "runs/final_master/S4/tp_soft_relocation_design static rows",
+      "task": "T_P_SR"
+    },
+    {
+      "reason": "pad task, not T_B",
+      "source": "runs/final_master/S4/family_b_* captures",
+      "task": "Family B"
+    },
+    {
+      "reason": "contain fact ids in prompts, no snapshots",
+      "source": "experiments/vlm_cache/*",
+      "task": "relation payloads"
+    }
+  ],
+  "s0_b_plan_dev_results": [
+    {
+      "contains_open_fact": false,
+      "file": "runs/final_master/S0/44fc2b9b/b_plan_dev_results.csv"
+    },
+    {
+      "contains_open_fact": false,
+      "file": "runs/final_master/S0/60c26621/b_plan_dev_results.csv"
+    },
+    {
+      "contains_open_fact": false,
+      "file": "runs/final_master/S0/b484b4ae/b_plan_dev_results.csv"
+    }
+  ],
+  "snapshot_requirements": [
+    "Verifier-confirmed Open(container)=TRUE",
+    "GripperEmpty=TRUE",
+    "OnTable(target)=TRUE",
+    "OnTable(second_object)=TRUE",
+    "PICK(target) legal",
+    "PICK(second_object) legal",
+    "restorable (full fact record + replay/restore identity)"
+  ],
+  "t_b_runs_files_with_open_fact": 0,
+  "t_b_runs_have_transition_files": false,
+  "t_b_runs_total_episodes": 7281,
+  "t_b_training_runs": [
+    {
+      "episode_log_keys": [
+        "T",
+        "case_id",
+        "method",
+        "prior_mode",
+        "reward",
+        "success",
+        "task",
+        "transitions_so_far"
+      ],
+      "episodes": 1443,
+      "files_with_open_fact": 0,
+      "has_transition_file": false,
+      "run_dir": "runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b"
+    },
+    {
+      "episode_log_keys": [
+        "T",
+        "case_id",
+        "method",
+        "prior_mode",
+        "reward",
+        "success",
+        "task",
+        "transitions_so_far"
+      ],
+      "episodes": 1782,
+      "files_with_open_fact": 0,
+      "has_transition_file": false,
+      "run_dir": "runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b"
+    },
+    {
+      "episode_log_keys": [
+        "T",
+        "case_id",
+        "method",
+        "prior_mode",
+        "reward",
+        "success",
+        "task",
+        "transitions_so_far"
+      ],
+      "episodes": 1790,
+      "files_with_open_fact": 0,
+      "has_transition_file": false,
+      "run_dir": "runs/final_master/2.1.1/T_B/B1-K+E/seed_1/R-TB-E-1-20261002T031938Z-e4dc34ae"
+    },
+    {
+      "episode_log_keys": [
+        "T",
+        "case_id",
+        "method",
+        "prior_mode",
+        "reward",
+        "success",
+        "task",
+        "transitions_so_far"
+      ],
+      "episodes": 2266,
+      "files_with_open_fact": 0,
+      "has_transition_file": false,
+      "run_dir": "runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b"
+    }
+  ]
+}

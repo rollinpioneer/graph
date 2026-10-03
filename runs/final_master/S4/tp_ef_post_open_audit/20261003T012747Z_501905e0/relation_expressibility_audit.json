@@ -1,0 +1,182 @@
+{
+  "candidate_relative_difference_exists": true,
+  "card": "CP-DISR-TP-EF-POST-OPEN-AUDIT-1",
+  "contract_redundant": 20,
+  "entry_exists": true,
+  "interpretation": [
+    "Structural entry: yes/no above is purely syntactic admissibility, not semantic correctness or utility.",
+    "A SOFT_SUPPORTS relation through a DEL effect (e.g. Held(target) deleting GripperEmpty) is admissible by the rules although semantically adversarial; relation truth is unadjudicated (UNKNOWN) and is not decided here.",
+    "Natural elicitation is a separate question: the 40 relations from existing T_B dev caches were all contract-redundant (see DISCOVERY-1)."
+  ],
+  "legality_rules_applied": [
+    "legal action/goal ids",
+    "effect_fact_ref is a registered ADD/DEL effect of the source action",
+    "no self loop",
+    "not directly contract-redundant"
+  ],
+  "non_redundant_between_the_two_candidates": [
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:GripperEmpty",
+      "effect_kind": "DEL",
+      "source": "a:PICK:second_object:v1",
+      "target": "a:PICK:target:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:Held:second_object",
+      "effect_kind": "ADD",
+      "source": "a:PICK:second_object:v1",
+      "target": "a:PICK:target:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:OnTable:second_object",
+      "effect_kind": "DEL",
+      "source": "a:PICK:second_object:v1",
+      "target": "a:PICK:target:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:GripperEmpty",
+      "effect_kind": "DEL",
+      "source": "a:PICK:target:v1",
+      "target": "a:PICK:second_object:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:Held:target",
+      "effect_kind": "ADD",
+      "source": "a:PICK:target:v1",
+      "target": "a:PICK:second_object:v1",
+      "type": "SOFT_SUPPORTS"
+    },
+    {
+      "contract_redundant": false,
+      "effect_fact_ref": "p:OnTable:target",
+      "effect_kind": "DEL",
+      "source": "a:PICK:target:v1",
+      "target": "a:PICK:second_object:v1",
+      "type": "SOFT_SUPPORTS"
+    }
+  ],
+  "non_redundant_extra_contract": 132,
+  "non_redundant_touching_candidate_pair": 62,
+  "non_redundant_with_source_in_candidate_pair": {
+    "PICK:second_object": 22,
+    "PICK:target": 22
+  },
+  "provider_calls": 0,
+  "relation_truth_utility_opportunity": "UNKNOWN_NOT_ASSESSED",
+  "relation_types": [
+    "SOFT_SUPPORTS",
+    "SOFT_RELEVANT_TO_GOAL"
+  ],
+  "sample_non_redundant_relations_with_candidate_source": {
+    "PICK:second_object": [
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:OPEN:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:PICK:target:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:PLACE:second_object:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:PLACE:target:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:PLACE_BUFFER:second_object:buffer:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:second_object:v1",
+        "target": "a:PLACE_BUFFER:target:buffer:v1",
+        "type": "SOFT_SUPPORTS"
+      }
+    ],
+    "PICK:target": [
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:OPEN:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:PICK:second_object:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:PLACE:second_object:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:PLACE:target:container:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:PLACE_BUFFER:second_object:buffer:v1",
+        "type": "SOFT_SUPPORTS"
+      },
+      {
+        "contract_redundant": false,
+        "effect_fact_ref": "p:GripperEmpty",
+        "effect_kind": "DEL",
+        "source": "a:PICK:target:v1",
+        "target": "a:PLACE_BUFFER:target:buffer:v1",
+        "type": "SOFT_SUPPORTS"
+      }
+    ]
+  },
+  "universe_size": 152
+}

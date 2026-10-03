@@ -1,0 +1,42 @@
+{
+  "card": "CP-DISR-TP-EF-POST-OPEN-AUDIT-1",
+  "classification": "CONTRACT_TIED_SCRIPTABLE",
+  "denominator": "NOT_FROZEN",
+  "epsilon": "NOT_FROZEN",
+  "must_log_in_any_future_card": [
+    "post-skill FactStore (all fact ids with truth values)",
+    "candidate ids and mask",
+    "qpos hash",
+    "public observation hash",
+    "restore receipt without episode counter",
+    "controller exit and Verifier postcondition for OPEN",
+    "no continuation skill"
+  ],
+  "no_stepwise_b_plan": true,
+  "offline_legality_on_hypothetical_post_open_facts": {
+    "S": true,
+    "T": true
+  },
+  "repeat": "NOT_FROZEN",
+  "routes": {
+    "S": {
+      "candidate": "a:PICK:second_object:v1",
+      "continuation": [
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1"
+      ]
+    },
+    "T": {
+      "candidate": "a:PICK:target:v1",
+      "continuation": [
+        "a:PLACE:target:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ]
+    }
+  },
+  "states_frozen": [],
+  "status": "SPEC_ONLY_NOT_EXECUTABLE_NO_RECOVERABLE_POST_OPEN_SNAPSHOT",
+  "why_not_frozen": "no recoverable post-OPEN snapshot exists in saved T_B logs; state, repeat, epsilon and stop rules are frozen only after the setup-only record exists"
+}

@@ -1,0 +1,140 @@
+{
+  "basis": "HYPOTHETICAL nominal post-OPEN facts (initial facts + nominal OPEN effect); NOT a recorded snapshot",
+  "card": "CP-DISR-TP-EF-POST-OPEN-AUDIT-1",
+  "classification": "CONTRACT_TIED_SCRIPTABLE",
+  "distinct_initial_fact_sets_across_20_states": 1,
+  "facts": {
+    "p:AtBuffer:second_object:buffer": "FALSE",
+    "p:AtBuffer:target:buffer": "FALSE",
+    "p:GripperEmpty": "TRUE",
+    "p:Held:second_object": "FALSE",
+    "p:Held:target": "FALSE",
+    "p:Inside:second_object:container": "FALSE",
+    "p:Inside:target:container": "FALSE",
+    "p:OnTable:second_object": "TRUE",
+    "p:OnTable:target": "TRUE",
+    "p:Open:container": "TRUE"
+  },
+  "min_skills_after_candidate": {
+    "PICK_second": 4,
+    "PICK_target": 4
+  },
+  "not_established_by_this_audit": [
+    "that such a post-OPEN state is physically recoverable",
+    "that Verifier would report OnTable(second_object)=TRUE there",
+    "any physical utility difference between routes T and S"
+  ],
+  "observed_skill_support": {
+    "a:PICK:second_object:v1": {
+      "executions": 8,
+      "normal_termination": 8
+    },
+    "a:PICK:target:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    },
+    "a:PLACE:target:container:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    },
+    "a:PLACE_BUFFER:second_object:buffer:v1": {
+      "executions": 2,
+      "normal_termination": 2
+    }
+  },
+  "ordering_by_hard_contract": false,
+  "patch_pick_second": {
+    "p:GripperEmpty": [
+      "TRUE",
+      "FALSE"
+    ],
+    "p:Held:second_object": [
+      "FALSE",
+      "TRUE"
+    ],
+    "p:OnTable:second_object": [
+      "TRUE",
+      "FALSE"
+    ]
+  },
+  "patch_pick_target": {
+    "p:GripperEmpty": [
+      "TRUE",
+      "FALSE"
+    ],
+    "p:Held:target": [
+      "FALSE",
+      "TRUE"
+    ],
+    "p:OnTable:target": [
+      "TRUE",
+      "FALSE"
+    ]
+  },
+  "pick_second_legal": true,
+  "pick_target_legal": true,
+  "required_properties": {
+    "GripperEmpty": true,
+    "OnTable_second": true,
+    "OnTable_target": true,
+    "Open": true
+  },
+  "routes": {
+    "S": {
+      "fully_legal_reaches_goal": true,
+      "script": [
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1"
+      ],
+      "steps": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "legal_at_step": true
+        }
+      ]
+    },
+    "T": {
+      "fully_legal_reaches_goal": true,
+      "script": [
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ],
+      "steps": [
+        {
+          "action": "a:PICK:target:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "legal_at_step": true
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "legal_at_step": true
+        }
+      ]
+    }
+  },
+  "scope_limitation": "The earlier statement 'PICK(target) first is a contract dead end' holds only for the saved closed-container initial states (Open(container)=FALSE). It is not a general contract conclusion; from a post-OPEN state PICK(target) is a legal first step whose route is contract-tied with PICK(second_object).",
+  "skills_without_observed_success": []
+}
