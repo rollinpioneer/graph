@@ -1,0 +1,197 @@
+{
+  "caps": {
+    "episodes": 2,
+    "optimizer_steps": 0,
+    "provider_requests": 0,
+    "test_ids_accessed": 0
+  },
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "case": "T_B_dev_00",
+  "episodes": 2,
+  "finished": "2026-10-03T15:32:19Z",
+  "gpu": 0,
+  "gpu_uuid": "GPU-4120c94f-c9c2-6653-a0ec-41957aa85822",
+  "head": "9422b837cf1dfc43afc056a77bdb59d63512b3b6",
+  "methods": {
+    "B1-K+NC": {
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "counters": {
+        "executor_entered": 3,
+        "executor_returned": 3,
+        "transitions": 3
+      },
+      "logits_finite_on_legal": true,
+      "mask_matches_snapshot": true,
+      "method": "B1-K+NC",
+      "n_legal": 3,
+      "prior_edges": 0,
+      "q_finite_on_legal": true,
+      "representation": {
+        "expected": [
+          [
+            3,
+            128
+          ],
+          [
+            6,
+            128
+          ],
+          [
+            6,
+            128
+          ]
+        ],
+        "kind": "neural_composition_rows",
+        "nominal_apply_used": false,
+        "readout_row_shapes": [
+          [
+            3,
+            128
+          ],
+          [
+            6,
+            128
+          ],
+          [
+            6,
+            128
+          ]
+        ]
+      },
+      "representation_shape_ok": true,
+      "reset_ok": true,
+      "steps": [
+        {
+          "duration": 5.299999999999527,
+          "index": 0,
+          "old_logp_finite": true,
+          "selected": "a:PICK:second_object:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        },
+        {
+          "duration": 3.5500000000004315,
+          "index": 1,
+          "old_logp_finite": true,
+          "selected": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        },
+        {
+          "duration": 3.800000000001269,
+          "index": 2,
+          "old_logp_finite": true,
+          "selected": "a:PICK:second_object:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        }
+      ],
+      "value_finite": true,
+      "verdict": "PASS"
+    },
+    "B2-ABS": {
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "counters": {
+        "executor_entered": 3,
+        "executor_returned": 3,
+        "transitions": 3
+      },
+      "logits_finite_on_legal": true,
+      "mask_matches_snapshot": true,
+      "method": "B2-ABS",
+      "n_legal": 3,
+      "prior_edges": 0,
+      "q_finite_on_legal": true,
+      "representation": {
+        "expected": [
+          [
+            3,
+            128
+          ],
+          [
+            3,
+            128
+          ],
+          [
+            3,
+            128
+          ]
+        ],
+        "kind": "absolute_successor_rows",
+        "nominal_apply_used": true,
+        "readout_row_shapes": [
+          [
+            3,
+            128
+          ],
+          [
+            3,
+            128
+          ],
+          [
+            3,
+            128
+          ]
+        ]
+      },
+      "representation_shape_ok": true,
+      "reset_ok": true,
+      "steps": [
+        {
+          "duration": 3.54999999999972,
+          "index": 0,
+          "old_logp_finite": true,
+          "selected": "a:PICK:target:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        },
+        {
+          "duration": 3.5499999999996534,
+          "index": 1,
+          "old_logp_finite": true,
+          "selected": "a:PLACE_BUFFER:target:buffer:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        },
+        {
+          "duration": 3.750000000001253,
+          "index": 2,
+          "old_logp_finite": true,
+          "selected": "a:PICK:target:v1",
+          "terminated": false,
+          "transition": true,
+          "truncated": false
+        }
+      ],
+      "value_finite": true,
+      "verdict": "PASS"
+    }
+  },
+  "note": "engineering smoke only; no method conclusion may be drawn from it",
+  "optimizer_steps": 0,
+  "provider_requests": 0,
+  "started": "2026-10-03T15:32:00Z",
+  "test_ids_accessed": 0,
+  "verdict": "PASS"
+}

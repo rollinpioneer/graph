@@ -1,0 +1,69 @@
+{
+  "all_elementwise_equal": true,
+  "base_commit": "9422b837cf1dfc43afc056a77bdb59d63512b3b6",
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "created": "2026-10-03T15:31:52Z",
+  "new_src": "/home/xushijie2/graph_cp_disr_tb_repctl/src/cp_disr",
+  "old_src": "/home/xushijie2/graph_cp_disr_final_tb_launch/src/cp_disr",
+  "rows": [
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_0",
+      "method": "B1-K",
+      "n_params": 3539651
+    },
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_1",
+      "method": "B1-K",
+      "n_params": 3539651
+    },
+    {
+      "checkpoint": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K/seed_1/R-TB-K-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014531_u14.pt",
+      "elementwise_equal": true,
+      "kind": "real_final_checkpoint_strict_load",
+      "method": "B1-K",
+      "sha256": "fa6ca4cf20689aba50c81b52ae2b202772e97cf0a886d74ae58cc22fcb91f385"
+    },
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_0",
+      "method": "B1-K+E",
+      "n_params": 3539651
+    },
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_1",
+      "method": "B1-K+E",
+      "n_params": 3539651
+    },
+    {
+      "checkpoint": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B1-K+E/seed_0/R-TB-E-0-20261001T115252Z-cac2fa5b/checkpoints/final_n_014512_u14.pt",
+      "elementwise_equal": true,
+      "kind": "real_final_checkpoint_strict_load",
+      "method": "B1-K+E",
+      "sha256": "f9db3e4ff6dc877dbd4b1b433ac31789e43f6fd45404c35e5103674e4ed4aaba"
+    },
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_0",
+      "method": "B2",
+      "n_params": 3539651
+    },
+    {
+      "elementwise_equal": true,
+      "kind": "fresh_init_seed_1",
+      "method": "B2",
+      "n_params": 3539651
+    },
+    {
+      "checkpoint": "/home/xushijie2/graph_cp_disr_final_tb_launch/runs/final_master/2.1.1/T_B/B2/seed_1/R-TB-DK-1-20261001T115252Z-cac2fa5b/checkpoints/final_n_014170_u13.pt",
+      "elementwise_equal": true,
+      "kind": "real_final_checkpoint_strict_load",
+      "method": "B2",
+      "sha256": "b1e331c98d4937b919242912cb3011bb079ec6971a3f8b7b51c682546b7476ca"
+    }
+  ],
+  "statement": "B1-K, B1-K+E and B2 forward outputs (logits, value, q, hidden) on synthetic real-T_B-template states are element-wise identical between the base tree and this tree, both for fresh initialisations (seeds 0,1; identical state_dict digests/keys) and after a strict load of the real current-profile final checkpoints.",
+  "verdict": "PASS"
+}

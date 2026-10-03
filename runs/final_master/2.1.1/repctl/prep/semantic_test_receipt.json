@@ -1,0 +1,111 @@
+{
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "checks": {
+    "A1_f_after_identical_to_b2": {
+      "candidate_states_compared": 24,
+      "states": 6
+    },
+    "A1b_nominal_apply_load_bearing": {
+      "states": 6,
+      "states_where_logits_changed": 6
+    },
+    "A3_rows_are_absolute_successor": {
+      "candidate_rows_checked": 24
+    },
+    "A4_permutation_absolute_successor": {
+      "states": 6
+    },
+    "N1_source_scan": {
+      "forbidden_names": [
+        "ReadOnlyOverlay",
+        "derive",
+        "differences",
+        "four_views",
+        "nominal_apply",
+        "nominal_overlay",
+        "precondition_value",
+        "successor"
+      ],
+      "hits": []
+    },
+    "N2_runtime_trap": {
+      "nc_nominal_apply_calls": 0,
+      "trap_fires_on": [
+        "B2",
+        "B2-ABS"
+      ]
+    },
+    "N3_effects_change_representation": {
+      "changes_observed": 84
+    },
+    "N4_state_changes_representation": {
+      "changes_observed": 42
+    },
+    "N5_permutation_neural_composition": {
+      "states": 6
+    },
+    "N6_no_sidecar_or_file_read": {
+      "forward_under_file_read_trap": true,
+      "snapshot_fields": [
+        "env_id",
+        "episode_id",
+        "decision_id",
+        "template",
+        "facts",
+        "candidate_ids",
+        "mask",
+        "prior_edges",
+        "prior_hash",
+        "base_input",
+        "candidate_features",
+        "observation_ref",
+        "clock_seconds",
+        "execution_summary",
+        "synthetic_unit_fixture"
+      ],
+      "tokens_scanned": [
+        "sidecar",
+        "successor_cache",
+        "f_after",
+        "after_cache",
+        "torch.load",
+        "pickle",
+        "open(",
+        "read_text",
+        "read_bytes"
+      ]
+    },
+    "common_boundaries": {
+      "methods": [
+        "B1-K",
+        "B1-K+E",
+        "B2",
+        "B2-ABS",
+        "B1-K+NC"
+      ],
+      "states": 6
+    }
+  },
+  "created": "2026-10-03T15:30:54Z",
+  "states": [
+    0,
+    1,
+    2,
+    4,
+    6,
+    8
+  ],
+  "template": {
+    "candidates": [
+      "a:OPEN:container:v1",
+      "a:PICK:second_object:v1",
+      "a:PICK:target:v1",
+      "a:PLACE:second_object:container:v1",
+      "a:PLACE:target:container:v1",
+      "a:PLACE_BUFFER:second_object:buffer:v1",
+      "a:PLACE_BUFFER:target:buffer:v1"
+    ],
+    "nodes": 17
+  },
+  "verdict": "PASS"
+}

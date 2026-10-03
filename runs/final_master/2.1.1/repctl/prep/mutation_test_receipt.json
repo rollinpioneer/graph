@@ -1,0 +1,63 @@
+{
+  "all_detected": true,
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "mutants": [
+    {
+      "covers": "A2",
+      "detection": "AssertionError: F_after differs from the unpatched nominal_apply for a:OPEN:container:v1",
+      "mutant": "M-A2-break-nominal-apply",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "A2",
+      "detection": "AssertionError: nominal_apply is not load-bearing for Absolute Successor",
+      "mutant": "M-A2b-break-nominal-apply-load-bearing",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "A3",
+      "detection": "AssertionError: rows are not E(F_after) for a:OPEN:container:v1",
+      "mutant": "M-A3-restore-latent-subtraction",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "N1",
+      "detection": "AssertionError: Matched Neural Composition production path references ['four_views']",
+      "mutant": "M-N1-nc-source-mentions-four-views",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "N2",
+      "detection": "NominalApplyCalled: nominal_apply reached",
+      "mutant": "M-N2-nc-calls-nominal-apply",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "N3",
+      "detection": "AssertionError: candidate representation does not respond to the grounded effects",
+      "mutant": "M-N3-nc-ignores-effects",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "N4",
+      "detection": "AssertionError: candidate representation does not respond to the current state F",
+      "mutant": "M-N4-nc-ignores-state",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    },
+    {
+      "covers": "N6",
+      "detection": "FileReadAttempt: file or cache read during forward",
+      "mutant": "M-N6-nc-reads-a-file",
+      "mutant_detected": true,
+      "unmutated_check_passed": true
+    }
+  ],
+  "verdict": "PASS"
+}

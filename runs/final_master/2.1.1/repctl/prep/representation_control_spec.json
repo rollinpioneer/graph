@@ -1,0 +1,119 @@
+{
+  "auxiliary_metrics": [
+    "failure reason",
+    "skill count",
+    "time_to_first_confirmed_success (only with a verified recorder)"
+  ],
+  "base_commit": "9422b837cf1dfc43afc056a77bdb59d63512b3b6",
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "controls": {
+    "ABSOLUTE_SUCCESSOR": {
+      "consequence_representation": "rows_i = E(F_after_i) with F_after_i = T_nom(F, a_i) from the unchanged four_views / nominal_apply; the latent difference E(F_after_i) - E(F) is not formed as the consequence",
+      "fusion_form_frozen": "context = [z_o, c_a, mean E(F)] (current representation E(F) enters through the context exactly as in B2); candidate readout = the shared CandidateReadout (self.contract) attending over rows_i with the context query; uk -> logits via the shared base head; Q/V heads unchanged",
+      "inputs": "identical to B2: current facts F, candidate set, grounding, PRE/ADD/DEL/UNKNOWN, conditional guards, frame semantics, graph encoder",
+      "method": "B2-ABS",
+      "no_extra": [
+        "multi-step rollout",
+        "planner",
+        "world model",
+        "new parameters"
+      ]
+    },
+    "MATCHED_NEURAL_COMPOSITION": {
+      "forbidden": [
+        "nominal_apply / nominal_overlay",
+        "F_after_i construction",
+        "successor view/cache/sidecar",
+        "difference of encodings"
+      ],
+      "inputs": "current F and grounded K(a_i): action, PRE_POS/PRE_NEG, ADD, DEL, UNKNOWN, conditional guards and conditional effects with their conditional index, binding/ownership via the candidate-local contract",
+      "interaction": "token = NodeFeatures embedding of the grounded atom (carries its current TRUE/FALSE/UNKNOWN code) + role embedding (+ conditional-index embedding); rows_i = ReLU(Linear([token ; mean token])); readout/heads shared with B2",
+      "method": "B1-K+NC"
+    }
+  },
+  "created": "2026-10-03T15:32:44Z",
+  "created_at_head": "9422b837cf1dfc43afc056a77bdb59d63512b3b6",
+  "eval_points": [
+    0,
+    4096,
+    8192,
+    "final"
+  ],
+  "fairness": "same train split, dev10, task distribution, Skill Contract, candidate IDs, hard mask, reward, Tcap/Ncap, PPO, optimizer, gamma, rollout/update schedule, evaluation cases, deterministic argmax evaluation, seed policy (0/1/2), controller, verifier, evaluator, runtime, checkpoint schedule; test30 not read",
+  "gpu_policy": "lowest-index idle GPU among 0-6 (<=1500 MiB used, <=20% util) not used by another worker of this card; physical GPU recorded per run",
+  "interpretation_rules_frozen_before_training": {
+    "CASE_A": "Absolute Successor and B2 both clearly earlier, Matched Neural Composition resembles +E -> explicit state-conditioned successor grounding is the main candidate; latent difference is not necessary.",
+    "CASE_B": "Only B2 earlier, Absolute Successor resembles +E -> latent difference parameterization may be the main source; do not write 'successor grounding itself causes the advantage'.",
+    "CASE_C": "Matched Neural Composition also as early as B2 -> explicit symbolic application is not necessary; candidate-specific state x effect interaction / architecture / optimization structure is more likely; the T_B-centred claim must be narrowed.",
+    "CASE_D": "Differences across the three seeds of all methods are unstable -> B2's early-learning pattern may be seed variance; do not claim a stable sample-efficiency advantage.",
+    "CASE_E": "Both controls give unexpected new patterns -> stop and analyse; do not design a third method on the spot.",
+    "what_counts_as_early": "pre-registered: dev10 success >= 10/10 at N=4096 or N=8192 while +E is 0/10 at those points (current-profile reference); stated here to avoid post-hoc redefinition, any softer pattern is reported descriptively and is not decisive"
+  },
+  "max_concurrent_workers": 3,
+  "plan_table": {
+    "R-TB-ABS-0": {
+      "method": "B2-ABS",
+      "queue_order": 1,
+      "seed": 0
+    },
+    "R-TB-ABS-1": {
+      "method": "B2-ABS",
+      "queue_order": 3,
+      "seed": 1
+    },
+    "R-TB-ABS-2": {
+      "method": "B2-ABS",
+      "queue_order": 5,
+      "seed": 2
+    },
+    "R-TB-NC-0": {
+      "method": "B1-K+NC",
+      "queue_order": 2,
+      "seed": 0
+    },
+    "R-TB-NC-1": {
+      "method": "B1-K+NC",
+      "queue_order": 4,
+      "seed": 1
+    },
+    "R-TB-NC-2": {
+      "method": "B1-K+NC",
+      "queue_order": 6,
+      "seed": 2
+    }
+  },
+  "primary_metrics": [
+    "dev10 success / 10",
+    "mean discounted return",
+    "actual N",
+    "actual T"
+  ],
+  "question": "Is B2's earlier learning at the pre-registered dev checkpoints mainly (A) explicit state-conditioned successor grounding, (B) latent difference parameterization, or (C) network capacity / candidate-specific interaction architecture?",
+  "queue_order": [
+    "R-TB-ABS-0",
+    "R-TB-NC-0",
+    "R-TB-ABS-1",
+    "R-TB-NC-1",
+    "R-TB-ABS-2",
+    "R-TB-NC-2"
+  ],
+  "source_files_sha256": {
+    "scripts/final_tb_repctl_launch.py": "90784686038fc2e26fb4ba02b87fc476063f4351a59a4bd7d466040591983c88",
+    "scripts/tb_repctl_receipts.py": "b600dca6e2b9e9fb80206bf84233b020e37cc85362aaf0de87836bd54137422d",
+    "src/cp_disr/collector.py": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+    "src/cp_disr/contracts.py": "0fac13062584ae5b21eea9b7f2d535d07115e221c40b06f8a93ebc70d0b3d94c",
+    "src/cp_disr/final_tb.py": "0536ff754ddf63a277ba87a5bf4d8c7e64c10a40394f5326a23439519d96013a",
+    "src/cp_disr/final_tb_repctl.py": "fd3a445bcae0e672ac856688fb6c364d9c52a01bde6a927661ee0b50437b81b8",
+    "src/cp_disr/graph.py": "bd64609a3bef009bdb9f06fd46f01ef8d07beac2b7f8a417103d9b1758071034",
+    "src/cp_disr/neural.py": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+    "src/cp_disr/persistence.py": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
+    "src/cp_disr/phase_a_v12.py": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
+    "src/cp_disr/platforms/libero/runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "src/cp_disr/repctl_policy.py": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81",
+    "src/cp_disr/rl.py": "6aa5df99bc12d73d25d99e58ae95814e741db9ee6a78903b0f45ee0593fc6d6f",
+    "src/cp_disr/stage2a_v11.py": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+    "src/cp_disr/tb_repctl_checks.py": "420b97a91a86676589644d4498534641be2db3b83a921cc915804da0394ce850",
+    "src/cp_disr/torch_rl.py": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13"
+  },
+  "stop_condition": "after the six runs and the frozen-dev comparison: STOP. No test30, no holdout, no extra seeds, no structural generalization without a new authorization."
+}
