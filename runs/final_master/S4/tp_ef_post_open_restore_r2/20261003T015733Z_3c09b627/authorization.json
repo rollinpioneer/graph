@@ -1,0 +1,76 @@
+{
+  "arrays_root": "/home/xushijie2/graph_cp_disr_snapshots/tp_ef_post_open_restore_r2/20261003T015733Z/arrays",
+  "authorized_by": "user chat instruction approving CP-DISR-TP-EF-POST-OPEN-RESTORE-R2",
+  "baseline": "487cc6f1506e057465b02f2feada27a3c96f7e35",
+  "caps": {
+    "continuation_skills": 0,
+    "dev03_restore_validations": 1,
+    "dev05_open_skill_calls": 1,
+    "dev05_restore_validations": 1,
+    "dev05_setup_episodes": 1,
+    "environment_constructions": 3,
+    "optimizer_steps": 0,
+    "provider_requests": 0,
+    "rl_transitions": 0,
+    "skill_retries": 0,
+    "start_case_calls": 3,
+    "test_episodes": 0
+  },
+  "card": "CP-DISR-TP-EF-POST-OPEN-RESTORE-R2",
+  "contract_basis": "configs/final_master/family_b_obs_v2/pair_equivalence_contract.json",
+  "forbidden": [
+    "candidate continuation",
+    "provider",
+    "RL",
+    "optimizer",
+    "test"
+  ],
+  "physical_gpu": {
+    "compute_processes": [],
+    "driver": "610.57.04",
+    "index": 0,
+    "memory_used_mib": 13,
+    "name": "NVIDIA A100-SXM4-40GB",
+    "uuid": "GPU-4120c94f-c9c2-6653-a0ec-41957aa85822"
+  },
+  "problems": [],
+  "stage_a": "reuse dev_03 snapshot, no OPEN, 2 fresh renders",
+  "stage_b": "dev_05 capture+restore only if stage A passes",
+  "status": "PASS",
+  "stop_rule": "any failed gate stops; no recapture of dev_03; no threshold widening; no substitution",
+  "thresholds_frozen_before_any_restored_rgb_is_read": {
+    "depth": {
+      "applied_to": [
+        "raw normalized depth array",
+        "metric depth"
+      ],
+      "max_abs_diff": 1e-06
+    },
+    "exact": [
+      "facts / FactRecords",
+      "goal",
+      "candidate IDs",
+      "candidate mask",
+      "controller/gripper state",
+      "RNG",
+      "episode clock",
+      "object presence",
+      "public perception decisions",
+      "cached public observation (restored python state)"
+    ],
+    "perception": {
+      "presence_and_unknown_reasons": "exact",
+      "xyz_atol_m": 0.0001
+    },
+    "proprio": {
+      "max_abs_diff": 1e-09
+    },
+    "rgb": {
+      "max_abs_diff_uint8": 3,
+      "shape_dtype": "exact"
+    },
+    "sim_arrays": {
+      "max_abs_diff": 1e-12
+    }
+  }
+}

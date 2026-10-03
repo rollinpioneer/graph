@@ -1,0 +1,82 @@
+{
+  "applicable": true,
+  "card": "CP-DISR-TP-EF-POST-OPEN-RESTORE-R2",
+  "checks": {
+    "constructor_render_args": {
+      "attribute_differences": {},
+      "camera_identity_static": {
+        "T_B_camera_names": "agentview",
+        "T_B_depth": true,
+        "T_B_height": 128,
+        "T_B_width": 128,
+        "frozen_agentview": {
+          "fixed_in_world": true,
+          "fovy": 45.0,
+          "height": 128,
+          "mode": 0,
+          "pos": [
+            0.5,
+            0.0,
+            1.35
+          ],
+          "width": 128
+        },
+        "profile_cameras": [
+          "agentview",
+          "sideview"
+        ],
+        "profile_image_size": 128
+      },
+      "camera_static_ok": true,
+      "identical_except_camera_set": true,
+      "keyword_differences": {}
+    },
+    "contract_clause": {
+      "depth_max_abs_diff_m": 0.001,
+      "frozen_here_is_stricter_or_equal": true,
+      "perception_xyz_atol_m": 0.0001,
+      "qpos_qvel_atol": 1e-08,
+      "rgb_max_abs_diff_uint8": 3,
+      "sha256": "e02958a3a92e803884e4bd1b57864e75289ffc04db8c2221c037060365b8b99f"
+    },
+    "depth_and_rgb_definition": {
+      "frozen_depth_convention": "robosuite normalized depth -> get_real_depth_map metric; image flipud",
+      "metric_depth_get_real_depth_map": true,
+      "public_observation_flipud_rgb_and_depth": true,
+      "rgb_dtype": "uint8 (verified live and on the saved snapshot arrays)"
+    },
+    "gpu_policy": {
+      "contract": "both members of a U/V pair run sequentially on the same GPU",
+      "this_card": "all processes pinned to physical GPU index 0, run sequentially; UUID recorded per process"
+    },
+    "limitation": "The frozen contract belongs to the Family B observation profile (profile sha 3c98a09649a7). Applicability to T_B is concluded from identity of the render path (same base env class, same render arguments, same camera definition, unchanged shared observation modules, same renderer stack), not from a T_B-specific profile.",
+    "observation_source_identity": {
+      "equals_family_b_recorded_perception": true,
+      "perception_sha16": "32b2ad455dbb418e",
+      "sha256": {
+        "src/cp_disr/platforms/libero/clock.py": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
+        "src/cp_disr/platforms/libero/d0_env.py": "acca983f058d2061d737603a91df9acc98310e4bc9ee713659d66ab6c92b7c6e",
+        "src/cp_disr/platforms/libero/observations.py": "f0e44d52c5d8a631299cb1d350388133a78204896ccd11a9785745f290eaf977",
+        "src/cp_disr/platforms/libero/perception.py": "32b2ad455dbb418e13a4cd9cc16e8995b1bb5dc0f4bdd08d6ab1913c63930c7c",
+        "src/cp_disr/platforms/libero/verifier.py": "e342d9bcd0b6e3f2dddaf4aeb3da171e7b9e9cb56b946b216c74d568c7aa2482"
+      },
+      "shared_modules_unchanged_since_family_b_commits": {
+        "48dc5e3b8": true,
+        "7776f3a59": true,
+        "fffb2b073": true
+      }
+    },
+    "renderer_stack": {
+      "MUJOCO_GL": "egl (set by worker env)",
+      "manifest": {
+        "mujoco": "3.6.0",
+        "robosuite": "1.4.0"
+      },
+      "matches_manifest": true,
+      "mujoco": "3.6.0",
+      "robosuite": "1.4.0"
+    }
+  },
+  "contract": "configs/final_master/family_b_obs_v2/pair_equivalence_contract.json",
+  "problems": []
+}
