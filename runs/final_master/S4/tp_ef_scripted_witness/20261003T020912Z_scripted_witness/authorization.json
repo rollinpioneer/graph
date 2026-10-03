@@ -1,0 +1,134 @@
+{
+  "authorized_by": "user chat instruction approving CP-DISR-TP-EF-SCRIPTED-WITNESS-1",
+  "baseline": "b8af10315985a25c915eed37c15c4f15869f8d02",
+  "caps": {
+    "elastic": 0,
+    "environment_constructions": 8,
+    "open_skill_calls": 0,
+    "optimizer_steps": 0,
+    "physical_branch_attempts": 8,
+    "provider_requests": 0,
+    "rl_transitions": 0,
+    "scripted_skill_calls": 32,
+    "skill_retries": 0,
+    "start_case_calls": 8,
+    "test_episodes": 0
+  },
+  "card": "CP-DISR-TP-EF-SCRIPTED-WITNESS-1",
+  "epsilon_rule": {
+    "computed_before_cross_route_winner": true,
+    "epsilon_G": "max(0.02, same-route repeat range of Q_ref_decision)",
+    "epsilon_T": "max(2.1 s, same-route repeat range of decision-relative time)"
+  },
+  "forbidden": [
+    "OPEN",
+    "stepwise B_PLAN",
+    "skill retry",
+    "recovery action",
+    "state or candidate replacement",
+    "provider",
+    "RL",
+    "optimizer",
+    "test"
+  ],
+  "mechanism_gate": "PASS only if both states reliable, 8/8 TASK_SUCCESS, opposite winners; same winner = FIXED_ACTION_BIAS; second state insufficient = INSUFFICIENT_TWO_WITNESSES; any execution failure = ENGINEERING_OR_EXECUTION_FAILURE",
+  "order": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "physical_gpu": {
+    "compute_processes": [],
+    "driver": "610.57.04",
+    "index": 0,
+    "memory_used_mib": 13,
+    "name": "NVIDIA A100-SXM4-40GB",
+    "uuid": "GPU-4120c94f-c9c2-6653-a0ec-41957aa85822"
+  },
+  "problems": [],
+  "reliable_witness_conditions": [
+    "both routes 2/2 TASK_SUCCESS",
+    "exactly 4 skills per branch",
+    "no restore/perception/mask/controller/recorder anomaly",
+    "repeat winner directions agree",
+    "abs(delta_T) > epsilon_T",
+    "abs(delta_G) > epsilon_G",
+    "shorter time and higher Q_ref point to the same route"
+  ],
+  "restore_gate_thresholds": {
+    "depth": {
+      "applied_to": [
+        "raw normalized depth array",
+        "metric depth"
+      ],
+      "max_abs_diff": 1e-06
+    },
+    "exact": [
+      "facts / FactRecords",
+      "goal",
+      "candidate IDs",
+      "candidate mask",
+      "controller/gripper state",
+      "RNG",
+      "episode clock",
+      "object presence",
+      "public perception decisions",
+      "cached public observation (restored python state)"
+    ],
+    "perception": {
+      "presence_and_unknown_reasons": "exact",
+      "xyz_atol_m": 0.0001
+    },
+    "proprio": {
+      "max_abs_diff": 1e-09
+    },
+    "rgb": {
+      "max_abs_diff_uint8": 3,
+      "shape_dtype": "exact"
+    },
+    "sim_arrays": {
+      "max_abs_diff": 1e-12
+    }
+  },
+  "routes": {
+    "S": {
+      "candidate": "a:PICK:second_object:v1",
+      "full_route": [
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1"
+      ]
+    },
+    "T": {
+      "candidate": "a:PICK:target:v1",
+      "full_route": [
+        "a:PICK:target:v1",
+        "a:PLACE:target:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1"
+      ]
+    }
+  },
+  "states": [
+    "T_B_dev_03",
+    "T_B_dev_05"
+  ],
+  "status": "REGISTERED_FROZEN",
+  "time_and_return": {
+    "H_seconds": 23.1,
+    "additional": "G_episode = 2^(-episode_relative/H)",
+    "clock": "original episode clock; no fresh 60 s for the post-OPEN state",
+    "deadline_seconds": 60.0,
+    "primary": [
+      "decision_relative_completion_time",
+      "Q_ref_decision = 2^(-decision_relative/H)"
+    ]
+  },
+  "wave_rule": "Wave B is released only if dev_03 is RELIABLE_PHYSICAL_WITNESS (epsilons from dev_03 repeats); final gate uses epsilons over all repeats"
+}
