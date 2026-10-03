@@ -1,0 +1,1081 @@
+{
+  "G_episode": 0.48594820567795194,
+  "Q_ref_decision": 0.6104219678448016,
+  "anomalies": [],
+  "bootstrap_env_reused_for_start_case": true,
+  "branch_id": "3f3318ffbb1c7db6",
+  "card": "CP-DISR-TP-EF-SCRIPTED-WITNESS-1",
+  "case_id": "T_B_dev_03",
+  "decision_relative_completion_time": 16.449999999997456,
+  "env_reset_calls_total": 2,
+  "environment_constructions": 1,
+  "episode_relative_completion_time": 24.049999999996995,
+  "first_confirmed_success_clock": 24.049999999996995,
+  "gpu": {
+    "compute_processes": [],
+    "driver": "610.57.04",
+    "index": 0,
+    "memory_used_mib": 13,
+    "name": "NVIDIA A100-SXM4-40GB",
+    "uuid": "GPU-4120c94f-c9c2-6653-a0ec-41957aa85822"
+  },
+  "order": "A2",
+  "pid": 1781238,
+  "renderer": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "GL_RENDERER": "NVIDIA A100-SXM4-40GB/PCIe/SSE2",
+    "GL_VENDOR": "NVIDIA Corporation",
+    "GL_VERSION": "4.6.0 NVIDIA 610.57.04",
+    "MUJOCO_EGL_DEVICE_ID": null,
+    "MUJOCO_GL": "egl",
+    "PYOPENGL_PLATFORM": "egl"
+  },
+  "repeat": 0,
+  "restore_gate": {
+    "checks": {
+      "camera_live_vs_frozen": {
+        "frozen": {
+          "fovy": 45.0,
+          "height": 128,
+          "mode": 0,
+          "pos": [
+            0.5,
+            0.0,
+            1.35
+          ],
+          "quat": [
+            0.6530979720442611,
+            0.2710406591485372,
+            0.2710406591485372,
+            0.6530979720442611
+          ],
+          "width": 128
+        },
+        "issues": [],
+        "live": {
+          "fovy": 45.0,
+          "height": 128,
+          "mode": 0,
+          "pos": [
+            0.5,
+            0.0,
+            1.35
+          ],
+          "quat": [
+            0.6530979720442611,
+            0.2710406591485372,
+            0.2710406591485372,
+            0.6530979720442611
+          ],
+          "width": 128
+        },
+        "pass": true,
+        "tolerance": 1e-09
+      },
+      "clock": {
+        "pass": true,
+        "restored_now": 7.5999999999995405
+      },
+      "controller_gripper_state": {
+        "diffs_total": 0,
+        "entries": 314,
+        "first_diffs": [],
+        "pass": true
+      },
+      "facts_cached_obs": {
+        "pass": true
+      },
+      "goal_candidates_mask": {
+        "pass": true
+      },
+      "post_open_requirements": {
+        "facts": {
+          "p:GripperEmpty": "TRUE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "TRUE",
+          "p:Open:container": "TRUE"
+        },
+        "pass": true,
+        "pick_masks": {
+          "a:PICK:second_object:v1": true,
+          "a:PICK:target:v1": true
+        }
+      },
+      "public_obs_cached_exact": {
+        "pass": true
+      },
+      "render_gate": {
+        "metrics": {
+          "depth_metric": {
+            "changed_count": 0,
+            "changed_fraction": 0.0,
+            "label": "metric",
+            "max_abs": 0.0,
+            "mean_abs_all": 0.0,
+            "pass_": true,
+            "quantiles_changed": {
+              "100": 0.0,
+              "50": 0.0,
+              "90": 0.0,
+              "99": 0.0
+            },
+            "shape_equal": true
+          },
+          "depth_raw": {
+            "changed_count": 0,
+            "changed_fraction": 0.0,
+            "label": "raw",
+            "max_abs": 0.0,
+            "mean_abs_all": 0.0,
+            "pass_": true,
+            "quantiles_changed": {
+              "100": 0.0,
+              "50": 0.0,
+              "90": 0.0,
+              "99": 0.0
+            },
+            "shape_equal": true
+          },
+          "facts": {
+            "restore_vs_manifest_forced_equal": true,
+            "saved_vs_restore_equal": true
+          },
+          "pass_": true,
+          "perception": {
+            "depth_stats_max_abs": 0.0,
+            "pass_": true,
+            "per_object": {
+              "buffer": {
+                "pixel_delta": 0,
+                "pixels_a": 0,
+                "pixels_b": 0,
+                "presence_equal": true,
+                "xyz_max_abs_m": 0.0
+              },
+              "container": {
+                "pixel_delta": 0,
+                "pixels_a": 0,
+                "pixels_b": 0,
+                "presence_equal": true,
+                "xyz_max_abs_m": 0.0
+              },
+              "interferer": {
+                "presence_equal": true
+              },
+              "lid": {
+                "pixel_delta": 0,
+                "pixels_a": 188,
+                "pixels_b": 188,
+                "presence_equal": true,
+                "xyz_max_abs_m": 0.0
+              },
+              "second_object": {
+                "pixel_delta": 0,
+                "pixels_a": 66,
+                "pixels_b": 66,
+                "presence_equal": true,
+                "xyz_max_abs_m": 0.0
+              },
+              "target": {
+                "pixel_delta": 0,
+                "pixels_a": 37,
+                "pixels_b": 37,
+                "presence_equal": true,
+                "xyz_max_abs_m": 0.0
+              }
+            },
+            "presence_equal": true,
+            "unknown_reasons_equal": true,
+            "xyz_max_abs_m": 0.0
+          },
+          "proprio": {
+            "changed_count": 0,
+            "max_abs": 0.0,
+            "pass_": true
+          },
+          "rgb": {
+            "bounding_boxes": {
+              "component_count": 1,
+              "components": [
+                {
+                  "col_max": 33,
+                  "col_min": 33,
+                  "pixels": 1,
+                  "row_max": 25,
+                  "row_min": 25
+                }
+              ],
+              "overall": {
+                "col_max": 33,
+                "col_min": 33,
+                "row_max": 25,
+                "row_min": 25
+              }
+            },
+            "changed_channel_count": 1,
+            "changed_channel_fraction": 2.0345052083333332e-05,
+            "changed_pixel_count": 1,
+            "changed_pixel_fraction": 6.103515625e-05,
+            "dtype": "uint8",
+            "dtype_equal": true,
+            "elements": 49152,
+            "max_abs": 1,
+            "mean_abs_all": 2.0345052083333332e-05,
+            "mean_abs_changed": 1.0,
+            "pass_": true,
+            "per_channel_changed": [
+              0,
+              0,
+              1
+            ],
+            "quantiles_all_elements": {
+              "100": 1.0,
+              "50": 0.0,
+              "90": 0.0,
+              "99": 0.0,
+              "99.9": 0.0
+            },
+            "quantiles_changed_elements": {
+              "100": 1.0,
+              "50": 1.0,
+              "90": 1.0,
+              "99": 1.0
+            },
+            "shape_equal": true,
+            "value_histogram": {
+              "1": 1
+            }
+          }
+        },
+        "pass": true
+      },
+      "rng": {
+        "pass": true
+      },
+      "sim_arrays": {
+        "max_abs": 0.0,
+        "mismatched_fields": [],
+        "pass": true
+      },
+      "sim_arrays_raw": {
+        "max_abs": 0.0,
+        "mismatched_fields": [],
+        "pass": true
+      },
+      "state_after_gate_reapply": {
+        "cached_obs_exact": true,
+        "missing": 0,
+        "pass": true,
+        "py_diffs": 0,
+        "sim_max_abs": 0.0
+      }
+    },
+    "failures": [],
+    "fingerprint": {
+      "cached_obs": "f5605c1fdf316686cd5ca42ecd1db17a810eb6ee14e7cbf461a321cb07200cb3",
+      "facts": "389265ace5d43052d9d532913dc97a594da7484690ca4ff331ec927256ead5ec",
+      "py_state": "9f849d302ac4153b7e2afa56565ba4facd7aecb180592d9a9ea205340c38a970",
+      "render1_array_hashes": {
+        "depth": "b7566c22863c682ee98c37a2079e1dc238f5073769ae1827b97af3764980aa14",
+        "proprio": "9e23136c595c4ad0b3ad74491e2bfecab9a7b8b16481cf364c2188754fbbcfda",
+        "rgb": "759286f540ccba35215c3bff2282587d1fea931a6c1e464fbb70776263e72e6f"
+      },
+      "sim": "c6643170968df43cde4006a35112ca1c70da5f12db4674b7bfad52e81b873110",
+      "state_identity_sha256_saved": "799193dd819e28028d844b6c12a665eb0abf5e18258f26fe896f4e0ee61cb501"
+    },
+    "pass": true
+  },
+  "route": "S",
+  "skill_calls": 4,
+  "skill_calls_executed": 4,
+  "skill_count": 4,
+  "skills": [
+    {
+      "post": {
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock_end": 12.00000000000101,
+        "controller_exit": "NORMAL_TERMINATION",
+        "duration": 4.40000000000147,
+        "evaluator": {
+          "reason": "CONTINUE",
+          "reward_events": [],
+          "success": false,
+          "terminated": false,
+          "truncated": false
+        },
+        "expected_add_facts": [
+          "p:Held:second_object"
+        ],
+        "expected_postcondition_missing": [],
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "FALSE",
+          "p:AtBuffer:target:buffer": "UNKNOWN",
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:Held:target": "UNKNOWN",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "UNKNOWN",
+          "p:OnTable:second_object": "FALSE",
+          "p:OnTable:target": "UNKNOWN",
+          "p:Open:container": "TRUE"
+        },
+        "mask": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false
+        ],
+        "next_action_mask_true": true,
+        "public_obs_hash": "efc7b9dd56f4abe5033de22e7897b24f637b16f3954cb762f3109b33fb766ebb",
+        "sim_duration": 4.400000000001469,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 88,
+        "verifier_records": [
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:second_object:buffer",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:AtBuffer:target:buffer",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:GripperEmpty",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:gripper_closed_with_nearby_blob",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Held:second_object",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:closed_gripper_near_object_blob",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Held:target",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:second_object:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Inside:target:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:second_object",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_tracked_at_gripper",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:OnTable:target",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Open:container",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:lid_offset_from_container",
+            "value": "TRUE"
+          }
+        ]
+      },
+      "pre": {
+        "action": "a:PICK:second_object:v1",
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock": 7.5999999999995405,
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "FALSE",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "TRUE",
+          "p:Held:second_object": "FALSE",
+          "p:Held:target": "FALSE",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "FALSE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "TRUE",
+          "p:Open:container": "TRUE"
+        },
+        "index": 0,
+        "mask": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "mask_for_action": true,
+        "public_obs_hash": "f5605c1fdf316686cd5ca42ecd1db17a810eb6ee14e7cbf461a321cb07200cb3"
+      }
+    },
+    {
+      "post": {
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock_end": 15.550000000001706,
+        "controller_exit": "NORMAL_TERMINATION",
+        "duration": 3.5500000000006953,
+        "evaluator": {
+          "reason": "CONTINUE",
+          "reward_events": [],
+          "success": false,
+          "terminated": false,
+          "truncated": false
+        },
+        "expected_add_facts": [
+          "p:AtBuffer:second_object:buffer",
+          "p:GripperEmpty"
+        ],
+        "expected_postcondition_missing": [],
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "TRUE",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "TRUE",
+          "p:Held:second_object": "FALSE",
+          "p:Held:target": "FALSE",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "FALSE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "TRUE",
+          "p:Open:container": "TRUE"
+        },
+        "mask": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "next_action_mask_true": true,
+        "public_obs_hash": "2e7a20268189fca932b17d2f26b4584956058c5781e195abb7743ba842c4691e",
+        "sim_duration": 3.5500000000006953,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 71,
+        "verifier_records": [
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:second_object:buffer",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:target:buffer",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:GripperEmpty",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:gripper_open_and_no_nearby_blob",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:Held:second_object",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:open_gripper_or_object_away",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:Held:target",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:open_gripper_or_object_away",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:second_object:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:target:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:second_object",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:blob_near_table_plane",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:target",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:blob_near_table_plane",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Open:container",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:lid_offset_from_container",
+            "value": "TRUE"
+          }
+        ]
+      },
+      "pre": {
+        "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock": 12.00000000000101,
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "FALSE",
+          "p:AtBuffer:target:buffer": "UNKNOWN",
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:Held:target": "UNKNOWN",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "UNKNOWN",
+          "p:OnTable:second_object": "FALSE",
+          "p:OnTable:target": "UNKNOWN",
+          "p:Open:container": "TRUE"
+        },
+        "index": 1,
+        "mask": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false
+        ],
+        "mask_for_action": true,
+        "public_obs_hash": "efc7b9dd56f4abe5033de22e7897b24f637b16f3954cb762f3109b33fb766ebb"
+      }
+    },
+    {
+      "post": {
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock_end": 21.149999999998602,
+        "controller_exit": "NORMAL_TERMINATION",
+        "duration": 5.599999999996896,
+        "evaluator": {
+          "reason": "CONTINUE",
+          "reward_events": [],
+          "success": false,
+          "terminated": false,
+          "truncated": false
+        },
+        "expected_add_facts": [
+          "p:Held:target"
+        ],
+        "expected_postcondition_missing": [],
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "TRUE",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "UNKNOWN",
+          "p:Held:target": "TRUE",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "FALSE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "FALSE",
+          "p:Open:container": "TRUE"
+        },
+        "mask": [
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "next_action_mask_true": true,
+        "public_obs_hash": "82001181f90705c55aec3d750e754499703abdf64fdf474147d115876afaf92e",
+        "sim_duration": 5.599999999996896,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 112,
+        "verifier_records": [
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:second_object:buffer",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:target:buffer",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:GripperEmpty",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:gripper_closed_with_nearby_blob",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:Held:second_object",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:held_evidence_conflict",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Held:target",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:closed_gripper_near_object_blob",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:second_object:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:target:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:second_object",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:blob_near_table_plane",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:target",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_tracked_at_gripper",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Open:container",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:lid_offset_from_container",
+            "value": "TRUE"
+          }
+        ]
+      },
+      "pre": {
+        "action": "a:PICK:target:v1",
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock": 15.550000000001706,
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "TRUE",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "TRUE",
+          "p:Held:second_object": "FALSE",
+          "p:Held:target": "FALSE",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "FALSE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "TRUE",
+          "p:Open:container": "TRUE"
+        },
+        "index": 2,
+        "mask": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "mask_for_action": true,
+        "public_obs_hash": "2e7a20268189fca932b17d2f26b4584956058c5781e195abb7743ba842c4691e"
+      }
+    },
+    {
+      "post": {
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock_end": 24.049999999996995,
+        "controller_exit": "NORMAL_TERMINATION",
+        "duration": 2.8999999999983928,
+        "evaluator": {
+          "reason": "TASK_SUCCESS",
+          "reward_events": [
+            [
+              2.8999999999983928,
+              1.0
+            ]
+          ],
+          "success": true,
+          "terminated": true,
+          "truncated": false
+        },
+        "expected_add_facts": [
+          "p:Inside:target:container",
+          "p:GripperEmpty"
+        ],
+        "expected_postcondition_missing": [],
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "UNKNOWN",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "TRUE",
+          "p:Held:second_object": "UNKNOWN",
+          "p:Held:target": "FALSE",
+          "p:Inside:second_object:container": "UNKNOWN",
+          "p:Inside:target:container": "TRUE",
+          "p:OnTable:second_object": "UNKNOWN",
+          "p:OnTable:target": "TRUE",
+          "p:Open:container": "TRUE"
+        },
+        "mask": [
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "next_action_mask_true": true,
+        "public_obs_hash": "fff28fa3530afb7110c310eab8d6f0b6863a6beea4bb6c649a98578601f2f71f",
+        "sim_duration": 2.8999999999983928,
+        "states": [
+          "APPROACH",
+          "INTERACT",
+          "RETREAT"
+        ],
+        "steps": 58,
+        "verifier_records": [
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:AtBuffer:second_object:buffer",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:AtBuffer:target:buffer",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_buffer_estimate",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:GripperEmpty",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:gripper_open_and_no_nearby_blob",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Held:second_object",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "gripper",
+              "rgb"
+            ],
+            "fact_id": "p:Held:target",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:open_gripper_or_object_away",
+            "value": "FALSE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Inside:second_object:container",
+            "last_confirmed_value": "FALSE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "rgb",
+              "depth"
+            ],
+            "fact_id": "p:Inside:target:container",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:xy_inside_container_estimate",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:OnTable:second_object",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:object_blob_missing",
+            "value": "UNKNOWN"
+          },
+          {
+            "evidence_ids": [
+              "depth"
+            ],
+            "fact_id": "p:OnTable:target",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:blob_near_table_plane",
+            "value": "TRUE"
+          },
+          {
+            "evidence_ids": [
+              "rgb"
+            ],
+            "fact_id": "p:Open:container",
+            "last_confirmed_value": "TRUE",
+            "reason": "cp-disr-d0-verifier-v1:lid_offset_from_container",
+            "value": "TRUE"
+          }
+        ]
+      },
+      "pre": {
+        "action": "a:PLACE:target:container:v1",
+        "candidate_ids": [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PLACE:target:container:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "clock": 21.149999999998602,
+        "facts": {
+          "p:AtBuffer:second_object:buffer": "TRUE",
+          "p:AtBuffer:target:buffer": "FALSE",
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "UNKNOWN",
+          "p:Held:target": "TRUE",
+          "p:Inside:second_object:container": "FALSE",
+          "p:Inside:target:container": "FALSE",
+          "p:OnTable:second_object": "TRUE",
+          "p:OnTable:target": "FALSE",
+          "p:Open:container": "TRUE"
+        },
+        "index": 3,
+        "mask": [
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "mask_for_action": true,
+        "public_obs_hash": "82001181f90705c55aec3d750e754499703abdf64fdf474147d115876afaf92e"
+      }
+    }
+  ],
+  "snapshot_integrity_at_start": true,
+  "start_case_calls": 1,
+  "status": "PASS",
+  "task_success": true,
+  "timing_start": {
+    "decision_start_clock": 7.5999999999995405,
+    "remaining_deadline": 52.40000000000046
+  },
+  "valid": true,
+  "wave": "A"
+}
