@@ -1,0 +1,23 @@
+{
+  "basket_parameters": {
+    "interior_half_xy_m": [
+      0.06346006136999552,
+      0.058971018225005424
+    ],
+    "z_cutoff_above_table_m": 0.141472892005441
+  },
+  "code_touch_points": [
+    "task_evaluator.TaskEvaluator.goal_true: new task id with registered container geometry",
+    "hidden_truth(): per-object body positions keyed by role"
+  ],
+  "d0_predicate": "abs(dx)<=0.030 and abs(dy)<=0.030 and z<=table+0.12 and lid_away",
+  "equivalence_on_d0_instance": {
+    "mismatches": 0,
+    "points": 200000,
+    "seed": 20261003
+  },
+  "note": "the success meaning is unchanged; the container geometry comes from a registry instead of module constants, and a lidless container makes the lid clause vacuous",
+  "registered_predicate": "abs(dx)<=interior_half_x and abs(dy)<=interior_half_y and z<=table+rim_cutoff and (lid clause vacuous when the case has no lid)",
+  "semantic_change": false,
+  "success_definition": "both objects are inside the container (centre inside the container interior volume), the container having no lid"
+}

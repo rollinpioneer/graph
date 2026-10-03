@@ -1,0 +1,89 @@
+{
+  "GripperEmpty": {
+    "implementable": true,
+    "rule": "unchanged: open gripper and no nearby blob"
+  },
+  "Held": {
+    "implementable": true,
+    "marker_pixels_with_hand_occlusion": {
+      "bbq_sauce": 23,
+      "butter": 41,
+      "chocolate_pudding": 40,
+      "cream_cheese": 54
+    },
+    "rule": "closed gripper and marker blob within held_xy 0.06 / held_z 0.07 of the eef (unchanged thresholds)",
+    "visible_enough": true
+  },
+  "InBasket": {
+    "absence_inference": {
+      "accepted": false,
+      "reason": "it cannot tell an object in the basket from one that is hidden elsewhere, and the existing Verifier maps a missing blob to UNKNOWN",
+      "rule": "released over the contain region, absent from the table, not held"
+    },
+    "best_pixels_over_basket_grid": 217,
+    "marker_pixels_at_registered_drop": {
+      "bbq_sauce": 165,
+      "butter": 68,
+      "chocolate_pudding": 102,
+      "cream_cheese": 83
+    },
+    "needs_pixels": 8,
+    "positive_rule": "marker blob inside the registered cavity xy with z below the rim",
+    "positively_observable": true
+  },
+  "OnTable": {
+    "implementable": true,
+    "rule": "|blob_z - (table_top + top_plateau_height)| <= 0.020 and not held; the old fixed +0.025 reference with tolerance 0.05 is replaced by the registered height, not widened"
+  },
+  "registered_geometry": {
+    "bbq_sauce": {
+      "grasp_site_press_m": 0.013999999999999999,
+      "gripper_width_m": 0.07973471453995444,
+      "half_size_xyz": [
+        0.023490000000000007,
+        0.053550000000000014,
+        0.01455479150697941
+      ],
+      "stable_orientation": "OFFICIAL_SPAWN",
+      "support_surface": "table_skin_top",
+      "top_plateau_height_m": 0.02910958301395882
+    },
+    "butter": {
+      "grasp_site_press_m": 0.013999999999999999,
+      "gripper_width_m": 0.07973471453995444,
+      "half_size_xyz": [
+        0.038090000000000006,
+        0.01977,
+        0.008710000000000011
+      ],
+      "stable_orientation": "OFFICIAL_SPAWN",
+      "support_surface": "table_skin_top",
+      "top_plateau_height_m": 0.017420000000000022
+    },
+    "chocolate_pudding": {
+      "grasp_site_press_m": 0.013999999999999999,
+      "gripper_width_m": 0.07973471453995444,
+      "half_size_xyz": [
+        0.04010000000000001,
+        0.02316,
+        0.013710000000000012
+      ],
+      "stable_orientation": "OFFICIAL_SPAWN",
+      "support_surface": "table_skin_top",
+      "top_plateau_height_m": 0.027420000000000024
+    },
+    "cream_cheese": {
+      "grasp_site_press_m": 0.013999999999999999,
+      "gripper_width_m": 0.07973471453995444,
+      "half_size_xyz": [
+        0.04060800000000001,
+        0.021336,
+        0.00893600000000001
+      ],
+      "stable_orientation": "OFFICIAL_SPAWN",
+      "support_surface": "table_skin_top",
+      "top_plateau_height_m": 0.01787200000000002
+    }
+  },
+  "thresholds_widened": false
+}

@@ -1,0 +1,260 @@
+{
+  "all_failing_categories": [
+    "DV1_FAIL_BASKET_GEOMETRY",
+    "DV1_FAIL_FIXED_HEURISTIC_SUFFICIENT",
+    "DV1_FAIL_NO_HELPFUL_NEUTRAL_REVERSED_SET",
+    "ENGINEERING_UNRESOLVED"
+  ],
+  "category_results": {
+    "DV1_FAIL_BASKET_GEOMETRY": {
+      "evidence": {
+        "any_order_to_repick_pathway": false,
+        "cavity_depth_m": 0.12373881252273865,
+        "pair_floor_fill_pessimistic": 0.5842938589371071,
+        "pathways": {
+          "ejection": false,
+          "first_item_evicted": false,
+          "tipping_out_of_cavity": false
+        },
+        "tip_clear_ok": {
+          "bbq_sauce": true,
+          "chocolate_pudding": true,
+          "cream_cheese": true
+        },
+        "worst_pile_top_m": 0.05652958301395884
+      },
+      "fails": true
+    },
+    "DV1_FAIL_EVALUATOR_SEMANTIC_CHANGE": {
+      "evidence": {
+        "equivalence": {
+          "mismatches": 0,
+          "points": 200000,
+          "seed": 20261003
+        }
+      },
+      "fails": false
+    },
+    "DV1_FAIL_FIXED_HEURISTIC_SUFFICIENT": {
+      "evidence": {
+        "pair_with_size_stability_agreement": true,
+        "pair_with_size_stability_conflict": false,
+        "pass": false,
+        "pinchable_pairs": [
+          "bbq_sauce|chocolate_pudding",
+          "bbq_sauce|cream_cheese",
+          "chocolate_pudding|cream_cheese"
+        ],
+        "rules_agreement_over_all_6_pairs": {
+          "heavier_first": 6,
+          "higher_com_first": 6,
+          "larger_footprint_first": 6,
+          "larger_top_plateau_first": 6,
+          "lighter_first": 0,
+          "lower_com_first": 0,
+          "shorter_first": 0,
+          "smaller_footprint_first": 0,
+          "smaller_top_plateau_first": 0,
+          "taller_first": 6
+        },
+        "rules_agreement_over_pinchable_pairs": {
+          "heavier_first": 3,
+          "higher_com_first": 3,
+          "larger_footprint_first": 3,
+          "larger_top_plateau_first": 3,
+          "lighter_first": 0,
+          "lower_com_first": 0,
+          "shorter_first": 0,
+          "smaller_footprint_first": 0,
+          "smaller_top_plateau_first": 0,
+          "taller_first": 3
+        },
+        "rules_matching_stability_on_every_pinchable_pair": [
+          "larger_footprint_first",
+          "smaller_footprint_first",
+          "heavier_first",
+          "lighter_first",
+          "taller_first",
+          "shorter_first",
+          "larger_top_plateau_first",
+          "smaller_top_plateau_first",
+          "higher_com_first",
+          "lower_com_first"
+        ],
+        "single_rule_sufficient": true
+      },
+      "fails": true
+    },
+    "DV1_FAIL_NO_HELPFUL_NEUTRAL_REVERSED_SET": {
+      "evidence": {
+        "HELPFUL": 3,
+        "NEUTRAL": 3,
+        "REVERSED": 0
+      },
+      "fails": true
+    },
+    "DV1_FAIL_NO_PINCHABLE_PAIR": {
+      "evidence": {
+        "per_object": {
+          "bbq_sauce": "GENERIC_PICK_YAW90",
+          "butter": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "chocolate_pudding": "GENERIC_PICK_YAW0",
+          "cream_cheese": "GENERIC_PICK_YAW0"
+        },
+        "usable_objects": [
+          "bbq_sauce",
+          "chocolate_pudding",
+          "cream_cheese"
+        ],
+        "usable_pairs": [
+          [
+            "bbq_sauce",
+            "chocolate_pudding"
+          ],
+          [
+            "bbq_sauce",
+            "cream_cheese"
+          ],
+          [
+            "chocolate_pudding",
+            "cream_cheese"
+          ]
+        ]
+      },
+      "fails": false
+    },
+    "DV1_FAIL_REQUIRES_NEW_LOW_LEVEL_BEHAVIOR": {
+      "evidence": {
+        "eliminated_objects": [
+          "butter"
+        ],
+        "note": "eliminated objects are dropped (card rule); this category fails only if the surviving set cannot form a pair",
+        "reasons": {
+          "butter": [
+            "pad contact height 0.0078 m < 0.50 x the standard cube contact 0.0160 m"
+          ]
+        },
+        "yaw_extension_needed_for": [
+          "bbq_sauce"
+        ]
+      },
+      "fails": false
+    },
+    "DV1_FAIL_REQUIRES_NEW_PERCEPTION_MODEL": {
+      "evidence": {
+        "marker_pixels_A_B": {
+          "bbq_sauce": [
+            84,
+            172
+          ],
+          "butter": [
+            44,
+            95
+          ],
+          "chocolate_pudding": [
+            59,
+            120
+          ],
+          "cream_cheese": [
+            53,
+            111
+          ]
+        },
+        "min_pixels": 8,
+        "new_vision_model": false
+      },
+      "fails": false
+    },
+    "DV1_FAIL_SNAPSHOT_REWRITE": {
+      "evidence": {
+        "capture_sim_reads_env_sim_data": true,
+        "free_joint_objects_set_by_qpos": true,
+        "object_set_defined_by_case": true,
+        "python_state_dump_covers_robot_controller_gripper_rng": true,
+        "restore_builds_env_from_case_first": true,
+        "sim_fields_saved": [
+          "\"qpos\", \"qvel\", \"act\", \"ctrl\", \"qacc_warmstart\", \"qacc\", \"qfrc_applied\", \"xfrc_applied\", \"mocap_pos\", \"mocap_quat\""
+        ]
+      },
+      "fails": false
+    },
+    "DV1_FAIL_VERIFIER_NOT_PUBLICLY_IMPLEMENTABLE": {
+      "evidence": {
+        "best_pixels_over_basket_grid": 217,
+        "held_ok": true,
+        "held_pixels": {
+          "bbq_sauce": 23,
+          "butter": 41,
+          "chocolate_pudding": 40,
+          "cream_cheese": 54
+        },
+        "inbasket_pixels_at_drop": {
+          "bbq_sauce": 165,
+          "butter": 68,
+          "chocolate_pudding": 102,
+          "cream_cheese": 83
+        },
+        "needs": 8
+      },
+      "fails": false
+    },
+    "ENGINEERING_UNRESOLVED": {
+      "evidence": {
+        "hand_occluder_valid": false,
+        "reference_cube_held_pixels": 0
+      },
+      "fails": true
+    }
+  },
+  "label": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+  "objects": [
+    "bbq_sauce",
+    "butter",
+    "chocolate_pudding",
+    "cream_cheese"
+  ],
+  "pairs": [
+    [
+      "bbq_sauce",
+      "butter"
+    ],
+    [
+      "bbq_sauce",
+      "chocolate_pudding"
+    ],
+    [
+      "bbq_sauce",
+      "cream_cheese"
+    ],
+    [
+      "butter",
+      "chocolate_pudding"
+    ],
+    [
+      "butter",
+      "cream_cheese"
+    ],
+    [
+      "chocolate_pudding",
+      "cream_cheese"
+    ]
+  ],
+  "pass_conditions": {
+    "10_no_drawer_knob_door_controller": true,
+    "1_two_objects_one_generic_pick": true,
+    "2_one_pair_enters_basket": true,
+    "3_no_new_perception_model": true,
+    "4_verifier_public": true,
+    "5_evaluator_semantics_unchanged": true,
+    "6_snapshot_no_rewrite": true,
+    "7_no_order_specific_drop": false,
+    "8_two_pairs_refute_one_rule": false,
+    "9_helpful_neutral_reversed": false
+  },
+  "usable_objects": [
+    "bbq_sauce",
+    "chocolate_pudding",
+    "cream_cheese"
+  ],
+  "verdict": "DV1_FAIL_BASKET_GEOMETRY"
+}

@@ -1,0 +1,111 @@
+{
+  "accepted_prior_result": "CP-DISR-TP-LIBERO-OPPORTUNITY-AUDIT-1 = NO_LOW_COST_TP_CANDIDATE_FOUND (kept; this card does not overturn it)",
+  "authorized_by": "user chat instruction approving CP-DISR-TP-DV1-BINDING-PREFLIGHT-1",
+  "basket_criterion": "DV1 needs a geometric path from the order to a public re-pick (ejection, tipping out, or eviction); if every order ends inside the cavity below the rim the mechanism does not exist",
+  "card": "CP-DISR-TP-DV1-BINDING-PREFLIGHT-1",
+  "container": "basket",
+  "declared_before_run": {
+    "A_XY": [
+      -0.12,
+      -0.1
+    ],
+    "BASKET_XY": [
+      0.18,
+      0.12
+    ],
+    "B_XY": [
+      0.12,
+      -0.1
+    ],
+    "COLOR_TOL": 0.32,
+    "CTRL_TOL": 0.008,
+    "HAND_CLEAR_MIN": 0.01,
+    "MARGIN_DELTA": 0.004,
+    "MARKER_COVER": 0.8,
+    "MIN_PIXELS": 8,
+    "OVERLAP_FRACTION": 0.5,
+    "PLACE_XY_TOL": 0.027999999999999997,
+    "RELEASE_CLEAR": 0.01,
+    "TIP_CLEAR_MIN": 0.01,
+    "rules": [
+      "larger_footprint_first",
+      "smaller_footprint_first",
+      "heavier_first",
+      "lighter_first",
+      "taller_first",
+      "shorter_first",
+      "larger_top_plateau_first",
+      "smaller_top_plateau_first",
+      "higher_com_first",
+      "lower_com_first"
+    ],
+    "yaw_grid_deg": [
+      0,
+      180,
+      5
+    ]
+  },
+  "fail_order": [
+    "DV1_FAIL_NO_PINCHABLE_PAIR",
+    "DV1_FAIL_REQUIRES_NEW_LOW_LEVEL_BEHAVIOR",
+    "DV1_FAIL_REQUIRES_NEW_PERCEPTION_MODEL",
+    "DV1_FAIL_VERIFIER_NOT_PUBLICLY_IMPLEMENTABLE",
+    "DV1_FAIL_EVALUATOR_SEMANTIC_CHANGE",
+    "DV1_FAIL_SNAPSHOT_REWRITE",
+    "DV1_FAIL_BASKET_GEOMETRY",
+    "DV1_FAIL_FIXED_HEURISTIC_SUFFICIENT",
+    "DV1_FAIL_NO_HELPFUL_NEUTRAL_REVERSED_SET",
+    "ENGINEERING_UNRESOLVED"
+  ],
+  "forbidden_label": "UNMODIFIED_LIBERO_BENCHMARK",
+  "frozen_objects": [
+    "bbq_sauce",
+    "butter",
+    "chocolate_pudding",
+    "cream_cheese"
+  ],
+  "label": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+  "limits": {
+    "benchmark_score_reads": 0,
+    "demo_replay": 0,
+    "elastic_attempts": 0,
+    "env_reset": 0,
+    "environment_constructions": 0,
+    "optimizer_steps": 0,
+    "physical_episodes": 0,
+    "provider_requests": 0,
+    "provider_retries": 0,
+    "rl_transitions": 0,
+    "skill_calls": 0,
+    "start_case": 0,
+    "test_result_reads": 0
+  },
+  "pairs": [
+    [
+      "bbq_sauce",
+      "butter"
+    ],
+    [
+      "bbq_sauce",
+      "chocolate_pudding"
+    ],
+    [
+      "bbq_sauce",
+      "cream_cheese"
+    ],
+    [
+      "butter",
+      "chocolate_pudding"
+    ],
+    [
+      "butter",
+      "cream_cheese"
+    ],
+    [
+      "chocolate_pudding",
+      "cream_cheese"
+    ]
+  ],
+  "verdict_rule": "first failing category in fail_order; all categories are still evaluated and reported",
+  "verifier_criterion": "InBasket needs positive public RGB-D evidence: the object marker must reach MIN_PIXELS visible pixels at the registered drop point (basket at the proven container position); absence-only inference is not accepted"
+}

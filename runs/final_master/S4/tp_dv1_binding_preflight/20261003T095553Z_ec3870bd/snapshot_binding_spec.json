@@ -1,0 +1,30 @@
+{
+  "evidence": {
+    "capture_sim_reads_env_sim_data": true,
+    "free_joint_objects_set_by_qpos": true,
+    "object_set_defined_by_case": true,
+    "python_state_dump_covers_robot_controller_gripper_rng": true,
+    "restore_builds_env_from_case_first": true,
+    "sim_fields_saved": [
+      "\"qpos\", \"qvel\", \"act\", \"ctrl\", \"qacc_warmstart\", \"qacc\", \"qfrc_applied\", \"xfrc_applied\", \"mocap_pos\", \"mocap_quat\""
+    ]
+  },
+  "extensions": [
+    "CaseSpec carries object asset ids and registered-geometry hash",
+    "D0ManipulationEnv._load_model builds the registered objects",
+    "_apply_case_poses/_setup_references/hidden_truth key the new bodies by role",
+    "restore identity adds the geometry hash"
+  ],
+  "lifecycle_rewritten": false,
+  "must_save": [
+    "object joint states (free-joint qpos/qvel for every registered object)",
+    "orientation (inside qpos)",
+    "velocities (qvel)",
+    "controller and gripper named state (python dump)",
+    "RNG (numpy and python)",
+    "public observation identity",
+    "registered object geometry (hash added to the manifest identity)"
+  ],
+  "status": "PASS",
+  "uses_current_restore_model": true
+}

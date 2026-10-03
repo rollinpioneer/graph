@@ -1,0 +1,236 @@
+{
+  "action": "PLACE_IN_BASKET(object)",
+  "any_order_to_repick_pathway": false,
+  "basket_position_xy": [
+    0.18,
+    0.12
+  ],
+  "basket_registered_orientation": "IDENTITY_ASSET_FRAME (z-up cavity)",
+  "cavity": {
+    "cavity_center_xy": [
+      0.002270239995938072,
+      0.00039742530370491524
+    ],
+    "cavity_depth_m": 0.12373881252273865,
+    "floor_area_m2": 0.014969217742439873,
+    "floor_top_z": 0.01773407948270235,
+    "inner_width_xy_m": [
+      0.12692012273999104,
+      0.11794203645001085
+    ],
+    "inner_x": [
+      -0.06118982137405745,
+      0.0657303013659336
+    ],
+    "inner_y": [
+      -0.05857359292130051,
+      0.05936844352871034
+    ],
+    "rim_top_z": 0.141472892005441
+  },
+  "conclusion": "every order of every pair ends inside the cavity below the rim; the Evaluator is TRUE for both objects in all 12 ordered pairs, so the order cannot change success or create a public re-pick",
+  "contain_region_site": {
+    "half": [
+      0.06108,
+      0.06108,
+      0.06949
+    ],
+    "pos": [
+      -0.0,
+      -0.0,
+      0.07185
+    ]
+  },
+  "drop": {
+    "bbq_sauce": {
+      "cavity_inner_width_xy_m": [
+        0.12692012273999104,
+        0.11794203645001085
+      ],
+      "fall_height_to_floor_m": 0.13373881252273867,
+      "finger_tip_above_rim_m": 0.014750965988636039,
+      "fingers_enter_cavity": false,
+      "item_bottom_above_rim_m": 0.01,
+      "open_finger_span_y_m": 0.13280676484107973,
+      "site_z_above_table_m": 0.16547289200544102,
+      "tip_clear_ok": true
+    },
+    "chocolate_pudding": {
+      "cavity_inner_width_xy_m": [
+        0.12692012273999104,
+        0.11794203645001085
+      ],
+      "fall_height_to_floor_m": 0.13373881252273867,
+      "finger_tip_above_rim_m": 0.014750965988636039,
+      "fingers_enter_cavity": false,
+      "item_bottom_above_rim_m": 0.01,
+      "open_finger_span_y_m": 0.13280676484107973,
+      "site_z_above_table_m": 0.16547289200544102,
+      "tip_clear_ok": true
+    },
+    "cream_cheese": {
+      "cavity_inner_width_xy_m": [
+        0.12692012273999104,
+        0.11794203645001085
+      ],
+      "fall_height_to_floor_m": 0.13373881252273867,
+      "finger_tip_above_rim_m": 0.014750965988636039,
+      "fingers_enter_cavity": false,
+      "item_bottom_above_rim_m": 0.01,
+      "open_finger_span_y_m": 0.13280676484107973,
+      "site_z_above_table_m": 0.16547289200544102,
+      "tip_clear_ok": true
+    }
+  },
+  "drop_xy": "registered cavity centre (relative to the basket), identical for every order",
+  "evaluator_inside_all_orders": true,
+  "order_specific_drop_sites_needed": false,
+  "orientation_note": "the official class inherits rotation (pi/2 about x), which would lay the asset-frame cavity on its side; that contradicts the contain_region site and cannot be resolved without an environment, so the official spawn is UNVERIFIED and the derived task registers the identity (upright) orientation as a derived choice, not as an official claim",
+  "orientation_status": "UNVERIFIED_AS_OFFICIAL",
+  "pair_floor_fill_pessimistic": 0.5842938589371071,
+  "pathways": {
+    "ejection": {
+      "contact_damping_ratio_all_geoms": [
+        1.0
+      ],
+      "impact_speed_m_s": 1.6198628033559301,
+      "possible": false,
+      "reason": "critically damped contacts (damping ratio 1) have no rebound; ejection needs a restitution of 0.71",
+      "rebound_needed_to_clear_rim_m_s": 1.1483227259626363,
+      "restitution_bound": 0.0,
+      "restitution_needed": 0.7089012252047602
+    },
+    "first_item_evicted": {
+      "possible": false,
+      "reason": "the second item lands on or beside the first; the pile top 0.057 m is far below the rim at 0.124 m"
+    },
+    "tipping_out_of_cavity": {
+      "possible": false,
+      "reason": "the drop offset bound 0.028 m is below the cavity half width and the pile top stays below the rim, so a tipped or sliding item is stopped by the walls and remains inside"
+    }
+  },
+  "pile": [
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "bbq_sauce",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0772092295087798,
+      "pile_top_above_floor_m": 0.04652958301395885,
+      "second": "butter",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "bbq_sauce",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0672092295087798,
+      "pile_top_above_floor_m": 0.05652958301395884,
+      "second": "chocolate_pudding",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "bbq_sauce",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0767572295087798,
+      "pile_top_above_floor_m": 0.04698158301395884,
+      "second": "cream_cheese",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "butter",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0772092295087798,
+      "pile_top_above_floor_m": 0.04652958301395885,
+      "second": "bbq_sauce",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "butter",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0788988125227386,
+      "pile_top_above_floor_m": 0.044840000000000046,
+      "second": "chocolate_pudding",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "butter",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0884468125227386,
+      "pile_top_above_floor_m": 0.035292000000000046,
+      "second": "cream_cheese",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "chocolate_pudding",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0672092295087798,
+      "pile_top_above_floor_m": 0.05652958301395884,
+      "second": "bbq_sauce",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "chocolate_pudding",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0788988125227386,
+      "pile_top_above_floor_m": 0.044840000000000046,
+      "second": "butter",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "chocolate_pudding",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.07844681252273861,
+      "pile_top_above_floor_m": 0.04529200000000004,
+      "second": "cream_cheese",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "cream_cheese",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0767572295087798,
+      "pile_top_above_floor_m": 0.04698158301395884,
+      "second": "bbq_sauce",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "cream_cheese",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.0884468125227386,
+      "pile_top_above_floor_m": 0.035292000000000046,
+      "second": "butter",
+      "stays_inside_cavity": true
+    },
+    {
+      "cavity_half_width_min_m": 0.058971018225005424,
+      "evaluator_inside_true": true,
+      "first": "cream_cheese",
+      "lateral_offset_bound_m": 0.027999999999999997,
+      "margin_to_rim_m": 0.07844681252273861,
+      "pile_top_above_floor_m": 0.04529200000000004,
+      "second": "chocolate_pudding",
+      "stays_inside_cavity": true
+    }
+  ],
+  "reuses": "PLACE (APPROACH hover, INTERACT drop, hold open, RETREAT)",
+  "worst_pile_top_m": 0.05652958301395884
+}

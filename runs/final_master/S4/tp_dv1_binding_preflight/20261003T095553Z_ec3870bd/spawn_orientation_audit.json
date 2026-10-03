@@ -1,0 +1,412 @@
+{
+  "basket": {
+    "angle_rad": 1.5707963267948966,
+    "axis_source": {
+      "defined_in": "GoogleScannedObject",
+      "file": "google_scanned_objects.py",
+      "line": 34,
+      "source": "\"x\""
+    },
+    "class_chain": [
+      "Basket",
+      "GoogleScannedObject"
+    ],
+    "init_quat_defined": false,
+    "quat_wxyz": [
+      0.7071067811865476,
+      0.7071067811865475,
+      0,
+      0
+    ],
+    "reason": "bddl_base_domain passes obj.rotation and obj.rotation_axis (not the region yaw_rotation) to the region sampler for movable objects; the quaternion is deterministic",
+    "rotation": [
+      1.5707963267948966,
+      1.5707963267948966
+    ],
+    "rotation_axis": "x",
+    "rotation_source": {
+      "defined_in": "GoogleScannedObject",
+      "file": "google_scanned_objects.py",
+      "line": 33,
+      "source": "(np.pi / 2, np.pi / 2)"
+    },
+    "status": "DETERMINED_BY_SOURCE",
+    "yaw_about_z_rad": 0.0
+  },
+  "basket_registered": {
+    "note": "the official class inherits rotation (pi/2 about x), which would lay the asset-frame cavity on its side; that contradicts the contain_region site and cannot be resolved without an environment, so the official spawn is UNVERIFIED and the derived task registers the identity (upright) orientation as a derived choice, not as an official claim",
+    "orientation": "IDENTITY_ASSET_FRAME (z-up cavity)",
+    "status": "UNVERIFIED_AS_OFFICIAL"
+  },
+  "objects": {
+    "bbq_sauce": {
+      "angle_rad": 1.5707963267948966,
+      "axis_source": {
+        "defined_in": "HopeBaseObject",
+        "file": "hope_objects.py",
+        "line": 30,
+        "source": "\"x\""
+      },
+      "class_chain": [
+        "BbqSauce",
+        "HopeBaseObject"
+      ],
+      "init_quat_defined": false,
+      "quat_wxyz": [
+        0.7071067811865476,
+        0.7071067811865475,
+        0,
+        0
+      ],
+      "reason": "bddl_base_domain passes obj.rotation and obj.rotation_axis (not the region yaw_rotation) to the region sampler for movable objects; the quaternion is deterministic",
+      "registered_orientation": "OFFICIAL_SPAWN",
+      "rest_pose_com_inside_support": true,
+      "rotation": [
+        1.5707963267948966,
+        1.5707963267948966
+      ],
+      "rotation_axis": "x",
+      "rotation_source": {
+        "defined_in": "HopeBaseObject",
+        "file": "hope_objects.py",
+        "line": 29,
+        "source": "(np.pi / 2, np.pi / 2)"
+      },
+      "stable_faces_asset_frame": [
+        {
+          "com_height_m": 0.014554791506979407,
+          "com_inside_support": true,
+          "face_down": "asset_y_down",
+          "height_m": 0.029109583013958815,
+          "support_area_m2": 0.005031558000000002,
+          "tip_margin_over_com_height": 1.6139015106287116
+        },
+        {
+          "com_height_m": 0.014554791506979407,
+          "com_inside_support": true,
+          "face_down": "asset_y_up",
+          "height_m": 0.029109583013958815,
+          "support_area_m2": 0.005031558000000002,
+          "tip_margin_over_com_height": 1.6139015106287116
+        },
+        {
+          "com_height_m": 0.04704154366992778,
+          "com_inside_support": true,
+          "face_down": "asset_z_up",
+          "height_m": 0.10710000000000001,
+          "support_area_m2": 0.0013596012000000014,
+          "tip_margin_over_com_height": 0.30760044996674374
+        },
+        {
+          "com_height_m": 0.023490000000000007,
+          "com_inside_support": true,
+          "face_down": "asset_x_down",
+          "height_m": 0.046980000000000015,
+          "support_area_m2": 0.0015523416000000016,
+          "tip_margin_over_com_height": 0.2809049097519044
+        },
+        {
+          "com_height_m": 0.023490000000000007,
+          "com_inside_support": true,
+          "face_down": "asset_x_up",
+          "height_m": 0.046980000000000015,
+          "support_area_m2": 0.0015523416000000016,
+          "tip_margin_over_com_height": 0.2809049097519044
+        },
+        {
+          "com_height_m": 0.06005845633007224,
+          "com_inside_support": true,
+          "face_down": "asset_z_down",
+          "height_m": 0.10710000000000001,
+          "support_area_m2": 0.0008337523532451431,
+          "tip_margin_over_com_height": 0.2384497806574905
+        }
+      ],
+      "status": "DETERMINED_BY_SOURCE",
+      "tip_margin_over_com_height": 1.6139015106287125,
+      "world_extent_xyz_m": [
+        0.046980000000000015,
+        0.10710000000000003,
+        0.02910958301395882
+      ],
+      "yaw_about_z_rad": 0.0
+    },
+    "butter": {
+      "angle_rad": 0.0,
+      "axis_source": {
+        "defined_in": "Butter",
+        "file": "hope_objects.py",
+        "line": 53,
+        "source": "\"x\""
+      },
+      "class_chain": [
+        "Butter",
+        "HopeBaseObject"
+      ],
+      "init_quat_defined": false,
+      "quat_wxyz": [
+        1.0,
+        0.0,
+        0,
+        0
+      ],
+      "reason": "bddl_base_domain passes obj.rotation and obj.rotation_axis (not the region yaw_rotation) to the region sampler for movable objects; the quaternion is deterministic",
+      "registered_orientation": "OFFICIAL_SPAWN",
+      "rest_pose_com_inside_support": true,
+      "rotation": [
+        0.0,
+        0.0
+      ],
+      "rotation_axis": "x",
+      "rotation_source": {
+        "defined_in": "Butter",
+        "file": "hope_objects.py",
+        "line": 52,
+        "source": "(0.0, 0.0)"
+      },
+      "stable_faces_asset_frame": [
+        {
+          "com_height_m": 0.008710000000000011,
+          "com_inside_support": true,
+          "face_down": "asset_z_up",
+          "height_m": 0.017420000000000022,
+          "support_area_m2": 0.0030121572,
+          "tip_margin_over_com_height": 2.269804822043625
+        },
+        {
+          "com_height_m": 0.008710000000000011,
+          "com_inside_support": true,
+          "face_down": "asset_z_down",
+          "height_m": 0.017420000000000022,
+          "support_area_m2": 0.0030121572,
+          "tip_margin_over_com_height": 2.269804822043625
+        },
+        {
+          "com_height_m": 0.01977,
+          "com_inside_support": true,
+          "face_down": "asset_y_down",
+          "height_m": 0.03954,
+          "support_area_m2": 0.0013270556000000019,
+          "tip_margin_over_com_height": 0.440566514921599
+        },
+        {
+          "com_height_m": 0.01977,
+          "com_inside_support": true,
+          "face_down": "asset_y_up",
+          "height_m": 0.03954,
+          "support_area_m2": 0.0013270556000000019,
+          "tip_margin_over_com_height": 0.440566514921599
+        },
+        {
+          "com_height_m": 0.038090000000000006,
+          "com_inside_support": true,
+          "face_down": "asset_x_down",
+          "height_m": 0.07618000000000001,
+          "support_area_m2": 0.0006887868000000009,
+          "tip_margin_over_com_height": 0.22866894197952245
+        },
+        {
+          "com_height_m": 0.038090000000000006,
+          "com_inside_support": true,
+          "face_down": "asset_x_up",
+          "height_m": 0.07618000000000001,
+          "support_area_m2": 0.0006887868000000009,
+          "tip_margin_over_com_height": 0.22866894197952245
+        }
+      ],
+      "status": "DETERMINED_BY_SOURCE",
+      "tip_margin_over_com_height": 2.269804822043625,
+      "world_extent_xyz_m": [
+        0.07618000000000001,
+        0.03954,
+        0.017420000000000022
+      ],
+      "yaw_about_z_rad": 0.0
+    },
+    "chocolate_pudding": {
+      "angle_rad": 0.0,
+      "axis_source": {
+        "defined_in": "ChocolatePudding",
+        "file": "hope_objects.py",
+        "line": 67,
+        "source": "\"x\""
+      },
+      "class_chain": [
+        "ChocolatePudding",
+        "HopeBaseObject"
+      ],
+      "init_quat_defined": false,
+      "quat_wxyz": [
+        1.0,
+        0.0,
+        0,
+        0
+      ],
+      "reason": "bddl_base_domain passes obj.rotation and obj.rotation_axis (not the region yaw_rotation) to the region sampler for movable objects; the quaternion is deterministic",
+      "registered_orientation": "OFFICIAL_SPAWN",
+      "rest_pose_com_inside_support": true,
+      "rotation": [
+        0.0,
+        0.0
+      ],
+      "rotation_axis": "x",
+      "rotation_source": {
+        "defined_in": "ChocolatePudding",
+        "file": "hope_objects.py",
+        "line": 66,
+        "source": "(0.0, 0.0)"
+      },
+      "stable_faces_asset_frame": [
+        {
+          "com_height_m": 0.013710000000000012,
+          "com_inside_support": true,
+          "face_down": "asset_z_up",
+          "height_m": 0.027420000000000024,
+          "support_area_m2": 0.003714864000000001,
+          "tip_margin_over_com_height": 1.6892778993435433
+        },
+        {
+          "com_height_m": 0.013710000000000012,
+          "com_inside_support": true,
+          "face_down": "asset_z_down",
+          "height_m": 0.027420000000000024,
+          "support_area_m2": 0.003714864000000001,
+          "tip_margin_over_com_height": 1.6892778993435433
+        },
+        {
+          "com_height_m": 0.02316,
+          "com_inside_support": true,
+          "face_down": "asset_y_down",
+          "height_m": 0.04632,
+          "support_area_m2": 0.0021990840000000026,
+          "tip_margin_over_com_height": 0.591968911917099
+        },
+        {
+          "com_height_m": 0.02316,
+          "com_inside_support": true,
+          "face_down": "asset_y_up",
+          "height_m": 0.04632,
+          "support_area_m2": 0.0021990840000000026,
+          "tip_margin_over_com_height": 0.591968911917099
+        },
+        {
+          "com_height_m": 0.04010000000000001,
+          "com_inside_support": true,
+          "face_down": "asset_x_down",
+          "height_m": 0.08020000000000002,
+          "support_area_m2": 0.001270094400000001,
+          "tip_margin_over_com_height": 0.34189526184538677
+        },
+        {
+          "com_height_m": 0.04010000000000001,
+          "com_inside_support": true,
+          "face_down": "asset_x_up",
+          "height_m": 0.08020000000000002,
+          "support_area_m2": 0.001270094400000001,
+          "tip_margin_over_com_height": 0.34189526184538677
+        }
+      ],
+      "status": "DETERMINED_BY_SOURCE",
+      "tip_margin_over_com_height": 1.6892778993435433,
+      "world_extent_xyz_m": [
+        0.08020000000000002,
+        0.04632,
+        0.027420000000000024
+      ],
+      "yaw_about_z_rad": 0.0
+    },
+    "cream_cheese": {
+      "angle_rad": 0.0,
+      "axis_source": {
+        "defined_in": "CreamCheese",
+        "file": "hope_objects.py",
+        "line": 87,
+        "source": "\"x\""
+      },
+      "class_chain": [
+        "CreamCheese",
+        "HopeBaseObject"
+      ],
+      "init_quat_defined": false,
+      "quat_wxyz": [
+        1.0,
+        0.0,
+        0,
+        0
+      ],
+      "reason": "bddl_base_domain passes obj.rotation and obj.rotation_axis (not the region yaw_rotation) to the region sampler for movable objects; the quaternion is deterministic",
+      "registered_orientation": "OFFICIAL_SPAWN",
+      "rest_pose_com_inside_support": true,
+      "rotation": [
+        0.0,
+        0.0
+      ],
+      "rotation_axis": "x",
+      "rotation_source": {
+        "defined_in": "CreamCheese",
+        "file": "hope_objects.py",
+        "line": 86,
+        "source": "(0.0, 0.0)"
+      },
+      "stable_faces_asset_frame": [
+        {
+          "com_height_m": 0.00893600000000001,
+          "com_inside_support": true,
+          "face_down": "asset_z_up",
+          "height_m": 0.01787200000000002,
+          "support_area_m2": 0.003465649152000001,
+          "tip_margin_over_com_height": 2.3876454789615016
+        },
+        {
+          "com_height_m": 0.00893600000000001,
+          "com_inside_support": true,
+          "face_down": "asset_z_down",
+          "height_m": 0.01787200000000002,
+          "support_area_m2": 0.003465649152000001,
+          "tip_margin_over_com_height": 2.3876454789615016
+        },
+        {
+          "com_height_m": 0.021336,
+          "com_inside_support": true,
+          "face_down": "asset_y_down",
+          "height_m": 0.042672,
+          "support_area_m2": 0.001451492352000002,
+          "tip_margin_over_com_height": 0.41882264716910433
+        },
+        {
+          "com_height_m": 0.021336,
+          "com_inside_support": true,
+          "face_down": "asset_y_up",
+          "height_m": 0.042672,
+          "support_area_m2": 0.001451492352000002,
+          "tip_margin_over_com_height": 0.41882264716910433
+        },
+        {
+          "com_height_m": 0.04060800000000001,
+          "com_inside_support": true,
+          "face_down": "asset_x_down",
+          "height_m": 0.08121600000000002,
+          "support_area_m2": 0.0007626339840000009,
+          "tip_margin_over_com_height": 0.22005516154452343
+        },
+        {
+          "com_height_m": 0.04060800000000001,
+          "com_inside_support": true,
+          "face_down": "asset_x_up",
+          "height_m": 0.08121600000000002,
+          "support_area_m2": 0.0007626339840000009,
+          "tip_margin_over_com_height": 0.22005516154452343
+        }
+      ],
+      "status": "DETERMINED_BY_SOURCE",
+      "tip_margin_over_com_height": 2.3876454789615016,
+      "world_extent_xyz_m": [
+        0.08121600000000002,
+        0.042672,
+        0.01787200000000002
+      ],
+      "yaw_about_z_rad": 0.0
+    }
+  },
+  "rule_source": "libero/libero/envs/bddl_base_domain.py lines 626-627 and regions/base_region_sampler.py _sample_quat: movable objects use obj.rotation and obj.rotation_axis; region yaw_rotation is used only for fixtures"
+}

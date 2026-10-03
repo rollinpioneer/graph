@@ -1,0 +1,97 @@
+{
+  "extension": "GENERIC_YAW_ALIGNED_TOP_DOWN_PICK",
+  "gripper": {
+    "eef_site_hand_z": 0.097,
+    "finger_half_width_orthogonal": 0.010494818910956383,
+    "finger_inner_face_open": 0.03986735726997722,
+    "finger_lowest_rel_site_z": -0.009249034011363982,
+    "finger_outer_face_open": 0.06640338242053986,
+    "hand_lowest_rel_site_z": 0.031037849307060245,
+    "pad_half_extents": [
+      0.008,
+      0.004,
+      0.008
+    ],
+    "pad_height_m": 0.016,
+    "pad_lowest_rel_site_z": -0.004399999999999987,
+    "source": "robosuite panda_gripper.xml + finger.stl + hand.stl (read as files; robosuite not imported)"
+  },
+  "new_states": [],
+  "parameters": [
+    "half_size_xyz",
+    "grasp_site_z_press",
+    "end_effector_yaw",
+    "gripper_width",
+    "drop_z"
+  ],
+  "per_object": {
+    "bbq_sauce": {
+      "grasp_site_z_press_m": 0.013999999999999999,
+      "half_size_world_xyz_m": [
+        0.023490000000000007,
+        0.053550000000000014,
+        0.01455479150697941
+      ],
+      "pad_contact_height_m": 0.016,
+      "palm_clearance_m": 0.01592826629310142,
+      "pinch_width_m": 0.04698000000000002,
+      "status": "GENERIC_PICK_YAW90",
+      "yaw_deg": 90
+    },
+    "butter": {
+      "grasp_site_z_press_m": 0.013999999999999999,
+      "half_size_world_xyz_m": [
+        0.038090000000000006,
+        0.01977,
+        0.008710000000000011
+      ],
+      "pad_contact_height_m": 0.007820000000000011,
+      "palm_clearance_m": 0.02761784930706022,
+      "pinch_width_m": 0.03954,
+      "status": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+      "yaw_deg": 0
+    },
+    "chocolate_pudding": {
+      "grasp_site_z_press_m": 0.013999999999999999,
+      "half_size_world_xyz_m": [
+        0.04010000000000001,
+        0.02316,
+        0.013710000000000012
+      ],
+      "pad_contact_height_m": 0.016,
+      "palm_clearance_m": 0.01761784930706022,
+      "pinch_width_m": 0.04632,
+      "status": "GENERIC_PICK_YAW0",
+      "yaw_deg": 0
+    },
+    "cream_cheese": {
+      "grasp_site_z_press_m": 0.013999999999999999,
+      "half_size_world_xyz_m": [
+        0.04060800000000001,
+        0.021336,
+        0.00893600000000001
+      ],
+      "pad_contact_height_m": 0.008272000000000009,
+      "palm_clearance_m": 0.027165849307060223,
+      "pinch_width_m": 0.042672,
+      "status": "GENERIC_PICK_YAW0",
+      "yaw_deg": 0
+    }
+  },
+  "states_reused": [
+    "APPROACH",
+    "DESCEND(INTERACT)",
+    "PRESS",
+    "CLOSE(hold)",
+    "LIFT(RETREAT)",
+    "SHOW"
+  ],
+  "why_grasp_z_must_be_a_parameter": "the existing formula min(blob_z - 0.012, table + half + 0.002) puts the press site so low for thin objects that the finger tips would end below the table (see existing_formula_finger_low_at_press_m per object)",
+  "yaw_wiring": {
+    "needed_for": [
+      "bbq_sauce"
+    ],
+    "new_motion_state": false,
+    "requirement": "action[3:6] is forced to 0 in D0ManipulationEnv.step_osc; the extension feeds a yaw error into action[5] during APPROACH only (OSC_POSE already has the rotation dims); the eef yaw is read from public proprio eef_quat"
+  }
+}
