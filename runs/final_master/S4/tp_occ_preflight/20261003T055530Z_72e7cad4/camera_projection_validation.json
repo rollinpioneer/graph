@@ -1,0 +1,40 @@
+{
+  "card": "CP-DISR-TP-OCC-PREFLIGHT-1",
+  "metric_depth_fit": {
+    "far": 531.5,
+    "gating": false,
+    "inlier_fraction": 0.9919354838709677,
+    "max_abs_error_m": 0.07741524861668225,
+    "median_abs_error_m": 0.0001917150057272332,
+    "model": "get_real_depth_map: z = near / (1 - d_norm (1 - near/far)), near = znear*extent, far = zfar*extent; znear = 0.001 from robosuite base.xml, zfar = 50 (MuJoCo default); only the extent is fitted (L1)",
+    "model_extent": 10.63,
+    "model_form_ok": true,
+    "near": 0.01063,
+    "p90_abs_error_m": 0.0008181036256658007,
+    "pixels": 248,
+    "rms_all_pixels_m": 0.00696000674561355,
+    "rms_inliers_lt_10mm_m": 0.0005992666933262866,
+    "status": "INFORMATIONAL",
+    "tolerance_on_median_m": 0.003,
+    "why_not_gating": "the card's Phase D criterion is the projected centroid agreement; this depth check was added by the implementation, and its all-pixel RMS is dominated by silhouette-edge pixels (a pixel assigned to the top face by the ray-cast but rendered as side/background)"
+  },
+  "status": "PASS",
+  "summary": {
+    "area_ratio_max": 1.2258064516129032,
+    "area_ratio_min": 0.8163265306122449,
+    "max_centroid_error_px": 0.5581812605253142,
+    "mean_centroid_error_px": 0.19108421882841872,
+    "mean_mask_iou": 0.9342824573112327,
+    "n_blobs": 20,
+    "n_ok": 20
+  },
+  "tolerances": {
+    "area_ratio": [
+      0.7,
+      1.4
+    ],
+    "centroid_max_px": 2.0,
+    "centroid_mean_px": 1.0,
+    "depth_rms_m": 0.003
+  }
+}

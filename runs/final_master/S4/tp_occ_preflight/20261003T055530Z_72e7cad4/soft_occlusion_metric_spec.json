@@ -1,0 +1,26 @@
+{
+  "card": "CP-DISR-TP-OCC-PREFLIGHT-1",
+  "classes": {
+    "CLEAR": "otherwise",
+    "DETECTION_LOST": "visible_top_px * area_ratio_max < min_pixels (8): no blob at all, facts UNKNOWN and the PICK mask FALSE",
+    "DETECTION_WEAK": "visible_top_px * area_ratio_min (0.816) < min_pixels: detection depends on calibration error",
+    "SOFT_OCCLUSION_CANDIDATE": "detected for sure and the centroid shift along a world axis >= 0.0119 m (the smaller grasp slack minus the controller tolerance 0.008 m)"
+  },
+  "metrics": [
+    "clean_projected_area",
+    "visible_projected_area_after_occlusion",
+    "visible_fraction",
+    "centroid_shift_px",
+    "estimated_xyz_shift",
+    "depth_support_fraction",
+    "foreground_overlap_fraction"
+  ],
+  "sources_of_boundaries": [
+    "perception.min_pixels",
+    "calibrated area ratio range",
+    "gripper geometry (finger inner face / pad width)",
+    "_pick tolerances"
+  ],
+  "visible_set": "top-face pixels (calibrated)",
+  "zone_lower_bound_m": 0.01186735726997722
+}

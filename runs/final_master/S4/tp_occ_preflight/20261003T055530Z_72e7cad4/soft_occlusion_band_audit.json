@@ -1,0 +1,32 @@
+{
+  "card": "CP-DISR-TP-OCC-PREFLIGHT-1",
+  "category": "PREFLIGHT_FAIL_NO_SOFT_OCCLUSION_BAND",
+  "explanation": "a cube hides another cube's top face only if the line of sight to a point at the top height passes through it; that line is above the top height everywhere between the target point and the camera, so an equal-height cube can hide side faces but never the top face, which is the only face the colour mask sees (calibrated).",
+  "per_mode": {
+    "OCCLUDE_SECOND": {
+      "classes": {
+        "CLEAR": 77
+      },
+      "projected_overlap_layouts": 77,
+      "world_safe_layouts": 4143
+    },
+    "OCCLUDE_TARGET": {
+      "classes": {
+        "CLEAR": 77
+      },
+      "projected_overlap_layouts": 77,
+      "world_safe_layouts": 4143
+    }
+  },
+  "soft_candidates_per_mode": {
+    "OCCLUDE_SECOND": 0,
+    "OCCLUDE_TARGET": 0
+  },
+  "status": "FAIL",
+  "structural_check_ignoring_all_safety": {
+    "includes_touching_layouts": true,
+    "layouts_checked": 2411,
+    "max_top_face_occluded_fraction": 0.0
+  },
+  "zone_lower_bound_m": 0.01186735726997722
+}

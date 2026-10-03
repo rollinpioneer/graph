@@ -1,0 +1,109 @@
+{
+  "10_grasp_point": {
+    "line": 297,
+    "rule": "grasp = (blob_x, blob_y, min(blob_z - 0.012, table_top + 0.02 + 0.002)); with blob_z about table_top + 0.043 the height is always table_top + 0.022, so only the blob XY matters"
+  },
+  "11_partial_blob_centroid": {
+    "calibrated_fact": "the colour mask captures the top face only (side faces are shaded below the colour threshold); see clean_blob_calibration.json",
+    "rule": "the centroid is the mean of the VISIBLE top-face points only; a partially hidden top face shifts it toward the visible part"
+  },
+  "12_allowed_spatial_error": {
+    "affect_zone_lower_bound_m": 0.01186735726997722,
+    "affect_zone_note": "a bias can change the outcome once bias + controller tolerance reaches the smaller slack",
+    "controller_termination_tolerance_m": 0.008,
+    "derivation": "open finger inner face 0.0399 m - cube half 0.020 m",
+    "orthogonal_derivation": "pad centre leaves the cube face when the offset reaches the cube half width",
+    "slack_along_spread_axis_m": 0.01986735726997722,
+    "slack_orthogonal_axis_m": 0.02,
+    "spread_axis": "world y (derived from the saved eef quaternion; see world_safe_grid.json)"
+  },
+  "13_path_tolerances": {
+    "close_hold_steps": 36,
+    "grasp": "tol 0.008 (260 steps)",
+    "hover": "tol 0.02 (180 steps)",
+    "press": "tol 0.01 (80 steps; already satisfied at the grasp height, so no extra motion)",
+    "show_retreat_tol": 0.03,
+    "source_lines": {
+      "_pick": 330
+    }
+  },
+  "1_colour_segmentation": {
+    "color_tol": 0.32,
+    "line": 29,
+    "object_colors_rgb": {
+      "second_object": [
+        0.92,
+        0.72,
+        0.12
+      ],
+      "target": [
+        0.85,
+        0.2,
+        0.15
+      ]
+    },
+    "rule": "per-pixel Euclidean RGB distance to the object colour < THRESHOLDS['color_tol'] on rgb/255"
+  },
+  "2_minimum_blob": {
+    "depth_valid_m": [
+      0.05,
+      4.0
+    ],
+    "line": 67,
+    "min_pixels": 8,
+    "rule": "mask pixels < min_pixels, or finite depth-valid pixels < min_pixels, gives no blob"
+  },
+  "3_centroid": {
+    "line": 86,
+    "rule": "xyz = mean over ALL depth-valid mask pixels of the back-projected world points (rec['xyz'] = pts.mean(0))"
+  },
+  "4_depth": {
+    "line": 37,
+    "rule": "_metric_depth: robosuite get_real_depth_map(env.sim, depth) on the flipped normalized depth; fallback only if that fails"
+  },
+  "5_pixel_to_world": {
+    "line": 82,
+    "rule": "x_cam=(xs-cx)*z/f, y_cam=(ys-cy)*z/f, p_cam=[x_cam,-y_cam,-z], p_world = R p_cam + t with the live agentview camera; f=0.5*128/tan(fovy/2), cx=cy=(128-1)/2"
+  },
+  "6_unknown": {
+    "line": 82,
+    "rule": "blob missing -> Held/OnTable/Inside/AtBuffer = UNKNOWN (reason object_blob_missing); lid or container missing -> Open UNKNOWN; container/buffer fall back to the static layout instead of UNKNOWN"
+  },
+  "7_OnTable": {
+    "line": 95,
+    "note": "the blob z is the mean z of the visible TOP-FACE points (about table_top + 0.043), 0.018 from the reference, inside the tolerance",
+    "rule": "TRUE when |blob_z - (table_z + 0.025)| < table_z_tol (0.05) and the object is not held; FALSE if held; else UNKNOWN"
+  },
+  "8_pick_mask_depends_on_visibility": {
+    "answer": true,
+    "contract_file": "configs/runtime/stage_2a_contract_registry.yaml",
+    "mechanism": "contract PICK pre_pos = GripperEmpty and OnTable(?o); OnTable(o) is UNKNOWN when the object has no blob, so the PICK mask turns FALSE for an undetected object (hard, not soft)"
+  },
+  "9_object_xyz_read_by_executor": {
+    "line": 276,
+    "rule": "_object_xyz: refresh perception (env.last_perception = table_xyz of the current blobs) and read perc[name][:3]; missing -> PerceptionMissing / CriticalFactLost"
+  },
+  "card": "CP-DISR-TP-OCC-PREFLIGHT-1",
+  "contract_registry_sha256": "e5914909eb1d91a7cdffa11c18a91a0748edafc44dd06a2da1404d0bc151d00b",
+  "safety_workspace": {
+    "slack": 0.05,
+    "xy": [
+      [
+        -0.45,
+        0.45
+      ],
+      [
+        -0.45,
+        0.45
+      ]
+    ]
+  },
+  "source_sha256": {
+    "d0_env.py": "acca983f058d2061d737603a91df9acc98310e4bc9ee713659d66ab6c92b7c6e",
+    "perception.py": "32b2ad455dbb418e13a4cd9cc16e8995b1bb5dc0f4bdd08d6ab1913c63930c7c",
+    "runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "safety.py": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
+    "skill_executor.py": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed",
+    "verifier.py": "e342d9bcd0b6e3f2dddaf4aeb3da171e7b9e9cb56b946b216c74d568c7aa2482"
+  }
+}

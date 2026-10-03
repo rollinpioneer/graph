@@ -1,0 +1,19 @@
+{
+  "events": [
+    {
+      "detail": "a ray-cast of the agentview camera over axis-aligned cubes was compared with the saved development images before the calibration thresholds above were written; the first hypothesis (whole cube) gave a 2.8 px bias and a 0.5 area ratio, the second (top face only) matched; the thresholds were then declared in code and committed before this run",
+      "event": "exploratory_calibration_before_threshold_freeze",
+      "scientific_change": false
+    },
+    {
+      "detail": "the first offline test run failed the metric-depth fit because the far/near ratio was assumed to be 5000; robosuite base.xml sets znear=0.001 and MuJoCo's zfar is 50 (ratio 50000, only the extent is fitted); the CAL_DEPTH_RMS_M tolerance was not changed",
+      "event": "depth_mapping_constants_corrected",
+      "scientific_change": false
+    },
+    {
+      "detail": "after the constants were corrected the extent fit (about 10.6) still had an all-pixel RMS of 6.9 mm and a max error of 77 mm, caused by silhouette-edge pixels; the median error is small. The depth fit was a check the implementation added, not a criterion of the card (Phase D is the projected centroid agreement), so it is reported as informational with robust statistics; no card threshold was changed",
+      "event": "depth_fit_made_non_gating",
+      "scientific_change": false
+    }
+  ]
+}
