@@ -598,7 +598,8 @@ def final_summary(out, verdict):
     v = json.loads((out / "camera_projection_validation.json").read_text())
     s = v["summary"]
     L += ["## C/D. camera model vs real clean dev blobs", "", f"- blobs {s['n_ok']}/{s['n_blobs']}; centroid error mean {s['mean_centroid_error_px']:.2f} px, max {s['max_centroid_error_px']:.2f} px; area ratio real/pred {s['area_ratio_min']:.2f}-{s['area_ratio_max']:.2f}; mean mask IoU {s['mean_mask_iou']:.2f}",
-          f"- metric depth fit: {v['metric_depth_fit'].get('status')} (rms {v['metric_depth_fit'].get('rms_m')})", "- the colour mask captures the top face of each cube only", ""]
+          f"- metric depth fit (informational, not gating): model form ok {v['metric_depth_fit'].get('model_form_ok')}, median error {v['metric_depth_fit'].get('median_abs_error_m'):.5f} m, all-pixel RMS {v['metric_depth_fit'].get('rms_all_pixels_m'):.4f} m (edge pixels)",
+          "- the colour mask captures the top face of each cube only", ""]
     if (out / "soft_occlusion_band_audit.json").exists():
         a = json.loads((out / "soft_occlusion_band_audit.json").read_text())
         g = json.loads((out / "world_safe_grid.json").read_text())
