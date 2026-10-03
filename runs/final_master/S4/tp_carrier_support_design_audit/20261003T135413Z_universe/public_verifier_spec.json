@@ -1,0 +1,27 @@
+{
+  "facts": {
+    "AtRegion(A,D)": "A marker xy inside D (registered tolerance)",
+    "AtRegion(B,D)": "B marker xy inside D",
+    "CarrierHeld(B)": "closed gripper and B marker patches near eef, B not at rest",
+    "GripperEmpty": "unchanged",
+    "Held(A)": "closed gripper and A marker near eef (unchanged thresholds)",
+    "OnCarrier(A,B)": "A marker xy inside the registered carrier support region and z within 0.008 m of support height + A height"
+  },
+  "needs_training": false,
+  "perception": {
+    "A_marker_pixels_on_carrier": 65,
+    "B_marker_pixels_with_A_present": 222,
+    "evaluated_pair": "basket|bbq_sauce",
+    "marker_B": "thin patches on the highest layer of the carrier, visible beside A",
+    "min_pixels": 8,
+    "new_vision_model": false,
+    "option_A_texture": "not demonstrable offline",
+    "option_B_marker": "public colour markers (LIBERO-derived instrumentation); roles use existing perception colours (A: target, B: a free named colour)",
+    "status": "PASS",
+    "unknown_conditions": [
+      "marker pixels < min_pixels -> facts UNKNOWN",
+      "A hidden by the hand while held",
+      "carrier marker hidden while it is lifted"
+    ]
+  }
+}

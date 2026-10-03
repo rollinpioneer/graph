@@ -1,0 +1,171 @@
+{
+  "carriers": {
+    "desk_caddy": {
+      "best": {
+        "box": 1,
+        "collisions": [],
+        "com_distance_m": 0.045172206618000296,
+        "feasible": true,
+        "kind": "RIM_WALL_PINCH",
+        "pad_contact_height_m": 0.010399999999999993,
+        "site_xy": [
+          0.0013799999999999923,
+          -0.06804
+        ],
+        "site_z": 0.16002000000000005,
+        "torque_ratio": 0.7308222353480871,
+        "yaw_deg": 1.2722218725854064e-14
+      },
+      "class_if_limit_lifted": "GENERIC_BINDING_REQUIRED",
+      "extent_xyz_m": [
+        0.151,
+        0.4338,
+        0.1669
+      ],
+      "feasible_sites": 89,
+      "mass_kg_range": [
+        0.278,
+        0.5277
+      ],
+      "pairs": {
+        "bbq_sauce": {
+          "carrier_grasp_ratio": 0.7855700018965098,
+          "centre_class": "UNSTABLE_OR_HARD_FAILURE",
+          "com_margin_m": 0.005,
+          "edge_class": "UNSTABLE_OR_HARD_FAILURE",
+          "fit_fraction": 0.2222222222222222,
+          "pick_on_carrier_ok": false,
+          "pick_reasons": [
+            "yaw 0: pinch width 0.107 > 0.064",
+            "yaw 90: finger+palm hit the carrier"
+          ]
+        },
+        "chocolate_pudding": {
+          "carrier_grasp_ratio": 0.7756970526513792,
+          "centre_class": "UNSTABLE_OR_HARD_FAILURE",
+          "com_margin_m": 0.005,
+          "edge_class": "UNSTABLE_OR_HARD_FAILURE",
+          "fit_fraction": 0.125,
+          "pick_on_carrier_ok": false,
+          "pick_reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.080 > 0.064"
+          ]
+        },
+        "cream_cheese": {
+          "carrier_grasp_ratio": 0.7565877461264213,
+          "centre_class": "UNSTABLE_OR_HARD_FAILURE",
+          "com_margin_m": 0.005,
+          "edge_class": "UNSTABLE_OR_HARD_FAILURE",
+          "fit_fraction": 0.125,
+          "pick_on_carrier_ok": false,
+          "pick_reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.081 > 0.064"
+          ]
+        }
+      }
+    },
+    "wine_rack": {
+      "best": null,
+      "class_if_limit_lifted": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+      "extent_xyz_m": [
+        0.2688,
+        0.2538,
+        0.3304
+      ],
+      "feasible_sites": 0,
+      "mass_kg_range": [
+        0.1527,
+        0.3049
+      ],
+      "pairs": {}
+    },
+    "wooden_tray": {
+      "best": {
+        "box": 2,
+        "collisions": [],
+        "com_distance_m": 0.07917934328141109,
+        "feasible": true,
+        "kind": "RIM_WALL_PINCH",
+        "pad_contact_height_m": 0.0104,
+        "site_xy": [
+          0.0028149721217943006,
+          -0.08017555992640153
+        ],
+        "site_z": 0.05764266154743012,
+        "torque_ratio": 0.24522082180815208,
+        "yaw_deg": 179.69747898698645
+      },
+      "class_if_limit_lifted": "GENERIC_MOVE_CARRIER_COMPATIBLE",
+      "extent_xyz_m": [
+        0.2971,
+        0.1665,
+        0.0819
+      ],
+      "feasible_sites": 48,
+      "mass_kg_range": [
+        0.0572,
+        0.101
+      ],
+      "pairs": {
+        "bbq_sauce": {
+          "carrier_grasp_ratio": 0.30580595712058933,
+          "centre_class": "STABLE_CENTER_CANDIDATE",
+          "com_margin_m": 0.02,
+          "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+          "fit_fraction": 0.7142857142857143,
+          "pick_on_carrier_ok": true,
+          "pick_reasons": [
+            "yaw 0: pinch width 0.107 > 0.064"
+          ]
+        },
+        "chocolate_pudding": {
+          "carrier_grasp_ratio": 0.2982862613530274,
+          "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+          "com_margin_m": 0.025,
+          "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+          "fit_fraction": 1.0,
+          "pick_on_carrier_ok": false,
+          "pick_reasons": [
+            "yaw 0: palm hit the carrier",
+            "yaw 90: pinch width 0.080 > 0.064"
+          ]
+        },
+        "cream_cheese": {
+          "carrier_grasp_ratio": 0.27569146149283763,
+          "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+          "com_margin_m": 0.025,
+          "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+          "fit_fraction": 1.0,
+          "pick_on_carrier_ok": false,
+          "pick_reasons": [
+            "yaw 0: palm hit the carrier",
+            "yaw 90: pinch width 0.081 > 0.064"
+          ]
+        }
+      }
+    },
+    "wooden_two_layer_shelf": {
+      "best": null,
+      "class_if_limit_lifted": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+      "extent_xyz_m": [
+        0.3515,
+        0.1909,
+        0.2104
+      ],
+      "feasible_sites": 0,
+      "mass_kg_range": [
+        0.2063,
+        0.4106
+      ],
+      "pairs": {}
+    }
+  },
+  "declared_limit_m": 0.2,
+  "gating": false,
+  "note": "the verdict uses the declared MAX_CARRIER_EXTENT; this block only shows what the extent limit alone changed",
+  "stable_centre_pairs_if_limit_lifted": [
+    "wooden_tray|bbq_sauce"
+  ]
+}

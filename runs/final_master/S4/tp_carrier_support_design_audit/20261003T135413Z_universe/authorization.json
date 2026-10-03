@@ -1,0 +1,67 @@
+{
+  "authorized_by": "user chat instruction approving CP-DISR-TP-CARRIER-SUPPORT-DESIGN-AUDIT-1",
+  "card": "CP-DISR-TP-CARRIER-SUPPORT-DESIGN-AUDIT-1",
+  "declared_before_stage2": {
+    "EDGE_MARGIN": 0.01,
+    "FIT_FRACTION_MIN": 0.6,
+    "FLAT_TOL": 0.003,
+    "GRIP_FORCE_N": 20.0,
+    "MARGIN_STABLE": 0.02,
+    "MAX_CARRIER_EXTENT": 0.2,
+    "PAYLOAD_MAX_KG": 1.0,
+    "SITE_STEP": 0.01,
+    "SPEED_CAP": 0.2,
+    "TILT_EXPECTED_DEG": 5.0,
+    "TORQUE_MAX": 1.0,
+    "TORQUE_OK": 0.5,
+    "WALL_LEVEL_TOL": 0.03,
+    "object_first_routes": "5 skills (set A down, move B, pick and place A) and the card's 3-skill route are both evaluated",
+    "orientation_policy": "carriers: asset frame z-up (derived registration); carried: class source rotation when explicit or the Hope default, else asset frame",
+    "recovery_model": "after a fall: PICK(A) then PLACE(A)"
+  },
+  "fail_order": [
+    "TASK_FAIL_NO_GENERIC_CARRIER",
+    "TASK_FAIL_REQUIRES_NEW_LOW_LEVEL_BEHAVIOR",
+    "TASK_FAIL_NO_CARRIED_OBJECT",
+    "TASK_FAIL_NO_STABLE_SUPPORT_PAIR",
+    "TASK_FAIL_NO_STABILITY_CONTRAST",
+    "TASK_FAIL_COMMUTATIVE",
+    "TASK_FAIL_FIXED_HEURISTIC_SUFFICIENT",
+    "TASK_FAIL_STATIC_PRIOR_SUFFICIENT",
+    "TASK_FAIL_CONTRACT_REVEALED",
+    "TASK_FAIL_REQUIRES_NEW_PERCEPTION_MODEL",
+    "TASK_FAIL_EVALUATOR_SEMANTIC_CHANGE",
+    "TASK_FAIL_SNAPSHOT_REWRITE",
+    "TASK_FAIL_RELATION_NOT_EXPRESSIBLE",
+    "TASK_FAIL_CANARY_NOT_BOUNDED",
+    "ENGINEERING_UNRESOLVED"
+  ],
+  "family": "T_P_CARRIER_SUPPORT_V1",
+  "kept_conclusions": {
+    "DV1_STACK_ORDER_IN_SHARED_BASKET": "STOPPED",
+    "GLOBAL_T_P": "UNRESOLVED",
+    "LIBERO_LOW_COST_TP_SEARCH": "COMPLETE_NEGATIVE"
+  },
+  "label": "DESIGN_ONLY_NOT_AUTHORIZED",
+  "limits": {
+    "benchmark_score_reads": 0,
+    "demo_replay": 0,
+    "elastic_attempts": 0,
+    "env_reset": 0,
+    "environment_constructions": 0,
+    "optimizer_steps": 0,
+    "physical_episodes": 0,
+    "provider_requests": 0,
+    "provider_retries": 0,
+    "rl_transitions": 0,
+    "skill_calls": 0,
+    "start_case": 0,
+    "test_result_reads": 0
+  },
+  "universe_frozen_and_committed_before_geometry": {
+    "committed": true,
+    "hashes_match_manifest": true,
+    "tracked_in_git": true
+  },
+  "verdict_rule": "first failing category in fail_order; every category is still evaluated and reported"
+}

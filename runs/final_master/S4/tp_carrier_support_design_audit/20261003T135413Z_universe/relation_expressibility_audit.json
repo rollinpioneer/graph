@@ -1,0 +1,42 @@
+{
+  "best_first_action_by_scenario": {
+    "S1_CO_TRANSPORT_STABLE": "carrier_first",
+    "S2_SEPARATE_DESTINATIONS": "tie",
+    "S3_CO_TRANSPORT_UNSTABLE": "carrier_first",
+    "S4_NO_SUPPORT_NEUTRAL": "tie"
+  },
+  "per_scenario_reading": {
+    "S1": "points to carrier-first: helpful (best action carrier-first)",
+    "S2": "tie: goal-dependent, no cost difference",
+    "S3": "points to carrier-first; harm is not established (carrier-first still needs no more skills)",
+    "S4": "neutral / absent"
+  },
+  "relation_always_points_to_carrier_first_when_non_neutral": true,
+  "relations": [
+    {
+      "contract_redundant": false,
+      "expressible": true,
+      "issues": [],
+      "relation": {
+        "effect_fact_ref": "p:AtRegion:B:D_B",
+        "relation_id": "rel_carrier_goal",
+        "source_ref": "a:MOVE_CARRIER:B:D_B:v1",
+        "target_ref": "p:AtRegion:A:D_A",
+        "type": "SOFT_RELEVANT_TO_GOAL"
+      }
+    },
+    {
+      "contract_redundant": false,
+      "expressible": true,
+      "issues": [],
+      "relation": {
+        "effect_fact_ref": "p:OnSupport:A",
+        "relation_id": "rel_pick_supports_move",
+        "source_ref": "a:PICK:A:v1",
+        "target_ref": "a:MOVE_CARRIER:B:D_B:v1",
+        "type": "SOFT_SUPPORTS"
+      }
+    }
+  ],
+  "schema": "m1_soft_relations_v2"
+}

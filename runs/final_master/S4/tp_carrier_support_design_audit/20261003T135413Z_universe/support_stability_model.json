@@ -1,0 +1,937 @@
+{
+  "contrast_pairs": [],
+  "definitions": {
+    "no_slip_limit": "mu*g, mu = max friction of the two geoms",
+    "path_acceleration_bound": "speed cap / control step (worst-case step from rest)",
+    "rim_retention_margin": "cavity depth - carried COM height",
+    "static_tip_margin": "atan(margin / COM height)",
+    "support_margin": "distance from the carried COM projection to the boundary of the flat support region"
+  },
+  "marginal_edge_pairs": [],
+  "model": "quasi-static; NOT a dynamics conclusion",
+  "pairs": {
+    "basket|bbq_sauce": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "bbq_sauce",
+      "carrier": "basket",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.12406891945211651,
+      "centre": {
+        "carrier_grasp": {
+          "best": {
+            "box": 3,
+            "collisions": [],
+            "com_distance_m": 0.06849892874730819,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              -0.00044976151998661845,
+              0.06894852565613727
+            ],
+            "site_z": 0.135472892005441,
+            "torque_ratio": 0.6582573393297606,
+            "yaw_deg": 0.15759288007951486
+          },
+          "feasible": 44
+        },
+        "com_projection_margin_m": 0.055,
+        "fit_fraction": 1.0,
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.01592826629310142,
+          "reasons": [
+            "yaw 0: pinch width 0.107 > 0.064",
+            "yaw 90: finger+palm hit the carrier"
+          ],
+          "yaw_options_deg": []
+        },
+        "static_tip_margin_rad": 1.3120939451928146,
+        "support_margin_m": 0.055
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": {
+            "box": 3,
+            "collisions": [],
+            "com_distance_m": 0.06865848140336572,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              0.009550200643207734,
+              0.06897603446711456
+            ],
+            "site_z": 0.135472892005441,
+            "torque_ratio": 0.6597905999044898,
+            "yaw_deg": 0.15759288007951486
+          },
+          "feasible": 44
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.06,
+              0.0
+            ],
+            "radius_m": 0.06,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6190476190476191,
+            "offset": [
+              0.0,
+              0.045
+            ],
+            "radius_m": 0.045,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6190476190476191,
+            "offset": [
+              0.045961940777125586,
+              0.045961940777125586
+            ],
+            "radius_m": 0.065,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5502645502645502,
+            "offset": [
+              -0.045961940777125586,
+              0.045961940777125586
+            ],
+            "radius_m": 0.065,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5238095238095238,
+            "offset": [
+              0.0,
+              -0.06
+            ],
+            "radius_m": 0.06,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.3492063492063492,
+            "offset": [
+              0.06010407640085654,
+              -0.06010407640085654
+            ],
+            "radius_m": 0.085,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.38095238095238093,
+            "offset": [
+              -0.05303300858899106,
+              -0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              -0.055,
+              0.0
+            ],
+            "radius_m": 0.055,
+            "tip_margin_rad": 0.6019878023501235
+          }
+        },
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.01592826629310142,
+          "reasons": [
+            "yaw 0: pinch width 0.107 > 0.064",
+            "yaw 90: palm hit the carrier"
+          ],
+          "yaw_options_deg": []
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.017359369926648327,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": 0.10951412794513711,
+      "rim_z_m": 0.14142828937876484,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.017359369926648327
+    },
+    "basket|chocolate_pudding": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "chocolate_pudding",
+      "carrier": "basket",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.12406891945211651,
+      "centre": {
+        "carrier_grasp": {
+          "best": {
+            "box": 2,
+            "collisions": [],
+            "com_distance_m": 0.0686630144663554,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              -0.0005797521123764272,
+              -0.06869508731561488
+            ],
+            "site_z": 0.13547233287434612,
+            "torque_ratio": 0.6546862345567566,
+            "yaw_deg": -179.64008879446675
+          },
+          "feasible": 44
+        },
+        "com_projection_margin_m": 0.06,
+        "fit_fraction": 1.0,
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.017617849307060215,
+          "reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.080 > 0.064"
+          ],
+          "yaw_options_deg": []
+        },
+        "static_tip_margin_rad": 1.3461530415125487,
+        "support_margin_m": 0.06
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": {
+            "box": 2,
+            "collisions": [],
+            "com_distance_m": 0.06874980301815893,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              0.009420050596432144,
+              -0.06863227183261382
+            ],
+            "site_z": 0.13547233287434612,
+            "torque_ratio": 0.6555137436695516,
+            "yaw_deg": -179.64008879446675
+          },
+          "feasible": 44
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.625,
+            "offset": [
+              0.06,
+              0.0
+            ],
+            "radius_m": 0.06,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.0,
+              0.05
+            ],
+            "radius_m": 0.05,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4583333333333333,
+            "offset": [
+              0.05303300858899106,
+              0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4166666666666667,
+            "offset": [
+              -0.05303300858899106,
+              0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.0,
+              -0.055
+            ],
+            "radius_m": 0.055,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4583333333333333,
+            "offset": [
+              0.05303300858899106,
+              -0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4166666666666667,
+            "offset": [
+              -0.05303300858899106,
+              -0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5625,
+            "offset": [
+              -0.055,
+              0.0
+            ],
+            "radius_m": 0.055,
+            "tip_margin_rad": 0.6301827072592837
+          }
+        },
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.017617849307060215,
+          "reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.080 > 0.064"
+          ],
+          "yaw_options_deg": []
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.017359369926648327,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": 0.1103589194521165,
+      "rim_z_m": 0.14142828937876484,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.017359369926648327
+    },
+    "basket|cream_cheese": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "cream_cheese",
+      "carrier": "basket",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.12406891945211651,
+      "centre": {
+        "carrier_grasp": {
+          "best": {
+            "box": 2,
+            "collisions": [],
+            "com_distance_m": 0.06866204044604281,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              -0.0005797521123764272,
+              -0.06869508731561488
+            ],
+            "site_z": 0.13547233287434612,
+            "torque_ratio": 0.6353383862437796,
+            "yaw_deg": -179.64008879446675
+          },
+          "feasible": 44
+        },
+        "com_projection_margin_m": 0.06,
+        "fit_fraction": 1.0,
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.008272000000000009,
+          "palm_clearance_m": 0.027165849307060223,
+          "reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.081 > 0.064"
+          ],
+          "yaw_options_deg": []
+        },
+        "static_tip_margin_rad": 1.422949736854678,
+        "support_margin_m": 0.06
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": {
+            "box": 2,
+            "collisions": [],
+            "com_distance_m": 0.06874835223018771,
+            "feasible": true,
+            "kind": "RIM_WALL_PINCH",
+            "pad_contact_height_m": 0.010399999999999993,
+            "site_xy": [
+              -0.0005797521123764272,
+              -0.06869508731561488
+            ],
+            "site_z": 0.13547233287434612,
+            "torque_ratio": 0.6361370399000971,
+            "yaw_deg": -179.64008879446675
+          },
+          "feasible": 44
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.625,
+            "offset": [
+              0.06,
+              0.0
+            ],
+            "radius_m": 0.06,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.0,
+              0.05
+            ],
+            "radius_m": 0.05,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.3819444444444444,
+            "offset": [
+              0.05303300858899106,
+              0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.3472222222222222,
+            "offset": [
+              -0.05303300858899106,
+              0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.0,
+              -0.055
+            ],
+            "radius_m": 0.055,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4583333333333333,
+            "offset": [
+              0.05303300858899106,
+              -0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4166666666666667,
+            "offset": [
+              -0.05303300858899106,
+              -0.05303300858899106
+            ],
+            "radius_m": 0.075,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5625,
+            "offset": [
+              -0.055,
+              0.0
+            ],
+            "radius_m": 0.055,
+            "tip_margin_rad": 0.8415284100598596
+          }
+        },
+        "pick_on_carrier": {
+          "ok": false,
+          "pad_contact_m": 0.008272000000000009,
+          "palm_clearance_m": 0.027165849307060223,
+          "reasons": [
+            "yaw 0: finger+palm hit the carrier",
+            "yaw 90: pinch width 0.081 > 0.064"
+          ],
+          "yaw_options_deg": []
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.017359369926648327,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": 0.1151329194521165,
+      "rim_z_m": 0.14142828937876484,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.017359369926648327
+    },
+    "cookies|bbq_sauce": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "bbq_sauce",
+      "carrier": "cookies",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.0,
+      "centre": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "com_projection_margin_m": 0.03,
+        "fit_fraction": 0.7619047619047619,
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.01592826629310142,
+          "reasons": [
+            "yaw 0: pinch width 0.107 > 0.064"
+          ],
+          "yaw_options_deg": [
+            90
+          ]
+        },
+        "static_tip_margin_rad": 1.1190912722007353,
+        "support_margin_m": 0.03
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5079365079365079,
+            "offset": [
+              0.025,
+              0.0
+            ],
+            "radius_m": 0.025,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.6666666666666666,
+            "offset": [
+              0.0,
+              0.025
+            ],
+            "radius_m": 0.025,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4444444444444444,
+            "offset": [
+              0.024748737341529162,
+              0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.47619047619047616,
+            "offset": [
+              -0.021213203435596423,
+              0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.47619047619047616,
+            "offset": [
+              0.0,
+              -0.04
+            ],
+            "radius_m": 0.04,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4126984126984127,
+            "offset": [
+              0.024748737341529162,
+              -0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4444444444444444,
+            "offset": [
+              -0.021213203435596423,
+              -0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.6019878023501235
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5079365079365079,
+            "offset": [
+              -0.02,
+              0.0
+            ],
+            "radius_m": 0.02,
+            "tip_margin_rad": 0.6019878023501235
+          }
+        },
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.01592826629310142,
+          "reasons": [
+            "yaw 0: pinch width 0.107 > 0.064"
+          ],
+          "yaw_options_deg": [
+            90
+          ]
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.018799999999999706,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": -0.0145547915069794,
+      "rim_z_m": 0.018799999999999706,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.018799999999999706
+    },
+    "cookies|chocolate_pudding": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "chocolate_pudding",
+      "carrier": "cookies",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.0,
+      "centre": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "com_projection_margin_m": 0.03,
+        "fit_fraction": 0.75,
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.017617849307060215,
+          "reasons": [
+            "yaw 90: pinch width 0.080 > 0.064"
+          ],
+          "yaw_options_deg": [
+            0
+          ]
+        },
+        "static_tip_margin_rad": 1.142136469134679,
+        "support_margin_m": 0.03
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5625,
+            "offset": [
+              0.025,
+              0.0
+            ],
+            "radius_m": 0.025,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.0,
+              0.035
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.024748737341529162,
+              0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5625,
+            "offset": [
+              -0.021213203435596423,
+              0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.0,
+              -0.03
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.4375,
+            "offset": [
+              0.024748737341529162,
+              -0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              -0.021213203435596423,
+              -0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.6301827072592837
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.625,
+            "offset": [
+              -0.02,
+              0.0
+            ],
+            "radius_m": 0.02,
+            "tip_margin_rad": 0.6301827072592837
+          }
+        },
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.016,
+          "palm_clearance_m": 0.017617849307060215,
+          "reasons": [
+            "yaw 90: pinch width 0.080 > 0.064"
+          ],
+          "yaw_options_deg": [
+            0
+          ]
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.018799999999999706,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": -0.013710000000000012,
+      "rim_z_m": 0.018799999999999706,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.018799999999999706
+    },
+    "cookies|cream_cheese": {
+      "acceleration_ratio": 0.4292075755137078,
+      "carried": "cream_cheese",
+      "carrier": "cookies",
+      "carrier_path_acceleration_bound": 4.0,
+      "cavity_depth_m": 0.0,
+      "centre": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "com_projection_margin_m": 0.03,
+        "fit_fraction": 0.75,
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.008272000000000009,
+          "palm_clearance_m": 0.027165849307060223,
+          "reasons": [
+            "yaw 90: pinch width 0.081 > 0.064"
+          ],
+          "yaw_options_deg": [
+            0
+          ]
+        },
+        "static_tip_margin_rad": 1.281297866206809,
+        "support_margin_m": 0.03
+      },
+      "centre_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "edge": {
+        "carrier_grasp": {
+          "best": null,
+          "feasible": 0
+        },
+        "chosen": "E",
+        "directions": {
+          "E": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5625,
+            "offset": [
+              0.025,
+              0.0
+            ],
+            "radius_m": 0.025,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "N": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.0,
+              0.035
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "NE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.024748737341529162,
+              0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "NW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              -0.021213203435596423,
+              0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "S": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.0,
+              -0.03
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "SE": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              0.024748737341529162,
+              -0.024748737341529162
+            ],
+            "radius_m": 0.035,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "SW": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.5,
+            "offset": [
+              -0.021213203435596423,
+              -0.021213203435596423
+            ],
+            "radius_m": 0.03,
+            "tip_margin_rad": 0.8415284100598596
+          },
+          "W": {
+            "com_margin_m": 0.01,
+            "fit_fraction": 0.625,
+            "offset": [
+              -0.02,
+              0.0
+            ],
+            "radius_m": 0.02,
+            "tip_margin_rad": 0.8415284100598596
+          }
+        },
+        "pick_on_carrier": {
+          "ok": true,
+          "pad_contact_m": 0.008272000000000009,
+          "palm_clearance_m": 0.027165849307060223,
+          "reasons": [
+            "yaw 90: pinch width 0.081 > 0.064"
+          ],
+          "yaw_options_deg": [
+            0
+          ]
+        }
+      },
+      "edge_class": "UNKNOWN_NEEDS_PHYSICAL_CANARY",
+      "fall_height_m": 0.018799999999999706,
+      "no_slip_acceleration_limit": 9.3195,
+      "rim_retention_margin_m": -0.00893600000000001,
+      "rim_z_m": 0.018799999999999706,
+      "speed_cap_m_s": 0.2,
+      "support_z_m": 0.018799999999999706
+    }
+  },
+  "parameters": {
+    "edge_margin_m": 0.01,
+    "margin_stable_m": 0.02,
+    "speed_cap_m_s": 0.2,
+    "tilt_expected_deg": 5.0
+  },
+  "stable_center_pairs": [],
+  "support_fields": {
+    "basket": {
+      "cavity_depth_m": 0.12406891945211651,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rim_z": 0.14142828937876484,
+      "support_area_m2": 0.015600000000000001,
+      "z_support": 0.017359369926648327
+    },
+    "cookies": {
+      "cavity_depth_m": 0.0,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rim_z": 0.018799999999999706,
+      "support_area_m2": 0.0048000000000000004,
+      "z_support": 0.018799999999999706
+    }
+  }
+}

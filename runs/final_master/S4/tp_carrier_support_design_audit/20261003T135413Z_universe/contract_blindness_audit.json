@@ -1,0 +1,93 @@
+{
+  "best_plan_skills": {
+    "S1_CO_TRANSPORT_STABLE": 1,
+    "S2_SEPARATE_DESTINATIONS": 3,
+    "S3_CO_TRANSPORT_UNSTABLE": 1,
+    "S4_NO_SUPPORT_NEUTRAL": 3
+  },
+  "contract_only_plans": {
+    "S1_CO_TRANSPORT_STABLE": {
+      "note": "the contract has no effect that lets MOVE_CARRIER relocate A, so A is handled separately",
+      "plan": [
+        "PICK(A)",
+        "PLACE(A,T)",
+        "MOVE_CARRIER(B,D)",
+        "PICK(A)",
+        "PLACE(A,D_A)"
+      ],
+      "skills": 5
+    },
+    "S2_SEPARATE_DESTINATIONS": {
+      "note": "independent subgoals",
+      "plan": [
+        "PICK(A)",
+        "PLACE(A,D_A)",
+        "MOVE_CARRIER(B,D_B)"
+      ],
+      "skills": 3
+    },
+    "S3_CO_TRANSPORT_UNSTABLE": {
+      "note": "the contract has no effect that lets MOVE_CARRIER relocate A, so A is handled separately",
+      "plan": [
+        "PICK(A)",
+        "PLACE(A,T)",
+        "MOVE_CARRIER(B,D)",
+        "PICK(A)",
+        "PLACE(A,D_A)"
+      ],
+      "skills": 5
+    },
+    "S4_NO_SUPPORT_NEUTRAL": {
+      "note": "independent subgoals",
+      "plan": [
+        "PICK(A)",
+        "PLACE(A,D_A)",
+        "MOVE_CARRIER(B,D_B)"
+      ],
+      "skills": 3
+    }
+  },
+  "contract_planner_reveals_winner_in_every_scenario": false,
+  "contracts": {
+    "a:MOVE_CARRIER:B:D_B:v1": {
+      "add": [
+        "p:AtRegion:B:D_B"
+      ],
+      "del": [
+        "p:AtRegion:B:start"
+      ],
+      "pre": [
+        "p:GripperEmpty",
+        "p:OnSupport:B"
+      ]
+    },
+    "a:PICK:A:v1": {
+      "add": [
+        "p:Held:A"
+      ],
+      "del": [
+        "p:GripperEmpty",
+        "p:OnSupport:A"
+      ],
+      "pre": [
+        "p:GripperEmpty",
+        "p:OnSupport:A"
+      ]
+    },
+    "a:PLACE:A:D_A:v1": {
+      "add": [
+        "p:AtRegion:A:D_A",
+        "p:GripperEmpty"
+      ],
+      "del": [
+        "p:Held:A"
+      ],
+      "pre": [
+        "p:Held:A"
+      ]
+    }
+  },
+  "hard_mask_contents": "PRE/ADD/DEL of PICK(A), PLACE(A), MOVE_CARRIER(B,D) only; no entry says that A rides, falls, is stable, or which order is better",
+  "hard_mask_leaks_winner": false,
+  "reading": "S1: the contract cannot credit MOVE_CARRIER with relocating A, so the uniform-cost plan uses 5 skills although 1 is possible; S2: independent subgoals, tie"
+}

@@ -1,0 +1,185 @@
+{
+  "forbidden": [
+    "scene-specific trajectories",
+    "online path change when A falls",
+    "retry until success",
+    "hidden pose correction",
+    "learned controller",
+    "changes to PICK(A) or PLACE(A)"
+  ],
+  "new_states_beyond_allowed": [],
+  "parameters": [
+    "grasp site",
+    "gripper yaw",
+    "gripper width",
+    "lift height",
+    "destination",
+    "translation speed",
+    "carrier geometry"
+  ],
+  "per_carrier": {
+    "akita_black_bowl": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.17054192852348782,
+      "release_site_z_m": null
+    },
+    "basket": {
+      "best_site": {
+        "box": 2,
+        "collisions": [],
+        "com_distance_m": 0.06866063703079443,
+        "feasible": true,
+        "kind": "RIM_WALL_PINCH",
+        "pad_contact_height_m": 0.010399999999999993,
+        "site_xy": [
+          -0.0005797521123764272,
+          -0.06869508731561488
+        ],
+        "site_z": 0.13547233287434612,
+        "torque_ratio": 0.6092464449476761,
+        "yaw_deg": -179.64008879446675
+      },
+      "candidate_sites": 52,
+      "class": "GENERIC_BINDING_REQUIRED",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 44,
+      "lift_height_above_table_m": 0.261472892005441,
+      "release_site_z_m": 0.13547233287434612
+    },
+    "cookies": {
+      "best_site": {
+        "box": null,
+        "collisions": [],
+        "com_distance_m": 0.0,
+        "feasible": true,
+        "kind": "BODY_PINCH",
+        "pad_contact_height_m": 0.009200000000000003,
+        "pinch_width_m": 0.06208000000000001,
+        "site_xy": [
+          0.0,
+          0.0
+        ],
+        "site_z": 0.013999999999999999,
+        "torque_ratio": 0.0,
+        "yaw_deg": 90.0
+      },
+      "candidate_sites": 1,
+      "class": "GENERIC_MOVE_CARRIER_COMPATIBLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 1,
+      "lift_height_above_table_m": 0.1388,
+      "release_site_z_m": 0.013999999999999999
+    },
+    "desk_caddy": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.28690000000000004,
+      "release_site_z_m": null
+    },
+    "flat_stove": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.19002,
+      "release_site_z_m": null
+    },
+    "glazed_rim_porcelain_ramekin": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.16200990127282844,
+      "release_site_z_m": null
+    },
+    "microwave": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.3995,
+      "release_site_z_m": null
+    },
+    "plate": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.13894636973086458,
+      "release_site_z_m": null
+    },
+    "white_cabinet": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.33840319016193826,
+      "release_site_z_m": null
+    },
+    "wine_rack": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.4504296000476763,
+      "release_site_z_m": null
+    },
+    "wooden_cabinet": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.33840319016193826,
+      "release_site_z_m": null
+    },
+    "wooden_tray": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.2018626615474301,
+      "release_site_z_m": null
+    },
+    "wooden_two_layer_shelf": {
+      "best_site": null,
+      "candidate_sites": 0,
+      "class": "NOT_MOVABLE",
+      "derived_asset_semantic_change": false,
+      "feasible_sites": 0,
+      "lift_height_above_table_m": 0.33041894326279736,
+      "release_site_z_m": null
+    }
+  },
+  "states": [
+    "APPROACH_CARRIER_GRASP_SITE",
+    "DESCEND",
+    "CLOSE",
+    "LIFT_LEVEL",
+    "TRANSLATE_LEVEL",
+    "DESCEND_TO_DESTINATION",
+    "RELEASE",
+    "RETREAT"
+  ],
+  "status": "SPECIFIED",
+  "sweep_check": {
+    "lift_level_height_above_carrier_top_m": 0.12,
+    "translation_clearance": "the lifted carrier (top + 0.12 m) clears every static item of the proven layout, whose tallest member is the 0.145 m container"
+  },
+  "translation_speed_cap_m_s": 0.2,
+  "yaw_wiring": "action[3:6] is zeroed in D0ManipulationEnv.step_osc; any non-zero yaw needs the yaw feed into action[5] during APPROACH only (the OSC_POSE rotation dims already exist)"
+}

@@ -1,0 +1,55 @@
+{
+  "family": "T_P_CARRIER_SUPPORT_V1",
+  "gripper_holds_one_object": true,
+  "label": "DESIGN_ONLY_NOT_AUTHORIZED",
+  "scenario_pair_counts": {
+    "contrast_pairs": 0,
+    "marginal_edge_pairs": 0,
+    "stable_center_pairs": 0
+  },
+  "scenarios": {
+    "S1_CO_TRANSPORT_STABLE": {
+      "goals": [
+        "AtRegion(B,D_B)",
+        "AtRegion(A,D_A)"
+      ],
+      "realised_by": [],
+      "state": "A centred on B (stable-centre pair); A's target xy coincides with where A rides when B reaches its destination",
+      "unestablished": [
+        "A actually rides with B without sliding"
+      ]
+    },
+    "S2_SEPARATE_DESTINATIONS": {
+      "goals": [
+        "AtRegion(B,D_B)",
+        "AtRegion(A,D_A)"
+      ],
+      "realised_by": [],
+      "state": "A stable on B; A's target is elsewhere",
+      "unestablished": [
+        "any cost of carrier-first beyond path"
+      ]
+    },
+    "S3_CO_TRANSPORT_UNSTABLE": {
+      "goals": [
+        "AtRegion(B,D_B)",
+        "AtRegion(A,D_A)"
+      ],
+      "realised_by": [],
+      "state": "same goals as S1 but A near the carrier edge (margin 0.010 m)",
+      "unestablished": [
+        "A slides or falls",
+        "recovery always possible"
+      ]
+    },
+    "S4_NO_SUPPORT_NEUTRAL": {
+      "goals": [
+        "AtRegion(B,D_B)",
+        "AtRegion(A,D_A)"
+      ],
+      "realised_by": "any usable pair with A placed apart",
+      "state": "A not on B; moving B does not change A",
+      "unestablished": []
+    }
+  }
+}

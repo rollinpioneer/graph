@@ -1,0 +1,272 @@
+{
+  "UNESTABLISHED": [
+    "A follows B",
+    "A does not slide",
+    "A falls",
+    "a fall is recoverable",
+    "MOVE_CARRIER needs fewer skills",
+    "separate goals favour object-first",
+    "the support relation can be generated from RGB"
+  ],
+  "best_first_action_by_skill_count": {
+    "S1_CO_TRANSPORT_STABLE": "carrier_first",
+    "S2_SEPARATE_DESTINATIONS": "tie",
+    "S3_CO_TRANSPORT_UNSTABLE": "carrier_first",
+    "S4_NO_SUPPORT_NEUTRAL": "tie"
+  },
+  "dominance": {
+    "S1_CO_TRANSPORT_STABLE": {
+      "carrier_first_ever_strictly_more_skills": false,
+      "carrier_first_ever_strictly_more_skills_vs_card_route": false,
+      "carrier_first_ever_strictly_more_time": false,
+      "object_first_ever_strictly_more_skills": true,
+      "object_first_ever_strictly_more_skills_vs_card_route": true,
+      "orders_differ_by_skill_count": true,
+      "orders_differ_by_time": true
+    },
+    "S2_SEPARATE_DESTINATIONS": {
+      "carrier_first_ever_strictly_more_skills": false,
+      "carrier_first_ever_strictly_more_skills_vs_card_route": false,
+      "carrier_first_ever_strictly_more_time": false,
+      "object_first_ever_strictly_more_skills": false,
+      "object_first_ever_strictly_more_skills_vs_card_route": false,
+      "orders_differ_by_skill_count": false,
+      "orders_differ_by_time": false
+    },
+    "S3_CO_TRANSPORT_UNSTABLE": {
+      "carrier_first_ever_strictly_more_skills": false,
+      "carrier_first_ever_strictly_more_skills_vs_card_route": false,
+      "carrier_first_ever_strictly_more_time": false,
+      "object_first_ever_strictly_more_skills": true,
+      "object_first_ever_strictly_more_skills_vs_card_route": true,
+      "orders_differ_by_skill_count": true,
+      "orders_differ_by_time": true
+    },
+    "S4_NO_SUPPORT_NEUTRAL": {
+      "carrier_first_ever_strictly_more_skills": false,
+      "carrier_first_ever_strictly_more_skills_vs_card_route": false,
+      "carrier_first_ever_strictly_more_time": false,
+      "object_first_ever_strictly_more_skills": false,
+      "object_first_ever_strictly_more_skills_vs_card_route": false,
+      "orders_differ_by_skill_count": false,
+      "orders_differ_by_time": false
+    }
+  },
+  "duration_source": {
+    "PICK_s": 4.837499999999359,
+    "PLACE_s": 3.224999999999283,
+    "source": "runs/final_master/S4/tp_bsi_preflight/20261003T053528Z_a6ca170d/skill_duration_summary.json"
+  },
+  "mechanisms_that_could_make_carrier_first_worse_but_are_UNESTABLE": [
+    "A falls to a state that is not publicly recoverable",
+    "A leaves the proven pick workspace",
+    "recovery needs more than PICK + PLACE",
+    "slide changes later reachability"
+  ],
+  "move_carrier_duration": "UNESTABLISHED: bracketed between one PICK and one PICK plus one PLACE",
+  "reversed_or_harmful_witness_not_path_only": false,
+  "routes_by_scenario": {
+    "S1_CO_TRANSPORT_STABLE": [
+      {
+        "carrier_first": {
+          "skills": 1.0,
+          "time_s": 4.837499999999359
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.0
+      },
+      {
+        "carrier_first": {
+          "skills": 2.0,
+          "time_s": 8.86874999999868
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.5
+      },
+      {
+        "carrier_first": {
+          "skills": 3.0,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 1.0
+      }
+    ],
+    "S2_SEPARATE_DESTINATIONS": [
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.0
+      },
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.5
+      },
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 1.0
+      }
+    ],
+    "S3_CO_TRANSPORT_UNSTABLE": [
+      {
+        "carrier_first": {
+          "skills": 1.0,
+          "time_s": 4.837499999999359
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.0
+      },
+      {
+        "carrier_first": {
+          "skills": 2.0,
+          "time_s": 8.86874999999868
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.5
+      },
+      {
+        "carrier_first": {
+          "skills": 3.0,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 5,
+          "time_s": 20.962499999996645
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 1.0
+      }
+    ],
+    "S4_NO_SUPPORT_NEUTRAL": [
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.0
+      },
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 0.5
+      },
+      {
+        "carrier_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "move_carrier_s": 4.837499999999359,
+        "object_first": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "object_first_card_route": {
+          "skills": 3,
+          "time_s": 12.899999999998002
+        },
+        "p_fall": 1.0
+      }
+    ]
+  },
+  "s2_classification": "COMMUTATIVE",
+  "s3_harmful_possible": false
+}

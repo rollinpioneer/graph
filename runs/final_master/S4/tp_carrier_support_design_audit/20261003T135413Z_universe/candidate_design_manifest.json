@@ -1,0 +1,244 @@
+{
+  "all_failing_categories": [
+    "TASK_FAIL_NO_STABLE_SUPPORT_PAIR",
+    "TASK_FAIL_NO_STABILITY_CONTRAST",
+    "TASK_FAIL_COMMUTATIVE",
+    "TASK_FAIL_FIXED_HEURISTIC_SUFFICIENT",
+    "TASK_FAIL_STATIC_PRIOR_SUFFICIENT",
+    "TASK_FAIL_CANARY_NOT_BOUNDED"
+  ],
+  "category_results": {
+    "ENGINEERING_UNRESOLVED": {
+      "evidence": {
+        "assets_without_box_collision_proxy": []
+      },
+      "fails": false
+    },
+    "TASK_FAIL_CANARY_NOT_BOUNDED": {
+      "evidence": {
+        "bounded": false,
+        "episodes": [
+          "C1 stable centre MOVE_CARRIER",
+          "C2 stable centre repeat",
+          "C3 edge configuration MOVE_CARRIER",
+          "C4 edge repeat"
+        ],
+        "max_episodes": 4,
+        "name": "CP-DISR-TP-CARRIER-SUPPORT-MECHANISM-CANARY-1",
+        "questions": {
+          "Q1 carrier moves stably": "C1, C2",
+          "Q2 co-transport in the stable configuration": "C1, C2",
+          "Q3 different consequence in the unstable configuration": "C3, C4",
+          "Q4 A recoverable after a fall": "answerable only if A falls in C3 or C4; otherwise deferred to a staged follow-up of at most 2 episodes"
+        },
+        "status": "BOUNDED_WITH_STAGING"
+      },
+      "fails": true
+    },
+    "TASK_FAIL_COMMUTATIVE": {
+      "evidence": {
+        "reversed_witness_not_path_only": false,
+        "s2": "COMMUTATIVE",
+        "s3_harmful_possible": false
+      },
+      "fails": true
+    },
+    "TASK_FAIL_CONTRACT_REVEALED": {
+      "evidence": {
+        "contract_plans": {
+          "S1_CO_TRANSPORT_STABLE": 5,
+          "S2_SEPARATE_DESTINATIONS": 3,
+          "S3_CO_TRANSPORT_UNSTABLE": 5,
+          "S4_NO_SUPPORT_NEUTRAL": 3
+        },
+        "optimal_skills": {
+          "S1_CO_TRANSPORT_STABLE": 1,
+          "S2_SEPARATE_DESTINATIONS": 3,
+          "S3_CO_TRANSPORT_UNSTABLE": 1,
+          "S4_NO_SUPPORT_NEUTRAL": 3
+        }
+      },
+      "fails": false
+    },
+    "TASK_FAIL_EVALUATOR_SEMANTIC_CHANGE": {
+      "evidence": {
+        "existing_evaluators_modified": false
+      },
+      "fails": false
+    },
+    "TASK_FAIL_FIXED_HEURISTIC_SUFFICIENT": {
+      "evidence": {
+        "counterexamples": {
+          "R1": [],
+          "R2": [],
+          "R3": [],
+          "R4": [
+            "S3_CO_TRANSPORT_UNSTABLE"
+          ],
+          "R5": [
+            "S1_CO_TRANSPORT_STABLE",
+            "S3_CO_TRANSPORT_UNSTABLE"
+          ],
+          "R6": []
+        },
+        "unrefuted_rules": [
+          "R1",
+          "R2",
+          "R3",
+          "R6"
+        ]
+      },
+      "fails": true
+    },
+    "TASK_FAIL_NO_CARRIED_OBJECT": {
+      "evidence": {
+        "unusable": {
+          "akita_black_bowl": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "alphabet_soup": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "black_book": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "butter": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "chefmate_8_frypan": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "cookies": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "glazed_rim_porcelain_ramekin": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "ketchup": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "milk": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "moka_pot": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "new_salad_dressing": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "orange_juice": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "plate": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "porcelain_mug": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "red_coffee_mug": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "salad_dressing": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "tomato_sauce": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "white_bowl": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "white_yellow_mug": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "wine_bottle": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED",
+          "yellow_book": "NEW_LOW_LEVEL_BEHAVIOR_REQUIRED"
+        },
+        "usable": [
+          "bbq_sauce",
+          "chocolate_pudding",
+          "cream_cheese"
+        ]
+      },
+      "fails": false
+    },
+    "TASK_FAIL_NO_GENERIC_CARRIER": {
+      "evidence": {
+        "classes": {
+          "akita_black_bowl": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+          "basket": "GENERIC_BINDING_REQUIRED",
+          "cookies": "GENERIC_MOVE_CARRIER_COMPATIBLE",
+          "desk_caddy": "NOT_MOVABLE",
+          "flat_stove": "NOT_MOVABLE",
+          "glazed_rim_porcelain_ramekin": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+          "microwave": "NOT_MOVABLE",
+          "plate": "ASSET_SPECIFIC_CONTROLLER_REQUIRED",
+          "white_cabinet": "NOT_MOVABLE",
+          "wine_rack": "NOT_MOVABLE",
+          "wooden_cabinet": "NOT_MOVABLE",
+          "wooden_tray": "NOT_MOVABLE",
+          "wooden_two_layer_shelf": "NOT_MOVABLE"
+        },
+        "derived_usable_backup_only": [],
+        "native_usable": [
+          "basket",
+          "cookies"
+        ]
+      },
+      "fails": false
+    },
+    "TASK_FAIL_NO_STABILITY_CONTRAST": {
+      "evidence": {
+        "contrast_pairs": [],
+        "edge_class_counts": {
+          "UNKNOWN_NEEDS_PHYSICAL_CANARY": 6
+        },
+        "marginal_edge_pairs": []
+      },
+      "fails": true
+    },
+    "TASK_FAIL_NO_STABLE_SUPPORT_PAIR": {
+      "evidence": {
+        "centre_class_counts": {
+          "UNKNOWN_NEEDS_PHYSICAL_CANARY": 6
+        },
+        "pairs_evaluated": 6,
+        "stable_center_pairs": []
+      },
+      "fails": true
+    },
+    "TASK_FAIL_RELATION_NOT_EXPRESSIBLE": {
+      "evidence": [
+        {
+          "id": "rel_carrier_goal",
+          "issues": []
+        },
+        {
+          "id": "rel_pick_supports_move",
+          "issues": []
+        }
+      ],
+      "fails": false
+    },
+    "TASK_FAIL_REQUIRES_NEW_LOW_LEVEL_BEHAVIOR": {
+      "evidence": {
+        "new_states": [],
+        "spec_status": "SPECIFIED"
+      },
+      "fails": false
+    },
+    "TASK_FAIL_REQUIRES_NEW_PERCEPTION_MODEL": {
+      "evidence": {
+        "A_marker_pixels_on_carrier": 65,
+        "B_marker_pixels_with_A_present": 222,
+        "evaluated_pair": "basket|bbq_sauce",
+        "status": "PASS"
+      },
+      "fails": false
+    },
+    "TASK_FAIL_SNAPSHOT_REWRITE": {
+      "evidence": {
+        "capture_sim_reads_env_sim_data": true,
+        "free_joint_objects_set_by_qpos": true,
+        "object_set_defined_by_case": true,
+        "python_state_dump_covers_robot_controller_gripper_rng": true,
+        "restore_builds_env_from_case_first": true,
+        "sim_fields_saved": [
+          "\"qpos\", \"qvel\", \"act\", \"ctrl\", \"qacc_warmstart\", \"qacc\", \"qfrc_applied\", \"xfrc_applied\", \"mocap_pos\", \"mocap_quat\""
+        ]
+      },
+      "fails": false
+    },
+    "TASK_FAIL_STATIC_PRIOR_SUFFICIENT": {
+      "evidence": {
+        "best_first_action_by_scenario": {
+          "S1_CO_TRANSPORT_STABLE": "carrier_first",
+          "S2_SEPARATE_DESTINATIONS": "tie",
+          "S3_CO_TRANSPORT_UNSTABLE": "carrier_first",
+          "S4_NO_SUPPORT_NEUTRAL": "tie"
+        }
+      },
+      "fails": true
+    }
+  },
+  "family": "T_P_CARRIER_SUPPORT_V1",
+  "label": "DESIGN_ONLY_NOT_AUTHORIZED",
+  "pass_conditions": {
+    "10_relation_expressible_non_redundant": true,
+    "11_verifier_evaluator_definable": true,
+    "12_snapshot_no_rewrite": true,
+    "13_no_new_models_or_low_level": true,
+    "14_canary_bounded": false,
+    "1_one_carrier_generic": true,
+    "2_one_carried_object": true,
+    "3_stable_centre_pair": false,
+    "4_edge_pair": false,
+    "5_neutral_configuration": true,
+    "6_s1_skill_advantage": true,
+    "7_reversed_not_path_only": false,
+    "8_r1_to_r6_all_refuted": false,
+    "9_contract_cannot_order": true
+  },
+  "verdict": "TASK_FAIL_NO_STABLE_SUPPORT_PAIR"
+}
