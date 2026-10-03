@@ -1,0 +1,2754 @@
+{
+  "cards": {
+    "DV1_STACK_ORDER_IN_SHARED_BASKET": {
+      "canary_episodes": 4,
+      "card_id": "DV1_STACK_ORDER_IN_SHARED_BASKET",
+      "contract_gives_winner": false,
+      "contract_note": "no contract relation orders the two items (the drop site occupancy is not a predicate)",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral",
+          "harmful"
+        ],
+        "established": false,
+        "note": "helpful/neutral/reversed can be designed by choosing item pairs, but the physical existence of the effect is not shown"
+      },
+      "downstream_dependence": {
+        "note": "success of In(basket) and the rework rate need a physical probe; the static asset data cannot establish them",
+        "value": null
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G10"
+      ],
+      "fixed_rule_note": "a 'larger first' rule fails on pairs where size and fragility disagree; this can be designed in, but the real effect size is unmeasured",
+      "fixed_rule_solves": false,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: either item can be placed first",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "only 0 of 10 grocery assets are orientation-agnostic pinchable (none); 4 more would be pinchable if spawn orientation were verified (bbq_sauce,butter,chocolate_pudding,cream_cheese). hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "no contract relation orders the two items (the drop site occupancy is not a predicate)",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "pile heights per item (asset z extents, orientation unverified): {\"alphabet_soup\": {\"min_height\": 0.062, \"max_height\": 0.076}, \"bbq_sauce\": {\"min_height\": 0.029, \"max_height\": 0.107}, \"butter\": {\"min_height\": 0.017, \"max_height\": 0.076}, \"chocolate_pudding\": {\"min_height\": 0.027, \"max_height\": 0.08}}; basket contain_region depth 0.139 m. Whether the second drop topples or ejects an item is a contact-dynamics question.",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G4": {
+          "reason": "success of In(basket) and the rework rate need a physical probe; the static asset data cannot establish them",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: an ejected item needs a re-pick, which is extra skills not path",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "sturdy/heavy/large first is a natural commonsense relation readable from the image and task language",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "weight/fragility are not in the contract vocabulary",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "helpful/neutral/reversed can be designed by choosing item pairs, but the physical existence of the effect is not shown",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G9": {
+          "reason": "a 'larger first' rule fails on pairs where size and fragility disagree; this can be designed in, but the real effect size is unmeasured",
+          "status": "PASS"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "D0_ENV_WITH_LIBERO_ASSETS",
+      "legal_first_actions_note": "either item can be placed first",
+      "n_legal_first_actions": 2,
+      "not_path_note": "an ejected item needs a re-pick, which is extra skills not path",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": null,
+        "note": "pile heights per item (asset z extents, orientation unverified): {\"alphabet_soup\": {\"min_height\": 0.062, \"max_height\": 0.076}, \"bbq_sauce\": {\"min_height\": 0.029, \"max_height\": 0.107}, \"butter\": {\"min_height\": 0.017, \"max_height\": 0.076}, \"chocolate_pudding\": {\"min_height\": 0.027, \"max_height\": 0.08}}; basket contain_region depth 0.139 m. Whether the second drop topples or ejects an item is a contact-dynamics question."
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": false,
+      "relation_note": "sturdy/heavy/large first is a natural commonsense relation readable from the image and task language",
+      "renaming_note": "weight/fragility are not in the contract vocabulary",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "only 0 of 10 grocery assets are orientation-agnostic pinchable (none); 4 more would be pinchable if spawn orientation were verified (bbq_sauce,butter,chocolate_pudding,cream_cheese). hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "tasks": [
+        "derived: two grocery items, one public basket"
+      ],
+      "template": {
+        "candidate_A": "PLACE the sturdy/heavy item first",
+        "candidate_B": "PLACE the fragile/light item first",
+        "downstream_effect": "tipping or ejection of the top item would force re-pick (extra skills)",
+        "persistent_effect": "pile order in the basket: the second item lands on the first",
+        "state": "two items on the table, empty basket; PLACE drops at a fixed basket site"
+      },
+      "unverifiable_gates": [
+        "G3",
+        "G4",
+        "G8",
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "DV2_SUPPORT_REMOVE_TOP_FIRST": {
+      "canary_episodes": 4,
+      "card_id": "DV2_SUPPORT_REMOVE_TOP_FIRST",
+      "contract_gives_winner": true,
+      "contract_note": "a support predicate in PRE of PICK(B) determines the order",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral"
+        ],
+        "established": true,
+        "note": "A-only goals are neutral, B goals are forced"
+      },
+      "downstream_dependence": {
+        "note": "gates the second action",
+        "value": true
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G1",
+        "G2",
+        "G7",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "remove whatever rests on a needed object",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "1 legal first high-level actions in the decision state: picking B is blocked while A rests on it (hard); the only legal first move for a B-goal is A",
+          "status": "FAIL"
+        },
+        "G10": {
+          "reason": "stacked starts violate the OnTable contract and the Verifier OnTable bound; hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "hard precondition decides the order (Clear(B) / not supported-by(A, B)): belongs in PRE/ADD/DEL, the contract planner returns the winner",
+          "status": "FAIL"
+        },
+        "G3": {
+          "reason": "support relation persists, but it is a hard precondition",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "gates the second action",
+          "status": "PASS"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "support relation is visible",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "Support is a precondition predicate, i.e. a contract fact",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "A-only goals are neutral, B goals are forced",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "remove whatever rests on a needed object",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": true,
+      "hard_precondition_note": "Clear(B) / not supported-by(A, B)",
+      "host": "D0_ENV_WITH_LIBERO_ASSETS",
+      "legal_first_actions_note": "picking B is blocked while A rests on it (hard); the only legal first move for a B-goal is A",
+      "n_legal_first_actions": 1,
+      "not_path_note": "",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "support relation persists, but it is a hard precondition"
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "support relation is visible",
+      "renaming_note": "Support is a precondition predicate, i.e. a contract fact",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "stacked starts violate the OnTable contract and the Verifier OnTable bound; hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "tasks": [
+        "derived: item A resting on item B, goals vary over A, B or both"
+      ],
+      "template": {
+        "candidate_A": "move A first",
+        "candidate_B": "pick B directly",
+        "downstream_effect": "B cannot be picked while A rests on it",
+        "persistent_effect": "A removed from the support of B",
+        "state": "A rests on B"
+      },
+      "unverifiable_gates": [
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "DV3_NEIGHBOUR_CLEARING_IN_FINGER_ENVELOPE": {
+      "canary_episodes": 4,
+      "card_id": "DV3_NEIGHBOUR_CLEARING_IN_FINGER_ENVELOPE",
+      "contract_gives_winner": true,
+      "contract_note": "Safety hard mask already removes the colliding candidate",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral"
+        ],
+        "established": true,
+        "note": "far neighbours are neutral"
+      },
+      "downstream_dependence": {
+        "note": "collision or not",
+        "value": true
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G2",
+        "G7",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "clear any neighbour within the envelope",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: clearing is legal; grasping directly is legal only if the envelope is free (safety mask)",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "PICK and PLACE_BUFFER would suffice but hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "hard precondition decides the order (finger-envelope collision is a Safety/contract-level hard mask; the BSI, OCC and VIS preflights on the same Panda gripper found no safe soft band): belongs in PRE/ADD/DEL, the contract planner returns the winner",
+          "status": "FAIL"
+        },
+        "G3": {
+          "reason": "neighbour position persists",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "collision or not",
+          "status": "PASS"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "adjacency is visible",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "adjacency/collision is a geometric precondition the Safety module encodes",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "far neighbours are neutral",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "clear any neighbour within the envelope",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": true,
+      "hard_precondition_note": "finger-envelope collision is a Safety/contract-level hard mask; the BSI, OCC and VIS preflights on the same Panda gripper found no safe soft band",
+      "host": "D0_ENV_WITH_LIBERO_ASSETS",
+      "legal_first_actions_note": "clearing is legal; grasping directly is legal only if the envelope is free (safety mask)",
+      "n_legal_first_actions": 2,
+      "not_path_note": "",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "neighbour position persists"
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "adjacency is visible",
+      "renaming_note": "adjacency/collision is a geometric precondition the Safety module encodes",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "PICK and PLACE_BUFFER would suffice but hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+        "platform_ok": false,
+        "worst_class": "CURRENT_SKILL_WITH_NEW_BINDING"
+      },
+      "tasks": [
+        "derived: a neighbour placed inside the pinch envelope of the goal object"
+      ],
+      "template": {
+        "candidate_A": "clear the neighbour first",
+        "candidate_B": "grasp directly",
+        "downstream_effect": "the grasp collides with the neighbour or not",
+        "persistent_effect": "neighbour moved away",
+        "state": "neighbour next to the goal object"
+      },
+      "unverifiable_gates": [
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "DV4_SHARED_DESTINATION_CAPACITY": {
+      "canary_episodes": 4,
+      "card_id": "DV4_SHARED_DESTINATION_CAPACITY",
+      "contract_gives_winner": true,
+      "contract_note": "the goal contract only wants the goal item at the destination; B_PLAN never plans the distractor",
+      "covers": {
+        "classes": [
+          "helpful",
+          "harmful"
+        ],
+        "established": true,
+        "note": "distractor-first is only ever harmful"
+      },
+      "downstream_dependence": {
+        "note": "blocks the goal item",
+        "value": true
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G2",
+        "G7",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "never place a non-goal item on the destination",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: placing the distractor on the destination is legal",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "the goal contract only wants the goal item at the destination; B_PLAN never plans the distractor",
+          "status": "FAIL"
+        },
+        "G3": {
+          "reason": "occupied destination",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "blocks the goal item",
+          "status": "PASS"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "goal-relevance of an item is visible in language",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "relevance is the goal itself",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "distractor-first is only ever harmful",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "never place a non-goal item on the destination",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "D0_ENV_WITH_LIBERO_ASSETS",
+      "legal_first_actions_note": "placing the distractor on the destination is legal",
+      "n_legal_first_actions": 2,
+      "not_path_note": "",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "occupied destination"
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "goal-relevance of an item is visible in language",
+      "renaming_note": "relevance is the goal itself",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "hosting LIBERO assets inside the project's D0 platform keeps the controller, but LIBERO objects are textured and non-cubic, so perception (colour override), per-object grasp heights and container binding are new",
+        "platform_ok": false,
+        "worst_class": "CURRENT_SKILL_WITH_NEW_BINDING"
+      },
+      "tasks": [
+        "derived: a plate that takes one item, a goal-relevant item and a goal-irrelevant item"
+      ],
+      "template": {
+        "candidate_A": "place the goal item first",
+        "candidate_B": "place the distractor first",
+        "downstream_effect": "the goal item no longer fits",
+        "persistent_effect": "destination occupied",
+        "state": "goal item and distractor both on the table, small destination"
+      },
+      "unverifiable_gates": [
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "DV5_GOAL_CONDITIONED_DISTRACTOR_RELEVANCE": {
+      "canary_episodes": 4,
+      "card_id": "DV5_GOAL_CONDITIONED_DISTRACTOR_RELEVANCE",
+      "contract_gives_winner": true,
+      "contract_note": "the goal contract names the object",
+      "covers": {
+        "classes": [
+          "helpful",
+          "harmful"
+        ],
+        "established": true,
+        "note": "wrong-object-first is only harmful"
+      },
+      "downstream_dependence": {
+        "note": "only extra cost for the wrong object",
+        "value": false
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G2",
+        "G3",
+        "G4",
+        "G7",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "act on the goal object",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: acting on a non-goal object is legal",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "the goal contract names the object",
+          "status": "FAIL"
+        },
+        "G3": {
+          "reason": "no persistent effect on the goal chain",
+          "status": "FAIL"
+        },
+        "G4": {
+          "reason": "only extra cost for the wrong object",
+          "status": "FAIL"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "language names the object",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "goal grounding",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "wrong-object-first is only harmful",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "act on the goal object",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "acting on a non-goal object is legal",
+      "n_legal_first_actions": 2,
+      "not_path_note": "",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": false,
+        "note": "no persistent effect on the goal chain"
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "language names the object",
+      "renaming_note": "goal grounding",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "tasks": [
+        "derived: official scene, goal switched between objects"
+      ],
+      "template": {
+        "candidate_A": "act on the named object",
+        "candidate_B": "act on another object",
+        "downstream_effect": "none beyond cost",
+        "persistent_effect": "none",
+        "state": "same scene, goal names one of several objects"
+      },
+      "unverifiable_gates": [
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "DV6_ARTICULATED_OPTIONAL_PREPARATION": {
+      "canary_episodes": 4,
+      "card_id": "DV6_ARTICULATED_OPTIONAL_PREPARATION",
+      "contract_gives_winner": false,
+      "contract_note": "optional preparation has no contract winner",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral"
+        ],
+        "established": true,
+        "note": "harmful when the drawer blocks nothing but costs a skill"
+      },
+      "downstream_dependence": {
+        "note": "saves the later OPEN when a later goal needs the drawer",
+        "value": true
+      },
+      "evaluator": {
+        "note": "BDDL-style predicates on simulator state give an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G7",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "open iff a pending goal needs the drawer: a one-line rule on the goal text",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: opening is legal at any time",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "sliding drawer needs a handle-pull skill; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL-style predicates on simulator state give an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "optional preparation has no contract winner",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "drawer state persists",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "saves the later OPEN when a later goal needs the drawer",
+          "status": "PASS"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "whether a later goal needs the drawer is expressible",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "a later In(drawer) goal makes Open(drawer) a hard PRE of that goal; the 'optional' reading disappears once the goal is stated",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "harmful when the drawer blocks nothing but costs a skill",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "open iff a pending goal needs the drawer: a one-line rule on the goal text",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "opening is legal at any time",
+      "n_legal_first_actions": 2,
+      "not_path_note": "",
+      "origin": "LIBERO_DERIVED_DIAGNOSTIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "drawer state persists"
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "whether a later goal needs the drawer is expressible",
+      "renaming_note": "a later In(drawer) goal makes Open(drawer) a hard PRE of that goal; the 'optional' reading disappears once the goal is stated",
+      "restore": {
+        "note": "the project's snapshot restore is D0-only; LIBERO assets inside D0 would need the restore contract re-validated in a physical card",
+        "status": "UNVERIFIABLE_STATICALLY"
+      },
+      "skills": {
+        "note": "sliding drawer needs a handle-pull skill; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "tasks": [
+        "derived: drawer opened early to stage an item that a later goal may need"
+      ],
+      "template": {
+        "candidate_A": "open the drawer early",
+        "candidate_B": "wait",
+        "downstream_effect": "saves or wastes a skill",
+        "persistent_effect": "drawer open",
+        "state": "closed drawer, goal may or may not need it"
+      },
+      "unverifiable_gates": [
+        "G11",
+        "G13"
+      ],
+      "verifier": {
+        "note": "postconditions (Held, In basket) need segmentation of the chosen LIBERO assets; colour override of materials is a design choice, not an existing component",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M1_BASKET_TWO_ITEMS": {
+      "canary_episodes": 4,
+      "capacity_by_task": [
+        {
+          "capacity": {
+            "destination_area_m2": 0.01492,
+            "fill_ratio_max": 0.636,
+            "fill_ratio_min": 0.518,
+            "material_threshold": 0.5,
+            "site_size": [
+              0.06108,
+              0.06108,
+              0.06949
+            ],
+            "sum_footprint_max_m2": 0.00949,
+            "sum_footprint_min_m2": 0.00773
+          },
+          "items": [
+            "alphabet_soup",
+            "tomato_sauce"
+          ],
+          "task": "LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket"
+        },
+        {
+          "capacity": {
+            "destination_area_m2": 0.01492,
+            "fill_ratio_max": 0.434,
+            "fill_ratio_min": 0.097,
+            "material_threshold": 0.5,
+            "site_size": [
+              0.06108,
+              0.06108,
+              0.06949
+            ],
+            "sum_footprint_max_m2": 0.00648,
+            "sum_footprint_min_m2": 0.00145
+          },
+          "items": [
+            "butter",
+            "cream_cheese"
+          ],
+          "task": "LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket"
+        },
+        {
+          "capacity": {
+            "destination_area_m2": 0.01492,
+            "fill_ratio_max": 0.551,
+            "fill_ratio_min": 0.312,
+            "material_threshold": 0.5,
+            "site_size": [
+              0.06108,
+              0.06108,
+              0.06949
+            ],
+            "sum_footprint_max_m2": 0.00822,
+            "sum_footprint_min_m2": 0.00466
+          },
+          "items": [
+            "alphabet_soup",
+            "cream_cheese"
+          ],
+          "task": "LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket"
+        }
+      ],
+      "card_id": "M1_BASKET_TWO_ITEMS",
+      "contract_gives_winner": false,
+      "contract_note": "PICK/PLACE contracts have no PRE/ADD/DEL that distinguishes the two orders; B_PLAN ties and breaks by id",
+      "covers": {
+        "classes": [
+          "neutral",
+          "helpful"
+        ],
+        "established": false,
+        "note": "neutral where the fill is small; helpful only if the pile effect is real, which needs a physical probe"
+      },
+      "downstream_dependence": {
+        "note": "basket occupancy matters only if both items are dropped at one fixed site; with a free-site destination binding (absent from the current PLACE) the orders are interchangeable and a fill below 1.0 leaves room for both",
+        "value": null
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "free-site placement or 'larger first' removes the effect in every member task (pessimistic fill 0.636 < 1.0)",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: PICK item one or PICK item two; both are on the table",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x3; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "PICK/PLACE contracts have no PRE/ADD/DEL that distinguishes the two orders; B_PLAN ties and breaks by id",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "pessimistic fill ratio of the basket contain_region by the two items: 0.636, 0.434, 0.551 (material threshold 0.50); material in 2 of 3 tasks",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "basket occupancy matters only if both items are dropped at one fixed site; with a free-site destination binding (absent from the current PLACE) the orders are interchangeable and a fill below 1.0 leaves room for both",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: occupancy of the basket, not only path, if the drop site is fixed",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "packing order (bulky or flat item last) is a commonsense relation, but the official tasks fix no relation, no label and no goal variation",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "site occupancy is not a contract predicate",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "neutral where the fill is small; helpful only if the pile effect is real, which needs a physical probe",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G9": {
+          "reason": "free-site placement or 'larger first' removes the effect in every member task (pessimistic fill 0.636 < 1.0)",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "PICK item one or PICK item two; both are on the table",
+      "n_legal_first_actions": 2,
+      "not_path_note": "occupancy of the basket, not only path, if the drop site is fixed",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "pessimistic fill ratio of the basket contain_region by the two items: 0.636, 0.434, 0.551 (material threshold 0.50); material in 2 of 3 tasks"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 2
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": false,
+      "relation_note": "packing order (bulky or flat item last) is a commonsense relation, but the official tasks fix no relation, no label and no goal variation",
+      "renaming_note": "site occupancy is not a contract predicate",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x3",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x3; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "task_names": [
+        "LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket",
+        "LIVING_ROOM_SCENE2_put_both_the_cream_cheese_box_and_the_butter_in_the_basket",
+        "LIVING_ROOM_SCENE1_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket"
+      ],
+      "tasks": [
+        "libero_10#0",
+        "libero_10#1",
+        "libero_10#7"
+      ],
+      "template": {
+        "candidate_A": "PICK/PLACE the first item into the basket",
+        "candidate_B": "PICK/PLACE the second item first",
+        "downstream_effect": "second item may land on the first if the drop site is fixed",
+        "persistent_effect": "first item inside the basket",
+        "state": "two items on the table, basket empty"
+      },
+      "unverifiable_gates": [
+        "G4",
+        "G8",
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M2_STOVE_TWO_POTS": {
+      "canary_episodes": 4,
+      "capacity_by_task": [
+        {
+          "capacity": {
+            "destination_area_m2": 0.0225,
+            "fill_ratio_max": 1.991,
+            "fill_ratio_min": 1.068,
+            "material_threshold": 0.5,
+            "site_size": [
+              0.075,
+              0.075,
+              0.0025
+            ],
+            "sum_footprint_max_m2": 0.04479,
+            "sum_footprint_min_m2": 0.02402
+          },
+          "items": [
+            "moka_pot",
+            "moka_pot"
+          ],
+          "task": "KITCHEN_SCENE8_put_both_moka_pots_on_the_stove"
+        }
+      ],
+      "card_id": "M2_STOVE_TWO_POTS",
+      "contract_gives_winner": false,
+      "contract_note": "no contract relation orders the two pots; Turnon is outside the current predicate vocabulary",
+      "covers": {
+        "classes": [
+          "neutral"
+        ],
+        "established": true,
+        "note": "symmetric pots give only the neutral case"
+      },
+      "downstream_dependence": {
+        "note": "overlap, knob access and pot collision need a simulator",
+        "value": null
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G6",
+        "G8",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "symmetric objects: any fixed order, with Turnon first, is as good as any other",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: place pot one or pot two first; the goal also contains Turnon, which is a separate action",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding; Turnon needs a rotary knob skill (NEW_LOW_LEVEL_CONTROLLER_REQUIRED)",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "no contract relation orders the two pots; Turnon is outside the current predicate vocabulary",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "pessimistic fill ratio of the flat_stove cook_region by the two items: 1.991 (material threshold 0.50); material in 1 of 1 tasks; a ratio above 1.0 means the two pots cannot both fit inside one cook_region footprint, so the On predicate semantics decide feasibility",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "overlap, knob access and pot collision need a simulator",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: Turnon and the two placements interact through physical access",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "the two pots play identical roles; the only candidate relation is geometric access",
+          "status": "FAIL"
+        },
+        "G7": {
+          "reason": "geometric access would be a safety/contract precondition if it existed",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "symmetric pots give only the neutral case",
+          "status": "FAIL"
+        },
+        "G9": {
+          "reason": "symmetric objects: any fixed order, with Turnon first, is as good as any other",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "place pot one or pot two first; the goal also contains Turnon, which is a separate action",
+      "n_legal_first_actions": 2,
+      "not_path_note": "Turnon and the two placements interact through physical access",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "pessimistic fill ratio of the flat_stove cook_region by the two items: 1.991 (material threshold 0.50); material in 1 of 1 tasks; a ratio above 1.0 means the two pots cannot both fit inside one cook_region footprint, so the On predicate semantics decide feasibility"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 0
+      },
+      "relation_expressible": false,
+      "relation_is_contract_renaming": false,
+      "relation_note": "the two pots play identical roles; the only candidate relation is geometric access",
+      "renaming_note": "geometric access would be a safety/contract precondition if it existed",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_LOW_LEVEL_CONTROLLER x1",
+      "skills": {
+        "note": "task skill coverage: NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding; Turnon needs a rotary knob skill (NEW_LOW_LEVEL_CONTROLLER_REQUIRED)",
+        "platform_ok": false,
+        "worst_class": "NEW_LOW_LEVEL_CONTROLLER_REQUIRED"
+      },
+      "task_names": [
+        "KITCHEN_SCENE8_put_both_moka_pots_on_the_stove"
+      ],
+      "tasks": [
+        "libero_10#8"
+      ],
+      "unverifiable_gates": [
+        "G4",
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M3_TWO_TARGETS_DISTINCT_DESTINATIONS": {
+      "canary_episodes": 4,
+      "card_id": "M3_TWO_TARGETS_DISTINCT_DESTINATIONS",
+      "contract_gives_winner": false,
+      "contract_note": "independent PICK/PLACE pairs; B_PLAN ties",
+      "covers": {
+        "classes": [
+          "neutral"
+        ],
+        "established": true,
+        "note": "independent subtasks: neutral only"
+      },
+      "downstream_dependence": {
+        "note": "orders are interchangeable up to path",
+        "value": false
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G3",
+        "G4",
+        "G5",
+        "G6",
+        "G8",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "commutative: any fixed order",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: either object can be picked first",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x2; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "independent PICK/PLACE pairs; B_PLAN ties",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "the two destinations are different plates or regions; placing one object does not change the other's destination",
+          "status": "FAIL"
+        },
+        "G4": {
+          "reason": "orders are interchangeable up to path",
+          "status": "FAIL"
+        },
+        "G5": {
+          "reason": "the difference between the orders is only low-level path",
+          "status": "FAIL"
+        },
+        "G6": {
+          "reason": "no relation to express",
+          "status": "FAIL"
+        },
+        "G7": {
+          "reason": "no relation",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "independent subtasks: neutral only",
+          "status": "FAIL"
+        },
+        "G9": {
+          "reason": "commutative: any fixed order",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "either object can be picked first",
+      "n_legal_first_actions": 2,
+      "not_path_note": "",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": true,
+      "persistent_effect": {
+        "material": false,
+        "note": "the two destinations are different plates or regions; placing one object does not change the other's destination"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 2
+      },
+      "relation_expressible": false,
+      "relation_is_contract_renaming": false,
+      "relation_note": "no relation to express",
+      "renaming_note": "no relation",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x2",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x2; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "task_names": [
+        "LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate",
+        "LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate"
+      ],
+      "tasks": [
+        "libero_10#4",
+        "libero_10#6"
+      ],
+      "unverifiable_gates": [
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M4A_ARTICULATED_PLUS_PLACE": {
+      "canary_episodes": 4,
+      "card_id": "M4A_ARTICULATED_PLUS_PLACE",
+      "contract_gives_winner": false,
+      "contract_note": "Turnon has no contract; no current relation orders it against the placement",
+      "covers": {
+        "classes": [
+          "neutral"
+        ],
+        "established": true,
+        "note": "no goal variation exists in the public tasks"
+      },
+      "downstream_dependence": {
+        "note": "needs physical measurement",
+        "value": null
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G6",
+        "G8",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "turn on first, then place: a single ordering rule",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "2 legal first high-level actions in the decision state: turn the stove on or place the pot first",
+          "status": "PASS"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding; the rotary knob needs rotation actions that the executor zeroes",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "Turnon has no contract; no current relation orders it against the placement",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "stove state and pot position persist; their physical interaction (knob blocked by the pot) cannot be established statically",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G4": {
+          "reason": "needs physical measurement",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: knob access",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "at most a geometric access relation",
+          "status": "FAIL"
+        },
+        "G7": {
+          "reason": "geometric",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "no goal variation exists in the public tasks",
+          "status": "FAIL"
+        },
+        "G9": {
+          "reason": "turn on first, then place: a single ordering rule",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "turn the stove on or place the pot first",
+      "n_legal_first_actions": 2,
+      "not_path_note": "knob access",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": null,
+        "note": "stove state and pot position persist; their physical interaction (knob blocked by the pot) cannot be established statically"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 0
+      },
+      "relation_expressible": false,
+      "relation_is_contract_renaming": false,
+      "relation_note": "at most a geometric access relation",
+      "renaming_note": "geometric",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_LOW_LEVEL_CONTROLLER x1",
+      "skills": {
+        "note": "task skill coverage: NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding; the rotary knob needs rotation actions that the executor zeroes",
+        "platform_ok": false,
+        "worst_class": "NEW_LOW_LEVEL_CONTROLLER_REQUIRED"
+      },
+      "task_names": [
+        "KITCHEN_SCENE3_turn_on_the_stove_and_put_the_moka_pot_on_it"
+      ],
+      "tasks": [
+        "libero_10#2"
+      ],
+      "unverifiable_gates": [
+        "G3",
+        "G4",
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M4B_ARTICULATED_HARD_PRECONDITION": {
+      "canary_episodes": 4,
+      "card_id": "M4B_ARTICULATED_HARD_PRECONDITION",
+      "contract_gives_winner": true,
+      "contract_note": "OPEN/CLOSE with Open(container) as PRE of In/PLACE gives the winner",
+      "covers": {
+        "classes": [
+          "helpful"
+        ],
+        "established": true,
+        "note": "always required"
+      },
+      "downstream_dependence": {
+        "note": "container state gates the next action",
+        "value": true
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G1",
+        "G2",
+        "G7",
+        "G8",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "open first, close last",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "1 legal first high-level actions in the decision state: the container must be opened before anything can go in; closing must follow insertion",
+          "status": "FAIL"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x2, NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "hard precondition decides the order (articulated CLOSE on microwave_1 gates a placement into its interior; articulated CLOSE on white_cabinet_1_bottom_region gates a placement into its interior; articulated OPEN on microwave_1_heating_region gates a placement into its interior; articulated OPEN on wooden_cabinet_1_top_region gates a pl): belongs in PRE/ADD/DEL, the contract planner returns the winner",
+          "status": "FAIL"
+        },
+        "G3": {
+          "reason": "container state persists, but it is a hard precondition, not a prior",
+          "status": "PASS"
+        },
+        "G4": {
+          "reason": "container state gates the next action",
+          "status": "PASS"
+        },
+        "G5": {
+          "reason": "difference is not a pure path distance: ",
+          "status": "PASS"
+        },
+        "G6": {
+          "reason": "container-open relation",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "Open(container) is already in the current contract vocabulary",
+          "status": "FAIL"
+        },
+        "G8": {
+          "reason": "always required",
+          "status": "FAIL"
+        },
+        "G9": {
+          "reason": "open first, close last",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": true,
+      "hard_precondition_note": "articulated CLOSE on microwave_1 gates a placement into its interior; articulated CLOSE on white_cabinet_1_bottom_region gates a placement into its interior; articulated OPEN on microwave_1_heating_region gates a placement into its interior; articulated OPEN on wooden_cabinet_1_top_region gates a pl",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "the container must be opened before anything can go in; closing must follow insertion",
+      "n_legal_first_actions": 1,
+      "not_path_note": "",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": false,
+      "persistent_effect": {
+        "material": true,
+        "note": "container state persists, but it is a hard precondition, not a prior"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 0
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": true,
+      "relation_note": "container-open relation",
+      "renaming_note": "Open(container) is already in the current contract vocabulary",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x2, NEW_LOW_LEVEL_CONTROLLER x1",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x2, NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_LOW_LEVEL_CONTROLLER_REQUIRED"
+      },
+      "task_names": [
+        "KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet_and_close_it",
+        "KITCHEN_SCENE6_put_the_yellow_and_white_mug_in_the_microwave_and_close_it",
+        "open_the_top_drawer_and_put_the_bowl_inside"
+      ],
+      "tasks": [
+        "libero_10#3",
+        "libero_10#9",
+        "libero_goal#3"
+      ],
+      "unverifiable_gates": [
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M5_SPATIAL_SINGLE_GOAL_DISTRACTORS": {
+      "canary_episodes": 4,
+      "card_id": "M5_SPATIAL_SINGLE_GOAL_DISTRACTORS",
+      "contract_gives_winner": false,
+      "contract_note": "a single goal chain; B_PLAN returns it directly",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral"
+        ],
+        "established": true,
+        "note": "same-scene goal switching only changes the target object"
+      },
+      "downstream_dependence": {
+        "note": "single goal",
+        "value": false
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G1",
+        "G3",
+        "G4",
+        "G5",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "act on the goal object directly: one rule solves every task",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "1 legal first high-level actions in the decision state: one required action chain; moving a distractor is legal but never needed (3 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+          "status": "FAIL"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x10; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "a single goal chain; B_PLAN returns it directly",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "no second goal for the first action to affect",
+          "status": "FAIL"
+        },
+        "G4": {
+          "reason": "single goal",
+          "status": "FAIL"
+        },
+        "G5": {
+          "reason": "the difference between the orders is only low-level path",
+          "status": "FAIL"
+        },
+        "G6": {
+          "reason": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "goal grounding",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "same-scene goal switching only changes the target object",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "act on the goal object directly: one rule solves every task",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "one required action chain; moving a distractor is legal but never needed (3 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+      "n_legal_first_actions": 1,
+      "not_path_note": "",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": true,
+      "persistent_effect": {
+        "material": false,
+        "note": "no second goal for the first action to affect"
+      },
+      "proximity": {
+        "proximity_certain": 1,
+        "proximity_possible": 3
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": false,
+      "relation_note": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+      "renaming_note": "goal grounding",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x10",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x10; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "task_names": [
+        "pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_next_to_the_ramekin_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_from_table_center_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_on_the_cookie_box_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_in_the_top_drawer_of_the_wooden_cabinet_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_on_the_ramekin_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_next_to_the_cookie_box_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_on_the_stove_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_next_to_the_plate_and_place_it_on_the_plate",
+        "pick_up_the_black_bowl_on_the_wooden_cabinet_and_place_it_on_the_plate"
+      ],
+      "tasks": [
+        "libero_spatial#0",
+        "libero_spatial#1",
+        "libero_spatial#2",
+        "libero_spatial#3",
+        "libero_spatial#4",
+        "libero_spatial#5",
+        "libero_spatial#6",
+        "libero_spatial#7",
+        "libero_spatial#8",
+        "libero_spatial#9"
+      ],
+      "unverifiable_gates": [
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M6_OBJECT_SINGLE_GOAL_SAME_SCENE": {
+      "canary_episodes": 4,
+      "card_id": "M6_OBJECT_SINGLE_GOAL_SAME_SCENE",
+      "contract_gives_winner": false,
+      "contract_note": "a single goal chain; B_PLAN returns it directly",
+      "covers": {
+        "classes": [
+          "helpful",
+          "neutral"
+        ],
+        "established": true,
+        "note": "same-scene goal switching only changes the target object"
+      },
+      "downstream_dependence": {
+        "note": "single goal",
+        "value": false
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G1",
+        "G3",
+        "G4",
+        "G5",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "act on the goal object directly: one rule solves every task",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "1 legal first high-level actions in the decision state: one required action chain; moving a distractor is legal but never needed (7 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+          "status": "FAIL"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x10; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "a single goal chain; B_PLAN returns it directly",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "no second goal for the first action to affect",
+          "status": "FAIL"
+        },
+        "G4": {
+          "reason": "single goal",
+          "status": "FAIL"
+        },
+        "G5": {
+          "reason": "the difference between the orders is only low-level path",
+          "status": "FAIL"
+        },
+        "G6": {
+          "reason": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+          "status": "PASS"
+        },
+        "G7": {
+          "reason": "goal grounding",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "same-scene goal switching only changes the target object",
+          "status": "PASS"
+        },
+        "G9": {
+          "reason": "act on the goal object directly: one rule solves every task",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "one required action chain; moving a distractor is legal but never needed (7 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+      "n_legal_first_actions": 1,
+      "not_path_note": "",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": true,
+      "persistent_effect": {
+        "material": false,
+        "note": "no second goal for the first action to affect"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 7
+      },
+      "relation_expressible": true,
+      "relation_is_contract_renaming": false,
+      "relation_note": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+      "renaming_note": "goal grounding",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x10",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x10; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_SCRIPTED_SKILL_REQUIRED"
+      },
+      "task_names": [
+        "pick_up_the_alphabet_soup_and_place_it_in_the_basket",
+        "pick_up_the_cream_cheese_and_place_it_in_the_basket",
+        "pick_up_the_salad_dressing_and_place_it_in_the_basket",
+        "pick_up_the_bbq_sauce_and_place_it_in_the_basket",
+        "pick_up_the_ketchup_and_place_it_in_the_basket",
+        "pick_up_the_tomato_sauce_and_place_it_in_the_basket",
+        "pick_up_the_butter_and_place_it_in_the_basket",
+        "pick_up_the_milk_and_place_it_in_the_basket",
+        "pick_up_the_chocolate_pudding_and_place_it_in_the_basket",
+        "pick_up_the_orange_juice_and_place_it_in_the_basket"
+      ],
+      "tasks": [
+        "libero_object#0",
+        "libero_object#1",
+        "libero_object#2",
+        "libero_object#3",
+        "libero_object#4",
+        "libero_object#5",
+        "libero_object#6",
+        "libero_object#7",
+        "libero_object#8",
+        "libero_object#9"
+      ],
+      "unverifiable_gates": [
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    },
+    "M7_SINGLE_GOAL_OTHER": {
+      "canary_episodes": 4,
+      "card_id": "M7_SINGLE_GOAL_OTHER",
+      "contract_gives_winner": false,
+      "contract_note": "a single goal chain; B_PLAN returns it directly",
+      "covers": {
+        "classes": [
+          "neutral"
+        ],
+        "established": true,
+        "note": "same-scene goal switching only changes the target object"
+      },
+      "downstream_dependence": {
+        "note": "single goal",
+        "value": false
+      },
+      "evaluator": {
+        "note": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+        "status": "PASS"
+      },
+      "failed_gates": [
+        "G1",
+        "G3",
+        "G4",
+        "G5",
+        "G6",
+        "G8",
+        "G9",
+        "G10"
+      ],
+      "fixed_rule_note": "act on the goal object directly: one rule solves every task",
+      "fixed_rule_solves": true,
+      "gates": {
+        "G1": {
+          "reason": "1 legal first high-level actions in the decision state: one required action chain; moving a distractor is legal but never needed (2 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+          "status": "FAIL"
+        },
+        "G10": {
+          "reason": "task skill coverage: NEW_SCRIPTED_SKILL x9, NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+          "status": "FAIL"
+        },
+        "G11": {
+          "reason": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+          "status": "UNVERIFIABLE_STATICALLY"
+        },
+        "G12": {
+          "reason": "BDDL goal predicates (On/In/Open/Close/Turnon) on simulator state define an independent Evaluator",
+          "status": "PASS"
+        },
+        "G13": {
+          "reason": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+          "status": "PASS"
+        },
+        "G14": {
+          "reason": "first mechanism canary needs about 4 episodes",
+          "status": "PASS"
+        },
+        "G15": {
+          "reason": "task selection uses BDDL structure and asset geometry only; no score, outcome or demonstration was read",
+          "status": "PASS"
+        },
+        "G2": {
+          "reason": "a single goal chain; B_PLAN returns it directly",
+          "status": "PASS"
+        },
+        "G3": {
+          "reason": "no second goal for the first action to affect",
+          "status": "FAIL"
+        },
+        "G4": {
+          "reason": "single goal",
+          "status": "FAIL"
+        },
+        "G5": {
+          "reason": "the difference between the orders is only low-level path",
+          "status": "FAIL"
+        },
+        "G6": {
+          "reason": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+          "status": "FAIL"
+        },
+        "G7": {
+          "reason": "goal grounding",
+          "status": "PASS"
+        },
+        "G8": {
+          "reason": "same-scene goal switching only changes the target object",
+          "status": "FAIL"
+        },
+        "G9": {
+          "reason": "act on the goal object directly: one rule solves every task",
+          "status": "FAIL"
+        }
+      },
+      "hard_precondition": false,
+      "hard_precondition_note": "",
+      "host": "LIBERO_ENV",
+      "legal_first_actions_note": "one required action chain; moving a distractor is legal but never needed (2 of 10 tasks have a distractor that may enter the finger envelope, proxy)",
+      "n_legal_first_actions": 1,
+      "not_path_note": "",
+      "origin": "UNMODIFIED_PUBLIC_TASK",
+      "path_only": true,
+      "persistent_effect": {
+        "material": false,
+        "note": "no second goal for the first action to affect"
+      },
+      "proximity": {
+        "proximity_certain": 0,
+        "proximity_possible": 2
+      },
+      "relation_expressible": false,
+      "relation_is_contract_renaming": false,
+      "relation_note": "the language relation identifies WHICH object to move (grounding), not WHICH order to use",
+      "renaming_note": "goal grounding",
+      "restore": {
+        "note": "official fixed initial-state files give a deterministic reset (hashed, not unpickled, in this audit); snapshot restore would be new",
+        "status": "PASS"
+      },
+      "skill_mix": "NEW_SCRIPTED_SKILL x9, NEW_LOW_LEVEL_CONTROLLER x1",
+      "skills": {
+        "note": "task skill coverage: NEW_SCRIPTED_SKILL x9, NEW_LOW_LEVEL_CONTROLLER x1; the project has no LIBERO environment binding (0 references to libero/BDDL in src), its perception is a colour-blob model for D0 cubes, its Verifier/Evaluator are D0-specific and its snapshot module is D0-only; every LIBERO-hosted task needs a new platform binding that is not a limited per-object binding",
+        "platform_ok": false,
+        "worst_class": "NEW_LOW_LEVEL_CONTROLLER_REQUIRED"
+      },
+      "task_names": [
+        "STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy",
+        "open_the_middle_drawer_of_the_cabinet",
+        "put_the_bowl_on_the_stove",
+        "put_the_wine_bottle_on_top_of_the_cabinet",
+        "put_the_bowl_on_top_of_the_cabinet",
+        "push_the_plate_to_the_front_of_the_stove",
+        "put_the_cream_cheese_in_the_bowl",
+        "turn_on_the_stove",
+        "put_the_bowl_on_the_plate",
+        "put_the_wine_bottle_on_the_rack"
+      ],
+      "tasks": [
+        "libero_10#5",
+        "libero_goal#0",
+        "libero_goal#1",
+        "libero_goal#2",
+        "libero_goal#4",
+        "libero_goal#5",
+        "libero_goal#6",
+        "libero_goal#7",
+        "libero_goal#8",
+        "libero_goal#9"
+      ],
+      "unverifiable_gates": [
+        "G11"
+      ],
+      "verifier": {
+        "note": "BDDL predicates are public and evaluable, but the RGB-D Verifier needs segmentation of textured objects that the project does not have",
+        "status": "UNVERIFIABLE_STATICALLY"
+      }
+    }
+  },
+  "derived_card_asset_facts": {
+    "basket_depth_m": 0.139,
+    "grasp_classes": {
+      "akita_black_bowl": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.107,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1072
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.107, 0.107): worst-case yaw width 0.107, aligned width 0.107 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0505,
+          0.107,
+          0.1072
+        ],
+        "strict_binding": false
+      },
+      "alphabet_soup": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0624,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.0985
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.062, 0.076): worst-case yaw width 0.099, aligned width 0.062 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0624,
+          0.0624,
+          0.0762
+        ],
+        "strict_binding": false
+      },
+      "basket": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1573,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.2313
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.157, 0.170): worst-case yaw width 0.231, aligned width 0.157 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.1415,
+          0.1573,
+          0.1695
+        ],
+        "strict_binding": false
+      },
+      "bbq_sauce": {
+        "binding_if_orientation_verified": true,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.047,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.117
+          },
+          "standing": {
+            "aligned_width_m": 0.0291,
+            "class": "COMPACT",
+            "worst_yaw_width_m": 0.0553
+          }
+        },
+        "optimistic_class": "COMPACT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.047, 0.107): worst-case yaw width 0.117, aligned width 0.047 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.029, 0.047): worst 0.055 -> COMPACT",
+        "sorted_extents_m": [
+          0.0291,
+          0.047,
+          0.1071
+        ],
+        "strict_binding": false
+      },
+      "black_book": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1104,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1739
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.110, 0.134): worst-case yaw width 0.174, aligned width 0.110 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0287,
+          0.1104,
+          0.1344
+        ],
+        "strict_binding": false
+      },
+      "butter": {
+        "binding_if_orientation_verified": true,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0395,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0858
+          },
+          "standing": {
+            "aligned_width_m": 0.0174,
+            "class": "COMPACT",
+            "worst_yaw_width_m": 0.0432
+          }
+        },
+        "optimistic_class": "COMPACT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.040, 0.076): worst-case yaw width 0.086, aligned width 0.040 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.017, 0.040): worst 0.043 -> COMPACT",
+        "sorted_extents_m": [
+          0.0174,
+          0.0395,
+          0.0762
+        ],
+        "strict_binding": false
+      },
+      "chefmate_8_frypan": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.2044,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.4106
+          },
+          "standing": {
+            "aligned_width_m": 0.0579,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.2124
+          }
+        },
+        "optimistic_class": "YAW_DEPENDENT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.204, 0.356): worst-case yaw width 0.411, aligned width 0.204 vs limit 0.06 -> NOT_PINCHABLE; standing hypothesis (0.058, 0.204): worst 0.212 -> YAW_DEPENDENT",
+        "sorted_extents_m": [
+          0.0579,
+          0.2044,
+          0.3561
+        ],
+        "strict_binding": false
+      },
+      "chocolate_pudding": {
+        "binding_if_orientation_verified": true,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0463,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0926
+          },
+          "standing": {
+            "aligned_width_m": 0.0274,
+            "class": "COMPACT",
+            "worst_yaw_width_m": 0.0538
+          }
+        },
+        "optimistic_class": "COMPACT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.046, 0.080): worst-case yaw width 0.093, aligned width 0.046 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.027, 0.046): worst 0.054 -> COMPACT",
+        "sorted_extents_m": [
+          0.0274,
+          0.0463,
+          0.0802
+        ],
+        "strict_binding": false
+      },
+      "cookies": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0621,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1033
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.062, 0.083): worst-case yaw width 0.103, aligned width 0.062 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0188,
+          0.0621,
+          0.0826
+        ],
+        "strict_binding": false
+      },
+      "cream_cheese": {
+        "binding_if_orientation_verified": true,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0427,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0917
+          },
+          "standing": {
+            "aligned_width_m": 0.0179,
+            "class": "COMPACT",
+            "worst_yaw_width_m": 0.0463
+          }
+        },
+        "optimistic_class": "COMPACT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.043, 0.081): worst-case yaw width 0.092, aligned width 0.043 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.018, 0.043): worst 0.046 -> COMPACT",
+        "sorted_extents_m": [
+          0.0179,
+          0.0427,
+          0.0812
+        ],
+        "strict_binding": false
+      },
+      "desk_caddy": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1669,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.4648
+          },
+          "standing": {
+            "aligned_width_m": 0.151,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.2251
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.167, 0.434): worst-case yaw width 0.465, aligned width 0.167 vs limit 0.06 -> NOT_PINCHABLE; standing hypothesis (0.151, 0.167): worst 0.225 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.151,
+          0.1669,
+          0.4338
+        ],
+        "strict_binding": false
+      },
+      "flat_stove": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.19,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.19
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.190, 0.190): worst-case yaw width 0.190, aligned width 0.190 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.07,
+          0.19,
+          0.19
+        ],
+        "strict_binding": false
+      },
+      "glazed_rim_porcelain_ramekin": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0891,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.0893
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.089, 0.089): worst-case yaw width 0.089, aligned width 0.089 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.042,
+          0.0891,
+          0.0893
+        ],
+        "strict_binding": false
+      },
+      "ketchup": {
+        "binding_if_orientation_verified": false,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0562,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.1561
+          },
+          "standing": {
+            "aligned_width_m": 0.0368,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0672
+          }
+        },
+        "optimistic_class": "YAW_DEPENDENT",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.056, 0.146): worst-case yaw width 0.156, aligned width 0.056 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.037, 0.056): worst 0.067 -> YAW_DEPENDENT",
+        "sorted_extents_m": [
+          0.0368,
+          0.0562,
+          0.1456
+        ],
+        "strict_binding": false
+      },
+      "microwave": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.283,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.516
+          },
+          "standing": {
+            "aligned_width_m": 0.2215,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.3594
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.283, 0.431): worst-case yaw width 0.516, aligned width 0.283 vs limit 0.06 -> NOT_PINCHABLE; standing hypothesis (0.222, 0.283): worst 0.359 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.2215,
+          0.283,
+          0.4315
+        ],
+        "strict_binding": false
+      },
+      "milk": {
+        "binding_if_orientation_verified": false,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0531,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.1415
+          },
+          "standing": {
+            "aligned_width_m": 0.0525,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0747
+          }
+        },
+        "optimistic_class": "YAW_DEPENDENT",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.053, 0.131): worst-case yaw width 0.142, aligned width 0.053 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.053, 0.053): worst 0.075 -> YAW_DEPENDENT",
+        "sorted_extents_m": [
+          0.0525,
+          0.0531,
+          0.1312
+        ],
+        "strict_binding": false
+      },
+      "moka_pot": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1475,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1518
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.148, 0.152): worst-case yaw width 0.152, aligned width 0.148 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0814,
+          0.1475,
+          0.1518
+        ],
+        "strict_binding": false
+      },
+      "orange_juice": {
+        "binding_if_orientation_verified": false,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0531,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.1415
+          },
+          "standing": {
+            "aligned_width_m": 0.0525,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0747
+          }
+        },
+        "optimistic_class": "YAW_DEPENDENT",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.053, 0.131): worst-case yaw width 0.142, aligned width 0.053 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.053, 0.053): worst 0.075 -> YAW_DEPENDENT",
+        "sorted_extents_m": [
+          0.0525,
+          0.0531,
+          0.1312
+        ],
+        "strict_binding": false
+      },
+      "plate": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1375,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1376
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.137, 0.138): worst-case yaw width 0.138, aligned width 0.137 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0189,
+          0.1375,
+          0.1376
+        ],
+        "strict_binding": false
+      },
+      "porcelain_mug": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1061,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1637
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.106, 0.125): worst-case yaw width 0.164, aligned width 0.106 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0963,
+          0.1061,
+          0.1246
+        ],
+        "strict_binding": false
+      },
+      "red_coffee_mug": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1229,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1809
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.123, 0.133): worst-case yaw width 0.181, aligned width 0.123 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0932,
+          0.1229,
+          0.1327
+        ],
+        "strict_binding": false
+      },
+      "salad_dressing": {
+        "binding_if_orientation_verified": false,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0527,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.1548
+          },
+          "standing": {
+            "aligned_width_m": 0.0355,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.0636
+          }
+        },
+        "optimistic_class": "YAW_DEPENDENT",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.053, 0.146): worst-case yaw width 0.155, aligned width 0.053 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.036, 0.053): worst 0.064 -> YAW_DEPENDENT",
+        "sorted_extents_m": [
+          0.0355,
+          0.0527,
+          0.1456
+        ],
+        "strict_binding": false
+      },
+      "tomato_sauce": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0622,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.0984
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.062, 0.076): worst-case yaw width 0.098, aligned width 0.062 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.0616,
+          0.0622,
+          0.0762
+        ],
+        "strict_binding": false
+      },
+      "white_cabinet": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.221,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.3371
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.221, 0.255): worst-case yaw width 0.337, aligned width 0.221 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.2184,
+          0.221,
+          0.2546
+        ],
+        "strict_binding": false
+      },
+      "white_yellow_mug": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.1061,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.1754
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.106, 0.140): worst-case yaw width 0.175, aligned width 0.106 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.1032,
+          0.1061,
+          0.1397
+        ],
+        "strict_binding": false
+      },
+      "wine_bottle": {
+        "binding_if_orientation_verified": true,
+        "class": "YAW_DEPENDENT",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.0442,
+            "class": "YAW_DEPENDENT",
+            "worst_yaw_width_m": 0.163
+          },
+          "standing": {
+            "aligned_width_m": 0.0426,
+            "class": "COMPACT",
+            "worst_yaw_width_m": 0.0442
+          }
+        },
+        "optimistic_class": "COMPACT",
+        "optimistic_hypothesis": "standing",
+        "reason": "lying hypothesis horizontal extents (0.044, 0.157): worst-case yaw width 0.163, aligned width 0.044 vs limit 0.06 -> YAW_DEPENDENT; standing hypothesis (0.043, 0.044): worst 0.044 -> COMPACT",
+        "sorted_extents_m": [
+          0.0426,
+          0.0442,
+          0.1569
+        ],
+        "strict_binding": false
+      },
+      "wine_rack": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.2688,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.4259
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.269, 0.330): worst-case yaw width 0.426, aligned width 0.269 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.2538,
+          0.2688,
+          0.3304
+        ],
+        "strict_binding": false
+      },
+      "wooden_cabinet": {
+        "binding_if_orientation_verified": false,
+        "class": "NOT_PINCHABLE",
+        "hypotheses": {
+          "lying": {
+            "aligned_width_m": 0.221,
+            "class": "NOT_PINCHABLE",
+            "worst_yaw_width_m": 0.3371
+          }
+        },
+        "optimistic_class": "NOT_PINCHABLE",
+        "optimistic_hypothesis": "lying",
+        "reason": "lying hypothesis horizontal extents (0.221, 0.255): worst-case yaw width 0.337, aligned width 0.221 vs limit 0.06 -> NOT_PINCHABLE",
+        "sorted_extents_m": [
+          0.2184,
+          0.221,
+          0.2546
+        ],
+        "strict_binding": false
+      }
+    },
+    "orientation_binding_grocery": [
+      "bbq_sauce",
+      "butter",
+      "chocolate_pudding",
+      "cream_cheese"
+    ],
+    "pile": {
+      "alphabet_soup": {
+        "max_height": 0.076,
+        "min_height": 0.062
+      },
+      "bbq_sauce": {
+        "max_height": 0.107,
+        "min_height": 0.029
+      },
+      "butter": {
+        "max_height": 0.076,
+        "min_height": 0.017
+      },
+      "chocolate_pudding": {
+        "max_height": 0.08,
+        "min_height": 0.027
+      },
+      "cream_cheese": {
+        "max_height": 0.081,
+        "min_height": 0.018
+      },
+      "ketchup": {
+        "max_height": 0.146,
+        "min_height": 0.037
+      },
+      "milk": {
+        "max_height": 0.131,
+        "min_height": 0.053
+      },
+      "orange_juice": {
+        "max_height": 0.131,
+        "min_height": 0.053
+      },
+      "salad_dressing": {
+        "max_height": 0.146,
+        "min_height": 0.036
+      },
+      "tomato_sauce": {
+        "max_height": 0.076,
+        "min_height": 0.062
+      }
+    },
+    "strict_binding_grocery": []
+  },
+  "prior_cards": {
+    "tp_bsi_preflight": {
+      "file": "runs/final_master/S4/tp_bsi_preflight/20261003T053528Z_a6ca170d/preflight_verdict.json",
+      "stop_phase": "F",
+      "verdict": "PREFLIGHT_FAIL_NO_SAFE_SOFT_INTERFERENCE_BAND"
+    },
+    "tp_occ_preflight": {
+      "file": "runs/final_master/S4/tp_occ_preflight/20261003T055530Z_72e7cad4/preflight_verdict.json",
+      "stop_phase": "F",
+      "verdict": "PREFLIGHT_FAIL_NO_SOFT_OCCLUSION_BAND"
+    },
+    "tp_vis_preflight": {
+      "file": "runs/final_master/S4/tp_vis_preflight/20261003T064839Z_f2867e73/preflight_verdict.json",
+      "stop_phase": "H",
+      "verdict": "PREFLIGHT_FAIL_NO_VIS_A_SOFT_BAND"
+    }
+  }
+}

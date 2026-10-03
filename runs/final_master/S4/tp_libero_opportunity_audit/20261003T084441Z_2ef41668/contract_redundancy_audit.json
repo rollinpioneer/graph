@@ -1,0 +1,120 @@
+{
+  "current_vocabulary": [
+    "AtBuffer",
+    "GripperEmpty",
+    "Held",
+    "Inside",
+    "OnTable",
+    "Open"
+  ],
+  "libero_vocabulary": [
+    "Close",
+    "In",
+    "On",
+    "Open",
+    "Turnoff",
+    "Turnon",
+    "Up"
+  ],
+  "per_card": {
+    "DV1_STACK_ORDER_IN_SHARED_BASKET": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "no contract relation orders the two items (the drop site occupancy is not a predicate)",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "weight/fragility are not in the contract vocabulary"
+    },
+    "DV2_SUPPORT_REMOVE_TOP_FIRST": {
+      "contract_gives_winner": true,
+      "hard_precondition": true,
+      "note": "a support predicate in PRE of PICK(B) determines the order",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "Support is a precondition predicate, i.e. a contract fact"
+    },
+    "DV3_NEIGHBOUR_CLEARING_IN_FINGER_ENVELOPE": {
+      "contract_gives_winner": true,
+      "hard_precondition": true,
+      "note": "Safety hard mask already removes the colliding candidate",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "adjacency/collision is a geometric precondition the Safety module encodes"
+    },
+    "DV4_SHARED_DESTINATION_CAPACITY": {
+      "contract_gives_winner": true,
+      "hard_precondition": false,
+      "note": "the goal contract only wants the goal item at the destination; B_PLAN never plans the distractor",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "relevance is the goal itself"
+    },
+    "DV5_GOAL_CONDITIONED_DISTRACTOR_RELEVANCE": {
+      "contract_gives_winner": true,
+      "hard_precondition": false,
+      "note": "the goal contract names the object",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "goal grounding"
+    },
+    "DV6_ARTICULATED_OPTIONAL_PREPARATION": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "optional preparation has no contract winner",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "a later In(drawer) goal makes Open(drawer) a hard PRE of that goal; the 'optional' reading disappears once the goal is stated"
+    },
+    "M1_BASKET_TWO_ITEMS": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "PICK/PLACE contracts have no PRE/ADD/DEL that distinguishes the two orders; B_PLAN ties and breaks by id",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "site occupancy is not a contract predicate"
+    },
+    "M2_STOVE_TWO_POTS": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "no contract relation orders the two pots; Turnon is outside the current predicate vocabulary",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "geometric access would be a safety/contract precondition if it existed"
+    },
+    "M3_TWO_TARGETS_DISTINCT_DESTINATIONS": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "independent PICK/PLACE pairs; B_PLAN ties",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "no relation"
+    },
+    "M4A_ARTICULATED_PLUS_PLACE": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "Turnon has no contract; no current relation orders it against the placement",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "geometric"
+    },
+    "M4B_ARTICULATED_HARD_PRECONDITION": {
+      "contract_gives_winner": true,
+      "hard_precondition": true,
+      "note": "OPEN/CLOSE with Open(container) as PRE of In/PLACE gives the winner",
+      "relation_is_contract_renaming": true,
+      "renaming_note": "Open(container) is already in the current contract vocabulary"
+    },
+    "M5_SPATIAL_SINGLE_GOAL_DISTRACTORS": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "a single goal chain; B_PLAN returns it directly",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "goal grounding"
+    },
+    "M6_OBJECT_SINGLE_GOAL_SAME_SCENE": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "a single goal chain; B_PLAN returns it directly",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "goal grounding"
+    },
+    "M7_SINGLE_GOAL_OTHER": {
+      "contract_gives_winner": false,
+      "hard_precondition": false,
+      "note": "a single goal chain; B_PLAN returns it directly",
+      "relation_is_contract_renaming": false,
+      "renaming_note": "goal grounding"
+    }
+  },
+  "planner": "uniform-cost search over the contract state space with a relaxed goal-distance heuristic; cost is the reference skill duration (src/cp_disr/baselines/b_plan.py); ties break by contract id"
+}

@@ -1,0 +1,28 @@
+{
+  "OPEN_meaning": "grasp a free lid and park it on the table (not a drawer, door or knob)",
+  "action_space": "OSC_POSE with position deltas only; gripper open/close",
+  "contract_predicates": [
+    "GripperEmpty",
+    "Held",
+    "OnTable",
+    "Open",
+    "Inside",
+    "AtBuffer"
+  ],
+  "environment_class": "project-owned robosuite D0ManipulationEnv (cubes, lid container, buffer pad)",
+  "evaluator": "hidden MuJoCo truth on D0 geometry (cp-disr-d0-task-evaluator)",
+  "evaluator_is_d0_specific": true,
+  "executable_skills": [
+    "OPEN",
+    "PICK",
+    "PLACE",
+    "PLACE_BUFFER"
+  ],
+  "grasp_site_is_table_relative": true,
+  "hover_height_above_table_m": 0.22,
+  "libero_references_in_src": [],
+  "object_constants_are_cube_specific": true,
+  "orientation_actions_zeroed": true,
+  "perception": "colour-threshold top-face blobs with named D0 colours (no texture/semantic model)",
+  "snapshot_restore": "D0 snapshot module only"
+}
