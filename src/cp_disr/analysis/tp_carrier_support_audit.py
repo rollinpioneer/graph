@@ -497,6 +497,10 @@ def mobility_row(role_info, rec):
     return {"movable": not reasons, "reasons": reasons}
 
 
+def extent_only_blocked(mob, rec):
+    """True when the declared horizontal-extent limit is the only reason a carrier is not movable."""
+    return bool(rec.get("ok")) and (not mob["movable"]) and len(mob["reasons"]) == 1 and mob["reasons"][0].startswith("horizontal extent")
+
 # ---- pair stability --------------------------------------------------------------------------------------------
 def pick_on_carrier(A, carrier, field, grip, offset):
     """PICK(A) while A rests on the carrier: finger tips must clear the support, the open fingers and the palm must clear the carrier."""
@@ -782,7 +786,10 @@ def run_stage2(root, libero_root, out):
     events = [{"event": "mass_parser_made_robust_for_stl_and_missing_mesh_files", "technical_reason": "stage 2 first failed on the stove (an STL visual mesh) and on a mesh element without a file; the visual-mesh mass parser only knew the binary .msh format",
                "science_unchanged": True, "regression_test": "test_safe_mass_inertia_handles_stl_and_missing_mesh_file", "first_run": "ValueError in dv.mesh_volume before any gate was evaluated"},
               {"event": "per_axis_rotation_dictionaries_treated_as_unverified", "technical_reason": "stage 2 then failed on Ketchup, Milk, OrangeJuice, SaladDressing and NewSaladDressing, whose rotation attribute is a per-axis dictionary; the earlier card's spawn parser expected one numeric angle pair",
-               "science_unchanged": True, "regression_test": "test_safe_spawn_marks_per_axis_rotation_dictionaries_unverified", "first_run": "ValueError in dv.spawn_orientation before any gate was evaluated"}]
+               "science_unchanged": True, "regression_test": "test_safe_spawn_marks_per_axis_rotation_dictionaries_unverified", "first_run": "ValueError in dv.spawn_orientation before any gate was evaluated"},
+              {"event": "non_gating_extent_sensitivity_added", "kind": "analysis_addition_non_gating",
+               "technical_reason": "the first complete run showed that the declared 0.20 m extent limit alone excludes the wooden tray; the gate was NOT changed, a separate informational block (carrier_extent_sensitivity.json) re-evaluates carriers excluded only by that limit",
+               "science_unchanged": True, "regression_test": "test_extent_only_blocked_flags_only_the_extent_reason", "first_run_verdict": "TASK_FAIL_NO_STABLE_SUPPORT_PAIR"}]
     before = la_protected(root)
     la.write_json(out / "protected_before.json", before)
     man = json.loads((out / "universe_manifest.json").read_text())
@@ -874,6 +881,24 @@ def run_stage2(root, libero_root, out):
                          "centre_class": pe["centre_class"], "edge_direction": pe["edge"]["chosen"], "edge_margin_m": round(pe["edge"]["directions"][pe["edge"]["chosen"]]["com_margin_m"], 4) if pe["edge"]["chosen"] else None,
                          "edge_class": pe["edge_class"], "reasons_pick_centre": " || ".join(pe["centre"]["pick_on_carrier"]["reasons"])})
     write_csv(out / "carrier_object_pair_matrix.csv", prow or [{"carrier": "NONE"}], list(prow[0].keys()) if prow else ["carrier"])
+    # informational, NON-GATING sensitivity: carriers excluded only by the declared extent limit are re-evaluated with the limit lifted
+    sens = {"gating": False, "note": "the verdict uses the declared MAX_CARRIER_EXTENT; this block only shows what the extent limit alone changed", "declared_limit_m": MAX_CARRIER_EXTENT, "carriers": {}}
+    for ty, c in carriers.items():
+        if extent_only_blocked(c["mobility"], c["rec"]):
+            gs = carrier_grasp(c["rec"], grip)
+            cls = classify_carrier({"movable": True, "reasons": []}, gs)
+            entry = {"extent_xyz_m": [round(x, 4) for x in c["rec"]["extent"]], "mass_kg_range": [round(c["rec"]["mass_lo"], 4), round(c["rec"]["mass_hi"], 4)], "class_if_limit_lifted": cls, "feasible_sites": gs["feasible"], "best": gs["best"], "pairs": {}}
+            if cls in ("GENERIC_MOVE_CARRIER_COMPATIBLE", "GENERIC_BINDING_REQUIRED"):
+                fld = support_field(c["rec"])
+                if fld["ok"]:
+                    for at in usable_carried:
+                        pe = pair_eval(c["rec"], carried[at]["rec"], fld, grip)
+                        entry["pairs"][at] = {"centre_class": pe["centre_class"], "edge_class": pe["edge_class"], "fit_fraction": pe["centre"]["fit_fraction"], "com_margin_m": pe["centre"]["com_projection_margin_m"],
+                                              "pick_on_carrier_ok": pe["centre"]["pick_on_carrier"]["ok"], "pick_reasons": pe["centre"]["pick_on_carrier"]["reasons"],
+                                              "carrier_grasp_ratio": pe["centre"]["carrier_grasp"]["best"]["torque_ratio"] if pe["centre"]["carrier_grasp"]["best"] else None}
+            sens["carriers"][ty] = entry
+    sens["stable_centre_pairs_if_limit_lifted"] = ["%s|%s" % (t, a) for t, e in sens["carriers"].items() for a, p in e["pairs"].items() if p["centre_class"] == "STABLE_CENTER_CANDIDATE"]
+    write_json(out / "carrier_extent_sensitivity.json", sens)
     stable = [k for k, v in pairs.items() if v["centre_class"] == "STABLE_CENTER_CANDIDATE"]
     edge = [k for k, v in pairs.items() if v["edge_class"] == "MARGINAL_EDGE_CANDIDATE"]
     contrast = [k for k in stable if pairs[k]["edge_class"] == "MARGINAL_EDGE_CANDIDATE"]

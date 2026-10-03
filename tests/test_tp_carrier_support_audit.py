@@ -202,3 +202,10 @@ def test_safe_spawn_marks_per_axis_rotation_dictionaries_unverified(tmp_path_fac
     s = m.safe_spawn(root, "Dicty")
     assert s["status"] == "UNVERIFIED" and s["quat_wxyz"] is None
     assert m.safe_spawn(root, "Base")["status"] == "DETERMINED_BY_SOURCE"
+
+def test_extent_only_blocked_flags_only_the_extent_reason():
+    rec = {"ok": True}
+    assert m.extent_only_blocked({"movable": False, "reasons": ["horizontal extent 0.297 m > 0.20 m"]}, rec) is True
+    assert m.extent_only_blocked({"movable": False, "reasons": ["horizontal extent 0.3 m > 0.20 m", "mass 2 kg > 1.0 kg"]}, rec) is False
+    assert m.extent_only_blocked({"movable": True, "reasons": []}, rec) is False
+    assert m.extent_only_blocked({"movable": False, "reasons": ["articulated appliance or furniture"]}, rec) is False
