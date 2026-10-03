@@ -7,7 +7,7 @@ Phases: {'A': 'PASS', 'B': 'PASS', 'C': 'PASS', 'D': 'PASS', 'E': 'PASS', 'F': '
 ## C/D. camera model vs real clean dev blobs
 
 - blobs 20/20; centroid error mean 0.19 px, max 0.56 px; area ratio real/pred 0.82-1.23; mean mask IoU 0.93
-- metric depth fit: INFORMATIONAL (rms None)
+- metric depth fit (informational, not gating): model form ok True, median error 0.00019 m, all-pixel RMS 0.0070 m (edge pixels)
 - the colour mask captures the top face of each cube only
 
 ## E/F. world-safe projected overlap and soft band
