@@ -429,26 +429,28 @@ class Geometry:
         return {"pixel_margin": float(margin), "top_face_pixel_area": float(area), "pass": bool(margin >= SAFETY_MARGIN_PX and area >= MIN_TOP_FACE_PIXELS)}
 
 
-def projection_sanity(geom, cam, z0_abs, snap_dir="/home/xushijie2/graph_cp_disr_snapshots/tp_ef_post_open_capture/20261003T014215Z/T_B_dev_03"):
-    """Compare the projected container / buffer centres with the colour-blob centroids of the saved public RGB (development snapshot, never a test image)."""
+def projection_sanity(geom, cam, z0_abs, root=".", snap_dir="/home/xushijie2/graph_cp_disr_snapshots/tp_ef_post_open_capture/20261003T014215Z/T_B_dev_03"):
+    """Compare projected cube centres with the colour-blob centroids of the saved public RGB of a development snapshot (never a test image).
+    The container / buffer are not used: perception normally finds no colour support for them and falls back to the static layout."""
     p = Path(snap_dir) / "obs_public_cached.npz"
-    if not p.is_file():
+    sp = Path(root) / "configs/splits/T_B_stage_2a_v11.json"
+    if not p.is_file() or not sp.is_file():
         return {"status": "NOT_AVAILABLE"}
+    row = [r for r in json.loads(sp.read_text())["dev"] if r["case_id"] == "T_B_dev_03"][0]
     rgb = np.load(p)["rgb"].astype(np.float32)
     rgb = rgb / 255.0 if rgb.max() > 1.5 else rgb
-    colors = {"container": (0.18, 0.35, 0.75), "buffer": (0.18, 0.72, 0.30)}
-    centers = {"container": (CONTAINER_XY[0], CONTAINER_XY[1], z0_abs + 0.03), "buffer": (BUFFER_XY[0], BUFFER_XY[1], z0_abs + 0.008)}
+    colors = {"target": ((0.85, 0.20, 0.15), row["target_xy"]), "second_object": ((0.92, 0.72, 0.12), row["second_xy"])}
     out = {}
-    for k, col in colors.items():
+    for k, (col, xy) in colors.items():
         m = np.linalg.norm(rgb - np.array(col)[None, None, :], axis=2) < 0.32
         ys, xs = np.where(m)
-        u, v, d, f = geom.project(centers[k], cam)
+        u, v, d, f = geom.project((xy[0], xy[1], z0_abs + 0.003 + geom.cube), cam)
         if len(xs) < 8:
-            out[k] = {"blob_pixels": int(len(xs)), "status": "NO_BLOB"}
+            out[k] = {"blob_pixels": int(len(xs)), "status": "NO_BLOB", "projected": [float(u), float(v)]}
             continue
         out[k] = {"blob_pixels": int(len(xs)), "blob_centroid": [float(xs.mean()), float(ys.mean())], "projected": [float(u), float(v)], "pixel_distance": float(math.hypot(xs.mean() - u, ys.mean() - v))}
     ok = all(v.get("pixel_distance", 99) < 6.0 for v in out.values())
-    return {"status": "PASS" if ok else "MODEL_UNVERIFIED", "tolerance_px": 6.0, "objects": out}
+    return {"status": "PASS" if ok else "MODEL_UNVERIFIED", "tolerance_px": 6.0, "case": "T_B_dev_03 (development)", "objects": out}
 
 
 def candidate_grid(geom, cam, z0_abs):
@@ -720,7 +722,7 @@ def run(root, out):
         write_json(out / "static_sweep_audit.json", audit)
         cam_rows = [{"mode": c["mode"], "offset": c["offset"], "camera": c.get("camera"), "interfering": c["score"] > 0} for c in cands if c.get("camera")]
         rel = [r for r in cam_rows if r["interfering"]]
-        sanity = projection_sanity(geom, cam, z0_abs)
+        sanity = projection_sanity(geom, cam, z0_abs, root)
         write_json(out / "camera_static_audit.json", {"card": CARD, "camera": "agentview frozen profile (pos %s, fovy %s, 128x128)" % (cam["pos"], cam["fovy"]), "margin_px_min": SAFETY_MARGIN_PX, "top_face_min_px": MIN_TOP_FACE_PIXELS,
                                                       "all_valid_grid_candidates": {"checked": len(cam_rows), "failing": sum(1 for r in cam_rows if not r["camera"]["pass"]), "worst_margin_px": min(r["camera"]["pixel_margin"] for r in cam_rows),
                                                                                    "note": "candidates far on the near side of the container fall outside the image; they have score 0 (CLEAR) and are irrelevant to the soft band"},
