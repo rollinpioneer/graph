@@ -193,3 +193,12 @@ def test_safe_mass_inertia_handles_stl_and_missing_mesh_file(tmp_path_factory):
                                                   {"file": "missing.obj", "scale": [1, 1, 1], "density": 100.0, "collides": False}], "sites": {}}
     mi = m.safe_mass_inertia(parsed, d)
     assert mi["visual_mesh_unparsed"] == 2 and abs(mi["mass_boxes_plus_visual_mesh_kg"] - (mi["mass_boxes_only_kg"] + 0.1)) < 1e-9
+
+def test_safe_spawn_marks_per_axis_rotation_dictionaries_unverified(tmp_path_factory):
+    root = tmp_path_factory.mktemp("liblike")
+    d = root / "envs" / "objects"
+    d.mkdir(parents=True)
+    (d / "o.py").write_text("import numpy as np\nclass Base:\n    def __init__(self):\n        self.rotation = (np.pi / 2, np.pi / 2)\n        self.rotation_axis = 'x'\nclass Dicty(Base):\n    def __init__(self):\n        super().__init__()\n        self.rotation = {'x': (np.pi / 2, np.pi / 2), 'z': (np.pi / 2, np.pi / 2)}\n")
+    s = m.safe_spawn(root, "Dicty")
+    assert s["status"] == "UNVERIFIED" and s["quat_wxyz"] is None
+    assert m.safe_spawn(root, "Base")["status"] == "DETERMINED_BY_SOURCE"

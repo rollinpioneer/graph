@@ -292,6 +292,13 @@ def safe_mass_inertia(parsed, xml_dir):
     mi["mass_ratio_high_over_low"] = mi["mass_boxes_plus_visual_mesh_kg"] / max(mi["mass_boxes_only_kg"], 1e-12)
     return mi
 
+def safe_spawn(lib, class_name):
+    """dv.spawn_orientation, with per-axis rotation dictionaries (several classes declare {"x": (...), "z": (...)}) treated as UNVERIFIED instead of raising."""
+    try:
+        return dv.spawn_orientation(lib, class_name)
+    except (ValueError, TypeError):
+        return {"status": "UNVERIFIED", "quat_wxyz": None, "rotation_source": None, "reason": "rotation attribute is a per-axis dictionary or otherwise not a single numeric angle pair"}
+
 def registered_record(lib, reg, name, policy):
     """Geometry in the registered orientation, resting on z = 0. policy: 'carrier' -> identity (asset frame z-up); 'carried' -> class source orientation
     when it is explicit or the Hope default, else identity. Every record states its orientation basis and status."""
@@ -302,7 +309,7 @@ def registered_record(lib, reg, name, policy):
     if not parsed["boxes"]:
         return dict(base, reason="NO_BOX_COLLISION_PROXY", orientation_basis="n/a", orientation_status="n/a")
     mi = safe_mass_inertia(parsed, xml.parent)
-    spawn = dv.spawn_orientation(lib, rec["class"])
+    spawn = safe_spawn(lib, rec["class"])
     defined_in = (spawn.get("rotation_source") or {}).get("defined_in")
     if policy == "carried" and spawn["status"] == "DETERMINED_BY_SOURCE" and defined_in != "GoogleScannedObject":
         Rs, basis, status = la._quat_to_mat(spawn["quat_wxyz"]), "class source rotation (%s)" % defined_in, "DETERMINED_BY_SOURCE"
@@ -773,7 +780,9 @@ def run_stage2(root, libero_root, out):
     root, out = Path(root).resolve(), Path(out).resolve()
     guard = la.Guard()
     events = [{"event": "mass_parser_made_robust_for_stl_and_missing_mesh_files", "technical_reason": "stage 2 first failed on the stove (an STL visual mesh) and on a mesh element without a file; the visual-mesh mass parser only knew the binary .msh format",
-               "science_unchanged": True, "regression_test": "test_safe_mass_inertia_handles_stl_and_missing_mesh_file", "first_run": "ValueError in dv.mesh_volume before any gate was evaluated"}]
+               "science_unchanged": True, "regression_test": "test_safe_mass_inertia_handles_stl_and_missing_mesh_file", "first_run": "ValueError in dv.mesh_volume before any gate was evaluated"},
+              {"event": "per_axis_rotation_dictionaries_treated_as_unverified", "technical_reason": "stage 2 then failed on Ketchup, Milk, OrangeJuice, SaladDressing and NewSaladDressing, whose rotation attribute is a per-axis dictionary; the earlier card's spawn parser expected one numeric angle pair",
+               "science_unchanged": True, "regression_test": "test_safe_spawn_marks_per_axis_rotation_dictionaries_unverified", "first_run": "ValueError in dv.spawn_orientation before any gate was evaluated"}]
     before = la_protected(root)
     la.write_json(out / "protected_before.json", before)
     man = json.loads((out / "universe_manifest.json").read_text())
