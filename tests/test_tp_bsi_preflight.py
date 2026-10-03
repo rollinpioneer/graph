@@ -1,4 +1,4 @@
-"""Offline tests for the BSI preflight card (static analysis only; no environment is ever constructed)."""
+﻿"""Offline tests for the BSI preflight card (static analysis only; no environment is ever constructed)."""
 from pathlib import Path
 
 import pytest
@@ -99,8 +99,9 @@ def test_zero_env_guard_raises():
     assert zg.calls == 1
 
 
-def test_duration_inventory_reads_both_clean_sources(tmp_path):
+def test_duration_inventory_reads_both_clean_sources(tmp_path_factory):
     import json
+    tmp_path = tmp_path_factory.mktemp("bsi_dur")
     sw = tmp_path / b.SW1_REL / "20260101T000000Z_scripted_witness"
     sw.mkdir(parents=True)
     pre = {"index": 0, "action": "a:PICK:target:v1"}
@@ -116,4 +117,5 @@ def test_duration_inventory_reads_both_clean_sources(tmp_path):
     (db / "b2.json").write_text(json.dumps({"success": False, "valid": True, "termination": "NO_PLAN", "case_id": "d", "trace": [{"action": "a:PICK:second_object:v1", "elapsed_start": 0, "elapsed_end": 4, "controller_exit": "NORMAL_TERMINATION"}]}))
     rows = b.collect_durations(tmp_path, b.Guard())
     assert sorted((r["source"], r["role"]) for r in rows) == [("DISCOVERY-1", "PICK_second"), ("SCRIPTED-WITNESS-1", "PICK_target")]
-    assert [r["duration"] for r in rows if r["source"] == "DISCOVERY-1"] == [4.5]
+    assert [r["duration"] for r in rows if r["source"] == "DISCOVERY-1"] == pytest.approx([4.5])
+

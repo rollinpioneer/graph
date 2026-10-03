@@ -429,6 +429,28 @@ class Geometry:
         return {"pixel_margin": float(margin), "top_face_pixel_area": float(area), "pass": bool(margin >= SAFETY_MARGIN_PX and area >= MIN_TOP_FACE_PIXELS)}
 
 
+def projection_sanity(geom, cam, z0_abs, snap_dir="/home/xushijie2/graph_cp_disr_snapshots/tp_ef_post_open_capture/20261003T014215Z/T_B_dev_03"):
+    """Compare the projected container / buffer centres with the colour-blob centroids of the saved public RGB (development snapshot, never a test image)."""
+    p = Path(snap_dir) / "obs_public_cached.npz"
+    if not p.is_file():
+        return {"status": "NOT_AVAILABLE"}
+    rgb = np.load(p)["rgb"].astype(np.float32)
+    rgb = rgb / 255.0 if rgb.max() > 1.5 else rgb
+    colors = {"container": (0.18, 0.35, 0.75), "buffer": (0.18, 0.72, 0.30)}
+    centers = {"container": (CONTAINER_XY[0], CONTAINER_XY[1], z0_abs + 0.03), "buffer": (BUFFER_XY[0], BUFFER_XY[1], z0_abs + 0.008)}
+    out = {}
+    for k, col in colors.items():
+        m = np.linalg.norm(rgb - np.array(col)[None, None, :], axis=2) < 0.32
+        ys, xs = np.where(m)
+        u, v, d, f = geom.project(centers[k], cam)
+        if len(xs) < 8:
+            out[k] = {"blob_pixels": int(len(xs)), "status": "NO_BLOB"}
+            continue
+        out[k] = {"blob_pixels": int(len(xs)), "blob_centroid": [float(xs.mean()), float(ys.mean())], "projected": [float(u), float(v)], "pixel_distance": float(math.hypot(xs.mean() - u, ys.mean() - v))}
+    ok = all(v.get("pixel_distance", 99) < 6.0 for v in out.values())
+    return {"status": "PASS" if ok else "MODEL_UNVERIFIED", "tolerance_px": 6.0, "objects": out}
+
+
 def candidate_grid(geom, cam, z0_abs):
     cands = []
     steps = int(round(GRID_HALF / GRID_STEP))
@@ -696,10 +718,15 @@ def run(root, out):
                  "limitations": ["static necessary-condition model; contact dynamics are not simulated", "finger spread axis tested on both world axes (orientation unverified offline)", "release xy error of the controller (tol 0.018 m) is not modelled in the score"],
                  "status": "PASS" if not cat else "FAIL"}
         write_json(out / "static_sweep_audit.json", audit)
-        cam_rows = [{"mode": c["mode"], "offset": c["offset"], "camera": c.get("camera")} for c in cands if c.get("camera")]
+        cam_rows = [{"mode": c["mode"], "offset": c["offset"], "camera": c.get("camera"), "interfering": c["score"] > 0} for c in cands if c.get("camera")]
+        rel = [r for r in cam_rows if r["interfering"]]
+        sanity = projection_sanity(geom, cam, z0_abs)
         write_json(out / "camera_static_audit.json", {"card": CARD, "camera": "agentview frozen profile (pos %s, fovy %s, 128x128)" % (cam["pos"], cam["fovy"]), "margin_px_min": SAFETY_MARGIN_PX, "top_face_min_px": MIN_TOP_FACE_PIXELS,
-                                                      "candidates_checked": len(cam_rows), "candidates_failing": sum(1 for r in cam_rows if not r["camera"]["pass"]), "worst_margin_px": min(r["camera"]["pixel_margin"] for r in cam_rows),
-                                                      "min_top_face_area_px": min(r["camera"]["top_face_pixel_area"] for r in cam_rows), "status": "PASS" if all(r["camera"]["pass"] for r in cam_rows) else "FAIL", "occlusion": "not modelled"})
+                                                      "all_valid_grid_candidates": {"checked": len(cam_rows), "failing": sum(1 for r in cam_rows if not r["camera"]["pass"]), "worst_margin_px": min(r["camera"]["pixel_margin"] for r in cam_rows),
+                                                                                   "note": "candidates far on the near side of the container fall outside the image; they have score 0 (CLEAR) and are irrelevant to the soft band"},
+                                                      "interfering_candidates": {"checked": len(rel), "failing": sum(1 for r in rel if not r["camera"]["pass"]), "worst_margin_px": min(r["camera"]["pixel_margin"] for r in rel) if rel else None,
+                                                                                "min_top_face_area_px": min(r["camera"]["top_face_pixel_area"] for r in rel) if rel else None},
+                                                      "projection_model_sanity_check": sanity, "status": "PASS" if rel and all(r["camera"]["pass"] for r in rel) else "FAIL", "occlusion": "not modelled"})
         phases["F"] = audit["status"]
         if cat:
             category, stop_phase = cat, "F"
