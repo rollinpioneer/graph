@@ -1,0 +1,241 @@
+{
+ "label": "POST_HOC_DIAGNOSTIC",
+ "note": "evaluation only; frozen weights; best alpha is not a method result; single training seed",
+ "alphas": [
+  0.0,
+  0.25,
+  0.5
+ ],
+ "checkpoints": {
+  "earliest": {
+   "transitions": 2074,
+   "per_alpha": {
+    "0.0": {
+     "J": 0.9003541262357222,
+     "success": 1.0,
+     "raw_steps": 7.704,
+     "n_checks": 3.708,
+     "episodes": 250
+    },
+    "0.25": {
+     "J": 0.9009233752959851,
+     "success": 1.0,
+     "raw_steps": 7.656,
+     "n_checks": 3.66,
+     "episodes": 250
+    },
+    "0.5": {
+     "J": 0.902780835020137,
+     "success": 1.0,
+     "raw_steps": 7.512,
+     "n_checks": 3.556,
+     "episodes": 250
+    }
+   },
+   "paired_vs_alpha0": {
+    "0.25": {
+     "J": {
+      "mean_diff": 0.0005692490602629179,
+      "game_cluster_ci95": [
+       -0.0013262824191199488,
+       0.0024257039952693556,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.0030029665811633233,
+       0.0037256804015532653,
+       16
+      ]
+     },
+     "raw_steps": {
+      "mean_diff": -0.048,
+      "game_cluster_ci95": [
+       -0.204,
+       0.112,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.30011081800144296,
+       0.25441626082251073,
+       16
+      ]
+     },
+     "n_checks": {
+      "mean_diff": -0.048,
+      "game_cluster_ci95": [
+       -0.16,
+       0.072,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.25629873598623604,
+       0.18290437860750355,
+       16
+      ]
+     }
+    },
+    "0.5": {
+     "J": {
+      "mean_diff": 0.0024267087844146913,
+      "game_cluster_ci95": [
+       -0.0022010746590385454,
+       0.00649131010080654,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.005451395495005146,
+       0.005279253005343603,
+       16
+      ]
+     },
+     "raw_steps": {
+      "mean_diff": -0.192,
+      "game_cluster_ci95": [
+       -0.564,
+       0.252,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.4396811868686869,
+       0.5592481303418801,
+       16
+      ]
+     },
+     "n_checks": {
+      "mean_diff": -0.152,
+      "game_cluster_ci95": [
+       -0.392,
+       0.124,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.32671886273448775,
+       0.3338386266511259,
+       16
+      ]
+     }
+    }
+   },
+   "harness_check": {
+    "alpha_trained": 0.005462268367409706,
+    "episodes": 250,
+    "identical_to_pilot_eval": 250
+   }
+  },
+  "latest": {
+   "transitions": 8265,
+   "per_alpha": {
+    "0.0": {
+     "J": 0.9240428453080171,
+     "success": 1.0,
+     "raw_steps": 5.728,
+     "n_checks": 2.46,
+     "episodes": 250
+    },
+    "0.25": {
+     "J": 0.9248250372974747,
+     "success": 1.0,
+     "raw_steps": 5.668,
+     "n_checks": 2.412,
+     "episodes": 250
+    },
+    "0.5": {
+     "J": 0.9247356551866681,
+     "success": 1.0,
+     "raw_steps": 5.684,
+     "n_checks": 2.408,
+     "episodes": 250
+    }
+   },
+   "paired_vs_alpha0": {
+    "0.25": {
+     "J": {
+      "mean_diff": 0.0007821919894576408,
+      "game_cluster_ci95": [
+       -0.0003281579199111717,
+       0.0019058575615281406,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.00014153599310962417,
+       0.0020035683044017922,
+       16
+      ]
+     },
+     "raw_steps": {
+      "mean_diff": -0.06,
+      "game_cluster_ci95": [
+       -0.152,
+       0.032,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.15671043366355866,
+       0.020246333527583517,
+       16
+      ]
+     },
+     "n_checks": {
+      "mean_diff": -0.048,
+      "game_cluster_ci95": [
+       -0.124,
+       0.028,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.12430804438616938,
+       0.023319189491064464,
+       16
+      ]
+     }
+    },
+    "0.5": {
+     "J": {
+      "mean_diff": 0.0006928098786511407,
+      "game_cluster_ci95": [
+       -0.0009768024865825734,
+       0.002151439482251493,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.001300227300169201,
+       0.0019118131812689238,
+       16
+      ]
+     },
+     "raw_steps": {
+      "mean_diff": -0.044,
+      "game_cluster_ci95": [
+       -0.172,
+       0.108,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.14837096930846932,
+       0.18316603535353532,
+       16
+      ]
+     },
+     "n_checks": {
+      "mean_diff": -0.052,
+      "game_cluster_ci95": [
+       -0.152,
+       0.06,
+       125
+      ],
+      "scene_cluster_ci95": [
+       -0.14493055555555553,
+       0.09048951048951036,
+       16
+      ]
+     }
+    }
+   },
+   "harness_check": {
+    "alpha_trained": 0.006498341914266348,
+    "episodes": 250,
+    "identical_to_pilot_eval": 250
+   }
+  }
+ }
+}

@@ -25,5 +25,8 @@ Q_ref 已改为多 holder（独立 Bernoulli、至少一个 holder）模型；�
 - 绝对校准：平均 Q 预测 0.9102 vs 实现 0.9110；动作级相关 0.77。
 - neutral cell 均值 −0.0023（预期无方向）。
 
+## 术语更正（归档时补充）
+文中的 “Belief-Optimal” 指：基于训练集多-holder 模型与固定成本的搜索参照（不读取隐藏位置，也不是全知策略）。它相对 Fixed Prior 的 J 差距（+0.0092）只表示这一参照比固定 prior 排序略好，不应称为“动态依赖收益”，也不构成对任何学习型 prior 接口的证据。E1 的 FAIL 结论不变。
+
 ## 3. 数据审计要点
 多目标实例比例 58–60%，多 holder 比例 44–48%，目标 receptacle 有多个实例的比例 23–38%（train/dev/test），均非平凡，Q_ref 已按此修正。test 中有 33/126 局的 holder (目标类, receptacle 类) 组合在 train 中未出现，1 局目标类（knife）未在 train 出现；dev 为 22/125 与 0。
