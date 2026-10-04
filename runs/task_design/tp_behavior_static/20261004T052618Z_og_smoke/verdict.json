@@ -1,0 +1,55 @@
+{
+  "card": "CP-DISR-TP-BEHAVIOR-STATIC-1 (continuation: authorised smoke test of a headless OmniGibson/Isaac Sim environment)",
+  "scope_authorised": "smoke test only; no dataset or BEHAVIOR dataset terms",
+  "install": {
+    "python": "3.11 (uv), isolated venv ~/xsj2_og_env",
+    "isaacsim": "5.1.0.0",
+    "omnigibson": "3.9.3 (pinned checkout, editable)",
+    "torch": "2.7.0+cu128",
+    "extra_pins_needed": [
+      "warp-lang==1.12.0 (upstream pin, normally in the primitives extra)"
+    ],
+    "nvidia_eula": "accepted by the agent on the user's explicit smoke-test authorisation"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "text": "omnigibson launcher requires robot assets (from huggingface.co, unreachable) before Isaac Sim starts: RuntimeError robot assets version None < 3.8.2",
+      "kind": "dataset_dependency"
+    },
+    {
+      "id": "F2",
+      "text": "Isaac Sim plain launch: USD extension libraries fail to load: libgomp static-TLS error, libXt.so.6 and libGLU.so.1 missing (Rocky Linux 10, not a supported distribution)",
+      "kind": "host_os",
+      "fixed_in_user_space": true
+    },
+    {
+      "id": "F3",
+      "text": "after the loader fixes Isaac Sim reaches its RTX scene renderer start-up and crashes (SIGSEGV, core dump) in librtx.scenedb.plugin.so / libcarb.scenerenderer-rtx.plugin.so / libomni.hydra.rtx.plugin.so",
+      "kind": "gpu_unsupported",
+      "gpu": "NVIDIA A100-SXM4-40GB x8, driver 610.57.04 (no RT cores); OmniGibson docs require RTX 2070+"
+    }
+  ],
+  "blocker": "ISAAC_SIM_RTX_RENDERER_CRASH_ON_A100",
+  "engineering_status": "FAIL",
+  "verdict": "ENGINEERING_BLOCKED",
+  "scientific_conclusion": "NONE: the eligibility gates F1-F7 were never evaluated",
+  "resources": {
+    "simulator_launch_attempts": 4,
+    "physics_steps_completed": 0,
+    "dataset_downloads": 0,
+    "provider_requests": 0,
+    "rl_transitions": 0,
+    "optimizer_steps": 0,
+    "packages_downloaded": "torch cu128, isaacsim 5.1 wheels (pip cache about 9.5 GB), two user-space RPMs (libXt, mesa-libGLU)"
+  },
+  "options_for_user": [
+    "run the scan on a machine with an RTX-class GPU (RT cores), e.g. RTX 30/40-series, A6000 or L40, on a supported Ubuntu",
+    "attempt a no-rendering Kit experience with a traced patch to OmniGibson's launcher (uncertain; modifies vendor code; assets still needed)",
+    "stop here"
+  ],
+  "not_done": [
+    "asset download (robot assets and behavior-1k assets) and dataset terms",
+    "any BEHAVIOR scene, task, primitive or transition rule execution"
+  ]
+}
