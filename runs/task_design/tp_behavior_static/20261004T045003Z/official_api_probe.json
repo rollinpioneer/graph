@@ -1,0 +1,64 @@
+{
+  "bddl3_provides_only": "parser, Conditions/compile with a backend evaluate_fn, predicate vocabulary and typed recipe data; it contains no primitive or transition-rule executor",
+  "blocked": true,
+  "blocker": "OFFICIAL_SYMBOLIC_API_UNAVAILABLE",
+  "install_requires_mentions_isaac": false,
+  "isaacsim_importable": false,
+  "object_states_touched_by_primitives": [
+    "Contains",
+    "Covered",
+    "HeatSourceOrSink",
+    "Open",
+    "ParticleRemover",
+    "ParticleSource",
+    "Saturated",
+    "ToggledOn"
+  ],
+  "omnigibson_importable": false,
+  "omnigibson_install_requires": [],
+  "primitive_class_constructor_arguments": [
+    "self",
+    "env",
+    "robot"
+  ],
+  "primitive_module_docstring": "WARNING!\nA set of action primitives that work without executing low-level physics but instead teleporting\nobjects directly into their post-condition states. Useful for learning high-level methods.",
+  "primitive_module_imports_engine": [
+    "torch",
+    "omnigibson"
+  ],
+  "primitives_reading_or_writing_simulator_object_states": {
+    "CLOSE": true,
+    "CUT": true,
+    "GRASP": true,
+    "NAVIGATE_TO": true,
+    "OPEN": true,
+    "PLACE_INSIDE": true,
+    "PLACE_NEAR_HEATING_ELEMENT": true,
+    "PLACE_ON_TOP": true,
+    "RELEASE": true,
+    "SOAK_INSIDE": true,
+    "SOAK_UNDER": true,
+    "TOGGLE_OFF": true,
+    "TOGGLE_ON": true,
+    "WIPE": true
+  },
+  "reading": "the official primitives teleport simulator objects into post-condition states by reading and writing OmniGibson object states, and the official transition rules are OmniGibson classes over simulator objects and particle systems; applying them needs a live OmniGibson (Isaac Sim) environment, which this card does not authorise, and writing a substitute would be a re-implementation the card forbids",
+  "standalone_symbolic_engine_found": false,
+  "transition_rule_module": {
+    "imports_omnigibson": true,
+    "imports_torch": true,
+    "rule_class_count": 14,
+    "top_level_imports": [
+      "abc",
+      "bddl",
+      "collections",
+      "copy",
+      "math",
+      "networkx",
+      "omnigibson",
+      "operator",
+      "random",
+      "torch"
+    ]
+  }
+}

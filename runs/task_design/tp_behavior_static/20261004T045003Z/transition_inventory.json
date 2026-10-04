@@ -1,0 +1,460 @@
+{
+  "bddl_recipe_inventory": {
+    "load_cooking_recipes": {
+      "count": 32,
+      "fields": [
+        "container_synsets",
+        "heatsource_synsets",
+        "input_states",
+        "input_synsets",
+        "name",
+        "output_states",
+        "output_synsets",
+        "timesteps"
+      ],
+      "sample": [
+        {
+          "container_synsets": "{'cookie_sheet.n.01'}",
+          "heatsource_synsets": "{'oven.n.01'}",
+          "input_states": {
+            "sugar_cookie_dough.n.01": [
+              [
+                "Cooked",
+                false
+              ]
+            ]
+          },
+          "input_synsets": {
+            "sugar_cookie_dough.n.01": 1
+          },
+          "name": "sugar_cookies",
+          "output_states": {
+            "sugar_cookie.n.01": [
+              [
+                "Cooked",
+                true
+              ]
+            ]
+          },
+          "output_synsets": {
+            "sugar_cookie.n.01": 6
+          },
+          "timesteps": null
+        },
+        {
+          "container_synsets": "{'stockpot.n.01'}",
+          "heatsource_synsets": "{'stove.n.01'}",
+          "input_states": null,
+          "input_synsets": {
+            "salt.n.02": 1,
+            "water.n.06": 1
+          },
+          "name": "salt_water",
+          "output_states": null,
+          "output_synsets": {
+            "seawater.n.01": 1
+          },
+          "timesteps": null
+        }
+      ],
+      "status": "OK"
+    },
+    "load_machine_recipes": {
+      "count": 39,
+      "fields": [
+        "input_states",
+        "input_synsets",
+        "machine_synsets",
+        "name",
+        "output_states",
+        "output_synsets"
+      ],
+      "sample": [
+        {
+          "input_states": null,
+          "input_synsets": {
+            "coffee_bean.n.01": 1,
+            "water.n.06": 1
+          },
+          "machine_synsets": "{'coffee_maker.n.01'}",
+          "name": "drip_coffee_0",
+          "output_states": null,
+          "output_synsets": {
+            "drip_coffee.n.01": 1
+          }
+        },
+        {
+          "input_states": null,
+          "input_synsets": {
+            "cane_sugar.n.02": 1,
+            "chocolate_milk.n.01": 1,
+            "espresso.n.01": 1,
+            "ice_cube.n.01": 3
+          },
+          "machine_synsets": "{'blender.n.01'}",
+          "name": "iced_cappuccino",
+          "output_states": null,
+          "output_synsets": {
+            "iced_cappuccino.n.01": 1
+          }
+        }
+      ],
+      "status": "OK"
+    },
+    "load_mixing_recipes": {
+      "count": 14,
+      "fields": [
+        "input_states",
+        "input_synsets",
+        "name",
+        "output_states",
+        "output_synsets"
+      ],
+      "sample": [
+        {
+          "input_states": null,
+          "input_synsets": {
+            "cane_sugar.n.02": 1,
+            "espresso.n.01": 1,
+            "foam.n.01": 1,
+            "whole_milk.n.01": 1
+          },
+          "name": "cappuccino",
+          "output_states": null,
+          "output_synsets": {
+            "cappuccino.n.01": 1
+          }
+        },
+        {
+          "input_states": null,
+          "input_synsets": {
+            "lemon_juice.n.01": 1,
+            "vinegar.n.01": 1,
+            "water.n.06": 1
+          },
+          "name": "vinegar_cleaning_solution",
+          "output_states": null,
+          "output_synsets": {
+            "vinegar_cleaning_solution.n.01": 1
+          }
+        }
+      ],
+      "status": "OK"
+    },
+    "load_substance_cooking_recipes": {
+      "count": 340,
+      "fields": [
+        "input_states",
+        "input_synsets",
+        "name",
+        "output_states",
+        "output_synsets"
+      ],
+      "sample": [
+        {
+          "input_states": null,
+          "input_synsets": {
+            "allspice.n.03": 1
+          },
+          "name": "allspice.n.03-cooking",
+          "output_states": null,
+          "output_synsets": {
+            "cooked__allspice.n.01": 1
+          }
+        },
+        {
+          "input_states": null,
+          "input_synsets": {
+            "almond.n.02": 1
+          },
+          "name": "almond.n.02-cooking",
+          "output_states": null,
+          "output_synsets": {
+            "cooked__almond.n.01": 1
+          }
+        }
+      ],
+      "status": "OK"
+    },
+    "load_washer_rule": {
+      "count": 1,
+      "fields": [
+        "conditions"
+      ],
+      "sample": [
+        {
+          "conditions": {
+            "alga.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "baby_oil.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "bunchgrass.n.01": [],
+            "coconut_oil.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "cooking_oil.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "debris.n.01": [],
+            "dirt.n.02": [],
+            "dust.n.01": [],
+            "house_paint.n.01": [
+              "acetone.n.01"
+            ],
+            "incision.n.01": null,
+            "ink.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "mildew.n.02": [],
+            "mold.n.05": [],
+            "mud.n.03": [],
+            "olive_oil.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "rust.n.01": null,
+            "sesame_oil.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "spray_paint.n.01": [
+              "acetone.n.01"
+            ],
+            "stain.n.01": [
+              "sodium_carbonate.n.01",
+              "vinegar.n.01",
+              "detergent.n.02",
+              "lemon_juice.n.01",
+              "rubbing_alcohol.n.01",
+              "liquid_soap.n.01",
+              "chlorine.n.01",
+              "shampoo.n.01",
+              "toothpaste.n.01",
+              "ammonia_water.n.01",
+              "disinfectant.n.01"
+            ],
+            "tarnish.n.02": null,
+            "water.n.06": [],
+            "wrinkle.n.01": null
+          }
+        }
+      ],
+      "status": "OK"
+    }
+  },
+  "note": "recipes come from the official typed loaders; the rule classes are an AST list only, because applying them needs OmniGibson",
+  "omnigibson_rule_classes": {
+    "imports_omnigibson": true,
+    "imports_torch": true,
+    "rule_classes": [
+      {
+        "bases": [
+          "Registerable"
+        ],
+        "doc": "Defines a set of categories of objects and how to transition their states.",
+        "lineno": 588,
+        "name": "BaseTransitionRule"
+      },
+      {
+        "bases": [
+          "BaseTransitionRule"
+        ],
+        "doc": "Transition rule to apply to cloth washers and dryers.",
+        "lineno": 741,
+        "name": "WasherDryerRule"
+      },
+      {
+        "bases": [
+          "WasherDryerRule"
+        ],
+        "doc": "Transition rule to apply to cloth washers.",
+        "lineno": 813,
+        "name": "WasherRule"
+      },
+      {
+        "bases": [
+          "WasherDryerRule"
+        ],
+        "doc": "Transition rule to apply to cloth dryers.",
+        "lineno": 893,
+        "name": "DryerRule"
+      },
+      {
+        "bases": [
+          "BaseTransitionRule"
+        ],
+        "doc": "Transition rule to apply to sliced / slicer object pairs.",
+        "lineno": 923,
+        "name": "SlicingRule"
+      },
+      {
+        "bases": [
+          "BaseTransitionRule"
+        ],
+        "doc": "Transition rule to apply to diceable / slicer object pairs.",
+        "lineno": 999,
+        "name": "DicingRule"
+      },
+      {
+        "bases": [
+          "BaseTransitionRule"
+        ],
+        "doc": "Transition rule to apply to meltable objects to simulate melting",
+        "lineno": 1037,
+        "name": "MeltingRule"
+      },
+      {
+        "bases": [
+          "BaseTransitionRule"
+        ],
+        "doc": "Transition rule to approximate recipe-based transitions",
+        "lineno": 1070,
+        "name": "RecipeRule"
+      },
+      {
+        "bases": [
+          "RecipeRule"
+        ],
+        "doc": "Transition rule to apply to \"cook\" physical particles.",
+        "lineno": 1908,
+        "name": "CookingPhysicalParticleRule"
+      },
+      {
+        "bases": [
+          "RecipeRule"
+        ],
+        "doc": "Transition mixing rule that leverages a single toggleable machine (e.g. electric mixer, coffee machine, blender),",
+        "lineno": 2022,
+        "name": "ToggleableMachineRule"
+      },
+      {
+        "bases": [
+          "RecipeRule"
+        ],
+        "doc": "Transition mixing rule that leverages \"mixingTool\" ability objects, which require touching between a mixing tool",
+        "lineno": 2124,
+        "name": "MixingToolRule"
+      },
+      {
+        "bases": [
+          "RecipeRule"
+        ],
+        "doc": "Transition mixing rule that approximates cooking recipes via a container and heatsource.",
+        "lineno": 2207,
+        "name": "CookingRule"
+      },
+      {
+        "bases": [
+          "CookingRule"
+        ],
+        "doc": "Cooking rule when output is objects (e.g. one dough can produce many bagels as output).",
+        "lineno": 2438,
+        "name": "CookingObjectRule"
+      },
+      {
+        "bases": [
+          "CookingRule"
+        ],
+        "doc": "Cooking rule when output is a system.",
+        "lineno": 2512,
+        "name": "CookingSystemRule"
+      }
+    ],
+    "top_level_imports": [
+      "abc",
+      "bddl",
+      "collections",
+      "copy",
+      "math",
+      "networkx",
+      "omnigibson",
+      "operator",
+      "random",
+      "torch"
+    ]
+  },
+  "recipe_output_states": {
+    "Cooked": [
+      false,
+      true
+    ],
+    "Hot": [
+      true
+    ]
+  },
+  "source_sha256": {
+    "bddl_transition_rules": "3b5690c7f4580ba9c753ff9aced176806fa715c72f6b846240b803e6b1b2b475",
+    "omnigibson_transition_rules": "506be33c3129cf6ce9bcfe89bbac13ff8c5b64a8ca9f39736f0d2350f26014fb",
+    "recipes_json": "c12694c999f37af0c93fec33cfebe84c00869e854f8ebf9b3867c03b1238dfb5"
+  }
+}

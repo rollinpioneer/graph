@@ -1,0 +1,40 @@
+{
+  "card": "CP-DISR-TP-BEHAVIOR-STATIC-1",
+  "coverage_rule": "FULL: every goal literal has a primitive write (AST set_value / placement predicate) or a recipe output state; PARTIAL: some; UNSUPPORTED: none; UNKNOWN: parse failure, unknown goal head, or a literal without an official predicate-to-state mapping",
+  "declared_before_scan": true,
+  "domain": "behavior-1k",
+  "go_thresholds": {
+    "activity_families": 5,
+    "discrete_consequence_states": 5,
+    "eligible_states": 20,
+    "note": "project thresholds declared before the scan; they are not lowered after results"
+  },
+  "planner_caps": {
+    "planner_depth": 4,
+    "planner_nodes": 20000,
+    "planner_seconds": 30
+  },
+  "resource_limits": {
+    "asset_downloads": 0,
+    "optimizer_steps": 0,
+    "physics_steps": 0,
+    "provider_requests": 0,
+    "rendering": 0,
+    "rl_transitions": 0,
+    "simulator_launches": 0,
+    "vlm_or_llm_calls": 0
+  },
+  "stages": [
+    "A1_bddl3_parse",
+    "A2_primitive_inventory",
+    "A3_transition_inventory",
+    "A4_symbolic_coverage",
+    "B_canonical_state",
+    "C_legal_actions",
+    "D_official_successor_and_closure",
+    "E_remaining_plan_J",
+    "F_pair_gates",
+    "G_shortcut_audit",
+    "H_full_vs_astat_identifiability"
+  ]
+}

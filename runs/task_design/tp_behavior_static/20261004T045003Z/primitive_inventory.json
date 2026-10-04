@@ -1,0 +1,522 @@
+{
+  "controller_function_mapping": {
+    "CLOSE": "_close",
+    "CUT": "_cut",
+    "GRASP": "_grasp",
+    "NAVIGATE_TO": "_navigate_to_obj",
+    "OPEN": "_open",
+    "PLACE_INSIDE": "_place_inside",
+    "PLACE_NEAR_HEATING_ELEMENT": "_place_near_heating_element",
+    "PLACE_ON_TOP": "_place_on_top",
+    "RELEASE": "_release",
+    "SOAK_INSIDE": "_soak_inside",
+    "SOAK_UNDER": "_soak_under",
+    "TOGGLE_OFF": "_toggle_off",
+    "TOGGLE_ON": "_toggle_on",
+    "WIPE": "_wipe"
+  },
+  "diff_against_card_expectation": {
+    "expected_not_in_source": [],
+    "identical": true,
+    "in_source_not_expected": []
+  },
+  "primitives": {
+    "CLOSE": {
+      "defined_in": "starter_base_class",
+      "doc": "Close an object",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "POST_CONDITION_ERROR",
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_open_or_close",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 330,
+        "object_states_read": [
+          "Open"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "Open",
+            "value": "param"
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "state_subscripts": 4
+        }
+      },
+      "implementation": "_close",
+      "name": "CLOSE"
+    },
+    "CUT": {
+      "defined_in": "symbolic",
+      "doc": "Cut (slice or dice) the given object with the currently grasped object.",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 508,
+        "object_states_read": [],
+        "placement_predicates": [],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "sim_attribute_refs": 2
+        }
+      },
+      "implementation": "_cut",
+      "name": "CUT"
+    },
+    "GRASP": {
+      "defined_in": "symbolic",
+      "doc": "Grasp an object",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "POST_CONDITION_ERROR",
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 145,
+        "object_states_read": [],
+        "placement_predicates": [],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 1
+        }
+      },
+      "implementation": "_grasp",
+      "name": "GRASP"
+    },
+    "NAVIGATE_TO": {
+      "defined_in": "starter_base_class",
+      "doc": "Navigate to an object",
+      "facts": {
+        "args": [
+          "self",
+          "obj",
+          "eef_pose",
+          "skip_obstacle_update"
+        ],
+        "error_reasons": [
+          "PLANNING_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_joint_position_with_fingers_at_limit",
+          "_get_obj_in_hand",
+          "_get_robot_pose_from_2d_pose",
+          "_navigate_to_pose",
+          "_postprocess_action",
+          "_sample_grasp_pose",
+          "_sample_pose_near_object",
+          "_settle_robot",
+          "_target_in_reach_of_robot",
+          "_validate_poses"
+        ],
+        "lineno": 1600,
+        "object_states_read": [],
+        "placement_predicates": [],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 21,
+          "sim_attribute_refs": 2
+        }
+      },
+      "implementation": "_navigate_to_obj",
+      "name": "NAVIGATE_TO"
+    },
+    "OPEN": {
+      "defined_in": "starter_base_class",
+      "doc": "Open an object",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "POST_CONDITION_ERROR",
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_open_or_close",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 327,
+        "object_states_read": [
+          "Open"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "Open",
+            "value": "param"
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "state_subscripts": 4
+        }
+      },
+      "implementation": "_open",
+      "name": "OPEN"
+    },
+    "PLACE_INSIDE": {
+      "defined_in": "starter_base_class",
+      "doc": "Place the currently grasped object inside another object",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "EXECUTION_ERROR",
+          "PRE_CONDITION_ERROR",
+          "SAMPLING_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_place_with_predicate",
+          "_postprocess_action",
+          "_release",
+          "_sample_pose_with_object_and_predicate",
+          "_settle_robot"
+        ],
+        "lineno": 624,
+        "object_states_read": [],
+        "placement_predicates": [
+          "Inside"
+        ],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 9,
+          "state_subscripts": 1
+        }
+      },
+      "implementation": "_place_inside",
+      "name": "PLACE_INSIDE"
+    },
+    "PLACE_NEAR_HEATING_ELEMENT": {
+      "defined_in": "symbolic",
+      "doc": "Place the currently grasped object near the heating element of another object.",
+      "facts": {
+        "args": [
+          "self",
+          "heat_source_obj"
+        ],
+        "error_reasons": [
+          "EXECUTION_ERROR",
+          "PRE_CONDITION_ERROR",
+          "SAMPLING_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_place_with_predicate",
+          "_postprocess_action",
+          "_release",
+          "_sample_pose_with_object_and_predicate",
+          "_settle_robot"
+        ],
+        "lineno": 546,
+        "object_states_read": [
+          "HeatSourceOrSink"
+        ],
+        "placement_predicates": [
+          "OnTop"
+        ],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 10,
+          "state_subscripts": 4
+        }
+      },
+      "implementation": "_place_near_heating_element",
+      "name": "PLACE_NEAR_HEATING_ELEMENT"
+    },
+    "PLACE_ON_TOP": {
+      "defined_in": "starter_base_class",
+      "doc": "Place the currently grasped object on top of another object",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "EXECUTION_ERROR",
+          "PRE_CONDITION_ERROR",
+          "SAMPLING_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_place_with_predicate",
+          "_postprocess_action",
+          "_release",
+          "_sample_pose_with_object_and_predicate",
+          "_settle_robot"
+        ],
+        "lineno": 612,
+        "object_states_read": [],
+        "placement_predicates": [
+          "OnTop"
+        ],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 9,
+          "state_subscripts": 1
+        }
+      },
+      "implementation": "_place_on_top",
+      "name": "PLACE_ON_TOP"
+    },
+    "RELEASE": {
+      "defined_in": "symbolic",
+      "doc": "Release an object, letting it fall to the ground. You can then grasp it again, as a way of reorienting your grasp of the object.",
+      "facts": {
+        "args": [
+          "self"
+        ],
+        "error_reasons": [
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 193,
+        "object_states_read": [],
+        "placement_predicates": [],
+        "set_value_writes": [],
+        "sim_object_references": {
+          "engine_name_refs": 1
+        }
+      },
+      "implementation": "_release",
+      "name": "RELEASE"
+    },
+    "SOAK_INSIDE": {
+      "defined_in": "symbolic",
+      "doc": "Soak the currently grasped object inside the fluid within a container.",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 356,
+        "object_states_read": [
+          "Contains",
+          "ParticleRemover",
+          "Saturated"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "Saturated",
+            "value": true
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "sim_attribute_refs": 2,
+          "state_subscripts": 5
+        }
+      },
+      "implementation": "_soak_inside",
+      "name": "SOAK_INSIDE"
+    },
+    "SOAK_UNDER": {
+      "defined_in": "symbolic",
+      "doc": "Soak the currently grasped object under a fluid source.",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 277,
+        "object_states_read": [
+          "ParticleRemover",
+          "ParticleSource",
+          "Saturated"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "Saturated",
+            "value": true
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "sim_attribute_refs": 2,
+          "state_subscripts": 5
+        }
+      },
+      "implementation": "_soak_under",
+      "name": "SOAK_UNDER"
+    },
+    "TOGGLE_OFF": {
+      "defined_in": "starter_base_class",
+      "doc": "Toggle an object off",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "POST_CONDITION_ERROR",
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_postprocess_action",
+          "_settle_robot",
+          "_toggle"
+        ],
+        "lineno": 639,
+        "object_states_read": [
+          "ToggledOn"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "ToggledOn",
+            "value": "param"
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "state_subscripts": 4
+        }
+      },
+      "implementation": "_toggle_off",
+      "name": "TOGGLE_OFF"
+    },
+    "TOGGLE_ON": {
+      "defined_in": "starter_base_class",
+      "doc": "Toggle an object on",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "POST_CONDITION_ERROR",
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_postprocess_action",
+          "_settle_robot",
+          "_toggle"
+        ],
+        "lineno": 636,
+        "object_states_read": [
+          "ToggledOn"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "ToggledOn",
+            "value": "param"
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "state_subscripts": 4
+        }
+      },
+      "implementation": "_toggle_on",
+      "name": "TOGGLE_ON"
+    },
+    "WIPE": {
+      "defined_in": "symbolic",
+      "doc": "Wipe the given object with the currently grasped object.",
+      "facts": {
+        "args": [
+          "self",
+          "obj"
+        ],
+        "error_reasons": [
+          "PRE_CONDITION_ERROR"
+        ],
+        "helpers_followed": [
+          "_get_obj_in_hand",
+          "_overwrite_head_action",
+          "_postprocess_action",
+          "_settle_robot"
+        ],
+        "lineno": 432,
+        "object_states_read": [
+          "Covered",
+          "ParticleRemover"
+        ],
+        "placement_predicates": [],
+        "set_value_writes": [
+          {
+            "state": "Covered",
+            "value": false
+          }
+        ],
+        "sim_object_references": {
+          "engine_name_refs": 1,
+          "sim_attribute_refs": 2,
+          "state_subscripts": 5
+        }
+      },
+      "implementation": "_wipe",
+      "name": "WIPE"
+    }
+  },
+  "source_sha256": {
+    "starter": "539368402f9032e345681e50b2822f55d2ffa0b550ccf9ae6580e8699c757034",
+    "symbolic": "3981841236181d2d03993fdbfa5a8ec165b014e23b16b1d3ef504f3067eb85d1"
+  }
+}
