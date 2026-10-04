@@ -13,8 +13,37 @@ from .graph import RELATIONS, four_views, view
 from .facts import Truth
 from .common import DataIntegrityError
 
-METHODS = ("B0", "B1", "B1-K", "B2", "Full", "A_DD", "A_Q", "A_B", "A_CAT", "B1-H", "B1-K+E", "A_STAT")
+METHODS = ("B0", "B1", "B1-K", "B2", "Full", "A_DD", "A_Q", "A_B", "A_CAT", "B1-H", "B1-K+E", "A_STAT", "PRIOR_BIAS")
 CANONICAL = {"B1-K": "B1", "B1": "B1"}
+
+
+class WeightedRGCNConv(RGCNConv):
+    """RGCNConv whose messages may carry a per-edge multiplier (mean aggregation unchanged).
+
+    With edge_weight None, or all-ones weights, the output equals RGCNConv exactly. The weight only
+    scales a message inside its own relation type; it adds no relation, node, truth value or mask.
+    """
+
+    def forward(self, x, edge_index, edge_type, edge_weight=None):
+        if edge_weight is None:
+            return super().forward(x, edge_index, edge_type)
+        n = x.size(0)
+        weight = (self.comp @ self.weight.view(self.num_bases, -1)).view(self.num_relations, self.in_channels_l, self.out_channels) if self.num_bases is not None else self.weight
+        out = x.new_zeros(n, self.out_channels)
+        for i in range(self.num_relations):
+            m = edge_type == i
+            if not bool(m.any()):
+                continue
+            src, dst = edge_index[0][m], edge_index[1][m]
+            msg = x[src] * edge_weight[m].unsqueeze(-1)
+            agg = x.new_zeros(n, x.size(1)).index_add(0, dst, msg)
+            cnt = x.new_zeros(n).index_add(0, dst, torch.ones_like(dst, dtype=x.dtype)).clamp(min=1).unsqueeze(-1)
+            out = out + (agg / cnt) @ weight[i]
+        if self.root is not None:
+            out = out + x @ self.root
+        if self.bias is not None:
+            out = out + self.bias
+        return out
 
 
 def canonical_method(method):
@@ -79,7 +108,7 @@ class GraphEncoder(nn.Module):
     def __init__(self, actions, predicates, types):
         super().__init__()
         self.features = NodeFeatures(actions, predicates, types)
-        self.layers = nn.ModuleList([RGCNConv(128, 128, len(RELATIONS), num_bases=4, aggr="mean", root_weight=True) for _ in range(4)])
+        self.layers = nn.ModuleList([WeightedRGCNConv(128, 128, len(RELATIONS), num_bases=4, aggr="mean", root_weight=True) for _ in range(4)])
         self.norms = nn.ModuleList([nn.LayerNorm(128) for _ in range(4)])
         self.readout = GoalReadout()
         self.forward_calls = 0
@@ -91,8 +120,10 @@ class GraphEncoder(nn.Module):
         edges = graph.edges
         ei = torch.tensor([[ids[a] for a, b, r in edges], [ids[b] for a, b, r in edges]], device=h.device, dtype=torch.long).reshape(2, -1)
         et = torch.tensor([RELATIONS.index(r) for a, b, r in edges], device=h.device, dtype=torch.long)
+        weights = getattr(graph, "weights", None)
+        ew = torch.tensor([weights.get((a, b, r), 1.0) for a, b, r in edges], device=h.device, dtype=h.dtype) if weights else None
         for layer, norm in zip(self.layers, self.norms):
-            h = norm(torch.relu(layer(h, ei, et)))
+            h = norm(torch.relu(layer(h, ei, et) if ew is None else layer(h, ei, et, ew)))
         return self.readout(h, graph.template)
 
 
@@ -355,6 +386,25 @@ class Policy(nn.Module):
         self.base = nn.Linear(128, 1)
         self.v_head = nn.Sequential(nn.Linear(512, 128), nn.ReLU(), nn.Linear(128, 1))
         self.q_head = nn.Sequential(nn.Linear(640, 128), nn.ReLU(), nn.Linear(128, 1))
+        # Only PRIOR_BIAS owns the shared scalar; other methods keep their original parameter set.
+        if self.method == "PRIOR_BIAS":
+            self.prior_beta = nn.Parameter(torch.zeros(()))
+        self.shadow_zero_prior = False  # evaluation switch: zero ONLY the final prior residual
+
+    def prior_bias_scores(self, snapshot, mask):
+        """PRIOR_BIAS: centred prior scores scaled to [-1, 1] over the valid candidate set (same bound B)."""
+        s = {}
+        for e in snapshot.prior_edges:
+            if len(e) > 3 and e[2] == "SOFT_RELEVANT_TO_GOAL":
+                s[e[0]] = float(e[3])
+        raw = [s.get(cid, 0.0) if bool(mask[i]) else 0.0 for i, cid in enumerate(snapshot.candidate_ids)]
+        valid = [i for i in range(len(raw)) if bool(mask[i])]
+        if not s or not valid:
+            return [0.0] * len(raw)
+        mean = sum(raw[i] for i in valid) / len(valid)
+        centred = [raw[i] - mean if bool(mask[i]) else 0.0 for i in range(len(raw))]
+        scale = max(abs(c) for c in centred)
+        return [c / scale if scale > 1e-12 else 0.0 for c in centred]
 
     @property
     def q_coefficient(self):
@@ -430,7 +480,7 @@ class Policy(nn.Module):
                 up, residual = self.prior(torch.cat((context, uk)), prior_input, self.B, False)
                 diagnostics["effect_tokens"][cid] = token_count
             else:
-                edges = () if method == "B2" else snapshot.prior_edges
+                edges = () if method in ("B2", "PRIOR_BIAS") else snapshot.prior_edges
                 delta = differences(self.encoder, four_views(snapshot.template, facts, edges, contracts[cid]))
                 successor_used = True
                 context = torch.cat((zo, ca, zk.mean(0)))
@@ -455,12 +505,18 @@ class Policy(nn.Module):
                         diagnostics["stat_relation"][cid] = prior_input
                     elif method == "A_DD":
                         prior_input = delta.dh if edges else torch.zeros_like(delta.dk)
-                    elif method == "B2":
+                    elif method in ("B2", "PRIOR_BIAS"):
                         prior_input = torch.zeros_like(delta.dk)
                     else:
                         prior_input = delta.dp if edges else torch.zeros_like(delta.dk)
                     up, residual = self.prior(torch.cat((context, uk)), prior_input, self.B, method == "A_B")
+                    if method == "PRIOR_BIAS":
+                        if "bias_scores" not in diagnostics:
+                            diagnostics["bias_scores"] = self.prior_bias_scores(snapshot, snapshot.mask)
+                        residual = self.B * torch.tanh(self.prior_beta) * diagnostics["bias_scores"][i]
                 diagnostics["differences"][cid] = delta
+            if self.shadow_zero_prior:
+                residual = residual * 0
             uk_all.append(uk)
             up_all.append(up)
             logits.append(self.base(uk).squeeze(-1) + residual)

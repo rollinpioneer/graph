@@ -1,0 +1,80 @@
+{
+ "summary": {
+  "games": 662,
+  "decisions": 4261,
+  "legal_candidates_per_decision": {
+   "mean": 7.0525698192912465,
+   "p50": 6,
+   "p95": 20,
+   "max": 41
+  },
+  "legal_CHECK_per_search_decision": {
+   "mean": 9.775093569241239,
+   "p50": 8,
+   "p95": 22,
+   "max": 41
+  },
+  "unchecked_feasible_per_search_decision": {
+   "mean": 9.775093569241239,
+   "p50": 8,
+   "p95": 22,
+   "max": 41
+  },
+  "max_legal_over_N_u_plus_2": -1,
+  "duration_by_macro": {
+   "CHECK": {
+    "mean": 1.3259612112963592,
+    "min": 1,
+    "max": 2,
+    "n": 2939
+   },
+   "TAKE": {
+    "mean": 1,
+    "min": 1,
+    "max": 1,
+    "n": 661
+   },
+   "PUT": {
+    "mean": 2.086232980332829,
+    "min": 2,
+    "max": 3,
+    "n": 661
+   }
+  },
+  "macro_failures": 0
+ },
+ "traces": [
+  {
+   "game": "pick_and_place_simple-KeyChain-None-Ottoman-203",
+   "trace": [
+    "-= Welcome to TextWorld, ALFRED! =-  You are in the middle of a room. Looking quickly around you, you see a armchair 1, a coffeetable 1, a diningtable 1, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a ottoman 1, a sidetable 1, and a sofa 1.  Your task is to: put a keychain in ottoman.",
+    "CHECK(sidetable 1): go to sidetable 1 -> You arrive at sidetable 1. On the sidetable 1, you see a houseplant 1, a remotecontrol 2, and a watch 3.",
+    "CHECK(coffeetable 1): go to coffeetable 1 -> You arrive at coffeetable 1. On the coffeetable 1, you see a book 1, a bowl 1, a keychain 1, a newspaper 1, a ",
+    "TAKE(coffeetable 1): take keychain 1 from coffeetable 1 -> You pick up the keychain 1 from the coffeetable 1.",
+    "PUT(ottoman 1): go to ottoman 1 | move keychain 1 to ottoman 1 -> You move the keychain 1 to the ottoman 1.",
+    "won=True raw_steps=5"
+   ]
+  },
+  {
+   "game": "pick_and_place_simple-KeyChain-None-Ottoman-203",
+   "trace": [
+    "-= Welcome to TextWorld, ALFRED! =-  You are in the middle of a room. Looking quickly around you, you see a armchair 1, a coffeetable 1, a diningtable 1, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a ottoman 1, a sidetable 1, and a sofa 1.  Your task is to: put a keychain in ottoman.",
+    "CHECK(sidetable 1): go to sidetable 1 -> You arrive at sidetable 1. On the sidetable 1, you see a cellphone 3, a houseplant 1, a keychain 2, and a vase",
+    "TAKE(sidetable 1): take keychain 2 from sidetable 1 -> You pick up the keychain 2 from the sidetable 1.",
+    "PUT(ottoman 1): go to ottoman 1 | move keychain 2 to ottoman 1 -> You move the keychain 2 to the ottoman 1.",
+    "won=True raw_steps=4"
+   ]
+  },
+  {
+   "game": "pick_and_place_simple-KeyChain-None-Ottoman-203",
+   "trace": [
+    "-= Welcome to TextWorld, ALFRED! =-  You are in the middle of a room. Looking quickly around you, you see a armchair 1, a coffeetable 1, a diningtable 1, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a ottoman 1, a sidetable 1, and a sofa 1.  Your task is to: put some keychain on ottoman.",
+    "CHECK(sidetable 1): go to sidetable 1 -> You arrive at sidetable 1. On the sidetable 1, you see a houseplant 1, and a pencil 2.",
+    "CHECK(coffeetable 1): go to coffeetable 1 -> You arrive at coffeetable 1. On the coffeetable 1, you see a bowl 1, a keychain 2, a laptop 2, a laptop 1, and",
+    "TAKE(coffeetable 1): take keychain 2 from coffeetable 1 -> You pick up the keychain 2 from the coffeetable 1.",
+    "PUT(ottoman 1): go to ottoman 1 | move keychain 2 to ottoman 1 -> You move the keychain 2 to the ottoman 1.",
+    "won=True raw_steps=5"
+   ]
+  }
+ ]
+}

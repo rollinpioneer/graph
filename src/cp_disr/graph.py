@@ -41,9 +41,15 @@ class GraphView:
     values:tuple[tuple[str,Truth],...]
     soft_edges:tuple=()
     @property
-    def edges(self):return tuple(sorted(set(self.template.edges+self.soft_edges)))
+    def edges(self):return tuple(sorted(set(self.template.edges)|{tuple(e[:3]) for e in self.soft_edges}))
+    @property
+    def weights(self):
+        """Per-edge message multipliers for soft edges that carry an optional 4th element; default 1."""
+        return {tuple(e[:3]):float(e[3]) for e in self.soft_edges if len(e)>3}
 
-def reverse_edges(edges): return tuple(sorted(set(edges)|{(b,a,'REV_'+r) for a,b,r in edges}))
+def reverse_edges(edges):
+    edges=tuple(tuple(e) for e in edges)
+    return tuple(sorted(set(edges)|{(e[1],e[0],'REV_'+e[2])+e[3:] for e in edges}))
 
 def build_template(contracts,goals,predicate_types,objects,extra_atoms=(),derived_rules=(),exclusive_groups=()):
     contracts=tuple(sorted(contracts,key=lambda c:c.id)); goals=tuple(goals)
@@ -65,9 +71,11 @@ def build_template(contracts,goals,predicate_types,objects,extra_atoms=(),derive
 def view(template,values,soft_edges=()):
     facts={n.id for n in template.nodes if n.kind=='PROPOSITION'}
     if set(values)!=facts: raise ContractError('Snapshot facts do not match template')
-    for a,b,r in soft_edges:
+    for e in soft_edges:
+        a,b,r=e[:3]
         if r not in ('SOFT_SUPPORTS','SOFT_RELEVANT_TO_GOAL'):raise ContractError('Invalid soft relation')
         if a not in template.node_ids or b not in template.node_ids:raise ContractError('Unknown soft endpoint')
+        if len(e)>4 or (len(e)==4 and not (isinstance(e[3],(int,float)) and 0<=e[3]<float('inf'))):raise ContractError('Soft edge weight must be a finite nonnegative number')
     return GraphView(template,tuple(sorted((k,Truth(v)) for k,v in values.items())),reverse_edges(soft_edges))
 
 def successor(graph,contract,derived=None,exclusive_groups=None):
