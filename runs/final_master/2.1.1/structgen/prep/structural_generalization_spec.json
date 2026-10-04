@@ -1,0 +1,256 @@
+{
+  "axes": {
+    "A_dependency_depth": {
+      "definition": "length of the shortest legal chain of Skill-Contract actions (preconditions enforced, nominal_apply) from the frozen public initial facts to the goal",
+      "levels": {
+        "DEPTH-1": "depth 2-3",
+        "DEPTH-2": "depth 4",
+        "DEPTH-3": "depth 5"
+      },
+      "not_used_to_create_difficulty": [
+        "distance",
+        "grasp difficulty",
+        "deadline",
+        "camera",
+        "controller timeout"
+      ]
+    },
+    "B_unseen_binding_composition": {
+      "definition": "train/dev cells bind {target->container, second_object->buffer}; every test cell contains a binding absent from train (second_object->container or target->buffer) composed from skill schemas and effect schemas that all appear in training; no new object type, predicate or skill",
+      "forbidden_axes": [
+        "UNKNOWN ratio",
+        "conditional-effect complexity",
+        "candidate clutter",
+        "graph-topology perturbation",
+        "perception change",
+        "new skill",
+        "new predicate type"
+      ]
+    }
+  },
+  "base_result_commits": {
+    "representation_controls": "4d0c426f67dfa1ce23247f89879c0b4952367d53",
+    "seed_balance": "b602dfd1bc6f1241ebed1a474d51e6f6875d52a2"
+  },
+  "budget": {
+    "H": 23.09999999999752,
+    "Ncap": 16384,
+    "Tcap_seconds": 68812.79999996186,
+    "d_ref": 4.199999999997672,
+    "eval_points": [
+      0,
+      4096,
+      8192,
+      16384
+    ],
+    "max_updates": 16,
+    "ppo": {
+      "actor_episode_discount_weight": false,
+      "adam": {
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "eps": 1e-08,
+        "weight_decay": 0.0
+      },
+      "entropy_coef": 0.01,
+      "gamma_rule": "2**(-duration_seconds/H)",
+      "grad_clip": 0.5,
+      "lambda_q": 0.1,
+      "lr": 0.0003,
+      "minibatch": 64,
+      "ppo_clip": [
+        0.8,
+        1.2
+      ],
+      "rollout_n": 1024,
+      "sequence_length": 16,
+      "source": "src/cp_disr/torch_rl.py (signature defaults + literals) and final_tb.py",
+      "update_epochs": 4,
+      "value_coef": 0.5
+    },
+    "rollout_n": 1024,
+    "source": "read from baseline_identity.json (current-profile records), not from memory",
+    "task_deadline_seconds": 60.0
+  },
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "cases_per_cell": {
+    "dev": 4,
+    "test": 10,
+    "train": 20
+  },
+  "cells": {
+    "struct_gen_test": [
+      "IN_S",
+      "BUF_T+BUF_S",
+      "IN_S+BUF_T"
+    ],
+    "train_and_dev": [
+      "IN_T",
+      "BUF_S",
+      "IN_T+BUF_S"
+    ]
+  },
+  "counts": {
+    "dev": 12,
+    "test": 30,
+    "train": 60
+  },
+  "created": "2026-10-04T15:57:43Z",
+  "dev_size_note": "dev has 12 cases (4 per train cell) instead of 10; v11.DEV_EPISODES and v12.DEV10_N are set to 12 in-process; label strings keep the historical name 'dev10'",
+  "episode_order": "train cases are cycled in file order (task_cases[n % 60]), interleaved by cell; identical for every method and seed (production semantics)",
+  "evaluator_disclosure": "task_evaluator.py is byte-identical to the base commit; StructGenEvaluator subclasses it and evaluates the case's goal atoms with its unchanged atomic checks (_inside, _at_buffer, thresholds, deadline and first-success reward logic). Equivalence with TaskEvaluator for the T_B, T_A and single-goal modes is unit-tested.",
+  "expected_depth": {
+    "BUF_S": 2,
+    "BUF_T+BUF_S": 4,
+    "IN_S": 3,
+    "IN_S+BUF_T": 5,
+    "IN_T": 3,
+    "IN_T+BUF_S": 5
+  },
+  "frozen_evidence_not_rerun": {
+    "EARLY_seeds_of_3_on_the_frozen_T_B_profile": {
+      "+E": 1,
+      "ABS": 2,
+      "B2": 3,
+      "NC": 0
+    },
+    "matrix_first_effective_checkpoint": {
+      "+E": [
+        "FINAL_ONLY",
+        "FINAL_ONLY",
+        "4096"
+      ],
+      "ABS": [
+        "FINAL_ONLY",
+        "4096",
+        "8192"
+      ],
+      "B2": [
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "NC": [
+        "NEVER",
+        "FINAL_ONLY",
+        "NEVER"
+      ]
+    }
+  },
+  "goal_sets": {
+    "BUF_S": [
+      "p:AtBuffer:second_object:buffer"
+    ],
+    "BUF_T+BUF_S": [
+      "p:AtBuffer:target:buffer",
+      "p:AtBuffer:second_object:buffer"
+    ],
+    "IN_S": [
+      "p:Inside:second_object:container"
+    ],
+    "IN_S+BUF_T": [
+      "p:Inside:second_object:container",
+      "p:AtBuffer:target:buffer"
+    ],
+    "IN_T": [
+      "p:Inside:target:container"
+    ],
+    "IN_T+BUF_S": [
+      "p:Inside:target:container",
+      "p:AtBuffer:second_object:buffer"
+    ]
+  },
+  "methods": {
+    "+E": "B1-K+E",
+    "ABS": "B2-ABS",
+    "B2": "B2",
+    "NC": "B1-K+NC"
+  },
+  "metrics": {
+    "earliest_effective_checkpoint": "4096 / 8192 / FINAL_ONLY / NEVER on dev (EARLY = dev 12/12 at 4096 or 8192; FINAL_ONLY = not early and final 12/12; NEVER otherwise)",
+    "generalization_gap": "dev final success rate minus struct-gen test final success rate, per method and seed",
+    "learning_dynamics": "dev success, mean discounted return, actual N/T at 0/4096/8192/final",
+    "structural_generalization": "final-checkpoint success on the 30 test episodes, by dependency depth level and by binding novelty (second_object->container vs target->buffer involvement)"
+  },
+  "not_authorized_here": [
+    "VLM / prior",
+    "T_P",
+    "Family B",
+    "RoboCasa",
+    "new controller / perception / reward / predicate family",
+    "planner",
+    "learned world model",
+    "new seeds",
+    "new representations"
+  ],
+  "outcome_rules_frozen_before_any_run": {
+    "evaluated_in_order": [
+      "OUTCOME_D EXPLICIT_SYMBOLIC_APPLICATION_NOT_NECESSARY: T(NC) >= 0.5 and T(NC) >= T(B2) - 0.10",
+      "OUTCOME_B FIXED_PROFILE_LEARNING_EFFECT_ONLY: max_m T(m) < 0.25, or max_m T(m) - min_m T(m) < 0.10",
+      "OUTCOME_C DIFFERENCE_PARAMETERIZATION_REGAINS_IMPORTANCE: T(B2) - T(ABS) >= 0.25 and T(B2) - mean(T(+E),T(NC)) >= 0.15",
+      "OUTCOME_A STRUCTURAL_GROUNDING_HYPOTHESIS_STRENGTHENED: Delta >= 0.15, Delta_seed >= 0.10 in at least 2 of 3 seeds, and in at least 2 of 3 test cells mean(c(B2),c(ABS)) >= mean(c(+E),c(NC)) + 0.10",
+      "OUTCOME_E REPRESENTATION_EFFECT_INCONCLUSIVE: none of the above (including seed-dominated ordering)"
+    ],
+    "no_post_hoc": "no depth level, case or binding may be dropped, re-weighted or selected after any result is seen; raw evidence for every case is kept",
+    "notation": "T(m) = mean over seeds of final test success rate of method m; c(m,cell) = mean over seeds of final success rate in a test cell; S = {B2, ABS}, N = {+E, NC}; Delta = mean(T(B2),T(ABS)) - mean(T(+E),T(NC)); Delta_seed = the same per seed",
+    "paper_effect_mapping": {
+      "OUTCOME_A with 0.15 <= Delta < 0.30": "STRENGTHENED",
+      "OUTCOME_A with Delta >= 0.30": "STRONGLY_STRENGTHENED",
+      "OUTCOME_B": "WEAKENED",
+      "OUTCOME_C": "NARROWED",
+      "OUTCOME_D": "NARROWED",
+      "OUTCOME_E": "INCONCLUSIVE"
+    }
+  },
+  "qualification": {
+    "cases": {
+      "DEPTH-1": [
+        "SG_test_00",
+        "SG_train_00"
+      ],
+      "DEPTH-2": [
+        "SG_test_01",
+        "SG_test_04"
+      ],
+      "DEPTH-3": [
+        "SG_test_02",
+        "SG_train_02"
+      ]
+    },
+    "criteria": {
+      "level_failure_rule": "any case failing any criterion at a depth level = systematic failure of that level -> STOP (no retry, no re-sampling, no coordinate change)",
+      "max_episodes": 6,
+      "online_coordinate_tuning": "forbidden",
+      "per_case_pass_requires": [
+        "reset succeeds and the public initial facts equal the symbolic initial facts (all ten atoms TRUE/FALSE, none UNKNOWN)",
+        "every skill of the first optimal plan is legal under the hard mask when it is executed",
+        "every skill ends with controller exit NORMAL_TERMINATION (no reach failure, collision, timeout, observation loss)",
+        "after every skill the verified public facts equal the nominal successor facts (all ten atoms)",
+        "the frozen evaluator reports CONTINUE before the last skill and TASK_SUCCESS after it",
+        "total elapsed simulated time < 0.8 x the 60 s task deadline"
+      ],
+      "policy_training": "none"
+    }
+  },
+  "question": "Does explicit computation of known state-conditioned action consequences provide a useful inductive bias under structural generalization?",
+  "representation_implementations": "frozen: neural.py, repctl_policy.py and the in-process registrations are unchanged (byte hashes in representation_identity.json)",
+  "runs": 12,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "stop_conditions": [
+    "shortcut cannot be removed",
+    "controller / reach problem",
+    "perception problem",
+    "new task needs a Skill Contract schema change or a new predicate",
+    "needs a reward change",
+    "needs a materially different Tcap",
+    "representation implementation would have to change"
+  ],
+  "test_policy": "the test split is a separate file never opened by the training split loader; it is evaluated post hoc, on the final checkpoint of each run only (pre-registered)",
+  "what_changes": "only the goal composition (which known action consequences must be combined) and which object is bound to which destination; contracts, predicates, candidate IDs, hard mask, controller, perception, verifier, reward, deadline, layout and the evaluator's atomic checks are the frozen T_B ones"
+}

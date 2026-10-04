@@ -1,0 +1,49 @@
+{
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "case_detail": {
+    "SG_test_00": "IN_S",
+    "SG_test_01": "BUF_T+BUF_S",
+    "SG_test_02": "IN_S+BUF_T",
+    "SG_test_04": "BUF_T+BUF_S",
+    "SG_train_00": "IN_T",
+    "SG_train_02": "IN_T+BUF_S"
+  },
+  "cases": {
+    "DEPTH-1": [
+      "SG_test_00",
+      "SG_train_00"
+    ],
+    "DEPTH-2": [
+      "SG_test_01",
+      "SG_test_04"
+    ],
+    "DEPTH-3": [
+      "SG_test_02",
+      "SG_train_02"
+    ]
+  },
+  "created": "2026-10-04T15:57:43Z",
+  "criteria": {
+    "level_failure_rule": "any case failing any criterion at a depth level = systematic failure of that level -> STOP (no retry, no re-sampling, no coordinate change)",
+    "max_episodes": 6,
+    "online_coordinate_tuning": "forbidden",
+    "per_case_pass_requires": [
+      "reset succeeds and the public initial facts equal the symbolic initial facts (all ten atoms TRUE/FALSE, none UNKNOWN)",
+      "every skill of the first optimal plan is legal under the hard mask when it is executed",
+      "every skill ends with controller exit NORMAL_TERMINATION (no reach failure, collision, timeout, observation loss)",
+      "after every skill the verified public facts equal the nominal successor facts (all ten atoms)",
+      "the frozen evaluator reports CONTINUE before the last skill and TASK_SUCCESS after it",
+      "total elapsed simulated time < 0.8 x the 60 s task deadline"
+    ],
+    "policy_training": "none"
+  },
+  "gpu": "one shared GPU, one environment, scripted optimal plan, no policy training",
+  "unique_cases": [
+    "SG_test_00",
+    "SG_test_01",
+    "SG_test_02",
+    "SG_test_04",
+    "SG_train_00",
+    "SG_train_02"
+  ]
+}

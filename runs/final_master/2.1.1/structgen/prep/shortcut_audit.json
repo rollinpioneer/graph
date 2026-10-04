@@ -1,0 +1,73 @@
+{
+  "S1": {
+    "max_cells_optimal_by_one_priority": 2,
+    "max_train_cells_optimal": 1,
+    "n_cells": 6,
+    "optimal_on_all_cases": 0,
+    "optimal_on_all_train_cells": 0,
+    "permutations_tested": 5040
+  },
+  "S2": {
+    "schema_priorities_tested": 24,
+    "solving_all_cases": 0
+  },
+  "S5": {
+    "overlap": 0,
+    "test_binding_signatures": 3,
+    "train_binding_signatures": 3
+  },
+  "S6": {
+    "2": {
+      "goal_sets": [
+        "BUF_S"
+      ],
+      "single_open_loop_sequence_valid_for_all": null
+    },
+    "3": {
+      "goal_sets": [
+        "IN_S",
+        "IN_T"
+      ],
+      "single_open_loop_sequence_valid_for_all": false
+    },
+    "4": {
+      "goal_sets": [
+        "BUF_T+BUF_S"
+      ],
+      "single_open_loop_sequence_valid_for_all": null
+    },
+    "5": {
+      "goal_sets": [
+        "IN_S+BUF_T",
+        "IN_T+BUF_S"
+      ],
+      "single_open_loop_sequence_valid_for_all": false
+    }
+  },
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "checks": {
+    "S1_no_fixed_candidate_id_priority_is_optimal_on_all_cases": true,
+    "S1b_no_fixed_candidate_id_priority_is_optimal_on_all_train_cells": true,
+    "S2_no_fixed_action_schema_priority_solves_all_cases": true,
+    "S3_object_ids_do_not_determine_the_optimal_candidate": true,
+    "S4_goal_id_alone_does_not_determine_the_optimal_candidate": true,
+    "S5_test_composite_bindings_absent_from_train": true,
+    "S5b_binding_signature_alone_does_not_determine_the_optimal_candidate": true,
+    "S6_no_open_loop_sequence_per_depth_solves_all_cases_of_that_depth": true,
+    "other_single_features_below_threshold": true
+  },
+  "feature_lookup_accuracy": {
+    "binding_signature_only": 0.3142857142857143,
+    "candidate_id_set_only": 0.2571428571428571,
+    "depth_only": 0.2857142857142857,
+    "goal_id_and_depth": 0.3142857142857143,
+    "goal_id_only": 0.3142857142857143,
+    "object_ids_and_step": 0.34285714285714286,
+    "object_ids_only": 0.2571428571428571,
+    "step_index_only": 0.34285714285714286
+  },
+  "n_decisions": 35,
+  "state_and_goal_lookup_accuracy": 1.0,
+  "threshold_max_single_feature_lookup_accuracy": 0.5,
+  "verdict": "PASS"
+}
