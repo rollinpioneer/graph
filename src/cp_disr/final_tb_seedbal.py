@@ -217,6 +217,26 @@ def _normalize_manifest(text: str, split_path: str) -> str:
     return re.sub(r"/home/(?:xushijie2|__compress_data/xushijie)/graph_cp_disr_[A-Za-z0-9_]+", "<ROOT>", text)
 
 
+WORKER_PATTERN = re.compile(r"final_tb_repctl_launch\.py\s+(?:train|supervise)|final_tb_seedbal_launch\.py\s+train|final_tb_e1_launch\.py\s+train|final_tb_launch\.py\s+train|stage-2a-v11-run|R\.MAX_WORKERS")
+
+
+def residual_training_workers(ps_text=None, self_pids=None) -> list:
+    """Training workers of this project that are alive (this process and its ancestors are excluded)."""
+    if ps_text is None:
+        ps_text = subprocess.run(["ps", "-eo", "pid,args"], capture_output=True, text=True).stdout
+    if self_pids is None:
+        ppids, cur, self_pids = e1._proc_ppid_map(), os.getpid(), set()
+        while cur and cur not in self_pids:
+            self_pids.add(cur)
+            cur = ppids.get(cur, 0)
+    rows = []
+    for line in ps_text.splitlines()[1:]:
+        parts = line.strip().split(None, 1)
+        if len(parts) == 2 and parts[0].isdigit() and int(parts[0]) not in self_pids and WORKER_PATTERN.search(parts[1]):
+            rows.append({"pid": int(parts[0]), "cmd": parts[1][:160]})
+    return rows
+
+
 def build_preflight(root, out_dir, prep_commit, split, manifest, configs, git_fn=git, old_root=OLD_ROOT, ps_text=None, free_fn=None) -> dict:
     """Training-free equivalence evidence: new plans vs the existing current-profile runs, apart from seed / attempt / path."""
     root, out_dir = Path(root), Path(out_dir)
@@ -234,8 +254,8 @@ def build_preflight(root, out_dir, prep_commit, split, manifest, configs, git_fn
     except subprocess.CalledProcessError:
         checks["result_commit_is_ancestor"] = False
     checks["tracked_tree_clean"] = git_fn(root, "status", "--porcelain", "--untracked-files=no") == ""
-    ps_text = ps_text if ps_text is not None else subprocess.run(["ps", "-eo", "pid,args"], capture_output=True, text=True).stdout
-    leftovers = [l.strip()[:160] for l in ps_text.splitlines()[1:] if re.search(r"final_tb_repctl_launch\.py|final_tb_seedbal_launch\.py|final_tb_e1_launch\.py|final_tb_launch\.py\s+train|stage-2a-v11-run", l)]
+    leftovers = residual_training_workers(ps_text)
+    rows["residual_training_workers"] = leftovers
     checks["no_residual_training_worker"] = not leftovers
     changed_tracked = git_fn(root, "diff", "--name-only", "--diff-filter=MD", RESULT_COMMIT, "HEAD").split()
     checks["no_pre_existing_tracked_file_modified_since_result_commit"] = changed_tracked == []

@@ -189,3 +189,11 @@ def test_frozen_existing_cells_are_reproduced_from_the_committed_tables():
             got[(fam, meta["seed"])] = A.classify_seed(meta["points"])
     for key, want in A.FROZEN_EXISTING.items():
         assert got[key] == want, (key, got.get(key), want)
+
+
+def test_residual_worker_detection_ignores_itself_and_finds_real_workers():
+    from cp_disr import final_tb_seedbal as S
+    ps = "PID COMMAND\n10 python scripts/final_tb_seedbal_launch.py register --root /r\n11 python scripts/final_tb_seedbal_launch.py train --plan R-TB-B2-0-CURRENT\n12 vim notes.txt\n13 python scripts/final_tb_repctl_launch.py train --plan x\n"
+    found = S.residual_training_workers(ps, self_pids={10})
+    assert [r["pid"] for r in found] == [11, 13]
+    assert S.residual_training_workers(ps, self_pids={11, 13}) == []
