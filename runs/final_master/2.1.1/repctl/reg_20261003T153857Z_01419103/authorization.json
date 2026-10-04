@@ -1,0 +1,95 @@
+{
+  "authorization_text": "User authorization (chat, 2026-10-03): \"\u6279\u51c6\u6267\u884c\uff1aCP-DISR-TB-REP-CONTROLS-01 \u2014 Absolute Successor + Matched Neural Composition representation controls\".\nScope as approved: 6 new RL runs only (B2-ABS and B1-K+NC, seeds 0/1/2, one attempt each, all seeds frozen before the first run), frozen T_B current-profile budget (Tcap/Ncap/PPO/reward/evaluator unchanged),\nmain dev checkpoints N=0/4096/8192/final on frozen dev10, at most 3 concurrent workers, no VLM/prior, no T_P, no test30, no holdout, no extra seeds, no third method.\nAfter the six runs and the frozen-dev comparison: STOP and report; the next stage requires a new explicit authorization.\n",
+  "authorization_text_sha256": "d7c7868829e0d06bb4d9a28b3e2a1e47344830a9421f140b034ce25b30158d59",
+  "base_commit": "9422b837cf1dfc43afc056a77bdb59d63512b3b6",
+  "caps": {
+    "formal_test": 0,
+    "max_concurrent_workers": 3,
+    "ncap": 16384,
+    "provider": 0,
+    "rl_attempts": 6,
+    "tcap": 68812.79999996186,
+    "test30_read": 0,
+    "tp_training": 0
+  },
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "not_authorized": [
+    "provider",
+    "VLM or prior",
+    "T_P",
+    "Family B",
+    "RoboCasa",
+    "planner",
+    "multi-step rollout",
+    "learned world model",
+    "test30",
+    "independent holdout",
+    "extra seeds",
+    "structural generalization",
+    "new method designed after seeing results",
+    "a retry or replacement of any started attempt",
+    "a change of reward, PPO, Tcap, task, candidate set or evaluator"
+  ],
+  "plan_table": {
+    "R-TB-ABS-0": {
+      "method": "B2-ABS",
+      "queue_order": 1,
+      "seed": 0
+    },
+    "R-TB-ABS-1": {
+      "method": "B2-ABS",
+      "queue_order": 3,
+      "seed": 1
+    },
+    "R-TB-ABS-2": {
+      "method": "B2-ABS",
+      "queue_order": 5,
+      "seed": 2
+    },
+    "R-TB-NC-0": {
+      "method": "B1-K+NC",
+      "queue_order": 2,
+      "seed": 0
+    },
+    "R-TB-NC-1": {
+      "method": "B1-K+NC",
+      "queue_order": 4,
+      "seed": 1
+    },
+    "R-TB-NC-2": {
+      "method": "B1-K+NC",
+      "queue_order": 6,
+      "seed": 2
+    }
+  },
+  "prep_commit": "014191037319f60bcd985d995996b2ee9a603dea",
+  "prep_receipts": {
+    "prep_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/prep",
+    "receipt_sha256": {
+      "baseline_identity.json": "9d8fcb2c49ec5b6de7f268196bfad3e3f84778fd9d2ef4cfa66f0e83754dbfd0",
+      "information_boundary.md": "296dee2ba54d8f38b6f3c701be8d4bf96e46a341f4ee938f930340056bb5aba3",
+      "legacy_equivalence_receipt.json": "151f01b051d57b7de273dd7d68095df347e9a5b25b193b61d44643e0a33a9ce5",
+      "mutation_test_receipt.json": "cef9e653a418ac0a0ce1c691225f73984ade91cf36213fd093b70db56bb8779d",
+      "representation_capacity_audit.json": "4dbca551775fa095573282868b7fad746c235e577aee23fe85dde11acf144dc4",
+      "representation_control_spec.json": "5efd1354bdea0e045437635df6d81c08f9b7c593d59792bca1bb035d7645784d",
+      "semantic_test_receipt.json": "a9318e605bbdffb73e14ce784b174885d145af6b3b9b636eebd45e7037415c11",
+      "smoke_receipt.json": "befd46bc9c4c2bae3f7d2e037ad224b6c6fc00322a1565531bd25a7a52d55e03"
+    },
+    "verdicts": {
+      "legacy_equivalence_receipt.json": "PASS",
+      "mutation_test_receipt.json": "PASS",
+      "representation_capacity_audit.json": "PASS",
+      "semantic_test_receipt.json": "PASS",
+      "smoke_receipt.json": "PASS"
+    }
+  },
+  "queue": [
+    "R-TB-ABS-0",
+    "R-TB-NC-0",
+    "R-TB-ABS-1",
+    "R-TB-NC-1",
+    "R-TB-ABS-2",
+    "R-TB-NC-2"
+  ],
+  "registered": "2026-10-03T15:38:57Z"
+}

@@ -1,0 +1,159 @@
+{
+  "card": "CP-DISR-TB-REP-CONTROLS-01",
+  "configs": {
+    "R-TB-ABS-0": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-ABS-0.yaml",
+      "sha256": "686a13991a19b8d65fc88bf12f2a40bf291943c75e4d61a51691bbf1767aa219"
+    },
+    "R-TB-ABS-1": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-ABS-1.yaml",
+      "sha256": "c9e79f086bb1cdd63905f487a722699776853c70adb42fec2d294478b25f884b"
+    },
+    "R-TB-ABS-2": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-ABS-2.yaml",
+      "sha256": "fba316e3e43e024071584fd5e58f6bc72cef938eef040eca0819eccaa9a8e999"
+    },
+    "R-TB-NC-0": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-NC-0.yaml",
+      "sha256": "ba645ddf6d9fc93cb15e75c749d4963e7a73651378a64feb0d16b2de0e2860fc"
+    },
+    "R-TB-NC-1": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-NC-1.yaml",
+      "sha256": "868f34f7340bf0667a7f4e513f91b66814f1434d4a6318e33adbab5f5219beaa"
+    },
+    "R-TB-NC-2": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/run_configs/R-TB-NC-2.yaml",
+      "sha256": "d3d17594306ee4d7d2b32fa656f599d907b543031f07745c54385b19999b9f7c"
+    }
+  },
+  "derived": {
+    "runtime_manifest": {
+      "bound_root": "/home/xushijie2/graph_cp_disr_tb_repctl",
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/runtime_manifest_tb_resolved.yaml",
+      "rebound": [
+        {
+          "new": "/home/xushijie2/graph_cp_disr_tb_repctl/experiments",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery/experiments"
+        },
+        {
+          "new": "/home/xushijie2/graph_cp_disr_tb_repctl",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery"
+        },
+        {
+          "new": "/home/xushijie2/graph_cp_disr_tb_repctl/src/cp_disr/platforms/libero/runtime_factory.py",
+          "old": "/home/xushijie2/graph_cp_disr_v13_recovery/src/cp_disr/platforms/libero/runtime_factory.py"
+        }
+      ],
+      "sha256": "7c33ed51437bf04650d9fc5e12fac88c2385e89cecd88d7a1fe1fa4831f2bbb4"
+    },
+    "train_split": {
+      "path": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/repctl/reg_20261003T153857Z_01419103/train_split_tb_noprior.json",
+      "sha256": "44e0ab7d30f43c1bc23ea32c24d5f890e46c0da912079b7103c74e1706933975",
+      "source_sha256": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079"
+    }
+  },
+  "dev_ids_sha256": "c0c489e910ea11a2e42b9d700d1766f3d99f8a162c643c92bc1fd9f0e75cf433",
+  "envelope": {
+    "H": 23.09999999999752,
+    "d_ref": 4.199999999997672,
+    "ncap": 16384,
+    "tcap": 68812.79999996186
+  },
+  "eval_points": [
+    0,
+    4096,
+    8192,
+    16384
+  ],
+  "frozen_profile": {
+    "H_seconds": 23.09999999999752,
+    "d_ref_seconds": 4.199999999997672,
+    "max_complete_updates": 16,
+    "prior_mode": "absent",
+    "resolved_yaml_deadline_seconds": 60.0,
+    "resolved_yaml_reference_skill_seconds": 4.199999999997672,
+    "rollout_n": 1024,
+    "runtime_d_ref_seconds": 4.199999999997672,
+    "runtime_suite_H_seconds": 23.09999999999752,
+    "study_envelope_ncap": 16384,
+    "study_envelope_tcap": 68812.79999996186,
+    "task_deadline_seconds": 60.0,
+    "task_id": "T_B",
+    "tcap_definition": "16384 * frozen_d_ref"
+  },
+  "frozen_runtime": {
+    "H_seconds": 23.09999999999752,
+    "d_ref_seconds": 4.199999999997672,
+    "max_complete_updates": 16,
+    "prior_mode": "absent",
+    "rollout_n": 1024,
+    "study_envelope_ncap": 16384,
+    "study_envelope_tcap_definition": "16384 * frozen_d_ref",
+    "task_deadline_seconds": 60.0,
+    "task_id": "T_B"
+  },
+  "init": "FROM_SCRATCH",
+  "plans": {
+    "R-TB-ABS-0": {
+      "attempt_id": "R-TB-ABS-0-20261003T153857Z-01419103",
+      "method": "B2-ABS",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B2-ABS/seed_0/R-TB-ABS-0-20261003T153857Z-01419103",
+      "queue_order": 1,
+      "seed": 0,
+      "status": "NOT_STARTED"
+    },
+    "R-TB-ABS-1": {
+      "attempt_id": "R-TB-ABS-1-20261003T153857Z-01419103",
+      "method": "B2-ABS",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B2-ABS/seed_1/R-TB-ABS-1-20261003T153857Z-01419103",
+      "queue_order": 3,
+      "seed": 1,
+      "status": "NOT_STARTED"
+    },
+    "R-TB-ABS-2": {
+      "attempt_id": "R-TB-ABS-2-20261003T153857Z-01419103",
+      "method": "B2-ABS",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B2-ABS/seed_2/R-TB-ABS-2-20261003T153857Z-01419103",
+      "queue_order": 5,
+      "seed": 2,
+      "status": "NOT_STARTED"
+    },
+    "R-TB-NC-0": {
+      "attempt_id": "R-TB-NC-0-20261003T153857Z-01419103",
+      "method": "B1-K+NC",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B1-K+NC/seed_0/R-TB-NC-0-20261003T153857Z-01419103",
+      "queue_order": 2,
+      "seed": 0,
+      "status": "NOT_STARTED"
+    },
+    "R-TB-NC-1": {
+      "attempt_id": "R-TB-NC-1-20261003T153857Z-01419103",
+      "method": "B1-K+NC",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B1-K+NC/seed_1/R-TB-NC-1-20261003T153857Z-01419103",
+      "queue_order": 4,
+      "seed": 1,
+      "status": "NOT_STARTED"
+    },
+    "R-TB-NC-2": {
+      "attempt_id": "R-TB-NC-2-20261003T153857Z-01419103",
+      "method": "B1-K+NC",
+      "planned_run_dir": "/home/xushijie2/graph_cp_disr_tb_repctl/runs/final_master/2.1.1/T_B/B1-K+NC/seed_2/R-TB-NC-2-20261003T153857Z-01419103",
+      "queue_order": 6,
+      "seed": 2,
+      "status": "NOT_STARTED"
+    }
+  },
+  "prep_commit": "014191037319f60bcd985d995996b2ee9a603dea",
+  "queue": [
+    "R-TB-ABS-0",
+    "R-TB-NC-0",
+    "R-TB-ABS-1",
+    "R-TB-NC-1",
+    "R-TB-ABS-2",
+    "R-TB-NC-2"
+  ],
+  "split_file_sha256": "b16130d209c107a20149cc5a62e4e300f21a9cd962a69f65834926630a9fa079",
+  "stamp": "20261003T153857Z",
+  "train_ids_sha256": "d7859485ef3aa5148eed8efe305cb59d8d2169b1162fd291848dd29681cc3636",
+  "warm_start": false
+}
