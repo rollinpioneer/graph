@@ -1,0 +1,69 @@
+{
+  "authorization_text": "User authorization (chat, 2026-10-04): \"\u6279\u51c6\u6267\u884c\uff1aCP-DISR-TB-SEED-BALANCE-01 \u2014 current-profile B2 / B1-K+E matched-seed completion\".\nScope as approved: exactly three new RL runs on the unchanged current-profile T_B path: R-TB-B2-0-CURRENT (B2 seed 0), R-TB-B2-2-CURRENT (B2 seed 2), R-TB-E-2-CURRENT (B1-K+E seed 2); max 3 workers; frozen evaluation N=0/4096/8192/final on dev10;\nno seed 3+, no new ABS/NC, no B1-K/B0, no T_P, no provider, no test30, no structural generalization, no smoke (registration-only change). After the three runs and the matched-seed comparison: STOP and report.\n",
+  "authorization_text_sha256": "62a20314a41297b7b0c3edfc698af02b5b937469625b988374f1d15aecc0f85a",
+  "caps": {
+    "formal_test": 0,
+    "max_concurrent_workers": 3,
+    "ncap": 16384,
+    "provider": 0,
+    "rl_attempts": 3,
+    "smoke_episodes": 0,
+    "tcap": 68812.79999996186,
+    "test30_read": 0,
+    "tp_training": 0
+  },
+  "card": "CP-DISR-TB-SEED-BALANCE-01",
+  "conclusion_rules": [
+    "if B2 EARLY seeds <= 1 of 3 -> SEED_SENSITIVITY_HIGH",
+    "elif +E EARLY seeds >= 1 of 3 -> MIXED_REPRESENTATION_PATTERN",
+    "elif B2 >= 2/3 EARLY and ABS >= 2/3 EARLY and +E 0/3 EARLY and NC 0/3 EARLY -> MECHANISM_PATTERN_REPLICATED",
+    "else -> INCONCLUSIVE"
+  ],
+  "early_rules": {
+    "EARLY_SUCCESS": "dev10 == 10/10 at N=4096 or N=8192 (first_effective_checkpoint = 4096 if 4096 already 10/10, else 8192)",
+    "FINAL_ONLY": "4096 != 10/10 and 8192 != 10/10 and final == 10/10",
+    "NEVER": "final != 10/10"
+  },
+  "not_authorized": [
+    "seed 3 or above",
+    "new ABS / NC runs",
+    "B1-K / B0",
+    "T_P",
+    "Family B",
+    "RoboCasa",
+    "provider",
+    "test30",
+    "structural generalization",
+    "a retry or replacement of any started attempt",
+    "any change of representation, task, training budget or evaluator",
+    "more than three workers"
+  ],
+  "plan_table": {
+    "R-TB-B2-0-CURRENT": {
+      "method": "B2",
+      "queue_order": 1,
+      "reference_plan": "R-TB-DK-1",
+      "seed": 0
+    },
+    "R-TB-B2-2-CURRENT": {
+      "method": "B2",
+      "queue_order": 2,
+      "reference_plan": "R-TB-DK-1",
+      "seed": 2
+    },
+    "R-TB-E-2-CURRENT": {
+      "method": "B1-K+E",
+      "queue_order": 3,
+      "reference_plan": "R-TB-E-0",
+      "seed": 2
+    }
+  },
+  "prep_commit": "97f2ea7b0e204d3523a68274749db5b34da9e864",
+  "queue": [
+    "R-TB-B2-0-CURRENT",
+    "R-TB-B2-2-CURRENT",
+    "R-TB-E-2-CURRENT"
+  ],
+  "registered": "2026-10-04T03:47:21Z",
+  "result_commit": "4d0c426f67dfa1ce23247f89879c0b4952367d53"
+}

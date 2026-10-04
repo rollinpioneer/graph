@@ -1,0 +1,57 @@
+{
+  "n_transitions": 1024,
+  "required": 1024,
+  "optimizer_steps_this_update": 64,
+  "optimizer_steps_total": 64,
+  "param_changed": true,
+  "init_param_changed": true,
+  "losses": [
+    {
+      "epoch": 0,
+      "valid_transitions": 65,
+      "grad_norm": 0.26091426610946655,
+      "pre_clip_global_grad_norm": 0.26091426610946655,
+      "post_clip_global_grad_norm": 0.26091426610946655,
+      "clip_threshold": 0.5,
+      "clip_triggered": false,
+      "optimizer_step_id": 1,
+      "total": 0.014788334257900715,
+      "actor": -4.401573860945973e-08,
+      "v": 0.03677034005522728,
+      "q": 0.015440085902810097,
+      "actor_episode_discount_weight": 0.0
+    },
+    {
+      "epoch": 0,
+      "valid_transitions": 75,
+      "grad_norm": 0.2258581817150116,
+      "pre_clip_global_grad_norm": 0.2258581817150116,
+      "post_clip_global_grad_norm": 0.2258581817150116,
+      "clip_threshold": 0.5,
+      "clip_triggered": false,
+      "optimizer_step_id": 2,
+      "total": 0.006053559016436338,
+      "actor": 0.0009795379592105746,
+      "v": 0.021185168996453285,
+      "q": 0.007552240043878555,
+      "actor_episode_discount_weight": 0.0
+    }
+  ],
+  "clock_audit": {
+    "N_logged": 1024,
+    "N_used_by_PPO": 1024,
+    "N_clock_verified_valid": 1024,
+    "N_clock_invalid": 0,
+    "N_unknown": 0,
+    "exit_counts": {
+      "CONTINUE": 1006,
+      "TASK_SUCCESS": 18
+    },
+    "normal_failure_n": 0,
+    "technical_n": 0,
+    "mask_mismatch_n": 0,
+    "issues": []
+  },
+  "runtime_revision": "clock_integrity_r2",
+  "note": "first complete update is a real PPO update on this run, not an extra qualification job"
+}

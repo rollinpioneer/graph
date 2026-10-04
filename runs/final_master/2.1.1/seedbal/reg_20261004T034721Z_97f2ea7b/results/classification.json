@@ -1,0 +1,112 @@
+{
+  "card": "CP-DISR-TB-SEED-BALANCE-01",
+  "conclusion": "MIXED_REPRESENTATION_PATTERN",
+  "early_rules": {
+    "EARLY_SUCCESS": "10/10 at 4096 or 8192",
+    "FINAL_ONLY": "not early and final 10/10",
+    "NEVER": "final != 10/10"
+  },
+  "family_counts": {
+    "+E": {
+      "EARLY": 1,
+      "FINAL_ONLY": 2,
+      "NEVER": 0,
+      "labels": [
+        "FINAL_ONLY",
+        "FINAL_ONLY",
+        "4096"
+      ],
+      "missing": 0
+    },
+    "ABS": {
+      "EARLY": 2,
+      "FINAL_ONLY": 1,
+      "NEVER": 0,
+      "labels": [
+        "FINAL_ONLY",
+        "4096",
+        "8192"
+      ],
+      "missing": 0
+    },
+    "B2": {
+      "EARLY": 3,
+      "FINAL_ONLY": 0,
+      "NEVER": 0,
+      "labels": [
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "missing": 0
+    },
+    "NC": {
+      "EARLY": 0,
+      "FINAL_ONLY": 1,
+      "NEVER": 2,
+      "labels": [
+        "NEVER",
+        "FINAL_ONLY",
+        "NEVER"
+      ],
+      "missing": 0
+    }
+  },
+  "matrix": {
+    "+E|s0": "FINAL_ONLY",
+    "+E|s1": "FINAL_ONLY",
+    "+E|s2": "4096",
+    "ABS|s0": "FINAL_ONLY",
+    "ABS|s1": "4096",
+    "ABS|s2": "8192",
+    "B2|s0": "4096",
+    "B2|s1": "4096",
+    "B2|s2": "4096",
+    "NC|s0": "NEVER",
+    "NC|s1": "FINAL_ONLY",
+    "NC|s2": "NEVER"
+  },
+  "reason": "+E has an EARLY seed",
+  "same_seed_ABS_vs_NC": {
+    "0": [
+      "FINAL_ONLY",
+      "NEVER"
+    ],
+    "1": [
+      "4096",
+      "FINAL_ONLY"
+    ],
+    "2": [
+      "8192",
+      "NEVER"
+    ]
+  },
+  "same_seed_B2_vs_E": {
+    "0": [
+      "4096",
+      "FINAL_ONLY"
+    ],
+    "1": [
+      "4096",
+      "FINAL_ONLY"
+    ],
+    "2": [
+      "4096",
+      "4096"
+    ]
+  },
+  "source_runs": {
+    "+E|s0": "R-TB-E-0",
+    "+E|s1": "R-TB-E-1",
+    "+E|s2": "R-TB-E-2-CURRENT",
+    "ABS|s0": "R-TB-ABS-0",
+    "ABS|s1": "R-TB-ABS-1",
+    "ABS|s2": "R-TB-ABS-2",
+    "B2|s0": "R-TB-B2-0-CURRENT",
+    "B2|s1": "R-TB-DK-1",
+    "B2|s2": "R-TB-B2-2-CURRENT",
+    "NC|s0": "R-TB-NC-0",
+    "NC|s1": "R-TB-NC-1",
+    "NC|s2": "R-TB-NC-2"
+  }
+}
