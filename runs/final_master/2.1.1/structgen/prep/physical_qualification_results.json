@@ -1,0 +1,622 @@
+{
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "cases": {
+    "SG_test_00": {
+      "cell": "IN_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 3,
+      "elapsed_seconds": 15.050000000001983,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-1",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:OPEN:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 7.5999999999995405,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {},
+          "index": 0,
+          "legal": true,
+          "sim_duration": 7.5999999999995405
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.350000000001454,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 4.350000000001453
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.100000000000989,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Inside:target:container": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            },
+            "p:OnTable:target": {
+              "nominal": "UNKNOWN",
+              "observed": "TRUE"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 3.100000000000989
+        }
+      ]
+    },
+    "SG_test_01": {
+      "cell": "BUF_T+BUF_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 4,
+      "elapsed_seconds": 15.65000000000165,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-2",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.0999999999996595,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 0,
+          "legal": true,
+          "sim_duration": 4.0999999999996595
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.499999999999881,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 3.499999999999881
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.500000000001504,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 4.500000000001503
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.5500000000006064,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 3,
+          "legal": true,
+          "sim_duration": 3.5500000000006064
+        }
+      ]
+    },
+    "SG_test_02": {
+      "cell": "IN_S+BUF_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 5,
+      "elapsed_seconds": 22.749999999997716,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-3",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:OPEN:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 7.5999999999995405,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {},
+          "index": 0,
+          "legal": true,
+          "sim_duration": 7.5999999999995405
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.2000000000014035,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 4.200000000001403
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.1000000000010353,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 3.1000000000010353
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.299999999997704,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 3,
+          "legal": true,
+          "sim_duration": 4.299999999997704
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.5499999999980325,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 4,
+          "legal": true,
+          "sim_duration": 3.5499999999980325
+        }
+      ]
+    },
+    "SG_test_04": {
+      "cell": "BUF_T+BUF_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 4,
+      "elapsed_seconds": 16.200000000001346,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-2",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.649999999999599,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 0,
+          "legal": true,
+          "sim_duration": 4.649999999999599
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.550000000000143,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 3.550000000000142
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.500000000001503,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 4.500000000001503
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.5000000000001013,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:second_object:buffer": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:second_object:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 3,
+          "legal": true,
+          "sim_duration": 3.5000000000001013
+        }
+      ]
+    },
+    "SG_train_00": {
+      "cell": "IN_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 3,
+      "elapsed_seconds": 15.050000000001983,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-1",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:OPEN:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 7.5999999999995405,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {},
+          "index": 0,
+          "legal": true,
+          "sim_duration": 7.5999999999995405
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.55000000000152,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 4.5500000000015195
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 2.9000000000009223,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 2.9000000000009223
+        }
+      ]
+    },
+    "SG_train_02": {
+      "cell": "IN_T+BUF_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": true,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_continue_until_last_then_success": true,
+        "initial_facts_equal_symbolic_and_known": true,
+        "verified_facts_equal_nominal_every_step": false
+      },
+      "deadline_seconds": 60.0,
+      "depth": 5,
+      "elapsed_seconds": 23.199999999997466,
+      "initial_facts_equal_symbolic": true,
+      "initial_unknown_facts": [],
+      "level": "DEPTH-3",
+      "ok": false,
+      "steps": [
+        {
+          "action": "a:OPEN:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 7.5999999999995405,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {},
+          "index": 0,
+          "legal": true,
+          "sim_duration": 7.5999999999995405
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.55000000000152,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 1,
+          "legal": true,
+          "sim_duration": 4.5500000000015195
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 3.550000000000562,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Inside:target:container": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            },
+            "p:OnTable:target": {
+              "nominal": "UNKNOWN",
+              "observed": "TRUE"
+            }
+          },
+          "index": 2,
+          "legal": true,
+          "sim_duration": 3.550000000000562
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 4.599999999997451,
+          "evaluator_reason": "CONTINUE",
+          "evaluator_success": false,
+          "fact_mismatches_vs_nominal": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          },
+          "index": 3,
+          "legal": true,
+          "sim_duration": 4.599999999997451
+        },
+        {
+          "action": "a:PLACE:target:container:v1",
+          "controller_exit": "NORMAL_TERMINATION",
+          "duration": 2.8999999999983928,
+          "evaluator_reason": "TASK_SUCCESS",
+          "evaluator_success": true,
+          "fact_mismatches_vs_nominal": {
+            "p:AtBuffer:second_object:buffer": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:second_object:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          },
+          "index": 4,
+          "legal": true,
+          "sim_duration": 2.8999999999983928
+        }
+      ]
+    }
+  },
+  "criteria": {
+    "level_failure_rule": "any case failing any criterion at a depth level = systematic failure of that level -> STOP (no retry, no re-sampling, no coordinate change)",
+    "max_episodes": 6,
+    "online_coordinate_tuning": "forbidden",
+    "per_case_pass_requires": [
+      "reset succeeds and the public initial facts equal the symbolic initial facts (all ten atoms TRUE/FALSE, none UNKNOWN)",
+      "every skill of the first optimal plan is legal under the hard mask when it is executed",
+      "every skill ends with controller exit NORMAL_TERMINATION (no reach failure, collision, timeout, observation loss)",
+      "after every skill the verified public facts equal the nominal successor facts (all ten atoms)",
+      "the frozen evaluator reports CONTINUE before the last skill and TASK_SUCCESS after it",
+      "total elapsed simulated time < 0.8 x the 60 s task deadline"
+    ],
+    "policy_training": "none"
+  },
+  "episodes": 6,
+  "finished": "2026-10-04T16:00:12Z",
+  "gpu": 4,
+  "gpu_uuid": "GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4",
+  "head": "92bfca462068edc0791baf49a51e147b154228d9",
+  "level_verdicts": {
+    "DEPTH-1": "FAIL",
+    "DEPTH-2": "FAIL",
+    "DEPTH-3": "FAIL"
+  },
+  "optimizer_steps": 0,
+  "policy_training": false,
+  "provider_requests": 0,
+  "started": "2026-10-04T15:59:23Z",
+  "verdict": "FAIL"
+}

@@ -1,0 +1,34 @@
+{
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "created": "2026-10-04T16:08:16Z",
+  "mutations": [
+    "M1 candidate zero always optimal -> shortcut gate fails (test_M1_...)",
+    "M2 test binding in train -> novelty gate fails (test_M2_...)",
+    "M3 corrupted depth label -> depth audit fails (test_M3_...)",
+    "object-ID leakage -> shortcut gate fails",
+    "representation-control mutants (A2, A3, N1-N6) are covered by the representation-control suites listed above"
+  ],
+  "suites": {
+    "tests/test_struct_gen.py": {
+      "returncode": 0,
+      "summary": "21 passed, 3 warnings in 44.56s"
+    },
+    "tests/test_struct_gen_analysis.py": {
+      "returncode": 0,
+      "summary": "7 passed in 0.03s"
+    },
+    "tests/test_struct_gen_launch.py": {
+      "returncode": 0,
+      "summary": "13 passed, 3 warnings in 20.58s"
+    },
+    "tests/test_tb_repctl_semantics.py": {
+      "returncode": 0,
+      "summary": "30 passed, 3 warnings in 28.87s"
+    },
+    "tests/test_tb_seedbal.py": {
+      "returncode": 0,
+      "summary": "21 passed, 3 warnings in 6.50s"
+    }
+  },
+  "verdict": "PASS"
+}

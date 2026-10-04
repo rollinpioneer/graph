@@ -1,0 +1,51 @@
+{
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "created": "2026-10-04T16:06:00Z",
+  "files": {
+    "src/cp_disr/collector.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "seed_balance_result_commit": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
+      "worktree": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796"
+    },
+    "src/cp_disr/final_tb_repctl.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "eda59285e9e942153bd4ab55ccb5ed5950e7aa56fc89f7de8f147ad13a13d92c",
+      "seed_balance_result_commit": "eda59285e9e942153bd4ab55ccb5ed5950e7aa56fc89f7de8f147ad13a13d92c",
+      "worktree": "eda59285e9e942153bd4ab55ccb5ed5950e7aa56fc89f7de8f147ad13a13d92c"
+    },
+    "src/cp_disr/neural.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+      "seed_balance_result_commit": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+      "worktree": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a"
+    },
+    "src/cp_disr/repctl_policy.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81",
+      "seed_balance_result_commit": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81",
+      "worktree": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81"
+    },
+    "src/cp_disr/tb_repctl_checks.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "420b97a91a86676589644d4498534641be2db3b83a921cc915804da0394ce850",
+      "seed_balance_result_commit": "420b97a91a86676589644d4498534641be2db3b83a921cc915804da0394ce850",
+      "worktree": "420b97a91a86676589644d4498534641be2db3b83a921cc915804da0394ce850"
+    },
+    "src/cp_disr/torch_rl.py": {
+      "equal_to_seed_balance_result_commit": true,
+      "representation_controls_result_commit": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+      "seed_balance_result_commit": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+      "worktree": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13"
+    }
+  },
+  "methods": {
+    "+E": "neural.Policy(method='B1-K+E')",
+    "ABS": "repctl_policy.RepctlPolicy(method='B2-ABS')",
+    "B2": "neural.Policy(method='B2')",
+    "NC": "repctl_policy.RepctlPolicy(method='B1-K+NC')"
+  },
+  "semantic_checks": "tests/test_struct_gen.py::test_representation_semantics_hold_on_every_goal_template runs A1/A1b/A3/A4/N1-N6 and the common boundary checks on all six goal templates",
+  "semantics": "unchanged: +E direct grounded effects (no successor); B2 nominal successor difference; ABS absolute nominal successor; NC matched neural state x effect composition (no nominal_apply)",
+  "verdict": "PASS"
+}

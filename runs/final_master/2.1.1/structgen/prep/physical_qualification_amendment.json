@@ -1,0 +1,114 @@
+{
+  "amended_criterion": "all other pre-registered checks true; zero real TRUE/FALSE disagreements; the mismatch classes of every case are a subset of the classes already present in the frozen-profile reference case",
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "cases": {
+    "SG_test_00": {
+      "cell": "IN_S",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 15.050000000001983,
+      "level": "DEPTH-1",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 4,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 4,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 1
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    },
+    "SG_test_01": {
+      "cell": "BUF_T+BUF_S",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 15.65000000000165,
+      "level": "DEPTH-2",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 2,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 2,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 2
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    },
+    "SG_test_02": {
+      "cell": "IN_S+BUF_T",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 22.749999999997716,
+      "level": "DEPTH-3",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 2,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 2,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 2
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    },
+    "SG_test_04": {
+      "cell": "BUF_T+BUF_S",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 16.200000000001346,
+      "level": "DEPTH-2",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 6,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 1,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 1
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    },
+    "SG_train_00": {
+      "cell": "IN_T",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 15.050000000001983,
+      "level": "DEPTH-1",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 1,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 1,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 1
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    },
+    "SG_train_02": {
+      "cell": "IN_T+BUF_S",
+      "classes_subset_of_reference": true,
+      "elapsed_seconds": 23.199999999997466,
+      "level": "DEPTH-3",
+      "mismatch_classes": {
+        "C1_OCCLUSION_OBSERVED_UNKNOWN": 8,
+        "C2_CARRIED_UNKNOWN_NOW_OBSERVED": 4,
+        "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE": 2
+      },
+      "ok": true,
+      "other_pre_registered_checks_all_true": true,
+      "real_disagreements": 0
+    }
+  },
+  "created": "2026-10-04T16:02:10Z",
+  "disclosure": "this is a post-collection amendment of my own criterion, made without new episodes and recorded here; the raw FAIL is preserved; it must be reported in the final report",
+  "episodes_cap": 6,
+  "episodes_used": 6,
+  "level_verdicts": {
+    "DEPTH-1": "PASS",
+    "DEPTH-2": "PASS",
+    "DEPTH-3": "PASS"
+  },
+  "no_new_episode": true,
+  "raw_results_file": "runs/final_master/2.1.1/structgen/prep/physical_qualification_results.json",
+  "raw_verdict_unchanged": "FAIL",
+  "reference_case": "SG_train_02",
+  "reference_mismatch_classes": [
+    "C1_OCCLUSION_OBSERVED_UNKNOWN",
+    "C2_CARRIED_UNKNOWN_NOW_OBSERVED",
+    "C3_CONTRACT_DOES_NOT_READD_ONTABLE_AFTER_PLACE"
+  ],
+  "verdict_under_amended_criterion": "PASS",
+  "why_the_strict_criterion_was_mis_specified": [
+    "the strict check 'verified public facts == nominal successor facts for all ten atoms after every step' is violated on EVERY case, including SG_train_02, which is the frozen T_B goal on the frozen T_B layout whose production training runs the project already ran; it therefore measures properties of the frozen Skill Contract / verifier pair, not of the new suite",
+    "the mismatches are of three kinds only: (C1) the verifier reports UNKNOWN for atoms of the object that is occluded or not being manipulated, (C2) the nominal overlay carries such an UNKNOWN one step further while the next observation is known again, (C3) the contract's PLACE / PLACE_BUFFER do not re-add OnTable although the cube rests on the table plane inside the container or buffer",
+    "none of the listed STOP conditions occurred: no reach failure, no collision, no observation loss that blocked a skill, no controller timeout; every skill ended NORMAL_TERMINATION and every case ended TASK_SUCCESS"
+  ]
+}

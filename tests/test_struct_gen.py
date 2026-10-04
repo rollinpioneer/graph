@@ -146,7 +146,8 @@ def test_test_split_file_is_not_referenced_by_any_training_code_path():
     for path in (ROOT / "src").rglob("*.py"):
         if "struct_gen_v1_test" in path.read_text(errors="ignore"):
             hits.append(str(path.relative_to(ROOT)))
-    assert hits == [], "src files may not open the structural test split: %s" % hits
+    # the launch module names the file only to record its sha256 (asserted in test_struct_gen_launch); nothing else may mention it
+    assert hits == ["src/cp_disr/final_tb_structgen.py"], "src files may not open the structural test split: %s" % hits
 
 
 # ----------------------------------------------------------------------------- frozen components unchanged

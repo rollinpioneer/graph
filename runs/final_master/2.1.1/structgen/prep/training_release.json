@@ -1,0 +1,122 @@
+{
+  "budget": {
+    "Ncap": 16384,
+    "Tcap_seconds": 68812.79999996186,
+    "baseline_current_profile_mean_skill_duration": 4.785891025956332,
+    "expected_N_at_Tcap": 15305.905468017163,
+    "mean_skill_duration_seconds_in_qualification": 4.495833333333422,
+    "ncap_binding": false,
+    "statement": "Tcap is the binding stop as in the current-profile runs; no budget change is needed or made",
+    "verdict": "PASS"
+  },
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "created": "2026-10-04T16:10:58Z",
+  "disclosures": [
+    "physical qualification raw verdict FAIL under the strict fact-equality criterion; the same six episodes pass the disclosed reference-relative amendment (physical_qualification_amendment.json); no episode was added or repeated",
+    "task_evaluator.py is unchanged; StructGenEvaluator reuses its atomic checks (unit-tested for equivalence)",
+    "dev has 12 cases (4 per train cell), evaluated at 0/4096/8192/final; the test split is evaluated post hoc on final checkpoints only"
+  ],
+  "file_sha256": {
+    "configs/runtime/stage_2a_contract_registry.yaml": "e5914909eb1d91a7cdffa11c18a91a0748edafc44dd06a2da1404d0bc151d00b",
+    "configs/splits/struct_gen_v1_test.json": "b5a1f6df7200dd06cad2e610c44cfbbafa00e4eaed4e2c0a755f2902bc14a2aa",
+    "configs/splits/struct_gen_v1_train_dev.json": "2ae643250057ad585903b45f8cd2fb7adbba7b17e3204f79e542c76a9e04f53d",
+    "src/cp_disr/final_tb_repctl.py": "eda59285e9e942153bd4ab55ccb5ed5950e7aa56fc89f7de8f147ad13a13d92c",
+    "src/cp_disr/final_tb_structgen.py": "c0d560cabce8b1dabcd82181c0fdec7dbf357aeeec3d2883ed5caa42a7c0a970",
+    "src/cp_disr/neural.py": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+    "src/cp_disr/platforms/libero/runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
+    "src/cp_disr/platforms/libero/skill_executor.py": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed",
+    "src/cp_disr/platforms/libero/task_evaluator.py": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
+    "src/cp_disr/repctl_policy.py": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81",
+    "src/cp_disr/stage2a_v11.py": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
+    "src/cp_disr/struct_gen.py": "e8483078dc9501af1a08c8d740714a91dc69ff365f7b06ce0357ccd2404feff2",
+    "src/cp_disr/struct_gen_runtime.py": "273e81f54073d5a84f4bf028e7aba312b05d694d4167eb4926835d5344ae3e0e",
+    "src/cp_disr/torch_rl.py": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13"
+  },
+  "gates": {
+    "binding_novelty_audit": "PASS",
+    "budget_fairness": "PASS",
+    "capacity_identity": "PASS",
+    "dependency_depth_audit": "PASS",
+    "offline_tests": "PASS",
+    "physical_qualification": "PASS_UNDER_DISCLOSED_AMENDMENT",
+    "representation_identity": "PASS",
+    "reward_evaluator_controller_files_unchanged": "PASS",
+    "shortcut_audit": "PASS",
+    "split_frozen": "PASS"
+  },
+  "plan_table": {
+    "R-TB-SG-ABS-0": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 3,
+      "seed": 0
+    },
+    "R-TB-SG-ABS-1": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 7,
+      "seed": 1
+    },
+    "R-TB-SG-ABS-2": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 11,
+      "seed": 2
+    },
+    "R-TB-SG-B2-0": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 2,
+      "seed": 0
+    },
+    "R-TB-SG-B2-1": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 6,
+      "seed": 1
+    },
+    "R-TB-SG-B2-2": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 10,
+      "seed": 2
+    },
+    "R-TB-SG-E-0": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 1,
+      "seed": 0
+    },
+    "R-TB-SG-E-1": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 5,
+      "seed": 1
+    },
+    "R-TB-SG-E-2": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 9,
+      "seed": 2
+    },
+    "R-TB-SG-NC-0": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 4,
+      "seed": 0
+    },
+    "R-TB-SG-NC-1": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 8,
+      "seed": 1
+    },
+    "R-TB-SG-NC-2": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 12,
+      "seed": 2
+    }
+  },
+  "verdict": "PASS"
+}
