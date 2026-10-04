@@ -5,10 +5,11 @@ from ...common import digest
 from ...rl import Snapshot
 from ...contracts import precondition_value
 from ...facts import Truth
+from .ontology import OTYPE_INDEX, RTYPE_INDEX, oclass_onehot, rclass_onehot
 from .pddl_contracts import GOAL_FACT, KINDS, candidate_key, episode_template, fact_store, facts_from_public
 
 BASE_DIM = 8
-CAND_DIM = len(KINDS)
+CAND_DIM = len(KINDS) + len(RTYPE_INDEX) + len(OTYPE_INDEX)  # macro kind + receptacle class + target class (all public)
 SOFT = "SOFT_RELEVANT_TO_GOAL"
 
 
@@ -38,13 +39,14 @@ def base_input(pub):
 
 
 def build_snapshot(pub, prior_edges, env_id, episode_id, decision_id):
-    template = episode_template(pub.feasible, pub.goal_instance)
+    template = episode_template(pub.feasible, pub.goal_instance, pub.goal_otype)
     values = facts_from_public(template, pub)
     facts = fact_store(values, float(pub.raw_steps))
     cids = tuple(c.id for c in template.contracts)
     legal = set(pub.legal)
     mask = tuple(candidate_key(c) in legal for c in template.contracts)
-    feats = tuple(tuple(float(c.name == k) for k in KINDS) for c in template.contracts)
+    tgt = oclass_onehot(pub.goal_otype)
+    feats = tuple(tuple(float(c.name == k) for k in KINDS) + tuple(rclass_onehot(c.bound_arguments[0])) + tuple(tgt) for c in template.contracts)
     return Snapshot(
         env_id=env_id, episode_id=episode_id, decision_id=decision_id, template=template, facts=facts,
         candidate_ids=cids, mask=mask, prior_edges=prior_edges, prior_hash=digest(prior_edges),

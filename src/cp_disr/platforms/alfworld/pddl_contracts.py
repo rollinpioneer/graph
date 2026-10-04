@@ -9,8 +9,10 @@ Templates only mention public objects (receptacle instances announced by the fir
 no hidden object identifier appears. TAKE/PUT refer to the target through the fixed constant
 TARGET (class + instance bound at execution time), never through a hidden instance ID.
 """
+from dataclasses import replace
 from functools import lru_cache
 
+from .ontology import oclass, rclass
 from ...contracts import Atom, ConditionalEffect, Effects, SkillContract, TypedArgument
 from ...facts import FactRecord, FactStore, Truth
 from ...graph import Goal, build_template
@@ -63,9 +65,14 @@ def put_schema():
     )
 
 
-@lru_cache(maxsize=4096)
-def episode_template(feasible, goal_instance):
-    """Per-episode graph template over public objects only."""
+@lru_cache(maxsize=8192)
+def episode_template(feasible, goal_instance, target_otype):
+    """Per-episode graph template over public objects only.
+
+    Every node carries the semantic class of what it is bound to, through its argument type:
+    receptacle-bound actions/propositions get 'rtype:<class>', the target-bound 0-ary propositions get
+    'otype:<target class>'. Classes come from the fixed ontology (+UNK); no instance id, room id or path
+    is encoded."""
     contracts = [check_schema().ground({"r": r}) for r in feasible]
     contracts += [take_schema().ground({"r": r}) for r in feasible]
     objects = {r: "receptacle" for r in feasible}
@@ -73,7 +80,18 @@ def episode_template(feasible, goal_instance):
         contracts.append(put_schema().ground({"g": goal_instance}))
         objects[goal_instance] = "receptacle"
     extra = [_atom("target_found"), _atom("holding_target"), _atom("target_placed")]
-    return build_template(contracts, [Goal(GOAL_FACT, 1)], PREDICATE_TYPES, objects, extra_atoms=extra)
+    base = build_template(contracts, [Goal(GOAL_FACT, 1)], PREDICATE_TYPES, objects, extra_atoms=extra)
+    target_type = oclass(target_otype)
+    nodes = []
+    for n in base.nodes:
+        if n.arguments:
+            types = tuple(rclass(a) for a in n.arguments)
+        elif n.kind == "PROPOSITION":
+            types = (target_type,)
+        else:
+            types = n.argument_types
+        nodes.append(replace(n, argument_types=types))
+    return replace(base, nodes=tuple(nodes))
 
 
 def candidate_key(contract):

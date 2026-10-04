@@ -8,6 +8,7 @@ One call per distinct (target class, room receptacle-class set); results are cac
 import json
 import math
 import os
+import threading
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -41,21 +42,24 @@ def build_messages(otype, rtypes):
 
 
 def parse_scores(text, rtypes):
-    """Return {class: score} for listed classes only; missing classes score 0; None if unusable."""
+    """Strict parser: {"scores": {...}} whose key set EXACTLY equals the listed classes and whose
+    values are finite numbers in [0, 1]. Returns (scores, None) or (None, reason)."""
     try:
         obj = json.loads(text)
-        raw = obj["scores"]
-        if not isinstance(raw, dict):
-            return None
     except Exception:
-        return None
+        return None, "invalid_json"
+    if not isinstance(obj, dict) or set(obj) != {"scores"} or not isinstance(obj["scores"], dict):
+        return None, "bad_envelope"
+    raw = obj["scores"]
+    if set(raw) != set(rtypes):
+        return None, "key_set_mismatch"
     out = {}
     for c in rtypes:
-        v = raw.get(c, 0.0)
-        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
-            v = 0.0
+        v = raw[c]
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or not 0.0 <= v <= 1.0:
+            return None, "bad_value"
         out[c] = float(v)
-    return out if any(out.values()) else None
+    return out, None
 
 
 def instance_scores(class_scores, room_receptacles, feasible, can_contain, otype):
@@ -92,7 +96,7 @@ class PriorCache:
 
     def class_scores(self, otype, room_rtypes):
         e = self.entries.get(prior_key(otype, room_rtypes))
-        return None if e is None else e.get("scores")
+        return None if e is None or e.get("status") != "success" else e.get("scores")
 
     def scores(self, pub, tables):
         """Instance-level prior scores for one episode (public arguments only)."""
@@ -129,69 +133,145 @@ class SyntheticPrior:
         return {c: 0.05 + (int(hashlib.sha256((otype + c).encode()).hexdigest(), 16) % 1000) / 1000.0 for c in room_rtypes}
 
 
+class RateLimiter:
+    """Spaces request START times by at least 60/rpm seconds across threads."""
+
+    def __init__(self, rpm):
+        self.interval, self.next, self.lock = 60.0 / rpm, 0.0, threading.Lock()
+
+    def wait(self):
+        with self.lock:
+            now = time.monotonic()
+            start = max(now, self.next)
+            self.next = start + self.interval
+        if start > now:
+            time.sleep(start - now)
+
+
 class DashScopeTextProvider:
-    """Single-request text transport. The key is read from the environment by the SDK only."""
+    """Single-request text transport. The key is read from the environment by the SDK only and is
+    never logged, echoed or stored; exceptions are reduced to their type name."""
 
     def __init__(self, model=MODEL, timeout=60.0, retries=3):
         self.model, self.timeout, self.retries = model, timeout, retries
 
     def key_present(self):
-        return "DASHSCOPE_API_KEY" in os.environ
+        return bool(os.environ.get("DASHSCOPE_API_KEY"))
+
+    def sdk_version(self):
+        import importlib.metadata
+
+        return importlib.metadata.version("dashscope")
 
     def send(self, messages):
+        """Returns {ok, text, usage, request_id, ...} or {ok False, kind: transport_error, ...}."""
         import dashscope
-        from dashscope import Generation
+        from dashscope import MultiModalConversation
 
+        # qwen3.7-flash is served through the multimodal-generation route (text-only content here);
+        # the plain text-generation route answers HTTP 400 "url error" for this model.
         dashscope.base_http_api_url = ENDPOINT
-        last = None
+        wire = [{"role": m["role"], "content": [{"text": m["content"]}]} for m in messages]
+        last = {"ok": False, "kind": "transport_error", "status": 0, "code": "NoAttempt"}
         for attempt in range(self.retries):
             started = time.monotonic()
             try:
-                r = Generation.call(
-                    model=self.model, messages=messages, result_format="message", temperature=0,
+                r = MultiModalConversation.call(
+                    model=self.model, messages=wire, result_format="message", temperature=0,
                     enable_thinking=False, enable_search=False, response_format={"type": "json_object"},
                     max_tokens=1024, timeout=self.timeout,
                 )
                 status = int(getattr(r, "status_code", 0))
                 if status == 200:
-                    text = r.output.choices[0].message.content
                     usage = dict(r.usage) if getattr(r, "usage", None) else {}
-                    return {"ok": True, "text": text, "usage": usage, "request_id": getattr(r, "request_id", None),
-                            "model": self.model, "latency": time.monotonic() - started}
-                last = {"ok": False, "status": status, "code": str(getattr(r, "code", ""))}
+                    content = r.output.choices[0].message.content
+                    text = "".join(c.get("text", "") for c in content) if isinstance(content, list) else content
+                    return {"ok": True, "text": text, "usage": usage,
+                            "request_id": getattr(r, "request_id", None), "model": self.model,
+                            "latency": time.monotonic() - started}
+                last = {"ok": False, "kind": "transport_error", "status": status, "code": str(getattr(r, "code", "")),
+                        "request_id": getattr(r, "request_id", None)}
                 if status in (400, 401, 403, 404):
                     return last
             except Exception as exc:  # never log exception text: it may carry request headers
-                last = {"ok": False, "status": 0, "code": type(exc).__name__}
+                last = {"ok": False, "kind": "transport_error", "status": 0, "code": type(exc).__name__}
             time.sleep(2.0 * (attempt + 1))
         return last
 
 
-def generate_cache(keys, provider, workers=16, out_path=None, max_total_tokens=20_000_000):
-    """keys: iterable of (otype, tuple(rtypes)). Calls the provider once per key (concurrent), freezes results."""
+def atomic_write_json(path, obj):
+    tmp = path + ".tmp.%d" % os.getpid()
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, sort_keys=True, indent=1)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
+def generate_cache(keys, provider, out_path, rpm=55, workers=4, resume=False, retry_parse=False, save_every=10):
+    """Rate-limited, resumable, incrementally saved cache. One provider/model per cache file.
+
+    status per key: success | parse_error | transport_error.  keys: iterable of (otype, rtypes)."""
     keys = sorted({(o, tuple(sorted(set(r)))) for o, r in keys})
-    entries, tokens = {}, 0
+    prompt_hash = digest(build_messages("X", ("a", "b")))
+    meta = {"model": provider.model, "endpoint": ENDPOINT, "route": "multimodal-generation(text-only)", "sdk_version": provider.sdk_version(), "prompt_hash": prompt_hash,
+            "rpm_limit": rpm}
+    entries = {}
+    if resume and os.path.exists(out_path):
+        old = json.load(open(out_path))
+        for f in ("model", "endpoint", "prompt_hash"):
+            if old["meta"].get(f) != meta[f]:
+                raise RuntimeError("resume refused: cache was produced with a different %s (no provider mixing)" % f)
+        entries = dict(old["entries"])
+    elif os.path.exists(out_path):
+        raise RuntimeError("output exists; use resume")
+    todo = []
+    for o, rt in keys:
+        e = entries.get(prior_key(o, rt))
+        if e is None or e["status"] == "transport_error" or (retry_parse and e["status"] == "parse_error"):
+            todo.append((o, rt))
+    limiter, lock, done = RateLimiter(rpm), threading.Lock(), [0]
+
+    def totals():
+        return sum(int((e.get("usage") or {}).get("total_tokens", 0)) for e in entries.values())
+
+    def save():
+        atomic_write_json(out_path, {"meta": {**meta, "total_tokens": totals(), "n_keys": len(keys)}, "entries": entries})
 
     def job(k):
         o, rt = k
+        limiter.wait()
         res = provider.send(build_messages(o, rt))
-        return k, res
+        e = {"otype": o, "rtypes": list(rt)}
+        if res.get("ok"):
+            scores, why = parse_scores(res["text"], list(rt))
+            e.update(status="success" if scores else "parse_error", scores=scores, parse_error=why, raw=res["text"],
+                     usage=res.get("usage"), request_id=res.get("request_id"), model=res.get("model"), latency=res.get("latency"))
+        else:
+            e.update(status="transport_error", scores=None, error={k2: res.get(k2) for k2 in ("status", "code", "request_id")})
+        with lock:
+            entries[prior_key(o, rt)] = e
+            done[0] += 1
+            if done[0] % save_every == 0:
+                save()
+        return e
 
     with ThreadPoolExecutor(workers) as ex:
-        for k, res in ex.map(job, keys):
-            o, rt = k
-            e = {"otype": o, "rtypes": list(rt)}
-            if res and res.get("ok"):
-                e.update(scores=parse_scores(res["text"], list(rt)), raw=res["text"], usage=res.get("usage"),
-                         request_id=res.get("request_id"))
-                tokens += int((res.get("usage") or {}).get("total_tokens", 0))
-            else:
-                e.update(scores=None, raw=None, error=res)
-            entries[prior_key(o, rt)] = e
-            if tokens > max_total_tokens:
-                raise RuntimeError("token budget guard tripped")
-    cache = PriorCache(entries, {"model": provider.model, "endpoint": ENDPOINT, "n_keys": len(keys), "total_tokens": tokens,
-                                 "prompt_hash": digest(build_messages("X", ("a", "b")))})
-    if out_path:
-        cache.save(out_path)
-    return cache
+        list(ex.map(job, todo))
+    save()
+    return PriorCache(entries, {**meta, "total_tokens": totals(), "n_keys": len(keys)})
+
+
+def cache_report(cache, expected_keys=None):
+    c = {"success": 0, "parse_error": 0, "transport_error": 0}
+    reasons = defaultdict(int)
+    for e in cache.entries.values():
+        c[e["status"]] += 1
+        if e.get("parse_error"):
+            reasons[e["parse_error"]] += 1
+    n = len(cache.entries)
+    return {"n_keys": n, "success": c["success"], "parse_error": c["parse_error"], "transport_error": c["transport_error"],
+            "valid_rate": c["success"] / max(1, n), "parse_error_reasons": dict(reasons),
+            "total_tokens": cache.meta.get("total_tokens"), "model": cache.meta.get("model"), "sdk_version": cache.meta.get("sdk_version"),
+            "prompt_hash": cache.meta.get("prompt_hash"), "models_seen_in_entries": sorted({e.get("model") for e in cache.entries.values() if e.get("model")}),
+            "n_request_ids": sum(1 for e in cache.entries.values() if e.get("request_id"))}

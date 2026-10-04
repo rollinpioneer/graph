@@ -16,6 +16,7 @@ from ...prior import PriorSampler
 from ...rl import Rollout, Transition, gamma, interval_reward, set_suite_half_life
 from ...torch_rl import PPO, prefix_hidden, save_checkpoint
 from .adapter import AlfEpisode
+from .ontology import NODE_TYPES
 from .pddl_contracts import KINDS, PREDICATE_TYPES, candidate_key, episode_template
 from .snapshot import BASE_DIM, CAND_DIM, build_snapshot, prior_edges_for
 
@@ -27,7 +28,7 @@ def make_policy(method, device="cpu", seed=0):
     from ...neural_batched import BatchedPolicy
 
     torch.manual_seed(seed)
-    return BatchedPolicy(set(KINDS), set(PREDICATE_TYPES), {"receptacle"}, BASE_DIM, CAND_DIM, method=method).to(device)
+    return BatchedPolicy(set(KINDS), set(PREDICATE_TYPES), set(NODE_TYPES), BASE_DIM, CAND_DIM, method=method).to(device)
 
 
 class GameSchedule:
@@ -45,7 +46,7 @@ class GameSchedule:
 
 
 def full_prior_edges(pub, prior, tables):
-    return prior_edges_for(episode_template(pub.feasible, pub.goal_instance), prior.scores(pub, tables))
+    return prior_edges_for(episode_template(pub.feasible, pub.goal_instance, pub.goal_otype), prior.scores(pub, tables))
 
 
 def run_episode(policy, game_path, tables, prior_edges_fn, episode_id, sampler=None, mode="train", deterministic=False, record=False):
@@ -95,16 +96,20 @@ def run_episode(policy, game_path, tables, prior_edges_fn, episode_id, sampler=N
     return transitions, stats
 
 
-def evaluate(policy, games, tables, prior, data_root, repeats=4, seed=0, record=True):
+def evaluate(policy, games, tables, prior, data_root, repeats=4, seed=0, record=True, per_episode=None):
     """Stochastic-policy evaluation on a fixed episode list (same RNG seeds for every method)."""
     policy.eval()
     Js, wins, steps, tvs = [], [], [], []
     fn = lambda pub: full_prior_edges(pub, prior, tables)
     for r in range(repeats):
-        torch.manual_seed(seed32("alfworld_eval", 0, r, seed))
         for g in games:
+            # one RNG stream per (game, repeat, common eval seed): earlier episodes cannot shift later ones,
+            # so evaluations of different methods are paired episode by episode
+            torch.manual_seed(seed32("alfworld_eval", g, r, seed))
             _, st = run_episode(policy, os.path.join(data_root, g), tables, fn, "eval|%s|%d" % (g, r), mode="eval", record=record)
             Js.append(st["J"]); wins.append(float(st["won"])); steps.append(st["raw_steps"]); tvs += st["tv"]
+            if per_episode is not None:
+                per_episode.append({"game": g, "repeat": r, "J": st["J"], "won": st["won"], "raw_steps": st["raw_steps"]})
     policy.train()
     n = len(Js)
     return {"J": sum(Js) / n, "success": sum(wins) / n, "raw_steps": sum(steps) / n, "tv": (sum(tvs) / len(tvs) if tvs else None), "episodes": n}

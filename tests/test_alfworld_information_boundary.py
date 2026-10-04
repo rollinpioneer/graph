@@ -59,7 +59,7 @@ def test_same_public_history_gives_identical_snapshots():
         try:
             for step in range(6):
                 pa, pb = ea.public(), eb.public()
-                tpl = episode_template(pa.feasible, pa.goal_instance)
+                tpl = episode_template(pa.feasible, pa.goal_instance, pa.goal_otype)
                 sa = build_snapshot(pa, prior_edges_for(tpl, prior.scores(pa, tables)), "e", "x", step)
                 sb = build_snapshot(pb, prior_edges_for(tpl, prior.scores(pb, tables)), "e", "x", step)
                 assert pa == pb

@@ -13,8 +13,16 @@ def main():
     ap.add_argument("--data-root", default="/home/xushijie2/xsj2_alf/data")
     ap.add_argument("--out", default="runs/alfworld_prior_reliance")
     ap.add_argument("--workers", type=int, default=24)
+    ap.add_argument("--tables-only", action="store_true", help="rebuild tables.json from the existing catalog/splits (no env runs)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
+    if a.tables_only:
+        rows = data.load_catalog(os.path.join(a.out, "catalog.json"))
+        splits = json.load(open(os.path.join(a.out, "splits.json")))
+        tables = data.build_tables(rows, splits["train"])
+        json.dump(tables, open(os.path.join(a.out, "tables.json"), "w"), indent=1, sort_keys=True)
+        print("tables rebuilt from", tables["n_train_games"], "train games")
+        return
     cat_path = os.path.join(a.out, "catalog.json")
     rows = catalog.build_catalog(a.data_root, cat_path, a.workers)
     # make gamefile paths data-root independent

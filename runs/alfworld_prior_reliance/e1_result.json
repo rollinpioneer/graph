@@ -1,0 +1,2438 @@
+{
+ "task_prior_admission": {
+  "n_dev": 125,
+  "prior": "runs/alfworld_prior_reliance/prior_cache.json",
+  "mean_J": {
+   "contract_search": [
+    0.8534555073695176,
+    0.8339891693404531,
+    0.8714344816706704
+   ],
+   "belief_optimal": [
+    0.9268181000655499,
+    0.9214898955054531,
+    0.9314049564970218
+   ],
+   "fixed_prior": [
+    0.9176060284056352,
+    0.9079861668731222,
+    0.9255906292575974
+   ],
+   "random_legal": [
+    0.8649962350715081,
+    0.8515259398593553,
+    0.8773388009670728
+   ],
+   "clairvoyant_ceiling": [
+    0.9440778991368997,
+    0.9432443212048172,
+    0.944911477068982
+   ]
+  },
+  "success_rate": {
+   "contract_search": 1.0,
+   "belief_optimal": 1.0,
+   "fixed_prior": 1.0
+  },
+  "mean_raw_steps": {
+   "contract_search": 12.08,
+   "belief_optimal": 5.52,
+   "fixed_prior": 6.336
+  },
+  "mean_checks": {
+   "contract_search": 5.904,
+   "belief_optimal": 2.272,
+   "fixed_prior": 2.76
+  },
+  "criterion1_multiple_legal_checks": {
+   "contract_search": {
+    "search_decisions": 738,
+    "frac_two_or_more_checks": 0.981029810298103
+   },
+   "belief_optimal": {
+    "search_decisions": 284,
+    "frac_two_or_more_checks": 1.0
+   },
+   "fixed_prior": {
+    "search_decisions": 345,
+    "frac_two_or_more_checks": 0.9826086956521739
+   }
+  },
+  "criterion5_belief_vs_best_static": {
+   "best_static": "fixed_prior",
+   "static_mean_J": {
+    "contract_search": 0.8534555073695175,
+    "fixed_prior": 0.9176060284056355,
+    "random_legal": 0.8649962350715081
+   },
+   "paired_gain_vs_best_static": [
+    0.009212071659914516,
+    0.0025678526561615732,
+    0.016490992909558622
+   ],
+   "gain_vs_contract": [
+    0.07336259269603254,
+    0.05493855904571406,
+    0.09304684584267207
+   ],
+   "gain_vs_random": [
+    0.06182186499404189,
+    0.05015444636272063,
+    0.0748830170404852
+   ],
+   "ceiling_gain_over_best_static": [
+    0.026471870731264488,
+    0.01876406248432492,
+    0.03579878010298749
+   ],
+   "threshold": 0.03
+  },
+  "criterion5_belief_vs_fixed_prior": [
+   0.009212071659914516,
+   0.0025678526561615732,
+   0.016490992909558622
+  ],
+  "criterion5_fixed_prior_vs_contract": [
+   0.06415052103611803,
+   0.04575551692918239,
+   0.08331295382512204
+  ],
+  "criterion5_fixed_prior_vs_random": [
+   0.05260979333412737,
+   0.04045832914456009,
+   0.066082790760659
+  ],
+  "criterion6_disagreement_belief_vs_fixed_prior": {
+   "search_states": 1367,
+   "disagree_rate": 0.7359180687637161
+  },
+  "criterion2_soft_choice_share": {
+   "disagreements": 1006,
+   "frac_where_both_actions_legal_and_multiple_checks_available": 1.0,
+   "note": "both picks are drawn from the public legal set by construction; the share is the fraction of disagreements with >=2 legal CHECK"
+  },
+  "criterion3_prior_nonuniform_within_feasible": 1.0,
+  "criterion4_prior_conditions": {
+   "counts": {
+    "top1": 50,
+    "topk_only": 53,
+    "miss": 22
+   },
+   "n": 125,
+   "fractions": {
+    "top1": 0.4,
+    "topk_only": 0.424,
+    "miss": 0.176
+   }
+  },
+  "non_redundancy": {
+   "mean_prior_mass_on_canContain_infeasible_classes": 0.14241689525152765,
+   "frac_episodes_unfiltered_top1_is_infeasible": 0.104,
+   "frac_episodes_canContain_filter_changes_ranking": 0.712,
+   "frac_states_with_distinct_scores_within_feasible_set": 1.0
+  },
+  "disagree_belief_vs_contract": {
+   "states": 284,
+   "rate": 0.9295774647887324
+  },
+  "belief_calibration_multi_holder": [
+   {
+    "bin": "0.0-0.1",
+    "n": 691,
+    "mean_pred": 0.047065675925054735,
+    "freq": 0.04052098408104197
+   },
+   {
+    "bin": "0.1-0.2",
+    "n": 377,
+    "mean_pred": 0.14182044148862483,
+    "freq": 0.10875331564986737
+   },
+   {
+    "bin": "0.2-0.3",
+    "n": 75,
+    "mean_pred": 0.24521027746744717,
+    "freq": 0.24
+   },
+   {
+    "bin": "0.3-0.4",
+    "n": 64,
+    "mean_pred": 0.35641560039732495,
+    "freq": 0.28125
+   },
+   {
+    "bin": "0.4-0.5",
+    "n": 111,
+    "mean_pred": 0.45293623839014696,
+    "freq": 0.3063063063063063
+   },
+   {
+    "bin": "0.5-0.6",
+    "n": 75,
+    "mean_pred": 0.5483271095111316,
+    "freq": 0.29333333333333333
+   },
+   {
+    "bin": "0.6-0.7",
+    "n": 44,
+    "mean_pred": 0.6607052994860234,
+    "freq": 0.5681818181818182
+   },
+   {
+    "bin": "0.7-0.8",
+    "n": 10,
+    "mean_pred": 0.7603599791816886,
+    "freq": 0.8
+   },
+   {
+    "bin": "0.8-0.9",
+    "n": 3,
+    "mean_pred": 0.8108312543504698,
+    "freq": 0.0
+   },
+   {
+    "bin": "0.9-1.0",
+    "n": 0,
+    "mean_pred": null,
+    "freq": null
+   }
+  ]
+ },
+ "qref_validation": {
+  "status": "PENDING_RESEARCH_DECISION",
+  "epsilon_Q": 0.001,
+  "n_signature_cells": 116,
+  "n_groups_ge2_trials": 48,
+  "trials_per_cell": {
+   "mean": 2.5172413793103448
+  },
+  "n_decided": 56,
+  "n_neutral_unknown": 60,
+  "decided_cells": {
+   "mean_dJ_top1_minus_top2": 0.004236263218903449,
+   "scene_cluster_ci95": [
+    0.0018508958606396576,
+    0.006897691284829327
+   ],
+   "n_scene_clusters": 12,
+   "frac_top1_better": 0.6428571428571429,
+   "frac_top1_worse": 0.35714285714285715,
+   "mean_predicted_gap": 0.003910125401375657
+  },
+  "absolute_calibration_top1": {
+   "mean_Q_pred": 0.9101814022411484,
+   "mean_J_realised": 0.9109883955833135,
+   "corr_pred_vs_realised_over_all_actions": 0.7690448200789057
+  },
+  "neutral_cells": {
+   "mean_dJ": -0.0023004987863418556,
+   "n": 60
+  }
+ },
+ "qref_cells": [
+  {
+   "group": 0,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9358824160665228,
+   "q2": 0.9358824160665228,
+   "J1": 0.8950250709279725,
+   "J2": 0.8950250709279725,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Box-None-Sofa-220/trial_T20190907_165527_462462/game.tw-pddl"
+  },
+  {
+   "group": 0,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9234840601502621,
+   "q2": 0.9234840601502621,
+   "J1": 0.8827029962906549,
+   "J2": 0.8827029962906549,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Box-None-Sofa-220/trial_T20190907_165527_462462/game.tw-pddl"
+  },
+  {
+   "group": 0,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9119069478439511,
+   "q2": 0.9119069478439511,
+   "J1": 0.8827029962906549,
+   "J2": 0.8827029962906549,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Box-None-Sofa-220/trial_T20190907_165527_462462/game.tw-pddl"
+  },
+  {
+   "group": 1,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.911881834367024,
+   "q2": 0.911881834367024,
+   "J1": 0.9330329915368075,
+   "J2": 0.9460576467255959,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CD-None-Shelf-330/trial_T20190906_201313_428328/game.tw-pddl"
+  },
+  {
+   "group": 1,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.8884451525014541,
+   "q2": 0.8884451525014541,
+   "J1": 0.907519155317161,
+   "J2": 0.9201876506248751,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CD-None-Shelf-330/trial_T20190906_201313_428328/game.tw-pddl"
+  },
+  {
+   "group": 1,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.8734519985471034,
+   "q2": 0.8734519985471034,
+   "J1": 0.8950250709279725,
+   "J2": 0.9075191553171609,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CD-None-Shelf-330/trial_T20190906_201313_428328/game.tw-pddl"
+  },
+  {
+   "group": 2,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "desk 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9402711677112577,
+   "q2": 0.933804826039473,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368075,
+   "gap": 0.0064663416717847255,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CD-None-SideTable-328/trial_T20190907_033353_099987/game.tw-pddl"
+  },
+  {
+   "group": 2,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "desk 1"
+   ],
+   "a2": [
+    "CHECK",
+    "garbagecan 1"
+   ],
+   "q1": 0.9051950376574736,
+   "q2": 0.897051597410354,
+   "J1": 0.907519155317161,
+   "J2": 0.8950250709279725,
+   "gap": 0.008143440247119549,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CD-None-SideTable-328/trial_T20190907_033353_099987/game.tw-pddl"
+  },
+  {
+   "group": 3,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.926716136340715,
+   "q2": 0.9252081150215717,
+   "J1": 0.9244694309288525,
+   "J2": 0.9287512112328299,
+   "gap": 0.0015080213191432934,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Cabinet-418/trial_T20190907_190352_967068/game.tw-pddl"
+  },
+  {
+   "group": 3,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "cabinet 1"
+   ],
+   "q1": 0.9103694370451275,
+   "q2": 0.8944522591136878,
+   "J1": 0.9201876506248751,
+   "J2": 0.9075191553171609,
+   "gap": 0.015917177931439763,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Cabinet-418/trial_T20190907_190352_967068/game.tw-pddl"
+  },
+  {
+   "group": 3,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "cabinet 1"
+   ],
+   "q1": 0.889939468301489,
+   "q2": 0.8732522767163875,
+   "J1": 0.8950250709279725,
+   "J2": 0.8827029962906549,
+   "gap": 0.016687191585101457,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Cabinet-418/trial_T20190907_190352_967068/game.tw-pddl"
+  },
+  {
+   "group": 4,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9311546763247289,
+   "q2": 0.9297312402128086,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368075,
+   "gap": 0.0014234361119203065,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-410/trial_T20190908_124646_959694/game.tw-pddl"
+  },
+  {
+   "group": 4,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "drawer 1"
+   ],
+   "q1": 0.9115378716941642,
+   "q2": 0.8964233865824623,
+   "J1": 0.9330329915368075,
+   "J2": 0.9117419870863989,
+   "gap": 0.01511448511170188,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-410/trial_T20190908_124646_959694/game.tw-pddl"
+  },
+  {
+   "group": 4,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "drawer 2"
+   ],
+   "q1": 0.8905315250056868,
+   "q2": 0.8753178068748962,
+   "J1": 0.9075191553171609,
+   "J2": 0.8827029962906549,
+   "gap": 0.015213718130790532,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-410/trial_T20190908_124646_959694/game.tw-pddl"
+  },
+  {
+   "group": 5,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9383616296282061,
+   "q2": 0.936834657897539,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368074,
+   "gap": 0.0015269717306671815,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-418/trial_T20190907_184947_274026/game.tw-pddl"
+  },
+  {
+   "group": 5,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.89084608094587,
+   "q2": 0.8893275475274081,
+   "J1": 0.8950250709279725,
+   "J2": 0.8827029962906549,
+   "gap": 0.0015185334184619759,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-418/trial_T20190907_184947_274026/game.tw-pddl"
+  },
+  {
+   "group": 6,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "q1": 0.9411424176616414,
+   "q2": 0.9324319136309405,
+   "J1": 0.9330329915368074,
+   "J2": 0.9331226486752355,
+   "gap": 0.00871050403070095,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-429/trial_T20190908_052248_516834/game.tw-pddl"
+  },
+  {
+   "group": 6,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 2"
+   ],
+   "q1": 0.920957916183713,
+   "q2": 0.920957916183713,
+   "J1": 0.9266103210808412,
+   "J2": 0.9266103210808412,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Candle-None-Toilet-429/trial_T20190908_052248_516834/game.tw-pddl"
+  },
+  {
+   "group": 7,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "bed 1"
+   ],
+   "q1": 0.9337250755961736,
+   "q2": 0.9321467279021093,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368074,
+   "gap": 0.001578347694064286,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CellPhone-None-Bed-322/trial_T20190907_163932_211569/game.tw-pddl"
+  },
+  {
+   "group": 7,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "bed 1"
+   ],
+   "q1": 0.9089156052898635,
+   "q2": 0.9073737101905474,
+   "J1": 0.9201876506248751,
+   "J2": 0.9075191553171609,
+   "gap": 0.0015418950993161262,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CellPhone-None-Bed-322/trial_T20190907_163932_211569/game.tw-pddl"
+  },
+  {
+   "group": 8,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.9308532413618616,
+   "q2": 0.9308532413618616,
+   "J1": 0.9076927658468016,
+   "J2": 0.9076927658468016,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CellPhone-None-Dresser-330/trial_T20190909_052323_195252/game.tw-pddl"
+  },
+  {
+   "group": 8,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.9181137871717275,
+   "q2": 0.9181137871717275,
+   "J1": 0.8951962913101487,
+   "J2": 0.8951962913101487,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CellPhone-None-Dresser-330/trial_T20190909_052323_195252/game.tw-pddl"
+  },
+  {
+   "group": 8,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.8936385440714543,
+   "q2": 0.8936385440714543,
+   "J1": 0.8707171016479456,
+   "J2": 0.8707171016479456,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CellPhone-None-Dresser-330/trial_T20190909_052323_195252/game.tw-pddl"
+  },
+  {
+   "group": 9,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "q1": 0.9316329291600806,
+   "q2": 0.930117090807675,
+   "J1": 0.9162006243235764,
+   "J2": 0.9118590725939802,
+   "gap": 0.0015158383524055408,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CreditCard-None-Sofa-220/trial_T20190909_110856_321744/game.tw-pddl"
+  },
+  {
+   "group": 9,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9177688009581376,
+   "q2": 0.9162589701080374,
+   "J1": 0.9118590725939802,
+   "J2": 0.9075772922900027,
+   "gap": 0.0015098308501002577,
+   "scene": "json_2.1.1/train/pick_and_place_simple-CreditCard-None-Sofa-220/trial_T20190909_110856_321744/game.tw-pddl"
+  },
+  {
+   "group": 10,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "garbagecan 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "q1": 0.9258437891601115,
+   "q2": 0.9254101081294823,
+   "J1": 0.8783120044021903,
+   "J2": 0.8848243319965845,
+   "gap": 0.00043368103062912944,
+   "scene": "json_2.1.1/train/pick_and_place_simple-DishSponge-None-Toilet-403/trial_T20190907_192737_190036/game.tw-pddl"
+  },
+  {
+   "group": 11,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.919148527404939,
+   "q2": 0.9179458216282478,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368074,
+   "gap": 0.0012027057766912375,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Glassbottle-None-CounterTop-23/trial_T20190907_122220_401927/game.tw-pddl"
+  },
+  {
+   "group": 11,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.872817581537615,
+   "q2": 0.8716634351103296,
+   "J1": 0.8950250709279725,
+   "J2": 0.8827029962906549,
+   "gap": 0.0011541464272853963,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Glassbottle-None-CounterTop-23/trial_T20190907_122220_401927/game.tw-pddl"
+  },
+  {
+   "group": 12,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.919148527404939,
+   "q2": 0.9179458216282478,
+   "J1": 0.9076943777975841,
+   "J2": 0.9120359295271802,
+   "gap": 0.0012027057766912375,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Glassbottle-None-DiningTable-23/trial_T20190908_071034_583787/game.tw-pddl"
+  },
+  {
+   "group": 12,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9084220973072636,
+   "q2": 0.9072264933670104,
+   "J1": 0.8951978810687282,
+   "J2": 0.8994796613727057,
+   "gap": 0.0011956039402531982,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Glassbottle-None-DiningTable-23/trial_T20190908_071034_583787/game.tw-pddl"
+  },
+  {
+   "group": 13,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.9126709864870094,
+   "q2": 0.9126709864870094,
+   "J1": 0.911741987086399,
+   "J2": 0.9160237673903765,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Kettle-None-Cabinet-18/trial_T20190909_013018_393040/game.tw-pddl"
+  },
+  {
+   "group": 13,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.8885979203080371,
+   "q2": 0.8885979203080371,
+   "J1": 0.8868103545030941,
+   "J2": 0.8909750492994902,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Kettle-None-Cabinet-18/trial_T20190909_013018_393040/game.tw-pddl"
+  },
+  {
+   "group": 13,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.8772388289762998,
+   "q2": 0.8772388289762998,
+   "J1": 0.8746013742943011,
+   "J2": 0.8787087325067402,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Kettle-None-Cabinet-18/trial_T20190909_013018_393040/game.tw-pddl"
+  },
+  {
+   "group": 14,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9331383422254673,
+   "q2": 0.933022587472341,
+   "J1": 0.9460576467255959,
+   "J2": 0.9395453191312017,
+   "gap": 0.00011575475312630701,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-214/trial_T20190909_061144_774666/game.tw-pddl"
+  },
+  {
+   "group": 14,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.922222397629483,
+   "q2": 0.9221039131857316,
+   "J1": 0.9330329915368074,
+   "J2": 0.9266103210808412,
+   "gap": 0.00011848444375139877,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-214/trial_T20190909_061144_774666/game.tw-pddl"
+  },
+  {
+   "group": 14,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9115146859698561,
+   "q2": 0.9113912122900818,
+   "J1": 0.9201876506248751,
+   "J2": 0.9138534029710179,
+   "gap": 0.00012347367977427748,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-214/trial_T20190909_061144_774666/game.tw-pddl"
+  },
+  {
+   "group": 15,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9303245355055155,
+   "q2": 0.9303245355055155,
+   "J1": 0.933092762962426,
+   "J2": 0.933092762962426,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-322/trial_T20190908_223340_751080/game.tw-pddl"
+  },
+  {
+   "group": 15,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "q1": 0.9146260280855797,
+   "q2": 0.910212498676578,
+   "J1": 0.9266103210808412,
+   "J2": 0.9330329915368074,
+   "gap": 0.0044135294090016375,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-322/trial_T20190908_223340_751080/game.tw-pddl"
+  },
+  {
+   "group": 15,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.8952685428593118,
+   "q2": 0.8952685428593118,
+   "J1": 0.8950824075119295,
+   "J2": 0.8950824075119295,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-ArmChair-322/trial_T20190908_223340_751080/game.tw-pddl"
+  },
+  {
+   "group": 16,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.9080484278263287,
+   "q2": 0.90595945614711,
+   "J1": 0.8810873180083533,
+   "J2": 0.8853690983123306,
+   "gap": 0.002088971679218621,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Drawer-208/trial_T20190909_013444_420195/game.tw-pddl"
+  },
+  {
+   "group": 16,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.8973125892724884,
+   "q2": 0.8952217263384215,
+   "J1": 0.8725827059351378,
+   "J2": 0.8768055377043757,
+   "gap": 0.002090862934066906,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Drawer-208/trial_T20190909_013444_420195/game.tw-pddl"
+  },
+  {
+   "group": 16,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "armchair 1"
+   ],
+   "q1": 0.8759548594635649,
+   "q2": 0.8744462782244962,
+   "J1": 0.848780233590269,
+   "J2": 0.8425331913956748,
+   "gap": 0.001508581239068718,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Drawer-208/trial_T20190909_013444_420195/game.tw-pddl"
+  },
+  {
+   "group": 17,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9278886254434247,
+   "q2": 0.9277794503573467,
+   "J1": 0.9417160949959996,
+   "J2": 0.9373745432664036,
+   "gap": 0.00010917508607799498,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Ottoman-203/trial_T20190908_123648_878822/game.tw-pddl"
+  },
+  {
+   "group": 17,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9036544799893689,
+   "q2": 0.9035476511458671,
+   "J1": 0.915964818855637,
+   "J2": 0.9117419870863989,
+   "gap": 0.00010682884350177169,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Ottoman-203/trial_T20190908_123648_878822/game.tw-pddl"
+  },
+  {
+   "group": 17,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.8799941363534955,
+   "q2": 0.8798895735912095,
+   "J1": 0.8909177127155332,
+   "J2": 0.8868103545030941,
+   "gap": 0.00010456276228609784,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Ottoman-203/trial_T20190908_123648_878822/game.tw-pddl"
+  },
+  {
+   "group": 18,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9303245355055155,
+   "q2": 0.9303245355055155,
+   "J1": 0.9201876506248751,
+   "J2": 0.9201876506248751,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-SideTable-322/trial_T20190909_091659_910683/game.tw-pddl"
+  },
+  {
+   "group": 18,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.906383693166035,
+   "q2": 0.906383693166035,
+   "J1": 0.8950250709279725,
+   "J2": 0.8950250709279725,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-SideTable-322/trial_T20190909_091659_910683/game.tw-pddl"
+  },
+  {
+   "group": 18,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "q1": 0.8923358117505947,
+   "q2": 0.8879574837297516,
+   "J1": 0.8950250709279725,
+   "J2": 0.9075191553171609,
+   "gap": 0.004378328020843147,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-SideTable-322/trial_T20190909_091659_910683/game.tw-pddl"
+  },
+  {
+   "group": 19,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9136173974368422,
+   "q2": 0.9136173974368422,
+   "J1": 0.9118001240592409,
+   "J2": 0.9118001240592409,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-SideTable-330/trial_T20190908_132741_547490/game.tw-pddl"
+  },
+  {
+   "group": 19,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.8899735392955902,
+   "q2": 0.8899735392955902,
+   "J1": 0.8868669017173563,
+   "J2": 0.8868669017173563,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-SideTable-330/trial_T20190908_132741_547490/game.tw-pddl"
+  },
+  {
+   "group": 20,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.9195819804995026,
+   "q2": 0.9174664758027082,
+   "J1": 0.9203636846671959,
+   "J2": 0.9290467881263881,
+   "gap": 0.0021155046967943347,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Sofa-208/trial_T20190909_065831_439704/game.tw-pddl"
+  },
+  {
+   "group": 20,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.9087097809811396,
+   "q2": 0.9065923610077745,
+   "J1": 0.9076927658468016,
+   "J2": 0.9162563264547566,
+   "gap": 0.00211741997336512,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Sofa-208/trial_T20190909_065831_439704/game.tw-pddl"
+  },
+  {
+   "group": 20,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "armchair 1"
+   ],
+   "q1": 0.8870807765417209,
+   "q2": 0.8855530340986356,
+   "J1": 0.9076927658468016,
+   "J2": 0.8992471023083256,
+   "gap": 0.0015277424430852893,
+   "scene": "json_2.1.1/train/pick_and_place_simple-KeyChain-None-Sofa-208/trial_T20190909_065831_439704/game.tw-pddl"
+  },
+  {
+   "group": 21,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "q1": 0.9385062105795275,
+   "q2": 0.9346976268230696,
+   "J1": 0.9330927629624263,
+   "J2": 0.933092762962426,
+   "gap": 0.003808583756457984,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Laptop-None-Ottoman-203/trial_T20190908_110606_176017/game.tw-pddl"
+  },
+  {
+   "group": 21,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "q1": 0.9135518776749645,
+   "q2": 0.9097916434099279,
+   "J1": 0.9075772922900027,
+   "J2": 0.9075772922900028,
+   "gap": 0.003760234265036577,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Laptop-None-Ottoman-203/trial_T20190908_110606_176017/game.tw-pddl"
+  },
+  {
+   "group": 22,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9360341351708731,
+   "q2": 0.9360341351708731,
+   "J1": 0.9373745432664036,
+   "J2": 0.9417160949959996,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Newspaper-None-GarbageCan-214/trial_T20190907_181223_726699/game.tw-pddl"
+  },
+  {
+   "group": 22,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9233155671063296,
+   "q2": 0.9233155671063296,
+   "J1": 0.9244694309288525,
+   "J2": 0.9287512112328299,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Newspaper-None-GarbageCan-214/trial_T20190907_181223_726699/game.tw-pddl"
+  },
+  {
+   "group": 23,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.9366926165248607,
+   "q2": 0.9351135722302526,
+   "J1": 0.9330329915368075,
+   "J2": 0.9460576467255959,
+   "gap": 0.0015790442946080896,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Newspaper-None-Ottoman-203/trial_T20190908_173724_161102/game.tw-pddl"
+  },
+  {
+   "group": 23,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "q1": 0.924966078798614,
+   "q2": 0.9233648807087437,
+   "J1": 0.9201876506248751,
+   "J2": 0.9330329915368074,
+   "gap": 0.0016011980898703593,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Newspaper-None-Ottoman-203/trial_T20190908_173724_161102/game.tw-pddl"
+  },
+  {
+   "group": 23,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "q1": 0.8977604158769619,
+   "q2": 0.8962228901180843,
+   "J1": 0.907519155317161,
+   "J2": 0.8950250709279725,
+   "gap": 0.001537525758877556,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Newspaper-None-Ottoman-203/trial_T20190908_173724_161102/game.tw-pddl"
+  },
+  {
+   "group": 24,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.9316331046281716,
+   "q2": 0.9316331046281716,
+   "J1": 0.91402903123239,
+   "J2": 0.9205413588267841,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-Shelf-330/trial_T20190908_145341_930096/game.tw-pddl"
+  },
+  {
+   "group": 24,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.9191653082155327,
+   "q2": 0.9191653082155327,
+   "J1": 0.901445323457765,
+   "J2": 0.9078679939137311,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-Shelf-330/trial_T20190908_145341_930096/game.tw-pddl"
+  },
+  {
+   "group": 24,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "dresser 2"
+   ],
+   "q1": 0.8936485165635467,
+   "q2": 0.8936485165635467,
+   "J1": 0.8827878171120482,
+   "J2": 0.8890348593066425,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-Shelf-330/trial_T20190908_145341_930096/game.tw-pddl"
+  },
+  {
+   "group": 25,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9346167323128854,
+   "q2": 0.9291361628273128,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368075,
+   "gap": 0.005480569485572628,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-SideTable-322/trial_T20190909_030604_666371/game.tw-pddl"
+  },
+  {
+   "group": 25,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.9101567450591398,
+   "q2": 0.9047885621559283,
+   "J1": 0.9201876506248751,
+   "J2": 0.907519155317161,
+   "gap": 0.005368182903211505,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-SideTable-322/trial_T20190909_030604_666371/game.tw-pddl"
+  },
+  {
+   "group": 25,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "dresser 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "q1": 0.8992446269796295,
+   "q2": 0.8935553783877616,
+   "J1": 0.907519155317161,
+   "J2": 0.8950250709279725,
+   "gap": 0.005689248591867924,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pen-None-SideTable-322/trial_T20190909_030604_666371/game.tw-pddl"
+  },
+  {
+   "group": 26,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9258335960019897,
+   "q2": 0.9258335960019897,
+   "J1": 0.9395453191312017,
+   "J2": 0.9395453191312017,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-Dresser-330/trial_T20190909_071051_120393/game.tw-pddl"
+  },
+  {
+   "group": 26,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9009296155818423,
+   "q2": 0.9009296155818423,
+   "J1": 0.9138534029710179,
+   "J2": 0.9138534029710179,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-Dresser-330/trial_T20190909_071051_120393/game.tw-pddl"
+  },
+  {
+   "group": 26,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.8767211547260876,
+   "q2": 0.8767211547260876,
+   "J1": 0.8888640336093137,
+   "J2": 0.8888640336093137,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-Dresser-330/trial_T20190909_071051_120393/game.tw-pddl"
+  },
+  {
+   "group": 27,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9316241686690245,
+   "q2": 0.9316241686690245,
+   "J1": 0.915964818855637,
+   "J2": 0.915964818855637,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-SideTable-322/trial_T20190908_112624_358795/game.tw-pddl"
+  },
+  {
+   "group": 27,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9074249605727115,
+   "q2": 0.9074249605727115,
+   "J1": 0.8909177127155332,
+   "J2": 0.8909177127155332,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-SideTable-322/trial_T20190908_112624_358795/game.tw-pddl"
+  },
+  {
+   "group": 27,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.8961669362545379,
+   "q2": 0.8961669362545379,
+   "J1": 0.878652185292478,
+   "J2": 0.878652185292478,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pencil-None-SideTable-322/trial_T20190908_112624_358795/game.tw-pddl"
+  },
+  {
+   "group": 28,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.8148173119593282,
+   "q2": 0.8148173119593282,
+   "J1": 0.835083800091179,
+   "J2": 0.8223268819813557,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Drawer-13/trial_T20190908_230731_141286/game.tw-pddl"
+  },
+  {
+   "group": 28,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.7909194376871228,
+   "q2": 0.7909194376871228,
+   "J1": 0.8122483896625372,
+   "J2": 0.7998403101492843,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Drawer-13/trial_T20190908_230731_141286/game.tw-pddl"
+  },
+  {
+   "group": 28,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 2"
+   ],
+   "q1": 0.7826141501957254,
+   "q2": 0.7826141501957254,
+   "J1": 0.80106592605726,
+   "J2": 0.7888286722413358,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Drawer-13/trial_T20190908_230731_141286/game.tw-pddl"
+  },
+  {
+   "group": 29,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.8594688416925308,
+   "q2": 0.8584057086878369,
+   "J1": 0.9460576467255959,
+   "J2": 0.9373745432664036,
+   "gap": 0.0010631330046938503,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Shelf-20/trial_T20190907_162334_232853/game.tw-pddl"
+  },
+  {
+   "group": 29,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.8385490683691502,
+   "q2": 0.8375028047857813,
+   "J1": 0.9201876506248751,
+   "J2": 0.911741987086399,
+   "gap": 0.0010462635833689005,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Shelf-20/trial_T20190907_162334_232853/game.tw-pddl"
+  },
+  {
+   "group": 29,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.8184328988892886,
+   "q2": 0.8174008803857614,
+   "J1": 0.8950250709279725,
+   "J2": 0.8868103545030941,
+   "gap": 0.0010320185035271878,
+   "scene": "json_2.1.1/train/pick_and_place_simple-PepperShaker-None-Shelf-20/trial_T20190907_162334_232853/game.tw-pddl"
+  },
+  {
+   "group": 30,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9409082800405077,
+   "q2": 0.9409082800405077,
+   "J1": 0.9330329915368074,
+   "J2": 0.9460576467255959,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pillow-None-ArmChair-214/trial_T20190909_010401_711637/game.tw-pddl"
+  },
+  {
+   "group": 31,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "armchair 1"
+   ],
+   "q1": 0.9429619117876145,
+   "q2": 0.9380063295737351,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368075,
+   "gap": 0.004955582213879373,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pillow-None-Ottoman-208/trial_T20190906_172059_337617/game.tw-pddl"
+  },
+  {
+   "group": 31,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "ottoman 1"
+   ],
+   "q1": 0.9323125198603852,
+   "q2": 0.9219185280709232,
+   "J1": 0.9330329915368075,
+   "J2": 0.9201876506248751,
+   "gap": 0.010393991789461987,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Pillow-None-Ottoman-208/trial_T20190906_172059_337617/game.tw-pddl"
+  },
+  {
+   "group": 32,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9278856058016008,
+   "q2": 0.9278856058016008,
+   "J1": 0.9331226486752355,
+   "J2": 0.9331226486752355,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-ArmChair-222/trial_T20190906_201517_521686/game.tw-pddl"
+  },
+  {
+   "group": 32,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9036924042739075,
+   "q2": 0.9036924042739075,
+   "J1": 0.9076063607764238,
+   "J2": 0.9076063607764238,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-ArmChair-222/trial_T20190906_201517_521686/game.tw-pddl"
+  },
+  {
+   "group": 32,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9038331483956309,
+   "q2": 0.9038331483956309,
+   "J1": 0.9076063607764238,
+   "J2": 0.9076063607764238,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-ArmChair-222/trial_T20190906_201517_521686/game.tw-pddl"
+  },
+  {
+   "group": 33,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "q1": 0.9362627211322669,
+   "q2": 0.935232246621982,
+   "J1": 0.9331226486752355,
+   "J2": 0.9266103210808412,
+   "gap": 0.0010304745102849289,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-Ottoman-208/trial_T20190909_100908_040512/game.tw-pddl"
+  },
+  {
+   "group": 33,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "diningtable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "q1": 0.9119321645229442,
+   "q2": 0.9109155431722503,
+   "J1": 0.9076063607764238,
+   "J2": 0.9012721131225667,
+   "gap": 0.0010166213506939137,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-Ottoman-208/trial_T20190909_100908_040512/game.tw-pddl"
+  },
+  {
+   "group": 34,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9278856058016008,
+   "q2": 0.9278856058016008,
+   "J1": 0.901445323457765,
+   "J2": 0.901445323457765,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-Sofa-222/trial_T20190908_005441_761890/game.tw-pddl"
+  },
+  {
+   "group": 34,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.9157973312097195,
+   "q2": 0.9157973312097195,
+   "J1": 0.8951110758039078,
+   "J2": 0.8951110758039078,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-Sofa-222/trial_T20190908_005441_761890/game.tw-pddl"
+  },
+  {
+   "group": 34,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sofa 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sofa 2"
+   ],
+   "q1": 0.8919911337699387,
+   "q2": 0.8919911337699387,
+   "J1": 0.8706342163642042,
+   "J2": 0.8706342163642042,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-RemoteControl-None-Sofa-222/trial_T20190908_005441_761890/game.tw-pddl"
+  },
+  {
+   "group": 35,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 2"
+   ],
+   "q1": 0.9382537943793405,
+   "q2": 0.9382537943793405,
+   "J1": 0.933092762962426,
+   "J2": 0.9417160949959996,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SoapBottle-None-Toilet-429/trial_T20190906_201712_940852/game.tw-pddl"
+  },
+  {
+   "group": 35,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "shelf 2"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 3"
+   ],
+   "q1": 0.9271876019895113,
+   "q2": 0.9271876019895113,
+   "J1": 0.9266103210808412,
+   "J2": 0.9266103210808412,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SoapBottle-None-Toilet-429/trial_T20190906_201712_940852/game.tw-pddl"
+  },
+  {
+   "group": 36,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9254057268111933,
+   "q2": 0.9228989253454747,
+   "J1": 0.9244694309288525,
+   "J2": 0.92875121123283,
+   "gap": 0.0025068014657185778,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Cabinet-403/trial_T20190908_220946_946277/game.tw-pddl"
+  },
+  {
+   "group": 36,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9015818070224652,
+   "q2": 0.8991103360685461,
+   "J1": 0.911741987086399,
+   "J2": 0.915964818855637,
+   "gap": 0.002471470953919086,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Cabinet-403/trial_T20190908_220946_946277/game.tw-pddl"
+  },
+  {
+   "group": 36,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.8894343672047935,
+   "q2": 0.8869901086223267,
+   "J1": 0.8827029962906549,
+   "J2": 0.8950250709279725,
+   "gap": 0.002444258582466774,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Cabinet-403/trial_T20190908_220946_946277/game.tw-pddl"
+  },
+  {
+   "group": 37,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9420572812339626,
+   "q2": 0.9393481135396614,
+   "J1": 0.9330329915368074,
+   "J2": 0.9460576467255959,
+   "gap": 0.0027091676943011844,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-GarbageCan-410/trial_T20190908_122436_280277/game.tw-pddl"
+  },
+  {
+   "group": 37,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9300260553209208,
+   "q2": 0.9272379730830936,
+   "J1": 0.9201876506248751,
+   "J2": 0.9330329915368074,
+   "gap": 0.0027880822378271164,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-GarbageCan-410/trial_T20190908_122436_280277/game.tw-pddl"
+  },
+  {
+   "group": 37,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.8912791748283292,
+   "q2": 0.8887154308642659,
+   "J1": 0.8827029962906549,
+   "J2": 0.8950250709279725,
+   "gap": 0.0025637439640633364,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-GarbageCan-410/trial_T20190908_122436_280277/game.tw-pddl"
+  },
+  {
+   "group": 38,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9370347529575811,
+   "q2": 0.9344964500012796,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368074,
+   "gap": 0.0025383029563015302,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Toilet-403/trial_T20190908_042148_900573/game.tw-pddl"
+  },
+  {
+   "group": 38,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9129114520670231,
+   "q2": 0.9104089236001555,
+   "J1": 0.9201876506248751,
+   "J2": 0.9075191553171609,
+   "gap": 0.002502528466867604,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Toilet-403/trial_T20190908_042148_900573/game.tw-pddl"
+  },
+  {
+   "group": 39,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9388565092949257,
+   "q2": 0.9362764335016317,
+   "J1": 0.9460576467255959,
+   "J2": 0.9330329915368074,
+   "gap": 0.002580075793294001,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Toilet-418/trial_T20190906_190906_143249/game.tw-pddl"
+  },
+  {
+   "group": 39,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "a2": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "q1": 0.9268611343889365,
+   "q2": 0.9242330785058965,
+   "J1": 0.9330329915368074,
+   "J2": 0.9201876506248751,
+   "gap": 0.002628055883039937,
+   "scene": "json_2.1.1/train/pick_and_place_simple-SprayBottle-None-Toilet-418/trial_T20190906_190906_143249/game.tw-pddl"
+  },
+  {
+   "group": 40,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.9357359478461171,
+   "q2": 0.9357359478461171,
+   "J1": 0.9288109826584486,
+   "J2": 0.9374343146920223,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Statue-None-CoffeeTable-222/trial_T20190907_131157_141783/game.tw-pddl"
+  },
+  {
+   "group": 40,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "a2": [
+    "CHECK",
+    "coffeetable 1"
+   ],
+   "q1": 0.9193414372786087,
+   "q2": 0.9087394915103088,
+   "J1": 0.9201876506248751,
+   "J2": 0.9075191553171609,
+   "gap": 0.01060194576829998,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Statue-None-CoffeeTable-222/trial_T20190907_131157_141783/game.tw-pddl"
+  },
+  {
+   "group": 41,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 2"
+   ],
+   "q1": 0.9371868075266461,
+   "q2": 0.9371868075266461,
+   "J1": 0.9330329915368075,
+   "J2": 0.9460576467255959,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Statue-None-SideTable-214/trial_T20190909_035300_008956/game.tw-pddl"
+  },
+  {
+   "group": 42,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9247379739154764,
+   "q2": 0.9246308106045942,
+   "J1": 0.9201876506248751,
+   "J2": 0.9330329915368075,
+   "gap": 0.00010716331088223008,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Drawer-410/trial_T20190908_162032_928842/game.tw-pddl"
+  },
+  {
+   "group": 42,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9121826561817494,
+   "q2": 0.9120748089692585,
+   "J1": 0.907519155317161,
+   "J2": 0.9201876506248751,
+   "gap": 0.000107847212490908,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Drawer-410/trial_T20190908_162032_928842/game.tw-pddl"
+  },
+  {
+   "group": 42,
+   "depth": 2,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.8884473358791113,
+   "q2": 0.8883435687219281,
+   "J1": 0.8827029962906549,
+   "J2": 0.8950250709279725,
+   "gap": 0.00010376715718318774,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Drawer-410/trial_T20190908_162032_928842/game.tw-pddl"
+  },
+  {
+   "group": 43,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9372512892015457,
+   "q2": 0.9371467004979804,
+   "J1": 0.9395453191312017,
+   "J2": 0.9460576467255959,
+   "gap": 0.00010458870356522265,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-GarbageCan-403/trial_T20190907_034528_884833/game.tw-pddl"
+  },
+  {
+   "group": 44,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "q1": 0.9378254652487441,
+   "q2": 0.934568113926268,
+   "J1": 0.9205413588267841,
+   "J2": 0.91402903123239,
+   "gap": 0.0032573513224760653,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Shelf-429/trial_T20190908_082550_884968/game.tw-pddl"
+  },
+  {
+   "group": 44,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "q1": 0.9267600506148849,
+   "q2": 0.9233766722513947,
+   "J1": 0.91402903123239,
+   "J2": 0.9076063607764238,
+   "gap": 0.0033833783634901193,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Shelf-429/trial_T20190908_082550_884968/game.tw-pddl"
+  },
+  {
+   "group": 45,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "shelf 1"
+   ],
+   "q1": 0.9378254652487441,
+   "q2": 0.934568113926268,
+   "J1": 0.9075772922900027,
+   "J2": 0.9290467881263881,
+   "gap": 0.0032573513224760653,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-Toilet-429/trial_T20190907_215111_218053/game.tw-pddl"
+  },
+  {
+   "group": 46,
+   "depth": 0,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9364835084092358,
+   "q2": 0.936374983966444,
+   "J1": 0.9330329915368074,
+   "J2": 0.9460576467255959,
+   "gap": 0.00010852444279174644,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-ToiletPaperHanger-410/trial_T20190907_021609_052545/game.tw-pddl"
+  },
+  {
+   "group": 46,
+   "depth": 1,
+   "n_trials": 2,
+   "a1": [
+    "CHECK",
+    "toilet 1"
+   ],
+   "a2": [
+    "CHECK",
+    "countertop 1"
+   ],
+   "q1": 0.9240003501383108,
+   "q2": 0.9238930458410958,
+   "J1": 0.9201876506248751,
+   "J2": 0.9330329915368074,
+   "gap": 0.00010730429721506063,
+   "scene": "json_2.1.1/train/pick_and_place_simple-ToiletPaper-None-ToiletPaperHanger-410/trial_T20190907_021609_052545/game.tw-pddl"
+  },
+  {
+   "group": 48,
+   "depth": 0,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 1"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "q1": 0.922272627326269,
+   "q2": 0.922272627326269,
+   "J1": 0.9244694309288525,
+   "J2": 0.9417160949959996,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Watch-None-CoffeeTable-222/trial_T20190908_032356_906995/game.tw-pddl"
+  },
+  {
+   "group": 48,
+   "depth": 1,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 3"
+   ],
+   "q1": 0.9075421122032395,
+   "q2": 0.9075421122032395,
+   "J1": 0.92875121123283,
+   "J2": 0.9244694309288525,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Watch-None-CoffeeTable-222/trial_T20190908_032356_906995/game.tw-pddl"
+  },
+  {
+   "group": 48,
+   "depth": 2,
+   "n_trials": 3,
+   "a1": [
+    "CHECK",
+    "sidetable 2"
+   ],
+   "a2": [
+    "CHECK",
+    "sidetable 3"
+   ],
+   "q1": 0.8857358907963322,
+   "q2": 0.8857358907963322,
+   "J1": 0.9033544605207647,
+   "J2": 0.8991897657243686,
+   "gap": 0.0,
+   "scene": "json_2.1.1/train/pick_and_place_simple-Watch-None-CoffeeTable-222/trial_T20190908_032356_906995/game.tw-pddl"
+  }
+ ]
+}

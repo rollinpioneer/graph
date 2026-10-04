@@ -6,7 +6,8 @@ from collections import defaultdict
 from .observation import type_of
 
 SPLIT_SEED = 20261004
-ALPHA = 1.0  # frozen Laplace constant for the empirical belief (set before E1, never tuned)
+ALPHA = 1.0  # frozen Laplace constant of the legacy mutually-exclusive class belief
+TAU = 2.0    # frozen shrinkage strength of the multi-holder instance belief (towards the class marginal)
 
 
 def load_catalog(path):
@@ -74,8 +75,11 @@ def build_tables(rows, train_files):
             can_contain[a].add(b)
     open_n = defaultdict(lambda: [0, 0])
     belief = defaultdict(lambda: defaultdict(int))
+    holder_k = defaultdict(lambda: defaultdict(int))   # holder instances by (target class, receptacle class)
+    holder_n = defaultdict(lambda: defaultdict(int))   # feasible instances by (target class, receptacle class)
     rtypes = set()
     for r in train:
+        own_can = {tuple(p) for p in r["cancontain"]}
         by_name = {x["name"]: x for x in r["receptacles"]}
         for x in r["receptacles"]:
             rtypes.add(x["rtype"])
@@ -84,12 +88,19 @@ def build_tables(rows, train_files):
         holders = {t["receptacle"] for t in r["oracle"]["targets"] if t["receptacle"]}
         for h in holders:
             belief[r["goal_otype"]][by_name[h]["rtype"]] += 1
+        for x in r["receptacles"]:
+            if (x["rtype"], r["goal_otype"]) in own_can:
+                holder_n[r["goal_otype"]][x["rtype"]] += 1
+                holder_k[r["goal_otype"]][x["rtype"]] += int(x["name"] in holders)
     overall = sum(v[0] for v in open_n.values()) / max(1, sum(v[1] for v in open_n.values()))
     return {
         "can_contain": {k: sorted(v) for k, v in sorted(can_contain.items())},
         "p_open": {k: v[0] / v[1] for k, v in sorted(open_n.items())},
         "p_open_default": overall,
         "belief_counts": {o: dict(sorted(c.items())) for o, c in sorted(belief.items())},
+        "holder_k": {o: dict(sorted(c.items())) for o, c in sorted(holder_k.items())},
+        "holder_n": {o: dict(sorted(c.items())) for o, c in sorted(holder_n.items())},
+        "tau": TAU,
         "rtypes": sorted(rtypes),
         "alpha": ALPHA,
         "n_train_games": len(train),
@@ -108,6 +119,16 @@ class Tables:
 
     def p_open(self, rtype):
         return self.t["p_open"].get(rtype, self.t["p_open_default"])
+
+    def holder_rate(self, otype, rtype):
+        """P(an instance of this receptacle class holds >=1 target-class object): train counts shrunk to the
+        class marginal over all target classes, (k + tau*m_c) / (n + tau) with m_c = (K_c + 1) / (N_c + 2)."""
+        K = sum(self.t["holder_k"].get(o, {}).get(rtype, 0) for o in self.t["holder_k"])
+        N = sum(self.t["holder_n"].get(o, {}).get(rtype, 0) for o in self.t["holder_n"])
+        m = (K + 1.0) / (N + 2.0)
+        k = self.t["holder_k"].get(otype, {}).get(rtype, 0)
+        n = self.t["holder_n"].get(otype, {}).get(rtype, 0)
+        return (k + self.t["tau"] * m) / (n + self.t["tau"])
 
     def class_probs(self, otype, feasible_rtypes):
         """p_hat(c_r | c_o) with Laplace smoothing over all known receptacle classes, restricted+renormalised."""

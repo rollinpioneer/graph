@@ -15,12 +15,13 @@ FAST = ("B2",) + PRIOR_METHODS
 def _policy(method, batched=False, seed=0):
     from cp_disr.neural import Policy
     from cp_disr.neural_batched import BatchedPolicy
+    from cp_disr.platforms.alfworld.ontology import NODE_TYPES
     from cp_disr.platforms.alfworld.pddl_contracts import KINDS, PREDICATE_TYPES
     from cp_disr.platforms.alfworld.snapshot import BASE_DIM, CAND_DIM
 
     torch.manual_seed(seed)
     cls = BatchedPolicy if batched else Policy
-    return cls(set(KINDS), set(PREDICATE_TYPES), {"receptacle"}, BASE_DIM, CAND_DIM, method=method).eval()
+    return cls(set(KINDS), set(PREDICATE_TYPES), set(NODE_TYPES), BASE_DIM, CAND_DIM, method=method).eval()
 
 
 def _snapshots(n_games=6, with_prior=True):
