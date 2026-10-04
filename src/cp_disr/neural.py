@@ -45,6 +45,28 @@ class WeightedRGCNConv(RGCNConv):
             out = out + self.bias
         return out
 
+    def forward_sparse(self, x, edge_index, edge_type, edge_weight=None):
+        """Same maths as forward(), but W_r is applied only to the (relation, destination) rows that
+        actually receive messages instead of every node: identical output, far fewer FLOPs on batches."""
+        n = x.size(0)
+        weight = (self.comp @ self.weight.view(self.num_bases, -1)).view(self.num_relations, self.in_channels_l, self.out_channels) if self.num_bases is not None else self.weight
+        out = x @ self.root if self.root is not None else x.new_zeros(n, self.out_channels)
+        if self.bias is not None:
+            out = out + self.bias
+        if edge_index.numel() == 0:
+            return out
+        src, dst = edge_index[0], edge_index[1]
+        uniq, inv = torch.unique(edge_type * n + dst, return_inverse=True)
+        msg = x[src] if edge_weight is None else x[src] * edge_weight.unsqueeze(-1)
+        agg = x.new_zeros(uniq.numel(), x.size(1)).index_add(0, inv, msg)
+        cnt = x.new_zeros(uniq.numel()).index_add(0, inv, torch.ones_like(inv, dtype=x.dtype)).unsqueeze(-1)
+        agg = agg / cnt
+        rel, node = uniq // n, uniq % n
+        for r in torch.unique(rel).tolist():
+            rows = (rel == r).nonzero(as_tuple=True)[0]
+            out = out.index_add(0, node[rows], agg[rows] @ weight[r])
+        return out
+
 
 def canonical_method(method):
     if method not in METHODS:

@@ -5,11 +5,13 @@ disjoint-union RGCN forward instead of one forward per graph. The maths is ident
 GraphEncoder.forward / Policy.forward (checked numerically in tests); parameters are shared.
 Applies to B2, A_STAT, Full, A_CAT and PRIOR_BIAS; every other method falls back to Policy.forward.
 """
+import math
+
 import torch
 
 from .common import DataIntegrityError
 from .facts import Truth
-from .graph import RELATIONS, successor, view
+from .graph import RELATIONS, GraphView, successor, view
 from .neural import Differences, Policy, PolicyOutput, canonical_method
 
 FAST = ("B2", "A_STAT", "Full", "A_CAT", "PRIOR_BIAS")
@@ -99,7 +101,7 @@ def encode_views(encoder, template, views):
     EW = torch.cat(ew).to(dev, S.dtype) if any_w else None
     h = H0.reshape(G * N, -1)
     for layer, norm in zip(encoder.layers, encoder.norms):
-        h = norm(torch.relu(layer(h, EI, ET) if EW is None else layer(h, EI, ET, EW)))
+        h = norm(torch.relu(layer.forward_sparse(h, EI, ET, EW)))
     h = h.reshape(G, N, -1)
     ro = encoder.readout
     gi = s.goal_idx.to(dev)
@@ -115,8 +117,31 @@ def encode_views(encoder, template, views):
     return torch.cat((glob.unsqueeze(1), goals), 1)
 
 
+
+
+def _readout(module, context, rows):
+    """CandidateReadout.forward for K candidates at once: context (K, C), rows (K, R, 128) -> (K, 128)."""
+    score = (module.key(rows) * module.query(context).unsqueeze(1)).sum(-1) / math.sqrt(128)
+    attention = torch.softmax(score, dim=-1)
+    pooled = (attention.unsqueeze(-1) * module.value(rows)).sum(1)
+    return module.net(torch.cat((context, pooled), -1))
+
+
+def _anchored(prior, context, dp, B):
+    """AnchoredPrior.forward vectorised over candidates; a candidate whose dp is exactly zero gets exactly zero."""
+    nonzero = (dp != 0).flatten(1).any(1)
+    up = _readout(prior.readout, context, dp) - _readout(prior.readout, context, torch.zeros_like(dp))
+    s = prior.final(up).squeeze(-1)
+    keep = nonzero.to(up.dtype)
+    return up * keep.unsqueeze(-1), B * torch.tanh(s) * keep
+
+
 class BatchedPolicy(Policy):
-    """Policy with the batched encoder for FAST methods; otherwise identical to Policy."""
+    """Policy with batched graph encoding and vectorised candidate heads for FAST methods.
+
+    Mathematically identical to Policy.forward (checked in tests); every other method falls back to it.
+    diagnostics keep 'delta' and 'up' per candidate; the heavy per-candidate 'differences' are not built.
+    """
 
     def forward(self, snapshot, hidden=None):
         method = canonical_method(self.method)
@@ -133,82 +158,68 @@ class BatchedPolicy(Policy):
         contracts = {c.id: c for c in template.contracts}
         edges = () if method in ("B2", "PRIOR_BIAS") else snapshot.prior_edges
         k = view(template, facts)
-        views, index = [k], {}
+        views = [k]
         valid = [i for i in range(len(mask)) if snapshot.mask[i]]
         if edges:
             h = view(template, facts, edges)
             views.append(h)
-        for i in valid:
-            ki = successor(k, contracts[snapshot.candidate_ids[i]])
-            index[i] = len(views)
-            views.append(ki)
-            if edges:
-                from .graph import GraphView
-                index[(i, "h")] = len(views)
-                views.append(GraphView(template, ki.values, h.soft_edges))
+        kis = [successor(k, contracts[snapshot.candidate_ids[i]]) for i in valid]
+        views.extend(kis)
+        n_valid = len(valid)
+        if edges:
+            views.extend(GraphView(template, ki.values, h.soft_edges) for ki in kis)
         Z = encode_views(self.encoder, template, views)
+        K = n_valid
         zk = Z[0]
-        uk_all, up_all, logits = [], [], []
+        first_ki = 2 if edges else 1
+        Zki = Z[first_ki:first_ki + K]
+        dk = Zki.float() - zk.float()
+        feats = torch.as_tensor([snapshot.candidate_features[i] for i in valid], device=zo.device, dtype=zo.dtype)
+        ca = self.candidate(feats)
+        zbar = zk.mean(0)
+        context = torch.cat((zo.expand(K, -1), ca, zbar.expand(K, -1)), -1)
+        uk = _readout(self.contract, context, dk)
+        cat_ctx = torch.cat((context, uk), -1)
+        zero_res = zo.new_zeros(K)
+        if method in ("B2", "PRIOR_BIAS"):
+            up = zo.new_zeros(K, 128)
+            residual = zero_res
+            if method == "PRIOR_BIAS":
+                scores = torch.as_tensor(self.prior_bias_scores(snapshot, snapshot.mask), device=zo.device, dtype=zo.dtype)[valid]
+                residual = self.B * torch.tanh(self.prior_beta) * scores
+        elif not edges:
+            up, residual = zo.new_zeros(K, 128), zero_res
+        else:
+            zh = Z[1]
+            Zhi = Z[first_ki + K:first_ki + 2 * K]
+            if method == "A_STAT":
+                dp = (zh.float() - zk.float()).unsqueeze(0).expand(K, -1, -1)
+                up, residual = _anchored(self.prior, cat_ctx, dp, self.B)
+            elif method == "Full":
+                dp = (Zhi.float() - zh.float()) - dk
+                up, residual = _anchored(self.prior, cat_ctx, dp, self.B)
+            else:  # A_CAT
+                zkk, zhh = zk.unsqueeze(0).expand(K, -1, -1), zh.unsqueeze(0).expand(K, -1, -1)
+                C = torch.cat((zkk, Zki, zhh, Zhi), -1)
+                C0 = torch.cat((zkk, Zki, zkk, Zki), -1)
+                pi, an = self.cat_proj(C), self.cat_proj(C0)
+                up = _readout(self.prior.readout, cat_ctx, pi) - _readout(self.prior.readout, cat_ctx, an)
+                residual = self.B * torch.tanh(self.prior.final(up).squeeze(-1))
+        if self.shadow_zero_prior:
+            residual = residual * 0
+        base = self.base(uk).squeeze(-1)
+        vidx = torch.as_tensor(valid, device=zo.device)
+        logits = zo.new_zeros(len(mask)).index_put((vidx,), base + residual)
+        uk_all = zo.new_zeros(len(mask), 128).index_put((vidx,), uk)
+        up_all = zo.new_zeros(len(mask), 128).index_put((vidx,), up)
         diagnostics = {"differences": {}, "prior_inputs": {}, "up": {}, "delta": {}, "effect_tokens": {}, "stat_relation": {}, "successor_used": True, "method": method, "actor_episode_discount_weight": False}
-        for i, cid in enumerate(snapshot.candidate_ids):
-            if not snapshot.mask[i]:
-                uk_all.append(zo.new_zeros(128))
-                up_all.append(zo.new_zeros(128))
-                logits.append(zo.sum() * 0)
-                continue
-            ca = self.candidate(torch.as_tensor(snapshot.candidate_features[i], device=zo.device, dtype=zo.dtype))
-            zki = Z[index[i]]
-            if edges:
-                zh, zhi = Z[1], Z[index[(i, "h")]]
-                dk = zki.float() - zk.float()
-                dh = zhi.float() - zh.float()
-                delta = Differences(zk, zh, dk, dh, dh - dk, (zk, zh, zki, zhi))
-            else:
-                dk = zki.float() - zk.float()
-                delta = Differences(zk, zk, dk, dk, torch.zeros_like(dk), (zk, zk, zki, zki))
-            context = torch.cat((zo, ca, zk.mean(0)))
-            uk = self._phi_k(context, delta.dk)
-            if method == "A_CAT":
-                zk_e, zh_e, zki_e, zhi_e = delta.encodings
-                C = torch.cat((zk_e, zki_e, zh_e, zhi_e), dim=-1)
-                C0 = torch.cat((zk_e, zki_e, zk_e, zki_e), dim=-1)
-                prior_input = self.cat_proj(C)
-                anchor = self.cat_proj(C0)
-                cat_ctx = torch.cat((context, uk))
-                if edges:
-                    up = self.prior.readout(cat_ctx, prior_input) - self.prior.readout(cat_ctx, anchor)
-                    s_ = self.prior.final(up).squeeze(-1)
-                    residual = self.B * torch.tanh(s_)
-                else:
-                    zero = prior_input.sum() * 0 + cat_ctx.sum() * 0
-                    up, residual = zero.expand(128), zero
-            else:
-                if method == "A_STAT":
-                    prior_input = delta.zh.float() - delta.zk.float() if edges else torch.zeros_like(delta.dk)
-                    diagnostics["stat_relation"][cid] = prior_input
-                elif method in ("B2", "PRIOR_BIAS"):
-                    prior_input = torch.zeros_like(delta.dk)
-                else:
-                    prior_input = delta.dp if edges else torch.zeros_like(delta.dk)
-                up, residual = self.prior(torch.cat((context, uk)), prior_input, self.B, False)
-                if method == "PRIOR_BIAS":
-                    if "bias_scores" not in diagnostics:
-                        diagnostics["bias_scores"] = self.prior_bias_scores(snapshot, snapshot.mask)
-                    residual = self.B * torch.tanh(self.prior_beta) * diagnostics["bias_scores"][i]
-            diagnostics["differences"][cid] = delta
-            if self.shadow_zero_prior:
-                residual = residual * 0
-            uk_all.append(uk)
-            up_all.append(up)
-            logits.append(self.base(uk).squeeze(-1) + residual)
-            diagnostics["prior_inputs"][cid] = prior_input
-            diagnostics["up"][cid] = up
-            diagnostics["delta"][cid] = residual
-        uk = torch.stack(uk_all)
-        up = torch.stack(up_all)
-        mean_k = uk[mask].mean(0)
-        mean_p = up[mask].mean(0)
-        value = self.v_head(torch.cat((zo, zk.mean(0), mean_k, mean_p))).squeeze(-1)
-        q = self.q_head(torch.cat((uk, up, zo.expand(len(uk), -1), mean_k.expand(len(uk), -1), mean_p.expand(len(uk), -1)), dim=-1)).squeeze(-1)
-        logits = torch.stack(logits).masked_fill(~mask, -torch.inf)
+        for j, i in enumerate(valid):
+            cid = snapshot.candidate_ids[i]
+            diagnostics["delta"][cid] = residual[j]
+            diagnostics["up"][cid] = up[j]
+        mean_k = uk_all[mask].mean(0)
+        mean_p = up_all[mask].mean(0)
+        value = self.v_head(torch.cat((zo, zbar, mean_k, mean_p))).squeeze(-1)
+        q = self.q_head(torch.cat((uk_all, up_all, zo.expand(len(mask), -1), mean_k.expand(len(mask), -1), mean_p.expand(len(mask), -1)), dim=-1)).squeeze(-1)
+        logits = logits.masked_fill(~mask, -torch.inf)
         return PolicyOutput(snapshot.candidate_ids, logits, mask, torch.distributions.Categorical(logits=logits), value, q, zo, diagnostics)

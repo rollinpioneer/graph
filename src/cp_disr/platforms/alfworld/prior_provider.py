@@ -110,6 +110,25 @@ class PriorCache:
         return sorted(feas, key=lambda c: (-cs.get(c, 0.0), c))
 
 
+class SyntheticPrior:
+    """ENGINEERING ONLY (throughput/unit tests): hash-derived class scores, no provider call.
+    Never used for any research result; results produced with it are labelled synthetic."""
+
+    synthetic = True
+
+    def scores(self, pub, tables):
+        import hashlib
+
+        cs = {c: 0.05 + (int(hashlib.sha256((pub.goal_otype + c).encode()).hexdigest(), 16) % 1000) / 1000.0
+              for c in {type_of(r) for r in pub.receptacles}}
+        return instance_scores(cs, pub.receptacles, pub.feasible, tables.can_contain, pub.goal_otype)
+
+    def class_scores(self, otype, room_rtypes):
+        import hashlib
+
+        return {c: 0.05 + (int(hashlib.sha256((otype + c).encode()).hexdigest(), 16) % 1000) / 1000.0 for c in room_rtypes}
+
+
 class DashScopeTextProvider:
     """Single-request text transport. The key is read from the environment by the SDK only."""
 

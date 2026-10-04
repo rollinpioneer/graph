@@ -148,6 +148,7 @@ def main():
     ap.add_argument("--prior", default=None)
     ap.add_argument("--workers", type=int, default=24)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--qref-extra", type=int, default=0, help="EXPLORATORY extra Q_ref replay states per dev game (the pre-registered check stays at 1 per game)")
     a = ap.parse_args()
     cfg = {"run_dir": a.run_dir, "data_root": a.data_root, "prior": a.prior}
     splits = json.load(open(a.run_dir + "/splits.json"))
@@ -160,6 +161,7 @@ def main():
         rnd = pool.map(job_script, [(g, "random_legal", s) for g in dev for s in range(RANDOM_SEEDS)])
         traces = pool.map(job_trace, [(g, n) for g in dev for n in names])
         qstates = [x for x in pool.map(job_qref_state, [(g, 1000 + i) for i, g in enumerate(dev)]) if x]
+        qextra = [x for x in pool.map(job_qref_state, [(g, 5000 + 97 * j + i) for j in range(a.qref_extra) for i, g in enumerate(dev)]) if x] if a.qref_extra else []
     res = {"n_dev": len(dev), "prior": a.prior}
     J = {n: {r["rel"]: r["J"] for r in det if r["script"] == n} for n in names}
     J["random_legal"] = {g: st.mean(r["J"] for r in rnd if r["rel"] == g) for g in dev}
@@ -199,6 +201,28 @@ def main():
     res["qref_consistency"] = {"n_states": len(qstates), "paired_mean_J_top1_minus_top2": boot_ci(diffs) if diffs else None,
                                "frac_top1_better": sum(d > 0 for d in diffs) / max(1, len(diffs)),
                                "frac_tie": sum(d == 0 for d in diffs) / max(1, len(diffs)), "pass_lower_bound_gt_0": bool(diffs) and boot_ci(diffs)[1] > 0}
+    if qextra:
+        allq = qstates + qextra
+        by_game = {}
+        for x in allq:
+            by_game.setdefault(x["rel"], []).append(x["J1"] - x["J2"])
+        games = sorted(by_game)
+        rng = np.random.default_rng(0)
+        means = []
+        for _ in range(BOOT):  # cluster bootstrap over games (states of one game are not independent)
+            pick = rng.integers(0, len(games), len(games))
+            vals = [d for i in pick for d in by_game[games[i]]]
+            means.append(float(np.mean(vals)))
+        d_all = [x["J1"] - x["J2"] for x in allq]
+        gaps = np.array([x["q1"] - x["q2"] for x in allq])
+        order = np.argsort(gaps)
+        thirds = np.array_split(order, 3)
+        res["qref_consistency_extended_EXPLORATORY"] = {
+            "n_states": len(allq), "states_per_game": len(allq) / len(games), "mean": float(np.mean(d_all)),
+            "cluster_ci95": [float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))],
+            "frac_top1_better": float(np.mean([d > 0 for d in d_all])), "frac_top1_worse": float(np.mean([d < 0 for d in d_all])),
+            "by_Q_gap_tercile": [{"gap_range": [float(gaps[t].min()), float(gaps[t].max())], "n": int(len(t)), "mean_dJ": float(np.mean([d_all[i] for i in t]))} for t in thirds],
+        }
     # belief calibration on dev initial states
     bins = [[0, 0.0, 0] for _ in range(10)]
     for g in dev:

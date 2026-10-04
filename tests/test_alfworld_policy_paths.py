@@ -63,6 +63,16 @@ def test_weighted_rgcn_equals_rgcn_for_unit_weights_and_scales_messages():
     w = torch.ones(9)
     w[0] = 0.0
     assert not torch.allclose(mine(x, ei, et, w), ref(x, ei, et), atol=1e-6)  # weight really multiplies the message
+    # the sparse (batched) path is the same operator
+    assert torch.allclose(ref(x, ei, et), mine.forward_sparse(x, ei, et), atol=1e-5)
+    rw = torch.rand(9) + 0.1
+    assert torch.allclose(mine(x, ei, et, rw), mine.forward_sparse(x, ei, et, rw), atol=1e-5)
+    big_x = torch.randn(40, 16)
+    big_ei = torch.randint(0, 40, (2, 300))
+    big_et = torch.randint(0, 12, (300,))
+    big_w = torch.rand(300) + 0.1
+    assert torch.allclose(ref(big_x, big_ei, big_et), mine.forward_sparse(big_x, big_ei, big_et), atol=1e-5)
+    assert torch.allclose(mine(big_x, big_ei, big_et, big_w), mine.forward_sparse(big_x, big_ei, big_et, big_w), atol=1e-5)
 
 
 @pytest.mark.parametrize("method", FAST)
