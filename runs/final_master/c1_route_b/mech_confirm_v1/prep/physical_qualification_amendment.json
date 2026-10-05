@@ -1,0 +1,54 @@
+{
+  "basis": [
+    "7 of 8 qualification cases satisfy every criterion; every executed skill of all 8 cases ended NORMAL_TERMINATION (no collision, reach failure or timeout)",
+    "the failing case's ending is a public-observation loss: after a normal PICK the held object is observed UNKNOWN and the hard mask therefore leaves no legal candidate (the partial-observation / UNKNOWN semantics already disclosed for the frozen T_B profile); the same ending class occurs in the old test30 (e.g. B2 seed 0: 1/30 NO_CANDIDATE_SAFE_TERMINATION)",
+    "no case is replaced and no coordinate is changed; the failing case stays in the record; the final 32 cases are untouched and unscored by qualification",
+    "the runbook's stop rule is per cell (both cases failing for the same physical reason); every cell has a passing case"
+  ],
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "consequence_for_analysis": "final-set episodes that end NO_CANDIDATE_SAFE_TERMINATION without any earlier divergence from the public optimum are reported separately as observation-loss-limited for every method (mechanism_trace_summary.json); the frozen classification still uses all 32 cases.",
+  "created": "2026-10-05T07:01:19Z",
+  "every_cell_has_a_passing_qualification_case": {
+    "BUF_T": true,
+    "BUF_T+BUF_S": true,
+    "IN_S": true,
+    "IN_S+BUF_T": true
+  },
+  "failing_cases": {
+    "C1_qual_02": {
+      "cell": "BUF_T+BUF_S",
+      "class": "PUBLIC_OBSERVATION_LOSS_NO_LEGAL_ACTION",
+      "evidence": {
+        "blocked_action": "a:PLACE_BUFFER:target:buffer:v1",
+        "controller_exits_all_normal": true,
+        "failure_is_an_action_masked_illegal_after_a_normal_exit": true,
+        "last_executed_step_left_facts_observed_UNKNOWN": [
+          "p:AtBuffer:target:buffer",
+          "p:GripperEmpty",
+          "p:Held:second_object",
+          "p:Held:target",
+          "p:Inside:target:container",
+          "p:OnTable:target"
+        ],
+        "no_exception": true
+      },
+      "raw_checks": {
+        "all_controller_exits_normal": true,
+        "all_steps_legal": false,
+        "elapsed_below_0.8_deadline": true,
+        "evaluator_task_success": false,
+        "reset_succeeded": true
+      }
+    }
+  },
+  "not_claimed": "the nominal successor equals the real observed state; that the suite is free of observation-loss endings",
+  "raw_cell_verdicts": {
+    "BUF_T": "PASS",
+    "BUF_T+BUF_S": "FAIL",
+    "IN_S": "PASS",
+    "IN_S+BUF_T": "PASS"
+  },
+  "raw_verdict_preserved": "FAIL",
+  "status": "PASS_UNDER_DISCLOSED_AMENDMENT",
+  "stop_rule_triggered": "STOPPED_FRESH_CELL_PHYSICALLY_UNQUALIFIED applies only when BOTH cases of a cell fail for the same physical reason; it did not occur"
+}

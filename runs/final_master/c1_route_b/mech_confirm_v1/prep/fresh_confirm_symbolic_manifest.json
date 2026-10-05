@@ -1,0 +1,6999 @@
+{
+  "candidate_ids": [
+    "a:OPEN:container:v1",
+    "a:PICK:second_object:v1",
+    "a:PICK:target:v1",
+    "a:PLACE:second_object:container:v1",
+    "a:PLACE:target:container:v1",
+    "a:PLACE_BUFFER:second_object:buffer:v1",
+    "a:PLACE_BUFFER:target:buffer:v1"
+  ],
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "cases": [
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_00",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.11282804678191058,
+          -0.1605429971409361
+        ],
+        "target_xy": [
+          -0.1652073176101585,
+          -0.09838053139620885
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920008,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_01",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.1733041760658073,
+          -0.1332484743371165
+        ],
+        "target_xy": [
+          -0.13160885237551584,
+          -0.06679536183133164
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920009,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_02",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.15835689532917469,
+          -0.042818001794057564
+        ],
+        "target_xy": [
+          -0.1516920609864123,
+          -0.0356545234719533
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920010,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_03",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.06194933408176391,
+          -0.15847006512966566
+        ],
+        "target_xy": [
+          -0.03285454409959762,
+          -0.15311369476818806
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920011,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_04",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.1913533031319917,
+          -0.16953670470491466
+        ],
+        "target_xy": [
+          -0.0773059661460663,
+          -0.1762121152774149
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920012,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_05",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.16475783517895154,
+          -0.059105995960272426
+        ],
+        "target_xy": [
+          -0.1430646626696277,
+          -0.15576019122454357
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920013,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_06",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.04377386984354406,
+          -0.1306135966909483
+        ],
+        "target_xy": [
+          -0.1595358243966251,
+          -0.03325225440274654
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920014,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_07",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.09195491870200913,
+          -0.021038759267876156
+        ],
+        "target_xy": [
+          -0.07857947044071373,
+          -0.14071194033972073
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920015,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_08",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.08677668902889334,
+          -0.14348579881478632
+        ],
+        "target_xy": [
+          -0.09130315712908549,
+          -0.05880052756575302
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920016,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_09",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.06204707888223161,
+          -0.0262317716255486
+        ],
+        "target_xy": [
+          -0.17391666700641867,
+          -0.1070929768521655
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920017,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_10",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.09923345778364778,
+          -0.1730952170578375
+        ],
+        "target_xy": [
+          -0.05515157752036692,
+          -0.07816807392493916
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920018,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_11",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.0839230915639789,
+          -0.11824873687602058
+        ],
+        "target_xy": [
+          -0.2110022378184971,
+          -0.026222986931152353
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920019,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_12",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.15923086633450473,
+          -0.14190510122813715
+        ],
+        "target_xy": [
+          -0.1470408283035693,
+          -0.06208666482664495
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920020,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_13",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.11087256025389697,
+          -0.17756444672420552
+        ],
+        "target_xy": [
+          -0.2001427577387374,
+          -0.1396458596856046
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920021,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_14",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.14285074707749493,
+          -0.11907534579796894
+        ],
+        "target_xy": [
+          -0.05794126364194796,
+          -0.07715093029574581
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920022,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_15",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.10181318908863658,
+          -0.04154539540956856
+        ],
+        "target_xy": [
+          -0.14434625703669918,
+          -0.03705002811494476
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920023,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_16",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.18204394819518502,
+          -0.1297745285009243
+        ],
+        "target_xy": [
+          -0.19989417840910187,
+          -0.14466861711239015
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920024,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_17",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.1614550821240586,
+          -0.15048627676180962
+        ],
+        "target_xy": [
+          -0.19021080827057613,
+          -0.0651120613803564
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920025,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_18",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.06847857660627682,
+          -0.09877187666167844
+        ],
+        "target_xy": [
+          -0.06764607160107963,
+          -0.12100207904037658
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920026,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_19",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.07869561227345873,
+          -0.09334992455010944
+        ],
+        "target_xy": [
+          -0.0945472001224264,
+          -0.08687519339339639
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920027,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_20",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.11355032744579785,
+          -0.0843315809818243
+        ],
+        "target_xy": [
+          -0.13128378287612297,
+          -0.05630013456055076
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920028,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_21",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.05591833175482685,
+          -0.06501787722822626
+        ],
+        "target_xy": [
+          -0.06908912319346122,
+          -0.12427545919696413
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920029,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_22",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.09282982151280854,
+          -0.14013332366215728
+        ],
+        "target_xy": [
+          -0.05411065655826758,
+          -0.08980100497586503
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920030,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_23",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.17949025769287497,
+          -0.09505821934913017
+        ],
+        "target_xy": [
+          -0.12733139936971088,
+          -0.1211792474479895
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920031,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_24",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.11784419414098571,
+          -0.03651767177942081
+        ],
+        "target_xy": [
+          -0.06554921945622744,
+          -0.04798300501684455
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920032,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_25",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.14425089072400482,
+          -0.12752974014867646
+        ],
+        "target_xy": [
+          -0.027816589644565376,
+          -0.12666867712298557
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920033,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_26",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.16265750379081942,
+          -0.026508285768812784
+        ],
+        "target_xy": [
+          -0.1430759121800031,
+          -0.048098796943947864
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920034,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_27",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.16514695161367748,
+          -0.15467234071738026
+        ],
+        "target_xy": [
+          -0.1572110036669088,
+          -0.11999280050534887
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920035,
+      "split": "test"
+    },
+    {
+      "binding_signature": "61221dd22d62a46d516cd28568d00fc1c9569983d8029be6cdf7753800242687",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_28",
+      "cell": "IN_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 3,
+      "depth_level": 1,
+      "effect_composition_signature": "b1c9ac3c5d04b5721b61aa3e926ffe1a3f98caa142123a6772c8cdbc3f0a79aa",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.17228378639669184,
+          -0.15506611301577702
+        ],
+        "target_xy": [
+          -0.19641016407928033,
+          -0.03575297096189148
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container"
+        ],
+        "key": "IN_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920036,
+      "split": "test"
+    },
+    {
+      "binding_signature": "ddae980bdb3edb741888f3d170bb3d76c0ebfe774d97ecbd03a92ac2440f2dff",
+      "bindings": [
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_29",
+      "cell": "BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 2,
+      "depth_level": 1,
+      "effect_composition_signature": "2d963e9f1ef91d7f6ed055cd5940056aba061e3957b42e3ecbcb765b88f077f4",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.09095979443391586,
+          -0.12067481861037091
+        ],
+        "target_xy": [
+          -0.15940434514977495,
+          -0.021219895383222415
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ],
+      "seed": 920037,
+      "split": "test"
+    },
+    {
+      "binding_signature": "f3fe939adcedbb21a986a895c24b39a97c0c58884e7f62cc948dec8612b74e2a",
+      "bindings": [
+        [
+          "second_object",
+          "buffer"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_30",
+      "cell": "BUF_T+BUF_S",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 4,
+      "depth_level": 2,
+      "effect_composition_signature": "e490a06b2cc59134e7b648809ee48a6fb06a7adfe55286cd86513aeded47441f",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.13465399869818484,
+          -0.12218421564073437
+        ],
+        "target_xy": [
+          -0.1572253795402514,
+          -0.08986675376737412
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:AtBuffer:target:buffer",
+          "p:AtBuffer:second_object:buffer"
+        ],
+        "key": "BUF_T+BUF_S"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ],
+      "seed": 920038,
+      "split": "test"
+    },
+    {
+      "binding_signature": "522274b7a4b3075928e1b5e5f640d37b8ae86255a63a16c77d8b021bd4b350f6",
+      "bindings": [
+        [
+          "second_object",
+          "container"
+        ],
+        [
+          "target",
+          "buffer"
+        ]
+      ],
+      "candidate_ids": [
+        "a:OPEN:container:v1",
+        "a:PICK:second_object:v1",
+        "a:PICK:target:v1",
+        "a:PLACE:second_object:container:v1",
+        "a:PLACE:target:container:v1",
+        "a:PLACE_BUFFER:second_object:buffer:v1",
+        "a:PLACE_BUFFER:target:buffer:v1"
+      ],
+      "case_id": "C1_test_31",
+      "cell": "IN_S+BUF_T",
+      "contracts": {
+        "a:OPEN:container:v1": {
+          "ADD": [
+            "p:Open:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:second_object:v1": {
+          "ADD": [
+            "p:Held:second_object"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PICK:target:v1": {
+          "ADD": [
+            "p:Held:target"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:GripperEmpty",
+            "p:OnTable:target"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:second_object:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:second_object:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE:target:container:v1": {
+          "ADD": [
+            "p:GripperEmpty",
+            "p:Inside:target:container"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target",
+            "p:Open:container"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:second_object:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:second_object:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:second_object"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:second_object"
+          ],
+          "UNKNOWN": []
+        },
+        "a:PLACE_BUFFER:target:buffer:v1": {
+          "ADD": [
+            "p:AtBuffer:target:buffer",
+            "p:GripperEmpty"
+          ],
+          "CONDITIONAL": 0,
+          "DEL": [
+            "p:Held:target"
+          ],
+          "PRE_NEG": [],
+          "PRE_POS": [
+            "p:Held:target"
+          ],
+          "UNKNOWN": []
+        }
+      },
+      "dependency_depth": 5,
+      "depth_level": 3,
+      "effect_composition_signature": "f4cb871d66ff3b961116b13ada6af372773ca2f1200dd7c5ffdbf14fc916ce3e",
+      "geometry": {
+        "buffer_xy": [
+          -0.18,
+          0.12
+        ],
+        "container_xy": [
+          0.18,
+          0.12
+        ],
+        "deadline_seconds": 60.0,
+        "lid_closed": true,
+        "second_xy": [
+          0.11150523742777724,
+          -0.16744820995148438
+        ],
+        "target_xy": [
+          -0.0975701076944692,
+          -0.03160034450500851
+        ]
+      },
+      "goal": {
+        "atoms": [
+          "p:Inside:second_object:container",
+          "p:AtBuffer:target:buffer"
+        ],
+        "key": "IN_S+BUF_T"
+      },
+      "initial_facts": {
+        "p:AtBuffer:second_object:buffer": "FALSE",
+        "p:AtBuffer:target:buffer": "FALSE",
+        "p:GripperEmpty": "TRUE",
+        "p:Held:second_object": "FALSE",
+        "p:Held:target": "FALSE",
+        "p:Inside:second_object:container": "FALSE",
+        "p:Inside:target:container": "FALSE",
+        "p:OnTable:second_object": "TRUE",
+        "p:OnTable:target": "TRUE",
+        "p:Open:container": "FALSE"
+      },
+      "nominal_successors": {
+        "a:OPEN:container:v1": {
+          "p:Open:container": "TRUE"
+        },
+        "a:PICK:second_object:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:second_object": "TRUE",
+          "p:OnTable:second_object": "FALSE"
+        },
+        "a:PICK:target:v1": {
+          "p:GripperEmpty": "FALSE",
+          "p:Held:target": "TRUE",
+          "p:OnTable:target": "FALSE"
+        }
+      },
+      "objects": {
+        "buffer": "buffer",
+        "container": "container",
+        "second_object": "object",
+        "target": "object"
+      },
+      "optimal_first_actions": [
+        "a:OPEN:container:v1",
+        "a:PICK:target:v1"
+      ],
+      "optimal_plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ],
+      "seed": 920039,
+      "split": "test"
+    }
+  ],
+  "contract_table": {
+    "a:OPEN:container:v1": {
+      "ADD": [
+        "p:Open:container"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:GripperEmpty"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PICK:second_object:v1": {
+      "ADD": [
+        "p:Held:second_object"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:GripperEmpty",
+        "p:OnTable:second_object"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:GripperEmpty",
+        "p:OnTable:second_object"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PICK:target:v1": {
+      "ADD": [
+        "p:Held:target"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:GripperEmpty",
+        "p:OnTable:target"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:GripperEmpty",
+        "p:OnTable:target"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PLACE:second_object:container:v1": {
+      "ADD": [
+        "p:GripperEmpty",
+        "p:Inside:second_object:container"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:Held:second_object"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:Held:second_object",
+        "p:Open:container"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PLACE:target:container:v1": {
+      "ADD": [
+        "p:GripperEmpty",
+        "p:Inside:target:container"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:Held:target"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:Held:target",
+        "p:Open:container"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PLACE_BUFFER:second_object:buffer:v1": {
+      "ADD": [
+        "p:AtBuffer:second_object:buffer",
+        "p:GripperEmpty"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:Held:second_object"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:Held:second_object"
+      ],
+      "UNKNOWN": []
+    },
+    "a:PLACE_BUFFER:target:buffer:v1": {
+      "ADD": [
+        "p:AtBuffer:target:buffer",
+        "p:GripperEmpty"
+      ],
+      "CONDITIONAL": 0,
+      "DEL": [
+        "p:Held:target"
+      ],
+      "PRE_NEG": [],
+      "PRE_POS": [
+        "p:Held:target"
+      ],
+      "UNKNOWN": []
+    }
+  },
+  "solutions": {
+    "BUF_T": {
+      "depth": 2,
+      "optimal_actions": {
+        "625ae9dce66cc177c3f0278bbeddeb6f7adbfc1d4bcd8edd5ec45d507e18575e": [
+          "a:PICK:target:v1"
+        ],
+        "c2a6c08d18833048bb688ab6e5b78b388f664fee0aafcf54a3630bc4a2584964": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      },
+      "plans": [
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ]
+      ]
+    },
+    "BUF_T+BUF_S": {
+      "depth": 4,
+      "optimal_actions": {
+        "581578de53b865442a869551d067787e2636e69eaa9caedb4b09c3a7ccd43f62": [
+          "a:PICK:second_object:v1"
+        ],
+        "625ae9dce66cc177c3f0278bbeddeb6f7adbfc1d4bcd8edd5ec45d507e18575e": [
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1"
+        ],
+        "92079c7a37b5610a4a538b7f101c8904c2ef113872eb6a1ffd83dbbf2a0642ce": [
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ],
+        "be3cdbbd928fc3f93d56b53fcaa37bef62640ea5aa62f4c94bf64d7f4896aa33": [
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ],
+        "c2a6c08d18833048bb688ab6e5b78b388f664fee0aafcf54a3630bc4a2584964": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "cf0793623c98aeeae0ad16e6267e1214bdc0792d1977eacf05a0e596d840285e": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "f61f15a73f026c9de56004715ea11e6f855a7225eb20adafbcad8601d9bc87d4": [
+          "a:PICK:target:v1"
+        ]
+      },
+      "plans": [
+        [
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE_BUFFER:second_object:buffer:v1"
+        ]
+      ]
+    },
+    "IN_S": {
+      "depth": 3,
+      "optimal_actions": {
+        "46a301927e4b83c8c4fb705ab0d1b4bf4864636d6073b1644a580ad8f5357864": [
+          "a:PICK:second_object:v1"
+        ],
+        "625ae9dce66cc177c3f0278bbeddeb6f7adbfc1d4bcd8edd5ec45d507e18575e": [
+          "a:OPEN:container:v1"
+        ],
+        "fcb38ffec63fbefc99d473d4d835c6328034d824839c5bb4b426b97e909c7fef": [
+          "a:PLACE:second_object:container:v1"
+        ]
+      },
+      "plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ]
+    },
+    "IN_S+BUF_T": {
+      "depth": 5,
+      "optimal_actions": {
+        "0ca02440b66788c3daac0f8418cc4e7b7c524591eea84220bf4a5ef75c1fdfc3": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "46a301927e4b83c8c4fb705ab0d1b4bf4864636d6073b1644a580ad8f5357864": [
+          "a:PICK:second_object:v1",
+          "a:PICK:target:v1"
+        ],
+        "581578de53b865442a869551d067787e2636e69eaa9caedb4b09c3a7ccd43f62": [
+          "a:OPEN:container:v1"
+        ],
+        "625ae9dce66cc177c3f0278bbeddeb6f7adbfc1d4bcd8edd5ec45d507e18575e": [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1"
+        ],
+        "77211fe924ab4ff413cfb1a77d35a5fa69581ccc100236cba4ddc48f54a99e05": [
+          "a:PICK:target:v1"
+        ],
+        "a0a1db201a5d840a28ec0524c8a55ecf43ce8c505c0e26ce9bef6d889487efe4": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "c2a6c08d18833048bb688ab6e5b78b388f664fee0aafcf54a3630bc4a2584964": [
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        "cd29a7901d81be2b79e50716ab56e241d408af064c0d61b27c0153a113bb7248": [
+          "a:PICK:second_object:v1"
+        ],
+        "f6108e9c1fc0827fdd8cb461cc9526fe8401432d123e57349b261162112e9825": [
+          "a:PLACE:second_object:container:v1"
+        ],
+        "fcb38ffec63fbefc99d473d4d835c6328034d824839c5bb4b426b97e909c7fef": [
+          "a:PLACE:second_object:container:v1"
+        ]
+      },
+      "plans": [
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1"
+        ],
+        [
+          "a:OPEN:container:v1",
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ],
+        [
+          "a:PICK:target:v1",
+          "a:PLACE_BUFFER:target:buffer:v1",
+          "a:OPEN:container:v1",
+          "a:PICK:second_object:v1",
+          "a:PLACE:second_object:container:v1"
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,510 @@
+{
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "cases": {
+    "C1_qual_00": {
+      "cell": "IN_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 14.800000000001946,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "decision_index": 2,
+          "differences": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:Inside:target:container": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            },
+            "p:OnTable:target": {
+              "nominal": "UNKNOWN",
+              "observed": "TRUE"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.0012028069999985291,
+      "reason": "TASK_SUCCESS",
+      "steps": 3
+    },
+    "C1_qual_01": {
+      "cell": "BUF_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 7.349999999999457,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:target:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.0007456159999961187,
+      "reason": "TASK_SUCCESS",
+      "steps": 2
+    },
+    "C1_qual_02": {
+      "cell": "BUF_T+BUF_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": false,
+        "planner_never_failed": false,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 4.1999999999996485,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          }
+        }
+      ],
+      "ok": false,
+      "planner_cpu_seconds_max": 0.0020041020000007848,
+      "reason": "NO_CANDIDATE_SAFE_TERMINATION:d0-env-0:ep-3",
+      "steps": 1
+    },
+    "C1_qual_03": {
+      "cell": "IN_S+BUF_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 22.449999999997882,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:target:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 3,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "decision_index": 4,
+          "differences": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.002548937999996781,
+      "reason": "TASK_SUCCESS",
+      "steps": 5
+    },
+    "C1_qual_04": {
+      "cell": "IN_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 15.40000000000179,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "decision_index": 2,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.0012746839999948634,
+      "reason": "TASK_SUCCESS",
+      "steps": 3
+    },
+    "C1_qual_05": {
+      "cell": "BUF_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 7.499999999999507,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:target:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.0007650299999966137,
+      "reason": "TASK_SUCCESS",
+      "steps": 2
+    },
+    "C1_qual_06": {
+      "cell": "BUF_T+BUF_S",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 16.650000000001096,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:second_object:buffer:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        },
+        {
+          "action": "a:PICK:target:v1",
+          "decision_index": 2,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "decision_index": 3,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.0019369810000000598,
+      "reason": "TASK_SUCCESS",
+      "steps": 4
+    },
+    "C1_qual_07": {
+      "cell": "IN_S+BUF_T",
+      "checks": {
+        "all_controller_exits_normal": true,
+        "all_selected_skills_legal": true,
+        "evaluator_task_success": true,
+        "planner_never_failed": true,
+        "reset_succeeded": true
+      },
+      "controller_exits": [
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION",
+        "NORMAL_TERMINATION"
+      ],
+      "elapsed_seconds": 23.4999999999973,
+      "fact_discrepancies_vs_nominal": [
+        {
+          "action": "a:PICK:target:v1",
+          "decision_index": 0,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE_BUFFER:target:buffer:v1",
+          "decision_index": 1,
+          "differences": {
+            "p:Held:second_object": {
+              "nominal": "UNKNOWN",
+              "observed": "FALSE"
+            },
+            "p:OnTable:target": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            }
+          }
+        },
+        {
+          "action": "a:PICK:second_object:v1",
+          "decision_index": 3,
+          "differences": {
+            "p:Held:target": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            }
+          }
+        },
+        {
+          "action": "a:PLACE:second_object:container:v1",
+          "decision_index": 4,
+          "differences": {
+            "p:AtBuffer:target:buffer": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            },
+            "p:Inside:target:container": {
+              "nominal": "FALSE",
+              "observed": "UNKNOWN"
+            },
+            "p:OnTable:second_object": {
+              "nominal": "FALSE",
+              "observed": "TRUE"
+            },
+            "p:OnTable:target": {
+              "nominal": "TRUE",
+              "observed": "UNKNOWN"
+            }
+          }
+        }
+      ],
+      "ok": true,
+      "planner_cpu_seconds_max": 0.002547203000005993,
+      "reason": "TASK_SUCCESS",
+      "steps": 5
+    }
+  },
+  "cell_verdicts": {
+    "BUF_T": "PASS",
+    "BUF_T+BUF_S": "FAIL",
+    "IN_S": "PASS",
+    "IN_S+BUF_T": "PASS"
+  },
+  "created": "2026-10-05T06:57:43Z",
+  "criteria": {
+    "disclosed_semantics": "verified-vs-nominal fact discrepancies are recorded, not gating (as in the already disclosed T_B qualification amendment); we do not claim the nominal successor equals the real observed state",
+    "per_case": [
+      "reset succeeds",
+      "every selected skill legal under the public hard mask",
+      "every controller exit NORMAL_TERMINATION (no collision, reach failure, timeout)",
+      "frozen Evaluator returns TASK_SUCCESS",
+      "no online coordinate tuning, no replacement of a failed case"
+    ]
+  },
+  "episodes": 8,
+  "executor": "B_PLAN (frozen public-facts planner, first action only, replan after every verified step)",
+  "failed_cells": [],
+  "optimizer_steps": 0,
+  "policy_training": false,
+  "provider_requests": 0,
+  "role": "B_PLAN dry run of the 8 qualification cases (pipeline validation of the planner / decision logger). NOT the qualification verdict: see physical_qualification_results.json (frozen first shortest plan executor).",
+  "stop_flag": "STOPPED_FRESH_QUALIFICATION_FAILED",
+  "verdict": "FAIL"
+}

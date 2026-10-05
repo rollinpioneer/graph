@@ -1,0 +1,69 @@
+{
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "cells": [
+    "IN_S",
+    "BUF_T",
+    "BUF_T+BUF_S",
+    "IN_S+BUF_T"
+  ],
+  "created": "2026-10-05T07:03:21Z",
+  "frozen_before_any_fresh_confirm_result": true,
+  "interpretations_of_open_clauses": {
+    "ABS_close_to_QMARK": "the runbook says 'ABS \u4e0e QMARK \u63a5\u8fd1' without a number: fixed as |T(ABS) - T(QMARK)| <= 0.10 (the M3 tolerance)",
+    "advantage_concentrated_in_multiple_dual_goal_cells": "the runbook says 'B2 \u7684\u4f18\u52bf\u96c6\u4e2d\u5728\u591a\u4e2a\u53cc\u76ee\u6807 cell' without a number: fixed as B2 leads QMARK by >= 0.20 in BOTH dual-goal cells (BUF_T+BUF_S, IN_S+BUF_T) while the mean B2 lead in the two single-goal cells (IN_S, BUF_T) is <= 0.10",
+    "pooling": "with several seeds T and C are means over seeds of the per-seed rates over the 32 final cases; B2 and ABS use the matched seeds of QMARK",
+    "strong_and_failed": "the runbook says 'B2/ABS \u4fdd\u6301\u5f3a\u7ed3\u679c' / '\u660e\u663e\u5931\u6548' without a number: strong = T >= 0.70, failed = T < 0.50 (both B2 and ABS)"
+  },
+  "rules": {
+    "ABSOLUTE_SUCCESSOR_SUFFICIENT": {
+      "T_ABS_minus_T_B2_min": -0.1,
+      "cells_abs_trails_b2_by_more_than": 0.2,
+      "cells_max_count": 1
+    },
+    "DIFFERENCE_STABILITY_SIGNAL": {
+      "T_B2_minus_T_ABS_min": 0.15,
+      "cells_b2_leads_abs_by": 0.2,
+      "cells_min_count": 2
+    },
+    "M1_EXPLICIT_APPLICATION_SHARED_ADVANTAGE": {
+      "T_ABS_minus_T_Q_min": 0.15,
+      "T_B2_minus_T_Q_min": 0.2,
+      "cells_abs_leads_q_by": 0.1,
+      "cells_abs_min_count": 3,
+      "cells_b2_leads_q_by": 0.1,
+      "cells_b2_min_count": 3
+    },
+    "M2_B2_SPECIFIC_ADVANTAGE": {
+      "T_B2_minus_T_Q_min": 0.2,
+      "any_of": {
+        "ABS_close_to_Q_abs_diff_max": 0.1,
+        "T_B2_minus_T_ABS_min": 0.15,
+        "b2_advantage_concentrated_in_dual_goal_cells": {
+          "each_dual_cell_advantage_min": 0.2,
+          "mean_single_cell_advantage_max": 0.1
+        }
+      },
+      "not": "M1"
+    },
+    "M3_RELATIONAL_QUERY_IS_SUFFICIENT": {
+      "T_Q_minus_T_ABS_min": -0.1,
+      "T_Q_minus_T_B2_min": -0.1,
+      "cells_q_trails_b2_by_more_than": 0.2,
+      "cells_q_trails_b2_max_count": 1
+    },
+    "M4_INCONCLUSIVE": {
+      "definition": "none of M1, M2, M3"
+    },
+    "decision": {
+      "failed_total_success_max": 0.5,
+      "strong_total_success_min": 0.7
+    },
+    "id_qualification": {
+      "else": "CONTROL_NOT_ID_QUALIFIED",
+      "hard_failure": 0,
+      "nan": 0,
+      "qmark_final_dev12_success": 12
+    },
+    "seed_release": "QMARK seed1 only if seed0 is ID-qualified and the seed0 classification is M4; seed2 only if the seed0/1 pooled classification is M4; stop at the first non-M4 class; after seed2 a pooled M4 is MECHANISM_INCONCLUSIVE"
+  }
+}
