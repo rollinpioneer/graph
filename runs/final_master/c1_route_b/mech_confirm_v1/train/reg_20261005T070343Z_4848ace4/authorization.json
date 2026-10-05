@@ -1,0 +1,55 @@
+{
+  "authorization_text": "CP-DISR-C1-MECH-CONFIRM-V1 authorization (user message, 2026-10-05, Claude desktop session): \"\u6267\u884c\uff0c\u5e76\u544a\u8bc9\u6211\u9884\u4f30\u5b8c\u6210\u65f6\u95f4\" referring to the runbook\nCP_DISR_C1_Minimal_Mechanism_Closure_and_Confirmation_Runbook_v1.md (sha256 9e3d94d2dd889f05ae2454ad19b3080db59269c000f8c6f5b34bbd074e76fa54, 29242 bytes), which is the sole authority for this card.\nBase commit 5a2b3d18d21cbab19b9d09c3c430b3203e873730; target branch codex/cp-disr-c1-mechanism-confirmation-v1.\nAuthorized here: stages 0-8 of the runbook, QMARK seed 0 training (one attempt), evaluation of existing checkpoints on Fresh Confirm, B_PLAN reference, conditional QMARK seeds only by the frozen M4 rule\n(never speculatively), then commit/push the branch (no PR, no merge) and STOP at C1_MECHANISM_CONFIRMATION_COMPLETE / NEXT_ACTION = WAIT_FOR_USER_MAINLINE_DECISION.\nDisclosed qualification amendment: raw FAIL preserved (1/8), status PASS_UNDER_DISCLOSED_AMENDMENT (public-observation loss ending; see prep/physical_qualification_amendment.json).\n",
+  "authorization_text_sha256": "9267406a4cd3823bf6728f4caa06b8c72c040122d6d74162883f9254a0dd6f58",
+  "base_commit": "5a2b3d18d21cbab19b9d09c3c430b3203e873730",
+  "caps": {
+    "initial_rl_attempts": 1,
+    "max_concurrent_workers": 1,
+    "ncap": 16384,
+    "old_method_retraining": 0,
+    "provider": 0,
+    "rl_attempts": 3,
+    "tcap": 68812.79999996186,
+    "tp_training": 0
+  },
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "conditional_rule": "QMARK seed1 only if seed0 is ID-qualified and the Fresh Confirm outcome is M4 (INCONCLUSIVE); seed2 only if the seed0/1 combined outcome is still M4; never speculatively",
+  "initial_release": [
+    "R-TB-C1-QMARK-0"
+  ],
+  "not_authorized": [
+    "retraining B2 / ABS / +E / NC",
+    "a QMARK seed beyond the frozen conditional rule",
+    "second task family",
+    "new main method",
+    "VLM / prior / C2 / C3",
+    "external method reproduction",
+    "reading or opening the Fresh Confirm final file in any training code path",
+    "a change of Tcap/Ncap/PPO/reward/contracts/mask/controller/evaluator",
+    "retry or replacement of a started attempt",
+    "adjusting QMARK after any Fresh Confirm result"
+  ],
+  "plan_table": {
+    "R-TB-C1-QMARK-0": {
+      "family": "QMARK",
+      "method": "B1-K+QMARK",
+      "queue_order": 1,
+      "seed": 0
+    },
+    "R-TB-C1-QMARK-1": {
+      "family": "QMARK",
+      "method": "B1-K+QMARK",
+      "queue_order": 2,
+      "seed": 1
+    },
+    "R-TB-C1-QMARK-2": {
+      "family": "QMARK",
+      "method": "B1-K+QMARK",
+      "queue_order": 3,
+      "seed": 2
+    }
+  },
+  "prep_commit": "4848ace4e9e1fa5e1b8a8807bad4e8936e3915ea",
+  "registered": "2026-10-05T07:03:43Z",
+  "release_sha256": "9954596356013e5872fc22eccb96ca712fc6f58f821a77598add8ed00ffc25c9"
+}

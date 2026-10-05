@@ -1,0 +1,165 @@
+{
+  "additional_seeds_used": [],
+  "b2_vs_abs": "UNRESOLVED",
+  "base_commit": "5a2b3d18d21cbab19b9d09c3c430b3203e873730",
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "conditional_release": {
+    "seed1_needed": false,
+    "seed2_needed": false
+  },
+  "decision": "B",
+  "decision_note": null,
+  "frozen_rule_interpretations": {
+    "ABS_close_to_QMARK": "the runbook says 'ABS \u4e0e QMARK \u63a5\u8fd1' without a number: fixed as |T(ABS) - T(QMARK)| <= 0.10 (the M3 tolerance)",
+    "advantage_concentrated_in_multiple_dual_goal_cells": "the runbook says 'B2 \u7684\u4f18\u52bf\u96c6\u4e2d\u5728\u591a\u4e2a\u53cc\u76ee\u6807 cell' without a number: fixed as B2 leads QMARK by >= 0.20 in BOTH dual-goal cells (BUF_T+BUF_S, IN_S+BUF_T) while the mean B2 lead in the two single-goal cells (IN_S, BUF_T) is <= 0.10",
+    "pooling": "with several seeds T and C are means over seeds of the per-seed rates over the 32 final cases; B2 and ABS use the matched seeds of QMARK",
+    "strong_and_failed": "the runbook says 'B2/ABS \u4fdd\u6301\u5f3a\u7ed3\u679c' / '\u660e\u663e\u5931\u6548' without a number: strong = T >= 0.70, failed = T < 0.50 (both B2 and ABS)"
+  },
+  "id_qualification": {
+    "0": {
+      "NaN_n": 0,
+      "actual_N": 14532,
+      "actual_T": 68813.3000000058,
+      "complete_updates": 14,
+      "dev12_points": {
+        "0": [
+          4,
+          12
+        ],
+        "14532": [
+          12,
+          12
+        ],
+        "4096": [
+          12,
+          12
+        ],
+        "8192": [
+          12,
+          12
+        ]
+      },
+      "final_checkpoint": "/home/xushijie2/graph_cp_disr_tb_structgen/runs/final_master/c1_route_b/mech_confirm_v1/runs/B1-K+QMARK/seed_0/R-TB-C1-QMARK-0-20261005T070343Z-4848ace4/checkpoints/final_n_014532_u14.pt",
+      "final_checkpoint_sha256_recorded": "a12026fdf153e6e7b7ef4429c40fff9c20027482512686ba2cf94b30889dfca2",
+      "final_dev12_success": 12,
+      "final_dev12_success_rate": 1.0,
+      "hard_fail": null,
+      "qualified": true,
+      "seed": 0,
+      "status": "COMPLETE",
+      "stop_reason": "Tcap"
+    }
+  },
+  "main": "M3",
+  "next_action": "WAIT_FOR_USER_MAINLINE_DECISION",
+  "per_seed": {
+    "0": {
+      "C": {
+        "ABS": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.0,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        },
+        "B2": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.5,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        },
+        "QMARK": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.5,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        }
+      },
+      "T": {
+        "ABS": 0.71875,
+        "B2": 0.84375,
+        "QMARK": 0.84375
+      }
+    }
+  },
+  "planner_interpretation": {
+    "class": "MIXED",
+    "reading": "no single frozen planner pattern; reported descriptively."
+  },
+  "pooled_sequence": [
+    {
+      "C": {
+        "ABS": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.0,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        },
+        "B2": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.5,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        },
+        "QMARK": {
+          "BUF_T": 0.875,
+          "BUF_T+BUF_S": 0.5,
+          "IN_S": 1.0,
+          "IN_S+BUF_T": 1.0
+        }
+      },
+      "T": {
+        "ABS": 0.71875,
+        "B2": 0.84375,
+        "QMARK": 0.84375
+      },
+      "b2_vs_abs": {
+        "T_B2_minus_T_ABS": 0.125,
+        "b2_lead_over_abs_by_cell": {
+          "BUF_T": 0.0,
+          "BUF_T+BUF_S": 0.5,
+          "IN_S": 0.0,
+          "IN_S+BUF_T": 0.0
+        },
+        "label": "UNRESOLVED"
+      },
+      "main": {
+        "class": "M3",
+        "facts": {
+          "T_ABS_minus_T_Q": -0.125,
+          "T_B2_minus_T_ABS": 0.125,
+          "T_B2_minus_T_Q": 0.0,
+          "abs_lead_over_q_by_cell": {
+            "BUF_T": 0.0,
+            "BUF_T+BUF_S": -0.5,
+            "IN_S": 0.0,
+            "IN_S+BUF_T": 0.0
+          },
+          "b2_lead_over_q_by_cell": {
+            "BUF_T": 0.0,
+            "BUF_T+BUF_S": 0.0,
+            "IN_S": 0.0,
+            "IN_S+BUF_T": 0.0
+          },
+          "m2_clauses": {
+            "abs_close_to_qmark": false,
+            "b2_advantage_concentrated_in_dual_goal_cells": false,
+            "b2_exceeds_abs_by_0.15": false
+          },
+          "single_cell_mean_b2_lead": 0.0
+        }
+      },
+      "seeds": [
+        0
+      ]
+    }
+  ],
+  "route_b_recommendation": "NARROW_AND_CONTINUE",
+  "seed0_totals": {
+    "ABS": 0.71875,
+    "B2": 0.84375,
+    "E": 0.0,
+    "NC": 0.25,
+    "QMARK": 0.84375
+  },
+  "state": "C1_MECHANISM_CONFIRMATION_COMPLETE"
+}

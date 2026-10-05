@@ -1,0 +1,269 @@
+{
+  "abs_double_atbuffer_failures": [
+    {
+      "cell_BUF_T+BUF_S": [
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL",
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL"
+      ],
+      "seed": 0
+    }
+  ],
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "definitions": {
+    "completed_goals": "evaluator-level atoms (frozen atomic checks on the simulator state), logged after the fact; never a policy input",
+    "first_divergence": "first decision whose selected action is not in the shortest-legal-plan first-action set computed from the current PUBLIC facts after the policy has chosen (analysis only)",
+    "reference_unavailable": "REFERENCE_UNAVAILABLE_PUBLIC_UNKNOWN: no plan within depth 8 exists from the public facts; the hidden state is never used to complete it",
+    "repeated_action": "the same candidate id selected again within an episode",
+    "training_default_binding_error": "a placement of a train binding (target->container or second_object->buffer) selected at a decision where it is not in the optimal set"
+  },
+  "per_run": {
+    "ABS_s0": {
+      "destroyed_completed_goal_episode_rate": 0.0,
+      "episodes": 32,
+      "episodes_with_first_divergence": 8,
+      "failure_categories": {
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL": 8,
+        "OBSERVATION_LOSS_LIMITED_NO_CANDIDATE_WITHOUT_DIVERGENCE": 1
+      },
+      "failure_reasons": {
+        "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 8,
+        "NO_CANDIDATE_SAFE_TERMINATION": 1
+      },
+      "failures": 9,
+      "first_divergence_index_counts": {
+        "0": 8
+      },
+      "first_divergence_rate": 0.25,
+      "first_divergence_type_counts": {
+        "OPEN_NOT_OPTIMAL": 8
+      },
+      "no_candidate_after_an_earlier_divergence": 0,
+      "no_candidate_safe_termination_episodes": 1,
+      "placement_binding_counts_selected": {
+        "second_object->container": 16,
+        "target->buffer": 15
+      },
+      "reference_unavailable_decision_share": 0.0,
+      "repeated_action_episode_rate": 0.25,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    },
+    "B2_s0": {
+      "destroyed_completed_goal_episode_rate": 0.09375,
+      "episodes": 32,
+      "episodes_with_first_divergence": 0,
+      "failure_categories": {
+        "DESTROYED_A_COMPLETED_GOAL": 3,
+        "OBSERVATION_LOSS_LIMITED_NO_CANDIDATE_WITHOUT_DIVERGENCE": 2
+      },
+      "failure_reasons": {
+        "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 3,
+        "NO_CANDIDATE_SAFE_TERMINATION": 2
+      },
+      "failures": 5,
+      "first_divergence_index_counts": {},
+      "first_divergence_rate": 0.0,
+      "first_divergence_type_counts": {},
+      "no_candidate_after_an_earlier_divergence": 0,
+      "no_candidate_safe_termination_episodes": 2,
+      "placement_binding_counts_selected": {
+        "second_object->buffer": 7,
+        "second_object->container": 16,
+        "target->buffer": 40
+      },
+      "reference_unavailable_decision_share": 0.15862068965517243,
+      "repeated_action_episode_rate": 0.09375,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    },
+    "B_PLAN": {
+      "destroyed_completed_goal_episode_rate": 0.0,
+      "episodes": 32,
+      "episodes_with_first_divergence": 0,
+      "failure_categories": {
+        "OBSERVATION_LOSS_LIMITED_NO_CANDIDATE_WITHOUT_DIVERGENCE": 6
+      },
+      "failure_reasons": {
+        "NO_CANDIDATE_SAFE_TERMINATION": 6
+      },
+      "failures": 6,
+      "first_divergence_index_counts": {},
+      "first_divergence_rate": 0.0,
+      "first_divergence_type_counts": {},
+      "no_candidate_after_an_earlier_divergence": 0,
+      "no_candidate_safe_termination_episodes": 6,
+      "placement_binding_counts_selected": {
+        "second_object->buffer": 7,
+        "second_object->container": 16,
+        "target->buffer": 22
+      },
+      "reference_unavailable_decision_share": 0.0,
+      "repeated_action_episode_rate": 0.0,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    },
+    "E_s0": {
+      "destroyed_completed_goal_episode_rate": 0.25,
+      "episodes": 32,
+      "episodes_with_first_divergence": 32,
+      "failure_categories": {
+        "DESTROYED_A_COMPLETED_GOAL": 8,
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL": 24
+      },
+      "failure_reasons": {
+        "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 24,
+        "NO_CANDIDATE_SAFE_TERMINATION": 8
+      },
+      "failures": 32,
+      "first_divergence_index_counts": {
+        "0": 16,
+        "1": 8,
+        "2": 8
+      },
+      "first_divergence_rate": 1.0,
+      "first_divergence_type_counts": {
+        "PICK_NOT_OPTIMAL": 32
+      },
+      "no_candidate_after_an_earlier_divergence": 8,
+      "no_candidate_safe_termination_episodes": 8,
+      "placement_binding_counts_selected": {
+        "second_object->buffer": 192,
+        "target->container": 7
+      },
+      "reference_unavailable_decision_share": 0.21939953810623555,
+      "repeated_action_episode_rate": 0.96875,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    },
+    "NC_s0": {
+      "destroyed_completed_goal_episode_rate": 0.25,
+      "episodes": 32,
+      "episodes_with_first_divergence": 24,
+      "failure_categories": {
+        "DESTROYED_A_COMPLETED_GOAL": 8,
+        "FIRST_DIVERGENCE_AFTER_A_COMPLETED_GOAL": 8,
+        "FIRST_DIVERGENCE_BEFORE_ANY_GOAL": 8
+      },
+      "failure_reasons": {
+        "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 16,
+        "NO_CANDIDATE_SAFE_TERMINATION": 8
+      },
+      "failures": 24,
+      "first_divergence_index_counts": {
+        "0": 8,
+        "2": 8,
+        "3": 8
+      },
+      "first_divergence_rate": 0.75,
+      "first_divergence_type_counts": {
+        "PICK_NOT_OPTIMAL": 24
+      },
+      "no_candidate_after_an_earlier_divergence": 8,
+      "no_candidate_safe_termination_episodes": 8,
+      "placement_binding_counts_selected": {
+        "second_object->buffer": 128,
+        "second_object->container": 16
+      },
+      "reference_unavailable_decision_share": 0.1076923076923077,
+      "repeated_action_episode_rate": 0.75,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    },
+    "QMARK_s0": {
+      "destroyed_completed_goal_episode_rate": 0.125,
+      "episodes": 32,
+      "episodes_with_first_divergence": 0,
+      "failure_categories": {
+        "DESTROYED_A_COMPLETED_GOAL": 4,
+        "OBSERVATION_LOSS_LIMITED_NO_CANDIDATE_WITHOUT_DIVERGENCE": 1
+      },
+      "failure_reasons": {
+        "INSUFFICIENT_REMAINING_FOR_CONTROL_CYCLE": 4,
+        "NO_CANDIDATE_SAFE_TERMINATION": 1
+      },
+      "failures": 5,
+      "first_divergence_index_counts": {},
+      "first_divergence_rate": 0.0,
+      "first_divergence_type_counts": {},
+      "no_candidate_after_an_earlier_divergence": 0,
+      "no_candidate_safe_termination_episodes": 1,
+      "placement_binding_counts_selected": {
+        "second_object->buffer": 32,
+        "second_object->container": 16,
+        "target->buffer": 23
+      },
+      "reference_unavailable_decision_share": 0.1875,
+      "repeated_action_episode_rate": 0.125,
+      "training_default_binding_error_episode_rate": 0.0,
+      "training_default_binding_error_episodes": 0
+    }
+  },
+  "single_vs_dual_goal": {
+    "ABS_s0": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.875,
+      "IN_S_minus_IN_S+BUF_T": 0.0,
+      "cell_rates": {
+        "BUF_T": 0.875,
+        "BUF_T+BUF_S": 0.0,
+        "IN_S": 1.0,
+        "IN_S+BUF_T": 1.0
+      }
+    },
+    "B2_s0": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.375,
+      "IN_S_minus_IN_S+BUF_T": 0.0,
+      "cell_rates": {
+        "BUF_T": 0.875,
+        "BUF_T+BUF_S": 0.5,
+        "IN_S": 1.0,
+        "IN_S+BUF_T": 1.0
+      }
+    },
+    "B_PLAN": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.5,
+      "IN_S_minus_IN_S+BUF_T": 0.0,
+      "cell_rates": {
+        "BUF_T": 0.875,
+        "BUF_T+BUF_S": 0.375,
+        "IN_S": 1.0,
+        "IN_S+BUF_T": 1.0
+      }
+    },
+    "E_s0": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.0,
+      "IN_S_minus_IN_S+BUF_T": 0.0,
+      "cell_rates": {
+        "BUF_T": 0.0,
+        "BUF_T+BUF_S": 0.0,
+        "IN_S": 0.0,
+        "IN_S+BUF_T": 0.0
+      }
+    },
+    "NC_s0": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.0,
+      "IN_S_minus_IN_S+BUF_T": 1.0,
+      "cell_rates": {
+        "BUF_T": 0.0,
+        "BUF_T+BUF_S": 0.0,
+        "IN_S": 1.0,
+        "IN_S+BUF_T": 0.0
+      }
+    },
+    "QMARK_s0": {
+      "BUF_T_minus_BUF_T+BUF_S": 0.375,
+      "IN_S_minus_IN_S+BUF_T": 0.0,
+      "cell_rates": {
+        "BUF_T": 0.875,
+        "BUF_T+BUF_S": 0.5,
+        "IN_S": 1.0,
+        "IN_S+BUF_T": 1.0
+      }
+    }
+  }
+}
