@@ -1,0 +1,118 @@
+{
+  "authorization_text": "User authorization (chat, 2026-10-05): \"\u6279\u51c6\u6267\u884c\uff1aCP-DISR-TB-STRUCT-GEN-V1 \u2014 Structural Generalization of Action-Semantics Representations\".\nScope as approved: 12 runs (+E, B2, ABS, NC x seeds 0/1/2) on the frozen structural-generalization suite, only after training_release.json PASS; frozen Tcap/Ncap/PPO/reward/evaluator;\ndev checkpoints N=0/4096/8192/final; struct-gen test evaluated post hoc on final checkpoints only; no VLM/prior, no T_P, no new seeds, no new representation, no budget change.\nAfter the 12 runs and the comparison: STOP and report.\n",
+  "authorization_text_sha256": "5c3ba55575fc26a4addbf8629beb2bc3d17e1c3494ced7c8d9fe72e64f81742b",
+  "caps": {
+    "max_concurrent_workers": 6,
+    "ncap": 16384,
+    "provider": 0,
+    "rl_attempts": 12,
+    "tcap": 68812.79999996186,
+    "tp_training": 0
+  },
+  "card": "CP-DISR-TB-STRUCT-GEN-V1",
+  "not_authorized": [
+    "seed 3+",
+    "new representation",
+    "VLM / prior",
+    "T_P",
+    "Family B",
+    "RoboCasa",
+    "test split used for any training or selection decision",
+    "change of Tcap/Ncap/PPO/reward",
+    "retry or replacement of a started attempt",
+    "a case, depth level or binding dropped or selected after seeing results"
+  ],
+  "plan_table": {
+    "R-TB-SG-ABS-0": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 3,
+      "seed": 0
+    },
+    "R-TB-SG-ABS-1": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 7,
+      "seed": 1
+    },
+    "R-TB-SG-ABS-2": {
+      "family": "ABS",
+      "method": "B2-ABS",
+      "queue_order": 11,
+      "seed": 2
+    },
+    "R-TB-SG-B2-0": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 2,
+      "seed": 0
+    },
+    "R-TB-SG-B2-1": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 6,
+      "seed": 1
+    },
+    "R-TB-SG-B2-2": {
+      "family": "B2",
+      "method": "B2",
+      "queue_order": 10,
+      "seed": 2
+    },
+    "R-TB-SG-E-0": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 1,
+      "seed": 0
+    },
+    "R-TB-SG-E-1": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 5,
+      "seed": 1
+    },
+    "R-TB-SG-E-2": {
+      "family": "E",
+      "method": "B1-K+E",
+      "queue_order": 9,
+      "seed": 2
+    },
+    "R-TB-SG-NC-0": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 4,
+      "seed": 0
+    },
+    "R-TB-SG-NC-1": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 8,
+      "seed": 1
+    },
+    "R-TB-SG-NC-2": {
+      "family": "NC",
+      "method": "B1-K+NC",
+      "queue_order": 12,
+      "seed": 2
+    }
+  },
+  "prep_commit": "0fa123fd200fa7aa90f543aed63a54ff80c5faf3",
+  "queue": [
+    "R-TB-SG-E-0",
+    "R-TB-SG-B2-0",
+    "R-TB-SG-ABS-0",
+    "R-TB-SG-NC-0",
+    "R-TB-SG-E-1",
+    "R-TB-SG-B2-1",
+    "R-TB-SG-ABS-1",
+    "R-TB-SG-NC-1",
+    "R-TB-SG-E-2",
+    "R-TB-SG-B2-2",
+    "R-TB-SG-ABS-2",
+    "R-TB-SG-NC-2"
+  ],
+  "registered": "2026-10-04T16:11:35Z",
+  "release_sha256": "fb48e1ada8dd28971eca63ceb0b5677fdf8070246b26f3a3a9959ff2ddf3cc64",
+  "representation_controls_result_commit": "4d0c426f67dfa1ce23247f89879c0b4952367d53",
+  "seed_balance_result_commit": "b602dfd1bc6f1241ebed1a474d51e6f6875d52a2"
+}
