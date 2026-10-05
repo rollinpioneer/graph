@@ -1,0 +1,84 @@
+{
+  "b2": {
+    "by_module": {
+      "base": 129,
+      "candidate": 1152,
+      "contract": 164480,
+      "encoder": 430912,
+      "gru": 99072,
+      "observation": 6272,
+      "q_head": 82177,
+      "v_head": 65793
+    },
+    "computation": {
+      "encoder_forward_calls_current_state": 1,
+      "encoder_forward_calls_per_candidate": 2.0,
+      "encoder_forward_calls_total": 9,
+      "forward_seconds_cpu_median": 0.1490930998697877,
+      "graph_propagation_layers": 4,
+      "interaction_module_calls_per_candidate": {},
+      "interaction_module_calls_total": {},
+      "legal_candidates": 4,
+      "node_feature_embedding_calls_outside_encoder": 0,
+      "nominal_apply_calls_per_candidate": 1.0,
+      "nominal_apply_calls_total": 4
+    },
+    "effective_trainable_parameters": 849987
+  },
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "disclosure": "QMARK computes E(G(F,q=none)) once and E(G(F,q=a_i)) once per legal candidate (1 + K encoder forwards); B2 re-encodes the current state per candidate and the successor per candidate (1 + 2K). Same 4 relational-graph layers, candidate readout, GRU and heads. QMARK is not strictly equal-compute and is not claimed to be.",
+  "extra_parameters": 128,
+  "extra_parameters_pct_of_b2": 0.015059053844352913,
+  "implementation_flags": {
+    "facts_modified_by_query": false,
+    "four_views_path_used": false,
+    "logging_note": "the training / evaluation harness's candidate_struct logger calls four_views for a log field (nominal_patch_nonempty) for every method including QMARK; this is logging only and never reaches the policy (policy forward is traced under a nominal-apply trap in Q01)",
+    "new_parameter_tensors": [
+      "query_projection.weight (128 x 1)"
+    ],
+    "nominal_apply_called": false
+  },
+  "method": "B1-K+QMARK",
+  "old_methods_effective_parameters": {
+    "B1-K+E": 2695363,
+    "B1-K+NC": 884291,
+    "B2": 849987,
+    "B2-ABS": 849987
+  },
+  "old_methods_encoder_forward_calls_total_4_candidates": {
+    "B1-K+E": 1,
+    "B1-K+NC": 1,
+    "B2": 9,
+    "B2-ABS": 9
+  },
+  "qmark": {
+    "by_module": {
+      "base": 129,
+      "candidate": 1152,
+      "contract": 164480,
+      "encoder": 430912,
+      "gru": 99072,
+      "observation": 6272,
+      "q_head": 82177,
+      "query_projection": 128,
+      "v_head": 65793
+    },
+    "computation": {
+      "encoder_forward_calls_current_state": 1,
+      "encoder_forward_calls_per_candidate": 1.0,
+      "encoder_forward_calls_total": 5,
+      "forward_seconds_cpu_median": 0.08729820093140006,
+      "graph_propagation_layers": 4,
+      "interaction_module_calls_total": {
+        "query_projection": 4
+      },
+      "legal_candidates": 4,
+      "nominal_apply_calls_total": 0
+    },
+    "effective_trainable_parameters": 850115,
+    "new_modules": {
+      "query_projection": 128
+    },
+    "state_dict_trainable_parameters": 3539779
+  }
+}

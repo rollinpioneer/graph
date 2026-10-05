@@ -1,0 +1,737 @@
+{
+  "TRAINING_BINDING_EXECUTION_EXPOSURE": "RECOVERED",
+  "card": "CP-DISR-C1-MECH-CONFIRM-V1",
+  "definitions": {
+    "executed": "decisions where the policy selected the placement candidate",
+    "goal_episodes": "training episodes whose goal contains the binding (case cell from the train split)",
+    "last_decision_*": "executed as the last decision of an episode (no stored successor snapshot); episode_success = evaluator TASK_SUCCESS",
+    "legal_decisions": "decisions where the placement candidate was legal under the hard mask",
+    "normal_exit": "executed with controller exit NORMAL_TERMINATION",
+    "verified_effect_true": "normal exits whose next public snapshot has the binding's atom TRUE (decisions with a stored successor snapshot only)"
+  },
+  "note": "Execution of an unseen binding during training is not goal exposure: those goals were never rewarded as goals; the placement was reached as an action of a different goal.",
+  "per_method_totals": {
+    "ABS": {
+      "second_object->buffer": {
+        "executed": 7156,
+        "goal_episodes": 6736,
+        "last_decision_episode_success": 4086,
+        "last_decision_of_episode": 4086,
+        "legal_decisions": 7562,
+        "normal_exit": 7135,
+        "verified_effect_true": 3044,
+        "with_successor_snapshot": 3049
+      },
+      "second_object->container": {
+        "executed": 405,
+        "legal_decisions": 2785,
+        "normal_exit": 403,
+        "verified_effect_true": 402,
+        "with_successor_snapshot": 403
+      },
+      "target->buffer": {
+        "executed": 2231,
+        "last_decision_episode_success": 0,
+        "last_decision_of_episode": 3,
+        "legal_decisions": 8146,
+        "normal_exit": 2225,
+        "verified_effect_true": 2215,
+        "with_successor_snapshot": 2222
+      },
+      "target->container": {
+        "executed": 5915,
+        "goal_episodes": 6737,
+        "last_decision_episode_success": 4761,
+        "last_decision_of_episode": 4761,
+        "legal_decisions": 6406,
+        "normal_exit": 5907,
+        "verified_effect_true": 1145,
+        "with_successor_snapshot": 1146
+      }
+    },
+    "B2": {
+      "second_object->buffer": {
+        "executed": 7294,
+        "goal_episodes": 6877,
+        "last_decision_episode_success": 4858,
+        "last_decision_of_episode": 4858,
+        "legal_decisions": 7718,
+        "normal_exit": 7283,
+        "verified_effect_true": 2421,
+        "with_successor_snapshot": 2425
+      },
+      "second_object->container": {
+        "executed": 424,
+        "legal_decisions": 3164,
+        "normal_exit": 421,
+        "verified_effect_true": 418,
+        "with_successor_snapshot": 421
+      },
+      "target->buffer": {
+        "executed": 2185,
+        "last_decision_episode_success": 0,
+        "last_decision_of_episode": 2,
+        "legal_decisions": 8325,
+        "normal_exit": 2178,
+        "verified_effect_true": 2167,
+        "with_successor_snapshot": 2176
+      },
+      "target->container": {
+        "executed": 6139,
+        "goal_episodes": 6879,
+        "last_decision_episode_success": 4159,
+        "last_decision_of_episode": 4159,
+        "legal_decisions": 6554,
+        "normal_exit": 6131,
+        "verified_effect_true": 1971,
+        "with_successor_snapshot": 1972
+      }
+    },
+    "E": {
+      "second_object->buffer": {
+        "executed": 7598,
+        "goal_episodes": 5783,
+        "last_decision_episode_success": 2924,
+        "last_decision_of_episode": 2924,
+        "legal_decisions": 7898,
+        "normal_exit": 7574,
+        "verified_effect_true": 4640,
+        "with_successor_snapshot": 4650
+      },
+      "second_object->container": {
+        "executed": 300,
+        "legal_decisions": 1906,
+        "normal_exit": 297,
+        "verified_effect_true": 296,
+        "with_successor_snapshot": 297
+      },
+      "target->buffer": {
+        "executed": 3266,
+        "last_decision_episode_success": 0,
+        "last_decision_of_episode": 3,
+        "legal_decisions": 7931,
+        "normal_exit": 3214,
+        "verified_effect_true": 3195,
+        "with_successor_snapshot": 3211
+      },
+      "target->container": {
+        "executed": 4663,
+        "goal_episodes": 5785,
+        "last_decision_episode_success": 4220,
+        "last_decision_of_episode": 4220,
+        "legal_decisions": 4969,
+        "normal_exit": 4643,
+        "verified_effect_true": 421,
+        "with_successor_snapshot": 423
+      }
+    },
+    "NC": {
+      "second_object->buffer": {
+        "executed": 7496,
+        "goal_episodes": 5046,
+        "last_decision_episode_success": 2578,
+        "last_decision_of_episode": 2579,
+        "legal_decisions": 8175,
+        "normal_exit": 7455,
+        "verified_effect_true": 4868,
+        "with_successor_snapshot": 4876
+      },
+      "second_object->container": {
+        "executed": 679,
+        "legal_decisions": 4509,
+        "normal_exit": 674,
+        "verified_effect_true": 670,
+        "with_successor_snapshot": 674
+      },
+      "target->buffer": {
+        "executed": 4308,
+        "last_decision_episode_success": 0,
+        "last_decision_of_episode": 4,
+        "legal_decisions": 8244,
+        "normal_exit": 4283,
+        "verified_effect_true": 4264,
+        "with_successor_snapshot": 4279
+      },
+      "target->container": {
+        "executed": 3935,
+        "goal_episodes": 5047,
+        "last_decision_episode_success": 2815,
+        "last_decision_of_episode": 2817,
+        "legal_decisions": 4453,
+        "normal_exit": 3916,
+        "verified_effect_true": 1096,
+        "with_successor_snapshot": 1099
+      }
+    }
+  },
+  "per_run": {
+    "ABS-0": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2435,
+          "goal_episodes": 2292,
+          "last_decision_episode_success": 1266,
+          "last_decision_of_episode": 1266,
+          "legal_decisions": 2571,
+          "normal_exit": 2430,
+          "verified_effect_true": 1161,
+          "with_successor_snapshot": 1164
+        },
+        "second_object->container": {
+          "executed": 136,
+          "legal_decisions": 1103,
+          "normal_exit": 136,
+          "verified_effect_true": 136,
+          "with_successor_snapshot": 136
+        },
+        "target->buffer": {
+          "executed": 732,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2731,
+          "normal_exit": 730,
+          "verified_effect_true": 726,
+          "with_successor_snapshot": 729
+        },
+        "target->container": {
+          "executed": 1999,
+          "goal_episodes": 2292,
+          "last_decision_episode_success": 1721,
+          "last_decision_of_episode": 1721,
+          "legal_decisions": 2144,
+          "normal_exit": 1996,
+          "verified_effect_true": 275,
+          "with_successor_snapshot": 275
+        }
+      },
+      "decisions": 15250,
+      "episodes": 3438,
+      "verified_effect_recoverable": true
+    },
+    "ABS-1": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2358,
+          "goal_episodes": 2280,
+          "last_decision_episode_success": 1756,
+          "last_decision_of_episode": 1756,
+          "legal_decisions": 2501,
+          "normal_exit": 2350,
+          "verified_effect_true": 594,
+          "with_successor_snapshot": 594
+        },
+        "second_object->container": {
+          "executed": 143,
+          "legal_decisions": 1152,
+          "normal_exit": 143,
+          "verified_effect_true": 143,
+          "with_successor_snapshot": 143
+        },
+        "target->buffer": {
+          "executed": 691,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2762,
+          "normal_exit": 690,
+          "verified_effect_true": 687,
+          "with_successor_snapshot": 689
+        },
+        "target->container": {
+          "executed": 2071,
+          "goal_episodes": 2281,
+          "last_decision_episode_success": 1271,
+          "last_decision_of_episode": 1271,
+          "legal_decisions": 2204,
+          "normal_exit": 2068,
+          "verified_effect_true": 797,
+          "with_successor_snapshot": 797
+        }
+      },
+      "decisions": 14374,
+      "episodes": 3421,
+      "verified_effect_recoverable": true
+    },
+    "ABS-2": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2363,
+          "goal_episodes": 2164,
+          "last_decision_episode_success": 1064,
+          "last_decision_of_episode": 1064,
+          "legal_decisions": 2490,
+          "normal_exit": 2355,
+          "verified_effect_true": 1289,
+          "with_successor_snapshot": 1291
+        },
+        "second_object->container": {
+          "executed": 126,
+          "legal_decisions": 530,
+          "normal_exit": 124,
+          "verified_effect_true": 123,
+          "with_successor_snapshot": 124
+        },
+        "target->buffer": {
+          "executed": 808,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2653,
+          "normal_exit": 805,
+          "verified_effect_true": 802,
+          "with_successor_snapshot": 804
+        },
+        "target->container": {
+          "executed": 1845,
+          "goal_episodes": 2164,
+          "last_decision_episode_success": 1769,
+          "last_decision_of_episode": 1769,
+          "legal_decisions": 2058,
+          "normal_exit": 1843,
+          "verified_effect_true": 73,
+          "with_successor_snapshot": 74
+        }
+      },
+      "decisions": 14281,
+      "episodes": 3246,
+      "verified_effect_recoverable": true
+    },
+    "B2-0": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2429,
+          "goal_episodes": 2229,
+          "last_decision_episode_success": 1695,
+          "last_decision_of_episode": 1695,
+          "legal_decisions": 2630,
+          "normal_exit": 2422,
+          "verified_effect_true": 726,
+          "with_successor_snapshot": 727
+        },
+        "second_object->container": {
+          "executed": 201,
+          "legal_decisions": 1178,
+          "normal_exit": 201,
+          "verified_effect_true": 199,
+          "with_successor_snapshot": 201
+        },
+        "target->buffer": {
+          "executed": 681,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2650,
+          "normal_exit": 678,
+          "verified_effect_true": 669,
+          "with_successor_snapshot": 677
+        },
+        "target->container": {
+          "executed": 1968,
+          "goal_episodes": 2229,
+          "last_decision_episode_success": 1187,
+          "last_decision_of_episode": 1187,
+          "legal_decisions": 2101,
+          "normal_exit": 1967,
+          "verified_effect_true": 780,
+          "with_successor_snapshot": 780
+        }
+      },
+      "decisions": 14409,
+      "episodes": 3344,
+      "verified_effect_recoverable": true
+    },
+    "B2-1": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2309,
+          "goal_episodes": 2332,
+          "last_decision_episode_success": 1576,
+          "last_decision_of_episode": 1576,
+          "legal_decisions": 2437,
+          "normal_exit": 2308,
+          "verified_effect_true": 730,
+          "with_successor_snapshot": 732
+        },
+        "second_object->container": {
+          "executed": 128,
+          "legal_decisions": 924,
+          "normal_exit": 127,
+          "verified_effect_true": 127,
+          "with_successor_snapshot": 127
+        },
+        "target->buffer": {
+          "executed": 763,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2892,
+          "normal_exit": 761,
+          "verified_effect_true": 760,
+          "with_successor_snapshot": 760
+        },
+        "target->container": {
+          "executed": 2129,
+          "goal_episodes": 2333,
+          "last_decision_episode_success": 1466,
+          "last_decision_of_episode": 1466,
+          "legal_decisions": 2317,
+          "normal_exit": 2126,
+          "verified_effect_true": 659,
+          "with_successor_snapshot": 660
+        }
+      },
+      "decisions": 14384,
+      "episodes": 3499,
+      "verified_effect_recoverable": true
+    },
+    "B2-2": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2556,
+          "goal_episodes": 2316,
+          "last_decision_episode_success": 1587,
+          "last_decision_of_episode": 1587,
+          "legal_decisions": 2651,
+          "normal_exit": 2553,
+          "verified_effect_true": 965,
+          "with_successor_snapshot": 966
+        },
+        "second_object->container": {
+          "executed": 95,
+          "legal_decisions": 1062,
+          "normal_exit": 93,
+          "verified_effect_true": 92,
+          "with_successor_snapshot": 93
+        },
+        "target->buffer": {
+          "executed": 741,
+          "legal_decisions": 2783,
+          "normal_exit": 739,
+          "verified_effect_true": 738,
+          "with_successor_snapshot": 739
+        },
+        "target->container": {
+          "executed": 2042,
+          "goal_episodes": 2317,
+          "last_decision_episode_success": 1506,
+          "last_decision_of_episode": 1506,
+          "legal_decisions": 2136,
+          "normal_exit": 2038,
+          "verified_effect_true": 532,
+          "with_successor_snapshot": 532
+        }
+      },
+      "decisions": 14532,
+      "episodes": 3475,
+      "verified_effect_recoverable": true
+    },
+    "E-0": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2528,
+          "goal_episodes": 1886,
+          "last_decision_episode_success": 937,
+          "last_decision_of_episode": 937,
+          "legal_decisions": 2638,
+          "normal_exit": 2517,
+          "verified_effect_true": 1578,
+          "with_successor_snapshot": 1580
+        },
+        "second_object->container": {
+          "executed": 110,
+          "legal_decisions": 873,
+          "normal_exit": 110,
+          "verified_effect_true": 110,
+          "with_successor_snapshot": 110
+        },
+        "target->buffer": {
+          "executed": 1113,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 1,
+          "legal_decisions": 2624,
+          "normal_exit": 1096,
+          "verified_effect_true": 1087,
+          "with_successor_snapshot": 1095
+        },
+        "target->container": {
+          "executed": 1511,
+          "goal_episodes": 1887,
+          "last_decision_episode_success": 1367,
+          "last_decision_of_episode": 1367,
+          "legal_decisions": 1635,
+          "normal_exit": 1507,
+          "verified_effect_true": 139,
+          "with_successor_snapshot": 140
+        }
+      },
+      "decisions": 14491,
+      "episodes": 2830,
+      "verified_effect_recoverable": true
+    },
+    "E-1": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2613,
+          "goal_episodes": 2000,
+          "last_decision_episode_success": 1060,
+          "last_decision_of_episode": 1060,
+          "legal_decisions": 2707,
+          "normal_exit": 2611,
+          "verified_effect_true": 1545,
+          "with_successor_snapshot": 1551
+        },
+        "second_object->container": {
+          "executed": 94,
+          "legal_decisions": 592,
+          "normal_exit": 92,
+          "verified_effect_true": 92,
+          "with_successor_snapshot": 92
+        },
+        "target->buffer": {
+          "executed": 837,
+          "legal_decisions": 2505,
+          "normal_exit": 818,
+          "verified_effect_true": 814,
+          "with_successor_snapshot": 818
+        },
+        "target->container": {
+          "executed": 1668,
+          "goal_episodes": 2001,
+          "last_decision_episode_success": 1459,
+          "last_decision_of_episode": 1459,
+          "legal_decisions": 1768,
+          "normal_exit": 1661,
+          "verified_effect_true": 201,
+          "with_successor_snapshot": 202
+        }
+      },
+      "decisions": 14399,
+      "episodes": 3001,
+      "verified_effect_recoverable": true
+    },
+    "E-2": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2457,
+          "goal_episodes": 1897,
+          "last_decision_episode_success": 927,
+          "last_decision_of_episode": 927,
+          "legal_decisions": 2553,
+          "normal_exit": 2446,
+          "verified_effect_true": 1517,
+          "with_successor_snapshot": 1519
+        },
+        "second_object->container": {
+          "executed": 96,
+          "legal_decisions": 441,
+          "normal_exit": 95,
+          "verified_effect_true": 94,
+          "with_successor_snapshot": 95
+        },
+        "target->buffer": {
+          "executed": 1316,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 2,
+          "legal_decisions": 2802,
+          "normal_exit": 1300,
+          "verified_effect_true": 1294,
+          "with_successor_snapshot": 1298
+        },
+        "target->container": {
+          "executed": 1484,
+          "goal_episodes": 1897,
+          "last_decision_episode_success": 1394,
+          "last_decision_of_episode": 1394,
+          "legal_decisions": 1566,
+          "normal_exit": 1475,
+          "verified_effect_true": 81,
+          "with_successor_snapshot": 81
+        }
+      },
+      "decisions": 14591,
+      "episodes": 2846,
+      "verified_effect_recoverable": true
+    },
+    "NC-0": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2481,
+          "goal_episodes": 1635,
+          "last_decision_episode_success": 845,
+          "last_decision_of_episode": 845,
+          "legal_decisions": 2666,
+          "normal_exit": 2464,
+          "verified_effect_true": 1618,
+          "with_successor_snapshot": 1619
+        },
+        "second_object->container": {
+          "executed": 185,
+          "legal_decisions": 1565,
+          "normal_exit": 183,
+          "verified_effect_true": 182,
+          "with_successor_snapshot": 183
+        },
+        "target->buffer": {
+          "executed": 1413,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 2,
+          "legal_decisions": 2701,
+          "normal_exit": 1400,
+          "verified_effect_true": 1391,
+          "with_successor_snapshot": 1398
+        },
+        "target->container": {
+          "executed": 1288,
+          "goal_episodes": 1635,
+          "last_decision_episode_success": 915,
+          "last_decision_of_episode": 915,
+          "legal_decisions": 1520,
+          "normal_exit": 1281,
+          "verified_effect_true": 366,
+          "with_successor_snapshot": 366
+        }
+      },
+      "decisions": 14562,
+      "episodes": 2453,
+      "verified_effect_recoverable": true
+    },
+    "NC-1": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2575,
+          "goal_episodes": 1765,
+          "last_decision_episode_success": 915,
+          "last_decision_of_episode": 915,
+          "legal_decisions": 2815,
+          "normal_exit": 2562,
+          "verified_effect_true": 1645,
+          "with_successor_snapshot": 1647
+        },
+        "second_object->container": {
+          "executed": 240,
+          "legal_decisions": 1621,
+          "normal_exit": 240,
+          "verified_effect_true": 240,
+          "with_successor_snapshot": 240
+        },
+        "target->buffer": {
+          "executed": 1342,
+          "last_decision_episode_success": 0,
+          "last_decision_of_episode": 2,
+          "legal_decisions": 2796,
+          "normal_exit": 1337,
+          "verified_effect_true": 1332,
+          "with_successor_snapshot": 1335
+        },
+        "target->container": {
+          "executed": 1454,
+          "goal_episodes": 1765,
+          "last_decision_episode_success": 1029,
+          "last_decision_of_episode": 1031,
+          "legal_decisions": 1595,
+          "normal_exit": 1450,
+          "verified_effect_true": 418,
+          "with_successor_snapshot": 419
+        }
+      },
+      "decisions": 14964,
+      "episodes": 2648,
+      "verified_effect_recoverable": true
+    },
+    "NC-2": {
+      "bindings": {
+        "second_object->buffer": {
+          "executed": 2440,
+          "goal_episodes": 1646,
+          "last_decision_episode_success": 818,
+          "last_decision_of_episode": 819,
+          "legal_decisions": 2694,
+          "normal_exit": 2429,
+          "verified_effect_true": 1605,
+          "with_successor_snapshot": 1610
+        },
+        "second_object->container": {
+          "executed": 254,
+          "legal_decisions": 1323,
+          "normal_exit": 251,
+          "verified_effect_true": 248,
+          "with_successor_snapshot": 251
+        },
+        "target->buffer": {
+          "executed": 1553,
+          "legal_decisions": 2747,
+          "normal_exit": 1546,
+          "verified_effect_true": 1541,
+          "with_successor_snapshot": 1546
+        },
+        "target->container": {
+          "executed": 1193,
+          "goal_episodes": 1647,
+          "last_decision_episode_success": 871,
+          "last_decision_of_episode": 871,
+          "legal_decisions": 1338,
+          "normal_exit": 1185,
+          "verified_effect_true": 312,
+          "with_successor_snapshot": 314
+        }
+      },
+      "decisions": 14632,
+      "episodes": 2470,
+      "verified_effect_recoverable": true
+    }
+  },
+  "train_bindings": [
+    "target->container",
+    "second_object->buffer"
+  ],
+  "unseen_binding_executions_per_run": {
+    "ABS-0": {
+      "second_object->container": 136,
+      "target->buffer": 732
+    },
+    "ABS-1": {
+      "second_object->container": 143,
+      "target->buffer": 691
+    },
+    "ABS-2": {
+      "second_object->container": 126,
+      "target->buffer": 808
+    },
+    "B2-0": {
+      "second_object->container": 201,
+      "target->buffer": 681
+    },
+    "B2-1": {
+      "second_object->container": 128,
+      "target->buffer": 763
+    },
+    "B2-2": {
+      "second_object->container": 95,
+      "target->buffer": 741
+    },
+    "E-0": {
+      "second_object->container": 110,
+      "target->buffer": 1113
+    },
+    "E-1": {
+      "second_object->container": 94,
+      "target->buffer": 837
+    },
+    "E-2": {
+      "second_object->container": 96,
+      "target->buffer": 1316
+    },
+    "NC-0": {
+      "second_object->container": 185,
+      "target->buffer": 1413
+    },
+    "NC-1": {
+      "second_object->container": 240,
+      "target->buffer": 1342
+    },
+    "NC-2": {
+      "second_object->container": 254,
+      "target->buffer": 1553
+    }
+  },
+  "unseen_test_bindings": [
+    "second_object->container",
+    "target->buffer"
+  ]
+}
