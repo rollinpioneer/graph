@@ -1,0 +1,212 @@
+{
+ "aggregation_rounds": 2,
+ "amendment": "CP-DISR-C1-BW-IMITATION-A02",
+ "authorized_training_runs": 3,
+ "base_commit": "72c0fd2cdc4394dcdee3b5bd6bba210060535d57",
+ "branch": "codex/cp-disr-c1-blocksworld-main-v1",
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "d0_identity": {
+  "cycle_containing_trajectories": 0,
+  "decisions": 810,
+  "decisions_with_multiple_optimal_actions": 43,
+  "max_trajectory_length": 12,
+  "mean_optimal_set_size": 1.0604938271604938,
+  "mean_trajectory_length": 5.625,
+  "planner_label_coverage": 1.0,
+  "sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+  "source_counts": {
+   "expert": 144
+  },
+  "trajectories": 144,
+  "unique_goal_state_pairs": 810
+ },
+ "d0_sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+ "decision_chunk": 256,
+ "formal_eval_condition": "ALL_THREE_PASS_IMITATION_ID_GATE",
+ "freeze_commit": "490a3b11d49f6155baf2a6b6c430edac6609d2af",
+ "frozen_modules": [
+  "v_head",
+  "q_head",
+  "prior",
+  "set_encoder",
+  "b0_fuse",
+  "effect_readout",
+  "effect_fuse",
+  "cat_proj"
+ ],
+ "half_life": 6.0,
+ "id_gate": {
+  "decision_perfect_min": 33,
+  "hard_fail": 0,
+  "n_dev": 36,
+  "nan": 0,
+  "success_min": 33
+ },
+ "init": "FROM_SCRATCH",
+ "loss": "NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET",
+ "optimizer": {
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "eps": 1e-08,
+  "grad_clip": 0.5,
+  "lr": 0.0003,
+  "trajectory_batch_size": 32,
+  "weight_decay": 0.0
+ },
+ "ppo_checkpoints_loaded": false,
+ "ppo_state_preserved": "PPO_ID_GATE_FAIL",
+ "reused_files": {
+  "configs/splits/c1_bw_a0_iso_v1.json": {
+   "sha256": "c15346690583b700766e1adb73c46580d83439506972ddd09b7773637dd168f6",
+   "sha256_at_freeze_commit": "c15346690583b700766e1adb73c46580d83439506972ddd09b7773637dd168f6",
+   "unchanged_since_freeze": true
+  },
+  "configs/splits/c1_bw_a1_color_reverse_v1.json": {
+   "sha256": "4e31998725be0c81d6e7f9306beaf4c2b7a7629e7400482f4f18541b1a9c1d96",
+   "sha256_at_freeze_commit": "4e31998725be0c81d6e7f9306beaf4c2b7a7629e7400482f4f18541b1a9c1d96",
+   "unchanged_since_freeze": true
+  },
+  "configs/splits/c1_bw_a2_noniso_v1.json": {
+   "sha256": "1207d455afaa7b8c5b8e4d2f62d5b49dbf2c29e07a944ef85a543396b4a7a349",
+   "sha256_at_freeze_commit": "1207d455afaa7b8c5b8e4d2f62d5b49dbf2c29e07a944ef85a543396b4a7a349",
+   "unchanged_since_freeze": true
+  },
+  "configs/splits/c1_bw_b_scale_v1.json": {
+   "sha256": "9dcf596cc72d9102182f71963edb90d4fd576bd3a9063be40309be0a0ea89220",
+   "sha256_at_freeze_commit": "9dcf596cc72d9102182f71963edb90d4fd576bd3a9063be40309be0a0ea89220",
+   "unchanged_since_freeze": true
+  },
+  "configs/splits/c1_bw_train_dev_v1.json": {
+   "sha256": "64225ed50d69aa8c42d9ce36470bdb4705b792f464e97a88b23b2ba8cdc0b913",
+   "sha256_at_freeze_commit": "64225ed50d69aa8c42d9ce36470bdb4705b792f464e97a88b23b2ba8cdc0b913",
+   "unchanged_since_freeze": true
+  },
+  "scripts/c1_bw_build.py": {
+   "sha256": "d4c47a627741f00838780bf9d4ef0bb1f27625d770e214e58d43ac0120d7c1ee",
+   "sha256_at_freeze_commit": "d4c47a627741f00838780bf9d4ef0bb1f27625d770e214e58d43ac0120d7c1ee",
+   "unchanged_since_freeze": true
+  },
+  "scripts/c1_bw_eval.py": {
+   "sha256": "fe29f35ef3835a0fe6eebf9a9646bc0a430cc6d7cd143e5aafcb4fed04b2418d",
+   "sha256_at_freeze_commit": "fe29f35ef3835a0fe6eebf9a9646bc0a430cc6d7cd143e5aafcb4fed04b2418d",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/canonical.py": {
+   "sha256": "95c6e491cdbab40a9a4172e9051374a464b7028708f89fa1cc0af37ec0b7e59c",
+   "sha256_at_freeze_commit": "95c6e491cdbab40a9a4172e9051374a464b7028708f89fa1cc0af37ec0b7e59c",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/classification.py": {
+   "sha256": "4c40f4df87cfadb9ac46d451356bf92ac730c74ae39f580e7ef3302218237056",
+   "sha256_at_freeze_commit": "4c40f4df87cfadb9ac46d451356bf92ac730c74ae39f580e7ef3302218237056",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/contracts.py": {
+   "sha256": "79562d3c204fbb66bcccbaca4c3362cb3349a271ab6c2fc43dad33c7340673b7",
+   "sha256_at_freeze_commit": "79562d3c204fbb66bcccbaca4c3362cb3349a271ab6c2fc43dad33c7340673b7",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/environment.py": {
+   "sha256": "a99e60668b31246d2755a6358f0bf9f8fa139b1b6656b83fa5c84f7bbc9e4aec",
+   "sha256_at_freeze_commit": "a99e60668b31246d2755a6358f0bf9f8fa139b1b6656b83fa5c84f7bbc9e4aec",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/generator.py": {
+   "sha256": "8e23f8491b4c19d35f97a211ff765a510af2763821b5f26796c46054e01bf382",
+   "sha256_at_freeze_commit": "8e23f8491b4c19d35f97a211ff765a510af2763821b5f26796c46054e01bf382",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/launch.py": {
+   "sha256": "58ff20a4de71b41943a7de6aee15d7d8ecd0079cc6250cd976e30532fb647138",
+   "sha256_at_freeze_commit": "58ff20a4de71b41943a7de6aee15d7d8ecd0079cc6250cd976e30532fb647138",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/metrics.py": {
+   "sha256": "cd26fea264675b45b9f2037d22b66c8c1e11402931ce1195b697ba5fa23be345",
+   "sha256_at_freeze_commit": "cd26fea264675b45b9f2037d22b66c8c1e11402931ce1195b697ba5fa23be345",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/planner.py": {
+   "sha256": "2d62326cf91ce9d72d4c9268e0e7ccf6244129ce04f46a70a0d0921cfd1a438e",
+   "sha256_at_freeze_commit": "2d62326cf91ce9d72d4c9268e0e7ccf6244129ce04f46a70a0d0921cfd1a438e",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/splits.py": {
+   "sha256": "fef9bc210718c6589386141479bf85225c4152c6acf1491750482d4999df4e94",
+   "sha256_at_freeze_commit": "fef9bc210718c6589386141479bf85225c4152c6acf1491750482d4999df4e94",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/state.py": {
+   "sha256": "a6d7ba370fa5bf2f75e069a6f0f0a9e024c094e634a573fa4e5da0c2204e3564",
+   "sha256_at_freeze_commit": "a6d7ba370fa5bf2f75e069a6f0f0a9e024c094e634a573fa4e5da0c2204e3564",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/blocksworld/train.py": {
+   "sha256": "b367d5d810ca3884ce3af5b5ad56e48a4ba1460246126c69242a31d0f6830718",
+   "sha256_at_freeze_commit": "b367d5d810ca3884ce3af5b5ad56e48a4ba1460246126c69242a31d0f6830718",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/c1_blocksworld_policies.py": {
+   "sha256": "f57c32be09651276d0719996dcaa060869dcf8f6e8183d37b8e497dc4ac4aad8",
+   "sha256_at_freeze_commit": "f57c32be09651276d0719996dcaa060869dcf8f6e8183d37b8e497dc4ac4aad8",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/c1_qmark_policy.py": {
+   "sha256": "1e17968c4a9776cbca983833926e4cb23dc45b10c9a60758cddb6e10bbf4f1fc",
+   "sha256_at_freeze_commit": "1e17968c4a9776cbca983833926e4cb23dc45b10c9a60758cddb6e10bbf4f1fc",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/neural.py": {
+   "sha256": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+   "sha256_at_freeze_commit": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/rl.py": {
+   "sha256": "6aa5df99bc12d73d25d99e58ae95814e741db9ee6a78903b0f45ee0593fc6d6f",
+   "sha256_at_freeze_commit": "6aa5df99bc12d73d25d99e58ae95814e741db9ee6a78903b0f45ee0593fc6d6f",
+   "unchanged_since_freeze": true
+  },
+  "src/cp_disr/torch_rl.py": {
+   "sha256": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+   "sha256_at_freeze_commit": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
+   "unchanged_since_freeze": true
+  }
+ },
+ "runs": {
+  "R-C1-BW-IL-ASNET-0": "ASNET-READOUT",
+  "R-C1-BW-IL-B2-0": "B2-CACHED",
+  "R-C1-BW-IL-QMARK-0": "B1-K+QMARK-BW"
+ },
+ "seed": 0,
+ "stages": [
+  {
+   "dataset": "D0",
+   "epochs": 100,
+   "name": "stage0",
+   "shuffle_seed": 0
+  },
+  {
+   "dataset": "D1",
+   "epochs": 50,
+   "name": "round1",
+   "shuffle_seed": 1
+  },
+  {
+   "dataset": "D2",
+   "epochs": 50,
+   "name": "round2",
+   "shuffle_seed": 2
+  }
+ ],
+ "trainable_modules": [
+  "encoder",
+  "observation",
+  "gru",
+  "candidate",
+  "contract",
+  "base",
+  "query_projection"
+ ]
+}
