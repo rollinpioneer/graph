@@ -122,7 +122,8 @@ def source_identity(root):
 def check_identity(root, run_root):
     """Evaluation may start only on a clean tracked tree whose frozen sources, new sources and (read-only) old result trees equal the registered identity."""
     root, run_root = Path(root), Path(run_root)
-    if git(root, "status", "--porcelain", "--untracked-files=no"):
+    own = str(run_root.resolve().relative_to(Path(root).resolve()))                  # the A03 run root's own (registered) files change while the evaluation runs
+    if git(root, "status", "--porcelain", "--untracked-files=no", "--", ".", ":(exclude)%s" % own):
         raise A03Error("tracked tree is dirty")
     try:
         git(root, "merge-base", "--is-ancestor", BASE_COMMIT, "HEAD")
