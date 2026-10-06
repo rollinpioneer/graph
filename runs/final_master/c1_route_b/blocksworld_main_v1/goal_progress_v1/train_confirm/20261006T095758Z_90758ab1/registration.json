@@ -1,0 +1,173 @@
+{
+ "authorization_text": "C1 audit-based goal-progress runbook v1 (docs/c1_blocksworld/CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md): user message 2026-10-06 \"@CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md \u6267\u884c\" -> conditional whole-runbook execution; phase 1 state GOAL_PROGRESS_READY (commit fe611a4a5) releases phase 2: at most 3 trainings M0/M1/M2, independent Confirm112, no score gate.\n",
+ "authorization_text_sha256": "f7a9aff7b61438d9195a6d195b3a003c343167408ade4ae32436db96a5ec6357",
+ "base_commit": "5140f16144d5361408cd5ddc35d18310a5ce9d71",
+ "branch": "codex/cp-disr-c1-bw-goal-progress-v1",
+ "card": "C1-BW-GOAL-PROGRESS-V1",
+ "conditions": [
+  "M0",
+  "M1",
+  "M2",
+  "C0",
+  "C3",
+  "G1"
+ ],
+ "confirm": {
+  "core_slices": [
+   "C5-2",
+   "C5-23",
+   "S6-2",
+   "S7-2",
+   "S8-2",
+   "K6-3"
+  ],
+  "counts": 112,
+  "path": "configs/splits/c1_bw_gp_confirm112_v1.json",
+  "sha256": "faacda10d5e43742f35d6a2dff1deff74733115948da655f49b784e913e6b03f",
+  "slices": {
+   "A1-4": {
+    "built": 8,
+    "candidates_tried": 11,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "A1-5": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "C5-1": {
+    "built": 8,
+    "candidates_tried": 10,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "C5-2": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "C5-23": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "H6-13": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "H6-14": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "H6-23": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "H6-24": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "K6-1": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "K6-3": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "S6-2": {
+    "built": 8,
+    "candidates_tried": 9,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "S7-2": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   },
+   "S8-2": {
+    "built": 8,
+    "candidates_tried": 8,
+    "planned": 8,
+    "shortfall": 0
+   }
+  }
+ },
+ "confirm_episodes_planned": 672,
+ "dev36_models": [
+  "M0",
+  "M1",
+  "M2"
+ ],
+ "hyperparameters": {
+  "additional_collection_rounds_after_freeze": 0,
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "decision_chunk": 192,
+  "entropy_bonus": 0,
+  "epochs": 100,
+  "eps": 1e-08,
+  "existing_module_lr": 0.0001,
+  "grad_clip": 0.5,
+  "init_checkpoint": "A02_B2_final",
+  "new_head_init_seed": 20261006,
+  "new_head_lr": 0.0003,
+  "optimizer": "Adam",
+  "optimizer_reset": true,
+  "rank_weight": 1.0,
+  "shuffle_seed": 0,
+  "trajectory_batch_size": 32,
+  "weight_decay": 0,
+  "x_dim": 386
+ },
+ "label_rules": {
+  "ADVANTAGE_D_core_M2_minus_M1": 0.1,
+  "CLOSE_D_core": 0.1,
+  "min_core_slices_M2_ge_M1": 4,
+  "note": "section-13 labels are computed only after all six conditions are complete; 'close' is registered as a D_core gap < 0.10",
+  "protected_A1_max_success_deficit_vs_C0": 1
+ },
+ "losses": {
+  "M0": "L_IL = -log sum_{a in A*} pi(a|F,G) (original B2 policy, GRU path kept)",
+  "M1_M2": "L_IL over softmax(score) + L_rank (mean pairwise softplus over strictly ordered legal candidates per decision)"
+ },
+ "no_score_gate": true,
+ "phase1_registration_commit": "8c8c32e1c9bc1ebbce596bcd9e3d7b340be2c8eb",
+ "phase1_result_commit": "fe611a4a5e62eb8e59a8a22084cb48062062b40e",
+ "phase1_state": "GOAL_PROGRESS_READY",
+ "planner_references_planned": 112,
+ "registered": "2026-10-06T09:57:58Z",
+ "runbook": "docs/c1_blocksworld/CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md",
+ "runbook_sha256": "90758ab1ac336c72eb1ce19988dce09d868933a9d9d1e5c8be39db1bf7c3a765",
+ "runs": {
+  "M0": "R-C1-GP-M0-0",
+  "M1": "R-C1-GP-M1-0",
+  "M2": "R-C1-GP-M2-0"
+ },
+ "training": {
+  "d_train_sha256": "2b3380200d8aaf719871a4b2ae446bcfb1ed992dfb821cd6fb2f0bbb12d31d69",
+  "dataset": "D_train.json (A02 D2 + C0/C3 train144 rollouts of the A02 B2, collected once)",
+  "rank_labels_sha256": "24b5e335a727ce8328947451a55f1b6bdb5c686a0715a74f8b17b77f8da90064"
+ },
+ "training_run_cap": 3
+}
