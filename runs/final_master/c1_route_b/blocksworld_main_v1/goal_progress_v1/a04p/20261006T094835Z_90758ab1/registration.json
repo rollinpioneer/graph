@@ -1,0 +1,90 @@
+{
+ "authorization_text": "C1 audit-based goal-progress runbook v1 (docs/c1_blocksworld/CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md): user message 2026-10-06 \"@CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md \u6267\u884c\" -> whole runbook authorized as a conditional execution: phase 1 (A04P, 0 training), phase 2 (<=3 trainings) only if the registered section-8 state is GOAL_PROGRESS_READY.\n",
+ "authorization_text_sha256": "1eea4c3bb09b9815059c1147f081b18e08913242c8a21036099819f98f52eda6",
+ "base_commit": "5140f16144d5361408cd5ddc35d18310a5ce9d71",
+ "branch": "codex/cp-disr-c1-bw-goal-progress-v1",
+ "card": "C1-BW-A04P",
+ "controller_definitions": "runbook section 5 (C1 = A04 EDGE-RETRY count, C3 = visited-successor exclusion, G1 = strict superset of satisfied goal atoms)",
+ "controllers": [
+  "C0",
+  "C1",
+  "C3",
+  "G1"
+ ],
+ "decision_states": [
+  "GOAL_PROGRESS_READY",
+  "TIME_INPUT_FIRST",
+  "PROBE_INCONCLUSIVE",
+  "INSUFFICIENT_PROBE"
+ ],
+ "low_headroom_rule": "C3 or G1 >= 90% success on every core pilot slice (P-A2, P-B6) -> LOW_HEADROOM_FOR_SUCCESS_GAIN",
+ "phase1_new_training_runs": 0,
+ "pilot": {
+  "counts": 80,
+  "path": "configs/splits/c1_bw_a04p_pilot80_v1.json",
+  "sha256": "d564aac4f63e76dea0b2bfe86c3c69b9322ab6bfcd875fd2d0da2f4197a71202",
+  "slices": {
+   "P-A1-4": {
+    "attempts": 10,
+    "built": 8,
+    "planned": 8
+   },
+   "P-A1-5": {
+    "attempts": 8,
+    "built": 8,
+    "planned": 8
+   },
+   "P-A2-4": {
+    "attempts": 10,
+    "built": 6,
+    "planned": 6
+   },
+   "P-A2-5a": {
+    "attempts": 6,
+    "built": 5,
+    "planned": 5
+   },
+   "P-A2-5b": {
+    "attempts": 5,
+    "built": 5,
+    "planned": 5
+   },
+   "P-B6": {
+    "attempts": 17,
+    "built": 16,
+    "planned": 16
+   },
+   "P-B7": {
+    "attempts": 16,
+    "built": 16,
+    "planned": 16
+   },
+   "P-B8": {
+    "attempts": 20,
+    "built": 16,
+    "planned": 16
+   }
+  }
+ },
+ "pilot_episodes_planned": 320,
+ "planner_references_planned": 80,
+ "probe": {
+  "flip_fraction_min": 0.25,
+  "margin_improved_fraction_min": 0.6,
+  "max_candidates": 70,
+  "median_margin_change_min": 1.0,
+  "min_valid_for_numeric_direction": 12,
+  "replay_tolerance": 1e-05,
+  "source": "B2 first non-optimal decisions of all A03 failures in A2 and B",
+  "tau_n_steps": 196,
+  "tau_reference": 0.25,
+  "tau_source": "median step_index/step_cap over A02 D0 expert steps that stack a held block onto its goal support"
+ },
+ "registered": "2026-10-06T09:48:35Z",
+ "runbook": "docs/c1_blocksworld/CP_DISR_C1_Audit_Based_Goal_Progress_Runbook_v1.md",
+ "runbook_sha256": "90758ab1ac336c72eb1ce19988dce09d868933a9d9d1e5c8be39db1bf7c3a765",
+ "test_exposure": {
+  "pilot80": "development evidence",
+  "probe_states": "A03 states already consumed; development diagnostic only, never training data"
+ }
+}
