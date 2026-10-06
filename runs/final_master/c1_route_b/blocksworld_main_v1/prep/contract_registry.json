@@ -1,0 +1,109 @@
+{
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "constraints": [
+  "x != y for STACK and UNSTACK",
+  "one block per support",
+  "one held block at most"
+ ],
+ "predicates": {
+  "Blue": [
+   "block"
+  ],
+  "Clear": [
+   "block"
+  ],
+  "HandEmpty": [],
+  "Holding": [
+   "block"
+  ],
+  "On": [
+   "block",
+   "block"
+  ],
+  "OnTable": [
+   "block"
+  ],
+  "Red": [
+   "block"
+  ]
+ },
+ "schemas": {
+  "PICK_UP": {
+   "add": [
+    "p:Holding:x"
+   ],
+   "arguments": [
+    "x"
+   ],
+   "delete": [
+    "p:OnTable:x",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "pre_pos": [
+    "p:OnTable:x",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "static_color_preconditions": "Red(x) or Blue(x) of every block argument, added at grounding (always TRUE)"
+  },
+  "PUT_DOWN": {
+   "add": [
+    "p:OnTable:x",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "arguments": [
+    "x"
+   ],
+   "delete": [
+    "p:Holding:x"
+   ],
+   "pre_pos": [
+    "p:Holding:x"
+   ],
+   "static_color_preconditions": "Red(x) or Blue(x) of every block argument, added at grounding (always TRUE)"
+  },
+  "STACK": {
+   "add": [
+    "p:On:x:y",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "arguments": [
+    "x",
+    "y"
+   ],
+   "delete": [
+    "p:Holding:x",
+    "p:Clear:y"
+   ],
+   "pre_pos": [
+    "p:Holding:x",
+    "p:Clear:y"
+   ],
+   "static_color_preconditions": "Red(x) or Blue(x) of every block argument, added at grounding (always TRUE)"
+  },
+  "UNSTACK": {
+   "add": [
+    "p:Holding:x",
+    "p:Clear:y"
+   ],
+   "arguments": [
+    "x",
+    "y"
+   ],
+   "delete": [
+    "p:On:x:y",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "pre_pos": [
+    "p:On:x:y",
+    "p:Clear:x",
+    "p:HandEmpty"
+   ],
+   "static_color_preconditions": "Red(x) or Blue(x) of every block argument, added at grounding (always TRUE)"
+  }
+ }
+}

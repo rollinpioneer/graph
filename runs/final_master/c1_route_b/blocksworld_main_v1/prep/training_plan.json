@@ -1,0 +1,62 @@
+{
+ "authorized_training_runs": 3,
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "formal_eval_order": [
+  "A0",
+  "A1",
+  "A2",
+  "B",
+  "planner"
+ ],
+ "formal_eval_policy": "deterministic argmax, final checkpoint, each model x case once",
+ "half_life_H": 6.0,
+ "id_gate": {
+  "hard_failure": 0,
+  "id_dev_decision_perfect_min": 33,
+  "id_dev_success_min": 33,
+  "nan": 0
+ },
+ "init": "FROM_SCRATCH",
+ "ncap": 131072,
+ "ppo": {
+  "Ncap": 131072,
+  "Tcap_wall_seconds": 28800,
+  "entropy_coef": 0.01,
+  "eval_points": [
+   0,
+   16384,
+   32768,
+   65536,
+   131072
+  ],
+  "grad_clip": 0.5,
+  "lambda_q": 0.1,
+  "lr": 0.0003,
+  "max_updates": 128,
+  "minibatch": 64,
+  "rollout_n": 1024,
+  "seed": 0,
+  "sequence_length": 16,
+  "update_epochs": 4,
+  "value_coef": 0.5
+ },
+ "queue": "all three in parallel, one GPU each; no shared optimizer; no restart; final checkpoint only",
+ "runs": {
+  "R-C1-BW-ASNET-0": {
+   "method": "ASNET-READOUT",
+   "paper_label": "ASNet-style readout",
+   "seed": 0
+  },
+  "R-C1-BW-B2-0": {
+   "method": "B2-CACHED",
+   "paper_label": "B2",
+   "seed": 0
+  },
+  "R-C1-BW-QMARK-0": {
+   "method": "B1-K+QMARK-BW",
+   "paper_label": "QMARK",
+   "seed": 0
+  }
+ },
+ "tcap_wall_seconds": 28800
+}

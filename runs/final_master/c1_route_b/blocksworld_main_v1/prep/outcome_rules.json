@@ -1,0 +1,65 @@
+{
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "frozen_before_any_training": true,
+ "interpretations": {
+  "LIMIT_NONE": "'no obvious common failure' is fixed as every method having D_core >= 0.70",
+  "coordination_type_first_divergence": "operational definition fixed before any result: a first divergence is of coordination type when (a) the diverging action itself destroys a satisfied goal atom, or (b) the episode contains a repeated (state, action) pair, or (c) the episode destroys a satisfied goal atom at any step (covers wrong goal order that undoes completed work)",
+  "pooling": "one seed per method; the unit of evidence is the case, with the caveat that a deterministic policy on one seed is not an independent-seed estimate"
+ },
+ "limitation_mainline": {
+  "LIMIT_COORDINATION": "a minimal new algorithm for goal preservation / ordering is allowed",
+  "LIMIT_MIXED": "failure sources differ or evidence is insufficient; do not widen the matrix",
+  "LIMIT_NONE": "no common failure; no new algorithm indicated by this card",
+  "LIMIT_TRAINING": "decide first whether to switch all methods to planner imitation; do not interpret OOD"
+ },
+ "mainline": {
+  "REP_CANDIDATE_CONDITIONING_NEEDED": "develop a unified candidate-conditioned relational computation; do not rush to choose between B2 and QMARK",
+  "REP_DIRECT_READOUT_SUFFICIENT": "do not package QMARK as a new algorithm; paper follows unified explanation, diagnostic protocol and conditional comparison",
+  "REP_MIXED": "do not widen the matrix; locate one minimal decidable question from the existing logs",
+  "REP_QUERY_ADVANTAGE": "query propagation as the main implementation candidate; tighten the difference to the ASNet-style readout",
+  "REP_SUCCESSOR_ADVANTAGE": "explicit successor as the algorithm mainline; study its extra role in multi-step composition"
+ },
+ "rules": {
+  "D_core": "mean of the A1 and A2 episode decision-perfect rates (all decisions are hop <= 4 by amendment A01)",
+  "LIMIT_COORDINATION": {
+   "D_each_method_below": 0.5,
+   "coordination_type_first_divergence_share_min": 0.6,
+   "slice": "A2 coordination_slice cases"
+  },
+  "LIMIT_MIXED": "otherwise",
+  "LIMIT_NONE": {
+   "min_D_core_over_methods_min": 0.7
+  },
+  "LIMIT_RECEPTIVE_FIELD": "REMOVED by amendment A01 (hop > 4 structurally empty): status NOT_TESTABLE_STRUCTURALLY_EMPTY",
+  "LIMIT_TRAINING": "ID gate failed (no OOD interpretation)",
+  "REP_CANDIDATE_CONDITIONING_NEEDED": {
+   "abs_D_core_B2_minus_QMARK_max": 0.1,
+   "min_D_core_B2_QMARK_minus_ASNET_min": 0.15
+  },
+  "REP_DIRECT_READOUT_SUFFICIENT": {
+   "D_core_ASNET_minus_max_other_min": -0.1,
+   "slice_behind_best_max": 0.15
+  },
+  "REP_MIXED": "none of the above",
+  "REP_QUERY_ADVANTAGE": {
+   "D_core_QMARK_minus_max_other_min": 0.15,
+   "each_slice_QMARK_lead_min": 0.1
+  },
+  "REP_SUCCESSOR_ADVANTAGE": {
+   "D_core_B2_minus_max_other_min": 0.15,
+   "each_slice_B2_lead_min": 0.1
+  },
+  "a0_gate": {
+   "decision_perfect_min": 0.9,
+   "else": "EQUIVARIANCE_OR_BINDING_GATE_FAIL"
+  },
+  "id_gate": {
+   "else": "PPO_ID_GATE_FAIL",
+   "hard_failure": 0,
+   "id_dev_decision_perfect_min": 33,
+   "id_dev_n": 36,
+   "id_dev_success_min": 33,
+   "nan": 0
+  }
+ }
+}

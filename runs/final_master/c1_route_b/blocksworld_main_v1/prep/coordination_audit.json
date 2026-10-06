@@ -1,0 +1,39 @@
+{
+ "a1_coordination_true": 3,
+ "a2": {
+  "coordination_false": 16,
+  "coordination_true": 16,
+  "length_mean_false": 9.125,
+  "length_mean_true": 9.25,
+  "n_blocks_counts": {
+   "4": 12,
+   "5": 20
+  },
+  "shape_counts": {
+   "(2, 2)": 12,
+   "(2, 2, 1)": 10,
+   "(3, 2)": 10
+  }
+ },
+ "b": {
+  "monotone_solution_exists": 24,
+  "n_blocks_counts": {
+   "6": 16,
+   "7": 16,
+   "8": 16
+  },
+  "optimal_length": {
+   "max": 22,
+   "min": 10
+  },
+  "requires_goal_destruction": 24
+ },
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "checks": {
+  "a2_16_true_16_false": true,
+  "length_means_within_one_step": true,
+  "requires_destruction_is_complement_of_monotone": true
+ },
+ "definition": "coordination_slice = hop<=4 AND planner solvable AND requires_goal_destruction (every optimal plan destroys a satisfied goal atom at least once; equivalently no monotone optimal plan exists)",
+ "verdict": "PASS"
+}

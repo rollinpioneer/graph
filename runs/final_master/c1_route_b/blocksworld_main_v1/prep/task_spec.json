@@ -1,0 +1,82 @@
+{
+ "amendment": {
+  "HOP_GT4_STATUS": "STRUCTURALLY_EMPTY",
+  "RECEPTIVE_FIELD_STATUS": "NOT_TESTABLE_STRUCTURALLY_EMPTY",
+  "authorized_training_runs": 3,
+  "id": "CP-DISR-C1-BW-HOP-CLOSEOUT-A01",
+  "removed": [
+   "hop quota",
+   "H5 experiment",
+   "LIMIT_RECEPTIVE_FIELD"
+  ],
+  "resume_from": "E0",
+  "status": "AMENDMENT_A01_ACCEPTED",
+  "unchanged": [
+   "production contract graph",
+   "candidate_goal_hops definition",
+   "HandEmpty node and every message edge"
+  ]
+ },
+ "base_branch": "codex/cp-disr-c1-mechanism-confirmation-v1",
+ "base_commit": "1f7b4f6cabd4c95ce0eff86f3b51e8aa6217312e",
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "environment": "pure symbolic, deterministic, fully observable, no UNKNOWN, no simulator / GPU render / provider",
+ "half_life_H": 6.0,
+ "ppo": {
+  "Ncap": 131072,
+  "Tcap_wall_seconds": 28800,
+  "entropy_coef": 0.01,
+  "eval_points": [
+   0,
+   16384,
+   32768,
+   65536,
+   131072
+  ],
+  "grad_clip": 0.5,
+  "lambda_q": 0.1,
+  "lr": 0.0003,
+  "max_updates": 128,
+  "minibatch": 64,
+  "rollout_n": 1024,
+  "seed": 0,
+  "sequence_length": 16,
+  "update_epochs": 4,
+  "value_coef": 0.5
+ },
+ "reward": "1.0 at first full goal, else 0.0; no intermediate shaping",
+ "runs": {
+  "R-C1-BW-ASNET-0": {
+   "method": "ASNET-READOUT",
+   "paper_label": "ASNet-style readout",
+   "seed": 0
+  },
+  "R-C1-BW-B2-0": {
+   "method": "B2-CACHED",
+   "paper_label": "B2",
+   "seed": 0
+  },
+  "R-C1-BW-QMARK-0": {
+   "method": "B1-K+QMARK-BW",
+   "paper_label": "QMARK",
+   "seed": 0
+  }
+ },
+ "split_files": {
+  "a0": "configs/splits/c1_bw_a0_iso_v1.json",
+  "a1": "configs/splits/c1_bw_a1_color_reverse_v1.json",
+  "a2": "configs/splits/c1_bw_a2_noniso_v1.json",
+  "b": "configs/splits/c1_bw_b_scale_v1.json",
+  "train_dev": "configs/splits/c1_bw_train_dev_v1.json"
+ },
+ "splits": {
+  "A0": 24,
+  "A1": 32,
+  "A2": 32,
+  "B": 48,
+  "dev": 36,
+  "train": 144
+ },
+ "step_cap": "2 * L* + 4",
+ "training_loader_opens_only": "configs/splits/c1_bw_train_dev_v1.json"
+}

@@ -1,0 +1,93 @@
+{
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "checks": {
+  "B2_equivalence": true,
+  "QMARK_equivalence": true,
+  "asnet_no_extra_parameters": true,
+  "encodings_1_plus_K_for_B2_and_QMARK_1_for_ASNET": true,
+  "qmark_extra_parameters_128": true
+ },
+ "disclosure": "ASNET-READOUT is an ASNet-style adapted readout on the same encoder and PPO; it is not a reproduction of the original ASNet system (no teacher imitation, no dedicated alternating layers, no heuristic features). Wall-clock / forward time are efficiency descriptors, not sample-efficiency evidence.",
+ "equivalence": {
+  "B2_CACHED_vs_original_B2_max_abs_diff_logits_value_q": 1.30385160446167e-08,
+  "B2_CACHED_vs_original_B2_max_abs_grad_diff": 5.960464477539063e-08,
+  "QMARK_batched_vs_frozen_unbatched_max_abs_diff": 1.4901161193847656e-08,
+  "states_tested": 12,
+  "tolerance": 1e-05
+ },
+ "extra_parameters_vs_b2": {
+  "ASNET-READOUT": 0,
+  "B1-K+QMARK-BW": 128,
+  "B2-CACHED": 0
+ },
+ "methods": {
+  "ASNET-READOUT": {
+   "effective_trainable_parameters": 849859,
+   "encoder_graph_encodings_per_decision": 1,
+   "legal_candidates_in_sample": 3,
+   "median_forward_seconds": {
+    "cpu": 0.019363251980394125,
+    "cuda:3": 0.01732859807088971
+   },
+   "node_feature_calls_outside_encoder": 0,
+   "nominal_apply_calls": 0,
+   "parameters_by_module": {
+    "base": 129,
+    "candidate": 1152,
+    "contract": 164480,
+    "encoder": 430784,
+    "gru": 99072,
+    "observation": 6272,
+    "q_head": 82177,
+    "v_head": 65793
+   },
+   "state_dict_trainable_parameters": 3539395
+  },
+  "B1-K+QMARK-BW": {
+   "effective_trainable_parameters": 849987,
+   "encoder_graph_encodings_per_decision": 4,
+   "legal_candidates_in_sample": 3,
+   "median_forward_seconds": {
+    "cpu": 0.01980160200037062,
+    "cuda:3": 0.017597474856302142
+   },
+   "node_feature_calls_outside_encoder": 0,
+   "nominal_apply_calls": 0,
+   "parameters_by_module": {
+    "base": 129,
+    "candidate": 1152,
+    "contract": 164480,
+    "encoder": 430784,
+    "gru": 99072,
+    "observation": 6272,
+    "q_head": 82177,
+    "query_projection": 128,
+    "v_head": 65793
+   },
+   "state_dict_trainable_parameters": 3539523
+  },
+  "B2-CACHED": {
+   "effective_trainable_parameters": 849859,
+   "encoder_graph_encodings_per_decision": 4,
+   "legal_candidates_in_sample": 3,
+   "median_forward_seconds": {
+    "cpu": 0.019573697121813893,
+    "cuda:3": 0.017388731008395553
+   },
+   "node_feature_calls_outside_encoder": 0,
+   "nominal_apply_calls": 3,
+   "parameters_by_module": {
+    "base": 129,
+    "candidate": 1152,
+    "contract": 164480,
+    "encoder": 430784,
+    "gru": 99072,
+    "observation": 6272,
+    "q_head": 82177,
+    "v_head": 65793
+   },
+   "state_dict_trainable_parameters": 3539395
+  }
+ },
+ "verdict": "PASS"
+}
