@@ -1,0 +1,36 @@
+run_id: R-C1-BW-IL-B2-0
+method: B2-CACHED
+seed: 0
+train_dev_split: /home/xushijie2/graph_cp_disr_c1_bw/configs/splits/c1_bw_train_dev_v1.json
+train_dev_split_sha256: 64225ed50d69aa8c42d9ce36470bdb4705b792f464e97a88b23b2ba8cdc0b913
+out_dir: /home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-B2-0
+dataset_dir: /home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/datasets
+d0_path: /home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/datasets/D0.json
+d0_sha256: 6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02
+loss: NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET
+optimizer:
+  lr: 0.0003
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 0.0
+  grad_clip: 0.5
+  trajectory_batch_size: 32
+stages:
+- name: stage0
+  epochs: 100
+  shuffle_seed: 0
+  dataset: D0
+- name: round1
+  epochs: 50
+  shuffle_seed: 1
+  dataset: D1
+- name: round2
+  epochs: 50
+  shuffle_seed: 2
+  dataset: D2
+aggregation_rounds: 2
+prep_commit: 8ea6a71a54a1f25fd402b1e14e835728f93b5667
+half_life: 6.0
+init: FROM_SCRATCH

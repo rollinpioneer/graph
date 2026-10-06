@@ -1,0 +1,456 @@
+{
+ "amendment": "CP-DISR-C1-BW-IMITATION-A02",
+ "attempts_cap": 3,
+ "attempts_used": 3,
+ "card": "CP-DISR-C1-CROSS-TASK-BLOCKSWORLD-V1",
+ "created": "2026-10-06T05:36:52Z",
+ "runs": {
+  "R-C1-BW-IL-ASNET-0": {
+   "accounting": {
+    "aggregation_rounds": 2,
+    "checkpoints": {
+     "round1": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/round1.pt",
+      "sha256": "ef7c208b7671ebe616c3a4fd3b05e05e5b1774bee268f0291743a9541a2db595"
+     },
+     "round2": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/final.pt",
+      "sha256": "9b02eb9c4f80204802273fa92df02ea21093fd54e2fbcbf672846fa31df847da"
+     },
+     "stage0": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/stage0.pt",
+      "sha256": "4c9d6e04432056441bd36e4b76c368257e49e39d09d11be9c86980d65d60ee2e"
+     }
+    },
+    "dataset_identity": {
+     "D0": {
+      "cycle_containing_trajectories": 0,
+      "decisions": 810,
+      "decisions_with_multiple_optimal_actions": 43,
+      "max_trajectory_length": 12,
+      "mean_optimal_set_size": 1.0604938271604938,
+      "mean_trajectory_length": 5.625,
+      "planner_label_coverage": 1.0,
+      "sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+      "source_counts": {
+       "expert": 144
+      },
+      "trajectories": 144,
+      "unique_goal_state_pairs": 810
+     },
+     "D1": {
+      "cycle_containing_trajectories": 11,
+      "decisions": 3384,
+      "decisions_with_multiple_optimal_actions": 253,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0948581560283688,
+      "mean_trajectory_length": 5.875,
+      "planner_label_coverage": 1.0,
+      "sha256": "8d542bf79de04ade6bacafdf054f4b8e4e16b063d5f59089b0d746fe3037a4d2",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "B2_r1": 144,
+       "QMARK_r1": 144,
+       "expert": 144
+      },
+      "trajectories": 576,
+      "unique_goal_state_pairs": 896
+     },
+     "D2": {
+      "cycle_containing_trajectories": 14,
+      "decisions": 5826,
+      "decisions_with_multiple_optimal_actions": 390,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0822176450394783,
+      "mean_trajectory_length": 5.779761904761905,
+      "planner_label_coverage": 1.0,
+      "sha256": "d4c9fae944b2b30c0ce1a3c8e52ae76aabeaebf33e96a978922813f12098dced",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "ASNET_r2": 144,
+       "B2_r1": 144,
+       "B2_r2": 144,
+       "QMARK_r1": 144,
+       "QMARK_r2": 144,
+       "expert": 144
+      },
+      "trajectories": 1008,
+      "unique_goal_state_pairs": 897
+     }
+    },
+    "epochs": 200,
+    "final_checkpoint": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/final.pt",
+    "final_checkpoint_sha256": "9b02eb9c4f80204802273fa92df02ea21093fd54e2fbcbf672846fa31df847da",
+    "final_epoch": {
+     "argmax_in_optimal": 0.9972644727677107,
+     "batches": 32,
+     "decisions": 5826,
+     "epoch": 50,
+     "grad_norm": 0.28658227014238946,
+     "loss": 0.006949184159566357,
+     "mass": 0.9958596117794514,
+     "optimizer_steps": 3000,
+     "stage": "round2",
+     "wall_seconds": 2947.8
+    },
+    "frozen_modules_unchanged": true,
+    "hard_fail": null,
+    "loss": "NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET",
+    "method": "ASNET-READOUT",
+    "nan_events": 0,
+    "optimizer_steps": 3000,
+    "seed": 0,
+    "stage_end_epoch_rows": {
+     "round1": {
+      "argmax_in_optimal": 0.9951389034589132,
+      "batches": 18,
+      "decisions": 3384,
+      "epoch": 50,
+      "grad_norm": 0.23852563773592314,
+      "loss": 0.01015525555703789,
+      "mass": 0.9932138522466024,
+      "optimizer_steps": 1400,
+      "stage": "round1",
+      "wall_seconds": 1503.6
+     },
+     "round2": {
+      "argmax_in_optimal": 0.9972644727677107,
+      "batches": 32,
+      "decisions": 5826,
+      "epoch": 50,
+      "grad_norm": 0.28658227014238946,
+      "loss": 0.006949184159566357,
+      "mass": 0.9958596117794514,
+      "optimizer_steps": 3000,
+      "stage": "round2",
+      "wall_seconds": 2947.8
+     },
+     "stage0": {
+      "argmax_in_optimal": 0.9903125166893005,
+      "batches": 5,
+      "decisions": 810,
+      "epoch": 100,
+      "grad_norm": 0.8339106023311615,
+      "loss": 0.03863917328417301,
+      "mass": 0.9833431124687195,
+      "optimizer_steps": 500,
+      "stage": "stage0",
+      "wall_seconds": 531.5
+     }
+    },
+    "stop_reason": "FIXED_SCHEDULE_100_50_50",
+    "tag": "ASNET",
+    "wall_seconds": 2947.9
+   },
+   "config": {
+    "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/registration/R-C1-BW-IL-ASNET-0.yaml",
+    "sha256": "2f0b0a0d90a089bf4bf22f530ace4319147565cd4756dc0df25513c3dafb9aff"
+   },
+   "finished": "2026-10-06T06:26:10Z",
+   "gpu": 4,
+   "method": "ASNET-READOUT",
+   "pid": 4078609,
+   "seed": 0,
+   "started": "2026-10-06T05:36:59Z",
+   "status": "COMPLETE"
+  },
+  "R-C1-BW-IL-B2-0": {
+   "accounting": {
+    "aggregation_rounds": 2,
+    "checkpoints": {
+     "round1": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-B2-0/checkpoints/round1.pt",
+      "sha256": "9f21526019f099d0c60081c7edd5c64360013c97d3dbb8f9efde99be9901a645"
+     },
+     "round2": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-B2-0/checkpoints/final.pt",
+      "sha256": "29c7eab495b4dea7a3f30f40fe7321619bdbe941153b3a69c2a937a528d61e11"
+     },
+     "stage0": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-B2-0/checkpoints/stage0.pt",
+      "sha256": "285b6588cdcfcc15cb58cc15c5012226bc0f6dfbf9581b198a996be4ea0593c8"
+     }
+    },
+    "dataset_identity": {
+     "D0": {
+      "cycle_containing_trajectories": 0,
+      "decisions": 810,
+      "decisions_with_multiple_optimal_actions": 43,
+      "max_trajectory_length": 12,
+      "mean_optimal_set_size": 1.0604938271604938,
+      "mean_trajectory_length": 5.625,
+      "planner_label_coverage": 1.0,
+      "sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+      "source_counts": {
+       "expert": 144
+      },
+      "trajectories": 144,
+      "unique_goal_state_pairs": 810
+     },
+     "D1": {
+      "cycle_containing_trajectories": 11,
+      "decisions": 3384,
+      "decisions_with_multiple_optimal_actions": 253,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0948581560283688,
+      "mean_trajectory_length": 5.875,
+      "planner_label_coverage": 1.0,
+      "sha256": "8d542bf79de04ade6bacafdf054f4b8e4e16b063d5f59089b0d746fe3037a4d2",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "B2_r1": 144,
+       "QMARK_r1": 144,
+       "expert": 144
+      },
+      "trajectories": 576,
+      "unique_goal_state_pairs": 896
+     },
+     "D2": {
+      "cycle_containing_trajectories": 14,
+      "decisions": 5826,
+      "decisions_with_multiple_optimal_actions": 390,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0822176450394783,
+      "mean_trajectory_length": 5.779761904761905,
+      "planner_label_coverage": 1.0,
+      "sha256": "d4c9fae944b2b30c0ce1a3c8e52ae76aabeaebf33e96a978922813f12098dced",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "ASNET_r2": 144,
+       "B2_r1": 144,
+       "B2_r2": 144,
+       "QMARK_r1": 144,
+       "QMARK_r2": 144,
+       "expert": 144
+      },
+      "trajectories": 1008,
+      "unique_goal_state_pairs": 897
+     }
+    },
+    "epochs": 200,
+    "final_checkpoint": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-B2-0/checkpoints/final.pt",
+    "final_checkpoint_sha256": "29c7eab495b4dea7a3f30f40fe7321619bdbe941153b3a69c2a937a528d61e11",
+    "final_epoch": {
+     "argmax_in_optimal": 1.0,
+     "batches": 32,
+     "decisions": 5826,
+     "epoch": 50,
+     "grad_norm": 6.819532938773243e-05,
+     "loss": 5.995773231463192e-07,
+     "mass": 0.9999994151294231,
+     "optimizer_steps": 3000,
+     "stage": "round2",
+     "wall_seconds": 3651.3
+    },
+    "frozen_modules_unchanged": true,
+    "hard_fail": null,
+    "loss": "NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET",
+    "method": "B2-CACHED",
+    "nan_events": 0,
+    "optimizer_steps": 3000,
+    "seed": 0,
+    "stage_end_epoch_rows": {
+     "round1": {
+      "argmax_in_optimal": 1.0,
+      "batches": 18,
+      "decisions": 3384,
+      "epoch": 50,
+      "grad_norm": 0.00012850869496914028,
+      "loss": 9.725309008482934e-07,
+      "mass": 0.9999990628825294,
+      "optimizer_steps": 1400,
+      "stage": "round1",
+      "wall_seconds": 1702.0
+     },
+     "round2": {
+      "argmax_in_optimal": 1.0,
+      "batches": 32,
+      "decisions": 5826,
+      "epoch": 50,
+      "grad_norm": 6.819532938773243e-05,
+      "loss": 5.995773231463192e-07,
+      "mass": 0.9999994151294231,
+      "optimizer_steps": 3000,
+      "stage": "round2",
+      "wall_seconds": 3651.3
+     },
+     "stage0": {
+      "argmax_in_optimal": 1.0,
+      "batches": 5,
+      "decisions": 810,
+      "epoch": 100,
+      "grad_norm": 0.0010654756100848318,
+      "loss": 7.484046182071324e-06,
+      "mass": 0.9999925374984742,
+      "optimizer_steps": 500,
+      "stage": "stage0",
+      "wall_seconds": 590.1
+     }
+    },
+    "stop_reason": "FIXED_SCHEDULE_100_50_50",
+    "tag": "B2",
+    "wall_seconds": 3651.4
+   },
+   "config": {
+    "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/registration/R-C1-BW-IL-B2-0.yaml",
+    "sha256": "1316ebb8ab73b7e270c559097fd8ca5eef7f7d3f2457576319435909d5f7c3ad"
+   },
+   "finished": "2026-10-06T06:37:53Z",
+   "gpu": 0,
+   "method": "B2-CACHED",
+   "pid": 4078600,
+   "seed": 0,
+   "started": "2026-10-06T05:36:59Z",
+   "status": "COMPLETE"
+  },
+  "R-C1-BW-IL-QMARK-0": {
+   "accounting": {
+    "aggregation_rounds": 2,
+    "checkpoints": {
+     "round1": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-QMARK-0/checkpoints/round1.pt",
+      "sha256": "96c3ad3e0be8bfe9027b95dc9abe200b2fabb75f9a423327979cbdc90b6c2d26"
+     },
+     "round2": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-QMARK-0/checkpoints/final.pt",
+      "sha256": "50fa46d9c1ea39d91839f3980ae0c985549e339cf91317adb1a3505008f3ed87"
+     },
+     "stage0": {
+      "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-QMARK-0/checkpoints/stage0.pt",
+      "sha256": "01757f15b019cf455fc75552adfae1d320df01b71883c4ce1a03e6e548ccf9a3"
+     }
+    },
+    "dataset_identity": {
+     "D0": {
+      "cycle_containing_trajectories": 0,
+      "decisions": 810,
+      "decisions_with_multiple_optimal_actions": 43,
+      "max_trajectory_length": 12,
+      "mean_optimal_set_size": 1.0604938271604938,
+      "mean_trajectory_length": 5.625,
+      "planner_label_coverage": 1.0,
+      "sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+      "source_counts": {
+       "expert": 144
+      },
+      "trajectories": 144,
+      "unique_goal_state_pairs": 810
+     },
+     "D1": {
+      "cycle_containing_trajectories": 11,
+      "decisions": 3384,
+      "decisions_with_multiple_optimal_actions": 253,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0948581560283688,
+      "mean_trajectory_length": 5.875,
+      "planner_label_coverage": 1.0,
+      "sha256": "8d542bf79de04ade6bacafdf054f4b8e4e16b063d5f59089b0d746fe3037a4d2",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "B2_r1": 144,
+       "QMARK_r1": 144,
+       "expert": 144
+      },
+      "trajectories": 576,
+      "unique_goal_state_pairs": 896
+     },
+     "D2": {
+      "cycle_containing_trajectories": 14,
+      "decisions": 5826,
+      "decisions_with_multiple_optimal_actions": 390,
+      "max_trajectory_length": 28,
+      "mean_optimal_set_size": 1.0822176450394783,
+      "mean_trajectory_length": 5.779761904761905,
+      "planner_label_coverage": 1.0,
+      "sha256": "d4c9fae944b2b30c0ce1a3c8e52ae76aabeaebf33e96a978922813f12098dced",
+      "source_counts": {
+       "ASNET_r1": 144,
+       "ASNET_r2": 144,
+       "B2_r1": 144,
+       "B2_r2": 144,
+       "QMARK_r1": 144,
+       "QMARK_r2": 144,
+       "expert": 144
+      },
+      "trajectories": 1008,
+      "unique_goal_state_pairs": 897
+     }
+    },
+    "epochs": 200,
+    "final_checkpoint": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-QMARK-0/checkpoints/final.pt",
+    "final_checkpoint_sha256": "50fa46d9c1ea39d91839f3980ae0c985549e339cf91317adb1a3505008f3ed87",
+    "final_epoch": {
+     "argmax_in_optimal": 1.0,
+     "batches": 32,
+     "decisions": 5826,
+     "epoch": 50,
+     "grad_norm": 0.00010524066482275884,
+     "loss": 9.231731801229159e-07,
+     "mass": 0.9999991077929735,
+     "optimizer_steps": 3000,
+     "stage": "round2",
+     "wall_seconds": 3174.9
+    },
+    "frozen_modules_unchanged": true,
+    "hard_fail": null,
+    "loss": "NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET",
+    "method": "B1-K+QMARK-BW",
+    "nan_events": 0,
+    "optimizer_steps": 3000,
+    "seed": 0,
+    "stage_end_epoch_rows": {
+     "round1": {
+      "argmax_in_optimal": 1.0,
+      "batches": 18,
+      "decisions": 3384,
+      "epoch": 50,
+      "grad_norm": 0.002232620356759677,
+      "loss": 1.6300420750465288e-05,
+      "mass": 0.9999838074048361,
+      "optimizer_steps": 1400,
+      "stage": "round1",
+      "wall_seconds": 1671.4
+     },
+     "round2": {
+      "argmax_in_optimal": 1.0,
+      "batches": 32,
+      "decisions": 5826,
+      "epoch": 50,
+      "grad_norm": 0.00010524066482275884,
+      "loss": 9.231731801229159e-07,
+      "mass": 0.9999991077929735,
+      "optimizer_steps": 3000,
+      "stage": "round2",
+      "wall_seconds": 3174.9
+     },
+     "stage0": {
+      "argmax_in_optimal": 0.9944791793823242,
+      "batches": 5,
+      "decisions": 810,
+      "epoch": 100,
+      "grad_norm": 0.5613825380802154,
+      "loss": 0.014795569889247417,
+      "mass": 0.9907051801681519,
+      "optimizer_steps": 500,
+      "stage": "stage0",
+      "wall_seconds": 547.9
+     }
+    },
+    "stop_reason": "FIXED_SCHEDULE_100_50_50",
+    "tag": "QMARK",
+    "wall_seconds": 3175.0
+   },
+   "config": {
+    "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/registration/R-C1-BW-IL-QMARK-0.yaml",
+    "sha256": "7478fddddfc9aea02820e890495f1256b45ee9e380ecc6a14c7dba86ec6d7831"
+   },
+   "finished": "2026-10-06T06:29:57Z",
+   "gpu": 1,
+   "method": "B1-K+QMARK-BW",
+   "pid": 4078604,
+   "seed": 0,
+   "started": "2026-10-06T05:36:59Z",
+   "status": "COMPLETE"
+  }
+ }
+}

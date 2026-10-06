@@ -1,0 +1,136 @@
+{
+ "method": "ASNET-READOUT",
+ "tag": "ASNET",
+ "seed": 0,
+ "optimizer_steps": 3000,
+ "epochs": 200,
+ "aggregation_rounds": 2,
+ "nan_events": 0,
+ "wall_seconds": 2947.9,
+ "dataset_identity": {
+  "D0": {
+   "sha256": "6b053f16d185f7ee1b80e3c2a32b7530875ee00cbac8c9897a0b349516cdab02",
+   "trajectories": 144,
+   "decisions": 810,
+   "unique_goal_state_pairs": 810,
+   "source_counts": {
+    "expert": 144
+   },
+   "mean_trajectory_length": 5.625,
+   "max_trajectory_length": 12,
+   "cycle_containing_trajectories": 0,
+   "planner_label_coverage": 1.0,
+   "mean_optimal_set_size": 1.0604938271604938,
+   "decisions_with_multiple_optimal_actions": 43
+  },
+  "D1": {
+   "sha256": "8d542bf79de04ade6bacafdf054f4b8e4e16b063d5f59089b0d746fe3037a4d2",
+   "trajectories": 576,
+   "decisions": 3384,
+   "unique_goal_state_pairs": 896,
+   "source_counts": {
+    "expert": 144,
+    "B2_r1": 144,
+    "QMARK_r1": 144,
+    "ASNET_r1": 144
+   },
+   "mean_trajectory_length": 5.875,
+   "max_trajectory_length": 28,
+   "cycle_containing_trajectories": 11,
+   "planner_label_coverage": 1.0,
+   "mean_optimal_set_size": 1.0948581560283688,
+   "decisions_with_multiple_optimal_actions": 253
+  },
+  "D2": {
+   "sha256": "d4c9fae944b2b30c0ce1a3c8e52ae76aabeaebf33e96a978922813f12098dced",
+   "trajectories": 1008,
+   "decisions": 5826,
+   "unique_goal_state_pairs": 897,
+   "source_counts": {
+    "expert": 144,
+    "B2_r1": 144,
+    "QMARK_r1": 144,
+    "ASNET_r1": 144,
+    "B2_r2": 144,
+    "QMARK_r2": 144,
+    "ASNET_r2": 144
+   },
+   "mean_trajectory_length": 5.779761904761905,
+   "max_trajectory_length": 28,
+   "cycle_containing_trajectories": 14,
+   "planner_label_coverage": 1.0,
+   "mean_optimal_set_size": 1.0822176450394783,
+   "decisions_with_multiple_optimal_actions": 390
+  }
+ },
+ "final_epoch": {
+  "batches": 32,
+  "loss": 0.006949184159566357,
+  "mass": 0.9958596117794514,
+  "argmax_in_optimal": 0.9972644727677107,
+  "grad_norm": 0.28658227014238946,
+  "decisions": 5826,
+  "stage": "round2",
+  "epoch": 50,
+  "optimizer_steps": 3000,
+  "wall_seconds": 2947.8
+ },
+ "frozen_modules_unchanged": true,
+ "checkpoints": {
+  "stage0": {
+   "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/stage0.pt",
+   "sha256": "4c9d6e04432056441bd36e4b76c368257e49e39d09d11be9c86980d65d60ee2e"
+  },
+  "round1": {
+   "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/round1.pt",
+   "sha256": "ef7c208b7671ebe616c3a4fd3b05e05e5b1774bee268f0291743a9541a2db595"
+  },
+  "round2": {
+   "path": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/final.pt",
+   "sha256": "9b02eb9c4f80204802273fa92df02ea21093fd54e2fbcbf672846fa31df847da"
+  }
+ },
+ "final_checkpoint": "/home/xushijie2/graph_cp_disr_c1_bw/runs/final_master/c1_route_b/blocksworld_main_v1/imitation_a02/20261006T053652Z_8ea6a71a/runs/R-C1-BW-IL-ASNET-0/checkpoints/final.pt",
+ "final_checkpoint_sha256": "9b02eb9c4f80204802273fa92df02ea21093fd54e2fbcbf672846fa31df847da",
+ "stop_reason": "FIXED_SCHEDULE_100_50_50",
+ "hard_fail": null,
+ "loss": "NEG_LOG_SUM_PROB_OVER_FULL_OPTIMAL_ACTION_SET",
+ "stage_end_epoch_rows": {
+  "stage0": {
+   "batches": 5,
+   "loss": 0.03863917328417301,
+   "mass": 0.9833431124687195,
+   "argmax_in_optimal": 0.9903125166893005,
+   "grad_norm": 0.8339106023311615,
+   "decisions": 810,
+   "stage": "stage0",
+   "epoch": 100,
+   "optimizer_steps": 500,
+   "wall_seconds": 531.5
+  },
+  "round1": {
+   "batches": 18,
+   "loss": 0.01015525555703789,
+   "mass": 0.9932138522466024,
+   "argmax_in_optimal": 0.9951389034589132,
+   "grad_norm": 0.23852563773592314,
+   "decisions": 3384,
+   "stage": "round1",
+   "epoch": 50,
+   "optimizer_steps": 1400,
+   "wall_seconds": 1503.6
+  },
+  "round2": {
+   "batches": 32,
+   "loss": 0.006949184159566357,
+   "mass": 0.9958596117794514,
+   "argmax_in_optimal": 0.9972644727677107,
+   "grad_norm": 0.28658227014238946,
+   "decisions": 5826,
+   "stage": "round2",
+   "epoch": 50,
+   "optimizer_steps": 3000,
+   "wall_seconds": 2947.8
+  }
+ }
+}
