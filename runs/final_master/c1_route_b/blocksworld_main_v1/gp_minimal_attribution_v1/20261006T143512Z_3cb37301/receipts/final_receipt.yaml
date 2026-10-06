@@ -1,0 +1,69 @@
+card: C1-BW-GP-MINIMAL-ATTRIBUTION-V1
+runbook_version: 2.0-audit-integrated
+repository: rollinpioneer/graph
+base_commit: b625cfc7f4c83f2c1cf054eef58538d77363c1d5
+branch: codex/cp-disr-c1-bw-gp-minimal-controls-v1
+registration_commit: d368d1ff815a0b587be3c56b05ce0db277a491d8
+result_commit: 'see git log: research: record C1 GP minimal attribution results'
+old_results_modified: false
+training:
+  planned: 2
+  completed: 2
+  reruns: 0
+  restart_note: both runs moved to idle GPUs after 4 / 8 epochs with user approval,
+    same frozen config; aborted partials kept outside git
+  extra_data_collection: 0
+  rank_zero_equivalence: PASS
+  goal_switch_equivalence: PASS
+confirmation:
+  target_cases: 112
+  frozen_cases: 112
+  colour_pairs: 16
+  conditions:
+  - C0
+  - M0
+  - M1
+  - B2-RANK
+  - M1-GOAL
+  - G1
+  - C3
+  - G1+C3
+  - M1+C3
+  completed_episodes: 1008
+  technical_gaps: 0
+  destruction_label_scope: ALL_OPTIMAL_PLANS
+  unknown_labels_not_coerced: true
+results:
+  all_112_success_perfect:
+    C0:
+    - 37
+    - 36
+    M0:
+    - 34
+    - 33
+    M1:
+    - 66
+    - 62
+    B2-RANK:
+    - 45
+    - 43
+    M1-GOAL:
+    - 72
+    - 71
+    G1:
+    - 40
+    - 40
+    C3:
+    - 88
+    - 41
+    G1+C3:
+    - 111
+    - 88
+    M1+C3:
+    - 106
+    - 71
+algorithm_recommendation: learned base M1-GOAL; G1+C3 must stay as the strongest reference
+  (beats all learned conditions); M1-NLL not triggered
+conditional_third_run_started: false
+state: C1_BW_GP_MINIMAL_ATTRIBUTION_COMPLETE
+next_action: WAIT_FOR_USER_MAINLINE_DECISION
