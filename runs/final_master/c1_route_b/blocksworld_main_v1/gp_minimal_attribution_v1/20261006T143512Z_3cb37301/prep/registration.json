@@ -1,0 +1,63 @@
+{
+ "authorization_text": "C1-BW-GP-MINIMAL-ATTRIBUTION-V1 runbook v2 (docs/c1_blocksworld/CP_DISR_C1_GP_Minimal_Attribution_Runbook_v2.md): user message 2026-10-06 \"@CP_DISR_C1_GP_Minimal_Attribution_Runbook_v2_Audit_Integrated.md \u6267\u884c\" -> the card is authorized: <=2 trainings (B2-RANK, M1-GOAL), 112-case destruction-stratified colour-twin confirmation, nine conditions, no ID gate, M1-NLL not authorized.\n",
+ "authorization_text_sha256": "a786cc387bd94671f3164ee137242bd0da4d62e5147ebf29d4ca0d871211c8e1",
+ "base_commit": "b625cfc7f4c83f2c1cf054eef58538d77363c1d5",
+ "branch": "codex/cp-disr-c1-bw-gp-minimal-controls-v1",
+ "card": "C1-BW-GP-MINIMAL-ATTRIBUTION-V1",
+ "conditional_third_run": "NOT_AUTHORIZED",
+ "conditions": [
+  "C0",
+  "M0",
+  "M1",
+  "B2RANK",
+  "M1GOAL",
+  "G1",
+  "C3",
+  "G1C3",
+  "M1C3"
+ ],
+ "confirm": {
+  "color_pairs": 16,
+  "frozen_cases": 112,
+  "path": "configs/splits/c1_bw_gp_attr_confirm112_v2.json",
+  "sha256": "355090fb8e218a89ce290550fe27532aecfa4830cc4a6861f834badc4f25533c"
+ },
+ "dev36": {
+  "g1": "done in prep",
+  "new_models": 72
+ },
+ "equivalence": {
+  "b2_rank_zero": true,
+  "m1_goal_switch": true
+ },
+ "no_score_gate": true,
+ "planned_confirm_episodes": 1008,
+ "planner_references": 112,
+ "registered": "2026-10-06T14:38:44Z",
+ "run_root_naming": "<UTC>_<runbook sha8> (the registration commit sha is not known before the commit)",
+ "runbook": "docs/c1_blocksworld/CP_DISR_C1_GP_Minimal_Attribution_Runbook_v2.md",
+ "runbook_sha256": "3cb373014612e511e64487bf1f3fe4e83972ba124f3e7a9844af31a42ac92f6d",
+ "thresholds": {
+  "16<=N<32": "ceil(5N/32)",
+  "N<16": "no label",
+  "N>=32": 5,
+  "pairs16": 3
+ },
+ "training": {
+  "batch": 32,
+  "epochs": 100,
+  "expected_samples": 744600,
+  "expected_steps": 4100,
+  "grad_clip": 0.5,
+  "lr_all_B2RANK": 0.0001,
+  "lr_encoder_M1GOAL": 0.0001,
+  "lr_heads_M1GOAL": 0.0003,
+  "planned": 2,
+  "rank_weight": 1.0,
+  "runs": {
+   "B2RANK": "R-C1-GPA-B2-RANK-0",
+   "M1GOAL": "R-C1-GPA-M1-GOAL-0"
+  },
+  "shuffle_seed": 0
+ }
+}

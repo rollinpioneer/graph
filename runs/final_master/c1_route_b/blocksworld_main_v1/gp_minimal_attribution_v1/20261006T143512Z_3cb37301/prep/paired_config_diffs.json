@@ -1,0 +1,54 @@
+{
+ "B2RANK_vs_M0": {
+  "identical": [
+   "init A02 B2 final",
+   "optimizer reset Adam lr 1e-4 (all trainable)",
+   "epochs 100",
+   "batch 32",
+   "shuffle 0*100003+ep",
+   "grad clip 0.5",
+   "decision chunk 256",
+   "trainable modules",
+   "D_train",
+   "trajectory weights"
+  ],
+  "metadata_only": [
+   "run_id",
+   "output path",
+   "source commit"
+  ],
+  "scientific": {
+   "rank_weight": {
+    "B2RANK": 1.0,
+    "M0": 0.0
+   }
+  }
+ },
+ "M1GOAL_vs_M1": {
+  "identical": [
+   "init encoder A02 B2 final",
+   "head seed 20261006",
+   "phi/rho heads",
+   "386-d per-goal features",
+   "global aggregation",
+   "no GRU/time/candidate context",
+   "rank_weight 1.0",
+   "encoder lr 1e-4, heads 3e-4",
+   "epochs 100",
+   "batch 32",
+   "decision chunk 192",
+   "D_train"
+  ],
+  "metadata_only": [
+   "run_id",
+   "output path",
+   "source commit"
+  ],
+  "scientific": {
+   "encoder_goal_marks": {
+    "M1": "zero",
+    "M1GOAL": "production"
+   }
+  }
+ }
+}
