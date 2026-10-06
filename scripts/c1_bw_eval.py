@@ -19,7 +19,8 @@ def main():
     ap.add_argument("--root", default=".")
     ap.add_argument("--run-root", required=True)
     ap.add_argument("--gpu", type=int, required=True)
-    ap.add_argument("--only", help="comma separated split names (a0,a1,a2,b); default = all in order with the A0 gate")
+    ap.add_argument("--only", help="comma separated split names (a0,a1,a2,b); default = all in order with the A0 gate (dry-run use only)")
+    ap.add_argument("--planner-only", action="store_true", help="only write the exact-planner baseline file (dry-run use only)")
     a = ap.parse_args()
     os.environ["CUDA_VISIBLE_DEVICES"] = str(a.gpu)
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -66,7 +67,7 @@ def main():
     hops = T.Hops()
     results = {}
     for split in ("a0", "a1", "a2", "b"):
-        if only and split not in only:
+        if a.planner_only or (only and split not in only):
             continue
         cases, _doc = T.load_cases(root / files[split], "cases")
         for rid, m in models.items():
@@ -93,7 +94,7 @@ def main():
                 print(json.dumps({"state": "EQUIVARIANCE_OR_BINDING_GATE_FAIL", "a0": ok}))
                 return
     pl_path = run_root / "eval" / "planner_baseline.json"
-    if not pl_path.exists() and not only:
+    if not pl_path.exists() and (a.planner_only or not only):
         out = {"splits": {}}
         for split in ("a0", "a1", "a2", "b"):
             cases, _ = T.load_cases(root / files[split], "cases")
