@@ -1,0 +1,31 @@
+{
+ "dataset_files": {
+  "padded_cases.json": "561fa9a299c690f2abcce5c6fe79cb234948d5fcad900b38255643e3f9b9faaf",
+  "padded_rank_labels.json": "3d5cddfcfc9dde061f8eacf9ccb2fa55697b790ed61db9209d1b58cd475ea480",
+  "padded_trajectories.json": "4c1cfcb8c8c5c8fe9358f5c6df4d80fbb6cbe471285921acccb1a547eaae222a"
+ },
+ "exception_trajectories_flagged": 0,
+ "extra_label_wall_seconds": 1.3,
+ "original_D_train_sha256": "387e66309c51195ad017b2b90e9f2742090457d108a353f34159acd8f496bf78",
+ "pad_rule": "new blocks b{n}..b{N-1} on the table, goal OnTable, colours alternate from a hashed start, original names/colours/init/goal untouched, full planner relabelling",
+ "parents": 1296,
+ "per_epoch_decisions": 7446,
+ "per_epoch_trajectories": 1296,
+ "schedule": {
+  "every_parent_meets_all_four_versions": true,
+  "original_share": 0.5,
+  "slot_epochs": {
+   "0": 64800,
+   "1": 21600,
+   "2": 21600,
+   "3": 21600
+  }
+ },
+ "schedule_rule": "epoch even -> original; epoch odd -> pad version 1 + (slot + epoch//2) % 3",
+ "versions": {
+  "0": "original",
+  "1": "pad6",
+  "2": "pad7",
+  "3": "pad8"
+ }
+}
