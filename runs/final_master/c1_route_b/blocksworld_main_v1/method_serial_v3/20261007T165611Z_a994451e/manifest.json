@@ -1,0 +1,1166 @@
+{
+ "authorization_source": "\u7528\u6237\u5728\u5bf9\u8bdd\u4e2d\u7684\u539f\u8bdd\uff082026-10-08\uff09\uff1a@CP_DISR_C1_Method_Serial_Suite_v3_Package.zip @CP_DISR_C1_Method_Serial_Runbook_v3_Audit_Integrated.md \u6267\u884c\u5b9e\u9a8c\n",
+ "card": "C1-BW-METHOD-SERIAL-SUITE-V3",
+ "env": {
+  "CUDA_VISIBLE_DEVICES": "0",
+  "PYTHONPATH": "src",
+  "TMPDIR": "/home/xushijie3/cp_disr_tmp",
+  "TORCH_HOME": "/home/xushijie3/cp_disr_cache/torch",
+  "XDG_CACHE_HOME": "/home/xushijie3/cp_disr_cache"
+ },
+ "execution_authorized": true,
+ "max_new_training_runs": 9,
+ "priority_receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/stages/lookahead/priority.json",
+ "repo_root": "/home/xushijie3/work/graph_cp_disr",
+ "run_root": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+ "storage_root": "/home/xushijie3",
+ "tasks": [
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "fixtures",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "failure_scope": "global",
+   "group": "fixtures",
+   "id": "fixtures",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/fixtures.json",
+   "requires": []
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "lookahead_dev",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "lookahead",
+   "id": "lookahead_dev",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/lookahead_dev.json",
+   "requires": [
+    "fixtures"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "event_labels",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "event",
+   "id": "event_labels",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/event_labels.json",
+   "requires": [
+    "fixtures"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_BASE"
+   ],
+   "group": "event",
+   "id": "train_SG_BASE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_SG_BASE.json",
+   "requires": [
+    "event_labels"
+   ],
+   "training_run_id": "R-C1-SERIAL-SG-BASE-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_BASE"
+   ],
+   "group": "event",
+   "id": "devsel_SG_BASE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_SG_BASE.json",
+   "requires": [
+    "train_SG_BASE"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_FACT"
+   ],
+   "group": "event",
+   "id": "train_SG_FACT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_SG_FACT.json",
+   "requires": [
+    "event_labels"
+   ],
+   "training_run_id": "R-C1-SERIAL-SG-FACT-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_FACT"
+   ],
+   "group": "event",
+   "id": "devsel_SG_FACT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_SG_FACT.json",
+   "requires": [
+    "train_SG_FACT"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_JOINT"
+   ],
+   "group": "event",
+   "id": "train_SG_JOINT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_SG_JOINT.json",
+   "requires": [
+    "event_labels"
+   ],
+   "training_run_id": "R-C1-SERIAL-SG-JOINT-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_JOINT"
+   ],
+   "group": "event",
+   "id": "devsel_SG_JOINT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_SG_JOINT.json",
+   "requires": [
+    "train_SG_JOINT"
+   ]
+  },
+  {
+   "argv": [
+    "true"
+   ],
+   "group": "order",
+   "id": "order_cal_rec",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "kind": "order_cal_rec",
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/order_cal_rec.json"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "cal_prep",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "calibration",
+   "id": "cal_prep",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/cal_prep.json",
+   "requires": [
+    "fixtures"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_ABS"
+   ],
+   "group": "calibration",
+   "id": "train_CAL_ABS",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_CAL_ABS.json",
+   "requires": [
+    "cal_prep"
+   ],
+   "training_run_id": "R-C1-SERIAL-CAL-ABS-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_ABS"
+   ],
+   "group": "calibration",
+   "id": "devsel_CAL_ABS",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_CAL_ABS.json",
+   "requires": [
+    "train_CAL_ABS"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_REL"
+   ],
+   "group": "calibration",
+   "id": "train_CAL_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_CAL_REL.json",
+   "requires": [
+    "cal_prep"
+   ],
+   "training_run_id": "R-C1-SERIAL-CAL-REL-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_REL"
+   ],
+   "group": "calibration",
+   "id": "devsel_CAL_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_CAL_REL.json",
+   "requires": [
+    "train_CAL_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_SELF"
+   ],
+   "group": "recurrent",
+   "id": "train_REC_SELF",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_REC_SELF.json",
+   "requires": [
+    "fixtures"
+   ],
+   "training_run_id": "R-C1-SERIAL-REC-SELF-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_SELF"
+   ],
+   "group": "recurrent",
+   "id": "devsel_REC_SELF",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_REC_SELF.json",
+   "requires": [
+    "train_REC_SELF"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_REL"
+   ],
+   "group": "recurrent",
+   "id": "train_REC_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_REC_REL.json",
+   "requires": [
+    "fixtures"
+   ],
+   "training_run_id": "R-C1-SERIAL-REC-REL-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_REL"
+   ],
+   "group": "recurrent",
+   "id": "devsel_REC_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_REC_REL.json",
+   "requires": [
+    "train_REC_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_DENSE"
+   ],
+   "group": "goal_attention",
+   "id": "train_GOAL_DENSE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_GOAL_DENSE.json",
+   "requires": [
+    "fixtures"
+   ],
+   "training_run_id": "R-C1-SERIAL-GOAL-DENSE-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_DENSE"
+   ],
+   "group": "goal_attention",
+   "id": "devsel_GOAL_DENSE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_GOAL_DENSE.json",
+   "requires": [
+    "train_GOAL_DENSE"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_REL"
+   ],
+   "group": "goal_attention",
+   "id": "train_GOAL_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/train_GOAL_REL.json",
+   "requires": [
+    "fixtures"
+   ],
+   "training_run_id": "R-C1-SERIAL-GOAL-REL-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_REL"
+   ],
+   "group": "goal_attention",
+   "id": "devsel_GOAL_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/devsel_GOAL_REL.json",
+   "requires": [
+    "train_GOAL_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "lock_selected",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "lock",
+   "id": "lock_selected",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/lock_selected.json",
+   "requires": []
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_prepare",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "confirm",
+   "id": "confirm_prepare",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_prepare.json",
+   "requires": [
+    "lock_selected"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "MG_C3"
+   ],
+   "group": "confirm",
+   "id": "confirm_MG_C3",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_MG_C3.json",
+   "requires": [
+    "confirm_prepare"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "B_G1C3"
+   ],
+   "group": "confirm",
+   "id": "confirm_B_G1C3",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_B_G1C3.json",
+   "requires": [
+    "confirm_prepare"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "LOOK2_MG"
+   ],
+   "group": "confirm",
+   "id": "confirm_LOOK2_MG",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_LOOK2_MG.json",
+   "requires": [
+    "confirm_prepare"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "LOOK2_COUNT"
+   ],
+   "group": "confirm",
+   "id": "confirm_LOOK2_COUNT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_LOOK2_COUNT.json",
+   "requires": [
+    "confirm_prepare"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_BASE"
+   ],
+   "group": "confirm",
+   "id": "confirm_SG_BASE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_SG_BASE.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_SG_BASE"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_FACT"
+   ],
+   "group": "confirm",
+   "id": "confirm_SG_FACT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_SG_FACT.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_SG_FACT"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "SG_JOINT"
+   ],
+   "group": "confirm",
+   "id": "confirm_SG_JOINT",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_SG_JOINT.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_SG_JOINT"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_ABS_C3"
+   ],
+   "group": "confirm",
+   "id": "confirm_CAL_ABS_C3",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_CAL_ABS_C3.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_CAL_ABS"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_REL_C3"
+   ],
+   "group": "confirm",
+   "id": "confirm_CAL_REL_C3",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_CAL_REL_C3.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_CAL_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_ABS_LOOK2"
+   ],
+   "group": "confirm",
+   "id": "confirm_CAL_ABS_LOOK2",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_CAL_ABS_LOOK2.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_CAL_ABS"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "CAL_REL_LOOK2"
+   ],
+   "group": "confirm",
+   "id": "confirm_CAL_REL_LOOK2",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_CAL_REL_LOOK2.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_CAL_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_SELF_T4"
+   ],
+   "group": "confirm",
+   "id": "confirm_REC_SELF_T4",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_REC_SELF_T4.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_REC_SELF"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_SELF_T8"
+   ],
+   "group": "confirm",
+   "id": "confirm_REC_SELF_T8",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_REC_SELF_T8.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_REC_SELF"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_REL_T4"
+   ],
+   "group": "confirm",
+   "id": "confirm_REC_REL_T4",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_REC_REL_T4.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_REC_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "REC_REL_T8"
+   ],
+   "group": "confirm",
+   "id": "confirm_REC_REL_T8",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_REC_REL_T8.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_REC_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_DENSE"
+   ],
+   "group": "confirm",
+   "id": "confirm_GOAL_DENSE",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_GOAL_DENSE.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_GOAL_DENSE"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "confirm_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e",
+    "--condition",
+    "GOAL_REL"
+   ],
+   "group": "confirm",
+   "id": "confirm_GOAL_REL",
+   "input_hashes": {
+    "scripts/c1_method_serial.py": "8014dc2713d956fb51e7d4543a6a72a75141362e0dc0b80e672682a70e997b54",
+    "src/cp_disr/blocksworld/method_serial/common.py": "8d1b854479bf5d2d3d9eb5a6a8c9c56929de6bbf00b3dcc70daa22d3486fcc3d",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
+    "src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "686e5a9fe1c69ab7aaf45a2c274ab9c42ba86807bdda58f2d49ddeb1cb1cd988",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/confirm_GOAL_REL.json",
+   "requires": [
+    "confirm_prepare",
+    "devsel_GOAL_REL"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "report",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
+   ],
+   "group": "report",
+   "id": "report",
+   "input_hashes": {},
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e/receipts/report.json",
+   "requires": []
+  }
+ ]
+}
