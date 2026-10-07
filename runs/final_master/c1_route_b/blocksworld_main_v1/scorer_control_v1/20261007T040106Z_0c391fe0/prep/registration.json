@@ -1,0 +1,52 @@
+{
+ "authorization_text": "\u7528\u6237\u5728\u5bf9\u8bdd\u4e2d\u7684\u539f\u8bdd\uff082026-10-07\uff09\uff1a@CP_DISR_C1_Attribution_Closeout_and_Execution_Control_Check_v1.md \u6267\u884c\n",
+ "authorization_text_sha256": "f60808ce0071522da46716d03c367c7dccffc7d3e8f8553fc3a16bd83e530c2d",
+ "base_commit": "178df59e4d8e32cbeeffd4deee51225f326530c2",
+ "branch": "codex/cp-disr-c1-bw-scorer-control-v1",
+ "card": "C1-BW-SCORER-CONTROL-V1",
+ "conditions": {
+  "B_C3": {
+   "rule": "C3",
+   "scorer": "B2"
+  },
+  "B_G1C3": {
+   "rule": "G1C3",
+   "scorer": "B2"
+  },
+  "MG_C3": {
+   "rule": "C3",
+   "scorer": "M1GOAL"
+  },
+  "MG_G1C3": {
+   "rule": "G1C3",
+   "scorer": "M1GOAL"
+  }
+ },
+ "dev_reruns": 0,
+ "fixtures": {
+  "rules": true,
+  "scorers": true
+ },
+ "fresh": {
+  "frozen_cases": 112,
+  "path": "configs/splits/c1_bw_scorer_control_fresh112_v1.json",
+  "sha256": "24b539aa40dfe63f850bf4ac98d0cddf274ea4616f7cb99da4cf3e38d9fac60b",
+  "shortfalls": {}
+ },
+ "new_training_runs": 0,
+ "optimizer_steps": 0,
+ "plan": "docs/c1_blocksworld/CP_DISR_C1_Attribution_Closeout_and_Execution_Control_Check_v1.md",
+ "plan_sha256": "0c391fe04c2c7f71e91ac399b0b48bfa4dfac156bbaf352acafe6214c3bcb87f",
+ "planned_episodes": 448,
+ "planner_references": 112,
+ "registered": "2026-10-07T04:01:34Z",
+ "run_root_naming": "<UTC>_<plan sha8>",
+ "step_cap": "2*L*+4",
+ "thresholds": {
+  "16<=N<32": "ceil(5N/32)",
+  "N<16": "no label",
+  "N>=32": 5,
+  "note": "decision aids, not significance",
+  "pairs16": 3
+ }
+}
