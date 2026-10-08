@@ -28,6 +28,8 @@ BASE_COMMIT = "e3b1e65b3725174cc6169d7857d0983793037b88"
 BRANCH = "codex/cp-disr-c1-public-depots-rel-v1"
 PLAN_REL = "docs/c1_blocksworld/CP_DISR_C1_Next_Direction_v2_Depots_REL_20261008.md"
 SUITE_REL = "runs/final_master/c1_route_b/public_depots_rel_v1"
+SUPERSEDES = {"run_root": "runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438", "registration_commit": "3f30a79548bbdf6c7a6e1635ec69bd7e9ac95b76",
+              "reason": "Stopped by the experimenter shortly after launch (the three trainings had not reached their first checkpoint; no model had been evaluated on any dev or test problem): the joint (and struct) test sets were generated without the transport-coverage quota that plan 7.4 asks for (each cell should cover problems with and without transport; the first draw gave 0-1 problems without transport per cell). Only change: transport quota in the data generation, a uniform-reduction rule, three scheduler/report conveniences. Nothing about models, losses, budgets, selection or controllers changed; the stopped run produced Blocksworld rows (tau, GATED_*, LOOK2_HADD, probes) that are recomputed from scratch in the new run."}
 V3_REL = "runs/final_master/c1_route_b/blocksworld_main_v1/method_serial_v3/20261007T165611Z_a994451e"
 EXT = Path.home() / "ext"
 GOOSE_PY = str(Path.home() / "envs" / "goose" / "bin" / "python")
@@ -95,8 +97,8 @@ def cmd_init(gpus, auth):
     from cp_disr.pddl.sched import sha_file as shaf
     st = S()
     git = lambda *a, cwd=ROOT: subprocess.check_output(["git", "-C", str(cwd)] + list(a), text=True).strip()
-    if git("branch", "--show-current") != BRANCH or git("rev-parse", "HEAD") != BASE_COMMIT:
-        raise SystemExit("branch %s at %s required" % (BRANCH, BASE_COMMIT))
+    if git("branch", "--show-current") != BRANCH or subprocess.run(["git", "-C", str(ROOT), "merge-base", "--is-ancestor", BASE_COMMIT, "HEAD"]).returncode != 0:
+        raise SystemExit("branch %s descending from %s required" % (BRANCH, BASE_COMMIT))
     storage = Path("/home/xushijie3")
     hashes = {s: shaf(ROOT / s) for s in CORE if (ROOT / s).is_file()}
     code8 = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()[:8]
@@ -124,7 +126,7 @@ def cmd_init(gpus, auth):
     for k, v in ids.items():
         v["sha256_now"] = shaf(ROOT / v["path"])
     wj(rr / "assets" / "asset_identity.json", ids)
-    env = {"PYTHONPATH": "src", "TMPDIR": str(storage / "cp_disr_tmp"), "XDG_CACHE_HOME": str(storage / "cp_disr_cache"), "TORCH_HOME": str(storage / "cp_disr_cache" / "torch"), "PYTHONUNBUFFERED": "1",
+    env = {"PYTHONPATH": "src", "TMPDIR": str(storage / "cp_disr_tmp"), "XDG_CACHE_HOME": str(storage / "cp_disr_cache"), "TORCH_HOME": str(storage / "cp_disr_cache" / "torch"), "PYTHONUNBUFFERED": "1", "OMP_NUM_THREADS": "8", "MKL_NUM_THREADS": "8", "OPENBLAS_NUM_THREADS": "8",
            "CPDISR_EXT": str(EXT), "CPDISR_EXACT_BIN": str(EXT / "bin" / "exact_dist")}
     if SMOKE:
         env["DEPOTS_SMOKE"] = "1"
@@ -167,7 +169,7 @@ def cmd_init(gpus, auth):
     tasks[-1]["after"] = [t["id"] for t in tasks[:-1]]                                          # runs last, also when some task failed (reports what exists)
     manifest = {"card": CARD, "execution_authorized": True, "authorization_source": auth, "gpus": gpus, "env": env, "repo_root": str(ROOT), "tasks": tasks, "max_new_training_runs": 3}
     wj(rr / "manifest.json", manifest)
-    reg = {"card": CARD, "plan": PLAN_REL, "plan_sha256": shaf(ROOT / PLAN_REL), "base_commit": BASE_COMMIT, "authorization_text": auth, "authorization_text_sha256": hashlib.sha256(auth.encode()).hexdigest(),
+    reg = {"supersedes": SUPERSEDES, "card": CARD, "plan": PLAN_REL, "plan_sha256": shaf(ROOT / PLAN_REL), "base_commit": BASE_COMMIT, "authorization_text": auth, "authorization_text_sha256": hashlib.sha256(auth.encode()).hexdigest(),
            "scope": "plan sections 3-12: Blocksworld zero-training (gated look-ahead, h_add leaf, two probes) + generic relation interface + public Depots (3 internal trainings MG-G/DENSE-G/REL-G) + external LAMA and WL-GOOSE; "
                     "optional AIW-AD / KR 2023 not run unless stated in the final receipt",
            "frozen_design": {"seeds": {"train": st.SEEDS["train"], "dev": st.SEEDS["dev"], "struct": st.SEEDS["struct"], "joint0": st.JOINT_SEED0}, "per": {"train_per_n": st.TRAIN_PER_N, "dev_per_n": st.DEV_PER_N, "struct": st.STRUCT_PER, "joint_per_cell": st.JOINT_PER_CELL},
@@ -175,7 +177,7 @@ def cmd_init(gpus, auth):
                              "time_budget": {"per_problem_wall_seconds_all_time_limited_methods": st.DEADLINE_SECONDS, "neural_controllers": "checked between decisions (a decision is never interrupted)", "wl_goose": "whole planner run incl. preprocessing, process group killed at the limit",
                                              "lama": "anytime configuration with the same wall limit; first-plan time and length recorded separately"},
                              "places": 2, "trucks": 1, "hoists": 2, "pallets": "= crates", "train_goal_shape": "exactly one stack of height 2 or 3, all other crates alone on a pallet; complete layout (every crate has a goal)",
-                             "struct": "4 crates 2+2 (16) and 5 crates 3+2 (16)", "joint_cells": {"n6k1h2": [2, 1, 1, 1, 1], "n6k1h4": [4, 1, 1], "n6k2h2": [2, 2, 1, 1], "n6k2h4": [4, 2], "n8k1h2": [2, 1, 1, 1, 1, 1, 1], "n8k1h4": [4, 1, 1, 1, 1],
+                             "struct": "4 crates 2+2 (16) and 5 crates 3+2 (16)", "transport_coverage": "train (per crate count), dev (per crate count), struct (per crate count) and joint (per cell) are filled with half problems that need transport and half that do not; if any group cannot fill a condition, all groups of that family keep the same smaller number of each condition (decided from generation counts only)", "joint_cells": {"n6k1h2": [2, 1, 1, 1, 1], "n6k1h4": [4, 1, 1], "n6k2h2": [2, 2, 1, 1], "n6k2h4": [4, 2], "n8k1h2": [2, 1, 1, 1, 1, 1, 1], "n8k1h4": [4, 1, 1, 1, 1],
                                                                                                                                                              "n8k2h2": [2, 2, 1, 1, 1, 1], "n8k2h4": [4, 2, 1, 1]},
                              "selection": "dev (24 problems): most successes, then smaller failure-penalised cost ratio, then earlier checkpoint", "gate_tau": "10th percentile of top-2 logit margin over unique training decisions with >=2 legal actions",
                              "step_cap": "2*L_ref+4 (L_ref: exact optimum, else A*+LM-cut optimum, else best known LAMA plan)", "external": {"lama": "seq-sat-lama-2011 (anytime) + lama-first + seq-opt-lmcut", "wl_goose": "configurations/classic.toml, trained on the same 96 training problems with optimal plans"},
@@ -266,7 +268,7 @@ def cmd_gen_data(rr):
     p = Path(rr) / "data" / "manifest.json"
     wj(p, man)
     short = {k: len(v) for k, v in man.items() if isinstance(v, list)}
-    bad = {k: v for k, v in man["generation_report"].items() if v["built"] != v["requested"]}
+    bad = {k: v for k, v in man["generation_report"].items() if isinstance(v, dict) and v["built"] != v["requested"]}
     finish(rr, "gen_data", "DONE", [p], counts=short, shortfalls=bad)
     return 0
 
@@ -751,7 +753,10 @@ def cmd_docs(rr):
     import torch
     src = {"card": CARD, "plan": PLAN_REL, "plan_sha256": sha_file(ROOT / PLAN_REL), "base_commit": BASE_COMMIT, "branch": BRANCH, "head_at_init": cfg["head"], "public_domain_sources": ident,
            "user_review_materials": "the review report and the two audit scripts named in plan section 1 were read when the plan was written; they are not part of this repository and were not re-executed",
-           "software": {"python": platform.python_version(), "torch": torch.__version__, "machine": platform.node()}, "run_root": str(rr)}
+           "software": {"python": platform.python_version(), "torch": torch.__version__, "machine": platform.node()},
+           "hardware": {"cpu_cores_visible": os.cpu_count(), "torch_threads": torch.get_num_threads(), "gpus_used": cfg["gpus"], "gpu_names": [torch.cuda.get_device_name(g) for g in cfg["gpus"]] if torch.cuda.is_available() else None,
+                        "note": "shared machine: other users run jobs on the same CPUs / GPUs, wall-clock numbers include that contention; FD and WL-GOOSE are single-threaded, neural controllers use one GPU and the default torch CPU threads"},
+           "run_root": str(rr)}
     wj(rr / "source_manifest.json", src)
     roles = {"train": "gradients and exact labels only (96 problems, 3-5 crates, one tower of height 2-3)", "dev": "checkpoint selection only (24 problems, same structure)", "struct": "sealed structure test (4 crates 2+2, 5 crates 3+2; 32 problems), opened after lock",
              "joint": "sealed joint extrapolation test (8 cells x 16 problems: 6/8 crates, 1/2 towers, height 2/4), opened after lock", "ipc": "Track A: the 22 public IPC Depots problems, unchanged, opened after lock",
@@ -833,7 +838,7 @@ def main():
     rr = a.run_root
     if a.cmd == "run-all":
         from cp_disr.pddl.sched import run_all
-        return run_all(rr, cpu_slots=2)
+        return run_all(rr, cpu_slots=3)
     fn = {"prep_ext": lambda: cmd_prep_ext(rr), "gen_data": lambda: cmd_gen_data(rr), "labels": lambda: cmd_labels(rr), "ref": lambda: cmd_ref(rr, a.set), "goose_fit": lambda: cmd_goose_fit(rr, a.track),
           "train": lambda: cmd_train(rr, a.model), "devsel": lambda: cmd_devsel(rr, a.model), "lock": lambda: cmd_lock(rr), "eval": lambda: cmd_eval(rr, a.model, a.exec, a.set), "goose_eval": lambda: cmd_goose_eval(rr, a.set),
           "docs": lambda: cmd_docs(rr), "final_receipt": lambda: cmd_final_receipt(rr, a.condition or "not run"), "bw_tau": lambda: cmd_bw_tau(rr), "bw_eval": lambda: cmd_bw_eval(rr, a.condition), "bw_probes": lambda: cmd_bw_probes(rr), "gate_decision": lambda: cmd_gate_decision(rr), "report": lambda: cmd_report(rr)}[a.cmd]

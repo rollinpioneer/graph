@@ -24,7 +24,7 @@ SEEDS = {"train": {3: 1_000_000, 4: 1_100_000, 5: 1_200_000}, "dev": {3: 2_000_0
 JOINT_SEED0 = 4_000_000
 TRAIN_PER_N, DEV_PER_N, STRUCT_PER = 32, 8, 16
 JOINT_PER_CELL = 16
-MAX_ATTEMPTS = 60_000
+MAX_ATTEMPTS = 150_000
 LAMA_SECONDS, LMCUT_SECONDS, FD_MEMORY_MB = 300, 300, 8000
 DEADLINE_SECONDS = 300                         # uniform wall-clock budget per problem for every time-limited method (neural controllers, WL-GOOSE, LAMA)
 BUDGET = {"updates": 4100, "batch_trajectories": 32, "lr": 3e-4, "checkpoints": [820, 1640, 2460, 3280, 4100], "init_seed": 20261008, "chunk_decisions": 48, "grad_clip": 0.5, "rank_weight": 1.0}
@@ -62,6 +62,24 @@ def _fill(name, n, spec, count, seed0, outdir, seen, transport_quota=False, pall
     return got, {"requested": count, "built": len(got), "attempts": attempts, "next_seed": seed}
 
 
+def _balance(groups, report, family):
+    """Transport coverage: every group (struct: crate count; joint: cell) is filled with half problems that need transport and half that do not. If any group cannot fill a condition, ALL groups keep the same
+    (smaller) number of each condition (decided from generation counts only, before any model exists)."""
+    k = min(min(sum(1 for c in g if c["analysis"]["needs_transport"]), sum(1 for c in g if not c["analysis"]["needs_transport"])) for g in groups.values())
+    out = []
+    for name, g in groups.items():
+        keep = {True: k, False: k}
+        for c in g:
+            t = c["analysis"]["needs_transport"]
+            if keep[t] > 0:
+                keep[t] -= 1
+                out.append(c)
+            else:
+                Path(c["file"]).unlink()
+    report["%s_uniform_per_condition" % family] = k
+    return out
+
+
 def gen_data(rr):
     out = Path(rr) / "data" / "problems"
     seen, man, report = set(), {}, {}
@@ -74,24 +92,24 @@ def gen_data(rr):
             cases += got
             report["%s_n%d" % (fam, n)] = rep
         man[fam] = cases
-    cases = []
+    groups = {}
     d = out / "struct"
     d.mkdir(parents=True, exist_ok=True)
     for n, spec in ((4, [2, 2]), (5, [3, 2])):
-        got, rep = _fill("struct_n%d" % n, n, spec, STRUCT_PER, SEEDS["struct"][n], d, seen)
-        cases += got
+        got, rep = _fill("struct_n%d" % n, n, spec, STRUCT_PER, SEEDS["struct"][n], d, seen, transport_quota=True)
+        groups[n] = got
         report["struct_n%d" % n] = rep
-    man["struct"] = cases
-    cases = []
+    man["struct"] = _balance(groups, report, "struct")
+    groups = {}
     d = out / "joint"
     d.mkdir(parents=True, exist_ok=True)
     for ci, (cell, (n, spec)) in enumerate(DP.JOINT_CELLS.items()):
-        got, rep = _fill("joint_%s" % cell, n, spec, JOINT_PER_CELL, JOINT_SEED0 + 100_000 * ci, d, seen)
+        got, rep = _fill("joint_%s" % cell, n, spec, JOINT_PER_CELL, JOINT_SEED0 + 100_000 * ci, d, seen, transport_quota=True)
         for g in got:
             g["cell"] = cell
-        cases += got
+        groups[cell] = got
         report["joint_%s" % cell] = rep
-    man["joint"] = cases
+    man["joint"] = _balance(groups, report, "joint")
     ipc = []
     for i in range(1, 23):
         pf = DP.DOMAIN_IPC.parent / ("p%02d.pddl" % i)

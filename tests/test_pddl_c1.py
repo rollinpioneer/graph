@@ -347,3 +347,15 @@ def test_three_models_start_from_identical_tensors_and_agree_at_initialisation(t
     out = {m: ms[m].eval_logits(snap) for m in ms}
     assert torch.allclose(out["mg"], out["dense"]) and torch.allclose(out["mg"], out["rel"])  # zero-initialised output projection: the same function at step 0
     assert ms["rel"].mask_density(snap) <= 1.0 == ms["dense"].mask_density(snap)               # a tiny 3-crate task may have every goal pair related; larger tasks are measured in the run
+
+
+def test_balance_keeps_the_same_number_of_each_transport_condition(tmp_path):
+    def mk(name, need, i):
+        p = tmp_path / ("%s_%d.pddl" % (name, i))
+        p.write_text("x")
+        return {"case_id": p.stem, "file": str(p), "analysis": {"needs_transport": need}}
+    groups = {"a": [mk("a", True, i) for i in range(4)] + [mk("a", False, i + 10) for i in range(4)], "b": [mk("b", True, i) for i in range(4)] + [mk("b", False, i + 10) for i in range(2)]}
+    rep = {}
+    out = ST._balance(groups, rep, "x")
+    assert rep["x_uniform_per_condition"] == 2 and len(out) == 8 and sum(c["analysis"]["needs_transport"] for c in out) == 4
+    assert sum(1 for c in out if c["case_id"].startswith("a")) == 4 and len(list(tmp_path.glob("*.pddl"))) == 8     # dropped problems are removed from disk
