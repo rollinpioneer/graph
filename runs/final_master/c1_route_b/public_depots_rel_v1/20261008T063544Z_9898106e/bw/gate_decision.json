@@ -1,0 +1,56 @@
+{
+ "per_scorer": {
+  "MG": {
+   "episodes": 128,
+   "fixed_avoidable_destruction": 9,
+   "fixed_interventions": 298,
+   "fixed_leaves": 28588,
+   "fixed_model_calls": 1734,
+   "fixed_success": 127,
+   "fixed_unique_leaves": 24430,
+   "full_set": true,
+   "gate_checks": 1986,
+   "gated_avoidable_destruction": 11,
+   "gated_expansions": 343,
+   "gated_interventions": 264,
+   "gated_leaves": 6279,
+   "gated_model_calls": 343,
+   "gated_success": 127,
+   "gated_unique_leaves": 6279,
+   "scorer": "MG",
+   "trap_unfolds": 8481
+  },
+  "REL": {
+   "episodes": 128,
+   "fixed_avoidable_destruction": 12,
+   "fixed_interventions": 318,
+   "fixed_leaves": 28440,
+   "fixed_model_calls": 1740,
+   "fixed_success": 128,
+   "fixed_unique_leaves": 24281,
+   "full_set": true,
+   "gate_checks": 1962,
+   "gated_avoidable_destruction": 9,
+   "gated_expansions": 425,
+   "gated_interventions": 242,
+   "gated_leaves": 7283,
+   "gated_model_calls": 425,
+   "gated_success": 127,
+   "gated_unique_leaves": 7283,
+   "scorer": "REL",
+   "trap_unfolds": 8223
+  }
+ },
+ "pooled": {
+  "f_harm": 21,
+  "f_leaves": 57028,
+  "f_succ": 255,
+  "g_harm": 20,
+  "g_leaves": 13562,
+  "g_succ": 254
+ },
+ "reason": "(a) fewer leaf states True (13562 vs 57028); (b) completions >= 90% of fixed two-step True (254 vs 255); (c) avoidable destruction <= fixed True (20 vs 21)",
+ "rule": "Frozen rule (registration): the selective look-ahead is carried to Depots iff, pooled over the MG and REL scorers on the same Confirm128 problems, it (a) evaluates fewer leaf states than the fixed\n    two-step tree, (b) keeps >= 90% of the fixed two-step completions and (c) makes no more avoidable destructions of satisfied goals (the placement-harm proxy of the logs) than the fixed two-step tree.",
+ "run_gated_on_depots": true,
+ "smoke": false
+}

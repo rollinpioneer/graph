@@ -1,0 +1,317 @@
+{
+ "budget_frozen_in_registration": {
+  "batch_trajectories": 32,
+  "checkpoints": [
+   820,
+   1640,
+   2460,
+   3280,
+   4100
+  ],
+  "chunk_decisions": 48,
+  "grad_clip": 0.5,
+  "init_seed": 20261008,
+  "lr": 0.0003,
+  "rank_weight": 1.0,
+  "updates": 4100
+ },
+ "models": {
+  "DENSE-G": {
+   "accounting": {
+    "attempts": 2,
+    "batches_per_epoch": 15,
+    "decision_samples_shown": 1634323,
+    "nan_events": 0,
+    "new_module_param_change_l2": 2.329150915145874,
+    "optimizer_steps": 4100,
+    "parameters_new_module": 66088,
+    "parameters_trainable": 580072,
+    "trajectories": 457,
+    "wall_seconds": 10568.1
+   },
+   "checkpoints": {
+    "1640": {
+     "bytes": 18702261,
+     "sha256": "fad948b9d22933b837cfa3fd72b1cd2e129e0c3e8b5eb4fb00c1bd0250546f4e"
+    },
+    "2460": {
+     "bytes": 18702773,
+     "sha256": "b485ba19f32f834bf53da0bd2ce0521223e1e2dcb74c0dfe93312a0b8dace19b"
+    },
+    "3280": {
+     "bytes": 18702773,
+     "sha256": "651139e0f407b14bd8c87d04bd29fe9c41197c097910ac3192d9d01d493264a4"
+    },
+    "4100": {
+     "bytes": 18702773,
+     "sha256": "ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38"
+    },
+    "820": {
+     "bytes": 18702261,
+     "sha256": "8cfed0333d4360a91bd331d820dd77e305ac3be9a8f343ceed0c2a40a565672c"
+    }
+   },
+   "selection": {
+    "checkpoint": {
+     "bytes": 18702773,
+     "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/runs/dense/checkpoints/u04100.pt",
+     "sha256": "ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38"
+    },
+    "dev_by_update": {
+     "1640": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0226,
+      "mean_ratio_success": 1.0226,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 281,
+      "wall_seconds": 8.79
+     },
+     "2460": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0286,
+      "mean_ratio_success": 1.0286,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 283,
+      "wall_seconds": 7.16
+     },
+     "3280": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0117,
+      "mean_ratio_success": 1.0117,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 280,
+      "wall_seconds": 7.03
+     },
+     "4100": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0092,
+      "mean_ratio_success": 1.0092,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 279,
+      "wall_seconds": 7.01
+     },
+     "820": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0554,
+      "mean_ratio_success": 1.0554,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 293,
+      "wall_seconds": 7.53
+     }
+    },
+    "dev_cases": 24,
+    "model": "dense",
+    "rule": "most dev successes, then smaller failure-penalised cost ratio, then earlier checkpoint",
+    "selected_update": "4100"
+   }
+  },
+  "MG-G": {
+   "accounting": {
+    "attempts": 2,
+    "batches_per_epoch": 15,
+    "decision_samples_shown": 1634323,
+    "nan_events": 0,
+    "new_module_param_change_l2": 0.0,
+    "optimizer_steps": 4100,
+    "parameters_new_module": 0,
+    "parameters_trainable": 513984,
+    "trajectories": 457,
+    "wall_seconds": 8789.4
+   },
+   "checkpoints": {
+    "1640": {
+     "bytes": 17897709,
+     "sha256": "c97caa818d3b4928915e37f0a83d66a8de04f6297dbc03a22f6d32c779d8cedf"
+    },
+    "2460": {
+     "bytes": 17898093,
+     "sha256": "af902c245097171556556a9244d9655bff1ed0d7d1492b1011738e60f8f8e0b7"
+    },
+    "3280": {
+     "bytes": 17898093,
+     "sha256": "78b4de4a1c58707a3efeb201b7541e16b689dfcd82e2d681129ae99f58a66cd0"
+    },
+    "4100": {
+     "bytes": 17898093,
+     "sha256": "4d116a71c01d821639a299bc85b597823df9bcba242a3de5cf7a1dbc92d68480"
+    },
+    "820": {
+     "bytes": 17897709,
+     "sha256": "d71827af59f827025daf8ca11a5085aa6c57201434a5b665ce1b4a5a67e0909a"
+    }
+   },
+   "selection": {
+    "checkpoint": {
+     "bytes": 17897709,
+     "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/runs/mg/checkpoints/u00820.pt",
+     "sha256": "d71827af59f827025daf8ca11a5085aa6c57201434a5b665ce1b4a5a67e0909a"
+    },
+    "dev_by_update": {
+     "1640": {
+      "failures": {},
+      "mean_penalised_ratio": 1.031,
+      "mean_ratio_success": 1.031,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 287,
+      "wall_seconds": 10.61
+     },
+     "2460": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0483,
+      "mean_ratio_success": 1.0483,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 292,
+      "wall_seconds": 9.17
+     },
+     "3280": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0289,
+      "mean_ratio_success": 1.0289,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 286,
+      "wall_seconds": 8.16
+     },
+     "4100": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0515,
+      "mean_ratio_success": 1.0515,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 292,
+      "wall_seconds": 8.92
+     },
+     "820": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0106,
+      "mean_ratio_success": 1.0106,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 280,
+      "wall_seconds": 7.63
+     }
+    },
+    "dev_cases": 24,
+    "model": "mg",
+    "rule": "most dev successes, then smaller failure-penalised cost ratio, then earlier checkpoint",
+    "selected_update": "820"
+   }
+  },
+  "REL-G": {
+   "accounting": {
+    "attempts": 1,
+    "batches_per_epoch": 15,
+    "decision_samples_shown": 1634323,
+    "nan_events": 0,
+    "new_module_param_change_l2": 7.0349297523498535,
+    "optimizer_steps": 4100,
+    "parameters_new_module": 66088,
+    "parameters_trainable": 580072,
+    "trajectories": 457,
+    "wall_seconds": 7702.0
+   },
+   "checkpoints": {
+    "1640": {
+     "bytes": 18702261,
+     "sha256": "efd3ea69edad8d1b58749b1353d3ea72fbe9e0697d27024f2da64cb64c1ccf8e"
+    },
+    "2460": {
+     "bytes": 18702261,
+     "sha256": "cbd156a1fd3e05343555b7f079816fb3c204c040f25d161fb9fe5fd2f27afb53"
+    },
+    "3280": {
+     "bytes": 18702261,
+     "sha256": "20e6b6c970c519c1295284bd00c7e7e7bc7a7a208fbbe551726da7a90a70fba3"
+    },
+    "4100": {
+     "bytes": 18702261,
+     "sha256": "01a87e8bbe83112f8c460c36999a88759f987f070a2a5f204270441b0b211973"
+    },
+    "820": {
+     "bytes": 18702261,
+     "sha256": "a102246baff524aec06544f046691219fe3ddf5640af43a7190fff59d13a19e9"
+    }
+   },
+   "selection": {
+    "checkpoint": {
+     "bytes": 18702261,
+     "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/runs/rel/checkpoints/u03280.pt",
+     "sha256": "20e6b6c970c519c1295284bd00c7e7e7bc7a7a208fbbe551726da7a90a70fba3"
+    },
+    "dev_by_update": {
+     "1640": {
+      "failures": {},
+      "mean_penalised_ratio": 1.034,
+      "mean_ratio_success": 1.034,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 285,
+      "wall_seconds": 14.17
+     },
+     "2460": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0146,
+      "mean_ratio_success": 1.0146,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 281,
+      "wall_seconds": 12.51
+     },
+     "3280": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0035,
+      "mean_ratio_success": 1.0035,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 277,
+      "wall_seconds": 8.89
+     },
+     "4100": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0094,
+      "mean_ratio_success": 1.0094,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 279,
+      "wall_seconds": 13.04
+     },
+     "820": {
+      "failures": {},
+      "mean_penalised_ratio": 1.0233,
+      "mean_ratio_success": 1.0233,
+      "n": 24,
+      "perfect": 0,
+      "success": 24,
+      "total_steps": 283,
+      "wall_seconds": 13.43
+     }
+    },
+    "dev_cases": 24,
+    "model": "rel",
+    "rule": "most dev successes, then smaller failure-penalised cost ratio, then earlier checkpoint",
+    "selected_update": "3280"
+   }
+  }
+ }
+}

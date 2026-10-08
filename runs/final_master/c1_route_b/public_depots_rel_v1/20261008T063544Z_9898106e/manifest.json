@@ -14,10 +14,26 @@
   "XDG_CACHE_HOME": "/home/xushijie3/cp_disr_cache"
  },
  "execution_authorized": true,
+ "gpu_assignment_amendment": {
+  "new": [
+   3,
+   1,
+   0,
+   2
+  ],
+  "original": [
+   0,
+   3,
+   7
+  ],
+  "reason": "GPUs 0 and 3 were shared with other users' jobs and slowed two trainings; MG-G and DENSE-G were resumed from their 100-step saves on idle GPUs 1 and 2 (approved by the user); the remaining stages use the least loaded GPUs. Hardware assignment only.",
+  "time": "2026-10-08T17:43:23"
+ },
  "gpus": [
-  0,
   3,
-  7
+  1,
+  0,
+  2
  ],
  "max_new_training_runs": 3,
  "repo_root": "/home/xushijie3/work/graph_cp_disr",

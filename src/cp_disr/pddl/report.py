@@ -114,7 +114,8 @@ def external_records(rr, probs):
             lama_any, lama_first = {}, {}
             for cid, r in refs.items():
                 a, f = r["lama"], r["lama_first"]
-                lama_any[cid] = {"success": a["best_length"] is not None, "steps": a["best_length"], "wall_seconds": a["wall_seconds"], "reason": "OK" if a["best_length"] is not None else "NO_PLAN"}
+                t_first = a["lengths_by_time"][0][0] if a["lengths_by_time"] else a["wall_seconds"]
+                lama_any[cid] = {"success": a["best_length"] is not None, "steps": a["best_length"], "wall_seconds": t_first, "total_wall_seconds": a["wall_seconds"], "reason": "OK" if a["best_length"] is not None else "NO_PLAN"}
                 ft = f["lengths_by_time"][0][0] if f["lengths_by_time"] else f["wall_seconds"]
                 lama_first[cid] = {"success": f["best_length"] is not None, "steps": f["best_length"], "wall_seconds": ft, "reason": "OK" if f["best_length"] is not None else "NO_PLAN"}
             out[("LAMA-first", s)] = lama_first
@@ -250,7 +251,7 @@ def compute_costs(rr, recs):
     rows = []
     for (m, s), d in sorted(recs.items()):
         rs = list(d.values())
-        row = {"method": m, "set": s, "episodes": len(rs), "wall_seconds_total": round(sum(r.get("wall_seconds") or 0.0 for r in rs), 2), "wall_seconds_max": round(max((r.get("wall_seconds") or 0.0) for r in rs), 2) if rs else None}
+        row = {"method": m, "set": s, "episodes": len(rs), "wall_seconds_total": round(sum(r.get("total_wall_seconds", r.get("wall_seconds")) or 0.0 for r in rs), 2), "wall_seconds_max": round(max((r.get("total_wall_seconds", r.get("wall_seconds")) or 0.0) for r in rs), 2) if rs else None}
         if rs and "counters" in rs[0]:
             cn = Counter()
             for r in rs:
@@ -353,6 +354,7 @@ def numbers_md(rr, rows):
                 x = summarise_rows(rs)
                 lines.append("| %s | %d / %d | %s | %s | %s | %s | %s |" % (m, x["success"], x["n"], x["mean_penalised_ratio"], x["mean_ratio_success"], x["total_cost_success"], x["excess_over_ref_success"], x["mean_wall_seconds"]))
         lines.append("")
+    lines += ["Wall-clock columns: internal controllers = policy time (scoring-only label time excluded); WL-GOOSE = whole planner run; LAMA-first = time of its first plan; LAMA-anytime = time of ITS first plan inside the 300 s run (the full run lasts up to 300 s, see compute_costs.csv). The machine and its GPUs were shared with other users, so wall times are indicative only.", ""]
     pc = rr / "results" / "paired_costs.csv"
     if pc.is_file():
         lines += ["## primary and secondary paired comparisons (set ALL = struct + joint + ipc; per set in paired_costs.csv)", "", "| first | second | set | n | first solved | second solved | only first | only second | common | first cheaper | first costlier | same | mean diff (common) | sign p |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
