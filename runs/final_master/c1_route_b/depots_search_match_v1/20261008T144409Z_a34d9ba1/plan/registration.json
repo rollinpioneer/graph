@@ -1,0 +1,61 @@
+{
+ "authorization_text": "\u7528\u6237\u6307\u4ee4\uff08\u804a\u5929\uff0c2026-10-08\uff09\uff1a@CP_DISR_C1_Depots_Search_Matched_Runbook_v2_20261008.md\uff1b\u968f\u540e\u56de\u590d\u201c\u6267\u884c\u201d\u3002\uff08\u5e38\u8bbe\u6307\u4ee4\uff1a\u8bad\u7ec3/\u8bc4\u4ef7\u5168\u90e8\u591a\u5361\u5e76\u884c\uff1b\u5b9e\u9a8c\u5728 lab-xushijie3 \u4e0a\u8fd0\u884c\uff1b\u4ee3\u7801\u4e0e\u8f7b\u91cf\u7ed3\u679c\u4e00\u5e76 push\uff1b\u4e0d\u5f97\u672a\u7ecf\u6279\u51c6\u7ec8\u6b62\u4ed6\u4eba\u6216\u65e2\u6709\u5b9e\u9a8c\u8fdb\u7a0b\u3002\uff09\n",
+ "authorization_text_sha256": "62cc1ebc4ccd39039f032dcc945cea3bdfc81435ba15252c0c89e5ae5f25b12d",
+ "base_commit": "e10e80f56236cb7c43cd4113c8bc345d932f629f",
+ "card": "C1-DEPOTS-SEARCH-MATCH-V1",
+ "config_sha256": "a10328f12102f542e7e6c96290fa899d40d75a1390bd025f37d1a805004bc16e",
+ "core_source_hashes": {
+  "configs/c1_depots_search_match_v1.yaml": "a10328f12102f542e7e6c96290fa899d40d75a1390bd025f37d1a805004bc16e",
+  "scripts/c1_depots_search_match.py": "4a6eeeb866e8c671c0a69e02fe87b18cd124546165b670b579e883ff4a680c58",
+  "src/cp_disr/pddl/search_match/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "src/cp_disr/pddl/search_match/budget.py": "da3508ba39f1ae5696ba66edd7e068e8d66e90357df125e94a2fea4ee2e660b1",
+  "src/cp_disr/pddl/search_match/engine.py": "374e6006927ab4021d22ba369b9b545f92d9b50dc36f4dd79ece427fd30a750e",
+  "src/cp_disr/pddl/search_match/evaluators.py": "e4ee28ad695ec81a6eee95fa375feb7e26961010d317ce904db0bac301798b06",
+  "src/cp_disr/pddl/search_match/hadd_server.cc": "4efbcfb9da10b0d6fc5202aec242c7cb7fc824651ba02211a1822fafcaac1426",
+  "src/cp_disr/pddl/search_match/runner.py": "8476aaca951766eabe2a1b61877e394c80199173355a9a473ccdafc052360a87",
+  "tests/test_depots_search_match.py": "f82de6c614a47c37ab02db61f19493f9c2b4b9fad474aae25e17e6519b345d7e"
+ },
+ "decision_rules": {
+  "outcomes": "plan section 15 classes A-F decide the written method recommendation; no automatic new training",
+  "primary_comparison": "V_DENSE vs H_WL at the 10,000-expansion milestone (1,000 and 100,000 are the budget curve), per data set; coverage, common-solved plan length, expansions to first solution; H_ADD and H_COUNT are the scale references"
+ },
+ "evaluator_identity": "assets/evaluator_identity.json",
+ "fixture_policy": "interface fixtures use Train96 problems (and synthetic graphs) only; no Struct / Joint / IPC search outcome is looked at before the lock; the WL-GOOSE state conversion was additionally compared with the native planner on states of six IPC problem files (heuristic values only, no search, no outcome)",
+ "frozen_search_protocol": {
+  "engine": "common eager GBFS adaptation protocol (single OPEN keyed (h, serial), complete-state duplicate detection, CLOSED never reopened, in-place shorter-path update of OPEN states, canonical action order, goal tested at generation, no beam / helpful actions / C3 / step cap)",
+  "grace_seconds": 20,
+  "h_add_infinite": "sort_last",
+  "max_expansions": 100000,
+  "max_rss_growth_gib": 8,
+  "milestones": [
+   1000,
+   10000,
+   100000
+  ],
+  "neural_chunk": 48,
+  "primary_milestone": 10000,
+  "wall_seconds": 300,
+  "wl_rounding": "cpp_round"
+ },
+ "new_gate_labels": 0,
+ "new_problem_generation": 0,
+ "new_training_runs": 0,
+ "optimizer_steps": 0,
+ "plan": "docs/c1_blocksworld/CP_DISR_C1_Depots_Search_Matched_Runbook_v2_20261008.md",
+ "plan_sha256": "60a12d7e01ee49842c738b9ab174c2ec7672257cdd6e5f1c175a744f1c029655",
+ "registered": "2026-10-08T14:44:11Z",
+ "scope": "six frozen scorers x 182 problems in ONE shared search engine (1,092 runs), reference-length sensitivity (derived), problem topology table, full report; no training",
+ "scorers": [
+  "V_DENSE",
+  "V_MG",
+  "V_REL",
+  "H_WL",
+  "H_ADD",
+  "H_COUNT"
+ ],
+ "shards": {
+  "ipc": 2,
+  "joint": 4,
+  "struct": 1
+ }
+}

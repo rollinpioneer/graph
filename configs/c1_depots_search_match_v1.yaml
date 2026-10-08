@@ -1,0 +1,27 @@
+# C1-DEPOTS-SEARCH-MATCH-V1: frozen settings (plan CP_DISR_C1_Depots_Search_Matched_Runbook_v2_20261008.md, sections 5 and 6). Read by scripts/c1_depots_search_match.py; its sha256 is part of the registration.
+card: C1-DEPOTS-SEARCH-MATCH-V1
+base_branch: codex/cp-disr-c1-public-depots-rel-v1
+base_commit: e10e80f56236cb7c43cd4113c8bc345d932f629f
+branch: codex/cp-disr-c1-depots-search-match-v1
+old_run_root: runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e
+suite_rel: runs/final_master/c1_route_b/depots_search_match_v1
+
+search:
+  engine: common eager GBFS adaptation protocol (single OPEN keyed (h, serial), complete-state duplicate detection, CLOSED never reopened, in-place shorter-path update of OPEN states, canonical action order, goal tested at generation, no beam / helpful actions / C3 / step cap)
+  wall_seconds: 300          # per problem, covers parsing, grounding / translation, template, conversion, search and scoring
+  max_expansions: 100000
+  milestones: [1000, 10000, 100000]
+  primary_milestone: 10000
+  max_rss_growth_gib: 8      # growth of the worker's resident set since the start of the problem
+  grace_seconds: 20          # SIGALRM guard for sections that never poll the budget (grounding, translation)
+  neural_chunk: 48           # states per forward call (a pure compute split)
+  wl_rounding: cpp_round     # the native planner's heuristic value is round(prediction); kept
+  h_add_infinite: sort_last  # no dead-end pruning for any scorer
+
+scorers: [V_DENSE, V_MG, V_REL, H_WL, H_ADD, H_COUNT]
+sets: [struct, joint, ipc]
+shards: {struct: 1, joint: 4, ipc: 2}          # strided split of the sorted case ids; shards are independent searches run in parallel
+
+limits:
+  cpu_slots: 4               # concurrent CPU scorer tasks
+  one_neural_task_per_gpu: true
