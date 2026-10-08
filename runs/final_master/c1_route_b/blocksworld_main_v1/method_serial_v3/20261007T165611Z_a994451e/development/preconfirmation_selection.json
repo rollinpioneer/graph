@@ -1,0 +1,103 @@
+{
+ "candidates": [
+  {
+   "board48_h4_perfect": 9,
+   "board48_penalty": 1.0791,
+   "board48_perfect": 30,
+   "board48_success": 48,
+   "condition": "CAL_ABS",
+   "epoch": 20
+  },
+  {
+   "board48_h4_perfect": 9,
+   "board48_penalty": 1.114,
+   "board48_perfect": 30,
+   "board48_success": 47,
+   "condition": "CAL_REL",
+   "epoch": 20
+  },
+  {
+   "board48_h4_perfect": 10,
+   "board48_penalty": 1.1125,
+   "board48_perfect": 31,
+   "board48_success": 47,
+   "condition": "GOAL_DENSE",
+   "epoch": 100
+  },
+  {
+   "board48_h4_perfect": 13,
+   "board48_penalty": 1.082,
+   "board48_perfect": 36,
+   "board48_success": 47,
+   "condition": "GOAL_REL",
+   "epoch": 60
+  },
+  {
+   "board48_h4_perfect": 12,
+   "board48_penalty": 1.1164,
+   "board48_perfect": 32,
+   "board48_success": 47,
+   "condition": "REC_REL",
+   "epoch": 80
+  },
+  {
+   "board48_h4_perfect": 12,
+   "board48_penalty": 1.107,
+   "board48_perfect": 33,
+   "board48_success": 47,
+   "condition": "REC_SELF",
+   "epoch": 80
+  },
+  {
+   "board48_h4_perfect": 9,
+   "board48_penalty": 1.1209,
+   "board48_perfect": 29,
+   "board48_success": 46,
+   "condition": "SG_BASE",
+   "epoch": 100
+  },
+  {
+   "board48_h4_perfect": 2,
+   "board48_penalty": 1.4442,
+   "board48_perfect": 22,
+   "board48_success": 39,
+   "condition": "SG_FACT",
+   "epoch": 80
+  },
+  {
+   "board48_h4_perfect": 5,
+   "board48_penalty": 1.4523,
+   "board48_perfect": 24,
+   "board48_success": 36,
+   "condition": "SG_JOINT",
+   "epoch": 20
+  }
+ ],
+ "expected_side_effects": "recorded in the final claim boundary",
+ "families_and_matched_controls": {
+  "calibration": [
+   "CAL_REL vs CAL_ABS (C3 and LOOK2)"
+  ],
+  "goal_attention": [
+   "GOAL_REL vs GOAL_DENSE"
+  ],
+  "lookahead": [
+   "LOOK2_MG vs LOOK2_COUNT vs MG_C3"
+  ],
+  "next_event": [
+   "SG_JOINT vs SG_FACT vs SG_BASE"
+  ],
+  "recurrent": [
+   "REC_REL vs REC_SELF (T4 and T8)"
+  ]
+ },
+ "frozen_references": [
+  "MG_C3",
+  "B_G1C3"
+ ],
+ "locked_at": "2026-10-08T01:24:00Z",
+ "locked_before_confirmation": true,
+ "lookahead_priority": "RECURRENT_THEN_CALIBRATION",
+ "preselected_candidate": "CAL_ABS",
+ "selected_by": "Board48 key only"
+}

@@ -790,6 +790,103 @@ def cmd_report(rr):
     return 0
 
 
+# ------------------------------------------------------------------------------------------------ multi-GPU parallel workers (user instruction 2026-10-08: training / evaluation tasks run on several GPUs)
+DONE_STATES = ("DONE", "REUSED_EXACT", "MATHEMATICALLY_EQUIVALENT_REUSED")
+
+
+def _task_id(cmd, cond):
+    prefix = {"train": "train_", "devsel": "devsel_", "confirm_eval": "confirm_"}.get(cmd)
+    return (prefix + (cond or "")) if prefix else None
+
+
+def claim_or_wait(rr, tid):
+    """True: this process owns the task and must run it. False: the task is finished (receipt present) or was finished by the process we waited for. Stale claims (dead owner, no receipt) are taken over,
+    so a crashed stage resumes from its own epoch snapshot."""
+    rdir = Path(rr) / "receipts"
+    claim, rec = rdir / (tid + ".claim"), rdir / (tid + ".json")
+    while True:
+        try:
+            fd = os.open(claim, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, str(os.getpid()).encode())
+            os.close(fd)
+            return True
+        except FileExistsError:
+            pass
+        try:
+            pid = int(claim.read_text().strip())
+        except (OSError, ValueError):
+            pid = None
+        alive = pid is not None and pid != os.getpid() and Path("/proc/%d" % pid).exists()
+        done = None
+        if rec.is_file():
+            try:
+                done = json.loads(rec.read_text())
+            except json.JSONDecodeError:
+                done = None
+        if done and done.get("status") in DONE_STATES and not alive:
+            fp = os.environ.get("TASK_FINGERPRINT")
+            if fp and done.get("input_fingerprint") != fp:
+                done["input_fingerprint"] = fp           # same outputs, produced by the parallel worker; the fingerprint is the manifest fingerprint of the same task
+                tmp = Path(str(rec) + ".tmp")
+                tmp.write_text(json.dumps(done, indent=1, sort_keys=True))
+                os.replace(tmp, rec)
+            return False
+        if not alive:
+            claim.unlink(missing_ok=True)
+            continue
+        time.sleep(20)
+
+
+def cmd_worker(rr, tid, gpu):
+    from cp_disr.blocksworld.method_serial import schedule
+    man = json.loads((Path(rr) / "manifest.json").read_text())
+    task = next(t for t in man["tasks"] if t["id"] == tid)
+    fp = schedule.fingerprint(task)
+    env = {**os.environ, **{k: str(v) for k, v in man.get("env", {}).items()}, "CUDA_VISIBLE_DEVICES": str(gpu), "TASK_FINGERPRINT": fp, "PYTHONUNBUFFERED": "1"}
+    log = Path(rr) / "driver_logs" / ("%s.worker.log" % tid)
+    rc = 1
+    for _a in range(3 if task.get("training_run_id") else 1):
+        with open(log, "ab") as f:
+            rc = subprocess.run(task["argv"], cwd=str(ROOT), env=env, stdout=f, stderr=subprocess.STDOUT).returncode
+        if rc == 0:
+            break
+    return rc
+
+
+def cmd_parallel(rr, tids, gpus):
+    """Run independent manifest tasks concurrently, one per listed GPU; a task starts when its ``requires`` have DONE receipts."""
+    man = json.loads((Path(rr) / "manifest.json").read_text())
+    tasks = {t["id"]: t for t in man["tasks"]}
+    pending, running, rcs = [t for t in tids if t in tasks], {}, {}
+    free = list(gpus)
+
+    def done(t):
+        p = Path(rr) / "receipts" / ("%s.json" % t)
+        try:
+            return p.is_file() and json.loads(p.read_text()).get("status") in DONE_STATES
+        except json.JSONDecodeError:
+            return False
+    while pending or running:
+        for tid, (proc, g) in list(running.items()):
+            if proc.poll() is not None:
+                rcs[tid] = proc.returncode
+                free.append(g)
+                del running[tid]
+        for tid in list(pending):
+            if not free:
+                break
+            if done(tid):
+                pending.remove(tid)
+                continue
+            if all(done(r) for r in tasks[tid].get("requires", [])):
+                g = free.pop(0)
+                pending.remove(tid)
+                running[tid] = (subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "worker", "--run-root", str(rr), "--task-id", tid, "--gpu", str(g)], cwd=str(ROOT)), g)
+        time.sleep(15)
+    print(json.dumps(rcs))
+    return 0
+
+
 # ------------------------------------------------------------------------------------------------ status
 def cmd_status(rr):
     st = json.loads((Path(rr) / "stage_state.json").read_text()) if (Path(rr) / "stage_state.json").is_file() else {"stages": {}}
@@ -804,11 +901,21 @@ def main():
     ap.add_argument("--condition", default=None)
     ap.add_argument("--gpu", type=int, default=0)
     ap.add_argument("--authorization-text-file", default=None)
+    ap.add_argument("--task-id", default=None)
+    ap.add_argument("--tasks", default=None)
+    ap.add_argument("--gpus", default=None)
     a = ap.parse_args()
     if a.cmd == "init":
         cmd_init(a.gpu, Path(a.authorization_text_file).read_text(encoding="utf-8"))
         return 0
     rr = a.run_root
+    if a.cmd == "worker":
+        return cmd_worker(rr, a.task_id, a.gpu)
+    if a.cmd == "parallel":
+        return cmd_parallel(rr, a.tasks.split(","), [int(x) for x in a.gpus.split(",")])
+    tid = _task_id(a.cmd, a.condition)
+    if tid and not claim_or_wait(rr, tid):
+        return 0
     fn = {"run-all": lambda: run_all(rr), "status": lambda: cmd_status(rr), "fixtures": lambda: cmd_fixtures(rr), "lookahead_dev": lambda: cmd_lookahead(rr), "event_labels": lambda: cmd_event_labels(rr),
           "cal_prep": lambda: cmd_cal_prep(rr), "train": lambda: cmd_train(rr, a.condition), "devsel": lambda: cmd_devsel(rr, a.condition), "lock_selected": lambda: cmd_lock(rr),
           "confirm_prepare": lambda: cmd_confirm_prepare(rr), "confirm_eval": lambda: cmd_confirm_eval(rr, a.condition), "report": lambda: cmd_report(rr)}[a.cmd]

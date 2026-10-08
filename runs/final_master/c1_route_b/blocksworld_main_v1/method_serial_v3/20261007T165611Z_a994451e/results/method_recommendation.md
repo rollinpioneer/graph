@@ -1,0 +1,13 @@
+# C1-BW-METHOD-SERIAL-SUITE-V3 — method recommendation (descriptive; no further training is started by this card)
+
+Ordering rule (runbook 13.3): hard-layer deployment benefit, retained simple-case ability, effect over the matched control, compute/label cost, then applicability to a second domain. Small differences are written as weak evidence.
+
+| rank | option | benefit on hard layers (h=4 / must-destroy) | simple-case ability | effect over matched control | cost | caveat |
+|---|---|---|---|---|---|---|
+| 1 | two-step look-ahead with the learned value (LOOK2_MG; calibrated REL leaf equal or +1 success) | optimal 34/64 vs 23/64 (h4), 22/34 vs 16/34 (must-destroy); successes 127-128 | kept (h2 64/64) | +56 successes and +30 optimal at h4 over the same tree with goal-count leaves; +17 optimal over one-step | about +70% episode time; needs contract expansion | contains search compute; depth 2 only; second-domain use needs a transition/contract model |
+| 2 | GOAL_REL attention | optimal 38/64 (h4) vs 23/64; must-destroy 21/34 vs 16/34 | kept in optimality; successes 122 vs 124 | +12 optimal and +2 success over dense attention with identical module | one-step cost, +66k parameters | may be suppression of unseen cross-tower pairs; the mask depends on goal-structure features |
+| 3 | relative calibration as look-ahead leaf | +6 optimal over the absolute variant under look-ahead; equal to the uncalibrated MG leaf | kept | small | label cost of endpoint distances | no value-error evidence; no gain over MG leaf |
+| 4 | next-event organisation | negative at h4 (26-40 / 64 successes vs 60) | kept at h2 | JOINT > FACT but both < BASE | planner label cost | do not extend without revisiting the event definition and auxiliary weight |
+| 5 | recurrent relational processor | none observed (T4 = T8, REL = SELF) | kept | none | +20% training time | under-supervised; needs a different training signal before any claim |
+
+Reading: nothing here beats the combination of search and the learned value on the hardest layer, and the best one-step option (GOAL_REL) is confounded with a mask prior. The strongest honest deliverable is the pair "learned value + two-step expansion" as a controller and "relation-restricted attention" as a candidate representation change. A next card, if requested, should (a) test GOAL_REL with a third mask condition (mask restricted but only to observed-in-training pair types) and a second seed, (b) test look-ahead with GOAL_REL as the leaf scorer as an explicit combination (this suite deliberately did not combine modules), (c) keep the 8-iteration and next-event variants out until their training signal is redesigned. The preselected candidate (CAL_ABS) was not confirmed beyond a small, non-separable gain.
