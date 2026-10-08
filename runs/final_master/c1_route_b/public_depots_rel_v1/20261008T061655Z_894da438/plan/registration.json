@@ -1,0 +1,179 @@
+{
+ "authorization_text": "\u7528\u6237\u6307\u4ee4\uff08\u804a\u5929\uff0c2026-10-08\uff09\uff1a@CP_DISR_C1_Next_Direction_v2_Depots_REL_20261008.md \u6267\u884c\uff1b\u968f\u540e\u201c\u7ee7\u7eed\u201d\u3002\uff08\u4e4b\u524d\u7684\u5e38\u8bbe\u6307\u4ee4\uff1a\u8bad\u7ec3/\u8bc4\u4ef7\u5168\u90e8\u591a\u5361\u5e76\u884c\uff1b\u5b9e\u9a8c\u5728 lab-xushijie3 \u4e0a\u8fd0\u884c\uff1b\u4ee3\u7801\u4e0e\u8f7b\u91cf\u7ed3\u679c\u4e00\u5e76 push\u3002\uff09\n",
+ "authorization_text_sha256": "755c3a148710c7680d32a302844988c12942facce0e62f972f00646d2b4071a9",
+ "base_commit": "e3b1e65b3725174cc6169d7857d0983793037b88",
+ "card": "C1-PUBLIC-DEPOTS-REL-V1",
+ "core_source_hashes": {
+  "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+  "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+  "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+  "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+  "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+  "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+  "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+  "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+  "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+  "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+  "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+  "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+  "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+  "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+  "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+  "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+  "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+ },
+ "frozen_design": {
+  "blocksworld_stage": {
+   "conditions": [
+    "GATED_MG",
+    "GATED_REL",
+    "LOOK2_HADD (MG roots/C3, same two-step tree, leaf = h_add of the grounded contracts)"
+   ],
+   "probes": "module-level isolation and end-to-end augmentation on the 240-state bank (DENSE/REL/MG)",
+   "problems": "Confirm128 (development material), 128 episodes per condition",
+   "reused_rows": [
+    "MG_C3",
+    "LOOK2_MG",
+    "GOAL_REL",
+    "GOAL_DENSE",
+    "REL_LOOK2",
+    "DENSE_LOOK2"
+   ],
+   "scorers": {
+    "MG": "M1-GOAL final checkpoint (zero-initialised SerialModel wrapper)",
+    "REL": "GOAL_REL checkpoint selected by the method-serial v3 card"
+   }
+  },
+  "budget": {
+   "batch_trajectories": 32,
+   "checkpoints": [
+    820,
+    1640,
+    2460,
+    3280,
+    4100
+   ],
+   "chunk_decisions": 48,
+   "grad_clip": 0.5,
+   "init_seed": 20261008,
+   "lr": 0.0003,
+   "rank_weight": 1.0,
+   "updates": 4100
+  },
+  "exec": [
+   "one_step",
+   "two_step",
+   "gated"
+  ],
+  "external": {
+   "lama": "seq-sat-lama-2011 (anytime) + lama-first + seq-opt-lmcut",
+   "wl_goose": "configurations/classic.toml, trained on the same 96 training problems with optimal plans"
+  },
+  "external_optional": "AIW-AD / KR 2023: not part of the formal run; status is stated in the final receipt",
+  "fd": {
+   "lama_first_seconds": 300,
+   "lama_seconds": 300,
+   "lmcut_seconds": 300,
+   "memory_mb": 8000
+  },
+  "gate_tau": "10th percentile of top-2 logit margin over unique training decisions with >=2 legal actions",
+  "gated_depots_runs_only_if": "pooled over the MG and REL scorers on the Confirm128 problems the selective look-ahead (a) evaluates fewer leaf states than the fixed two-step tree, (b) keeps >= 90% of its completions and (c) makes no more avoidable destructions of satisfied goals (gate_decision stage); the thresholds tau are the 10th percentile of the top-2 margin over TRAINING decisions of each scorer, frozen before any evaluation episode",
+  "hoists": 2,
+  "joint_cells": {
+   "n6k1h2": [
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "n6k1h4": [
+    4,
+    1,
+    1
+   ],
+   "n6k2h2": [
+    2,
+    2,
+    1,
+    1
+   ],
+   "n6k2h4": [
+    4,
+    2
+   ],
+   "n8k1h2": [
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "n8k1h4": [
+    4,
+    1,
+    1,
+    1,
+    1
+   ],
+   "n8k2h2": [
+    2,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "n8k2h4": [
+    4,
+    2,
+    1,
+    1
+   ]
+  },
+  "labels": "exact BFS distances (full reachable state space) for train/dev/struct and 6-crate joint problems (optimum + goal-destruction label); 8-crate joint and IPC problems: A*+LM-cut within the budget, else best known LAMA plan; no label enters a forward pass",
+  "pallets": "= crates",
+  "per": {
+   "dev_per_n": 8,
+   "joint_per_cell": 16,
+   "struct": 16,
+   "train_per_n": 32
+  },
+  "places": 2,
+  "primary_comparisons": "REL-G vs DENSE-G at one_step and at two_step on struct and on joint: completion counts (only-first / only-second), failure-penalised cost ratio and common-success cost difference with a two-sided sign test; every other comparison is exploratory and uncorrected",
+  "seeds": {
+   "dev": {
+    "3": 2000000,
+    "4": 2100000,
+    "5": 2200000
+   },
+   "joint0": 4000000,
+   "struct": {
+    "4": 3000000,
+    "5": 3100000
+   },
+   "train": {
+    "3": 1000000,
+    "4": 1100000,
+    "5": 1200000
+   }
+  },
+  "selection": "dev (24 problems): most successes, then smaller failure-penalised cost ratio, then earlier checkpoint",
+  "step_cap": "2*L_ref+4 (L_ref: exact optimum, else A*+LM-cut optimum, else best known LAMA plan)",
+  "struct": "4 crates 2+2 (16) and 5 crates 3+2 (16)",
+  "time_budget": {
+   "lama": "anytime configuration with the same wall limit; first-plan time and length recorded separately",
+   "neural_controllers": "checked between decisions (a decision is never interrupted)",
+   "per_problem_wall_seconds_all_time_limited_methods": 300,
+   "wl_goose": "whole planner run incl. preprocessing, process group killed at the limit"
+  },
+  "train_goal_shape": "exactly one stack of height 2 or 3, all other crates alone on a pallet; complete layout (every crate has a goal)",
+  "trucks": 1
+ },
+ "plan": "docs/c1_blocksworld/CP_DISR_C1_Next_Direction_v2_Depots_REL_20261008.md",
+ "plan_sha256": "9e8b447f894dd6d39d42e6178f64030512162eb7cee38b703f68f77b2b07703d",
+ "registered": "2026-10-08T06:16:55Z",
+ "scope": "plan sections 3-12: Blocksworld zero-training (gated look-ahead, h_add leaf, two probes) + generic relation interface + public Depots (3 internal trainings MG-G/DENSE-G/REL-G) + external LAMA and WL-GOOSE; optional AIW-AD / KR 2023 not run unless stated in the final receipt"
+}

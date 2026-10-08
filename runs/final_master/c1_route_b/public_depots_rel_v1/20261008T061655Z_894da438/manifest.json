@@ -1,0 +1,2127 @@
+{
+ "authorization_source": "\u7528\u6237\u6307\u4ee4\uff08\u804a\u5929\uff0c2026-10-08\uff09\uff1a@CP_DISR_C1_Next_Direction_v2_Depots_REL_20261008.md \u6267\u884c\uff1b\u968f\u540e\u201c\u7ee7\u7eed\u201d\u3002\uff08\u4e4b\u524d\u7684\u5e38\u8bbe\u6307\u4ee4\uff1a\u8bad\u7ec3/\u8bc4\u4ef7\u5168\u90e8\u591a\u5361\u5e76\u884c\uff1b\u5b9e\u9a8c\u5728 lab-xushijie3 \u4e0a\u8fd0\u884c\uff1b\u4ee3\u7801\u4e0e\u8f7b\u91cf\u7ed3\u679c\u4e00\u5e76 push\u3002\uff09\n",
+ "card": "C1-PUBLIC-DEPOTS-REL-V1",
+ "env": {
+  "CPDISR_EXACT_BIN": "/home/xushijie3/ext/bin/exact_dist",
+  "CPDISR_EXT": "/home/xushijie3/ext",
+  "PYTHONPATH": "src",
+  "PYTHONUNBUFFERED": "1",
+  "TMPDIR": "/home/xushijie3/cp_disr_tmp",
+  "TORCH_HOME": "/home/xushijie3/cp_disr_cache/torch",
+  "XDG_CACHE_HOME": "/home/xushijie3/cp_disr_cache"
+ },
+ "execution_authorized": true,
+ "gpus": [
+  0,
+  3,
+  7
+ ],
+ "max_new_training_runs": 3,
+ "repo_root": "/home/xushijie3/work/graph_cp_disr",
+ "tasks": [
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "prep_ext",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "prep_ext",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/prep_ext.json",
+   "requires": [],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "gen_data",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "gen_data",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/gen_data.json",
+   "requires": [
+    "prep_ext"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "labels",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "labels",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/labels.json",
+   "requires": [
+    "gen_data"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "ref",
+    "--set",
+    "dev",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "ref_dev",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/ref_dev.json",
+   "requires": [
+    "gen_data"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "ref",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "ref_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/ref_struct.json",
+   "requires": [
+    "gen_data"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "ref",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "ref_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/ref_joint.json",
+   "requires": [
+    "gen_data"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "ref",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "ref_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/ref_ipc.json",
+   "requires": [
+    "gen_data"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "goose_fit",
+    "--track",
+    "typed",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "goose_fit_typed",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/goose_fit_typed.json",
+   "requires": [
+    "labels"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "goose_fit",
+    "--track",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "goose_fit_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/goose_fit_ipc.json",
+   "requires": [
+    "labels"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "bw_tau",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "bw_tau",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/bw_tau.json",
+   "requires": [],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "bw_eval",
+    "--condition",
+    "GATED_MG",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "bw_eval_GATED_MG",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/bw_eval_GATED_MG.json",
+   "requires": [
+    "bw_tau"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "bw_eval",
+    "--condition",
+    "GATED_REL",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "bw_eval_GATED_REL",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/bw_eval_GATED_REL.json",
+   "requires": [
+    "bw_tau"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "bw_eval",
+    "--condition",
+    "LOOK2_HADD",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "bw_eval_LOOK2_HADD",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/bw_eval_LOOK2_HADD.json",
+   "requires": [],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "bw_probes",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "bw_probes",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/bw_probes.json",
+   "requires": [],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "gate_decision",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "gate_decision",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/gate_decision.json",
+   "requires": [
+    "bw_eval_GATED_MG",
+    "bw_eval_GATED_REL",
+    "bw_eval_LOOK2_HADD"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "train",
+    "--model",
+    "mg",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "train_mg",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/train_mg.json",
+   "requires": [
+    "labels"
+   ],
+   "resource": "gpu",
+   "training_run_id": "R-C1-PD-MG-G-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "devsel",
+    "--model",
+    "mg",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "devsel_mg",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/devsel_mg.json",
+   "requires": [
+    "train_mg",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "train",
+    "--model",
+    "dense",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "train_dense",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/train_dense.json",
+   "requires": [
+    "labels"
+   ],
+   "resource": "gpu",
+   "training_run_id": "R-C1-PD-DENSE-G-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "devsel",
+    "--model",
+    "dense",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "devsel_dense",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/devsel_dense.json",
+   "requires": [
+    "train_dense",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "train",
+    "--model",
+    "rel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "train_rel",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/train_rel.json",
+   "requires": [
+    "labels"
+   ],
+   "resource": "gpu",
+   "training_run_id": "R-C1-PD-REL-G-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "devsel",
+    "--model",
+    "rel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "devsel_rel",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/devsel_rel.json",
+   "requires": [
+    "train_rel",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "lock",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "lock",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/lock.json",
+   "requires": [
+    "devsel_mg",
+    "devsel_dense",
+    "devsel_rel",
+    "goose_fit_typed",
+    "goose_fit_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "one_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_one_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_one_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "one_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_one_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_one_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "one_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_one_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_one_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "two_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_two_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_two_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "two_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_two_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_two_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "two_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_two_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_two_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "gated",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_gated_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_gated_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "gate_decision",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "gated",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_gated_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_gated_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "mg",
+    "--exec",
+    "gated",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_mg_gated_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_mg_gated_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "one_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_one_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_one_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "one_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_one_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_one_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "one_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_one_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_one_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "two_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_two_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_two_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "two_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_two_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_two_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "two_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_two_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_two_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "gated",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_gated_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_gated_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "gate_decision",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "gated",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_gated_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_gated_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "dense",
+    "--exec",
+    "gated",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_dense_gated_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_dense_gated_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "one_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_one_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_one_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "one_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_one_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_one_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "one_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_one_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_one_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "two_step",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_two_step_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_two_step_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "two_step",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_two_step_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_two_step_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "two_step",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_two_step_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_two_step_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "gated",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_gated_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_gated_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct",
+    "gate_decision",
+    "labels"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "gated",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_gated_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_gated_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "eval",
+    "--model",
+    "rel",
+    "--exec",
+    "gated",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "eval_rel_gated_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/eval_rel_gated_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc",
+    "gate_decision"
+   ],
+   "resource": "gpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "goose_eval",
+    "--set",
+    "struct",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "goose_eval_struct",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/goose_eval_struct.json",
+   "requires": [
+    "lock",
+    "ref_struct"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "goose_eval",
+    "--set",
+    "joint",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "goose_eval_joint",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/goose_eval_joint.json",
+   "requires": [
+    "lock",
+    "ref_joint"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "goose_eval",
+    "--set",
+    "ipc",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "goose_eval_ipc",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/goose_eval_ipc.json",
+   "requires": [
+    "lock",
+    "ref_ipc"
+   ],
+   "resource": "cpu"
+  },
+  {
+   "after": [
+    "prep_ext",
+    "gen_data",
+    "labels",
+    "ref_dev",
+    "ref_struct",
+    "ref_joint",
+    "ref_ipc",
+    "goose_fit_typed",
+    "goose_fit_ipc",
+    "bw_tau",
+    "bw_eval_GATED_MG",
+    "bw_eval_GATED_REL",
+    "bw_eval_LOOK2_HADD",
+    "bw_probes",
+    "gate_decision",
+    "train_mg",
+    "devsel_mg",
+    "train_dense",
+    "devsel_dense",
+    "train_rel",
+    "devsel_rel",
+    "lock",
+    "eval_mg_one_step_struct",
+    "eval_mg_one_step_joint",
+    "eval_mg_one_step_ipc",
+    "eval_mg_two_step_struct",
+    "eval_mg_two_step_joint",
+    "eval_mg_two_step_ipc",
+    "eval_mg_gated_struct",
+    "eval_mg_gated_joint",
+    "eval_mg_gated_ipc",
+    "eval_dense_one_step_struct",
+    "eval_dense_one_step_joint",
+    "eval_dense_one_step_ipc",
+    "eval_dense_two_step_struct",
+    "eval_dense_two_step_joint",
+    "eval_dense_two_step_ipc",
+    "eval_dense_gated_struct",
+    "eval_dense_gated_joint",
+    "eval_dense_gated_ipc",
+    "eval_rel_one_step_struct",
+    "eval_rel_one_step_joint",
+    "eval_rel_one_step_ipc",
+    "eval_rel_two_step_struct",
+    "eval_rel_two_step_joint",
+    "eval_rel_two_step_ipc",
+    "eval_rel_gated_struct",
+    "eval_rel_gated_joint",
+    "eval_rel_gated_ipc",
+    "goose_eval_struct",
+    "goose_eval_joint",
+    "goose_eval_ipc"
+   ],
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py",
+    "report",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438"
+   ],
+   "id": "report",
+   "input_hashes": {
+    "scripts/c1_public_depots.py": "feed99abcb133eb248917f997d37bcd06a6a0b394706f4bad7281951a7cc2138",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
+    "src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
+    "src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
+    "src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
+    "src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
+    "src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
+    "src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
+    "src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
+    "src/cp_disr/pddl/report.py": "cd5ad088b4dad1e3e9186953c55c3e093dc4cabd6485dfb20ab6b958ee684477",
+    "src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
+    "src/cp_disr/pddl/stages.py": "ebe7f91782a710ec1b9c5d123291f13eda60ed3e3a5158d8ffecc3df29187941",
+    "src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
+    "src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
+    "tests/test_pddl_c1.py": "63758c1b8222bc51b69b31a2f9335ece4fb6c3140362ffb10ab0ea3acf10b3da"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T061655Z_894da438/receipts/report.json",
+   "requires": [],
+   "resource": "cpu"
+  }
+ ]
+}
