@@ -1,0 +1,32 @@
+{
+ "authorization_text": "\u7528\u6237\u5728\u5bf9\u8bdd\u4e2d\u7684\u539f\u8bdd\uff082026-10-08\uff09\uff1a@CP_DISR_C1_Five_Methods_Closeout_and_Integration_Plan_20261008.md \u6267\u884c\n",
+ "authorization_text_sha256": "1ff73a705ce4d62642133fe26416eccff423f0b1271f76347082bfb3518cacb5",
+ "base_commit": "225cbae0c160b9fa4361a60a6b475f586f3f90a4",
+ "card": "C1-BW-GOAL-LOOKAHEAD-INTEGRATION-V1",
+ "control_definition": "same module/parameters/pair features/initialisation/budget as GOAL_REL and GOAL_DENSE; per query row keep self + k randomly ranked other goals, k = non-self targets of the REL mask in that row; ranking = fixed integer hash of (scored-state proposition truth vector, row, column), identical on every call (cached-by-construction, state-only, CPU = GPU); not invariant to object renaming (block names b0.. fixed in all splits); no true relation, label or history enters; same selection rule and 5 checkpoints as the other conditions",
+ "core_source_hashes": {
+  "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+  "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+  "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+  "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+  "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+  "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+  "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+ },
+ "extra_evaluations_of_the_control": [
+  "GOAL_RAND one-step+C3 on Confirm128",
+  "GOAL_RAND + fixed two-step on Confirm128 (execution-matched control for REL_LOOK2)"
+ ],
+ "plan": "docs/c1_blocksworld/CP_DISR_C1_Five_Methods_Closeout_and_Integration_Plan_20261008.md",
+ "plan_sha256": "72fd31c09e0e28902dcef5a13cae6d8cc0ed314583dfebdff1b97345ff23d102",
+ "registered": "2026-10-08T02:01:21Z",
+ "reused_rows": [
+  "MG_C3",
+  "LOOK2_MG",
+  "GOAL_DENSE",
+  "GOAL_REL",
+  "B_G1C3 (method-serial v3, same code/problems/weights)"
+ ],
+ "role_of_confirm128": "development material from this card on; no independent confirmation claim",
+ "scope": "section 5 (zero-training DENSE_LOOK2 and REL_LOOK2 on Confirm128, 256 development episodes) and section 6 (at most one training: sparsity-matched random-mask control GOAL_RAND)"
+}

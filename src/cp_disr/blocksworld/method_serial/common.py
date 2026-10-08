@@ -26,7 +26,9 @@ EPOCHS, CKPT_EPOCHS = (2, (1, 2)) if SMOKE else (100, (20, 40, 60, 80, 100))
 CONDS = {"SG_BASE": ("EVENT", "BASE", "event"), "SG_FACT": ("EVENT", "FACT", "event"), "SG_JOINT": ("EVENT", "JOINT", "event"),
          "CAL_ABS": ("CAL", "ABS", "calibration"), "CAL_REL": ("CAL", "REL", "calibration"),
          "REC_SELF": ("REC_SELF", "REC", "recurrent"), "REC_REL": ("REC_REL", "REC", "recurrent"),
-         "GOAL_DENSE": ("GOAL_DENSE", "ACTION", "goal_attention"), "GOAL_REL": ("GOAL_REL", "ACTION", "goal_attention")}
+         "GOAL_DENSE": ("GOAL_DENSE", "ACTION", "goal_attention"), "GOAL_REL": ("GOAL_REL", "ACTION", "goal_attention"),
+         "GOAL_RAND": ("GOAL_RAND", "ACTION", "goal_attention")}          # sparsity-matched random-mask control (goal-lookahead integration card)
+V3_CONDS = ("SG_BASE", "SG_FACT", "SG_JOINT", "CAL_ABS", "CAL_REL", "REC_SELF", "REC_REL", "GOAL_DENSE", "GOAL_REL")
 # the 17 confirmation conditions: name -> (source trained condition or None, how it is executed)
 CONFIRM = {"MG_C3": (None, "one_step"), "B_G1C3": (None, "b2_rule"), "LOOK2_MG": (None, "look_mg"), "LOOK2_COUNT": (None, "look_count"),
            "SG_BASE": ("SG_BASE", "one_step"), "SG_FACT": ("SG_FACT", "one_step"), "SG_JOINT": ("SG_JOINT", "one_step"),

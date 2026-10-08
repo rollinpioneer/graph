@@ -1,0 +1,209 @@
+{
+ "authorization_source": "\u7528\u6237\u5728\u5bf9\u8bdd\u4e2d\u7684\u539f\u8bdd\uff082026-10-08\uff09\uff1a@CP_DISR_C1_Five_Methods_Closeout_and_Integration_Plan_20261008.md \u6267\u884c\n",
+ "card": "C1-BW-GOAL-LOOKAHEAD-INTEGRATION-V1",
+ "env": {
+  "PYTHONPATH": "src",
+  "PYTHONUNBUFFERED": "1",
+  "TMPDIR": "/home/xushijie3/cp_disr_tmp",
+  "TORCH_HOME": "/home/xushijie3/cp_disr_cache/torch",
+  "XDG_CACHE_HOME": "/home/xushijie3/cp_disr_cache"
+ },
+ "execution_authorized": true,
+ "gpus": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "max_new_training_runs": 1,
+ "tasks": [
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py",
+    "fixtures",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39"
+   ],
+   "gpu": true,
+   "group": "fixtures",
+   "id": "fixtures",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/fixtures.json",
+   "requires": []
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "train",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "GOAL_RAND"
+   ],
+   "gpu": true,
+   "group": "train",
+   "id": "train_GOAL_RAND",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/train_GOAL_RAND.json",
+   "requires": [
+    "fixtures"
+   ],
+   "training_run_id": "R-C1-GLI-GOAL-RAND-0"
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py",
+    "devsel",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "GOAL_RAND"
+   ],
+   "gpu": true,
+   "group": "train",
+   "id": "devsel_GOAL_RAND",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/devsel_GOAL_RAND.json",
+   "requires": [
+    "train_GOAL_RAND"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py",
+    "look_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "DENSE_LOOK2"
+   ],
+   "gpu": true,
+   "group": "eval",
+   "id": "look_DENSE_LOOK2",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/look_DENSE_LOOK2.json",
+   "requires": [
+    "fixtures"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py",
+    "look_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "REL_LOOK2"
+   ],
+   "gpu": true,
+   "group": "eval",
+   "id": "look_REL_LOOK2",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/look_REL_LOOK2.json",
+   "requires": [
+    "fixtures"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py",
+    "look_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "RAND_C3"
+   ],
+   "gpu": true,
+   "group": "eval",
+   "id": "look_RAND_C3",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/look_RAND_C3.json",
+   "requires": [
+    "devsel_GOAL_RAND"
+   ]
+  },
+  {
+   "argv": [
+    "/home/xushijie3/envs/cpdisr/bin/python",
+    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py",
+    "look_eval",
+    "--run-root",
+    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39",
+    "--condition",
+    "RAND_LOOK2"
+   ],
+   "gpu": true,
+   "group": "eval",
+   "id": "look_RAND_LOOK2",
+   "input_hashes": {
+    "scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
+    "scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
+    "src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
+    "src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
+    "src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
+    "src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
+    "src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0"
+   },
+   "receipt": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/blocksworld_main_v1/goal_lookahead_integration_v1/20261008T020121Z_5ccadc39/receipts/look_RAND_LOOK2.json",
+   "requires": [
+    "devsel_GOAL_RAND"
+   ]
+  }
+ ]
+}

@@ -23,7 +23,7 @@ from .. import state as S
 from ...graph import RELATIONS
 from .heads_math import NextGoalActionHead, calibrated_logits
 
-KINDS = ("MG", "EVENT", "CAL", "REC_REL", "REC_SELF", "GOAL_DENSE", "GOAL_REL")
+KINDS = ("MG", "EVENT", "CAL", "REC_REL", "REC_SELF", "GOAL_DENSE", "GOAL_REL", "GOAL_RAND")
 NEW_SEED = 20261007
 D = 128
 
@@ -88,12 +88,23 @@ class RecurrentProcessor(nn.Module):
         return res
 
 
+P_HASH = 2147483629                     # primes < 2^31: every product below stays under 2^62 (no integer overflow, identical on CPU and GPU)
+P_SCORE = 2147483587
+
+
 class GoalAttention(nn.Module):
+    """mode 'dense': all goal pairs; 'rel': pairs allowed by shared objects / current true binary atoms / contract threats; 'rand': the sparsity-matched control: the SAME number of non-self targets per query
+    row as 'rel', chosen by a fixed hash of the scored state (never by the true relations). Parameters, pair features and initialisation are identical in the three modes."""
     R_DIM = 9
 
-    def __init__(self, relational):
+    def __init__(self, mode):
         super().__init__()
-        self.relational = relational
+        if isinstance(mode, bool):                                   # backward compatibility with the v3 call GoalAttention(kind == "GOAL_REL")
+            mode = "rel" if mode else "dense"
+        assert mode in ("dense", "rel", "rand")
+        self.mode = mode
+        self.relational = mode != "dense"
+        self._rnd = {}
         self.q, self.k, self.v = nn.Linear(D, D), nn.Linear(D, D), nn.Linear(D, D)
         self.bias = nn.Linear(self.R_DIM, 4)
         self.o = nn.Linear(D, D)
@@ -153,7 +164,34 @@ class GoalAttention(nn.Module):
         e = lambda t: t.unsqueeze(0).expand(G, -1, -1)
         feats = torch.stack((e(both_on), e(one_on), e(both_tab), truth.unsqueeze(2).expand(G, ng, ng), truth.unsqueeze(1).expand(G, ng, ng), e(gs.share), conn, e(gs.threat), e(gs.eye)), dim=-1)
         allowed = (gs.eye.unsqueeze(0) + gs.share.unsqueeze(0) + conn + gs.threat.unsqueeze(0)) > 0
+        if self.mode == "rand":
+            allowed = self.matched_random_mask(allowed, codes, gs)
         return feats, allowed
+
+    def _rand_tables(self, P, ng, dev):
+        key = (P, ng, str(dev))
+        hit = self._rnd.get(key)
+        if hit is None:
+            g = torch.Generator().manual_seed(20261008)
+            hit = (torch.randint(1, P_HASH, (P,), generator=g, dtype=torch.int64).to(dev), torch.randint(1, P_SCORE, (ng, ng), generator=g, dtype=torch.int64).to(dev),
+                   torch.randint(0, P_SCORE, (ng, ng), generator=g, dtype=torch.int64).to(dev), torch.randint(0, P_SCORE, (ng, ng), generator=g, dtype=torch.int64).to(dev))
+            self._rnd[key] = hit
+        return hit
+
+    def matched_random_mask(self, allowed, codes, gs):
+        """Per query row keep the self entry plus k randomly ranked other goals, k = number of non-self targets the relation mask allows in that row. The ranking is a pure function of the scored
+        state (the truth vector of its propositions) and of the (row, column) slot; no relation, label or history enters."""
+        G, ng, _ = allowed.shape
+        W, A, B, C = self._rand_tables(codes.shape[1], ng, codes.device)
+        key = ((codes[:, :, 0] > 0.5).to(torch.int64) * W.unsqueeze(0)).sum(1) % P_HASH                          # (G,)
+        s = (key.view(G, 1, 1) * A.unsqueeze(0) + B.unsqueeze(0)) % P_SCORE
+        s = (s * s + C.unsqueeze(0)) % P_SCORE
+        eye = gs.eye.bool().unsqueeze(0)
+        s = s.masked_fill(eye, 1 << 40)
+        order = torch.sort(s, dim=-1, stable=True).indices
+        rank = torch.sort(order, dim=-1, stable=True).indices
+        k = (allowed.sum(-1) - 1).clamp(min=0)
+        return (rank < k.unsqueeze(-1)) | eye
 
     def forward(self, z, feats, allowed):
         G, ng, _ = z.shape
@@ -179,8 +217,8 @@ class SerialModel(nn.Module):
                 self.event = NextGoalActionHead(D, seed)
             elif kind in ("REC_REL", "REC_SELF"):
                 self.rec = RecurrentProcessor(kind == "REC_SELF")
-            elif kind in ("GOAL_DENSE", "GOAL_REL"):
-                self.attn = GoalAttention(kind == "GOAL_REL")
+            elif kind in ("GOAL_DENSE", "GOAL_REL", "GOAL_RAND"):
+                self.attn = GoalAttention({"GOAL_DENSE": "dense", "GOAL_REL": "rel", "GOAL_RAND": "rand"}[kind])
         if kind == "CAL":
             self.log_beta = nn.Parameter(torch.zeros(()))
             self.register_buffer("a0", torch.ones(()))
