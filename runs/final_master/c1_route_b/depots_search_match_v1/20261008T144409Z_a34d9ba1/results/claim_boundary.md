@@ -1,0 +1,26 @@
+# C1-DEPOTS-SEARCH-MATCH-V1: claim boundary
+
+## Supported (development / comparison material; one training seed per learned scorer; frozen weights; deterministic search; 300 s and 100,000 expansions per problem)
+1. In one shared eager GBFS engine, the frozen DENSE-G state value solves all 32 Struct and all 128 Joint problems, with shorter first plans and far fewer expansions than the fitted WL-GOOSE scorer (Joint: 90 shorter / 16 longer, 125 fewer / 3 more expansions; Struct 17 / 1, 31 / 0) and than `h_add` / goal counting. Mean plan length over the proved optimum: 1.095 (DENSE), 1.219 (WL), 1.485 (`h_add`) on Joint.
+2. Most of the previous card's coverage differences on Struct / Joint came from the execution mode: under search all three learned scorers (DENSE, MG, REL) solve 128 of 128 Joint problems; before, the one-path executors solved 116 to 127. The previous REL-G deficit is not a scorer deficit under this protocol.
+3. The learned scorers are expensive per state (about 3.5 to 4.4 ms against 0.05 to 0.17 ms for WL / `h_add`) and on the 13 larger IPC problems the 300 s wall limit ends the neural runs after a few hundred to ~15,000 expansions: 14 to 15 of 22 solved against 18 (H_WL), 10 (`h_add`), 6 (goal counting); the neural failures are resource failures (`TIMEOUT_BEFORE_NODE_LIMIT`), not search exhaustion.
+4. Where both finish, DENSE needs fewer expansions than WL on IPC too (12 of 12 common problems); its plans there are not shorter (shorter in 1, longer in 8).
+
+## Not supported / must not be claimed
+- A new search algorithm or a new attention principle; the engine is a standard GBFS, the contribution here is the use of fixed scorers inside it. That adding search alone completes the research claim.
+- That the attention module or the training recipe is why DENSE beats WL: the two scorers differ in input representation, supervision construction, capacity, optimisation and model selection; the comparison is of whole scorer recipes inside a common engine (plan section 2.2, C3). Not a single-module ablation.
+- That the whole public-domain gap is closed or caused by missing backtracking: on IPC, cost per state and size, not the execution mode, decide the neural rows; the execution change explains the Track B coverage change, not the IPC gap to WL-GOOSE or LAMA.
+- Same-node superiority on IPC beyond 1,000 expansions for the neural rows (they do not reach 10,000 or 100,000 expansions on 7 to 8 problems); equal-time superiority anywhere on IPC; any statement that node-matched means compute-matched or faster.
+- That the relation-restricted scorer is better or worse than the dense one: under search they are indistinguishable (Joint 29 shorter / 30 longer, p 1.0; IPC 14 vs 15).
+- IPC conclusions about topology: the IPC problems differ from training in trucks, places, hoists, pallets, crates and size at the same time; failures of the neural rows are confined to the 13 problems with at least 1,500 ground actions, but this is a correlation in 22 problems, not an identified cause, and gives no evidence that larger-topology training would repair it.
+- Comparison with the previous card's native WL-GOOSE (20 of 22): H_WL here is the author model inside the common engine with the 100,000-expansion limit (four problems end at the node limit after 38 to 96 s), so the numbers are not the native system's numbers and the engines differ in tie-breaking, goal test and state conversion.
+- A result on any other domain; any independent confirmation (all problems are development material, one seed, project-defined Struct / Joint splits); the previous card's REL claim.
+
+## Disclosures
+- Authorisation: the user's message naming the plan file followed by "执行"; recorded in `plan/registration.json`. Registration commit `1243b5c` was pushed before the first search. Reporting code (`analysis.py`, `report.py`) was written and added while the searches ran (amendment commit); it reads results only.
+- Fixtures used only synthetic graphs and Train96 problems. The WL conversion was additionally compared with the native planner on states of six IPC problem files before registration (heuristic values only, no search, no outcome seen).
+- Search semantics deviate from native Fast Downward in the registered ways: goal tested at generation, scores for all new successors of a parent before the next pop, FIFO ties, no dead-end pruning for any scorer (a rounded WL value of -1 is an ordinary sort key; 8.4% of the 5.9M IPC WL evaluations were negative), +inf `h_add` sorted last.
+- Wall clock was taken on a shared machine (other users' CPU and GPU load); all neural searches ran on shared GPUs. Peak GPU memory 2.1 GiB, host growth below 1.5 GiB; the hard SIGALRM guard never fired; the largest wall time was 300.4 s.
+- Time of the 300 s limit includes grounding, translation (H_WL) and template construction; model loading (about 1.7 to 2.0 s per neural worker) and a CUDA warm-up are outside every problem's clock.
+- The p15 plan of length 71 found by V_DENSE is shorter than the historical best (78) and enters the best-known table of this card; the registered values of the previous card are unchanged.
+- No training, no gate labels, no new problems, no `.pt` committed; historical results were only read.
