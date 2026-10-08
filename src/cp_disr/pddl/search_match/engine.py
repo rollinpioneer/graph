@@ -76,7 +76,7 @@ class Result:
         return {k: getattr(self, k, None) for k in self.__slots__}
 
 
-def gbfs(task, index, evaluator, budget: Budget, milestones=MILESTONES):
+def gbfs(task, index, evaluator, budget: Budget, milestones=MILESTONES, observer=None):
     """Returns a ``Result``. status: SOLVED | OPEN_EXHAUSTED | NODE_LIMIT | TIMEOUT | MEMORY_LIMIT | MODEL_NONFINITE. ``plan`` is a list of action indices (unverified)."""
     r = Result()
     r.plan, r.expanded, r.generated, r.duplicates, r.path_updates, r.evaluated_calls = None, 0, 0, 0, 0, 0
@@ -135,6 +135,8 @@ def gbfs(task, index, evaluator, budget: Budget, milestones=MILESTONES):
                 continue
             closed.add(s)
             r.expanded += 1
+            if observer is not None:                                   # read-only hook (rolling hash of the expansion order); default None leaves the search unchanged
+                observer(s, r.expanded)
             g = node[s][0] + 1
             pending = []
             for a in index.applicable(s):

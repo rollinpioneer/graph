@@ -1,0 +1,54 @@
+# C1-DEPOTS-FROZEN-SCORE-FAST-ALT-V3: frozen settings (plan CP_DISR_C1_Depots_FAST_ALT_Runbook_v3_20261009.md). Read by scripts/c1_depots_fast_alt.py; its sha256 is part of the registration.
+card: C1-DEPOTS-FROZEN-SCORE-FAST-ALT-V3
+base_branch: codex/cp-disr-c1-depots-search-match-v1
+base_commit: 57f011656ea2ccb6915869eeead265d6c98514f2
+branch: codex/cp-disr-c1-depots-fast-alt-v3
+old_search_root: runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1       # per-case search records of the previous card (read only)
+old_asset_root: runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e           # frozen DENSE-G / WL models and the problem manifest (read only)
+suite_rel: runs/final_master/c1_route_b/depots_fast_alt_v3
+
+search:                       # identical to the previous card
+  wall_seconds: 300
+  max_expansions: 100000
+  milestones: [1000, 10000, 100000]
+  primary_milestone: 10000
+  max_rss_growth_gib: 8
+  grace_seconds: 20
+  neural_chunk: 48
+
+profile:                      # plan section 6
+  train_templates: [smallest, median, largest]      # by template edge count, ties by case id
+  ipc_probe: [ipc_p15, ipc_p21, ipc_p22]
+  max_expansions: 32
+  max_states: 1024
+  collect_wall_seconds: 60
+  batch_sizes: [1, 4, 8, 16, 32, 48]
+  logical_batch: 64
+  warmup: 2
+  repeats: 3
+
+verify:                       # plan section 7.3 (calibrated against the reference's own GPU repeat noise)
+  noise_factor: 2.0
+  noise_floor: 0.0001
+  plan_atol: 0.00001
+  plan_rtol: 0.000001
+  prefix_expansions: 1000
+  prefix_wall_seconds: 60
+  prefix_slack_problems: 2
+
+alt:                          # plan section 8
+  queues: 2
+  rotation: strict alternation after every valid expansion, root from the main queue, stale entries free
+  main_scores: {ALT_DENSE_ADD: frozen DENSE-G (FAST when verified, else reference), ALT_WL_ADD: fitted WL-GOOSE}
+  second_score: h_add
+  joint_protection_line_mean_ratio_increase: 0.05     # engineering trade-off line, not a statistical claim
+
+shards:
+  ipc_gpu_blocks: 11
+  ipc_cpu: 2
+  struct: 1
+  joint: 4
+
+limits:
+  cpu_slots: 3
+  one_gpu_task_per_gpu: true
