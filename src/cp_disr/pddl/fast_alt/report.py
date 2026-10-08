@@ -182,9 +182,138 @@ def build(rr, old, cfg, root):
                               "first_shorter": sh, "first_longer": lo, "same_length": len(dl) - sh - lo, "sum_length_diff": sum(dl) if dl else None, "median_length_diff": statistics.median(dl) if dl else None,
                               "length_sign_p": round(sign_p(sh, lo), 6), "first_fewer_expansions": fe, "first_more_expansions": me, "expansion_sign_p": round(sign_p(fe, me), 6)})
     outs.append(wcsv(res / "paired_quality.csv", pairs))
-    outs.append(primary_md(rr, res, summ, pairs, comp, tc, allrec, cfg, proven))
+    md = primary_md(rr, res, summ, pairs, comp, tc, allrec, cfg, proven)
+    outs.append(md)
+    extra_paths, extra_lines = extras(res, allrec, new, topo, proven, cfg)
+    outs += extra_paths
+    with open(md, "a", encoding="utf-8") as f:
+        f.write("\n".join(extra_lines) + "\n")
     outs.append(verify(rr, root, cfg, new, old))
     return outs
+
+
+def _med(xs):
+    xs = [x for x in xs if x is not None]
+    return statistics.median(xs) if xs else None
+
+
+def extras(res, allrec, new, topo, proven, cfg):
+    """Additional per-case derived tables (still generated from the stored records only): FAST vs REF throughput, guidance-vs-truncation on IPC, ALT cost accounting, Struct/Joint strata."""
+    paths, L = [], []
+    g = lambda cond, s, c: allrec.get((cond, s, c))
+    ipc_ids = sorted({k[2] for k in allrec if k[1] == "ipc" and k[0] == "REF_DENSE"})
+    # ---- FAST vs REF
+    rows = []
+    for c in ipc_ids:
+        a, b = g("REF_DENSE", "ipc", c), g("FAST_DENSE", "ipc", c)
+        if not (a and b):
+            continue
+        ma, mb = a.get("metrics_main") or {}, b.get("metrics_main") or {}
+        sa, sb = ma.get("states_scored"), mb.get("states_scored")
+        ta, tb = a.get("eval_seconds"), b.get("eval_seconds")
+        ra, rb = (sa / ta if sa and ta else None), (sb / tb if sb and tb else None)
+        hit = bool(a["status"] == "SOLVED" and b["status"] == "SOLVED")
+        both_to = bool(a["status"] == "TIMEOUT" and b["status"] == "TIMEOUT")
+        ha, hb = a.get("prefix_hashes") or {}, b.get("prefix_hashes") or {}
+        common = [m for m in ("1", "10", "100", "1000", "10000", "100000") if m in ha and m in hb]
+        rows.append({"case_id": c, "n_ground_actions": (topo.get(("ipc", c)) or {}).get("n_ground_actions"), "order_tag": a.get("order_tag"), "ref_status": a["status"], "fast_status": b["status"], "ref_expanded": a.get("expanded"),
+                     "fast_expanded": b.get("expanded"), "ref_wall_s": round(a["wall_total"], 2), "fast_wall_s": round(b["wall_total"], 2), "ref_plan_length": a.get("plan_length"), "fast_plan_length": b.get("plan_length"),
+                     "ref_states_scored": sa, "fast_states_scored": sb, "ref_scoring_s": round(ta, 2) if ta else None, "fast_scoring_s": round(tb, 2) if tb else None,
+                     "ref_states_per_scoring_s": round(ra, 1) if ra else None, "fast_states_per_scoring_s": round(rb, 1) if rb else None, "throughput_ratio_fast_over_ref": round(rb / ra, 3) if ra and rb else None,
+                     "expansion_ratio_fast_over_ref_when_both_timeout": round(b["expanded"] / a["expanded"], 3) if both_to and a.get("expanded") else None,
+                     "wall_ratio_ref_over_fast_when_both_solved": round(a["wall_total"] / b["wall_total"], 3) if hit and b["wall_total"] else None, "same_expanded": a.get("expanded") == b.get("expanded") if hit else None,
+                     "prefix_marks_compared": ",".join(common), "prefix_marks_equal": ",".join(m for m in common if ha[m] == hb[m]), "load_avg_ref": a.get("load_avg_1m"), "load_avg_fast": b.get("load_avg_1m"),
+                     "outer_calls_ref": ma.get("outer_physical_calls"), "outer_calls_fast": mb.get("outer_physical_calls"), "encoder_forwards_ref": ma.get("encoder_forwards"), "encoder_forwards_fast": mb.get("encoder_forwards"),
+                     "gpu_peak_gib_ref": round((a.get("gpu_peak_bytes") or 0) / 2 ** 30, 2), "gpu_peak_gib_fast": round((b.get("gpu_peak_bytes") or 0) / 2 ** 30, 2)})
+    paths.append(wcsv(res / "fast_vs_ref_by_case.csv", rows))
+    if rows:
+        tr = [r["throughput_ratio_fast_over_ref"] for r in rows]
+        tos = [r["expansion_ratio_fast_over_ref_when_both_timeout"] for r in rows if r["expansion_ratio_fast_over_ref_when_both_timeout"]]
+        sol = [r["wall_ratio_ref_over_fast_when_both_solved"] for r in rows if r["wall_ratio_ref_over_fast_when_both_solved"]]
+        slow = [r for r in rows if r["ref_wall_s"] is not None and r["wall_ratio_ref_over_fast_when_both_solved"] and r["ref_wall_s"] >= 5]
+        tot = lambda k: sum(r[k] or 0 for r in rows)
+        L += ["", "## FAST vs REF on IPC22 (same GPU, adjacent, order by case_id hash)", "",
+              "- per-problem scoring throughput (states per scoring-second) ratio FAST/REF: median %.2f, min %.2f, max %.2f over %d problems; aggregate %.2f (states %d vs %d, scoring seconds %.0f vs %.0f)" % (
+                  _med(tr), min(x for x in tr if x), max(x for x in tr if x), len(rows), (tot("fast_states_scored") / tot("fast_scoring_s")) / (tot("ref_states_scored") / tot("ref_scoring_s")), tot("fast_states_scored"), tot("ref_states_scored"),
+                  tot("fast_scoring_s"), tot("ref_scoring_s")),
+              "- both timed out (%d problems): expansions reached in 300 s FAST/REF median %.2f (min %.2f, max %.2f)" % (len(tos), _med(tos) or 0, min(tos) if tos else 0, max(tos) if tos else 0),
+              "- both solved (%d problems): wall ratio REF/FAST median %.2f; problems with REF wall >= 5 s (%d): median %.2f; solved-set total wall REF %.1f s vs FAST %.1f s" % (
+                  len(sol), _med(sol) or 0, len(slow), _med([r["wall_ratio_ref_over_fast_when_both_solved"] for r in slow]) or 0,
+                  sum(r["ref_wall_s"] for r in rows if r["wall_ratio_ref_over_fast_when_both_solved"]), sum(r["fast_wall_s"] for r in rows if r["wall_ratio_ref_over_fast_when_both_solved"])),
+              "- solved sets identical: %s; same expansion count on the %d common-solved problems: %d; plan length equal: %d" % (
+                  {r["case_id"] for r in rows if r["ref_status"] == "SOLVED"} == {r["case_id"] for r in rows if r["fast_status"] == "SOLVED"}, len(sol), sum(1 for r in rows if r["same_expanded"]),
+                  sum(1 for r in rows if r["wall_ratio_ref_over_fast_when_both_solved"] and r["ref_plan_length"] == r["fast_plan_length"]))]
+        for tag, ordr in (("REF first", lambda r: (r["order_tag"] or "").startswith("R")), ("FAST first", lambda r: (r["order_tag"] or "").startswith("F"))):
+            sub = [r["throughput_ratio_fast_over_ref"] for r in rows if ordr(r)]
+            L.append("- order check, %s (%d problems): median throughput ratio %.2f" % (tag, len(sub), _med(sub) or 0))
+    # ---- guidance vs truncation on IPC
+    gt = []
+    for c in ipc_ids:
+        f, a_, w, h, aw = g("FAST_DENSE", "ipc", c), g("ALT_DENSE_ADD", "ipc", c), g("EAGER_WL", "ipc", c), g("EAGER_HADD", "ipc", c), g("ALT_WL_ADD", "ipc", c)
+        if not f:
+            continue
+        rate = (f["expanded"] / f["wall_total"]) if f.get("expanded") and f["wall_total"] else None
+        if f["status"] == "SOLVED":
+            cls = "DENSE_SOLVED" + ("_WL_NOT_SOLVED" if w and w["status"] != "SOLVED" else "")
+        elif w and w["status"] == "SOLVED":
+            need = w["solved_at_expansion"]
+            cls = "GUIDANCE_DISADVANTAGE_VS_WL(DENSE explored more expansions than WL needed)" if f["expanded"] >= need else "TRUNCATED(DENSE explored fewer expansions than WL needed)"
+        else:
+            cls = "NO_WL_REFERENCE(WL also unsolved)"
+        gt.append({"case_id": c, "fast_status": f["status"], "fast_expanded_at_limit": f.get("expanded"), "fast_expansions_per_s": round(rate, 1) if rate else None, "wl_status": w["status"] if w else None,
+                   "wl_solved_at_expansion": w.get("solved_at_expansion") if w else None, "hadd_status": h["status"] if h else None, "hadd_solved_at_expansion": h.get("solved_at_expansion") if h else None,
+                   "alt_dense_status": a_["status"] if a_ else None, "alt_dense_solved_at_expansion": a_.get("solved_at_expansion") if a_ else None, "alt_wl_status": aw["status"] if aw else None,
+                   "alt_wl_solved_at_expansion": aw.get("solved_at_expansion") if aw else None, "wl_expansions_over_fast_reached": round(w["solved_at_expansion"] / f["expanded"], 2) if (w and w["status"] == "SOLVED" and f.get("expanded")) else None,
+                   "seconds_for_fast_to_reach_wl_expansions_at_measured_rate": round(w["solved_at_expansion"] / rate) if (w and w["status"] == "SOLVED" and rate and f["status"] != "SOLVED") else None, "classification": cls})
+    paths.append(wcsv(res / "ipc_guidance_vs_truncation.csv", gt))
+    L += ["", "## IPC: which DENSE failures are guidance, which are truncation (FAST run, 300 s)", "", "| case | FAST status / expansions | WL solved at | h_add solved at | ALT_DENSE | class |", "|---|---|---|---|---|---|"]
+    for r in gt:
+        if r["fast_status"] != "SOLVED" or r["classification"].endswith("_WL_NOT_SOLVED"):
+            L.append("| %s | %s / %s | %s | %s | %s / %s | %s |" % (r["case_id"], r["fast_status"], r["fast_expanded_at_limit"], r["wl_solved_at_expansion"], r["hadd_solved_at_expansion"], r["alt_dense_status"], r["alt_dense_solved_at_expansion"], r["classification"]))
+    # ---- ALT cost accounting
+    acc = []
+    for s in SETS:
+        ref_cond = "FAST_DENSE" if s == "ipc" else "OLD_DENSE"
+        for first, second in (("ALT_DENSE_ADD", ref_cond), ("ALT_DENSE_ADD", "ALT_WL_ADD"), ("ALT_DENSE_ADD", "EAGER_HADD" if s == "ipc" else "OLD_HADD"), ("ALT_DENSE_ADD", "EAGER_WL" if s == "ipc" else "OLD_WL")):
+            ids = sorted(c for (cc, ss, c) in allrec if cc == first and ss == s and (second, s, c) in allrec and allrec[(first, s, c)]["solved"] and allrec[(second, s, c)]["solved"])
+            if not ids:
+                continue
+            A, B = [allrec[(first, s, c)] for c in ids], [allrec[(second, s, c)] for c in ids]
+            def sm(rs, f):
+                vs = [f(r) for r in rs]
+                return sum(v or 0 for v in vs) if any(v is not None for v in vs) else None
+            dense_a = sm(A, lambda r: (r.get("metrics_main") or {}).get("states_scored"))
+            dense_b = sm(B, lambda r: (r.get("metrics_main") or {}).get("states_scored") if not r.get("old") else r.get("evaluated_states"))
+            acc.append({"set": s, "first": first, "second": second, "common_solved": len(ids), "expanded_first": sm(A, lambda r: r.get("expanded")), "expanded_second": sm(B, lambda r: r.get("expanded")),
+                        "first_main_states_scored": dense_a, "second_states_scored_or_main": dense_b, "first_add_states_scored": sm(A, lambda r: (r.get("metrics_add") or {}).get("states_scored")),
+                        "first_encoder_forwards": sm(A, lambda r: (r.get("metrics_main") or {}).get("encoder_forwards")), "second_encoder_forwards": sm(B, lambda r: (r.get("metrics_main") or {}).get("encoder_forwards")) if second in ("FAST_DENSE", "REF_DENSE") else None,
+                        "wall_first_s": round(sm(A, lambda r: r.get("wall_total")), 1) if s == "ipc" else None, "wall_second_s": round(sm(B, lambda r: r.get("wall_total")), 1) if s == "ipc" else None,
+                        "time_comparison_note": "same-day IPC block" if s == "ipc" and second in ("FAST_DENSE",) else ("different day / process: counts only" if s != "ipc" and second.startswith("OLD") else "IPC conditions of different resource types (CPU/GPU): wall indicative only")})
+    paths.append(wcsv(res / "alt_cost_accounting.csv", acc))
+    L += ["", "## ALT cost accounting on common-solved problems (counts; wall only for same-day IPC pairs)", "", "| set | first vs second | common | expansions (first / second) | first DENSE states / second states | first h_add states | encoder forwards (first / second) |", "|---|---|---|---|---|---|---|"]
+    for r in acc:
+        L.append("| %s | %s vs %s | %d | %d / %d | %s / %s | %s | %s / %s |" % (r["set"], r["first"], r["second"], r["common_solved"], r["expanded_first"], r["expanded_second"], r["first_main_states_scored"], r["second_states_scored_or_main"], r["first_add_states_scored"],
+                                                                                    r["first_encoder_forwards"], r["second_encoder_forwards"]))
+    # ---- strata on Struct / Joint
+    st = []
+    keys = ("needs_transport", "max_goal_height", "n_goal_towers", "n_crates", "cell")
+    scorers = ("ALT_DENSE_ADD", "ALT_WL_ADD", "OLD_DENSE", "OLD_WL", "OLD_HADD")
+    for s in ("struct", "joint"):
+        ids = sorted(c for (cc, ss, c) in allrec if cc == "ALT_DENSE_ADD" and ss == s)
+        for k in keys:
+            vals = sorted({(topo.get((s, c)) or {}).get(k) for c in ids} - {None, ""})
+            if len(vals) < 2 and k != "cell":
+                continue
+            for v in vals:
+                sub = [c for c in ids if (topo.get((s, c)) or {}).get(k) == v]
+                for cond in scorers:
+                    rs = [allrec[(cond, s, c)] for c in sub if (cond, s, c) in allrec]
+                    sol = [r for r in rs if r["solved"]]
+                    rat = [r["plan_length"] / proven(s, r["case_id"]) for r in sol if proven(s, r["case_id"])]
+                    st.append({"set": s, "stratum": k, "value": v, "condition": cond, "n": len(rs), "solved": len(sol), "mean_ratio_to_proven_optimum": round(statistics.mean(rat), 4) if rat else None,
+                               "optimal_plans": sum(1 for x in rat if abs(x - 1) < 1e-9), "mean_plan_length": round(statistics.mean(r["plan_length"] for r in sol), 3) if sol else None})
+    paths.append(wcsv(res / "strata_struct_joint.csv", st))
+    return paths, L
 
 
 def primary_md(rr, res, summ, pairs, comp, tc, allrec, cfg, proven):

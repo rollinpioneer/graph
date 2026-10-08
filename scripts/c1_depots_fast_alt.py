@@ -308,13 +308,22 @@ def cmd_final_receipt(rr):
     from collections import Counter
     recs = []
     for p in sorted((rr / "runs").glob("*.jsonl")):
+        if p.name == "search_results.jsonl":                                    # merged copy written by `report`
+            continue
         recs += [json.loads(l) for l in p.read_text().splitlines() if l.strip()]
     st = Counter(r["status"] for r in recs)
     fr = rj(rr / "plan" / "frozen.json")
     prof = rr / "receipts" / "profile.json"
-    out = {"card": CARD, "base_commit": BASE_COMMIT, "result_commit": "TO_BE_WRITTEN_AFTER_PUSH", "storage_owner": "xushijie3", "new_training_runs": 0, "new_external_fits": 0, "optimizer_steps": 0, "new_training_labels": 0,
+    pre = rj(rr / "checks" / "search_prefixes.json")
+    nprob = len(pre["problems"])
+    rows = sum(1 for _ in open(rr / "profile" / "timings.csv", encoding="utf-8")) - 1
+    coll = sum(1 for _ in open(rr / "profile" / "natural_batches.jsonl", encoding="utf-8"))
+    out = {"card": CARD, "base_commit": BASE_COMMIT, "result_commit": "THIS_COMMIT (a commit cannot contain its own hash; see the final report / git log of the branch)", "storage_owner": "xushijie3", "new_training_runs": 0,
+           "new_external_fits": 0, "optimizer_steps": 0, "new_training_labels": 0,
            "new_problem_generation": 0, "primary_searches_planned_max": 452, "primary_searches_planned_after_freeze": fr["planned_main_searches"], "primary_searches_completed": len(recs),
-           "bounded_probe_searches": "see checks/search_prefixes.json (20 problems x 3 runs) and profile/natural_batches.jsonl (6 collection runs)", "microbenchmark_calls": "see profile/timings.csv", "fast_status": fr["fast_status"],
+           "bounded_probe_searches": {"state_collection_runs": coll, "state_collection_cap": "<= 32 expansions each", "prefix_problems": nprob, "prefix_runs": 3 * nprob, "prefix_runs_breakdown": "REF, REF repeat, FAST per problem (checks/search_prefixes.json)",
+                                      "plan_literal_cap": 40, "over_literal_cap_by": 3 * nprob - 40, "note": "plan 7.3 item 6 requires a REF repeat reading; the 20 REF-repeat runs are counted separately and exceed the literal cap of 40 (REF + FAST only) by 20"},
+           "microbenchmark_calls": {"timed_rows": rows, "file": "profile/timings.csv"}, "fast_status": fr["fast_status"],
            "alt_dense_backend": fr["alt_dense_backend"].upper(), "solved": sum(r["solved"] for r in recs), "status_counts": dict(st), "resource_limited": sum(st.get(k, 0) for k in ("TIMEOUT", "MEMORY_LIMIT", "NODE_LIMIT")),
            "technical_incomplete": sum(st.get(k, 0) for k in ("ADAPTER_ERROR", "INVALID_PLAN", "MODEL_NONFINITE")), "old_results_modified": False, "weights_modified": False, "no_pt_committed": True,
            "finished": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "next_action": "WAIT_FOR_METHOD_DECISION"}
