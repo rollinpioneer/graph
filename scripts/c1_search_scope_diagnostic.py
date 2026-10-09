@@ -583,7 +583,13 @@ def cmd_report(rr):
     verify["consistent"] = bool(verify["within_caps"] and not verify["weights_modified"] and verify["fixtures_all_passed"] and verify["no_pt_in_run_root"])
     jdump(rr / "results" / "verify.json", verify)
     jdump(rr / "results" / "resource_accounting.json", {"ledger": led, "gpu_process_wall_seconds": round(gpu_wall, 1), "label_cpu_core_seconds": round(cpu_label, 1), "label_accounting": label_acct, "caps": cfg["labels"]})
-    jdump(rr / "results" / "method_decision.json", {"card_status": "DIAGNOSTIC_COMPLETE" if verify["consistent"] else "INCOMPLETE", "scientific_label": dec["scientific_label"], "mixed_local_and_cross": dec["mixed_local_and_cross"],
+    corrected = dec["scientific_label"] != dec["as_registered"]["scientific_label"]
+    jdump(rr / "results" / "method_decision.json", {"card_status": "DIAGNOSTIC_COMPLETE" if verify["consistent"] else "INCOMPLETE", "scientific_label": dec["scientific_label"], "as_registered_mechanical_label": dec["as_registered"]["scientific_label"],
+                                                    "label_corrected_after_seeing_results": corrected,
+                                                    "label_correction_note": ("The registered configuration applied min_bounded_events to events whose bounds EXIST; plan 14.1 says overlapping bounds are UNKNOWN. The first analysis pass therefore returned the mechanical label above although "
+                                                                              "no event had a decided pair. The analysis now applies the same threshold (8) to events with at least one decided pair (resolved_events) and skips the trivial pair of a popped state with itself. "
+                                                                              "No trace, score or bound was changed; both labels are reported; neither releases layer 2.") if corrected else None,
+                                                    "mixed_local_and_cross": dec["mixed_local_and_cross"],
                                                     "eligible_for_layer2_discussion": dec["scientific_label"] == "CROSS_SCOPE_SIGNAL", "layer2_authorized": False, "backup_authorized": False,
                                                     "supporting_cases": dec["signal_problems"] if dec["scientific_label"] == "CROSS_SCOPE_SIGNAL" else dec["local_problems"], "counterevidence_cases": [],
                                                     "unresolved": {"anchor_missing": dec["anchor_missing_problems"], "certificate_insufficient": dec["certificate_insufficient_problems"], "tie_dominated": dec["tie_dominated_problems"]},

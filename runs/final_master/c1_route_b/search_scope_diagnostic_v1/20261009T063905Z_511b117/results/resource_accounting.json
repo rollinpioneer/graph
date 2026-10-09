@@ -1,0 +1,197 @@
+{
+ "caps": {
+  "additional_upper_bound_requests": 64,
+  "concurrent_cpu_label_workers": 4,
+  "fixture_searches_max": 8,
+  "gpu_process_wall_seconds": 1800,
+  "label_cpu_core_seconds": 3600,
+  "label_priority": "R2 core (parent, plan child, DENSE first choice, WL first choice) > R3 popped states (alternating drivers by event) > R2 hash fill; equal per-problem share, remainder by the same order",
+  "lmcut_timeout_seconds": 60,
+  "lower_bound_backend": "Scorpion downward, --search astar(lmcut(), bound=0), initial state replaced in the SAS begin_state block",
+  "main_traces_max": 20,
+  "unique_bound_states": 4096,
+  "upper_bound_planner": "Scorpion downward, --search lazy_greedy([ff()], preferred=[ff()]), 5 s, one thread",
+  "upper_bound_request_seconds": 5
+ },
+ "gpu_process_wall_seconds": 315.1,
+ "label_accounting": {
+  "allocation_cap": 4096,
+  "budget_unlabelled": 0,
+  "label_cpu_core_seconds": 231.8,
+  "label_cpu_core_seconds_reported": 227.8,
+  "label_cpu_core_seconds_rusage": 231.8,
+  "lmcut_dispatched": 1113,
+  "lmcut_jobs": 1113,
+  "lmcut_undispatched": 0,
+  "status_counts": {
+   "OK": 1356,
+   "UNKNOWN": 33
+  },
+  "unique_bound_states_attempted": 1389,
+  "unique_bound_states_rows": 1389,
+  "upper_bound_requests": 64,
+  "upper_bound_requests_with_plan": 28,
+  "wall_seconds": 75.3
+ },
+ "label_cpu_core_seconds": 331.7,
+ "ledger": [
+  {
+   "cpu_seconds": 4.7,
+   "seconds": 5.1,
+   "stage": "prepare",
+   "time": "2026-10-09T06:39:15Z",
+   "weights_sha_before": "ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38"
+  },
+  {
+   "cpu_seconds": 31.8,
+   "fixture_searches": 8,
+   "gpu_seconds": 1.7,
+   "passed": true,
+   "seconds": 17.8,
+   "stage": "fixtures",
+   "time": "2026-10-09T06:40:50Z"
+  },
+  {
+   "cpu_seconds": 32.2,
+   "fixture_searches": 8,
+   "gpu_seconds": 1.5,
+   "passed": false,
+   "seconds": 16.5,
+   "stage": "fixtures",
+   "time": "2026-10-09T06:45:33Z"
+  },
+  {
+   "cpu_seconds": 31.2,
+   "fixture_searches": 8,
+   "gpu_seconds": 1.1,
+   "passed": true,
+   "seconds": 15.2,
+   "stage": "fixtures",
+   "time": "2026-10-09T06:46:58Z"
+  },
+  {
+   "cpu_seconds": 2.3,
+   "seconds": 2.3,
+   "shard": [
+    1,
+    5
+   ],
+   "stage": "traces_wl",
+   "statuses": {
+    "SOLVED": 2
+   },
+   "time": "2026-10-09T06:47:50Z",
+   "traces": 2
+  },
+  {
+   "cpu_seconds": 3.0,
+   "seconds": 3.0,
+   "shard": [
+    2,
+    5
+   ],
+   "stage": "traces_wl",
+   "statuses": {
+    "SOLVED": 2
+   },
+   "time": "2026-10-09T06:47:51Z",
+   "traces": 2
+  },
+  {
+   "cpu_seconds": 3.3,
+   "seconds": 3.3,
+   "shard": [
+    0,
+    5
+   ],
+   "stage": "traces_wl",
+   "statuses": {
+    "SOLVED": 2
+   },
+   "time": "2026-10-09T06:47:51Z",
+   "traces": 2
+  },
+  {
+   "cpu_seconds": 3.6,
+   "seconds": 3.6,
+   "shard": [
+    3,
+    5
+   ],
+   "stage": "traces_wl",
+   "statuses": {
+    "NODE_LIMIT": 1,
+    "SOLVED": 1
+   },
+   "time": "2026-10-09T06:47:52Z",
+   "traces": 2
+  },
+  {
+   "cpu_seconds": 5.4,
+   "seconds": 5.4,
+   "shard": [
+    4,
+    5
+   ],
+   "stage": "traces_wl",
+   "statuses": {
+    "NODE_LIMIT": 1,
+    "SOLVED": 1
+   },
+   "time": "2026-10-09T06:47:53Z",
+   "traces": 2
+  },
+  {
+   "cpu_seconds": 253.0,
+   "seconds": 252.7,
+   "shard": [
+    0,
+    1
+   ],
+   "stage": "traces_dense",
+   "statuses": {
+    "NODE_LIMIT": 2,
+    "SOLVED": 6,
+    "TIMEOUT": 2
+   },
+   "time": "2026-10-09T06:54:03Z",
+   "traces": 10
+  },
+  {
+   "cpu_seconds": 265.9,
+   "device": "cuda:0",
+   "gpu_process_wall_seconds": 265.6,
+   "scored_states": 3207,
+   "stage": "gpu_stage",
+   "time": "2026-10-09T06:54:16Z"
+  },
+  {
+   "cpu_seconds": 7.3,
+   "scored_states": 3207,
+   "seconds": 7.3,
+   "stage": "score_wl",
+   "time": "2026-10-09T06:55:17Z"
+  },
+  {
+   "allocation_cap": 4096,
+   "budget_unlabelled": 0,
+   "label_cpu_core_seconds": 231.8,
+   "label_cpu_core_seconds_reported": 227.8,
+   "label_cpu_core_seconds_rusage": 231.8,
+   "lmcut_dispatched": 1113,
+   "lmcut_jobs": 1113,
+   "lmcut_undispatched": 0,
+   "stage": "labels",
+   "status_counts": {
+    "OK": 1356,
+    "UNKNOWN": 33
+   },
+   "time": "2026-10-09T06:56:37Z",
+   "unique_bound_states_attempted": 1389,
+   "unique_bound_states_rows": 1389,
+   "upper_bound_requests": 64,
+   "upper_bound_requests_with_plan": 28,
+   "wall_seconds": 75.3
+  }
+ ]
+}

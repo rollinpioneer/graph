@@ -236,7 +236,8 @@ def test_decision_rule_precedence():
     cfg = {"decision": {"signal": {"min_problems": 2, "min_cross_events_per_problem": 8, "min_delayed_states_per_problem": 4}, "local": {"min_problems": 2, "min_error_parents_per_problem": 6},
                         "coverage": {"min_active_anchor_events": 8, "min_bounded_events": 8, "majority": 3}, "tie_dominated_fraction": 0.5}}
     F = ["a", "b", "c", "d"]
-    good = {"cross_inverted_events": 9, "cross_inverted_delayed_states": 5, "anchor_active_events": 20, "bounded_events": 20, "certified_cross_group": 9, "cross_tie_under_driver": 0, "cross_inverted_under_driver": 9, "certified_remaining": 9}
+    good = {"cross_inverted_events": 9, "cross_inverted_delayed_states": 5, "anchor_active_events": 20, "bounded_events": 20, "resolved_events": 20, "certified_cross_group": 9, "cross_tie_under_driver": 0, "cross_inverted_under_driver": 9,
+            "certified_remaining": 9}
     bad = dict(good, cross_inverted_events=0, cross_inverted_delayed_states=0, certified_cross_group=0, cross_inverted_under_driver=0, certified_remaining=0)
     loc0 = {"R2_dense_error_parents": 0}
     r = AN.decide(cfg, F, {"a": good, "b": good, "c": bad, "d": bad}, {c: loc0 for c in F}, False)
@@ -245,8 +246,10 @@ def test_decision_rule_precedence():
     assert r["scientific_label"] == "LOCAL_WITNESS_PRESENT_NO_CROSS_LOCALIZATION"
     r = AN.decide(cfg, F, {c: dict(bad, anchor_active_events=2) for c in F}, {c: loc0 for c in F}, False)
     assert r["scientific_label"] == "REFERENCE_ANCHOR_MISSING"
-    r = AN.decide(cfg, F, {c: dict(bad, bounded_events=1) for c in F}, {c: loc0 for c in F}, False)
+    r = AN.decide(cfg, F, {c: dict(bad, resolved_events=1) for c in F}, {c: loc0 for c in F}, False)
     assert r["scientific_label"] == "INCONCLUSIVE_CERTIFICATES"
+    r = AN.decide(cfg, F, {c: dict(bad, resolved_events=1) for c in F}, {c: loc0 for c in F}, False, coverage_key="bounded_events")   # the registered quantity (bounds exist) does not see the overlap
+    assert r["scientific_label"] == "NO_LOCALIZED_SIGNAL_IN_OBSERVED_PREFIX"
     r = AN.decide(cfg, F, {c: dict(bad, cross_tie_under_driver=9, certified_cross_group=9) for c in F}, {c: loc0 for c in F}, False)
     assert r["scientific_label"] == "NUMERICAL_TIE_DOMINATED"
     r = AN.decide(cfg, F, {c: bad for c in F}, {c: loc0 for c in F}, False)
@@ -260,24 +263,25 @@ DEC = {"signal": {"min_problems": 2, "min_cross_events_per_problem": 8, "min_del
        "coverage": {"min_active_anchor_events": 8, "min_bounded_events": 8, "majority": 3}, "tie_dominated_fraction": 0.5}
 
 
-def build_root(tmp, anchor_h=5.5, shared_events=()):
+def build_root(tmp, anchor_h=5.5, shared_events=(), nF=2, popped_lower=6, self_event=None):
     from cp_disr.pddl.scope_diag.core import gz_write, jdump
     rr = Path(tmp) / "rr"
-    cases = [{"case_id": "f1", "group": "F", "set": "ipc"}, {"case_id": "f2", "group": "F", "set": "ipc"}, {"case_id": "c1", "group": "C", "set": "train"}]
+    cases = [{"case_id": "f%d" % i, "group": "F", "set": "ipc"} for i in range(1, nF + 1)] + [{"case_id": "c1", "group": "C", "set": "train"}]
     jdump(rr / "registration" / "case_manifest.json", {"cases": cases})
     jdump(rr / "registration" / "config.json", {"decision": DEC})
     jdump(rr / "references" / "plans.json", {c["case_id"]: {"length": 10, "sha256": "x", "optimality": "UNKNOWN", "path_states_hex": ["r%d" % k for k in range(11)], "ids": []} for c in cases})
     bounds, scores = [], {}
-    for cid in ("f1", "f2"):
+    for cid in [c["case_id"] for c in cases if c["group"] == "F"]:
         snaps = []
         for e in range(1, 11):
             k = 7 + e % 4
             parents_a = ["x%d" % e] if e in shared_events else ["y"]
-            snaps.append({"type": "snapshot", "event": e, "open": 50, "closed": e - 1, "expanded": e - 1, "elapsed": 0.1,
-                          "popped": {"role": "POPPED", "state": "s%d" % e, "h": 5.0, "serial": e, "g": 5, "parents": ["x%d" % e], "first_event": e - 1, "ref_k": None, "ref_U": None},
-                          "anchor": {"role": "ANCHOR", "state": "r%d" % k, "h": anchor_h, "serial": 100 + e, "g": 3, "parents": parents_a, "first_event": 0, "ref_k": k, "ref_U": 10 - k},
-                          "competitors": [], "ref_deepest_generated": 10, "ref_deepest_closed": 2})
-            bounds.append({"case_id": cid, "state_hex": "s%d" % e, "lower": 6, "upper": None, "lower_source": "LM_CUT", "upper_source": "UNAVAILABLE", "status": "OK", "category": "R3_POPPED"})
+            anchor = {"role": "ANCHOR", "state": "r%d" % k, "h": anchor_h, "serial": 100 + e, "g": 3, "parents": parents_a, "first_event": 0, "ref_k": k, "ref_U": 10 - k}
+            popped = {"role": "POPPED", "state": "s%d" % e, "h": 5.0, "serial": e, "g": 5, "parents": ["x%d" % e], "first_event": e - 1, "ref_k": None, "ref_U": None}
+            if e == self_event:                                                                  # the popped state is itself the deepest OPEN reference state
+                anchor = dict(popped, role="ANCHOR", ref_k=k, ref_U=10 - k)
+            snaps.append({"type": "snapshot", "event": e, "open": 50, "closed": e - 1, "expanded": e - 1, "elapsed": 0.1, "popped": popped, "anchor": anchor, "competitors": [], "ref_deepest_generated": 10, "ref_deepest_closed": 2})
+            bounds.append({"case_id": cid, "state_hex": "s%d" % e, "lower": popped_lower, "upper": None, "lower_source": "LM_CUT", "upper_source": "UNAVAILABLE", "status": "OK", "category": "R3_POPPED"})
         gz_write(rr / "traces" / cid / "dense.jsonl.gz", [{"type": "header", "case_id": cid}] + snaps + [{"type": "summary", "status": "NODE_LIMIT", "expanded": 10, "wall_total": 1.0, "schedule": list(range(1, 11))}])
         scores[cid] = {"s%d" % e: 5.0 for e in range(1, 11)}
         scores[cid].update({"r%d" % k: anchor_h for k in range(7, 11)})
@@ -294,7 +298,7 @@ def test_analysis_end_to_end_cross_signal(tmp_path):
     r = out["r3"]["f1|dense"]
     assert out["decision"]["scientific_label"] == "CROSS_SCOPE_SIGNAL"
     assert r["cross_inverted_events"] == 10 and r["cross_inverted_delayed_states"] == 4 and r["certified_cross_group"] == 10 and r["certified_sibling"] == 0
-    assert r["anchor_active_events"] == 10 and r["bounded_events"] == 10 and r["pairs_unknown_bound"] == 0
+    assert r["anchor_active_events"] == 10 and r["bounded_events"] == 10 and r["resolved_events"] == 10 and r["pairs_unknown_bound"] == 0
     assert out["totals"]["certified_pairs"] == 20
     import csv
     rows = list(csv.DictReader(open(Path(tmp_path) / "rr" / "labels" / "certified_pairs.csv")))
@@ -310,6 +314,19 @@ def test_analysis_sibling_is_not_cross_and_ties_are_not_witnesses(tmp_path):
     r = out["r3"]["f1|dense"]
     assert r["cross_inverted_events"] == 0 and r["cross_tie_under_driver"] == 10                                              # numerical ties never count as inverted witnesses
     assert out["decision"]["scientific_label"] != "CROSS_SCOPE_SIGNAL"
+
+
+def test_overlapping_bounds_are_unresolved_and_self_pairs_are_skipped(tmp_path):
+    # L(popped) = 0 <= U(anchor) in every event: bounds exist but overlap -> UNKNOWN, never counted as resolved; the registered quantity (bounds exist) would still see all 10 events
+    out = AN.analyze(build_root(tmp_path / "o", nF=4, popped_lower=0))
+    r = out["r3"]["f1|dense"]
+    assert r["bounded_events"] == 10 and r["resolved_events"] == 0 and r["certified_remaining"] == 0 and r["pairs_resolved"] == 0
+    assert out["decision"]["scientific_label"] == "INCONCLUSIVE_CERTIFICATES"
+    assert out["decision"]["as_registered"]["scientific_label"] == "NO_LOCALIZED_SIGNAL_IN_OBSERVED_PREFIX"
+    # an anchor that is the popped state itself forms no pair
+    out = AN.analyze(build_root(tmp_path / "s", self_event=4))
+    r = out["r3"]["f1|dense"]
+    assert r["anchor_is_popped_events"] == 1 and r["candidate_pairs"] == 9 and r["cross_inverted_events"] == 9
 
 
 # ---- 8. formula invariance, budget allocation, no optimiser

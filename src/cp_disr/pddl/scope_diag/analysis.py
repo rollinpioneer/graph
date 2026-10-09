@@ -122,9 +122,18 @@ def r3_rows(inp, cid, driver):
         Us_s = inp.upper(cid, s["state"])
         for cand in ([d["anchor"]] if d["anchor"] else []) + d["competitors"]:
             t = cand
+            if t["state"] == s["state"]:                      # the popped state is itself the deepest OPEN reference state: no pair with itself
+                continue
             Ut = inp.upper(cid, t["state"])
             Lt = inp.lower(cid, t["state"])
             cr = cert_remaining(Ut, Ls)
+            # resolution (plan 14.1: overlapping bounds are UNKNOWN): WITNESS = waiting state provably better (U(t) < L(s)); NOT_WORSE = popped state provably not worse (U(s) <= L(t))
+            if cr == "CERT":
+                resolution = "WITNESS"
+            elif Us_s is not None and Lt is not None and Us_s <= Lt:
+                resolution = "NOT_WORSE"
+            else:
+                resolution = "UNRESOLVED"
             ct = "UNKNOWN"
             if cr != "UNKNOWN" and Ut is not None and Ls is not None:
                 ct = "CERT" if (t["g"] + Ut) < (s["g"] + Ls) else "NO"
@@ -142,7 +151,7 @@ def r3_rows(inp, cid, driver):
             drv_order = order_of(t["h"], s["h"])
             rows.append({"case_id": cid, "trace_id": driver, "event_id": d["event"], "pair_class": pclass, "role": t["role"], "better_hash": t["state"], "worse_hash": s["state"], "better_parent": ";".join(t["parents"][:4]),
                          "worse_parent": ";".join(s["parents"][:4]), "shared_recorded_parent": sp, "L_better": Lt, "U_better": Ut, "L_worse": Ls, "U_worse": Us_s, "g_better": t["g"], "g_worse": s["g"],
-                         "certificate_remaining": cr, "certificate_total": ct, "dense_v_better": dense_t, "dense_v_worse": dense_s, "wl_h_better": wl_t, "wl_h_worse": wl_s,
+                         "certificate_remaining": cr, "resolution": resolution, "margin_L_worse_minus_U_better": (Ls - Ut) if (Ls is not None and Ut is not None and Ls != INF and Ut != INF) else None, "certificate_total": ct, "dense_v_better": dense_t, "dense_v_worse": dense_s, "wl_h_better": wl_t, "wl_h_worse": wl_s,
                          "dense_order": order_of(dense_t, dense_s) if dense_t is not None and dense_s is not None else None, "wl_order": order_of(wl_t, wl_s) if wl_t is not None and wl_s is not None else None,
                          "driver_order": drv_order, "actual_popped": s["state"], "anchor_active": d["anchor"] is not None, "lower_backend": inp.lower_source(cid, s["state"]),
                          "upper_source": inp.upper_source(cid, t["state"]), "reference_plan_sha": inp.refs[cid]["sha256"], "ref_k": t.get("ref_k")})
@@ -160,11 +169,17 @@ def r3_summary(inp, cid, driver, rows):
     cross = [r for r in cert if r["pair_class"] == "CROSS_GROUP"]
     cross_inv = [r for r in cross if r["driver_order"] == "INVERTED"]
     cross_tie = [r for r in cross if r["driver_order"] == "TIE"]
-    bounded_events = {e for e, rs in by_event.items() if any(r["certificate_remaining"] != "UNKNOWN" for r in rs)}
+    bounded_events = {e for e, rs in by_event.items() if any(r["certificate_remaining"] != "UNKNOWN" for r in rs)}          # as registered: events with known bounds (overlap NOT excluded)
+    resolved_events = {e for e, rs in by_event.items() if any(r["resolution"] != "UNRESOLVED" for r in rs)}                 # corrected reading of plan 14.1: events with at least one decided pair
+    margins = [r["margin_L_worse_minus_U_better"] for r in rows if r["margin_L_worse_minus_U_better"] is not None and r["role"] == "ANCHOR"]
+    anchor_ks = [d["anchor"]["ref_k"] for d in snaps if d["anchor"]]
     other = WL if driver == DENSE else DENSE
     oth_key = "wl_order" if driver == DENSE else "dense_order"
     return {"case_id": cid, "trace": driver, "status": summ.get("status"), "expanded": summ.get("expanded"), "wall_total": summ.get("wall_total"), "snapshots_planned": len(summ.get("schedule", [])), "snapshots_taken": len(snaps),
-            "anchor_active_events": sum(1 for d in snaps if d["anchor"]), "no_active_anchor_events": sum(1 for d in snaps if not d["anchor"]), "candidate_pairs": len(rows), "bounded_events": len(bounded_events),
+            "anchor_active_events": sum(1 for d in snaps if d["anchor"]), "no_active_anchor_events": sum(1 for d in snaps if not d["anchor"]), "anchor_is_popped_events": sum(1 for d in snaps if d["anchor"] and d["anchor"]["state"] == d["popped"]["state"]),
+            "candidate_pairs": len(rows), "bounded_events": len(bounded_events), "resolved_events": len(resolved_events), "pairs_resolved": sum(1 for r in rows if r["resolution"] != "UNRESOLVED"),
+            "pairs_not_worse": sum(1 for r in rows if r["resolution"] == "NOT_WORSE"), "anchor_ref_k_max": max(anchor_ks) if anchor_ks else None, "anchor_ref_k_median": sorted(anchor_ks)[len(anchor_ks) // 2] if anchor_ks else None,
+            "anchor_margin_max": max(margins) if margins else None, "anchor_margin_median": sorted(margins)[len(margins) // 2] if margins else None,
             "pairs_with_both_bounds": sum(1 for r in rows if r["certificate_remaining"] != "UNKNOWN"), "pairs_unknown_bound": sum(1 for r in rows if r["certificate_remaining"] == "UNKNOWN"),
             "certified_remaining": len(cert), "certified_strict_total": sum(1 for r in cert if r["certificate_total"] == "CERT"), "certified_cross_group": len(cross), "certified_sibling": sum(1 for r in cert if r["pair_class"] == "SIBLING_IN_OPEN"),
             "certified_group_unknown": sum(1 for r in cert if r["pair_class"] == "GROUP_UNKNOWN"), "cross_inverted_under_driver": len(cross_inv), "cross_tie_under_driver": len(cross_tie),
@@ -254,16 +269,17 @@ def local_summary(inp, cid, rows):
 
 
 # ------------------------------------------------------------------------------------------------ decision
-def decide(cfg, groupF, r3_dense, local_dense, budget_exhausted):
-    """Pre-registered rule (plan 17, numeric details frozen in the configuration)."""
+def decide(cfg, groupF, r3_dense, local_dense, budget_exhausted, coverage_key="resolved_events"):
+    """Pre-registered rule (plan 17, numeric details frozen in the configuration). ``coverage_key`` is the quantity the threshold ``min_bounded_events`` applies to: ``bounded_events`` (events whose bounds exist, the
+    registered operationalisation; overlap is not excluded) or ``resolved_events`` (events with at least one pair decided by non-overlapping bounds, the reading demanded by plan 14.1 'overlap = UNKNOWN')."""
     D = cfg["decision"]
     ev = {}
     for cid in groupF:
         a = r3_dense.get(cid, {})
         loc = local_dense.get(cid, {})
         ev[cid] = {"cross_inverted_events": a.get("cross_inverted_events", 0), "cross_inverted_delayed_states": a.get("cross_inverted_delayed_states", 0), "R2_error_parents": loc.get("R2_dense_error_parents", 0),
-                   "anchor_active_events": a.get("anchor_active_events", 0), "bounded_events": a.get("bounded_events", 0), "certified_cross_group": a.get("certified_cross_group", 0), "cross_tie": a.get("cross_tie_under_driver", 0),
-                   "cross_inv": a.get("cross_inverted_under_driver", 0), "certified_remaining": a.get("certified_remaining", 0)}
+                   "anchor_active_events": a.get("anchor_active_events", 0), "bounded_events": a.get(coverage_key, 0), "certified_cross_group": a.get("certified_cross_group", 0), "cross_tie": a.get("cross_tie_under_driver", 0),
+                   "cross_inv": a.get("cross_inverted_under_driver", 0), "certified_remaining": a.get("certified_remaining", 0), "coverage_key": coverage_key}
     sig = [c for c, e in ev.items() if e["cross_inverted_events"] >= D["signal"]["min_cross_events_per_problem"] and e["cross_inverted_delayed_states"] >= D["signal"]["min_delayed_states_per_problem"]]
     loc = [c for c, e in ev.items() if e["R2_error_parents"] >= D["local"]["min_error_parents_per_problem"]]
     anchor_missing = [c for c, e in ev.items() if e["anchor_active_events"] < D["coverage"]["min_active_anchor_events"]]
@@ -309,8 +325,8 @@ def write_csv(path, rows, fields=None):
 
 
 CERT_FIELDS = ["case_id", "trace_id", "event_id", "pair_class", "better_hash", "worse_hash", "better_parent", "worse_parent", "shared_recorded_parent", "L_better", "U_better", "L_worse", "U_worse", "g_better", "g_worse",
-               "certificate_remaining", "certificate_total", "dense_v_better", "dense_v_worse", "wl_h_better", "wl_h_worse", "dense_order", "wl_order", "actual_popped", "anchor_active", "lower_backend", "upper_source",
-               "reference_plan_sha", "role", "driver_order", "ref_k"]
+               "certificate_remaining", "resolution", "margin_L_worse_minus_U_better", "certificate_total", "dense_v_better", "dense_v_worse", "wl_h_better", "wl_h_worse", "dense_order", "wl_order", "actual_popped", "anchor_active",
+               "lower_backend", "upper_source", "reference_plan_sha", "role", "driver_order", "ref_k"]
 
 
 def analyze(rr):
@@ -346,7 +362,9 @@ def analyze(rr):
         flat.append(d)
     write_csv(res / "local_positions.csv", flat)
     budget_exhausted = any(row.get("status") == "BUDGET_UNLABELLED" for cid in inp.bounds for row in inp.bounds[cid].values() if row.get("category", "").startswith("R3_POPPED") and cid in groupF)
-    dec = decide(cfg, groupF, {c: r3s[(c, DENSE)] for c in groupF}, {c: locs[c] for c in groupF}, budget_exhausted)
+    dec_registered = decide(cfg, groupF, {c: r3s[(c, DENSE)] for c in groupF}, {c: locs[c] for c in groupF}, budget_exhausted, coverage_key="bounded_events")
+    dec = decide(cfg, groupF, {c: r3s[(c, DENSE)] for c in groupF}, {c: locs[c] for c in groupF}, budget_exhausted, coverage_key="resolved_events")
+    dec["as_registered"] = {"scientific_label": dec_registered["scientific_label"], "coverage_quantity": "bounded_events (bounds exist; overlap not excluded)", "per_problem": dec_registered["per_problem"]}
     # per-problem table
     pp = []
     for c in cases:
@@ -354,7 +372,7 @@ def analyze(rr):
         row = {"case_id": cid, "group": c["group"], "set": c["set"], "reference_length": inp.refs[cid]["length"], "reference_optimality": inp.refs[cid]["optimality"]}
         for dr in (DENSE, WL):
             s = r3s[(cid, dr)]
-            for k in ("status", "expanded", "snapshots_taken", "anchor_active_events", "bounded_events", "certified_remaining", "certified_cross_group", "certified_sibling", "certified_group_unknown", "cross_inverted_under_driver",
+            for k in ("status", "expanded", "snapshots_taken", "anchor_active_events", "anchor_is_popped_events", "anchor_ref_k_max", "anchor_margin_max", "anchor_margin_median", "bounded_events", "resolved_events", "pairs_resolved", "pairs_not_worse", "certified_remaining", "certified_cross_group", "certified_sibling", "certified_group_unknown", "cross_inverted_under_driver",
                       "cross_tie_under_driver", "cross_inverted_events", "cross_inverted_delayed_states", "cross_distinct_state_pairs", "pairs_unknown_bound"):
                 row["%s_%s" % (dr, k)] = s[k]
         for k, v in locs[cid].items():
@@ -365,4 +383,52 @@ def analyze(rr):
     out = {"decision": dec, "r3": {"%s|%s" % k: v for k, v in r3s.items()}, "local": locs, "totals": {"certified_pairs": len(certified), "candidate_pairs": len(all_rows)},
            "config_decision": cfg["decision"]}
     (res / "diagnostic_summary.json").write_text(json.dumps(out, indent=1, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    tables_md(inp, res / "primary_tables.md", cases, r3s, locs, dec, all_rows)
     return out
+
+
+def tightness(inp, cid):
+    """LM-cut lower bound over the remaining reference length at the labelled reference parents (how loose the lower bound is)."""
+    ratios = []
+    for pos in inp.local[cid]:
+        L, U = inp.lower(cid, pos["parent"]), inp.upper(cid, pos["parent"])
+        if L is not None and U not in (None, 0) and L != INF:
+            ratios.append(L / U)
+    return ratios
+
+
+def tables_md(inp, path, cases, r3s, locs, dec, all_rows):
+    exact = {c["case_id"] for c in cases if c["group"] == "C"}
+    md = ["# CP-DISR-C1-SEARCH-SCOPE-DIAGNOSTIC-V1: generated numbers (interpretation: final_summary.md / claim_boundary.md)", "",
+          "Scientific label (corrected reading of plan 14.1): **%s**; mechanical label of the registered quantity: %s." % (dec["scientific_label"], dec["as_registered"]["scientific_label"]), ""]
+    for dr, title in ((DENSE, "R3 on the DENSE traces (frozen DENSE-G value drives the search)"), (WL, "R3 on the WL traces (WL-GOOSE drives the search)")):
+        md += ["## " + title, "", "| case | group | labels | status / expansions | events | anchor active | anchor = popped | deepest anchor k / ref length | median L(popped)-U(anchor) | max | events with known bounds | resolved events | witnesses (cross / sibling) | cross inverted events | cross tie |",
+               "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+        for c in cases:
+            s = r3s[(c["case_id"], dr)]
+            md.append("| %s | %s | %s | %s / %s | %s | %s | %s | %s / %s | %s | %s | %s | %s | %s / %s | %s | %s |" % (c["case_id"], c["group"], "exact" if c["case_id"] in exact else "LM-cut + reference suffix", s["status"], s["expanded"], s["snapshots_taken"],
+                                                                                                                s["anchor_active_events"], s["anchor_is_popped_events"], s["anchor_ref_k_max"], inp.refs[c["case_id"]]["length"], s["anchor_margin_median"], s["anchor_margin_max"],
+                                                                                                                s["bounded_events"], s["resolved_events"], s["certified_cross_group"], s["certified_sibling"], s["cross_inverted_events"], s["cross_tie_under_driver"]))
+        md.append("")
+    md += ["## R1 / R2 on the reference path (16 equidistant parents, all successors scored by both scorers; labelled: parent, plan child, both first choices, hash fill up to 8)", "",
+           "| case | group | positions | R1 certified | R1 DENSE inv / WL inv | R2 DENSE decision errors (parents) | R2 WL decision errors | DENSE picks plan child | WL picks plan child | provable pairs: DENSE correct / inverted / tie | WL correct / inverted / tie |", "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for c in cases:
+        s = locs[c["case_id"]]
+        md.append("| %s | %s | %s | %s | %s / %s | %s (%s) | %s | %s | %s | %s / %s / %s | %s / %s / %s |" % (c["case_id"], c["group"], s["positions_ok"], s["R1_certified"], s["R1_dense_inverted"], s["R1_wl_inverted"], s["R2_dense_decision_errors"], s["R2_dense_error_parents"],
+                                                                                                          s["R2_wl_decision_errors"], s["R2_dense_choice_is_plan_child"], s["R2_wl_choice_is_plan_child"], s["allpairs_dense_correct"], s["allpairs_dense_inverted"], s["allpairs_dense_tie"],
+                                                                                                          s["allpairs_wl_correct"], s["allpairs_wl_inverted"], s["allpairs_wl_tie"]))
+    md += ["", "## Looseness of the lower bound at the labelled reference parents (LM-cut / remaining reference length; exact problems: 1.0)", "", "| case | mean | min | max | n |", "|---|---|---|---|---|"]
+    for c in cases:
+        r = tightness(inp, c["case_id"])
+        md.append("| %s | %s | %s | %s | %d |" % (c["case_id"], "%.2f" % (sum(r) / len(r)) if r else "-", "%.2f" % min(r) if r else "-", "%.2f" % max(r) if r else "-", len(r)))
+    cnt = Counter((r["case_id"], r["trace_id"], r["role"], r["resolution"]) for r in all_rows)
+    md += ["", "## Candidate pairs by resolution (F problems, DENSE traces)", "", "| case | role | WITNESS | NOT_WORSE | UNRESOLVED |", "|---|---|---|---|---|"]
+    for c in cases:
+        if c["group"] == "F":
+            for role in ("ANCHOR", "COMPETITOR"):
+                md.append("| %s | %s | %d | %d | %d |" % (c["case_id"], role, cnt[(c["case_id"], DENSE, role, "WITNESS")], cnt[(c["case_id"], DENSE, role, "NOT_WORSE")], cnt[(c["case_id"], DENSE, role, "UNRESOLVED")]))
+    md += ["", "## Decision inputs (F problems, DENSE traces)", "", "| case | cross-inverted events | delayed states | R2 error parents | active anchor events | known-bound events (registered quantity) | resolved events (corrected) |", "|---|---|---|---|---|---|---|"]
+    for cid, e in dec["per_problem"].items():
+        s = r3s[(cid, DENSE)]
+        md.append("| %s | %s | %s | %s | %s | %s | %s |" % (cid, e["cross_inverted_events"], e["cross_inverted_delayed_states"], e["R2_error_parents"], e["anchor_active_events"], s["bounded_events"], s["resolved_events"]))
+    Path(path).write_text("\n".join(md) + "\n", encoding="utf-8")
