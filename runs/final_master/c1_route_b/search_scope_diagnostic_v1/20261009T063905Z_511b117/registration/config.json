@@ -1,0 +1,103 @@
+{
+ "base_commit": "511b117495920234cb646016eaf504c7371233aa",
+ "branch": "codex/cp-disr-c1-search-scope-diagnostic-v1",
+ "card": "CP-DISR-C1-SEARCH-SCOPE-DIAGNOSTIC-V1",
+ "cases": {
+  "control": {
+   "crates": [
+    3,
+    5
+   ],
+   "hash_prefix": "scope-diag-v1|",
+   "needs_transport": [
+    true,
+    false
+   ]
+  },
+  "ipc_F": [
+   "ipc_p06",
+   "ipc_p11",
+   "ipc_p12",
+   "ipc_p17"
+  ],
+  "ipc_R": [
+   "ipc_p14",
+   "ipc_p15"
+  ]
+ },
+ "decision": {
+  "coverage": {
+   "majority": 3,
+   "min_active_anchor_events": 8,
+   "min_bounded_events": 8
+  },
+  "local": {
+   "min_error_parents_per_problem": 6,
+   "min_problems": 2
+  },
+  "precedence": [
+   "CROSS_SCOPE_SIGNAL",
+   "LOCAL_WITNESS_PRESENT_NO_CROSS_LOCALIZATION",
+   "NUMERICAL_TIE_DOMINATED",
+   "REFERENCE_ANCHOR_MISSING",
+   "INCONCLUSIVE_CERTIFICATES",
+   "NO_LOCALIZED_SIGNAL_IN_OBSERVED_PREFIX"
+  ],
+  "signal": {
+   "min_cross_events_per_problem": 8,
+   "min_delayed_states_per_problem": 4,
+   "min_problems": 2
+  },
+  "tie_dominated_fraction": 0.5
+ },
+ "dense": {
+  "mode": "dense",
+  "selected_update": 4100,
+  "sha256": "ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38"
+ },
+ "labels": {
+  "additional_upper_bound_requests": 64,
+  "concurrent_cpu_label_workers": 4,
+  "fixture_searches_max": 8,
+  "gpu_process_wall_seconds": 1800,
+  "label_cpu_core_seconds": 3600,
+  "label_priority": "R2 core (parent, plan child, DENSE first choice, WL first choice) > R3 popped states (alternating drivers by event) > R2 hash fill; equal per-problem share, remainder by the same order",
+  "lmcut_timeout_seconds": 60,
+  "lower_bound_backend": "Scorpion downward, --search astar(lmcut(), bound=0), initial state replaced in the SAS begin_state block",
+  "main_traces_max": 20,
+  "unique_bound_states": 4096,
+  "upper_bound_planner": "Scorpion downward, --search lazy_greedy([ff()], preferred=[ff()]), 5 s, one thread",
+  "upper_bound_request_seconds": 5
+ },
+ "local": {
+  "labelled_successors": 8,
+  "positions": 16
+ },
+ "numerics": {
+  "dense_tolerance": "1e-5 + 1e-6*max(|v_i|,|v_j|)",
+  "wl": "rounded integer values as in the earlier cards; ties are exact equality"
+ },
+ "old_run_root": "runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e",
+ "plan_doc": "docs/c1_blocksworld/CP_DISR_C1_Final_Decision_and_Minimal_Validation_Card_20261009.md",
+ "plan_source_roots": [
+  "runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e",
+  "runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1",
+  "runs/final_master/c1_route_b/depots_fast_alt_v3/20261008T191927Z_fastalt"
+ ],
+ "reference_length_sensitivity": "runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1/results/reference_length_sensitivity.csv",
+ "traces": {
+  "competitors": 3,
+  "control": {
+   "max_expansions": 128,
+   "memory_gib": 8,
+   "wall_seconds": 15
+  },
+  "grace_seconds": 20,
+  "ipc": {
+   "max_expansions": 4096,
+   "memory_gib": 8,
+   "wall_seconds": 60
+  },
+  "snapshots": 32
+ }
+}

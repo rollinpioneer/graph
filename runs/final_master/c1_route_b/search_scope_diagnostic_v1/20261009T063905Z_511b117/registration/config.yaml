@@ -1,0 +1,65 @@
+# CP-DISR-C1-SEARCH-SCOPE-DIAGNOSTIC-V1: registered configuration (plan sections 11-17). Frozen at the registration commit, before any main prefix.
+card: CP-DISR-C1-SEARCH-SCOPE-DIAGNOSTIC-V1
+base_commit: 511b117495920234cb646016eaf504c7371233aa
+branch: codex/cp-disr-c1-search-scope-diagnostic-v1
+plan_doc: docs/c1_blocksworld/CP_DISR_C1_Final_Decision_and_Minimal_Validation_Card_20261009.md
+
+old_run_root: runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e
+plan_source_roots:                      # reference plans: every saved plan file of these roots that names the case (any producer)
+  - runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e
+  - runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1
+  - runs/final_master/c1_route_b/depots_fast_alt_v3/20261008T191927Z_fastalt
+reference_length_sensitivity: runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1/results/reference_length_sensitivity.csv
+dense:
+  mode: dense
+  selected_update: 4100
+  sha256: ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38
+
+cases:
+  ipc_F: [ipc_p06, ipc_p11, ipc_p12, ipc_p17]     # DENSE node-guidance disadvantage versus WL
+  ipc_R: [ipc_p14, ipc_p15]                       # reverse group (DENSE solves, WL / h_add exhaust 100k nodes)
+  control:                                        # Train96, minimum of SHA256("scope-diag-v1|case_id") per cell; fixed before any new model evaluation
+    hash_prefix: "scope-diag-v1|"
+    crates: [3, 5]
+    needs_transport: [true, false]
+
+traces:
+  snapshots: 32
+  competitors: 3
+  grace_seconds: 20
+  ipc: {max_expansions: 4096, wall_seconds: 60, memory_gib: 8}
+  control: {max_expansions: 128, wall_seconds: 15, memory_gib: 8}
+local:
+  positions: 16
+  labelled_successors: 8
+labels:
+  gpu_process_wall_seconds: 1800
+  label_cpu_core_seconds: 3600
+  unique_bound_states: 4096
+  additional_upper_bound_requests: 64
+  upper_bound_request_seconds: 5
+  concurrent_cpu_label_workers: 4
+  lmcut_timeout_seconds: 60
+  fixture_searches_max: 8
+  main_traces_max: 20
+  lower_bound_backend: "Scorpion downward, --search astar(lmcut(), bound=0), initial state replaced in the SAS begin_state block"
+  upper_bound_planner: "Scorpion downward, --search lazy_greedy([ff()], preferred=[ff()]), 5 s, one thread"
+  label_priority: "R2 core (parent, plan child, DENSE first choice, WL first choice) > R3 popped states (alternating drivers by event) > R2 hash fill; equal per-problem share, remainder by the same order"
+numerics:
+  dense_tolerance: "1e-5 + 1e-6*max(|v_i|,|v_j|)"
+  wl: "rounded integer values as in the earlier cards; ties are exact equality"
+
+decision:                                # pre-registered numeric details of the labels of plan section 17 (screening for further investment, not statistics)
+  signal:
+    min_problems: 2                      # F problems with ...
+    min_cross_events_per_problem: 8      # ... >= 8 distinct DENSE pop events with a cross-group certified, clearly inverted witness (not a near tie) ...
+    min_delayed_states_per_problem: 4    # ... involving >= 4 distinct delayed (better) states
+  local:
+    min_problems: 2
+    min_error_parents_per_problem: 6     # distinct sampled parents with a DENSE decision-level R2 error
+  coverage:
+    min_active_anchor_events: 8          # per F problem; fewer in >= `majority` of the 4 F problems => REFERENCE_ANCHOR_MISSING
+    min_bounded_events: 8                # events with at least one candidate whose certificate can be decided; fewer in >= majority => INCONCLUSIVE_CERTIFICATES
+    majority: 3
+  tie_dominated_fraction: 0.5            # share of certified cross-group witnesses that are numerical ties (per problem); >= majority of problems => NUMERICAL_TIE_DOMINATED
+  precedence: [CROSS_SCOPE_SIGNAL, LOCAL_WITNESS_PRESENT_NO_CROSS_LOCALIZATION, NUMERICAL_TIE_DOMINATED, REFERENCE_ANCHOR_MISSING, INCONCLUSIVE_CERTIFICATES, NO_LOCALIZED_SIGNAL_IN_OBSERVED_PREFIX]

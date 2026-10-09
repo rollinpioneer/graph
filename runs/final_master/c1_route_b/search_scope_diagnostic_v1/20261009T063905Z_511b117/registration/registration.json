@@ -1,0 +1,71 @@
+{
+ "base_commit": "511b117495920234cb646016eaf504c7371233aa",
+ "branch": "codex/cp-disr-c1-search-scope-diagnostic-v1",
+ "caps": {
+  "additional_upper_bound_requests": 64,
+  "concurrent_cpu_label_workers": 4,
+  "fixture_searches_max": 8,
+  "gpu_process_wall_seconds": 1800,
+  "label_cpu_core_seconds": 3600,
+  "label_priority": "R2 core (parent, plan child, DENSE first choice, WL first choice) > R3 popped states (alternating drivers by event) > R2 hash fill; equal per-problem share, remainder by the same order",
+  "lmcut_timeout_seconds": 60,
+  "lower_bound_backend": "Scorpion downward, --search astar(lmcut(), bound=0), initial state replaced in the SAS begin_state block",
+  "main_traces_max": 20,
+  "unique_bound_states": 4096,
+  "upper_bound_planner": "Scorpion downward, --search lazy_greedy([ff()], preferred=[ff()]), 5 s, one thread",
+  "upper_bound_request_seconds": 5
+ },
+ "card": "CP-DISR-C1-SEARCH-SCOPE-DIAGNOSTIC-V1",
+ "config_sha256": "a701d3338942db36b520b8e0491fff5d58181d68efd0254938f9f73a9c788001",
+ "decision": {
+  "coverage": {
+   "majority": 3,
+   "min_active_anchor_events": 8,
+   "min_bounded_events": 8
+  },
+  "local": {
+   "min_error_parents_per_problem": 6,
+   "min_problems": 2
+  },
+  "precedence": [
+   "CROSS_SCOPE_SIGNAL",
+   "LOCAL_WITNESS_PRESENT_NO_CROSS_LOCALIZATION",
+   "NUMERICAL_TIE_DOMINATED",
+   "REFERENCE_ANCHOR_MISSING",
+   "INCONCLUSIVE_CERTIFICATES",
+   "NO_LOCALIZED_SIGNAL_IN_OBSERVED_PREFIX"
+  ],
+  "signal": {
+   "min_cross_events_per_problem": 8,
+   "min_delayed_states_per_problem": 4,
+   "min_problems": 2
+  },
+  "tie_dominated_fraction": 0.5
+ },
+ "fixtures": {
+  "all_passed": true,
+  "searches": 8
+ },
+ "new_neural_trainings": 0,
+ "new_problem_generation": 0,
+ "new_wl_fits": 0,
+ "optimizer_steps": 0,
+ "plan_sha256": "c531dbecdfa9060958ddbbd3fb69ddf78f51657c3348260f0b6a03046361e28b",
+ "registered": "2026-10-09T06:47:22Z",
+ "traces": {
+  "competitors": 3,
+  "control": {
+   "max_expansions": 128,
+   "memory_gib": 8,
+   "wall_seconds": 15
+  },
+  "grace_seconds": 20,
+  "ipc": {
+   "max_expansions": 4096,
+   "memory_gib": 8,
+   "wall_seconds": 60
+  },
+  "snapshots": 32
+ },
+ "use_diagnostic_certificates_for_training": false
+}
