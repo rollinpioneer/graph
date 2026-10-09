@@ -157,6 +157,22 @@ def cost_rows(sm_root, fa_root):
         rows.append({"source": "same-search card compute table", "scorer": r["scorer"], "template": r["set"], "runs": r["runs"], "wall_s": w, "scoring_s": sc, "scoring_share_of_wall": sc / w if w and sc is not None else None,
                      "inference_s": inf, "translate_s": fnum(r["translate_s"]), "parse_ground_s": fnum(r["parse_ground_s"]), "model_load_s": fnum(r["model_load_s"]), "expanded": fnum(r["expanded"]), "evaluated_states": fnum(r["evaluated_states"]),
                      "forward_calls": fnum(r["forward_calls"]), "per_state_ms": 1000 * sc / fnum(r["evaluated_states"]) if sc is not None and fnum(r["evaluated_states"]) else None, "statuses": r["statuses"]})
+    # run-level decomposition of the wall clock of every search of the same-search card: parse + ground, template / translation preparation, scoring (conversion + encoder + readout for neural scorers), the rest of the search (OPEN / CLOSED, successor generation)
+    sbc = rcsv(Path(sm_root) / "results" / "search_by_case.csv")
+    agg2 = defaultdict(lambda: defaultdict(float))
+    for r in sbc:
+        k = (r["scorer"], r["set"])
+        for f in ("wall_total_s", "t_parse_ground_s", "t_prepare_s", "search_s", "scoring_s", "inference_s", "translate_s", "evaluated_states", "expanded", "generated"):
+            v = fnum(r[f])
+            if v is not None:
+                agg2[k][f] += v
+        agg2[k]["runs"] += 1
+    for (sc, st), a in sorted(agg2.items()):
+        w = a["wall_total_s"]
+        rows.append({"source": "same-search card, summed over the runs of (scorer, set)", "scorer": sc, "template": st, "runs": a["runs"], "wall_s": w, "parse_ground_s": a["t_parse_ground_s"], "prepare_s": a["t_prepare_s"], "search_s": a["search_s"], "scoring_s": a["scoring_s"],
+                     "inference_s": a["inference_s"] or None, "translate_s": a["translate_s"] or None, "search_overhead_without_scoring_s": a["search_s"] - a["scoring_s"], "scoring_share_of_wall": a["scoring_s"] / w if w else None,
+                     "search_overhead_share_of_wall": (a["search_s"] - a["scoring_s"]) / w if w else None, "per_state_ms": 1000 * a["scoring_s"] / a["evaluated_states"] if a["evaluated_states"] else None, "expanded": a["expanded"], "evaluated_states": a["evaluated_states"],
+                     "note": "model load / warm-up are outside the problem clock; overlapping or asynchronous parts are not separated (NA)"})
     fa = rcsv(Path(fa_root) / "results" / "compute_costs.csv")
     for r in fa:
         rows.append({"source": "FAST/ALT card compute table", "scorer": r["condition"], "template": r["set"], "runs": r["runs"], "wall_s": fnum(r["wall_total_s"]), "scoring_s": fnum(r["scoring_main_s"]), "scoring_share_of_wall": (fnum(r["scoring_main_s"]) / fnum(r["wall_total_s"])) if fnum(r["wall_total_s"]) else None,

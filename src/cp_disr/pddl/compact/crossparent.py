@@ -114,23 +114,37 @@ class PddlTrainerS(PddlTrainer):
         scores = res["logits"]
         nll = I.imitation_nll(scores, am)
         vn, vx = res["vn"], res["vx"]
-        ranks = []
-        used = 0
+        idx_of = {a: i for i, a in enumerate(ids)}
+        KA, KB, KJ, CA, CX, CJ, NN = [], [], [], [], [], [], []
+        off = 0
         for j, k in enumerate(keys):
             info = self.plan.by_key[k]
-            terms = []
+            NN.append(info["n"])
             for a, b in info["keep"]:
-                terms.append(F.softplus(vn[j, ids.index(a)] - vn[j, ids.index(b)]))
-            xi = 0
+                KA.append(j * n + idx_of[a])
+                KB.append(j * n + idx_of[b])
+                KJ.append(j)
+            nc = 0
             for a, y in info["cross"]:
                 if y is None:
                     continue
-                terms.append(F.softplus(vn[j, ids.index(a)] - vx[j][xi]))
-                xi += 1
-                used += 1
-            ranks.append(torch.stack(terms).sum() / info["n"] if terms else torch.zeros((), device=dev))
-        rank = torch.stack(ranks)
-        self.cross_used += used
+                CA.append(j * n + idx_of[a])
+                CX.append(off + nc)
+                CJ.append(j)
+                nc += 1
+            off += nc
+        S_ = len(sub)
+        vflat = vn.reshape(-1)
+        rank = torch.zeros(S_, device=dev)
+        if KA:
+            tk = F.softplus(vflat[torch.tensor(KA, device=dev)] - vflat[torch.tensor(KB, device=dev)])
+            rank = rank.index_add(0, torch.tensor(KJ, device=dev), tk)
+        if CA:
+            vxcat = torch.cat([v for v in vx if v.numel()])
+            tc = F.softplus(vflat[torch.tensor(CA, device=dev)] - vxcat[torch.tensor(CX, device=dev)])
+            rank = rank.index_add(0, torch.tensor(CJ, device=dev), tc)
+        rank = rank / torch.tensor(NN, device=dev, dtype=rank.dtype).clamp(min=1)
+        self.cross_used += len(CA)
         return nll + rank, nll, rank, scores.argmax(-1)
 
     def step(self, trajs):

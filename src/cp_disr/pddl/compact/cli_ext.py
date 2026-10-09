@@ -130,6 +130,7 @@ def make_evaluator(rr, name, device_name="cpu"):
     cfg = _cfg()
     old = OldRun(ROOT / cfg["old_run_root"])
     dev = torch.device(device_name)
+    name = {"D0R": "D0"}.get(name, name)                # D0R = the second D0 pass that pairs with T1 on the IPC panel (same weights, separate records)
     if name in ("MG", "DENSE", "REL"):
         m, _ck = load_neural(old, "V_" + name, dev)
         return EV.NeuralEval(name, m, dev)
@@ -330,6 +331,145 @@ def train_t1(rr, device_name):
     return 0
 
 
+def train_pair_accuracy(rr, models, device_name):
+    """Weighted accuracy of each scorer on the D0-aligned Train96 successor pairs (the W1 pair list): how far each model satisfies the supervision it was (or was not) given."""
+    from cp_disr.pddl import depots as DP, stages as ST
+    from cp_disr.pddl.search_match.budget import Budget
+    from cp_disr.pddl.compact import train as CT
+    rr = Path(rr)
+    data = json.loads((rr / "training" / "W1" / "data.json").read_text())
+    cfg = _cfg()
+    man, _e, _ = CT.load_old(ROOT / cfg["old_run_root"])
+    byid = {c["case_id"]: c for c in man["train"]}
+    out = {}
+    for name in models.split(","):
+        ev = make_evaluator(rr, name, device_name)
+        tot = {"correct": 0.0, "tie": 0.0, "inverted": 0.0}
+        unique = {"correct": 0, "tie": 0, "inverted": 0}
+        for p in data["problems"]:
+            c = byid[p["case_id"]]
+            task = ST.get_task(DP.DOMAIN_TYPED, c["file"])
+            b = Budget(600, 10 ** 9, 16 * 2 ** 30, 60.0)
+            ev.prepare(task, {"domain": str(DP.DOMAIN_TYPED), "problem": c["file"]}, b)
+            vals = ev.evaluate([int(h, 16) for h in p["state_masks_hex"]], b)
+            for i, j, w in p["pairs"]:
+                vi, vj = vals[i], vals[j]
+                k = "tie" if abs(vi - vj) <= 1e-5 + 1e-6 * max(abs(vi), abs(vj)) else ("correct" if vi < vj else "inverted")
+                tot[k] += w
+                unique[k] += 1
+            try:
+                ev.close()
+            except Exception:
+                pass
+        s = sum(tot.values())
+        out[name] = {"weighted": {k: v / s for k, v in tot.items()}, "unique_pairs": unique, "pairs": sum(unique.values())}
+    p = rr / "diagnostics" / "train_pair_accuracy.json"
+    old = json.loads(p.read_text()) if p.is_file() else {}
+    old.update(out)
+    _wj(p, old)
+    print(json.dumps(out)[:900])
+
+
+def report_c(rr):
+    """Paired task changes: per base x kind rows for old DENSE and old WL, change ratios and the W-coverage trigger quantities (plan 6.2) -- reported although S takes precedence."""
+    from cp_disr.pddl.compact import reports_a as RA
+    import statistics
+    rr = Path(rr)
+    man = json.loads((rr / "diagnostics" / "problem_transform_manifest.json").read_text())["rows"]
+    recs = {}
+    for line in (rr / "evaluation" / "runs" / "DENSE_WL_variants_0.jsonl").read_text().splitlines():
+        if line.strip():
+            d = json.loads(line)
+            recs[(d["scorer"], d["case_id"])] = d
+    meta = {r["problem_id"]: r for r in man}
+    rows = []
+    for r in man:
+        for sc in ("DENSE", "WL"):
+            d = recs.get((sc, r["problem_id"]))
+            if not d:
+                continue
+            base = recs.get((sc, r["base"]))
+            row = {"problem": r["problem_id"], "base": r["base"], "kind": r["kind"], "model": sc, "status": d["status"], "solved": d["solved"], "expanded": d.get("expanded"), "plan_length": d.get("plan_length"),
+                   "reference_length": r.get("reference_length"), "reference_optimal": r.get("reference_optimal"), "wall_s": round(d["wall_total"], 3), "states_scored": (d.get("evaluator_metrics") or {}).get("states_scored"),
+                   "n_ground_actions": r.get("n_ground_actions"), "n_crates": meta[r["base"]].get("n_crates"), "needs_transport": meta[r["base"]].get("needs_transport"), "max_goal_height": meta[r["base"]].get("max_goal_height")}
+            if base and r["kind"] != "BASE":
+                row["base_status"], row["base_expanded"] = base["status"], base.get("expanded")
+                if d["solved"] and base["solved"] and base.get("expanded"):
+                    row["expanded_ratio_to_base"] = round(d["expanded"] / base["expanded"], 3)
+                if d["solved"] and r.get("reference_length"):
+                    row["plan_over_reference"] = round(d["plan_length"] / r["reference_length"], 3)
+            rows.append(row)
+    RA.wcsv(rr / "results" / "paired_interventions.csv", rows)
+    summ = {}
+    for sc in ("DENSE", "WL"):
+        for k in ("BASE", "P", "R", "W"):
+            rs = [r for r in rows if r["model"] == sc and r["kind"] == k]
+            sol = [r for r in rs if r["solved"] in (True, "True")]
+            ratios = [r["expanded_ratio_to_base"] for r in rs if r.get("expanded_ratio_to_base")]
+            summ["%s|%s" % (sc, k)] = {"n": len(rs), "solved": len(sol), "median_expanded": statistics.median(r["expanded"] for r in sol) if sol else None, "median_expanded_ratio_to_base": statistics.median(ratios) if ratios else None,
+                                       "ratio_ge2": sum(1 for x in ratios if x >= 2), "ratio_le_half": sum(1 for x in ratios if x <= 0.5), "common": len(ratios)}
+    w_dense_base_ok_w_fail = sum(1 for r in rows if r["model"] == "DENSE" and r["kind"] == "W" and r["solved"] not in (True, "True") and r.get("base_status") == "SOLVED")
+    trig = {"groups_with_feasible_base_and_W": sum(1 for r in man if r["kind"] == "W" and r.get("feasible")), "dense_base_success_W_fail": w_dense_base_ok_w_fail,
+            "dense_W_common_success_expansion_ratio_ge_2": summ["DENSE|W"]["ratio_ge2"], "dense_W_common_success_groups": summ["DENSE|W"]["common"], "wl_W_common_success_expansion_ratio_ge_2": summ["WL|W"]["ratio_ge2"], "wl_W_common_success_groups": summ["WL|W"]["common"],
+            "rule": _cfg()["t1"]["W"], "W_condition_met": bool(w_dense_base_ok_w_fail >= 2 or (summ["DENSE|W"]["common"] >= 4 and summ["DENSE|W"]["ratio_ge2"] >= 4)),
+            "note": "S has priority and was triggered by library B; W is reported for the failure / interaction map only (no W training)"}
+    _wj(rr / "results" / "paired_interventions_summary.json", {"by_model_kind": summ, "w_trigger_quantities": trig})
+    print(json.dumps({"summary": summ, "trigger": trig})[:1800])
+
+
+def report_panel(rr):
+    from cp_disr.pddl.compact import final as FN, reports_a as RA
+    rr = Path(rr)
+    cfg = _cfg()
+    rows = FN.panel_rows(rr, ROOT / cfg["old_run_root"], ROOT / cfg["search_match_root"])
+    RA.wcsv(rr / "results" / "panel_by_case.csv", rows)
+    RA.wcsv(rr / "results" / "panel_summary.csv", FN.summary(rows))
+    arms = {r["arm"] for r in rows}
+    pairs = [p for p in (("D0", "C0"), ("D0", "OLD_DENSE"), ("C0", "OLD_DENSE"), ("T1", "D0"), ("T1", "OLD_DENSE"), ("W1", "OLD_WL"), ("W1", "D0"), ("D0", "OLD_WL"), ("C0", "OLD_WL")) if p[0] in arms and p[1] in arms]
+    RA.wcsv(rr / "results" / "paired_new_vs_old.csv", FN.paired(rows, pairs))
+    if "D0" in arms and "C0" in arms:
+        _wj(rr / "results" / "attention_function_joint32.json", FN.attention_readout(rows))
+    print("panel tables: %d rows, arms %s" % (len(rows), sorted(arms)))
+
+
+def verify_cmd(rr):
+    from cp_disr.pddl.compact import final as FN
+    rr = Path(rr)
+    cfg = _cfg()
+    out = FN.verify(rr, ROOT / cfg["old_run_root"], cfg)
+    _wj(rr / "final" / "verify.json", out)
+    print("verify consistent=%s plans=%s failures=%s" % (out["consistent"], out["checks"]["plans_replayed"], out["checks"]["plan_failures"][:3]))
+
+
+def accounting(rr):
+    """Compute / budget accounting from the ledger and the training accounts. GPU device-hours: wall of every GPU process (training, selection, panels, library scoring, fixtures). CPU core-hours are conservative: threads x wall."""
+    rr = Path(rr)
+    led = [json.loads(l) for l in (rr / "receipts" / "ledger.jsonl").read_text().splitlines() if l.strip()]
+    gpu_h = 0.0
+    parts = {}
+    for arm in ("D0", "C0", "T1"):
+        p = rr / "training" / arm / "training_accounting.json"
+        if p.is_file():
+            a = json.loads(p.read_text())
+            parts["train_" + arm] = {"accepted_updates": a["optimizer_steps"], "attempts": a["attempts"], "wall_hours": round(a["wall_seconds"] / 3600, 3), "decision_samples_shown": a["decision_samples_shown"], "nan_events": a["nan_events"]}
+            gpu_h += a["wall_seconds"] / 3600
+    for e in led:
+        if e["stage"].startswith("train_"):
+            continue
+        gpu_h += float(e.get("gpu_device_hours") or 0) + float(e.get("gpu_seconds") or 0) / 3600
+    cpu_h = sum(float(e.get("cpu_core_hours") or 0) for e in led) + 4 * sum(v["wall_hours"] for v in parts.values())
+    searches = 0
+    for p in (rr / "evaluation" / "runs").glob("*.jsonl"):
+        searches += sum(1 for l in p.read_text().splitlines() if l.strip())
+    fx = sum(1 for e in led if e["stage"].startswith("fixture"))
+    acc = {"training": parts, "accepted_updates_total": sum(v["accepted_updates"] for v in parts.values()), "wl_fits": sum(int(e.get("fits") or 0) for e in led), "gpu_device_hours_estimate": round(gpu_h, 2), "gpu_cap": 32,
+           "cpu_core_hours_estimate": round(cpu_h, 2), "cpu_cap": 64, "searches_total_incl_paired_changes": searches, "main_search_cap": 280, "fixture_stages": fx, "fixture_optimizer_steps": sum(int(e.get("fixture_optimizer_steps") or 0) for e in led),
+           "dev_policy_evaluations": sum(int(e.get("dev_policy_evaluations") or 0) for e in led), "new_exact_queries": sum(int(e.get("new_exact_queries") or 0) for e in led), "reference_solves": sum(int(e.get("reference_solves") or 0) for e in led),
+           "ledger_entries": len(led), "note": "GPU hours count the wall time of whole processes incl. model load; shared GPUs of other users are not counted"}
+    _wj(rr / "final" / "compute_accounting.json", acc)
+    print(json.dumps(acc))
+
+
 def panel(rr, arms, set_name, shard, nshards, device_name):
     from cp_disr.pddl.compact import panel as PN
     t0 = time.time()
@@ -426,6 +566,18 @@ def report_b(rr, names):
                     c["both_correct" if ca and cb else "a_only" if ca else "b_only" if cb else "neither"] += 1
             dd.append({"model_a": a, "model_b": b, "kind": "same_parent_decision", **c})
     RA.wcsv(rr / "diagnostics" / "b_repair_damage.csv", rd + dd)
+    # the same by goal structure (towers in the goal) and family: where are the repairs and the damages?
+    from cp_disr.pddl.compact import train as CT
+    man_all, _ex, _ = CT.load_old(ROOT / _cfg()["old_run_root"])
+    ktow = {c["case_id"]: c["analysis"]["k_goal_towers"] for fam in ("train", "struct", "joint") for c in man_all[fam]}
+    strat = defaultdict(lambda: {"both_correct": 0, "a_only": 0, "b_only": 0, "neither": 0})
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            for (k, p, x, y), d in idx.items():
+                if a in d and b in d:
+                    ca, cb = d[a] == "CORRECT", d[b] == "CORRECT"
+                    strat[(a, b, k, pk[p]["family"], ktow.get(p))]["both_correct" if ca and cb else "a_only" if ca else "b_only" if cb else "neither"] += 1
+    RA.wcsv(rr / "diagnostics" / "b_repair_damage_by_stratum.csv", [{"model_a": a, "model_b": b, "kind": k, "family": fam, "goal_towers": kt, **c, "net_a_minus_b": c["a_only"] - c["b_only"]} for (a, b, k, fam, kt), c in sorted(strat.items(), key=lambda kv: tuple(str(x) for x in kv[0]))])
     # equivariance summary
     eq = []
     for n in names:
@@ -477,6 +629,6 @@ def trigger_s(rr, names="DENSE,WL"):
 
 
 def commands(rr, a):
-    return {"fixture-s": lambda: fixture_s(rr, a.device), "train-t1": lambda: train_t1(rr, a.device), "fixture-variants": lambda: fixture_variants(rr), "report-a": lambda: report_a(rr), "report-b": lambda: report_b(rr, a.models), "trigger-s": lambda: trigger_s(rr),
+    return {"verify": lambda: verify_cmd(rr), "report-panel": lambda: report_panel(rr), "accounting": lambda: accounting(rr), "report-c": lambda: report_c(rr), "train-pair-accuracy": lambda: train_pair_accuracy(rr, a.models, a.device), "fixture-s": lambda: fixture_s(rr, a.device), "train-t1": lambda: train_t1(rr, a.device), "fixture-variants": lambda: fixture_variants(rr), "report-a": lambda: report_a(rr), "report-b": lambda: report_b(rr, a.models), "trigger-s": lambda: trigger_s(rr),
             "fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr), "fixture-b": lambda: fixture_b(rr), "lib-build": lambda: lib_build(rr), "lib-score": lambda: lib_score(rr, a.model, a.device),
             "lib-equiv": lambda: lib_equiv(rr, a.model, a.device), "variants-build": lambda: variants_build(rr), "panel": lambda: panel(rr, a.arms, a.set, a.shard, a.nshards, a.device)}

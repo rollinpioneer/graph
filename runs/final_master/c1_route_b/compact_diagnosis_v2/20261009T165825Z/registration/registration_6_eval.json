@@ -1,0 +1,65 @@
+{
+ "scope": "evaluation of D0 / C0 (Joint32, IPC22, library B) with the checkpoints selected by the ORIGINAL Dev24 rule; no new-model search result existed at this commit",
+ "selected": {
+  "D0": {
+   "update": "820",
+   "checkpoint_sha256": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+   "dev_by_update": {
+    "1640": [
+     24,
+     1.0149
+    ],
+    "2460": [
+     24,
+     1.0088
+    ],
+    "3280": [
+     24,
+     1.0088
+    ],
+    "4100": [
+     24,
+     1.0199
+    ],
+    "820": [
+     24,
+     1.0035
+    ]
+   }
+  },
+  "C0": {
+   "update": "4100",
+   "checkpoint_sha256": "1dc9e72172dc10e82d3349555dd34066eac785d37acef20eb13cb3c528a8fdbf",
+   "dev_by_update": {
+    "1640": [
+     24,
+     1.0062
+    ],
+    "2460": [
+     24,
+     1.0147
+    ],
+    "3280": [
+     24,
+     1.0056
+    ],
+    "4100": [
+     24,
+     1.0
+    ],
+    "820": [
+     24,
+     1.0511
+    ]
+   }
+  }
+ },
+ "note": "Dev24 is saturated (24/24 at every checkpoint of both arms); the rule therefore decides by small failure-penalised cost-ratio differences",
+ "panel_design": "D0 and C0 back to back on one GPU per problem (order by sha1 of the problem id); T1 later with a second D0 pass (arm D0R) for pairing and as a load / run-to-run reference; search budgets: 4 arms x 54 + 64 paired-change searches <= 280",
+ "files": {
+  "src/cp_disr/pddl/compact/panel.py": "3a210cd739521a29632d8c660963b16d3f43440538446b65fa3df7a7ba4ecb9e",
+  "src/cp_disr/pddl/compact/final.py": "1fe2452ba4617a7e50d5d3f81d63cdffed4fbd804d02a740eb06e5c7ce8b6839",
+  "src/cp_disr/pddl/compact/cli_ext.py": "d0690ca5df585097bf89e78709edb0059ae7b116c293352cf2a0b54d342fc1b8",
+  "src/cp_disr/pddl/compact/train.py": "7524284af8a6f2e40603b6614ace5c2fac46d00797f9e0814bc6106f78c2f922"
+ }
+}
