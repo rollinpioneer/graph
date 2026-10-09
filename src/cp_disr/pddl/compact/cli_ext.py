@@ -209,6 +209,186 @@ def lib_equiv(rr, model, device_name):
     print("equivariance %s: %d rows, max variant diff %.3g, max repeat diff %.3g" % (model, len(rows), max(r["abs_variant_diff"] for r in rows), max(r["abs_repeat_diff"] for r in rows)))
 
 
+def variants_build(rr):
+    from cp_disr.pddl.compact import variants as VR
+    rr = Path(rr)
+    cfg = _cfg()
+    t0 = time.time()
+    rows, solves = VR.make_all(ROOT / cfg["old_run_root"], cfg, rr / "diagnostics" / "variants", rr / "diagnostics" / "variant_reference", 60)
+    from collections import Counter
+    summ = Counter((r["kind"], bool(r.get("feasible"))) for r in rows)
+    _wj(rr / "diagnostics" / "problem_transform_manifest.json", {"rows": rows, "reference_solves": solves, "summary": {"%s|%s" % k: v for k, v in sorted(summ.items())}})
+    _ledger(rr, "variants_build", seconds=round(time.time() - t0, 1), reference_solves=solves, cpu_core_hours=round((time.time() - t0) / 3600, 3))
+    print(json.dumps({"%s|%s" % k: v for k, v in sorted(summ.items())}), "reference solves", solves)
+
+
+def fixture_variants(rr):
+    """Fixture 6: the transformed problems differ from their base exactly as defined (goal / object / init counts), P and R replay the base optimal plan, W is feasible by a bounded LAMA call."""
+    from cp_disr.pddl.parse import parse_problem
+    rr = Path(rr)
+    rows = json.loads((rr / "diagnostics" / "problem_transform_manifest.json").read_text())["rows"]
+    byid = {r["problem_id"]: r for r in rows}
+    checks = []
+    for r in rows:
+        if r["kind"] == "BASE":
+            continue
+        b = byid[r["base"]]
+        pb, pv = parse_problem(Path(b["file"]).read_text()), parse_problem(Path(r["file"]).read_text())
+        cnt = lambda p, t: sum(1 for x in p.objects.values() if x == t)
+        if r["kind"] == "P":
+            ok = len(pv.goal) == len(pb.goal) - 1 and set(pv.goal) < set(pb.goal) and pv.init == pb.init and pv.objects == pb.objects
+        elif r["kind"] == "R":
+            ok = cnt(pv, "pallet") == cnt(pb, "pallet") + 1 and pv.goal == pb.goal and len(pv.init) == len(pb.init) + 2 and set(pb.init) < set(pv.init)
+        else:
+            moved = set(r["moved_objects"])
+            at_new = {a[0] for pred, a in pv.init if pred == "at" and a[1] == r["new_place"]}
+            ok = (cnt(pv, "distributor") == cnt(pb, "distributor") + 1 and cnt(pv, "hoist") == cnt(pb, "hoist") + 1 and cnt(pv, "pallet") == cnt(pb, "pallet") + 1 and pv.goal == pb.goal and moved <= at_new
+                  and all(a[1] != r["from_place"] for pred, a in pv.init if pred == "at" and a[0] in moved))
+        checks.append({"problem": r["problem_id"], "kind": r["kind"], "structure_ok": bool(ok), "feasible": bool(r["feasible"]), "reference_length": r["reference_length"]})
+    out = {"checks": checks, "ok": all(c["structure_ok"] and c["feasible"] for c in checks), "n": len(checks), "reference_solves": json.loads((rr / "diagnostics" / "problem_transform_manifest.json").read_text())["reference_solves"]}
+    _wj(rr / "checks" / "fixture_variants.json", out)
+    _ledger(rr, "fixture_variants", passed=out["ok"])
+    print("fixture variants ok=%s n=%d" % (out["ok"], len(checks)))
+    return 0 if out["ok"] else 3
+
+
+def panel(rr, arms, set_name, shard, nshards, device_name):
+    from cp_disr.pddl.compact import panel as PN
+    t0 = time.time()
+    arms = arms.split(",")
+    cache = {}
+
+    def mk(a):
+        return make_evaluator(rr, a, device_name)
+    PN.run_panel(rr, ROOT / _cfg()["old_run_root"], arms, set_name, shard, nshards, mk, "_".join(arms))
+    _ledger(rr, "panel_%s_%s" % ("_".join(arms), set_name), shard=[shard, nshards], seconds=round(time.time() - t0, 1), gpu_device_hours=round((time.time() - t0) / 3600, 3) if device_name != "cpu" else 0, device=device_name)
+
+
+def report_a(rr):
+    from cp_disr.pddl.compact import reports_a as RA
+    rr = Path(rr)
+    cfg = _cfg()
+    t0 = time.time()
+    w1 = None
+    p = rr / "training" / "W1" / "fit_accounting.json"
+    if p.is_file():
+        acc = json.loads(p.read_text())
+        w1 = {"parents": acc["export_stats"]["parents"], "pairs_raw": acc["export_stats"]["pairs_raw"], "pairs_unique_nonzero": acc["fit"].get("pairs_unique_nonzero"), "features": acc["fit"].get("features"),
+              "train_pair_accuracy_weighted": acc["fit"].get("train_pair_accuracy_weighted"), "weights_nonzero": acc["fit"].get("weights_nonzero")}
+    res = rr / "results"
+    root, sm, fa, sc = (ROOT / cfg[k] for k in ("old_run_root", "search_match_root", "fast_alt_root", "scope_root"))
+    RA.wcsv(res / "supervision_contract.csv", RA.supervision_rows(root, w1))
+    RA.wcsv(res / "historical_paired.csv", RA.historical_rows(sm, fa))
+    RA.wcsv(res / "cost_breakdown.csv", RA.cost_rows(sm, fa))
+    RA.wcsv(res / "ipc_failure_map.csv", RA.ipc_map(sm, fa, sc))
+    _ledger(rr, "report_a", seconds=round(time.time() - t0, 1))
+    print("part A tables written")
+
+
+def report_b(rr, names):
+    from cp_disr.pddl.compact import diagb as DB, reports_a as RA
+    rr = Path(rr)
+    names = names.split(",")
+    rows_dec, rows_pair, decisions = DB.metrics(rr, names)
+    pk, man, pairs = DB.load_library(rr)
+    summ = DB.summarise(rows_dec, rows_pair, pk, names)
+    _wj(rr / "diagnostics" / "b_summary.json", summ)
+    RA.wcsv(rr / "diagnostics" / "b_decisions.csv", rows_dec)
+    RA.wcsv(rr / "diagnostics" / "b_pair_outcomes.csv", rows_pair)
+    # per-problem table of the decidable pair inversion rates
+    from collections import defaultdict
+    per = defaultdict(lambda: defaultdict(lambda: [0, 0]))
+    for r in rows_pair:
+        if r["outcome"] in ("CORRECT", "INVERTED", "TIE"):
+            c = per[(r["problem"], r["kind"])][r["model"]]
+            c[0] += 1
+            c[1] += r["outcome"] == "INVERTED"
+    rowsp = []
+    for (p, kind), d in sorted(per.items()):
+        row = {"problem": p, "family": pk[p]["family"], "kind": kind}
+        for n in names:
+            c = d.get(n, [0, 0])
+            row[n + "_decidable"] = c[0]
+            row[n + "_inversion_rate"] = c[1] / c[0] if c[0] else None
+        rowsp.append(row)
+    RA.wcsv(rr / "diagnostics" / "b_by_problem.csv", rowsp)
+    # repair / damage between models on identical items
+    idx = {}
+    for r in rows_pair:
+        if r["outcome"] in ("CORRECT", "INVERTED", "TIE"):
+            idx.setdefault((r["kind"], r["problem"], r["x"], r["y"]), {})[r["model"]] = r["outcome"]
+    rd = []
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            for kind in ("same_parent", "cross_parent"):
+                c = {"both_correct": 0, "a_only": 0, "b_only": 0, "neither": 0}
+                for (k, p, x, y), d in idx.items():
+                    if k != kind or a not in d or b not in d:
+                        continue
+                    ca, cb = d[a] == "CORRECT", d[b] == "CORRECT"
+                    c["both_correct" if ca and cb else "a_only" if ca else "b_only" if cb else "neither"] += 1
+                rd.append({"model_a": a, "model_b": b, "kind": kind, **c})
+    dd = []
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            c = {"both_correct": 0, "a_only": 0, "b_only": 0, "neither": 0}
+            for (cid, k), (ca, ra) in decisions[a].items():
+                if (cid, k) in decisions[b]:
+                    cb = decisions[b][(cid, k)][0]
+                    c["both_correct" if ca and cb else "a_only" if ca else "b_only" if cb else "neither"] += 1
+            dd.append({"model_a": a, "model_b": b, "kind": "same_parent_decision", **c})
+    RA.wcsv(rr / "diagnostics" / "b_repair_damage.csv", rd + dd)
+    # equivariance summary
+    eq = []
+    for n in names:
+        p = rr / "diagnostics" / ("invariance_%s.json" % n)
+        if p.is_file():
+            rows = json.loads(p.read_text())
+            import statistics
+            eq.append({"model": n, "rows": len(rows), "max_abs_repeat_diff": max(r["abs_repeat_diff"] for r in rows), "max_abs_variant_diff": max(r["abs_variant_diff"] for r in rows), "median_abs_variant_diff": statistics.median(r["abs_variant_diff"] for r in rows),
+                       "max_abs_variant_diff_rename": max(r["abs_variant_diff"] for r in rows if r["variant"].startswith("rename")), "max_abs_variant_diff_goalperm": max(r["abs_variant_diff"] for r in rows if r["variant"] == "goalperm")})
+    RA.wcsv(rr / "diagnostics" / "invariance_summary.csv", eq)
+    print(json.dumps(summ)[:1500])
+
+
+def trigger_s(rr, names="DENSE,WL"):
+    """T1-S trigger (plan 6.1) from the library B of the OLD models only."""
+    from cp_disr.pddl.compact import diagb as DB
+    rr = Path(rr)
+    cfg = _cfg()["t1"]["S"]
+    rows_dec, rows_pair, _ = DB.metrics(rr, ["DENSE", "WL"])
+    pk, man, pairs = DB.load_library(rr)
+    from collections import defaultdict
+    sampled = defaultdict(int)
+    for r in pairs:
+        if r["kind"] == "cross_parent":
+            sampled[r["problem"]] += 1
+    stat = defaultdict(lambda: {"DENSE": [0, 0], "WL": [0, 0]})
+    for r in rows_pair:
+        if r["kind"] == "cross_parent" and r["outcome"] in ("CORRECT", "INVERTED", "TIE"):
+            c = stat[r["problem"]][r["model"]]
+            c[0] += 1
+            c[1] += r["outcome"] == "INVERTED"
+    out, qual, worse = [], [], []
+    for p, d in pk.items():
+        if d["family"] == "train":
+            continue
+        n_dec = stat[p]["DENSE"][0]
+        rate = n_dec / sampled[p] if sampled[p] else 0
+        ok = n_dec >= cfg["comparable_pairs_per_problem_min"] and rate >= cfg["decidable_rate_min"]
+        dr = stat[p]["DENSE"][1] / n_dec if n_dec else None
+        wr = stat[p]["WL"][1] / stat[p]["WL"][0] if stat[p]["WL"][0] else None
+        w = bool(ok and dr is not None and wr is not None and dr > wr)
+        out.append({"problem": p, "family": d["family"], "cross_pairs_sampled": sampled[p], "cross_decidable": n_dec, "decidable_rate": rate, "qualifies": ok, "dense_inversion_rate": dr, "wl_inversion_rate": wr, "dense_worse_than_wl": w})
+        qual += [p] if ok else []
+        worse += [p] if w else []
+    trig = len(qual) >= cfg["problems_min"] and len(worse) >= cfg["dense_worse_than_wl_problems_min"]
+    res = {"rule": cfg, "qualifying_non_train_problems": len(qual), "dense_worse_than_wl_among_qualifying": len(worse), "S_triggered_by_B": trig, "cache_available_for_same_problem_cross_pairs": "Train96 exact cache: see second condition", "per_problem": out}
+    _wj(rr / "diagnostics" / "t1_trigger_S_from_B.json", res)
+    print("S trigger from B: qualifying=%d worse=%d triggered=%s" % (len(qual), len(worse), trig))
+
+
 def commands(rr, a):
-    return {"fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr), "fixture-b": lambda: fixture_b(rr), "lib-build": lambda: lib_build(rr), "lib-score": lambda: lib_score(rr, a.model, a.device),
-            "lib-equiv": lambda: lib_equiv(rr, a.model, a.device)}
+    return {"fixture-variants": lambda: fixture_variants(rr), "report-a": lambda: report_a(rr), "report-b": lambda: report_b(rr, a.models), "trigger-s": lambda: trigger_s(rr),
+            "fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr), "fixture-b": lambda: fixture_b(rr), "lib-build": lambda: lib_build(rr), "lib-score": lambda: lib_score(rr, a.model, a.device),
+            "lib-equiv": lambda: lib_equiv(rr, a.model, a.device), "variants-build": lambda: variants_build(rr), "panel": lambda: panel(rr, a.arms, a.set, a.shard, a.nshards, a.device)}

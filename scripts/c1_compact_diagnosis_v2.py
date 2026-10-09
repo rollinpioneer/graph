@@ -250,6 +250,11 @@ def main():
     ap.add_argument("--authorization-text-file")
     ap.add_argument("--arm")
     ap.add_argument("--model")
+    ap.add_argument("--models", default="MG,DENSE,REL,WL")
+    ap.add_argument("--arms")
+    ap.add_argument("--set")
+    ap.add_argument("--shard", type=int, default=0)
+    ap.add_argument("--nshards", type=int, default=1)
     ap.add_argument("--device", default="cuda:0")
     a = ap.parse_args()
     if a.cmd == "init":

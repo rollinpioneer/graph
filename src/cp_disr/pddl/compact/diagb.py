@@ -137,10 +137,10 @@ def metrics(rr, names):
             elif r["relation"] == "Y_BETTER":
                 better, worse = vy, vx
             else:
-                rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": "UNDECIDED"})
+                rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": "UNDECIDED", "x": r["x"], "y": r["y"]})
                 continue
             o = "TIE" if abs(better - worse) <= tol(better, worse) else ("CORRECT" if better < worse else "INVERTED")
-            rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": o, "margin": worse - better})
+            rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": o, "margin": worse - better, "x": r["x"], "y": r["y"]})
     return rows_dec, rows_pair, decisions
 
 
