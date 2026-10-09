@@ -1,0 +1,61 @@
++ pgrep -f 'panel --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --arms T1 --set joint32'
++ sleep 5
++ pgrep -f 'panel --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --arms T1 --set joint32'
++ export CUDA_VISIBLE_DEVICES=6
++ CUDA_VISIBLE_DEVICES=6
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1 --device cuda:0
+{"model": "T1", "states": 2395, "seconds": 16.4}
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-equiv --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1 --device cuda:0
+equivariance T1: 36 rows, max variant diff 2.29e-05, max repeat diff 1.53e-05
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py train-pair-accuracy --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --models T1 --device cuda:0
+{"T1": {"weighted": {"correct": 0.9926167116801656, "tie": 0.0, "inverted": 0.007383288319834294}, "unique_pairs": {"correct": 9744, "tie": 0, "inverted": 131}, "pairs": 9875}}
++ for a in D0 C0 T1
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0@820 --device cuda:0
+{"model": "D0@820", "states": 2395, "seconds": 16.6}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0@1640 --device cuda:0
+{"model": "D0@1640", "states": 2395, "seconds": 17.4}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0@2460 --device cuda:0
+{"model": "D0@2460", "states": 2395, "seconds": 16.9}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0@3280 --device cuda:0
+{"model": "D0@3280", "states": 2395, "seconds": 16.7}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0@4100 --device cuda:0
+{"model": "D0@4100", "states": 2395, "seconds": 16.6}
++ for a in D0 C0 T1
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0@820 --device cuda:0
+{"model": "C0@820", "states": 2395, "seconds": 17.0}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0@1640 --device cuda:0
+{"model": "C0@1640", "states": 2395, "seconds": 16.1}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0@2460 --device cuda:0
+{"model": "C0@2460", "states": 2395, "seconds": 16.5}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0@3280 --device cuda:0
+{"model": "C0@3280", "states": 2395, "seconds": 16.4}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0@4100 --device cuda:0
+{"model": "C0@4100", "states": 2395, "seconds": 16.9}
++ for a in D0 C0 T1
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1@820 --device cuda:0
+{"model": "T1@820", "states": 2395, "seconds": 16.9}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1@1640 --device cuda:0
+{"model": "T1@1640", "states": 2395, "seconds": 16.8}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1@2460 --device cuda:0
+{"model": "T1@2460", "states": 2395, "seconds": 17.3}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1@3280 --device cuda:0
+{"model": "T1@3280", "states": 2395, "seconds": 16.8}
++ for u in 820 1640 2460 3280 4100
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model T1@4100 --device cuda:0
+{"model": "T1@4100", "states": 2395, "seconds": 16.5}
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py train-pair-accuracy --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --models D0@820,D0@1640,D0@2460,D0@3280,D0@4100,C0@820,C0@1640,C0@2460,C0@3280,C0@4100,T1@820,T1@1640,T1@2460,T1@3280,T1@4100 --device cuda:0
+{"D0@820": {"weighted": {"correct": 0.9806270979804994, "tie": 0.0, "inverted": 0.019372902019500534}, "unique_pairs": {"correct": 9623, "tie": 0, "inverted": 252}, "pairs": 9875}, "D0@1640": {"weighted": {"correct": 0.9920458855916887, "tie": 0.0, "inverted": 0.007954114408311242}, "unique_pairs": {"correct": 9732, "tie": 0, "inverted": 143}, "pairs": 9875}, "D0@2460": {"weighted": {"correct": 0.997313420170566, "tie": 0.0, "inverted": 0.002686579829433995}, "unique_pairs": {"correct": 9795, "tie": 0, "inverted": 80}, "pairs": 9875}, "D0@3280": {"weighted": {"correct": 0.9985417013278869, "tie": 0.0, "inverted": 0.0014582986721131297}, "unique_pairs": {"correct": 9832, "tie": 0, "inverted": 43}, "pairs": 9875}, "D0@4100": {"weighted": {"correct": 0.9958307433853243, "tie": 0.0, "inverted": 0.004169256614675777}, "unique_pairs": {"correct": 9812, "tie": 0, "inverted": 63}, "pairs": 9875}

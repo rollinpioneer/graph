@@ -170,6 +170,35 @@ def verify(rr, root, cfg):
     return out
 
 
+def ipc_map_new(rows, old_map_rows):
+    """Wide per-problem table: every neural arm (old and new) against WL; label per arm: SOLVED, NODE_GUIDANCE_DISADVANTAGE_VS_WL (timed out after at least as many expansions as WL needed), TIME_TRUNCATED (fewer), NO_WL_REFERENCE."""
+    idx = {(r["arm"], r["case_id"]): r for r in rows if r["set"] == "ipc22"}
+    arms = ["OLD_DENSE", "OLD_MG", "OLD_REL", "D0", "D0R", "C0", "T1", "OLD_WL", "OLD_HADD"]
+    group = {r["case_id"]: r["group"] for r in old_map_rows}
+    out = []
+    for cid in sorted({k[1] for k in idx}):
+        row = {"case_id": cid, "group": group.get(cid, "other")}
+        wl = idx.get(("OLD_WL", cid))
+        for a in arms:
+            r = idx.get((a, cid))
+            if not r:
+                continue
+            row[a + "_status"] = r["status"]
+            row[a + "_expanded"] = r["expanded"]
+            row[a + "_wall_s"] = r["wall_s"]
+            row[a + "_plan_len"] = r["plan_length"]
+            if a in ("OLD_DENSE", "OLD_MG", "OLD_REL", "D0", "D0R", "C0", "T1"):
+                if r["solved"]:
+                    lab = "SOLVED"
+                elif wl and wl["solved"]:
+                    lab = "NODE_GUIDANCE_DISADVANTAGE_VS_WL" if r["status"] == "TIMEOUT" and r["expanded"] and wl["solved_at_expansion"] and r["expanded"] >= wl["solved_at_expansion"] else ("TIME_TRUNCATED" if r["status"] == "TIMEOUT" else r["status"])
+                else:
+                    lab = "NO_WL_REFERENCE_" + r["status"]
+                row[a + "_label"] = lab
+        out.append(row)
+    return out
+
+
 def attention_readout(rows):
     """Plan 3.2: D0 vs C0 by Joint cell. Advantage = geometric mean over the cell's common-solved problems of expanded(C0) / expanded(D0) (> 1: D0 needs fewer expansions) and mean plan-length difference C0 - D0.
     Pre-registered prediction: the advantage is larger in the two-tower cells (k2) than in the one-tower cells (k1) at the same n and goal height in at least 3 of 4 pairs, and D0 does not lose coverage."""

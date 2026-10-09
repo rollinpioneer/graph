@@ -1,0 +1,80 @@
+{
+ "card": "CP-DISR-C1-COMPACT-DIAGNOSIS-V2",
+ "end_state": "COMPLETE_WITH_BOUNDED_UNKNOWNS",
+ "base_commit": "48f565e062a0288eb82de72d63c06db229dc2491",
+ "branch": "codex/cp-disr-c1-compact-diagnosis-v2",
+ "run_root": "runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z",
+ "result_commit": "TO_BE_WRITTEN_AFTER_PUSH",
+ "trainings": {
+  "D0": {
+   "accepted_updates": 4100,
+   "attempts": 1,
+   "selected_update": 820
+  },
+  "C0": {
+   "accepted_updates": 4100,
+   "attempts": 1,
+   "selected_update": 4100
+  },
+  "T1": {
+   "accepted_updates": 4100,
+   "attempts": 3,
+   "selected_update": 2460,
+   "note": "attempt 1 aborted (slow python-loop S loss, own process killed, kept as T1_aborted_slow_python_loop); attempts 2-3 = GPU migration resumes from own checkpoints; accepted updates not double counted"
+  }
+ },
+ "accepted_updates_total": 12300,
+ "neural_trainings": 3,
+ "wl_fits": 1,
+ "t1_variant": "S (cross-parent supervision); T1-W skipped (W trigger not met); selection taken from old-model library-B diagnostics before any new model was evaluated",
+ "counts": {
+  "searches_total_incl_paired_changes": 280,
+  "fixture_stages": 6,
+  "fixture_optimizer_steps": 11,
+  "dev_policy_evaluations": 360,
+  "new_exact_queries": 56,
+  "reference_solves": 8
+ },
+ "search_retries": 0,
+ "compute": {
+  "gpu_device_hours_estimate": 9.18,
+  "cpu_core_hours_estimate": 22.81,
+  "parallel_wall_hours_approx": 3.7,
+  "note": "GPU hours count the wall time of whole processes incl. model load; shared GPUs of other users are not counted"
+ },
+ "reused_instead_of_redone": [
+  "old MG/DENSE/REL/WL/h_add Joint32 and IPC22 records",
+  "exact label cache (EXACT labels reused; only 56 new queries)",
+  "cost breakdown from the FAST/ALT and Search-Match cards",
+  "old DENSE/MG/REL checkpoints and WL models (read-only)"
+ ],
+ "deviations": [
+  "T1 first attempt used a Python loop for the S loss (3.5 s/update, projected >4 h): own process killed, directory preserved as T1_aborted_slow_python_loop, loss vectorised and re-validated (fraction 0 == D0 loss) before the accepted run; fixture-s ran twice",
+  "T1 was migrated twice between GPUs by resuming from its own checkpoints because of other users' load",
+  "Dev24 saturated (24/24 everywhere): selected checkpoints decided by the secondary rule term (D0 820, C0 4100, T1 2460); D0 and C0 therefore compare at different updates; checkpoint sensitivity only on library B scoring, not on search",
+  "IPC22 timing measured on shared GPUs with other users' jobs; only solved/expanded counts used for quality comparison; D0R repeat pass used as reference",
+  "W1 fitted on typed track only; IPC NOT_COMPARABLE",
+  "searches reached the 280 cap exactly (no retries)",
+  "b_pair_outcomes.csv (12.35 MB) exceeds the 10 MiB git limit: committed gzip-compressed (b_pair_outcomes.csv.gz); the earlier 6.2 MB partial version stays in history; the full csv remains on disk only",
+  "training processes were launched with OMP_NUM_THREADS=4 but used ~1 core"
+ ],
+ "unresolved": [
+  "training seed noise vs architecture effect (D0 vs C0) not separable",
+  "unlimited-time solvability of ipc_p21/p22 and cause of ipc_p06/p12 node disadvantage",
+  "effect of checkpoint choice on search",
+  "library B bias toward labelled states, 622 UNKNOWN labels",
+  "whether WL ties come from representation or hyper-parameters"
+ ],
+ "old_assets_unchanged": true,
+ "verify": "final/verify.json consistent=True, plans replayed 247, failures 0",
+ "weights_in_git": false,
+ "leftover_processes": 0,
+ "next_action": "WAIT_FOR_USER",
+ "not_authorised_here": [
+  "second seed",
+  "second T1",
+  "WL-W+",
+  "ALT/REL-hard",
+  "formal confirmation"
+ ]
+}

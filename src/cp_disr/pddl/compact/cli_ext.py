@@ -131,6 +131,9 @@ def make_evaluator(rr, name, device_name="cpu"):
     old = OldRun(ROOT / cfg["old_run_root"])
     dev = torch.device(device_name)
     name = {"D0R": "D0"}.get(name, name)                # D0R = the second D0 pass that pairs with T1 on the IPC panel (same weights, separate records)
+    upd = None
+    if "@" in name:                                      # exploratory checkpoint-sensitivity scoring on library B only (never used for selection): ARM@update
+        name, upd = name.split("@")
     if name in ("MG", "DENSE", "REL"):
         m, _ck = load_neural(old, "V_" + name, dev)
         return EV.NeuralEval(name, m, dev)
@@ -138,8 +141,11 @@ def make_evaluator(rr, name, device_name="cpu"):
         return EV.WlEval(old.wl_params("struct")["params"])
     if name in ("D0", "C0", "T1"):
         from cp_disr.pddl.compact import train as CT
-        sel = json.loads((Path(rr) / "training" / name / "selection.json").read_text())
-        m = CT.load_model_v2({"D0": "dense", "C0": "c0", "T1": "dense"}[name], sel["checkpoint"]["path"], dev)
+        if upd:
+            path = json.loads((Path(rr) / "training" / name / "training_accounting.json").read_text())["checkpoints"][upd]["path"]
+        else:
+            path = json.loads((Path(rr) / "training" / name / "selection.json").read_text())["checkpoint"]["path"]
+        m = CT.load_model_v2({"D0": "dense", "C0": "c0", "T1": "dense"}[name], path, dev)
         return EV.NeuralEval(name, m, dev)
     if name == "W1":
         return EV.WlEval(str(Path(rr) / "training" / "W1" / "wl_goose_w1.model.params"))
@@ -425,8 +431,10 @@ def report_panel(rr):
     RA.wcsv(rr / "results" / "panel_by_case.csv", rows)
     RA.wcsv(rr / "results" / "panel_summary.csv", FN.summary(rows))
     arms = {r["arm"] for r in rows}
-    pairs = [p for p in (("D0", "C0"), ("D0", "OLD_DENSE"), ("C0", "OLD_DENSE"), ("T1", "D0"), ("T1", "OLD_DENSE"), ("W1", "OLD_WL"), ("W1", "D0"), ("D0", "OLD_WL"), ("C0", "OLD_WL")) if p[0] in arms and p[1] in arms]
+    pairs = [p for p in (("D0", "C0"), ("D0", "OLD_DENSE"), ("C0", "OLD_DENSE"), ("T1", "D0"), ("T1", "D0R"), ("D0", "D0R"), ("T1", "C0"), ("T1", "OLD_DENSE"), ("W1", "OLD_WL"), ("W1", "D0"), ("D0", "OLD_WL"), ("C0", "OLD_WL"), ("D0R", "OLD_DENSE")) if p[0] in arms and p[1] in arms]
     RA.wcsv(rr / "results" / "paired_new_vs_old.csv", FN.paired(rows, pairs))
+    old_map = RA.rcsv(rr / "results" / "ipc_failure_map.csv") if (rr / "results" / "ipc_failure_map.csv").is_file() else []
+    RA.wcsv(rr / "results" / "ipc_failure_map_new_models.csv", FN.ipc_map_new(rows, old_map))
     if "D0" in arms and "C0" in arms:
         _wj(rr / "results" / "attention_function_joint32.json", FN.attention_readout(rows))
     print("panel tables: %d rows, arms %s" % (len(rows), sorted(arms)))

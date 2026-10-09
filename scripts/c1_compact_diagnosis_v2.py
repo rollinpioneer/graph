@@ -234,7 +234,7 @@ def cmd_devsel(rr, arm, device_name):
     import torch
     rr = Path(rr)
     cfg = load_cfg()
-    mode = {"D0": "dense", "C0": "c0"}[arm]
+    mode = {"D0": "dense", "C0": "c0", "T1": "dense"}[arm]
     dev = torch.device(device_name)
     t0 = time.time()
     sel = CT.devsel(rr / "training" / arm, mode, dev, CT.dev_cases(old_root(cfg)))
