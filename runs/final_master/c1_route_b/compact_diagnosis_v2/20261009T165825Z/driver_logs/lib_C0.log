@@ -1,0 +1,9 @@
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0 --device cuda:0
+{"model": "C0", "states": 2395, "seconds": 16.5}
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-equiv --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model C0 --device cuda:0
+equivariance C0: 36 rows, max variant diff 3.81e-05, max repeat diff 3.05e-05
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py train-pair-accuracy --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --models C0 --device cuda:0
+{"C0": {"weighted": {"correct": 0.9984886006914236, "tie": 0.0, "inverted": 0.0015113993085763785}, "unique_pairs": {"correct": 9838, "tie": 0, "inverted": 37}, "pairs": 9875}}

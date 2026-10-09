@@ -1,0 +1,50 @@
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0 --device cuda:0
+{"model": "D0", "states": 2395, "seconds": 17.0}
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-equiv --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model D0 --device cuda:0
+equivariance D0: 36 rows, max variant diff 3.05e-05, max repeat diff 3.05e-05
++ CUDA_VISIBLE_DEVICES=
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-score --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model W1 --device cpu
+package_version=2.2.0
+feature_name=wl
+graph_representation=ilg
+iterations=2
+pruning=a-m
+multiset_hash=0
+domain=wlplan.planning.Domain(name=domain, predicates=[at/2, available/1, clear/1, in/2, lifting/2, on/2], functions=[], schemata=[], constant_objects=[])
+weights_size=147
+{"model": "W1", "states": 2395, "seconds": 15.0}
++ CUDA_VISIBLE_DEVICES=
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py lib-equiv --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --model W1 --device cpu
+package_version=2.2.0
+feature_name=wl
+graph_representation=ilg
+iterations=2
+pruning=a-m
+multiset_hash=0
+domain=wlplan.planning.Domain(name=domain, predicates=[at/2, available/1, clear/1, in/2, lifting/2, on/2], functions=[], schemata=[], constant_objects=[])
+weights_size=147
+equivariance W1: 36 rows, max variant diff 0, max repeat diff 0
++ CUDA_VISIBLE_DEVICES=
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py train-pair-accuracy --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --models WL,W1 --device cpu
+package_version=2.2.0
+feature_name=wl
+graph_representation=ilg
+iterations=2
+pruning=a-m
+multiset_hash=0
+domain=wlplan.planning.Domain(name=depots, predicates=[at/2, available/1, clear/1, in/2, lifting/2, on/2], functions=[], schemata=[Drive/3, Drop/4, Lift/4, Load/4, Unload/4], constant_objects=[])
+weights_size=145
+package_version=2.2.0
+feature_name=wl
+graph_representation=ilg
+iterations=2
+pruning=a-m
+multiset_hash=0
+domain=wlplan.planning.Domain(name=domain, predicates=[at/2, available/1, clear/1, in/2, lifting/2, on/2], functions=[], schemata=[], constant_objects=[])
+weights_size=147
+{"WL": {"weighted": {"correct": 0.6940121310699823, "tie": 0.25519322530919547, "inverted": 0.05079464362082226}, "unique_pairs": {"correct": 6448, "tie": 2835, "inverted": 592}, "pairs": 9875}, "W1": {"weighted": {"correct": 0.7482836477373984, "tie": 0.19823390993537607, "inverted": 0.0534824423272256}, "unique_pairs": {"correct": 7186, "tie": 2136, "inverted": 553}, "pairs": 9875}}
++ CUDA_VISIBLE_DEVICES=2
++ /home/xushijie3/envs/cpdisr/bin/python scripts/c1_compact_diagnosis_v2.py train-pair-accuracy --run-root /home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z --models MG,DENSE,REL,D0 --device cuda:0
+{"MG": {"weighted": {"correct": 0.9817347215896931, "tie": 0.0, "inverted": 0.0182652784103069}, "unique_pairs": {"correct": 9575, "tie": 0, "inverted": 300}, "pairs": 9875}, "DENSE": {"weighted": {"correct": 0.9971721548120143, "tie": 0.0, "inverted": 0.002827845187985763}, "unique_pairs": {"correct": 9820, "tie": 0, "inverted": 55}, "pairs": 9875}, "REL": {"weighted": {"correct": 0.999391623168742, "tie": 0.0, "inverted": 0.0006083768312580977}, "unique_pairs": {"correct": 9853, "tie": 0, "inverted": 22}, "pairs": 9875}, "D0": {"weighted": {"correct": 0.9806270979804994, "tie": 0.0, "inverted": 0.019372902019500534}, "unique_pairs": {"correct": 9623, "tie": 0, "inverted": 252}, "pairs": 9875}}
