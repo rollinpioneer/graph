@@ -249,6 +249,7 @@ def main():
     ap.add_argument("--run-root")
     ap.add_argument("--authorization-text-file")
     ap.add_argument("--arm")
+    ap.add_argument("--model")
     ap.add_argument("--device", default="cuda:0")
     a = ap.parse_args()
     if a.cmd == "init":

@@ -121,5 +121,94 @@ def w1_fit(rr):
     return 0 if ok else 4
 
 
+# ------------------------------------------------------------------------------------------------ shared state library
+def make_evaluator(rr, name, device_name="cpu"):
+    """Scorer factory used by every stage: frozen old models, selected D0 / C0, W1."""
+    import torch
+    from cp_disr.pddl.search_match import evaluators as EV
+    from cp_disr.pddl.search_match.runner import OldRun, load_neural
+    cfg = _cfg()
+    old = OldRun(ROOT / cfg["old_run_root"])
+    dev = torch.device(device_name)
+    if name in ("MG", "DENSE", "REL"):
+        m, _ck = load_neural(old, "V_" + name, dev)
+        return EV.NeuralEval(name, m, dev)
+    if name == "WL":
+        return EV.WlEval(old.wl_params("struct")["params"])
+    if name in ("D0", "C0"):
+        from cp_disr.pddl.compact import train as CT
+        sel = json.loads((Path(rr) / "training" / name / "selection.json").read_text())
+        m = CT.load_model_v2({"D0": "dense", "C0": "c0"}[name], sel["checkpoint"]["path"], dev)
+        return EV.NeuralEval(name, m, dev)
+    if name == "W1":
+        return EV.WlEval(str(Path(rr) / "training" / "W1" / "wl_goose_w1.model.params"))
+    raise ValueError(name)
+
+
+def fixture_b(rr):
+    """Fixture 3 + equivariance construction: label relations (strict / equal / unknown), transformed problems are the same problem (ground sizes, init mapping, exact distance)."""
+    from cp_disr.pddl import depots as DP, stages as ST, task as T
+    from cp_disr.pddl.compact import diagb as DB, statelib as SL
+    from cp_disr.pddl.compact import train as CT
+    rr = Path(rr)
+    cfg = _cfg()
+    t0 = time.time()
+    ex = lambda lo, up, src="UNKNOWN": {"source": src, "lower": lo, "upper": up}
+    rel = {"strict_x": SL.relation(ex(3, 3, "EXACT"), ex(5, 5, "EXACT")), "strict_y": SL.relation(ex(5, 5, "EXACT"), ex(3, 3, "EXACT")), "equal": SL.relation(ex(4, 4, "EXACT"), ex(4, 4, "EXACT")),
+           "upper_vs_exact": SL.relation(ex(None, 3, "UPPER_ONLY"), ex(5, 5, "EXACT")), "overlap_is_unknown": SL.relation(ex(None, 6, "UPPER_ONLY"), ex(5, 5, "EXACT")), "touching_is_unknown": SL.relation(ex(None, 5, "UPPER_ONLY"), ex(5, 5, "EXACT")),
+           "unknown_end": SL.relation(ex(None, None), ex(5, 5, "EXACT"))}
+    expect = {"strict_x": "X_BETTER", "strict_y": "Y_BETTER", "equal": "EQUAL", "upper_vs_exact": "X_BETTER", "overlap_is_unknown": "UNKNOWN", "touching_is_unknown": "UNKNOWN", "unknown_end": "UNKNOWN"}
+    root = ROOT / cfg["old_run_root"]
+    man, exact, _ = CT.load_old(root)
+    checks = []
+    domain_text = DP.DOMAIN_TYPED.read_text()
+    for c in sorted(man["struct"], key=lambda c: c["sha256"])[:3] + sorted(man["train"], key=lambda c: c["sha256"])[:2]:
+        text = Path(c["file"]).read_text()
+        ta = ST.get_task(DP.DOMAIN_TYPED, c["file"])
+        for kind, seed in (("rename", 1), ("rename", 2), ("goalperm", 3)):
+            ntext, phi = DB.transformed_problem(text, kind, seed)
+            tb = T.StripsTask(domain_text, ntext, type_map=T.DEPOTS_TYPE_MAP, type_preds=T.DEPOTS_TYPE_PREDS, type_order=T.DEPOTS_TYPE_ORDER)
+            sb = DB.map_state(ta, ta.init_mask, tb, phi)
+            oa, ob = T.ExactOracle(ta), T.ExactOracle(tb)
+            da, db = oa.query(ta.init_mask)[0], ob.query(tb.init_mask)[0]
+            oa.close(), ob.close()
+            checks.append({"case": c["case_id"], "kind": kind, "seed": seed, "dyn_atoms_equal": len(ta.dyn_atoms) == len(tb.dyn_atoms), "actions_equal": len(ta.actions) == len(tb.actions), "init_mapped": sb == tb.init_mask,
+                           "goal_mapped": DB.map_state(ta, ta.goal_mask, tb, phi) == tb.goal_mask, "exact_init_distance_equal": da == db, "renaming_nontrivial": kind != "rename" or any(k != v for k, v in phi.items())})
+    ok_rel = all(rel[k] == expect[k] for k in expect)
+    ok_chk = all(all(v for k, v in ch.items() if k not in ("case", "kind", "seed")) for ch in checks)
+    out = {"relations": rel, "relations_expected": expect, "relations_ok": ok_rel, "transform_checks": checks, "transform_ok": ok_chk, "ok": ok_rel and ok_chk, "seconds": round(time.time() - t0, 1)}
+    _wj(rr / "checks" / "fixture_b.json", out)
+    _ledger(rr, "fixture_b", seconds=out["seconds"], passed=out["ok"], exact_oracle_builds=2 * len(checks))
+    print("fixture B ok=%s" % out["ok"])
+    return 0 if out["ok"] else 3
+
+
+def lib_build(rr):
+    from cp_disr.pddl.compact import diagb as DB
+    cfg = _cfg()
+    t0 = time.time()
+    st = DB.build(rr, ROOT / cfg["old_run_root"], cfg)
+    _ledger(rr, "lib_build", seconds=round(time.time() - t0, 1), new_exact_queries=st["new_exact_queries"], cpu_core_hours=round((time.time() - t0) / 3600, 3))
+    print(json.dumps(st))
+
+
+def lib_score(rr, model, device_name):
+    from cp_disr.pddl.compact import diagb as DB
+    t0 = time.time()
+    r = DB.score(rr, model, lambda: make_evaluator(rr, model, device_name))
+    _ledger(rr, "lib_score_" + model, seconds=round(time.time() - t0, 1), gpu_seconds=round(time.time() - t0, 1) if device_name != "cpu" else 0, device=device_name)
+    print(json.dumps(r))
+
+
+def lib_equiv(rr, model, device_name):
+    from cp_disr.pddl.compact import diagb as DB
+    t0 = time.time()
+    rows = DB.equivariance(rr, model, lambda: make_evaluator(rr, model, device_name))
+    _wj(Path(rr) / "diagnostics" / ("invariance_%s.json" % model), rows)
+    _ledger(rr, "lib_equiv_" + model, seconds=round(time.time() - t0, 1), gpu_seconds=round(time.time() - t0, 1) if device_name != "cpu" else 0, device=device_name)
+    print("equivariance %s: %d rows, max variant diff %.3g, max repeat diff %.3g" % (model, len(rows), max(r["abs_variant_diff"] for r in rows), max(r["abs_repeat_diff"] for r in rows)))
+
+
 def commands(rr, a):
-    return {"fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr)}
+    return {"fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr), "fixture-b": lambda: fixture_b(rr), "lib-build": lambda: lib_build(rr), "lib-score": lambda: lib_score(rr, a.model, a.device),
+            "lib-equiv": lambda: lib_equiv(rr, a.model, a.device)}
