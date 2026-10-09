@@ -1,0 +1,73 @@
+# CP-DISR-C1-COMPACT-DIAGNOSIS-V2: registered configuration (card text: CP_DISR_Zero_Training_Scientific_Diagnostic_Runbook_20261009.md, revision 2026-10-10).
+card: CP-DISR-C1-COMPACT-DIAGNOSIS-V2
+base_commit: 48f565e062a0288eb82de72d63c06db229dc2491
+branch: codex/cp-disr-c1-compact-diagnosis-v2
+plan_doc: docs/c1_blocksworld/CP_DISR_Zero_Training_Scientific_Diagnostic_Runbook_20261009.md
+
+old_run_root: runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e
+search_match_root: runs/final_master/c1_route_b/depots_search_match_v1/20261008T144409Z_a34d9ba1
+fast_alt_root: runs/final_master/c1_route_b/depots_fast_alt_v3/20261008T191927Z_fastalt
+scope_root: runs/final_master/c1_route_b/search_scope_diagnostic_v1/20261009T063905Z_511b117
+frozen_dense: {update: 4100, sha256: ffaad0f4e0e536afbef3f66109e3ff4f36563212fd428762436bb3f5305bcd38}
+
+training:                               # D0 / C0 (and a possible T1): the earlier recipe, not modified
+  updates: 4100
+  checkpoints: [820, 1640, 2460, 3280, 4100]
+  batch_trajectories: 32
+  lr: 0.0003
+  grad_clip: 0.5
+  rank_weight: 1.0
+  chunk_decisions: 48
+  init_seed: 20261008                   # shared by D0 and C0; the C0 interaction module is initialised with the same new-module seed 20261007
+  data: "Train96 exact labels of the earlier card (457 trajectories, 5979 decisions), read only; Dev24 for selection only"
+  selection_rule: "Dev24 one-step policy rollouts: most successes, then smaller failure-penalised cost ratio, then the earlier checkpoint (the original rule)"
+  seeds: 1
+  c0:
+    hidden: 126                         # new parameters 66,284 vs 66,088 of D0 (+0.30 %, limit 2 %)
+    interaction: "m_i = mean_j MLP([z_i, z_j, r_ij]) over ALL goal pairs incl. self, ReLU, W_out zero-initialised"
+  wall_hours_cap_per_run: 4
+
+panels:                                 # shared exploration panel of all new models
+  joint32: {per_cell: 4, order: "problem file sha256 ascending within each of the 8 cells"}
+  ipc22: all
+  dev24: all
+  search: {wall_seconds: 300, max_expansions: 100000, rss_growth_gib: 8, engine: "search_match.engine.gbfs (shared eager GBFS, reference scorer path for every neural arm)"}
+
+state_library_B:                        # section 4.B
+  train32: {n3: 11, n4: 11, n5: 10, order: "problem sha256 ascending within n"}
+  struct16: {cells: "n_crates x needs_transport, 4 each", order: "problem sha256 ascending"}
+  joint16: {per_cell: 2, order: "problem sha256 ascending"}
+  parents_per_problem: 8
+  successor_states_per_problem: 4
+  max_unique_states: 4096
+  max_same_parent_pairs: 20000
+  cross_parent_pairs_per_problem: 128
+  cross_parent_pairs_total: 8192
+  new_exact_queries: {max: 64, seconds: 30, search_states: 1000000, memory_gib: 4}
+  invariance: {states: 12, renamings_per_state: 2, goal_permutations_per_state: 1}
+
+variants_C:                             # section 4.C (old DENSE and old WL only)
+  base_problems: {dev_n4: 4, dev_n5: 4, cells: "needs_transport x max_goal_height, one problem per cell, smallest sha256"}
+  variants_per_base: 3                  # P goal relaxation, R extra empty pallet at the busiest place, W extra place with hoist + pallet receiving the first initial stack
+  reference_solves: {max: 32, seconds: 60, memory_gib: 4}
+  searches_max: 64
+
+t1:                                     # thresholds fixed before any new model is evaluated (engineering investment lines, not statistics)
+  S: {problems_min: 8, comparable_pairs_per_problem_min: 16, decidable_rate_min: 0.5, dense_worse_than_wl_problems_min: 6}
+  W: {pairs_min: 6, dense_base_success_w_fail_min: 2, common_success_expansion_ratio_min: 2.0, common_success_groups_min: 4, trial_problems: 4, trial_seconds: 120}
+  priority: "S before W; no training if neither triggers; selection never uses the new D0 / C0 / W1 results"
+
+budget:
+  neural_trainings_max: 3               # D0, C0, optional T1
+  accepted_updates_max: 12300
+  wl_fits_max: 1
+  wl_fit_minutes: 60
+  main_searches_max: 280
+  technical_retries_max: 8
+  dev_policy_evaluations_max: 360
+  gpu_device_hours_max: 32
+  cpu_core_hours_max: 64
+  fixture_groups: 8
+  fixture_calls_max: 24
+  artifacts_gib_max: 10
+  git_file_mib_max: 10
