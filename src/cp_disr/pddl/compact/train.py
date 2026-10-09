@@ -108,12 +108,12 @@ def write_csv(path, rows):
             w.writerow({k: r.get(k) for k in keys})
 
 
-def train_loop_v2(out_dir, mode, device, cases, trajs, labels, log=print, max_updates=None):
-    """``stages.train_loop`` with the model factory of this card. Resumable at 100-update boundaries. ``max_updates`` is only used by fixtures."""
+def train_loop_v2(out_dir, mode, device, cases, trajs, labels, log=print, max_updates=None, trainer_factory=None):
+    """``stages.train_loop`` with the model factory of this card. Resumable at 100-update boundaries. ``max_updates`` is only used by fixtures; ``trainer_factory`` (T1 only) builds the trainer, default = the original one."""
     out_dir = Path(out_dir)
     (out_dir / "checkpoints").mkdir(parents=True, exist_ok=True)
     m = make_model_v2(mode, device, seed=BUDGET["init_seed"])
-    tr = PT.PddlTrainer(m, cases, labels, device, lr=BUDGET["lr"], chunk=BUDGET["chunk_decisions"])
+    tr = trainer_factory(m, cases, labels, device) if trainer_factory else PT.PddlTrainer(m, cases, labels, device, lr=BUDGET["lr"], chunk=BUDGET["chunk_decisions"])
     resume = out_dir / "resume_last.pt"
     rows, update, attempts, wall_prev = [], 0, 1, 0.0
     if resume.is_file():

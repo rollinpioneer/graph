@@ -1,0 +1,16 @@
+{
+ "decision": "T1 = S (cross-parent supervision); W (world coverage) is not considered because S has priority and is triggered",
+ "basis": "library B with the OLD frozen models only; thresholds fixed in configs/c1_compact_diagnosis_v2.yaml before any new model result exists",
+ "condition_1_problems_with_ge16_decidable_cross_pairs_and_rate_ge_0.5_non_train": 16,
+ "condition_2_dense_cross_parent_inversion_rate_above_wl": 8,
+ "condition_3": "Train96 exact cache (rank_labels: exact distances of every legal successor of every trajectory state) provides same-problem cross-parent pairs with no IPC / diagnostic label; the supervision-scope gap (no cross-parent term) is confirmed by part A (supervision_contract.csv)",
+ "caveat": "WL has 535 numerical ties among 5956 decidable cross pairs; the registered error rate counts inversions only. DENSE inversions concentrate at exact distance gap 1 (24 %) and 2 (8 %), see diagnostics/b_by_distance_gap.csv",
+ "S_definition": "25 % of each decision's strictly ordered successor pairs replaced by same-problem cross-parent pairs (fixed by sha256), masked if not constructible; D0 architecture, init seed, data, batches, weights, 4100 updates",
+ "files": {
+  "src/cp_disr/pddl/compact/crossparent.py": "8f3cac931b301ec646d663306ba1059f958b136fb593bd4ada1226482a0e0224",
+  "src/cp_disr/pddl/compact/train.py": "7524284af8a6f2e40603b6614ace5c2fac46d00797f9e0814bc6106f78c2f922",
+  "src/cp_disr/pddl/compact/cli_ext.py": "89c2cf0efe08d5d3e5c2c7f717945a869a2bab81caa101962b5f9106993362d5",
+  "src/cp_disr/pddl/compact/diagb.py": "17cbb253954f56478053482516f417168844fb55881a4fbc85693549b14b11b5"
+ },
+ "fixture": "checks/fixture_s.json"
+}

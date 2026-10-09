@@ -135,10 +135,10 @@ def make_evaluator(rr, name, device_name="cpu"):
         return EV.NeuralEval(name, m, dev)
     if name == "WL":
         return EV.WlEval(old.wl_params("struct")["params"])
-    if name in ("D0", "C0"):
+    if name in ("D0", "C0", "T1"):
         from cp_disr.pddl.compact import train as CT
         sel = json.loads((Path(rr) / "training" / name / "selection.json").read_text())
-        m = CT.load_model_v2({"D0": "dense", "C0": "c0"}[name], sel["checkpoint"]["path"], dev)
+        m = CT.load_model_v2({"D0": "dense", "C0": "c0", "T1": "dense"}[name], sel["checkpoint"]["path"], dev)
         return EV.NeuralEval(name, m, dev)
     if name == "W1":
         return EV.WlEval(str(Path(rr) / "training" / "W1" / "wl_goose_w1.model.params"))
@@ -252,6 +252,84 @@ def fixture_variants(rr):
     return 0 if out["ok"] else 3
 
 
+def fixture_s(rr, device_name):
+    """Fixture for T1-S: with fraction 0 the S trainer equals D0's trainer (loss, gradient norm); with 0.25 the construction is strict, deterministic, never above D0's pair count and uses only Train96 labels."""
+    import torch
+    from cp_disr.pddl import train as PT
+    from cp_disr.pddl.compact import crossparent as XP, train as CT
+    from cp_disr.pddl.compact.models import make_model_v2
+    rr = Path(rr)
+    cfg = _cfg()
+    root = ROOT / cfg["old_run_root"]
+    dev = torch.device(device_name)
+    t0 = time.time()
+    cases, trajs, labels = CT.train_inputs(root)
+    plan0, plan = XP.SPlan(cases, labels, 0.0), XP.SPlan(cases, labels, 0.25)
+    m1, m2 = make_model_v2("dense", dev), make_model_v2("dense", dev)
+    tr1 = PT.PddlTrainer(m1, cases, labels, dev, lr=CT.BUDGET["lr"], chunk=CT.BUDGET["chunk_decisions"])
+    tr2 = XP.PddlTrainerS(m2, cases, labels, dev, plan0, lr=CT.BUDGET["lr"], chunk=CT.BUDGET["chunk_decisions"])
+    batch = tr1.update_batches(trajs, 0)[0]
+    r1, r2 = tr1.step(batch), tr2.step(batch)
+    same = {k: (r1[k], r2[k]) for k in ("loss", "nll", "rank", "grad_norm", "decisions")}
+    ok0 = all(abs(a - b) <= 1e-4 * max(1.0, abs(a)) for a, b in same.values())
+    m3 = make_model_v2("dense", dev)
+    tr3 = XP.PddlTrainerS(m3, cases, labels, dev, plan, lr=CT.BUDGET["lr"], chunk=CT.BUDGET["chunk_decisions"])
+    r3 = tr3.step(batch)
+    byc = {c.case_id: c for c in cases}
+    bad_order, bad_own, checked, deterministic = 0, 0, 0, True
+    plan_b = XP.SPlan(cases, labels, 0.25)
+    for key, info in list(plan.by_key.items())[::7]:
+        cid = info["cid"]
+        task = byc[cid].task
+        dist = labels[key]
+        st = key.split("|")[1]
+        parent = task.state_from_list([int(x) for x in st.split(",")])
+        own = {parent} | {task.apply(parent, task.action_by_id[a]) for a in dist}
+        for a, y in info["cross"]:
+            if y is None:
+                continue
+            checked += 1
+            bad_order += not (plan.pool[cid][y] > dist[a])
+            bad_own += y in own
+        deterministic &= plan_b.by_key[key]["cross"] == info["cross"] and plan_b.by_key[key]["keep"] == info["keep"]
+    st = plan.summary()
+    out = {"fraction0_equals_D0": ok0, "fraction0_values": same, "s_step": {k: r3[k] for k in ("loss", "nll", "rank", "grad_norm", "decisions", "cross_pairs_used")}, "plan_stats": st, "cross_pairs_checked": checked, "cross_not_strictly_farther": bad_order,
+           "cross_inside_own_decision": bad_own, "deterministic": bool(deterministic), "pairs_not_above_D0": st["pairs"] - st["masked_slots"] <= st["pairs"], "train_labels_only": all(k.split("|")[0].startswith("train_") for k in labels),
+           "fixture_optimizer_steps": 3, "seconds": round(time.time() - t0, 1)}
+    out["ok"] = bool(ok0 and bad_order == 0 and bad_own == 0 and deterministic and out["train_labels_only"] and r3["cross_pairs_used"] > 0)
+    _wj(rr / "checks" / "fixture_s.json", out)
+    _ledger(rr, "fixture_s", seconds=out["seconds"], passed=out["ok"], fixture_optimizer_steps=3, gpu_seconds=out["seconds"])
+    print("fixture S ok=%s stats=%s" % (out["ok"], json.dumps(st)))
+    return 0 if out["ok"] else 3
+
+
+def train_t1(rr, device_name):
+    import torch
+    from cp_disr.pddl.compact import crossparent as XP, train as CT
+    rr = Path(rr)
+    cfg = _cfg()
+    out = rr / "training" / "T1"
+    out.mkdir(parents=True, exist_ok=True)
+    if (out / "training_accounting.json").is_file():
+        print("already complete")
+        return 0
+    cases, trajs, labels = CT.train_inputs(ROOT / cfg["old_run_root"])
+    dev = torch.device(device_name)
+    plan = XP.SPlan(cases, labels, 0.25)
+    _wj(out / "s_plan_summary.json", plan.summary())
+    t0 = time.time()
+    factory = lambda m, c, l, d: XP.PddlTrainerS(m, c, l, d, plan, lr=CT.BUDGET["lr"], chunk=CT.BUDGET["chunk_decisions"])
+    acct, rows, m = CT.train_loop_v2(out, "dense", dev, cases, trajs, labels, log=print, trainer_factory=factory)
+    led = CT.schedule_ledger(trajs)
+    acct["schedule_decisions_match_ledger"] = [r["decisions"] for r in rows] == [r["decisions"] for r in led]
+    acct["s_plan"] = plan.summary()
+    acct["cross_pairs_used_total"] = sum(r.get("cross_pairs_used", 0) for r in rows)
+    _wj(out / "training_accounting.json", acct)
+    CT.write_csv(out / "updates.csv", rows)
+    _ledger(rr, "train_T1", seconds=round(time.time() - t0, 1), accepted_updates=acct["optimizer_steps"], attempts=acct["attempts"], device=device_name)
+    return 0
+
+
 def panel(rr, arms, set_name, shard, nshards, device_name):
     from cp_disr.pddl.compact import panel as PN
     t0 = time.time()
@@ -312,6 +390,16 @@ def report_b(rr, names):
             row[n + "_inversion_rate"] = c[1] / c[0] if c[0] else None
         rowsp.append(row)
     RA.wcsv(rr / "diagnostics" / "b_by_problem.csv", rowsp)
+    # inversion rate by exact distance gap (same-problem pairs; WL ties reported separately)
+    bucket = lambda g: "1" if g == 1 else "2" if g == 2 else "3-4" if g <= 4 else "5+"
+    gap = defaultdict(lambda: [0, 0, 0])
+    for r in rows_pair:
+        if r["outcome"] in ("CORRECT", "INVERTED", "TIE") and r.get("distance_gap"):
+            c = gap[(r["kind"], bucket(r["distance_gap"]), r["model"])]
+            c[0] += 1
+            c[1] += r["outcome"] == "INVERTED"
+            c[2] += r["outcome"] == "TIE"
+    RA.wcsv(rr / "diagnostics" / "b_by_distance_gap.csv", [{"kind": k, "gap": b, "model": m, "decidable": c[0], "inverted": c[1], "ties": c[2], "inversion_rate": c[1] / c[0]} for (k, b, m), c in sorted(gap.items())])
     # repair / damage between models on identical items
     idx = {}
     for r in rows_pair:
@@ -389,6 +477,6 @@ def trigger_s(rr, names="DENSE,WL"):
 
 
 def commands(rr, a):
-    return {"fixture-variants": lambda: fixture_variants(rr), "report-a": lambda: report_a(rr), "report-b": lambda: report_b(rr, a.models), "trigger-s": lambda: trigger_s(rr),
+    return {"fixture-s": lambda: fixture_s(rr, a.device), "train-t1": lambda: train_t1(rr, a.device), "fixture-variants": lambda: fixture_variants(rr), "report-a": lambda: report_a(rr), "report-b": lambda: report_b(rr, a.models), "trigger-s": lambda: trigger_s(rr),
             "fixture-w1": lambda: w1_fixture(rr), "w1-fit": lambda: w1_fit(rr), "fixture-b": lambda: fixture_b(rr), "lib-build": lambda: lib_build(rr), "lib-score": lambda: lib_score(rr, a.model, a.device),
             "lib-equiv": lambda: lib_equiv(rr, a.model, a.device), "variants-build": lambda: variants_build(rr), "panel": lambda: panel(rr, a.arms, a.set, a.shard, a.nshards, a.device)}

@@ -140,7 +140,9 @@ def metrics(rr, names):
                 rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": "UNDECIDED", "x": r["x"], "y": r["y"]})
                 continue
             o = "TIE" if abs(better - worse) <= tol(better, worse) else ("CORRECT" if better < worse else "INVERTED")
-            rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": o, "margin": worse - better, "x": r["x"], "y": r["y"]})
+            lx, ly = lab[(cid, r["x"])], lab[(cid, r["y"])]
+            gap = abs(lx["lower"] - ly["lower"]) if lx["source"] == "EXACT" and ly["source"] == "EXACT" else None
+            rows_pair.append({"model": n, "problem": cid, "kind": r["kind"], "relation": r["relation"], "outcome": o, "margin": worse - better, "x": r["x"], "y": r["y"], "distance_gap": gap})
     return rows_dec, rows_pair, decisions
 
 
