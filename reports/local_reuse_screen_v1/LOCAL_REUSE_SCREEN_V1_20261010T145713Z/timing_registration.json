@@ -1,0 +1,26 @@
+{
+  "breakdown": "One separate profiled first-hash parent group per task/arm; self CPU/GPU operator categories; no extrapolated complete-stream breakdown claim",
+  "interleaved_coalescing": "Within each same-task48 request window, ordinary stable parent coalescing; LRU2 across windows; output restored to original request order",
+  "warmups": 2,
+  "code_sha256": "59264116b56bca0c1a984298d5fb68990836fa42f60914e637638dde36d0b169",
+  "G3_protection": "interleaved geomean>=1.0 to reject ideal-order-only benefit",
+  "cpu_memory": "Cumulative process highwater with shared two frozen models; isolated per-arm peak unavailable",
+  "cache_capacity_parents": 2,
+  "external_load": "Any foreign compute PID on physical GPU2 invalidates paired block; at most one replacement paired block across whole stage; preserve invalid attempts",
+  "status": "FROZEN_BEFORE_FORMAL_TIMING",
+  "parent_cost": "Full parent encoder rebuild on miss, children only as required output, all packing/cache lifetime included",
+  "formal_repetitions": 5,
+  "window": 48,
+  "patterns": [
+    "grouped",
+    "interleaved"
+  ],
+  "registered_utc": "2026-10-10T15:22:31.8349938Z",
+  "G3_primary": "grouped task geomean>=1.20, gain>=2 strata",
+  "prototype_sha256": "3a6eea2d51ba118bc9ef7e0e436afb6f8181937aef53980223cc3daa5b907fc8",
+  "arms": [
+    "F",
+    "I/S"
+  ],
+  "neural_search_gate": "No search until G3 pass"
+}
