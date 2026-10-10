@@ -1,0 +1,9 @@
+# 本轮实验归档与发布
+
+用户在实验完成后明确要求：“每轮实验结束后，要把相关结果和代码push”。此要求作为本项目后续每轮实验的交付规则：完成计算与核查后，提交相关实验代码、配置身份、结果、日志和回执，推送现有实验分支，核对远端提交，并在最终答复中提供commit、分支和结果位置。计算授权与Git归档授权分别遵守；发布授权不扩大训练、拟合或搜索权限。
+
+本次补归档为A1/B1原方法审计与获准A-V。服务器代码基线为cc7d79d6fcb053bf0c16033e765a2e808de2aaac，分支codex/cp-disr-c1-compact-diagnosis-v2；目标目录为reports/a1_b1_original_audit_continuation/20261010_codex。新增脚本A_V_draft.py、完整六矩阵、逐对表、候选、日志、前后身份核查、A1/B1审计报告及其选取旧证据副本一并归档。
+
+00_receipt.json和output_index.json是实验完成时的历史快照，保留当时commit/push计数为0。它们不会被后来的发布改写。archive_manifest.json登记本次Git归档文件的大小与SHA256；archive_manifest本身不纳入其清单。发布commit的实际SHA与远端核查结果另存服务器独立发布目录及本地reports/git_publication_20261010/git_publication_receipt.json，以避免提交哈希自引用。
+
+本次归档不表示新增计算、算法变化或搜索收益。实验结果仍为固定构建剪枝差异重现、根因未定位、E0_ONLY；AB2未触发。相关外部源码摘录保留来源manifest与原MIT许可证；没有纳入论文包、数据集全集或训练checkpoint。

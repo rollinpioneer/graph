@@ -1,0 +1,20 @@
+方法/版本,环节,论文定义及页码,官方代码文件/行号/commit,作者默认配置,CP-DISR实现位置/commit,实际差异,证据状态,潜在影响,已有解决方式,后续核查
+OptRank/Zenodo12575733,特征编码,IJCAI PDF5-6 GOOSE-LLG神经模型,learner/models/rank_model.py:9-19;归档固定,4层64维LLG,compact/models.py@cc7d79d6f/旧审计,CP Action-Proposition并非该LLG,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,模型编码多因素,两轨道分开,不要将GOOSE当WL
+OptRank/Zenodo12575733,静态事实对象类型目标动作,IJCAI PDF5-6 lifted完整任务,learner/representation/llg.py/本分支未逐行审,LLG,CP编码由A1协调者核查,非共同固定编码,UNKNOWN_DETAIL,不能归因于损失,A1共享表示审计,本卡不重算图
+OptRank/Zenodo12575733,词表剪枝,IJCAI PDF5-6 neural LLG,rank_model.py:9-19;gnn.py:89-96,神经共享嵌入,旧共享02误称WL,WL a-m不属于OptRankGOOSE身份,READ_PRIMARY,方法身份混淆,更正旧表,不套A1剪枝
+OptRank/Zenodo12575733,标签父子兄弟,IJCAI PDF3-4 Def3与4.3,perfect_with_siblings.cc:126-139;rank_model.py:31-39,selected successor优于兄弟父,compact/train.py@cc7d79d6f/旧审计,D0用精确d*兄弟对;T1加跨父,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,信息量监督不同,已有作者计划约束,selected successor需身份
+OptRank/Zenodo12575733,跨路径离轨,IJCAI PDF3 Def3传递性,rank_model.py:31-39,路径递减与传递性,compact/crossparent.py@cc7d79d6f/旧审计,T1可含任意off-off d*对,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,离线反转不等于作者约束反例,已有路径邻域机制,旧0/112不是精确闭包
+OptRank/Zenodo12575733,损失,IJCAI PDF4 DirectRanker MSE,rank_model.py:18-45;train_rank.py:231-245,sigmoid目标1与MSE,compact/train.py@cc7d79d6f/旧审计,D0 NLL+softplus;T1替换25%项,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,不是严格匹配消融,同义偏移与实质机制分开,不重新训练
+OptRank/Zenodo12575733,采样与数据角色,IJCAI PDF5-6随机90/10,rank_dataset_gnn.py:44-67;200-215,每题全batch;每第interval验证,Train96 457轨迹/旧审计,作者计划邻域与CP精确偏离不同,READ_PRIMARY+PRIOR_CP_AUDIT,监督预算与泛化角色不匹配,唯一状态对计数,日志确认划分
+OptRank/Zenodo12575733,更新与优化器,IJCAI PDF6 Adam500epoch,train_rank.py:69-74;244-245,Adam默认50epoch,CP4100update/旧审计,后续包默认与正式协议不同,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,历史运行身份未对应,保留版本差异,需确切原命令
+OptRank/Zenodo12575733,检查点,IJCAI PDF6 val accuracy,train_rank.py:311-322,val_loss调度和train加2val选模,D0u820与T1u2460/旧审计,选择协议和检查点不同,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,监督作用不可隔离,冻结后分别报告,不得重新选模
+OptRank/Zenodo12575733,评分精度,IJCAI PDF4 Lemma2实数次序,rank_model.py:53-88,加1后np.rint转int,CP神经连续评分/旧审计,量化可制造并列,OFFICIAL_CODE_AUDITED,实数严格次序不保证部署严格次序,先查已保存评分事件,无新评分搜索
+OptRank/Zenodo12575733,缓存重复,IJCAI PDF2-3 GBFS,downward_gpu/search_engines/batch_eager_search.cc:76-143,new节点批评分;closed跳过,search_match/engine.py@cc7d79d6f/旧审计,CP共同搜索与FD batch不同,PARTIAL_OFFICIAL_CODE_AUDITED,缓存及生成顺序影响计时,严格分轨道,未审全缓存实现
+OptRank/Zenodo12575733,并列,IJCAI PDF3 Lemma1要求同tie规则,rank_model.py:81-87;batch_eager_search.cc:136-142,整数priority,CP按h加序号/旧审计,实数排序与整数队列不同,PARTIAL_OFFICIAL_CODE_AUDITED,并列可改变出队,部署语义独立记录,未授全tie等价
+OptRank/Zenodo12575733,目标与重开,IJCAI PDF2 Algo1出队goal,GPU batch_eager_search.cc:95-97;plugin_batch_eager_greedy.cc,出队判目标且reopen false,CP生成判目标/旧审计,不同终止时机,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,展开统计不可直接拼比,两轨道标明,不能拿CPU链替GPU
+OptRank/Zenodo12575733,预算计时,IJCAI PDF6 1800s8GB3repeat,rank_train_test_ipc2023.py:18;47-72,2000s5repeat默认batch,CP300s100000展开8GiB增量/旧审计,预算引擎版本多差异,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,不适合拼表排名,分别描述范围,实际日志命令缺
+Chrestien/e7cd65内嵌包,标签父子兄弟跨路径,NeurIPS/arXivPDF3-5 Def1Eq4,src/losses.jl:114-160;191-220,路径state对累计offstate softplus,compact/crossparent.py@cc7d79d6f/旧审计,T1任意严格d*对非理想OPEN监督,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,0/112不证明失败,已有Lgbfs离轨机制,已有计划包连接
+Chrestien/e7cd65内嵌包,损失采样更新,NeurIPS/arXivPDF7-8,supervised.jl:46-59;103-112;losses.jl:130-133,每题batch随机题AdaBelief10000update,CP4100和25%替换/旧审计,信息量优化器更新不同,OFFICIAL_CODE_AUDITED+PRIOR_CP_AUDIT,非损失消融,使用原规则说明,无监督生成运行
+Chrestien/e7cd65,grid与PDDL一致性,NeurIPS/arXivPDF3-5 Eq4,sokoban/train/gbfslgbfs.py:188-219;train.py:114-116,grid on-off同g;PDDL累计off,无CPgrid方法,公布子系统覆盖不同,OFFICIAL_CODE_AUDITED,未认定论文各运行代码同一,保留来源冲突,确切运行版本未知
+Chrestien/内嵌包,搜索评分及依赖,NeurIPS/arXivPDF2-3 merit,src/heuristic.jl:12-15;Manifest.toml:804-808,原标量SymbolicPlanners0.1.11,CP共同engine/旧审计,依赖源码未审tie reopen未知,PARTIAL_OFFICIAL_CODE_AUDITED,不能宣称端到端等价,冻结dependency tree,不重建环境
+Chrestien/内嵌包,作者结果统计,NeurIPS正式PDF9 Table1 Elevators GBFS Lgbfs85,README末段;show.jl:38-88;223-230,5s交叉折选模三种子平均,CP不在作者CSV中,本轮只核85.2747%取整85,TABLE_CELL_STATISTIC_VERIFIED,不证明全原生run或CP因果,保留指定cell证据,权重日志计划身份未核
