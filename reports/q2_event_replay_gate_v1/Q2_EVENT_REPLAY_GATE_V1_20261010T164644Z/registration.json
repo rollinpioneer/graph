@@ -1,0 +1,110 @@
+{
+  "CPU_ancillary_reserve_seconds": 120,
+  "tasks": {
+    "ipc_p12": {
+      "case_id": "ipc_p12",
+      "file": "/home/xushijie3/ext/downward-benchmarks/depot/p12.pddl",
+      "sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
+      "track": "ipc",
+      "actual_sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
+      "domain_file": "/home/xushijie3/ext/downward-benchmarks/depot/domain.pddl",
+      "domain_sha256": "6bb9465e91b63ec5c30b7d21994ee886d59f88028d92d363753567e3e5fa1bdd"
+    },
+    "struct_n4_004": {
+      "case_id": "struct_n4_004",
+      "file": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/data/problems/struct/struct_n4_004.pddl",
+      "sha256": "57659f4588e58c83d17e4d48cb8e2e294c28fc002a1e61a1a4c6002275ba2f47",
+      "track": "typed",
+      "actual_sha256": "57659f4588e58c83d17e4d48cb8e2e294c28fc002a1e61a1a4c6002275ba2f47",
+      "domain_file": "/home/xushijie3/ext/pddl-generators/depots/domain.pddl",
+      "domain_sha256": "81def700212ae8b703f6352307eb588223da67b943ae9289b0661c8e72319e69"
+    },
+    "struct_n4_011": {
+      "case_id": "struct_n4_011",
+      "file": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/data/problems/struct/struct_n4_011.pddl",
+      "sha256": "0634bc49da6b1b2c64ed549f04bd04b610d8ba50e04e7beff2aaafb95824877c",
+      "track": "typed",
+      "actual_sha256": "0634bc49da6b1b2c64ed549f04bd04b610d8ba50e04e7beff2aaafb95824877c",
+      "domain_file": "/home/xushijie3/ext/pddl-generators/depots/domain.pddl",
+      "domain_sha256": "81def700212ae8b703f6352307eb588223da67b943ae9289b0661c8e72319e69"
+    }
+  },
+  "scoring_protocol": {
+    "threads": 1,
+    "rounding": "NONE",
+    "device": "cpu",
+    "path": "Original cli_ext.make_evaluator -> NeuralEval.evaluate([state]) -> model.state_values; no RGCN arithmetic rewrite",
+    "precision": "original FP32 weights",
+    "input_shape": "one graph per actual model invocation, regardless of total requested batch",
+    "deterministic_algorithms": true,
+    "id": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
+    "legacy_difference": "original GPU/chunk48 changed to CPU/native single-state; historical OPEN revalued only in separate controlled copy",
+    "cache_key": "task SHA/domain SHA + full state hex + model SHA + protocol ID; nested namespaces retain full key identity"
+  },
+  "old_p12_snapshot": "/home/xushijie3/work/cp_disr_q2n1/Q2N1_20261010T142427Z/q2/snapshots/ipc_p12/D0_820_k016.pkl",
+  "caps": {
+    "CPU_core_seconds": 7200,
+    "certification": 0,
+    "prefix_restore_calls": 6,
+    "tasks": 3,
+    "p12_expansions_per_call": 64,
+    "struct_expansions_per_call": 32,
+    "repairs": 2,
+    "model_state_evaluations": 8192,
+    "GPU_device_seconds": 1800,
+    "training": 0,
+    "graph_builds": 0
+  },
+  "publication_branch": "codex/cp-disr-q2-event-replay-gate-v1",
+  "models": {
+    "D0@2460": {
+      "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u02460.pt",
+      "sha256_actual": "b797d0c7d88378ae0ff47c619e8c7b10baa27a9ca2eee6d95538906f404a3e15",
+      "sha256_recorded": "b797d0c7d88378ae0ff47c619e8c7b10baa27a9ca2eee6d95538906f404a3e15",
+      "matches": true
+    },
+    "D0@820": {
+      "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u00820.pt",
+      "sha256_actual": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+      "sha256_recorded": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+      "matches": true
+    },
+    "T1@2460": {
+      "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/T1/checkpoints/u02460.pt",
+      "sha256_actual": "d73ddf6ab5ac6b21e1fe398a83a63d5ba55dd9a5ae886de3ecdef4b43f9f8222",
+      "sha256_recorded": "d73ddf6ab5ac6b21e1fe398a83a63d5ba55dd9a5ae886de3ecdef4b43f9f8222",
+      "matches": true
+    }
+  },
+  "authorization": {
+    "phase_C": "NOT_APPROVED",
+    "text": "用户2026-10-11明确“执行”；批准G0—G2",
+    "publication": "Standing user instruction: each experiment card gets one new branch and code/results push"
+  },
+  "actual_server_head": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
+  "client_date": "2026-10-11 Asia/Taipei",
+  "code_hashes": {
+    "gate": "e40c4c966764e70e0f31ef7c393fcd2490b75f2cedf0bcbe19f29a5dfd80e42e",
+    "g0_audit": "b19d5259395711102e87a1eed85569a5062bab1dff7d58c8487afec81b0ce04f"
+  },
+  "card": "CP-DISR-Q2-EVENT-REPLAY-GATE-V1",
+  "baseline_commit": "cc7d79d6fcb053bf0c16033e765a2e808de2aaac",
+  "created_utc": "2026-10-10T17:01:04.9928165Z",
+  "struct_task_order": [
+    "struct_n4_011",
+    "struct_n4_004"
+  ],
+  "selection": {
+    "check_order": "old p12 k16; both Struct prefixes by task-file SHA; p12 root prefix up to64 to establish earliest controlled event",
+    "ties": "minimum exact ties reported separately, excluded from main eligible events",
+    "G2": "same full snapshot vs baseline continuation and fresh deserialized no-intervention path; compare exact full content including score cache and counters",
+    "group_selection": "earliest eligible p12 event; earliest Struct by task-file SHA then k; no cross-group fill",
+    "independent_checks": "3 complete OPEN passes, cache bypass, third pass reversed request order; each actual input is single state",
+    "optional": "No phase-C or intervention outcomes used in eligibility"
+  },
+  "model_order": [
+    "D0@820",
+    "D0@2460",
+    "T1@2460"
+  ]
+}
