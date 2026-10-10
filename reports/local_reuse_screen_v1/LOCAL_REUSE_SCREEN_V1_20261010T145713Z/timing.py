@@ -121,6 +121,9 @@ def timing(out):
                         pair.append(dict(case_id=info['case_id'],size_stratum=info['size_stratum'],pattern=pattern,arm=arm,repeat=rep,attempt=attempt,states=n,request_windows=len(stream),full_seconds=elapsed,states_per_second=n/elapsed,parse_graph_seconds=parse_seconds,cold_prepare_seconds=cold[arm],shared_two_model_load_seconds=loadseconds,gpu_peak_allocated_bytes=torch.cuda.max_memory_allocated(),gpu_peak_extra_bytes=torch.cuda.max_memory_allocated()-base_mem,gpu_peak_reserved_bytes=torch.cuda.max_memory_reserved(),process_cpu_rss_highwater_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,score_error_vs_same_stream_F_warmup=error,score_plan_tolerance_violations=violations,**metrics))
                     after=foreign_load();valid=not before and not after
                     for row in pair:row['valid']=valid;row['external_gpu_pids']=json.dumps(before+after);rows.append(row)
+                    # Retain failed/invalid attempts even if a later diagnostic
+                    # profiler or resource guard fails. Never depend on finale.
+                    csv_write(out/'timing_results.csv',rows)
                     if valid:
                         for row in pair:samples[row['arm']].append(row['full_seconds'])
                         break
@@ -130,6 +133,7 @@ def timing(out):
                 speed=float(np.median(samples['F'])/np.median(samples['I/S']))
                 task_speed.append(dict(case_id=info['case_id'],size_stratum=info['size_stratum'],pattern=pattern,speedup=speed,F_seconds=float(np.median(samples['F'])),I_seconds=float(np.median(samples['I/S'])),F_min=min(samples['F']),F_max=max(samples['F']),I_min=min(samples['I/S']),I_max=max(samples['I/S'])))
             print('TIMED',info['case_id'],pattern,task_speed[-1] if task_speed else 'INVALID',flush=True)
+            sj(out/'timing_progress.json',dict(task_patterns=task_speed,invalid_paired_blocks=invalid,completed_formal_rows=len(rows),wall_seconds=time.monotonic()-start))
         for arm in ['F','I/S']:
             values,wall=component_profile(arm,fv,inc,requests(selected,'grouped')[0])
             for category,cost in values.items():component_rows.append(dict(case_id=info['case_id'],arm=arm,category=category,scope='one first-hash parent group; diagnostic profiler, not formal speed ranking',profile_wall_seconds=wall,**cost))
