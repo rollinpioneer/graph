@@ -1,0 +1,151 @@
+{
+  "publication_branch": "codex/cp-disr-local-reuse-screen-v1",
+  "required_artifacts": [
+    "manifest.json",
+    "method_correspondence.md",
+    "dependency_audit.md",
+    "affected_work.csv",
+    "correctness_report.md",
+    "timing_results.csv",
+    "search_results.csv",
+    "trajectory_difference_report.md",
+    "research_decision.md",
+    "final_receipt.json"
+  ],
+  "numerics": {
+    "hidden_deviations_explained_by_preregistered_noise_and_double_check": true,
+    "hidden_tolerance_violations": 49,
+    "F_repeat_flips": 21,
+    "score_tolerance_violations": 0,
+    "ranking_flips": 19,
+    "F_repeat_ties": 59,
+    "score_max_relative": 8.763320238358574E-07,
+    "tie_changes": 74,
+    "search_equivalence": "UNKNOWN",
+    "score_max_absolute": 0.00048828125
+  },
+  "status": "COMPLETE_WITH_BOUNDED_UNKNOWNS",
+  "gates": {
+    "search": "NOT_TRIGGERED",
+    "timed_confirmation": "NOT_TRIGGERED",
+    "G2": "PASS",
+    "G1": "PASS",
+    "G3": "STOP"
+  },
+  "protection": {
+    "input_files_checked": 19,
+    "input_hashes_unchanged": true,
+    "source_files_checked": 188,
+    "git_status_unchanged": true,
+    "git_branch_unchanged": true,
+    "git_head_unchanged": true,
+    "source_hashes_unchanged": true,
+    "legacy_files_overwritten": false,
+    "checkpoint_hash_unchanged": true
+  },
+  "actual_server_baseline_head": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
+  "authorization": "User 执行 approves this card; new branch publication standing instruction",
+  "card": "CP-DISR-LOCAL-REUSE-SCREEN-V1",
+  "experiment_code_baseline": "cc7d79d6fcb053bf0c16033e765a2e808de2aaac",
+  "decision": "D_INSUFFICIENT_FULL_CARD_TIMING",
+  "budget": {
+    "cpu_core_seconds_limit": 86400,
+    "method_development": "same local work session, below 5-working-day cap",
+    "gpu_device_seconds_conservative": 272.3394982789978,
+    "cpu_core_seconds_measured": 554.204567,
+    "gpu_device_seconds_limit": 14400,
+    "cpu_ancillary_reserve_seconds": 120,
+    "CPU_RSS_peak_kib": 2383400,
+    "cpu_core_seconds_remaining": 85725.795433,
+    "GPU_peak_allocated_bytes": 1407023104,
+    "cpu_core_seconds_conservative": 674.204567,
+    "gpu_device_seconds_remaining": 14127.660501721002
+  },
+  "cleanup": {
+    "owned_experiment_processes_remaining": 0,
+    "persistent_ssh_session_closed": true,
+    "status": "COMPLETE_NO_OWNED_EXPERIMENT_PROCESSES",
+    "GPU2_memory_MiB_after": 4
+  },
+  "remote_run_root": "/home/xushijie3/work/cp_disr_local_reuse/LOCAL_REUSE_SCREEN_V1_20261010T145713Z",
+  "timing": {
+    "external_gpu_context_PID": 2796947,
+    "external_context_MiB": 20746,
+    "gain_strata": [],
+    "geomean_scope": "four fully valid preselected IPC tasks only, not all eight tasks",
+    "grouped_speedup": 0.7288026607392396,
+    "interleaved_speedup": 0.13349040316196506,
+    "gpu_noise_policy": "any foreign PID invalidates both arms, one global paired replacement maximum"
+  },
+  "updated_utc": "2026-10-10T15:41:18.1080986Z",
+  "counts": {
+    "microtuning": 0,
+    "limited_remeasurement_blocks": 1,
+    "formal_arm_records": 162,
+    "new_tasks": 0,
+    "tasks": 8,
+    "correctness_repairs": 0,
+    "valid_paired_blocks": 40,
+    "maximum_searches": 36,
+    "unique_registered_transfers": 1565,
+    "exact_queries": 0,
+    "training": 0,
+    "fully_valid_tasks": 4,
+    "fitting": 0,
+    "paired_blocks": 81,
+    "searches": 0,
+    "invalid_paired_blocks": 41,
+    "high_precision_transfers": 32,
+    "unused_budget_not_reallocated": true,
+    "new_state_collection_searches": 0,
+    "fixed_parents": 112
+  },
+  "limitations": [
+    "4 of 8 tasks lack complete valid timing repeats due to external GPU context",
+    "No actual search or search quality proof",
+    "I/S merged and no independent algorithm increment",
+    "Official InkStream system not executed; adapter is generic correspondence",
+    "Component profile is one diagnostic group and lacks separate load guard; not full-stream or independently fair breakdown",
+    "CPU memory figures are cumulative process highwater with shared models",
+    "All existing Joint/IPC states are development diagnostics",
+    "Source identity for the fixed-SHA SAGE fetch not separately proved"
+  ],
+  "required_artifact_verification": {
+    "research_decision.md": {
+      "sha256": "ccaea14569828baeaf443fbd99dd6ad249e4a413e4722c76f49cd458dbc8d488",
+      "bytes": 7959
+    },
+    "correctness_report.md": {
+      "sha256": "eed0486122ec24814a52bdf12b3e3d3922ee4665d82ce7efb9491e6688f35e1e",
+      "bytes": 698
+    },
+    "trajectory_difference_report.md": {
+      "sha256": "02793caede7c43732132703aafa7ce6b59876c18d684ee2f9bdbe2f3f8c4e708",
+      "bytes": 738
+    },
+    "search_results.csv": {
+      "sha256": "86bbe3c03c080e2d0a077d30f731282743ea0127dc25083bda3bb1b8c778b62f",
+      "bytes": 147
+    },
+    "dependency_audit.md": {
+      "sha256": "fa225b3d6d50f22442a5c07f925ad179fe1f18eaafd72f525268a53d67d00e1c",
+      "bytes": 2451
+    },
+    "timing_results.csv": {
+      "sha256": "be0c26755fa4f79ae68b450a728d8be7cfab704cac2aa1dda5915d512c572abf",
+      "bytes": 36729
+    },
+    "method_correspondence.md": {
+      "sha256": "f8d301d3dcd0169950838ffee2d6884985eb6a6f67eca422a5e0a7732d2982a6",
+      "bytes": 2156
+    },
+    "affected_work.csv": {
+      "sha256": "f966000e3621f06126417362ad1eb6433d109ccd41cc3d7bd079d382df8cb6e1",
+      "bytes": 2659078
+    },
+    "manifest.json": {
+      "sha256": "7c332dba70e72de15eb861801e86eb218a11a3c15388f048842e5b36fc755e8b",
+      "bytes": 628503
+    }
+  }
+}
