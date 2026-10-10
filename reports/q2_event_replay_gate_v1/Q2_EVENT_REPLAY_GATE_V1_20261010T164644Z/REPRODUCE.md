@@ -1,0 +1,11 @@
+# Q2 保存证据复核入口
+
+先读research_decision.md、approval_package.md。仅G0—G2执行，阶段C需要另行批准。registration.json冻结任务、域、三权重、预算和协议；G0_report/G0_audit说明旧证据边界。运行前登记提交为57a7f89fd1acb2a5a2b7f6a7114e333c5a42b866。publication_registration.json与publication_final.json是服务器/本地外置推送回执；最终回执在提交生成之后写出，不纳入其自身commit，以免自引用。
+
+服务器目录为/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/；本地为C:/Users/jackx/Documents/ChatGPT/CP-DISR/reports/q2_event_replay_gate_v1/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/。snapshots/*.json保存完整规范现场，decisions/*.jsonl.gz保存每步完整after和before语义摘要。resource_ledger.jsonl将每次真实state/model求值与score_bytes.bin的小端4字节FP32按sequence、byte_offset绑定。event_approval_metadata.json给出两事件身份、文件SHA、语义SHA和三轮原始字节范围。完整原始材料留在服务器与本地镜像；Git只发布已审阅代码、报告、轻量JSON及SHA索引。
+
+离线复核使用已有Python执行 `python finalize.py <本卡镜像绝对目录> local`：只读取保存证据、写verification_local.json，不评分或搜索。服务器模式另核对现有源码、旧材料、权重、任务哈希及已有计划/快照父动作合同，不进行最优性查询。已有服务器解释器为/home/xushijie3/envs/cpdisr/bin/python，所需环境变量和依赖版本见registration/runtime；不需要安装新依赖。
+
+g0_audit.py核对旧评分表、快照和出队日志；原样副本在old_round1/old_round2，两轮原实验卡各存experiment_card.md。旧两轮没有独立结果commit，原脚本和材料以哈希绑定。gate.py是已完成的资格和无干预恢复实现，不要再次启动或自行进入阶段C。实际源码基点为cc7d79d6f，服务器原HEAD070b2bfa3、原分支和工作区状态未改变。
+
+artifact_manifest.json索引最终证据及原卡/文献。transfer_manifest.json描述初次下载的stage_results.tar.gz；后续只读审阅元数据以artifact_manifest为准。文件字节SHA与规范语义SHA不同。无须最优计划证书即可核查技术重放，但不能因此声称最优条件覆盖或规划效率改善。阶段C未运行，因此没有干预首次分歧、汇合或处理后计划证据，这些项目在最终回执中记为未执行。

@@ -10,6 +10,9 @@ $env:GIT_NO_LAZY_FETCH='1'
 $env:GIT_INDEX_FILE=Join-Path $root ('publication_'+[Guid]::NewGuid().ToString('N')+'.index')
 # Explicitly reviewed publication list. Original evidence and all binary data stay on disk.
 $include=@('experiment_card.md','g0_audit.py','gate.py','publish_card.ps1','registration.json','G0_audit.json','G0_report.md','weight_identity.json','registration_assets.json','identity_before.json','old_asset_inventory.json','candidates.json','selected_events.json','G2_replay_checks.json','gate_receipt.json','old_p12_protocol_comparison.json','struct_n4_004_prefix_summary.json','struct_n4_011_prefix_summary.json','ipc_p12_prefix_summary.json','research_decision.md','approval_package.md','scoring_protocol.md','final_receipt.json','integrity_after.json','artifact_manifest.json','resource_summary.json','REPRODUCE.md','finalize.py')
+$include+=@('verification_server.json','verification_local.json','plan_validation.json','runtime.json','snapshot_contracts.json','author_condition_correspondence.json','candidate_exclusions.json','transfer_manifest.json')
+$include+=@('event_approval_metadata.json')
+$include+=@('server_final_check.json')
 $files=@(foreach($name in $include){$path=Join-Path $root $name;if(Test-Path -LiteralPath $path){Get-Item -LiteralPath $path}})
 $payload=@{}
 foreach($f in $files){$rel=[IO.Path]::GetRelativePath($root,$f.FullName).Replace('\','/');$payload[$rel]=@{bytes=$f.Length;sha256=(Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash.ToLowerInvariant()}}
