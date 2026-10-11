@@ -1,0 +1,59 @@
+# 完整汇合核查
+
+规则在运行前冻结。先匹配摘要，再核对全部实际内容；未匹配只表示已保存窗口内未观察到汇合。
+
+统计排除字段：expanded, generated, duplicates, path_updates, calls, score_cache_hits, score_cache_misses。保留所有父链接、缓存、有效与失效队列条目、插入序号及 serial。堆物理排列规范化为逻辑顺序。资源消耗另列；有限预算剩余额度不被宣称等价。
+
+## struct_n4_004_k008
+
+```json
+{
+  "event": "struct_n4_004_k008",
+  "rule": {
+    "exact": "Previous normalized full content; SHA candidate then actual content equality",
+    "future": "Exclude only below nondecision statistics; preserve all other fields; sort heap logical entries, preserve actual serial values and counter; retain stale entries",
+    "excluded_cost_fields": [
+      "expanded",
+      "generated",
+      "duplicates",
+      "path_updates",
+      "calls",
+      "score_cache_hits",
+      "score_cache_misses"
+    ],
+    "exclusions_justification": "These are recorded statistics, not action/score/queue decision inputs in frozen step; external consumed resource costs and budget remainder reported separately. No claim of equal remaining wall time or remaining bounded budget.",
+    "scope": "All saved complete A/B checkpoints, including cross-depth pairs; initial (0,0) excluded; no match means only no observed coalescence"
+  },
+  "hash_candidates": [],
+  "content_confirmed_matches": [],
+  "scope": "A/B initial plus complete checkpoints; (0,0) excluded as preintervention identity",
+  "status": "NO_OBSERVED_COALESCENCE_IN_SAVED_WINDOW"
+}
+```
+
+## ipc_p12_k002
+
+```json
+{
+  "event": "ipc_p12_k002",
+  "rule": {
+    "exact": "Previous normalized full content; SHA candidate then actual content equality",
+    "future": "Exclude only below nondecision statistics; preserve all other fields; sort heap logical entries, preserve actual serial values and counter; retain stale entries",
+    "excluded_cost_fields": [
+      "expanded",
+      "generated",
+      "duplicates",
+      "path_updates",
+      "calls",
+      "score_cache_hits",
+      "score_cache_misses"
+    ],
+    "exclusions_justification": "These are recorded statistics, not action/score/queue decision inputs in frozen step; external consumed resource costs and budget remainder reported separately. No claim of equal remaining wall time or remaining bounded budget.",
+    "scope": "All saved complete A/B checkpoints, including cross-depth pairs; initial (0,0) excluded; no match means only no observed coalescence"
+  },
+  "hash_candidates": [],
+  "content_confirmed_matches": [],
+  "scope": "A/B initial plus complete checkpoints; (0,0) excluded as preintervention identity",
+  "status": "NO_OBSERVED_COALESCENCE_IN_SAVED_WINDOW"
+}
+```
