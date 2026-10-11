@@ -1,0 +1,215 @@
+{
+  "card": "CP-DISR-Q2-P12-FINAL-CONTINUATION-V1",
+  "client_date": "2026-10-11 Asia/Taipei",
+  "created_utc": "2026-10-11T01:27:58.250163+00:00",
+  "authorization": {
+    "experiment": "APPROVED_BY_USER_EXECUTE",
+    "user_text": "执行",
+    "draft_status_overridden_by_explicit_user_request": true,
+    "remote": "Existing explicit lab-xushijie3 SSH authorization in this conversation; same host and repository",
+    "publication": "Standing explicit user instruction: every card uses a new branch and pushes related code/results; no merge",
+    "parallel": "APPROVED_BY_USER_OVERRIDE",
+    "parallel_user_text": "能并行吗，能的话就都并行",
+    "overridden_card_section": "Section 7 serial formal-search scheduling only; branch isolation and all scientific/resource caps remain"
+  },
+  "parent_commit": "fabfa1341b057a4c2b67c0b3acb88e35c43b45ac",
+  "publication_branch": "codex/cp-disr-q2-p12-final-continuation-v1",
+  "algorithm_baseline": "cc7d79d6fcb053bf0c16033e765a2e808de2aaac",
+  "expected_server_HEAD": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
+  "expected_status_sha256": "7e28c12422978992210c8063dc71d675afd18b8ec35ab0f3972206dcea83e311",
+  "server_repository": "/home/xushijie3/work/graph_cp_disr",
+  "previous_local_root": "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_phase_c_single_pop_v1\\Q2_PHASE_C_SINGLE_POP_V1_20261011T005008Z",
+  "previous_remote_root": "/home/xushijie3/work/cp_disr_q2_phase_c/Q2_PHASE_C_SINGLE_POP_V1_20261011T005008Z",
+  "remote_root": "/home/xushijie3/work/cp_disr_q2_p12_final_continuation/Q2_P12_FINAL_CONTINUATION_V1_20261011T011918Z",
+  "model": {
+    "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u00820.pt",
+    "sha256_actual": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+    "sha256_recorded": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+    "matches": true
+  },
+  "model_run_root": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z",
+  "protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
+  "protocol_settings": {
+    "threads": 1,
+    "rounding": "NONE",
+    "device": "cpu",
+    "path": "Original cli_ext.make_evaluator -> NeuralEval.evaluate([state]) -> model.state_values; no RGCN arithmetic rewrite",
+    "precision": "original FP32 weights",
+    "input_shape": "one graph per actual model invocation, regardless of total requested batch",
+    "deterministic_algorithms": true,
+    "id": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
+    "legacy_difference": "original GPU/chunk48 changed to CPU/native single-state; historical OPEN revalued only in separate controlled copy",
+    "cache_key": "task SHA/domain SHA + full state hex + model SHA + protocol ID; nested namespaces retain full key identity"
+  },
+  "event": "ipc_p12_k002",
+  "task": {
+    "case_id": "ipc_p12",
+    "file": "/home/xushijie3/ext/downward-benchmarks/depot/p12.pddl",
+    "sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
+    "track": "ipc",
+    "actual_sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
+    "domain_file": "/home/xushijie3/ext/downward-benchmarks/depot/domain.pddl",
+    "domain_sha256": "6bb9465e91b63ec5c30b7d21994ee886d59f88028d92d363753567e3e5fa1bdd"
+  },
+  "resume": {
+    "source": "each branch steps.jsonl.gz record 108 after; all prior-cache future suffixes excluded",
+    "event_pre_expansions": 2,
+    "old_event_completed_expansions": 108,
+    "task_cumulative_expansions": 110,
+    "forced_candidate": null,
+    "all_four_must_be_RUNNING": true,
+    "pending_scores_must_be_empty": true,
+    "pairwise_scene_identity": "A108=A_repeat108 and B108=B_repeat108, complete normalized content"
+  },
+  "schedule": "PARALLEL_4_ISOLATED_WORKERS_USER_OVERRIDE",
+  "launch_order": [
+    "A",
+    "B",
+    "B_repeat",
+    "A_repeat"
+  ],
+  "cpu_ids": [
+    0,
+    1,
+    2,
+    4
+  ],
+  "cpu_affinity_status": "VERIFIED_DISTINCT_PHYSICAL_CORES_READ_ONLY_PROC_STAT_SAMPLE",
+  "slots": [
+    {
+      "slot": 1,
+      "event": "ipc_p12_k002",
+      "branch": "A",
+      "cpu_id": 0
+    },
+    {
+      "slot": 2,
+      "event": "ipc_p12_k002",
+      "branch": "B",
+      "cpu_id": 1
+    },
+    {
+      "slot": 3,
+      "event": "ipc_p12_k002",
+      "branch": "B_repeat",
+      "cpu_id": 2
+    },
+    {
+      "slot": 4,
+      "event": "ipc_p12_k002",
+      "branch": "A_repeat",
+      "cpu_id": 4
+    }
+  ],
+  "caps": {
+    "events": 1,
+    "continuations": 4,
+    "expansions_each": 4892,
+    "event_after_expansions_each": 5000,
+    "search_wall_seconds_each": 7200,
+    "actual_model_states_each": 40000,
+    "actual_model_states_total": 160000,
+    "CPU_seconds": 36000,
+    "formal_CPU_seconds": 30600,
+    "formal_CPU_seconds_each": 7650,
+    "space_bytes_each": 4294967296,
+    "space_bytes_total_branches": 17179869184,
+    "space_bytes_auxiliary": 1073741824,
+    "GPU_seconds": 0,
+    "training": 0,
+    "fitting": 0,
+    "certification": 0,
+    "full_graphs": 0
+  },
+  "CPU_formal_limit_seconds": 30600,
+  "CPU_ancillary_reserve_seconds": 5400,
+  "resource_allocation": {
+    "formal_CPU": "The four workers share a hard aggregate 30600s process CPU ceiling; individual ceiling 7650s prevents one worker consuming another quota",
+    "ancillary_CPU": "5400s held for prechecks, logging selftests, transfer/archive, analysis, validation, publication and cleanup; actual measured components plus conservative accounting",
+    "parallel_wall": "Elapsed wall time is not summed CPU. Each isolated one-thread worker has an independent 7200s search wall clock including in-loop log/checkpoint costs",
+    "no_quota_moving": true,
+    "model_load": "Clean independent evaluator/model process per branch; no shared score service",
+    "cache": "Only its own 108 complete checkpoint; observational registry may compare but never supply values"
+  },
+  "coalescence": {
+    "exact": "Previous normalized full content; SHA candidate then actual content equality",
+    "future": "Exclude only below nondecision statistics; preserve all other fields; sort heap logical entries, preserve actual serial values and counter; retain stale entries",
+    "excluded_cost_fields": [
+      "expanded",
+      "generated",
+      "duplicates",
+      "path_updates",
+      "calls",
+      "score_cache_hits",
+      "score_cache_misses"
+    ],
+    "exclusions_justification": "These are recorded statistics, not action/score/queue decision inputs in frozen step; external consumed resource costs and budget remainder reported separately. No claim of equal remaining wall time or remaining bounded budget.",
+    "scope": "All saved complete A/B checkpoints, including cross-depth pairs; initial (0,0) excluded; no match means only no observed coalescence"
+  },
+  "decision_rules": {
+    "repeat": "Actual complete content equality in common prefix. Wall-only length differences are censored, not automatic errors.",
+    "legacy_suffix": "A and A_repeat new steps 109/110 and B_repeat109 match saved old suffix exactly; count these as formal continuation, no extra preflight forwards",
+    "score_consistency": "Audit observed values only; never provides cross-branch values; same key bytes mismatch stops related event",
+    "window": "A/B analysis uses all-four common complete observed prefix; longer nonrepeated tails are explicitly descriptive",
+    "complete": "For e newly completed steps: E=108+e and task total=110+e. delta_E=E_B-E_A; delta_L=full legal plan length B minus A. Four legal solutions and terminal repeats required for confirmed full event effect",
+    "terminal_repeat": "Main branches solved but repeat censored => TERMINAL_REPEAT_INCOMPLETE; descriptive outcome only",
+    "plan": "Original task action contract replay; legal is not optimal; no distance certification",
+    "incomplete": "Only complete expansion boundary is authoritative; separately save partial where/how stopped; interrupted calls are actual resource costs but not valid score samples",
+    "timing": "Load/restore/final save separate. Search wall includes all loop logging/checkpoint costs. No further search at first cap, no restart or fifth slot",
+    "accounts": "Logical path excludes rolled-back old suffix; research resources preserve old completed and interrupted spend plus every new worker/auxiliary expense",
+    "threshold": "No new posthoc magnitude threshold. Report delta_E and delta_L separately without a winner fusion"
+  },
+  "logging": {
+    "schema": "CP_DISR_NORMALIZED_SCENE_DELTA_V1",
+    "physical_heap": "Full exact heap physical array each delta; analysis can sort only under prior future-scene rule",
+    "delta": "CLOSED/node/score_cache add-delete-update; all remaining scene fields exact add-delete-update; before and after canonical hashes verified",
+    "full_checkpoint_interval_new_complete_steps": 128,
+    "final_complete_always_saved": true,
+    "space_guard": "Count existing branch files and pending encoded sequence bytes; reserve for final and partial saves, independent physical free space guard; stop on cap, never drop adverse logs",
+    "reconstruction": "Every committed complete scene reconstructs losslessly from initial108 + chained deltas"
+  },
+  "interpretation": {
+    "Struct004": "Prior complete delta_E=0,delta_L=0; different trajectory/actions. Frozen result, no rerun",
+    "prior_p12": "Repeated bounded behavioral differences, full efficiency UNKNOWN",
+    "H3": "UNRESOLVED",
+    "scope": "Post-phase-C final terminal supplement of the same known event; not an independent test task, not original phase-C automatic extension",
+    "CPU_protocol_generalization": "No direct extrapolation to old GPU deployment",
+    "author_coverage": "Cross-parent optimal-path identity unknown; no new-method claim"
+  },
+  "forbidden": [
+    "Struct rerun",
+    "second intervention",
+    "T1 forward",
+    "D0@2460 forward",
+    "OPEN rescore",
+    "cross-branch cache service",
+    "new event",
+    "new task",
+    "new model",
+    "new scoring protocol",
+    "training",
+    "fitting",
+    "distance certification",
+    "full graph",
+    "restart slot",
+    "fifth branch",
+    "larger cap",
+    "R4",
+    "merge",
+    "automatic follow-up"
+  ],
+  "final_stop": "After these four bounded runs, p12 computation closes: full terminal evidence or final UNKNOWN or technical failure; no automatic extension",
+  "code_sha256": {
+    "core_semantics.py": "7377fce60f916f86593a52d67a3d84861abb2c7647ca6c06a0bafe9b4ea4d72e",
+    "worker.py": "01c153225a0011fb62646aa48195e9ac0c638a3b4c01e191b9de836ab377c4f5",
+    "orchestrator.py": "50265789f78c9b0e8b63d672c026db9fcb1a45f984eedafe7265fb1d2b7c283a",
+    "analyze.py": "c57c62d3e3203b62a196451ff91aa17b1f6a0e821adb97e60069ab762b5a6d39",
+    "log_codec.py": "81bc77f6e56e96b082089918a2d00e740bdef108c51a2fa230a67400d432a452",
+    "log_codec_selftest.py": "3bdf0482455cd70e614cd2bedf0241f443f18a3895ccb711f869308d391124ef",
+    "identity.py": "7ea34a3ea9be14a93780c369af481fe999615a9f25b0a9868eb5a07d7d2c7850",
+    "publish_card.ps1": "cae800df172fc242dca30c5c4af3000a0794ff3d7480225ad224aa179a1dab08"
+  },
+  "freeze_status": "FROZEN_BEFORE_FORMAL_RUN",
+  "analysis_CPU_seconds_cap": 3600,
+  "frozen_utc": "2026-10-11T01:32:50Z"
+}
