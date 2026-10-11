@@ -1,0 +1,338 @@
+{
+  "card": "PC-SCALE-02",
+  "utc": "2026-10-11T14:08:26.799606+00:00",
+  "stage": "A",
+  "scene_groups": 4,
+  "episodes": 16,
+  "color_blocks": [
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      3
+    ]
+  ],
+  "conditions": [
+    "3_sparse",
+    "3_crowded",
+    "6_sparse",
+    "6_crowded"
+  ],
+  "policy_seed": 94701,
+  "parallel_envs_per_job": 4,
+  "steps": 200,
+  "endpoints": [
+    100,
+    200
+  ],
+  "primary_endpoint": 200,
+  "GPU_job_seconds_reservations": {
+    "3_sparse": 740,
+    "3_crowded": 740,
+    "6_sparse": 740,
+    "6_crowded": 740
+  },
+  "stage_A_reserved_gpu_seconds": 2960,
+  "denoising_steps": 100,
+  "horizon": 5,
+  "success_threshold_m": 0.04,
+  "EMA_frozen": true,
+  "source_and_scenes_sha256": {
+    "evaluate.py": "9aa81bc76e9d55834b170278974fbaf275c6d90687c263b146bff2679cff1185",
+    "prepare.py": "163e8804404db50918e10fe10ab99169f1cf6b630c32684ea63ec2d4e3a9581a",
+    "guard.py": "35a8e919c17e75e6815da90d82385f3753eaa6c546c0260a358405110429ca8d",
+    "launch_job.py": "a2f64946a4e19b52255243bf80802ecc4a695e4e5a34b94cd7c3e6940de50727",
+    "analyze.py": "94321dc1a75af48561497a60d701e7dfa3c46e12f169b4485bf20e672b96a561",
+    "results/scenes.json": "638d524ea1ffebb895e80ecf8d88fea6ba19071b9beb3bd2c54b0e695fe6ee31",
+    "results/identity.json": "7ec4bee41e1bde701c0ce6222e89bb493cdc2589f0d2b7cf2aa0c0b0c7bad20e",
+    "official_compatibility.patch": "52a244401a2459dabe3a928554b63c44cbc6504ea002742e57563e6c700fe34b"
+  },
+  "geometry_gate": {
+    "passed": true,
+    "candidate_counts": {
+      "g0_3_sparse": {
+        "attempts": 9278,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 3039,
+          "official_sampling_workspace": 4639
+        }
+      },
+      "g0_3_crowded": {
+        "attempts": 5281,
+        "accepted": 1600,
+        "rejections": {
+          "official_sampling_workspace": 1851,
+          "robot_initial_or_goal_retreat_clearance": 1826,
+          "band_or_overlap": 4
+        }
+      },
+      "g0_6_sparse": {
+        "attempts": 18000,
+        "accepted": 103,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 3378,
+          "official_sampling_workspace": 14519
+        }
+      },
+      "g0_6_crowded": {
+        "attempts": 14800,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 4883,
+          "official_sampling_workspace": 8312,
+          "band_or_overlap": 5
+        }
+      },
+      "g1_3_sparse": {
+        "attempts": 14138,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 6930,
+          "official_sampling_workspace": 5608
+        }
+      },
+      "g1_3_crowded": {
+        "attempts": 7747,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 4020,
+          "official_sampling_workspace": 2126,
+          "band_or_overlap": 1
+        }
+      },
+      "g1_6_sparse": {
+        "attempts": 18000,
+        "accepted": 11,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 5538,
+          "official_sampling_workspace": 12451
+        }
+      },
+      "g1_6_crowded": {
+        "attempts": 18000,
+        "accepted": 223,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 9690,
+          "official_sampling_workspace": 8086,
+          "band_or_overlap": 1
+        }
+      },
+      "g2_3_sparse": {
+        "attempts": 9467,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 3179,
+          "official_sampling_workspace": 4688
+        }
+      },
+      "g2_3_crowded": {
+        "attempts": 5806,
+        "accepted": 1600,
+        "rejections": {
+          "official_sampling_workspace": 2100,
+          "robot_initial_or_goal_retreat_clearance": 2101,
+          "band_or_overlap": 5
+        }
+      },
+      "g2_6_sparse": {
+        "attempts": 18000,
+        "accepted": 78,
+        "rejections": {
+          "official_sampling_workspace": 14567,
+          "robot_initial_or_goal_retreat_clearance": 3355
+        }
+      },
+      "g2_6_crowded": {
+        "attempts": 16353,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 5445,
+          "official_sampling_workspace": 9301,
+          "band_or_overlap": 7
+        }
+      },
+      "g3_3_sparse": {
+        "attempts": 13444,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 6532,
+          "official_sampling_workspace": 5312
+        }
+      },
+      "g3_3_crowded": {
+        "attempts": 7845,
+        "accepted": 1600,
+        "rejections": {
+          "official_sampling_workspace": 2052,
+          "robot_initial_or_goal_retreat_clearance": 4193
+        }
+      },
+      "g3_6_sparse": {
+        "attempts": 18000,
+        "accepted": 10,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 5524,
+          "official_sampling_workspace": 12466
+        }
+      },
+      "g3_6_crowded": {
+        "attempts": 18000,
+        "accepted": 262,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 9602,
+          "official_sampling_workspace": 8135,
+          "band_or_overlap": 1
+        }
+      },
+      "g4_3_sparse": {
+        "attempts": 9205,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 2941,
+          "official_sampling_workspace": 4664
+        }
+      },
+      "g4_3_crowded": {
+        "attempts": 5335,
+        "accepted": 1600,
+        "rejections": {
+          "official_sampling_workspace": 1922,
+          "robot_initial_or_goal_retreat_clearance": 1813
+        }
+      },
+      "g4_6_sparse": {
+        "attempts": 18000,
+        "accepted": 93,
+        "rejections": {
+          "official_sampling_workspace": 14551,
+          "robot_initial_or_goal_retreat_clearance": 3356
+        }
+      },
+      "g4_6_crowded": {
+        "attempts": 15773,
+        "accepted": 1600,
+        "rejections": {
+          "official_sampling_workspace": 8916,
+          "robot_initial_or_goal_retreat_clearance": 5249,
+          "band_or_overlap": 8
+        }
+      },
+      "g5_3_sparse": {
+        "attempts": 14105,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 6994,
+          "official_sampling_workspace": 5511
+        }
+      },
+      "g5_3_crowded": {
+        "attempts": 7924,
+        "accepted": 1600,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 4207,
+          "official_sampling_workspace": 2115,
+          "band_or_overlap": 2
+        }
+      },
+      "g5_6_sparse": {
+        "attempts": 18000,
+        "accepted": 19,
+        "rejections": {
+          "official_sampling_workspace": 12538,
+          "robot_initial_or_goal_retreat_clearance": 5443
+        }
+      },
+      "g5_6_crowded": {
+        "attempts": 18000,
+        "accepted": 254,
+        "rejections": {
+          "robot_initial_or_goal_retreat_clearance": 9665,
+          "official_sampling_workspace": 8080,
+          "band_or_overlap": 1
+        }
+      }
+    },
+    "common_bands_m": {
+      "crowded": [
+        0.052,
+        0.068
+      ],
+      "sparse": [
+        0.075,
+        0.1
+      ]
+    },
+    "bands_apply_to": "both mean and minimum nearest-neighbor spacing, initial and goal, both counts",
+    "matching_tolerances_m": {
+      "initial_edge_mean": 0.025,
+      "initial_edge_min": 0.025,
+      "initial_reach_mean": 0.025,
+      "initial_reach_max": 0.05,
+      "goal_edge_mean": 0.025,
+      "goal_edge_min": 0.025,
+      "goal_reach_mean": 0.025,
+      "goal_reach_max": 0.05
+    },
+    "all_transport_vectors_preserved": true,
+    "zero_initial_hits": true,
+    "workspace_xy_abs_max": [
+      0.15,
+      0.2
+    ],
+    "robot_clearance_m": 0.055,
+    "caveat": "Four conditions match geometric summaries, not exact physical worlds. Transport is common translation per group. Reach is geometric proxy only."
+  },
+  "measurement": {
+    "old_data_role": "exploration and calibration only",
+    "record_interval": "one policy/control step (~1/3 simulation second)",
+    "stationary_step_noise_p95_m": 9.539362508803606e-07,
+    "moving_step_p25_m": 0.00858966913074255,
+    "stall_window_steps": 20,
+    "cube_max_displacement_tolerance_m": 0.001,
+    "maximum_mean_goal_improvement_tolerance_m": 0.001,
+    "eef_response_threshold_m": 0.001,
+    "fall_rule": "any object z<0.975 for 5 consecutive recorded steps",
+    "departure_rule": "5 steps d<0.04 followed by 5 steps d>0.05",
+    "selected_B_event": "unfallen sustained no progress",
+    "selection_reason": "online measurement available before irrecoverable fall; observable chain response can be probed; no contact-force causal label",
+    "common_window_counts": {
+      "3": {
+        "episodes": 16,
+        "falls": 2,
+        "no_progress": 1
+      },
+      "6": {
+        "episodes": 16,
+        "falls": 7,
+        "no_progress": 4
+      }
+    }
+  },
+  "recovery_gate": {
+    "passed": false,
+    "replay_max_position_error_m": 0.027981003746390343,
+    "closed_loop_max_position_error_m": 0.12956669926643372,
+    "closed_loop_max_action_error": 1.2162244319915771,
+    "closed_loop_max_joint_error_rad": 0.9462502002716064,
+    "frozen_acceptance": {
+      "position_m": 0.0005,
+      "action_abs": 0.001,
+      "joint_rad": 0.005
+    },
+    "comparison_steps": 10,
+    "parallel_calibration_states": 2,
+    "model_calls": 40,
+    "limitation": "Empirical short-horizon gate; unobservable PhysX contacts and unreversed global clock remain limitations."
+  },
+  "B": "Stopped at recovery gate; no B1/B2 action parameters frozen or executed",
+  "C": "Not executed without a validated B rule",
+  "immutable_official_source_commit": "6b5e482fe479f647d4ca3790fac70c42f4940ab2",
+  "base_archive_commit": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
+  "budget_total_gpu_seconds": 7200,
+  "memory_hard_mib": 12288,
+  "memory_guard_mib": 11264,
+  "sampling_note": "Four vectorized scene slots paired by group across conditions; two balanced color blocks. One batch seed; evaluation noise is not training seeds."
+}

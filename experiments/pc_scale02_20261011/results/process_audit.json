@@ -1,0 +1,3694 @@
+{
+  "definition": {
+    "computed_utc": "2026-10-11T14:33:04.669436+00:00",
+    "role": "Supplemental exploratory sensitivity, computed after A. Main registered endpoints and event definitions are unchanged.",
+    "stall_windows": [
+      10,
+      20,
+      30
+    ],
+    "stall_displacement_and_progress_tolerances_m": [
+      0.0001,
+      0.001,
+      0.005
+    ],
+    "fall_center_z_m": [
+      0.97,
+      0.975,
+      0.98
+    ],
+    "fall_consecutive_steps": [
+      3,
+      5,
+      7
+    ],
+    "departure_hit_distances_m": [
+      0.035,
+      0.04,
+      0.045
+    ],
+    "departure_off_minus_hit_m": 0.01,
+    "departure_consecutive_steps": [
+      3,
+      5,
+      7
+    ],
+    "causal_limit": "Joint/end-effector response and target motion do not establish contact force, perception error, or goal-association error."
+  },
+  "by_condition": {
+    "3_sparse": {
+      "100": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 0,
+        "departure_episodes": 2,
+        "recovery_episodes": 2
+      },
+      "200": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 0,
+        "departure_episodes": 2,
+        "recovery_episodes": 2
+      }
+    },
+    "3_crowded": {
+      "100": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 0,
+        "departure_episodes": 0,
+        "recovery_episodes": 0
+      },
+      "200": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 0,
+        "departure_episodes": 0,
+        "recovery_episodes": 0
+      }
+    },
+    "6_sparse": {
+      "100": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 1,
+        "departure_episodes": 3,
+        "recovery_episodes": 3
+      },
+      "200": {
+        "episodes": 4,
+        "fall_episodes": 0,
+        "no_progress_episodes": 2,
+        "departure_episodes": 3,
+        "recovery_episodes": 3
+      }
+    },
+    "6_crowded": {
+      "100": {
+        "episodes": 4,
+        "fall_episodes": 1,
+        "no_progress_episodes": 2,
+        "departure_episodes": 2,
+        "recovery_episodes": 2
+      },
+      "200": {
+        "episodes": 4,
+        "fall_episodes": 1,
+        "no_progress_episodes": 2,
+        "departure_episodes": 2,
+        "recovery_episodes": 2
+      }
+    }
+  },
+  "episodes": [
+    {
+      "condition": "3_crowded",
+      "group": 0,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 0,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 1,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          68,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          70,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          69,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          69,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 1,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          68,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          70,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          69,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          69,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 2,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 2,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 3,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_crowded",
+      "group": 3,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 0,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          24,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          29,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          22,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          24,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          22,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          24,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 0,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          24,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          29,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          22,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          24,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          22,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          24,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 1,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          14,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          20,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          12,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          14,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          12,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          14,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          14,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 1,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          14,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          20,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          12,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          14,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          12,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          14,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          14,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 2,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 2,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 3,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "3_sparse",
+      "group": 3,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "6_crowded",
+      "group": 0,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 42,
+        "no_progress_windows": 28,
+        "first_no_progress_eef_motion_m": 0.19710217416286469,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 33,
+        "stall_w10_tol0.0010": 32,
+        "stall_w10_tol0.0050": 32,
+        "stall_w20_tol0.0001": 43,
+        "stall_w20_tol0.0010": 42,
+        "stall_w20_tol0.0050": 42,
+        "stall_w30_tol0.0001": 53,
+        "stall_w30_tol0.0010": 52,
+        "stall_w30_tol0.0050": 52
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          22,
+          42
+        ],
+        "mean_policy_action_norm": 0.10865919291973114,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.013525922782719135,
+        "max_joint_motion_from_window_start_rad": 0.6093689203262329,
+        "max_eef_motion_m": 0.19710217416286469,
+        "max_cube_motion_m": 0.0007222795975394547,
+        "mean_distance_improvement_m": 0.0
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.5
+    },
+    {
+      "condition": "6_crowded",
+      "group": 0,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 42,
+        "no_progress_windows": 114,
+        "first_no_progress_eef_motion_m": 0.19710217416286469,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 33,
+        "stall_w10_tol0.0010": 32,
+        "stall_w10_tol0.0050": 32,
+        "stall_w20_tol0.0001": 43,
+        "stall_w20_tol0.0010": 42,
+        "stall_w20_tol0.0050": 42,
+        "stall_w30_tol0.0001": 53,
+        "stall_w30_tol0.0010": 52,
+        "stall_w30_tol0.0050": 52
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          22,
+          42
+        ],
+        "mean_policy_action_norm": 0.10865919291973114,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.013525922782719135,
+        "max_joint_motion_from_window_start_rad": 0.6093689203262329,
+        "max_eef_motion_m": 0.19710217416286469,
+        "max_cube_motion_m": 0.0007222795975394547,
+        "mean_distance_improvement_m": 0.0
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.5
+    },
+    {
+      "condition": "6_crowded",
+      "group": 1,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": 90,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "recovery_steps": [
+          64,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": 88,
+        "z0.970_k5": 90,
+        "z0.970_k7": 92,
+        "z0.975_k3": 88,
+        "z0.975_k5": 90,
+        "z0.975_k7": 92,
+        "z0.980_k3": 88,
+        "z0.980_k5": 90,
+        "z0.980_k7": 92
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          46,
+          null,
+          null,
+          46,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          48,
+          null,
+          null,
+          48,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          50,
+          null,
+          null,
+          50,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          47,
+          null,
+          null,
+          null,
+          14,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          51,
+          null,
+          null,
+          null,
+          18,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          47,
+          null,
+          null,
+          null,
+          14,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          51,
+          null,
+          null,
+          null,
+          18,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": true,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_crowded",
+      "group": 1,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": 90,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "recovery_steps": [
+          64,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": 88,
+        "z0.970_k5": 90,
+        "z0.970_k7": 92,
+        "z0.975_k3": 88,
+        "z0.975_k5": 90,
+        "z0.975_k7": 92,
+        "z0.980_k3": 88,
+        "z0.980_k5": 90,
+        "z0.980_k7": 92
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          46,
+          null,
+          null,
+          46,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          48,
+          null,
+          null,
+          48,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          50,
+          null,
+          null,
+          50,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          47,
+          null,
+          null,
+          null,
+          14,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          51,
+          null,
+          null,
+          null,
+          18,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          47,
+          null,
+          null,
+          null,
+          14,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          49,
+          null,
+          null,
+          null,
+          16,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          51,
+          null,
+          null,
+          null,
+          18,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": true,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_crowded",
+      "group": 2,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 30,
+        "no_progress_windows": 71,
+        "first_no_progress_eef_motion_m": 0.07252136617898941,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 20,
+        "stall_w10_tol0.0010": 20,
+        "stall_w10_tol0.0050": 20,
+        "stall_w20_tol0.0001": 30,
+        "stall_w20_tol0.0010": 30,
+        "stall_w20_tol0.0050": 30,
+        "stall_w30_tol0.0001": 40,
+        "stall_w30_tol0.0010": 40,
+        "stall_w30_tol0.0050": 40
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          10,
+          30
+        ],
+        "mean_policy_action_norm": 0.03953159600496292,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.004917075391858816,
+        "max_joint_motion_from_window_start_rad": 0.3517891764640808,
+        "max_eef_motion_m": 0.07252136617898941,
+        "max_cube_motion_m": 2.3946401483954105e-07,
+        "mean_distance_improvement_m": 1.862645149230957e-09
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.8333333333333334
+    },
+    {
+      "condition": "6_crowded",
+      "group": 2,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 30,
+        "no_progress_windows": 171,
+        "first_no_progress_eef_motion_m": 0.07252136617898941,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 20,
+        "stall_w10_tol0.0010": 20,
+        "stall_w10_tol0.0050": 20,
+        "stall_w20_tol0.0001": 30,
+        "stall_w20_tol0.0010": 30,
+        "stall_w20_tol0.0050": 30,
+        "stall_w30_tol0.0001": 40,
+        "stall_w30_tol0.0010": 40,
+        "stall_w30_tol0.0050": 40
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          10,
+          30
+        ],
+        "mean_policy_action_norm": 0.03953159600496292,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.004917075391858816,
+        "max_joint_motion_from_window_start_rad": 0.3517891764640808,
+        "max_eef_motion_m": 0.07252136617898941,
+        "max_cube_motion_m": 2.3946401483954105e-07,
+        "mean_distance_improvement_m": 1.862645149230957e-09
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.8333333333333334
+    },
+    {
+      "condition": "6_crowded",
+      "group": 3,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          62,
+          null,
+          92,
+          44,
+          75,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          71,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          60,
+          null,
+          89,
+          42,
+          73,
+          100
+        ],
+        "hit0.035_off0.045_k5": [
+          62,
+          null,
+          91,
+          44,
+          75,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          64,
+          null,
+          93,
+          46,
+          77,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          60,
+          null,
+          90,
+          42,
+          73,
+          100
+        ],
+        "hit0.040_off0.050_k5": [
+          62,
+          null,
+          92,
+          44,
+          75,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          64,
+          null,
+          94,
+          46,
+          77,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          68,
+          null,
+          null,
+          42,
+          73,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          70,
+          null,
+          null,
+          44,
+          75,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          72,
+          null,
+          null,
+          46,
+          77,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_crowded",
+      "group": 3,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          62,
+          138,
+          92,
+          44,
+          75,
+          102
+        ],
+        "recovery_steps": [
+          163,
+          null,
+          103,
+          71,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          60,
+          136,
+          89,
+          42,
+          73,
+          100
+        ],
+        "hit0.035_off0.045_k5": [
+          62,
+          138,
+          91,
+          44,
+          75,
+          102
+        ],
+        "hit0.035_off0.045_k7": [
+          64,
+          140,
+          93,
+          46,
+          77,
+          104
+        ],
+        "hit0.040_off0.050_k3": [
+          60,
+          136,
+          90,
+          42,
+          73,
+          100
+        ],
+        "hit0.040_off0.050_k5": [
+          62,
+          138,
+          92,
+          44,
+          75,
+          102
+        ],
+        "hit0.040_off0.050_k7": [
+          64,
+          140,
+          94,
+          46,
+          77,
+          104
+        ],
+        "hit0.045_off0.055_k3": [
+          68,
+          136,
+          null,
+          42,
+          73,
+          102
+        ],
+        "hit0.045_off0.055_k5": [
+          70,
+          138,
+          null,
+          44,
+          75,
+          104
+        ],
+        "hit0.045_off0.055_k7": [
+          72,
+          140,
+          null,
+          46,
+          77,
+          106
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_sparse",
+      "group": 0,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 89,
+        "no_progress_windows": 12,
+        "first_no_progress_eef_motion_m": 0.020986882969737053,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          60,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 79,
+        "stall_w10_tol0.0010": 79,
+        "stall_w10_tol0.0050": 71,
+        "stall_w20_tol0.0001": 89,
+        "stall_w20_tol0.0010": 89,
+        "stall_w20_tol0.0050": 81,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": 99,
+        "stall_w30_tol0.0050": 91
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          55,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          69,
+          89
+        ],
+        "mean_policy_action_norm": 0.07123264670372009,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.008903134614229202,
+        "max_joint_motion_from_window_start_rad": 0.07658813893795013,
+        "max_eef_motion_m": 0.020986882969737053,
+        "max_cube_motion_m": 1.5914446649389902e-08,
+        "mean_distance_improvement_m": 1.1175870895385742e-08
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.8333333333333334
+    },
+    {
+      "condition": "6_sparse",
+      "group": 0,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 89,
+        "no_progress_windows": 112,
+        "first_no_progress_eef_motion_m": 0.020986882969737053,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          60,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 79,
+        "stall_w10_tol0.0010": 79,
+        "stall_w10_tol0.0050": 71,
+        "stall_w20_tol0.0001": 89,
+        "stall_w20_tol0.0010": 89,
+        "stall_w20_tol0.0050": 81,
+        "stall_w30_tol0.0001": 127,
+        "stall_w30_tol0.0010": 99,
+        "stall_w30_tol0.0050": 91
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          55,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          53,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          69,
+          89
+        ],
+        "mean_policy_action_norm": 0.07123264670372009,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.008903134614229202,
+        "max_joint_motion_from_window_start_rad": 0.07658813893795013,
+        "max_eef_motion_m": 0.020986882969737053,
+        "max_cube_motion_m": 1.5914446649389902e-08,
+        "mean_distance_improvement_m": 1.1175870895385742e-08
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.8333333333333334
+    },
+    {
+      "condition": "6_sparse",
+      "group": 1,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          29,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          27,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          29,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          31,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          27,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          29,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          31,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "6_sparse",
+      "group": 1,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": 166,
+        "no_progress_windows": 14,
+        "first_no_progress_eef_motion_m": 0.06389717012643814,
+        "departure_steps": [
+          null,
+          149,
+          null,
+          29,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          51,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 161,
+        "stall_w10_tol0.0010": 156,
+        "stall_w10_tol0.0050": 155,
+        "stall_w20_tol0.0001": 171,
+        "stall_w20_tol0.0010": 166,
+        "stall_w20_tol0.0050": 165,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": 176,
+        "stall_w30_tol0.0050": 175
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          147,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          149,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          151,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          147,
+          null,
+          27,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          149,
+          null,
+          29,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          151,
+          null,
+          31,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          147,
+          null,
+          27,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          149,
+          null,
+          29,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          151,
+          null,
+          31,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": {
+        "window": [
+          146,
+          166
+        ],
+        "mean_policy_action_norm": 0.1274225264787674,
+        "policy_action_fraction_components_outside_clip_1": 0.0,
+        "mean_controller_target_delta_from_pre_step_eef_m": 0.015891458839178085,
+        "max_joint_motion_from_window_start_rad": 0.21546220779418945,
+        "max_eef_motion_m": 0.06389717012643814,
+        "max_cube_motion_m": 0.00050497823394835,
+        "mean_distance_improvement_m": 1.862645149230957e-09
+      },
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.8333333333333334
+    },
+    {
+      "condition": "6_sparse",
+      "group": 2,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          49,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          82,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 88,
+        "stall_w10_tol0.0010": 88,
+        "stall_w10_tol0.0050": 87,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": 97,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          47,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          49,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          47,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          49,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          47,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          49,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          51,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_sparse",
+      "group": 2,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          151,
+          null,
+          144,
+          49,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          178,
+          null,
+          183,
+          82,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": 88,
+        "stall_w10_tol0.0010": 88,
+        "stall_w10_tol0.0050": 87,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": 97,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          182,
+          149,
+          null,
+          101,
+          47,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          184,
+          151,
+          null,
+          141,
+          49,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          186,
+          153,
+          null,
+          143,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          149,
+          null,
+          101,
+          47,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          151,
+          null,
+          144,
+          49,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          153,
+          null,
+          146,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          119,
+          47,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          145,
+          49,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          147,
+          51,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 0.6666666666666666
+    },
+    {
+      "condition": "6_sparse",
+      "group": 3,
+      "window_end": 100,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    },
+    {
+      "condition": "6_sparse",
+      "group": 3,
+      "window_end": 200,
+      "main_events": {
+        "first_fall": null,
+        "first_no_progress": null,
+        "no_progress_windows": 0,
+        "first_no_progress_eef_motion_m": null,
+        "departure_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "recovery_steps": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "stall_sensitivity": {
+        "stall_w10_tol0.0001": null,
+        "stall_w10_tol0.0010": null,
+        "stall_w10_tol0.0050": null,
+        "stall_w20_tol0.0001": null,
+        "stall_w20_tol0.0010": null,
+        "stall_w20_tol0.0050": null,
+        "stall_w30_tol0.0001": null,
+        "stall_w30_tol0.0010": null,
+        "stall_w30_tol0.0050": null
+      },
+      "fall_sensitivity": {
+        "z0.970_k3": null,
+        "z0.970_k5": null,
+        "z0.970_k7": null,
+        "z0.975_k3": null,
+        "z0.975_k5": null,
+        "z0.975_k7": null,
+        "z0.980_k3": null,
+        "z0.980_k5": null,
+        "z0.980_k7": null
+      },
+      "departure_sensitivity": {
+        "hit0.035_off0.045_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.035_off0.045_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.040_off0.050_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k5": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "hit0.045_off0.055_k7": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "control_chain_at_first_no_progress": null,
+      "endpoint_any_z_below_.975": false,
+      "official_endpoint_fraction": 1.0
+    }
+  ]
+}

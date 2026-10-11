@@ -1,0 +1,14 @@
+{
+  "card": "PC-SCALE-02",
+  "authorization": "User explicitly requested execution of Desktop/EXPERIMENT_CARD.md on 2026-10-11 after setting per-round SSH and Git workflow.",
+  "role": "Preflight calibration registration, not formal A/B parameter freeze",
+  "budget": {"hard_gpu_seconds":7200,"guard_global_reservable_seconds":7000,"hard_aggregate_mib":12288,"guard_stop_aggregate_mib":11264,"calibration_reservation_seconds":850},
+  "jobs": [
+    {"name":"pilot3","seconds":300,"mode":"pilot","n":3,"parallel":4,"steps":20,"seed":94601},
+    {"name":"recovery6","seconds":550,"mode":"calibrate","n":6,"parallel":2,"steps":30,"seed":94602}
+  ],
+  "recovery_tolerances": {"cube_position_m":0.0005,"action_absolute":0.001,"joint_rad":0.005,"continuation_steps":10},
+  "geometry_tolerances_m": {"edge_mean":0.025,"edge_min":0.025,"reach_mean":0.025,"reach_max":0.05},
+  "geometry_candidate_fix": "Attempt 1 used anchor half-tolerance, stricter than the specified full four-condition range. Retry 1 tests actual full pairwise ranges, without changing tolerances or viewing policy outcomes.",
+  "limits": "No training, no changed horizon/denoising/cameras/table. Calibration excluded from formal statistics. Do not run B if recovery gate fails. Do not run A causal contrast if geometry gate fails."
+}
