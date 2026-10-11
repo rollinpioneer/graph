@@ -1,0 +1,45 @@
+diff --git a/diffuser/diffuser/datasets/d4rl.py b/diffuser/diffuser/datasets/d4rl.py
+index 8ade6a0..776aed5 100644
+--- a/diffuser/diffuser/datasets/d4rl.py
++++ b/diffuser/diffuser/datasets/d4rl.py
+@@ -22,7 +22,10 @@ def suppress_output():
+ 
+ with suppress_output():
+     ## d4rl prints out a variety of warnings
+-    import d4rl
++    try:
++        import d4rl
++    except ImportError:
++        d4rl = None  # optional; unused by PandaPush
+ 
+ #-----------------------------------------------------------------------------#
+ #-------------------------------- general api --------------------------------#
+diff --git a/diffuser/diffuser/utils/rendering.py b/diffuser/diffuser/utils/rendering.py
+index 26d5a85..39afdab 100644
+--- a/diffuser/diffuser/utils/rendering.py
++++ b/diffuser/diffuser/utils/rendering.py
+@@ -7,7 +7,10 @@ from matplotlib.colors import ListedColormap
+ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+ from matplotlib.figure import Figure
+ import gym
+-import mujoco_py as mjc
++try:
++    import mujoco_py as mjc
++except ImportError:
++    mjc = None  # optional; unused by PandaPush
+ import warnings
+ import cv2 as cv
+ 
+diff --git a/dlp_utils.py b/dlp_utils.py
+index bab4d96..4a61163 100644
+--- a/dlp_utils.py
++++ b/dlp_utils.py
+@@ -166,7 +166,7 @@ def load_pretrained_rep_model(dir_path, model_type='dlp', pandapush=True, langta
+                           offset_std=config['offset_std'], obj_on_alpha=config['obj_on_alpha'],
+                           obj_on_beta=config['obj_on_beta'])
+         # load model from checkpoint
+-        model.load_state_dict(torch.load(ckpt_path))
++        model.load_state_dict(torch.load(ckpt_path, map_location='cpu'))
+     elif model_type == 'vqvae':
+         ### VQ-VAE: Need to get relevant files from the ECRL codebase: https://github.com/DanHrmti/ECRL/tree/master/vae
+         # from vae.models.vqvae import VQModel
