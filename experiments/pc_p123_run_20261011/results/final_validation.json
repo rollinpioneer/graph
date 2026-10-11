@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "utc": "2026-10-11T16:09:59.701028+00:00",
+  "jobs": [
+    {
+      "job": "resource_pilot6_retry",
+      "episodes": 6,
+      "steps": 10,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "af46cb807e4dd23cb3519607adeb5e4941f34f4b8a0a748a4827fdcff9d42299"
+    },
+    {
+      "job": "resource_contact2",
+      "episodes": 2,
+      "steps": 5,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "971cf4985c9f125789995f114f4d6291842b5b1bed487e8f8a22568c6508ffdb"
+    },
+    {
+      "job": "diagnostic_fixed5",
+      "episodes": 5,
+      "steps": 200,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "76f3173a1355e9855096dbf02d7764c3ef952a4ad1509af401ace2edd36f4b9f"
+    },
+    {
+      "job": "P1_sparse8",
+      "episodes": 8,
+      "steps": 200,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "a3d423615940a56672a42dd6c028f73b0e0ec2f53ef88866fe4ecdd42784782e"
+    },
+    {
+      "job": "P1_crowded8",
+      "episodes": 8,
+      "steps": 200,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "a3d423615940a56672a42dd6c028f73b0e0ec2f53ef88866fe4ecdd42784782e"
+    },
+    {
+      "job": "validation_P3_8",
+      "episodes": 8,
+      "steps": 200,
+      "exit_code": 0,
+      "finite_states_actions": true,
+      "metric_recomputed": true,
+      "environment_sha256": "413a7cd556394bc8abb1ac29a98f582de02e385838b36da2e93167aebdef131d"
+    }
+  ],
+  "P1_phase_gpu_seconds": 2016.700071867992,
+  "actual_damping_scale_verified_all_200_steps": true,
+  "frozen_source_hashes_match": true,
+  "formal_complete_episodes": 24,
+  "fixed_diagnostic_complete_episodes": 5,
+  "all_formal_full_200_steps": true,
+  "models_frozen": true,
+  "no_policy_training": true,
+  "limitations": [
+    "P1 and diagnostic net contact forces unavailable (CC_NEVER); no pair identities in any phase.",
+    "P3 CC_LAST_SUBSTEP readout omits first internal substep.",
+    "Identical scene geometry and policy seed do not imply restored same state."
+  ]
+}

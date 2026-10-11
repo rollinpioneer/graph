@@ -8,6 +8,14 @@ def chain(z,i,t):
  r={'start_state_step':lo,'end_state_step':t,'eef_max_displacement_m':scalar(np.linalg.norm(ee-ee[0],axis=-1).max()),'eef_path_length_m':scalar(np.linalg.norm(np.diff(ee,axis=0),axis=-1).sum()),'eef_z_range_m':[scalar(ee[:,2].min()),scalar(ee[:,2].max())],'cube_max_displacement_m':scalar(np.linalg.norm(st[...,:3]-st[0,:,:3],axis=-1).max()),'goal_mean_improvement_m':scalar(dd[0].mean()-dd.mean(-1).min()),'action_abs_mean':np.abs(ac).mean(0).tolist(),'action_clip_fraction':scalar((np.abs(ac)>=1).mean()),'q_max_abs_change_rad':scalar(np.abs(q-q[0]).max()),'min_eef_cube_center_distance_m':scalar(np.linalg.norm(ee[:,None,:]-st[...,:3],axis=-1).min()),'contact_counterpart':'unknown: original trajectory has no physical substep contacts','causal_class':'unknown; kinematic association only'}
  if 'controller_goal' in z:
   cg=z['controller_goal'][lo:t,i];r['controller_goal_max_change_m']=scalar(np.linalg.norm(cg-cg[0],axis=-1).max());r['controller_goal_eef_offset_mean_m']=scalar(np.linalg.norm(cg-ee[:-1],axis=-1).mean());r['controller_goal_ranges']=np.ptp(cg,axis=0).tolist()
+ if 'controller_goal' in z:
+  import yaml
+  cfg=yaml.safe_load((O/'EC-Diffuser/env_config/generalization_num_cubes/IsaacPandaPushConfig.yaml').read_text())['env'];table=cfg['tableDims'];center=cfg['tablePos'];cube=cfg['cubeSize'];top=center[2]+table[2]/2
+  low=np.array([center[0]-table[0]/2-cube/2,center[1]-table[1]/2-cube/2,top+.02]);high=np.array([center[0]+table[0]/2+cube/2,center[1]+table[1]/2+cube/2,top+cube])
+  expected=np.clip(ee[:-1]+np.clip(ac,-1,1)*.125,low,high)
+  r['expected_scaled_clamped_goal_max_error_m']=float(np.abs(expected-z['controller_goal'][lo:t,i]).max())
+  r['action_stored_stage']='official policy output after normalizer.unnormalize, before wrapper adds rotation/gripper components'
+  r['command_transform']='xyz clipped +/-1, multiplied .125 in OSC, added to current world eef position, clamped by actual table-dependent limits'
  return r
 rows=[]
 for cond,i,t in [('6_crowded',0,42),('6_crowded',2,30),('6_sparse',0,89),('6_sparse',1,166)]:
