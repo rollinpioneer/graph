@@ -1,0 +1,74 @@
+{
+  "utc": "2026-10-11T16:56:04.186246+00:00",
+  "mode": "gpu",
+  "sim_config_original": {
+    "dt": 0.01667,
+    "substeps": 2,
+    "up_axis": "z",
+    "use_gpu_pipeline": true,
+    "gravity": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "physx": {
+      "num_threads": 4,
+      "solver_type": 1,
+      "use_gpu": true,
+      "num_position_iterations": 8,
+      "num_velocity_iterations": 1,
+      "contact_offset": 0.005,
+      "rest_offset": 0.0,
+      "bounce_threshold_velocity": 0.2,
+      "max_depenetration_velocity": 1000.0,
+      "default_buffer_size_multiplier": 5.0,
+      "max_gpu_contact_pairs": 1048576,
+      "num_subscenes": 4,
+      "contact_collection": 0
+    }
+  },
+  "changes": {
+    "contact_collection": [
+      0,
+      1
+    ],
+    "use_gpu_pipeline": [
+      true,
+      true
+    ],
+    "scene": "isolated table/cube, no robot/cameras/policy"
+  },
+  "positive": "cube on known table, net reaction checked",
+  "negative": "cube bottom remains above table through 12 simulation steps",
+  "positive_max_cube_net_force_N": 0.42071375250816345,
+  "negative_max_cube_net_force_N": 0.0,
+  "negative_min_cube_bottom_m": 1.1110054683685302,
+  "table_top_m": 1.025,
+  "positive_contact_records": 0,
+  "negative_contact_records": 0,
+  "contact_record_fields": [
+    "env0",
+    "env1",
+    "body0",
+    "body1",
+    "localPos0",
+    "localPos1",
+    "minDist",
+    "initialOverlap",
+    "normal",
+    "offset0",
+    "offset1",
+    "lambda",
+    "lambdaFriction",
+    "friction",
+    "torsionFriction",
+    "rollingFriction"
+  ],
+  "time_resolution_s": 0.016669999808073044,
+  "internal_substeps": 2,
+  "coverage": "last internal substep only; transient coverage incomplete",
+  "pair_gate_local": false,
+  "original_backend_gate": false,
+  "ordering": "events within same dt cannot be ordered; no substep timestamps",
+  "comparability": "minimal fixture only, full policy/control/rendering not tested on CPU pipeline"
+}

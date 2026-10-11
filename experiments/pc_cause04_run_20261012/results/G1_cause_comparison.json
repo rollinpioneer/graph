@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-11T17:09:36.757895+00:00",
+  "strongest_observable_line": "rollback after achieving targets plus workload increase; no strongest confirmed cause",
+  "cause_comparisons": [
+    {
+      "candidate": "robot directly re-engages already reached objects, causing loss of achieved goals",
+      "competitor": "secondary cube interaction during manipulation of a pending object causes the same goal loss",
+      "evidence_level": "candidate causes; currently object-level movement/departure only",
+      "support": [
+        "PC_P12303/P1_crowded8/trajectory/slot05 object1 departure59 finalXY0.2793; object5 departure100 finalXY0.1131",
+        "PC_P12303/P1_sparse8/trajectory/slot04 object1 departure125 finalXY0.05446; object3 departure99 finalXY0.25993"
+      ],
+      "counterexamples": [
+        "successful P1_sparse8 slot00 object3 departure49 finalXY0.0141, 22 movement-object-steps after hit",
+        "successful P1_crowded8 slot03 objects0/5 depart45/48, return to finalXY0.01089/0.01780; 39 movement-object-steps after hit",
+        "no valid counterpart readout: direct vs secondary movement are observationally indistinguishable"
+      ],
+      "common_small_experiment": {
+        "manipulated_factor": "paired relative gap/path clearance between an active transport object and previously reached object; match transport and edge demand",
+        "invariants": "EMA/DLP/normalizer,H5,T100,200controls,table/cameras/OSC/dt/physics,object count,colors; matched initial transport/edge distance within preregistered bounds",
+        "arms": "2 arms x6 matched new scenes, randomized batch slots and independent policy streams; do not reuse discovery states as validation",
+        "cost_cap": "12 full episodes,<=1GPUh planned; exact scenes/seeds/geometry tolerances freeze only if measures qualify",
+        "direct_readout": "both contact identities, robot-to-reached vs cube-to-reached timing, pre-crossing direction, object error/departure",
+        "prediction_direct": "initial impulse on departing reached object preceded by robot contact without prior cube contact; gap effect absent unless robot route changes",
+        "prediction_secondary": "initial impulse preceded by contact with moving cube; widened path suppresses those chains and their goal-loss frequency",
+        "support_rule": "positive/negative calibrated pair sequence demonstrates one route, comparison changes that route with the predicted departure pattern, opposite route counterexamples retained",
+        "refutation_rule": "observed initial impulse reliably follows competing route or gap comparison fails preregistered chain prediction despite valid measurement",
+        "unresolved_rule": "missing pair identity/direction, same-dt order ambiguous, no trigger, visual/geometry route changes cannot be separated, or full-pipeline comparability fails",
+        "validity": "NOT PASSED: G-C fails official backend; CPU fixture has pair capability but not full pipeline/temporal/force calibration",
+        "confounders": "gap changes current/goal RGB and robot route; secondary and direct effects may coexist; no identity-level decision truth",
+        "scope": "local rollback mechanism only; cannot establish quantity contribution without controlled n comparison"
+      },
+      "G1": "FAILED; necessary direct readout not valid and layout/image confounds remain",
+      "executed": false
+    },
+    {
+      "candidate": "limited time relative to pending transport workload",
+      "competitor": "degradation in goal/perception representation or contact efficiency at same pending workload",
+      "support": "historical initial total distance3C0.54567m vs6C1.08099m; SCALE02 roughly0.234-0.237m vs0.4735m, all pending3vs6",
+      "counterexamples": "same 6C P1 initial pending6 and transport approx0.08m/object yields success and failure; successful episodes also revisit reached objects",
+      "common_experiment": "same6C current scene, precomplete some goal targets; update goal images, hold time/model/current scene",
+      "different_predictions": "both workload reduction and easier target representation can improve the same endpoints; no distinct valid direct predictions currently specified",
+      "manipulated": "pending goal demand",
+      "invariants": "same current6C scene,200controls,model/physics",
+      "direct_readout": "task metrics valid, internal target selection unmeasured",
+      "confounders": "goal-image/distribution and remaining transport difficulty change together",
+      "cost_cap": "would consume existing12-episode validation cap; NOT launched",
+      "support_refute_unresolved": "cannot uniquely support either from gain alone; shared prediction means unresolved",
+      "scope": "not a pure quantity effect",
+      "G1": "FAILED: predictions overlap"
+    }
+  ],
+  "gate": "FAILED",
+  "stop": "no additional P1 descriptive collection or validation",
+  "data": "all prior episodes discovery; no heldout experimental results created"
+}

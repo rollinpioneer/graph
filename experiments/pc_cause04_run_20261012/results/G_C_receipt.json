@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-11T17:07:19.467515+00:00",
+  "G_C": "FAILED for original GPU task pipeline",
+  "original_gpu_positive_net_force_N": 0.42071375250816345,
+  "original_gpu_negative_net_force_N": 0.0,
+  "original_positive_contact_records": 0,
+  "original_gpu_api_error": "GymGetEnvRigidContacts/Count cannot be used with GPU pipeline after simulation starts",
+  "cpu_tensor_fixture": {
+    "contact_records": 48,
+    "known_body_pair_valid": true,
+    "negative_records": 0,
+    "position_normal_fixture_check": true,
+    "body_map": {
+      "0": "fixed table",
+      "1": "cube"
+    },
+    "full_task_comparability_passed": false
+  },
+  "fields": {
+    "both_identities": "absent from original valid readout; present in CPU fixture",
+    "position": "CPU body-local contact points only verified on table fixture",
+    "normal": "CPU fixture z normal, no dynamic propagation validation",
+    "force": "net tensor valid on fixture; pair lambda units not calibrated as force",
+    "timestamps": "get_sim_time per dt 0.01667s, two internal substeps",
+    "coverage": "last internal substep; transient events may be lost",
+    "dropouts": "original pair API has 100% positive dropout/unavailability; CPU fixture 12/12 positive, negative0/12",
+    "ordering": "same dt events cannot be ordered"
+  },
+  "repair_cycles_used": 2,
+  "engineering_start_utc": "2026-10-11T16:55:34.756186+00:00",
+  "engineering_stop_utc": "2026-10-11T16:56:28.760868+00:00",
+  "decision": "stop contact supplements and all contact-dependent mechanism experiments; do not treat geometry as contact",
+  "positive_fixture_scope": "table/cube isolated static reaction, no dynamic robot-object chain or full policy comparability"
+}

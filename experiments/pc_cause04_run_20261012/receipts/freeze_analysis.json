@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-11T16:58:51.006718+00:00",
+  "index_sha256": "f7fe3d90ab567a5aa35412d872ed6356231faa99c2780ab3846829056e09383a",
+  "sources": 12,
+  "episodes": 77,
+  "data_role": "all existing data discovery only",
+  "P2": {
+    "primary_cases": "first no-progress window per episode, not selected by outcome",
+    "candidate_controls": "every 10 steps in successful same-protocol/n/layout trajectory, start>=20, end+20<=T",
+    "window": 20,
+    "pre_context": 20,
+    "post_context": 20,
+    "stage_bins": [
+      0,
+      50,
+      100,
+      150,
+      200,
+      400,
+      500
+    ],
+    "matching_tolerances": {
+      "nearest_eef_object_m": 0.025,
+      "eef_height_m": 0.015,
+      "mean_pending_goal_distance_m": 0.025,
+      "pending_count": 0,
+      "min_bbox_edge_m": 0.03,
+      "initial_transport_mean_m": 0.03
+    },
+    "visibility": "required validated same-object visibility at start; absent means no qualified match. Compute geometric provisional matches only, never pass gate.",
+    "selection": "prefer different episode, ascending sum normalized feature errors, tie episode id/start. No within-window or future outcome in matching.",
+    "normal_confirmation_offline": "next 20 steps after window: at least one object improves >=.01 m and no fall; confirmation after matching, never rematch according to outcome",
+    "independent_unit": "episode; control reuse explicitly tracked"
+  },
+  "P1": {
+    "near_proxy_m": 0.055,
+    "moved_step_m": 0.001,
+    "analysis_scope": "one complete audit pass; no expanding descriptive samples if G1 fails"
+  },
+  "P3": {
+    "fall": "z<.975 for5 controls; episode any rule and per-object first runs",
+    "bbox": "rotated cube .035m, true table x+/-.25 y+/-.30",
+    "causal_velocity": "strictly before first bbox crossing, never post-fall speed",
+    "ordering": "control samples vs physical .01667s labelled separately"
+  },
+  "definitions_sha256": "e249169988c0c3390651fa286304af9ece763c63f6306a6e9550ab33cad6d40f",
+  "started_utc": "2026-10-11T16:58:46.730677+00:00"
+}

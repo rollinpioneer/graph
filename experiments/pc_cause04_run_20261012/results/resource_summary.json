@@ -1,0 +1,69 @@
+{
+  "utc": "2026-10-11T17:07:19.468531+00:00",
+  "jobs": [
+    {
+      "start_utc": "2026-10-11T16:56:24.762614+00:00",
+      "end_utc": "2026-10-11T16:56:28.760868+00:00",
+      "wall_seconds": 3.9982164510001894,
+      "charged_gpu_seconds": 3.9982164510001894,
+      "total_gpu_seconds": 10.884065654987353,
+      "task_peak_mib": 0,
+      "exit_code": 0,
+      "stop_reason": null,
+      "gpu": "5",
+      "pid": 2845811,
+      "accounting": "conservative full child-process wall time, multiplied by GPUs on which task memory appears",
+      "run": "contact_cpu_tensor"
+    },
+    {
+      "start_utc": "2026-10-11T16:55:34.906669+00:00",
+      "end_utc": "2026-10-11T16:55:37.709421+00:00",
+      "wall_seconds": 2.802719098996022,
+      "charged_gpu_seconds": 2.802719098996022,
+      "total_gpu_seconds": 2.802719098996022,
+      "task_peak_mib": 0,
+      "exit_code": 1,
+      "stop_reason": null,
+      "gpu": "5",
+      "pid": 2839954,
+      "accounting": "conservative full child-process wall time, multiplied by GPUs on which task memory appears",
+      "run": "contact_gpu"
+    },
+    {
+      "start_utc": "2026-10-11T16:56:01.347091+00:00",
+      "end_utc": "2026-10-11T16:56:05.430240+00:00",
+      "wall_seconds": 4.083130104991142,
+      "charged_gpu_seconds": 4.083130104991142,
+      "total_gpu_seconds": 6.8858492039871635,
+      "task_peak_mib": 466,
+      "exit_code": 0,
+      "stop_reason": null,
+      "gpu": "5",
+      "pid": 2842996,
+      "accounting": "conservative full child-process wall time, multiplied by GPUs on which task memory appears",
+      "run": "contact_gpu_retry"
+    }
+  ],
+  "charged_gpu_seconds": 10.884065654987353,
+  "charged_gpu_hours": 0.00302335157082982,
+  "total_child_wall_seconds": 10.884065654987353,
+  "charge_with_2s_per_job_exit_margin_gpu_hours": 0.004690018237496487,
+  "eight_gpu_all_wall_plus_margin_upper_gpu_hours": 0.03752014589997189,
+  "upper_bound_reason": "at most8 installed GPUs; all child wall even before CUDA plus2s/job; protects brief contexts not sampled",
+  "aggregate_task_peak_sampled_mib": 466,
+  "memory_safety_stop_mib": 11264,
+  "memory_hard_cap_mib": 12288,
+  "sampling_s": 0.5,
+  "memory_precision": "sampled peak, no claim of continuous exact maximum; short CPU-tensor job CUDA residency not observed",
+  "observed_gpu_uuids": [
+    "GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384"
+  ],
+  "hard_gpu_hours_cap": 2,
+  "new_full_discovery_episodes": 0,
+  "new_validation_episodes": 0,
+  "failures": [
+    "contact_gpu"
+  ],
+  "budget_exhausted": false,
+  "phase2_reason": "scientific gates, not resource exhaustion"
+}
