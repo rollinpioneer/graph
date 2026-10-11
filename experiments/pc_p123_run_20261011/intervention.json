@@ -1,0 +1,12 @@
+{
+  "stage": "P3",
+  "kind": "uniform action amplitude damping",
+  "action_scale": 0.5,
+  "trigger": "all steps 1..200; no ground truth or future information",
+  "duration_steps": 200,
+  "applications_per_episode": 1,
+  "policy_calls_per_episode": 200,
+  "control_steps": 200,
+  "changed_components": "xyz policy action only before official wrapper; OSC and physics unchanged",
+  "claims": "Command amplitude reduction, not guaranteed measured physical speed bound. No directed edge oracle and no P2 recovery. B0/B1 two arms only."
+}

@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-11T15:59:28.671270+00:00",
+  "stage": "P3-B independent complete-task validation",
+  "priority_decision_before_intervention_results": true,
+  "choice_reason": "Four old stalls did not recur in one fixed-case rerun; three new falls have pre-crossing peak object speeds 0.396..0.759 m/s. Contact counterparts remain unknown. Test one simple, nondirected control baseline rather than claim a targeted cause. P2-B has no sufficiently localized explanation and remains unexecuted.",
+  "prior_data_role": "old trajectories and fixed reruns discovery/calibration only",
+  "groups": [
+    8,
+    9,
+    10,
+    11
+  ],
+  "new_scene_seed": 202611123,
+  "arms": [
+    "B0",
+    "B1"
+  ],
+  "episodes_per_arm": 4,
+  "scene_assignment_seed": 2611124,
+  "policy_sampling_seed": 951126,
+  "time": 200,
+  "horizon": 5,
+  "diffusion_steps": 100,
+  "primary_metric": "end-point mean object XY strict <.04 fraction; falls and progress jointly evaluated",
+  "randomization": "Each new matched scene instantiated once per arm in isolated vector environments; assignment to policy RNG batch slots permuted before run. Same seed does not imply restored states. Single simultaneously sampled batch, paired scene analysis.",
+  "data_role": "independent validation, not used for choosing damping parameter",
+  "measurement_change": {
+    "passed": true,
+    "readout_mode": 1,
+    "change": "CC_NEVER to CC_LAST_SUBSTEP only; no solver, dt, substeps, gravity, contact parameters changed",
+    "max_force_N": 15.495104789733887,
+    "sampling_dt_s": 0.016669999808073044,
+    "physx_internal_substeps": 2,
+    "limitation": "Last internal substep only; pair identities unavailable; not complete transient contact coverage."
+  },
+  "stop_budget_gpu_seconds": 2300,
+  "global_cap_gpu_seconds": 7200,
+  "memory_stop_mib": 11264,
+  "source_and_scenes_sha256": {
+    "evaluate_validation.py": "3a869a188d625a3070de3170f8123a29b2c8238291b2c85b4913cf7863f898af",
+    "prepare.py": "163e8804404db50918e10fe10ab99169f1cf6b630c32684ea63ec2d4e3a9581a",
+    "guard.py": "35a8e919c17e75e6815da90d82385f3753eaa6c546c0260a358405110429ca8d",
+    "launch_validation.py": "444d9e6dc5c9e75a66c4d11cff04913293ff6e28e03fd60c32134a22f551f1d3",
+    "run_job_validation.sh": "07891eb0b581b225f437abccd2d63c17e078f408d91f3c4be84dabfe19eac46d",
+    "results/scenes_all.json": "509c453ea3009dd7cfb3acc2d7ee58e67ab90b6e833c2f71423e18108c3d1a6c",
+    "results/identity.json": "3723697d553d853b0b2adb8ce3dc9616cccb1ab1ef46ff1020449f92698ab102",
+    "intervention.json": "2f96889e1f8209d4aab062b60cf32142b2ce0de881a2267f1e87d7e9ad2086fd",
+    "results/validation_assignment.json": "8f5a72f6859622953311ea7322374fd688ef24c56ffdf617ea27ae739a0d3bc6"
+  }
+}
