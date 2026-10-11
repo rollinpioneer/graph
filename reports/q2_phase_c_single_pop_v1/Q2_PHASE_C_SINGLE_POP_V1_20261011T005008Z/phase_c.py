@@ -1,0 +1,446 @@
+"""Fixed two-event phase C; eight slots, no qualification, training or T1 forward."""
+import copy
+import gzip
+import hashlib
+import heapq
+import json
+import math
+import os
+import resource
+import signal
+import struct
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+CPU_START = time.process_time()
+WALL_START = time.perf_counter()
+ROOT = Path(sys.argv[1])
+REG = json.loads((ROOT / 'preregistration.json').read_text())
+PREV = Path(REG['previous_remote_root'])
+REPO = Path(REG['server_repository'])
+META = json.loads((PREV / 'event_approval_metadata.json').read_text())
+EVENTS = {e['event_id']: e for e in META['events']}
+PROTOCOL = REG['protocol']
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(REPO / 'src'))
+import torch
+torch.set_num_threads(1)
+torch.set_num_interop_threads(1)
+torch.use_deterministic_algorithms(True)
+torch.set_float32_matmul_precision('highest')
+from cp_disr.pddl import task as T
+from cp_disr.pddl.compact import cli_ext as CE
+from cp_disr.pddl.search_match.budget import Budget
+from cp_disr.pddl.search_match.engine import SuccessorIndex
+
+TASKS, INDICES, EVALUATORS, OBSERVED = {}, {}, {}, {}
+TOTAL = {'actual_model_state_evaluations': 0, 'failed_model_calls': 0,
+         'slots_started': 0, 'GPU_device_seconds': 0}
+ROWS, BLOCKED = [], {}
+LEDGER = (ROOT / 'branch_ledger.jsonl').open('x', buffering=1)
+CHECKS = Budget(14000, 10**9, 8 * 2**30, 0)
+ACTIVE = None
+
+
+class Stop(Exception):
+    pass
+
+
+class Technical(Exception):
+    pass
+
+
+def emit(kind, **obj):
+    LEDGER.write(json.dumps({'kind': kind, 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), **obj}) + '\n')
+
+
+def save(path, obj):
+    p = ROOT / path
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
+
+
+def sha(p):
+    h = hashlib.sha256()
+    with Path(p).open('rb') as f:
+        for b in iter(lambda: f.read(2**20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def bits(v):
+    return struct.pack('<f', v).hex()
+
+
+def value_from_bits(h):
+    return struct.unpack('<f', bytes.fromhex(h))[0]
+
+
+def normalized(st):
+    obj = copy.deepcopy(st)
+    obj['heap'] = [[bits(h), serial, format(s, 'x'), s not in st['closed']] for h, serial, s in st['heap']]
+    obj['closed'] = [format(s, 'x') for s in sorted(st['closed'])]
+    obj['node'] = [[format(s, 'x'), g, None if p is None else format(p, 'x'), a] for s, (g, p, a) in sorted(st['node'].items())]
+    return obj
+
+
+def restored(obj):
+    st = copy.deepcopy(obj)
+    st['heap'] = [(value_from_bits(h), ser, int(s, 16)) for h, ser, s, valid in obj['heap']]
+    st['closed'] = {int(s, 16) for s in obj['closed']}
+    st['node'] = {int(s, 16): (g, None if p is None else int(p, 16), a) for s, g, p, a in obj['node']}
+    assert normalized(st) == obj and not st['pending_scores']
+    assert all(st['heap'][(i-1)//2] <= st['heap'][i] for i in range(1, len(st['heap'])))
+    return st
+
+
+def obj_digest(obj):
+    return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def future_scene(obj):
+    out = copy.deepcopy(obj)
+    for field in REG['coalescence']['excluded_cost_fields']:
+        out.pop(field)
+    # Heap layout is nonsemantic; preserve every logical entry, including stale entries.
+    out['heap'] = sorted(out['heap'], key=lambda e: (value_from_bits(e[0]), e[1], int(e[2], 16)))
+    return out
+
+
+def global_guard():
+    if time.process_time() - CPU_START + REG['CPU_ancillary_reserve_seconds'] >= 14400:
+        raise Stop('GLOBAL_CPU_LIMIT')
+    if TOTAL['actual_model_state_evaluations'] >= 32768:
+        raise Stop('GLOBAL_MODEL_STATE_LIMIT')
+
+
+def guard(forward=False):
+    global_guard()
+    if time.perf_counter() >= ACTIVE['deadline']:
+        raise Stop('SEARCH_WALL_LIMIT')
+    if forward and ACTIVE['actual_evaluations'] >= 4096:
+        raise Stop('BRANCH_MODEL_STATE_LIMIT')
+
+
+def alarm(signum, frame):
+    raise Stop('SEARCH_WALL_LIMIT')
+
+
+def note_value(cid, key, score):
+    namespace = (EVENTS[ACTIVE['event']]['task']['sha256'], EVENTS[ACTIVE['event']]['task']['domain_sha256'],
+                 key, REG['model']['sha256_actual'], PROTOCOL)
+    old = OBSERVED.get(namespace)
+    if old is not None and old != score:
+        emit('SCORE_CONSISTENCY_FAILURE', branch=ACTIVE['name'], state=key, previous=old, actual=score)
+        raise Technical('SAME_KEY_SCORE_BYTES_CHANGED')
+    OBSERVED[namespace] = score
+
+
+def load_event(e):
+    cid = e['task']['case_id']
+    if cid not in TASKS:
+        global_guard()
+        info = e['task']
+        task = T.depots_task(info['domain_file'], info['file'])
+        TASKS[cid], INDICES[cid] = task, SuccessorIndex(task)
+        ev = CE.make_evaluator(REG['model_run_root'], 'D0@820', 'cpu')
+        ev.model.eval()
+        for p in ev.model.parameters():
+            assert p.dtype == torch.float32 and p.device.type == 'cpu'
+            p.requires_grad_(False)
+        ev.prepare(task, {'domain': info['domain_file'], 'problem': info['file']}, CHECKS)
+        EVALUATORS[cid] = ev
+    return TASKS[cid], INDICES[cid]
+
+
+def raw_score(cid, s):
+    guard(forward=True)
+    b = ACTIVE
+    b['actual_evaluations'] += 1
+    TOTAL['actual_model_state_evaluations'] += 1
+    seq = TOTAL['actual_model_state_evaluations']
+    key = format(s, 'x')
+    offset = b['raw'].tell()
+    emit('MODEL_STATE_START', slot=b['slot'], branch=b['name'], event=b['event'], sequence=seq,
+         branch_sequence=b['actual_evaluations'], state=key, input_graphs=1, model='D0@820', protocol=PROTOCOL, byte_offset=offset)
+    t0, c0 = time.perf_counter(), time.process_time()
+    try:
+        # Arm only during the native call, so deadline delivery cannot corrupt ledger writes.
+        signal.setitimer(signal.ITIMER_REAL, max(0.000001, b['deadline']-time.perf_counter()))
+        try:
+            with torch.inference_mode():
+                v = EVALUATORS[cid].evaluate([s], CHECKS)[0]
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+        assert math.isfinite(v) and value_from_bits(bits(v)) == v
+        b['raw'].write(struct.pack('<f', v))
+        note_value(cid, key, bits(v))
+        emit('MODEL_STATE_END', sequence=seq, status='OK', value_bits_le=bits(v), byte_offset=offset,
+             wall_seconds=time.perf_counter()-t0, cpu_seconds=time.process_time()-c0)
+    except Exception as err:
+        TOTAL['failed_model_calls'] += 1
+        if b['raw'].tell() == offset:
+            b['raw'].write(bytes(4))
+        emit('MODEL_STATE_END', sequence=seq, status='FAILED', error=repr(err), byte_offset=offset,
+             wall_seconds=time.perf_counter()-t0, cpu_seconds=time.process_time()-c0)
+        raise
+    guard()
+    return v
+
+
+def search_score(st, states):
+    vals = []
+    st['pending_scores'] = [format(s, 'x') for s in states]
+    for i, s in enumerate(states):
+        ACTIVE['interruption_position'] = {'phase': 'score_successors', 'pending_index': i, 'pending_count': len(states)}
+        guard()
+        key = format(s, 'x')
+        if key in st['score_cache']:
+            st['score_cache_hits'] += 1
+            note_value(st['task'], key, st['score_cache'][key])
+            emit('CACHE_HIT', slot=ACTIVE['slot'], state=key)
+        else:
+            st['score_cache_misses'] += 1
+            emit('CACHE_MISS', slot=ACTIVE['slot'], state=key)
+            st['score_cache'][key] = bits(raw_score(st['task'], s))
+        vals.append(value_from_bits(st['score_cache'][key]))
+    st['calls'] += 1
+    st['pending_scores'] = []
+    return vals
+
+
+def step(st, forced=None):
+    task, index = TASKS[st['task']], INDICES[st['task']]
+    ACTIVE['interruption_position'] = {'phase': 'pop'}
+    guard()
+    if forced is not None:
+        candidates = [i for i, (_, ser, s) in enumerate(st['heap']) if ser == forced['serial'] and format(s, 'x') == forced['state'] and s not in st['closed']]
+        assert len(candidates) == 1
+        i = candidates[0]
+        before = normalized(st)
+        h, serial, s = st['heap'].pop(i)
+        heapq.heapify(st['heap'])
+        after = normalized(st)
+        expected = copy.deepcopy(before)
+        expected['heap'] = [entry for entry in expected['heap'] if not (entry[1] == serial and entry[2] == format(s, 'x'))]
+        assert future_scene(expected) == future_scene(after)
+        assert {k: v for k, v in before.items() if k != 'heap'} == {k: v for k, v in after.items() if k != 'heap'}
+        emit('INTERVENTION_AUDIT', slot=ACTIVE['slot'], removed_state=format(s, 'x'), removed_serial=serial,
+             retained_original_D0_score_bits=bits(h), every_other_field_unchanged=True, remaining_logical_heap_exact=True)
+    else:
+        while st['heap']:
+            guard()
+            h, serial, s = heapq.heappop(st['heap'])
+            if s not in st['closed']:
+                break
+        else:
+            st['status'] = 'OPEN_EXHAUSTED'
+            return None
+    st['closed'].add(s)
+    st['expanded'] += 1
+    g = st['node'][s][0] + 1
+    pending = []
+    decision = {'expanded': st['expanded'], 'state': format(s, 'x'), 'score_bits': bits(h), 'serial': serial}
+    for j, a in enumerate(index.applicable(s)):
+        ACTIVE['interruption_position'] = {'phase': 'generate_successor', 'action_position': j, 'action_index': a.index, 'popped': decision}
+        guard()
+        t = (s & ~a.del_mask) | a.add_mask
+        st['generated'] += 1
+        if task.solvable_by_relaxation and t & task.goal_mask == task.goal_mask:
+            st['node'][t] = (g, s, a.index)
+            acts, p = [], t
+            while st['node'][p][1] is not None:
+                _, p0, act = st['node'][p]
+                acts.append(act)
+                p = p0
+            st['plan'] = list(reversed(acts))
+            st['status'] = 'SOLVED'
+            return decision
+        if t in st['closed']:
+            st['duplicates'] += 1
+            continue
+        old = st['node'].get(t)
+        if old is None:
+            st['node'][t] = (g, s, a.index)
+            pending.append(t)
+        elif g < old[0]:
+            st['node'][t] = (g, s, a.index)
+            st['path_updates'] += 1
+        else:
+            st['duplicates'] += 1
+    if pending:
+        vals = search_score(st, pending)
+        for j, (t, v) in enumerate(zip(pending, vals)):
+            ACTIVE['interruption_position'] = {'phase': 'enqueue_successors', 'enqueue_index': j, 'count': len(pending)}
+            guard()
+            heapq.heappush(st['heap'], (v, st['serial'], t))
+            st['serial'] += 1
+            if v < st['best_h']:
+                st['best_h'] = v
+    return decision
+
+
+def run_branch(slot):
+    global ACTIVE
+    e = EVENTS[slot['event']]
+    name = slot['branch']
+    directory = 'branches/' + slot['event'] + '/' + name
+    (ROOT / directory).mkdir(parents=True, exist_ok=False)
+    tload, cload = time.perf_counter(), time.process_time()
+    task, _ = load_event(e)
+    load_wall, load_cpu = time.perf_counter()-tload, time.process_time()-cload
+    tr, cr = time.perf_counter(), time.process_time()
+    p = PREV / e['snapshot']
+    assert sha(p) == e['snapshot_file_sha256']
+    initial = json.loads(p.read_text())
+    assert obj_digest(initial) == e['snapshot_semantic_sha256']
+    st = restored(initial)
+    assert st['model_sha256'] == REG['model']['sha256_actual'] and st['scoring_protocol'] == PROTOCOL
+    normal = min(x for x in st['heap'] if x[2] not in st['closed'])
+    assert (normal[1], format(normal[2], 'x'), bits(normal[0])) == tuple(e['choices']['D0@820'][k] for k in ['serial', 'state', 'score_bits'])
+    forced = e['choices']['T1@2460'] if name.startswith('B') else None
+    assert any(ser == e['choices']['T1@2460']['serial'] and format(s, 'x') == e['choices']['T1@2460']['state'] and s not in st['closed'] for _, ser, s in st['heap'])
+    ACTIVE = {'name': name, 'event': slot['event'], 'slot': slot['slot'], 'actual_evaluations': 0,
+              'deadline': float('inf'), 'raw': (ROOT / directory / 'score_bytes.bin').open('xb', buffering=0)}
+    for key, value in st['score_cache'].items():
+        note_value(st['task'], key, value)
+    save(directory + '/initial.json', initial)
+    restore_wall, restore_cpu = time.perf_counter()-tr, time.process_time()-cr
+    emit('BRANCH_START', **slot, load_wall_seconds=load_wall, load_cpu_seconds=load_cpu,
+         restore_wall_seconds=restore_wall, restore_cpu_seconds=restore_cpu, cache_source='ORIGINAL_SNAPSHOT_ONLY')
+    TOTAL['slots_started'] += 1
+    start, cstart = time.perf_counter(), time.process_time()
+    ACTIVE['deadline'] = start + 120
+    complete, count, log_wall, log_cpu, search_end = initial, 0, 0.0, 0.0, start
+    reason, partial, error = None, None, None
+    with gzip.open(ROOT / directory / 'steps.jsonl.gz', 'wt', compresslevel=1) as log:
+        try:
+            while st['status'] == 'RUNNING' and count < 512:
+                guard()
+                before = obj_digest(complete)
+                decision = step(st, forced if count == 0 else None)
+                guard()
+                signal.setitimer(signal.ITIMER_REAL, 0)
+                search_end = time.perf_counter()
+                tl, cl = time.perf_counter(), time.process_time()
+                after = normalized(st)
+                rec = {'before_sha256': before, 'decision': decision, 'after': after}
+                log.write(json.dumps(rec) + '\n')
+                log.flush()
+                complete = after
+                if decision is not None:
+                    count += 1
+                log_wall += time.perf_counter()-tl
+                log_cpu += time.process_time()-cl
+                if decision is None:
+                    break
+            reason = st['status'] if st['status'] != 'RUNNING' else 'EXPANSION_LIMIT'
+        except Stop as err:
+            reason = str(err)
+            partial = {'interruption_position': ACTIVE.get('interruption_position'), 'incomplete': normalized(st),
+                       'last_complete_steps': count, 'not_counted_as_complete_expansion': normalized(st) != complete}
+        except Exception as err:
+            reason = 'TECHNICALLY_INVALID'
+            error = repr(err)
+            BLOCKED[slot['event']] = error
+            partial = {'interruption_position': ACTIVE.get('interruption_position'), 'incomplete': normalized(st), 'error': error}
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+    elapsed, cpu = time.perf_counter()-start, time.process_time()-cstart
+    ACTIVE['raw'].close()
+    save(directory + '/final_complete.json', complete)
+    if partial is not None:
+        save(directory + '/partial_interrupted.json', partial)
+    plan_valid, plan_length = None, None
+    if complete['status'] == 'SOLVED':
+        plan = complete['plan']
+        action_ids = [task.actions[i].aid for i in plan]
+        final = task.replay(action_ids)
+        plan_valid = final is not None and task.goal_satisfied(final)
+        plan_length = len(plan)
+        save('plans/' + slot['event'] + '_' + name + '.json', {'indices': plan, 'action_ids': action_ids,
+             'legal_and_goal': plan_valid, 'final_state': None if final is None else format(final, 'x'), 'optimality': 'UNKNOWN'})
+        if not plan_valid:
+            reason = 'TECHNICALLY_INVALID'
+            BLOCKED[slot['event']] = 'PLAN_CONTRACT_FAILURE'
+    row = {**slot, 'status': complete['status'], 'stop_reason': reason, 'completed_additional_expansions': count,
+           'plan_valid': plan_valid, 'total_plan_length': plan_length, 'actual_model_state_evaluations': ACTIVE['actual_evaluations'],
+           'search_and_logging_wall_seconds': elapsed, 'last_complete_search_end_seconds': search_end-start,
+           'search_and_logging_cpu_seconds': cpu, 'logging_wall_seconds': log_wall, 'logging_cpu_seconds': log_cpu,
+           'load_wall_seconds': load_wall, 'load_cpu_seconds': load_cpu, 'restore_wall_seconds': restore_wall, 'restore_cpu_seconds': restore_cpu,
+           'deadline_detection_latency_seconds': max(0, elapsed-120) if reason == 'SEARCH_WALL_LIMIT' else 0,
+           'partial_expansion_saved': partial is not None, 'error': error, 'directory': directory,
+           'final_complete_sha256': obj_digest(complete), 'initial_semantic_sha256': obj_digest(initial)}
+    for key in ['generated', 'duplicates', 'path_updates', 'calls', 'score_cache_hits', 'score_cache_misses']:
+        row['new_' + key] = complete[key]-initial[key]
+    row['valid_OPEN'] = sum(entry[3] for entry in complete['heap'])
+    save(directory + '/receipt.json', row)
+    emit('BRANCH_END', **row)
+    print(json.dumps(row), flush=True)
+    return row
+
+
+def identity():
+    m = json.loads((ROOT / 'input_manifest.json').read_text())
+    failures = []
+    for path, expected in m['remote_file_hashes'].items():
+        if not Path(path).is_file() or sha(path) != expected:
+            failures.append(path)
+    status = subprocess.check_output(['git', '-C', str(REPO), 'status', '--porcelain=v1', '--untracked-files=all'])
+    head = subprocess.check_output(['git', '-C', str(REPO), 'rev-parse', 'HEAD'], text=True).strip()
+    return {'mismatches': failures, 'HEAD': head, 'status_sha256': hashlib.sha256(status).hexdigest(),
+            'status_lines': len(status.splitlines()), 'own_pid': os.getpid()}
+
+
+def main():
+    assert REG['authorization']['phase_C'] == 'APPROVED_BY_USER_EXECUTE'
+    before = identity()
+    save('identity_before.json', before)
+    assert not before['mismatches'] and before['HEAD'] == REG['expected_server_HEAD'] and before['status_sha256'] == REG['expected_status_sha256']
+    emit('STAGE_START', fixed_order=REG['slots'], protocol=PROTOCOL, precheck_forwards=0)
+    signal.signal(signal.SIGALRM, alarm)
+    resource.setrlimit(resource.RLIMIT_CPU, (14000, 14020))
+    for slot in REG['slots']:
+        if slot['event'] in BLOCKED:
+            row = {**slot, 'status': 'NOT_RUN', 'stop_reason': 'EVENT_STOPPED_TECHNICAL', 'error': BLOCKED[slot['event']], 'actual_model_state_evaluations': 0}
+            emit('SLOT_NOT_RUN', **row)
+            ROWS.append(row)
+            continue
+        try:
+            global_guard()
+            ROWS.append(run_branch(slot))
+        except Exception as err:
+            BLOCKED[slot['event']] = repr(err)
+            row = {**slot, 'status': 'FAILED_BEFORE_SEARCH', 'stop_reason': repr(err), 'actual_model_state_evaluations': 0}
+            emit('SLOT_FAILURE', **row)
+            ROWS.append(row)
+        save('branch_results.json', ROWS)
+
+
+fatal = None
+try:
+    main()
+except Exception as err:
+    fatal = repr(err)
+    emit('STAGE_FAILURE', error=fatal)
+finally:
+    signal.setitimer(signal.ITIMER_REAL, 0)
+    for slot in REG['slots']:
+        if not any(row['slot'] == slot['slot'] for row in ROWS):
+            row = {**slot, 'status': 'NOT_RUN', 'stop_reason': fatal or 'STAGE_INTERRUPTED', 'actual_model_state_evaluations': 0}
+            ROWS.append(row)
+            emit('SLOT_NOT_RUN', **row)
+    save('branch_results.json', ROWS)
+    after = identity()
+    save('identity_after.json', after)
+    receipt = {'counts': TOTAL, 'fatal_error': fatal, 'blocked_events': BLOCKED,
+               'process_cpu_seconds': time.process_time()-CPU_START, 'wall_seconds': time.perf_counter()-WALL_START,
+               'CPU_ancillary_reserve_seconds': REG['CPU_ancillary_reserve_seconds'], 'training': 0, 'fitting': 0,
+               'certification': 0, 'full_graph_builds': 0, 'GPU_device_seconds': 0,
+               'old_inputs_unchanged': not after['mismatches'], 'server_checkout_unchanged': after['HEAD'] == REG['expected_server_HEAD'] and after['status_sha256'] == REG['expected_status_sha256']}
+    save('run_receipt.json', receipt)
+    emit('STAGE_END', **receipt)
+    LEDGER.close()
+    print(json.dumps(receipt), flush=True)

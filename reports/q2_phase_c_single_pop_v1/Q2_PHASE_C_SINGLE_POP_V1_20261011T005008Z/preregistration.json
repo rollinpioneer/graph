@@ -1,0 +1,135 @@
+{
+  "card": "CP-DISR-Q2-PHASE-C-SINGLE-POP-V1",
+  "client_date": "2026-10-11 Asia/Taipei",
+  "created_utc": "2026-10-11T00:53:12.920801+00:00",
+  "authorization": {
+    "phase_C": "APPROVED_BY_USER_EXECUTE",
+    "user_text": "执行",
+    "draft_status_overridden_by_explicit_user_request": true,
+    "remote": "Existing lab-xushijie3 SSH authorization in this conversation; same environment",
+    "publication": "Standing instruction: each card has a new branch; code and results push"
+  },
+  "parent_commit": "f3d8d655d172b338bb38ba7f638aa0fda355dc55",
+  "algorithm_baseline": "cc7d79d6fcb053bf0c16033e765a2e808de2aaac",
+  "expected_server_HEAD": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
+  "expected_status_sha256": "7e28c12422978992210c8063dc71d675afd18b8ec35ab0f3972206dcea83e311",
+  "server_repository": "/home/xushijie3/work/graph_cp_disr",
+  "previous_remote_root": "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z",
+  "model": {
+    "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u00820.pt",
+    "sha256_actual": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+    "sha256_recorded": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
+    "matches": true
+  },
+  "model_run_root": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z",
+  "protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
+  "protocol_settings": {
+    "threads": 1,
+    "rounding": "NONE",
+    "device": "cpu",
+    "path": "Original cli_ext.make_evaluator -> NeuralEval.evaluate([state]) -> model.state_values; no RGCN arithmetic rewrite",
+    "precision": "original FP32 weights",
+    "input_shape": "one graph per actual model invocation, regardless of total requested batch",
+    "deterministic_algorithms": true,
+    "id": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
+    "legacy_difference": "original GPU/chunk48 changed to CPU/native single-state; historical OPEN revalued only in separate controlled copy",
+    "cache_key": "task SHA/domain SHA + full state hex + model SHA + protocol ID; nested namespaces retain full key identity"
+  },
+  "caps": {
+    "events": 2,
+    "continuations": 8,
+    "expansions_each": 512,
+    "search_wall_seconds_each": 120,
+    "actual_model_states_each": 4096,
+    "actual_model_states_total": 32768,
+    "CPU_seconds": 14400,
+    "GPU_seconds": 0,
+    "training": 0,
+    "fitting": 0,
+    "certification": 0,
+    "full_graphs": 0
+  },
+  "CPU_ancillary_reserve_seconds": 300,
+  "slots": [
+    {
+      "slot": 1,
+      "event": "struct_n4_004_k008",
+      "branch": "A"
+    },
+    {
+      "slot": 2,
+      "event": "struct_n4_004_k008",
+      "branch": "B"
+    },
+    {
+      "slot": 3,
+      "event": "struct_n4_004_k008",
+      "branch": "B_repeat"
+    },
+    {
+      "slot": 4,
+      "event": "struct_n4_004_k008",
+      "branch": "A_repeat"
+    },
+    {
+      "slot": 5,
+      "event": "ipc_p12_k002",
+      "branch": "B"
+    },
+    {
+      "slot": 6,
+      "event": "ipc_p12_k002",
+      "branch": "A"
+    },
+    {
+      "slot": 7,
+      "event": "ipc_p12_k002",
+      "branch": "A_repeat"
+    },
+    {
+      "slot": 8,
+      "event": "ipc_p12_k002",
+      "branch": "B_repeat"
+    }
+  ],
+  "coalescence": {
+    "exact": "Previous normalized full content; SHA candidate then actual content equality",
+    "future": "Exclude only below nondecision statistics; preserve all other fields; sort heap logical entries, preserve actual serial values and counter; retain stale entries",
+    "excluded_cost_fields": [
+      "expanded",
+      "generated",
+      "duplicates",
+      "path_updates",
+      "calls",
+      "score_cache_hits",
+      "score_cache_misses"
+    ],
+    "exclusions_justification": "These are recorded statistics, not action/score/queue decision inputs in frozen step; external consumed resource costs and budget remainder reported separately. No claim of equal remaining wall time or remaining bounded budget.",
+    "scope": "All saved complete A/B checkpoints, including cross-depth pairs; initial (0,0) excluded; no match means only no observed coalescence"
+  },
+  "decision_rules": {
+    "repeat": "Actual complete content equality in common prefix. Wall-only length differences are censored, not automatic errors.",
+    "window": "All four common complete prefix; exclude intervention step for subsequent effects",
+    "complete": "delta_E=E_B-E_A; delta_L=L_B-L_A; require repeat validity and all four legal solutions",
+    "Struct_threshold": "Old 20 percent and 5 expansions canceled before outcome. Report every nonzero delta; no posthoc threshold",
+    "incomplete": "Interrupted expansion retained separately, not counted complete; resource requests still fully charged",
+    "score_consistency": "Audit observed values only; never provides cross-branch values; same key bytes mismatch stops related event",
+    "timing": "Deadline begins immediately before first pop after restore. Inclusive guard uses elapsed time including logging. SIGALRM inside step; checkpoint writing is separate record time. No new search after deadline; detection latency and last complete search end are reported.",
+    "cache": "Fresh deserialize original cache per slot; evaluator task/model lifecycle same G2; observational registry never used for inference"
+  },
+  "forbidden": [
+    "qualification rescreen",
+    "T1 forward",
+    "D0@2460 forward",
+    "new event",
+    "repair continuation",
+    "training",
+    "distance query",
+    "merge",
+    "R4"
+  ],
+  "code_sha256": {
+    "phase_c.py": "5570b1945f28c509588ca7cb2edc841de38016ff6b6b2c28aec5bf905ca8ca79",
+    "analyze.py": "2350ff74d54141eab6eb501dd3987392c077ddc4269f1b3800a3adf3b02bb166"
+  }
+}

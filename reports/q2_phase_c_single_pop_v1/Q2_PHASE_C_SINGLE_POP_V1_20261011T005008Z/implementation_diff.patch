@@ -1,0 +1,1940 @@
+--- f3d8:gate.py (G2 reference)
++++ phase_c.py
+@@ -1,24 +1,28 @@
+-"""Authorized G1/G2 only. Controlled CPU/FP32/one-state scoring; no intervention."""
++"""Fixed two-event phase C; eight slots, no qualification, training or T1 forward."""
+ import copy
+ import gzip
+ import hashlib
+ import heapq
+-import io
+ import json
+ import math
+ import os
+-import pickle
+ import resource
++import signal
+ import struct
++import subprocess
+ import sys
+ import time
+ from pathlib import Path
+ 
++CPU_START = time.process_time()
++WALL_START = time.perf_counter()
+ ROOT = Path(sys.argv[1])
+-REPO = Path('/home/xushijie3/work/graph_cp_disr')
+-REG = json.loads((ROOT / 'registration.json').read_text())
+-START = time.process_time()
+-WALL = time.perf_counter()
++REG = json.loads((ROOT / 'preregistration.json').read_text())
++PREV = Path(REG['previous_remote_root'])
++REPO = Path(REG['server_repository'])
++META = json.loads((PREV / 'event_approval_metadata.json').read_text())
++EVENTS = {e['event_id']: e for e in META['events']}
++PROTOCOL = REG['protocol']
+ sys.dont_write_bytecode = True
+ sys.path.insert(0, str(REPO / 'src'))
+ import torch
+@@ -26,351 +30,417 @@
+ torch.set_num_interop_threads(1)
+ torch.use_deterministic_algorithms(True)
+ torch.set_float32_matmul_precision('highest')
+-from cp_disr.pddl import depots as DP, task as T
++from cp_disr.pddl import task as T
+ from cp_disr.pddl.compact import cli_ext as CE
+ from cp_disr.pddl.search_match.budget import Budget
+ from cp_disr.pddl.search_match.engine import SuccessorIndex
+ 
+-COUNTS = {'model_state_evaluations': 0, 'search_prefix_and_restore_calls': 0, 'failed_model_calls': 0, 'repairs': 0, 'GPU_device_seconds': 0}
+-TASKS, INDEX, EV = {}, {}, {}
+-PROTOCOL = REG['scoring_protocol']['id']
+-CANDIDATES, SELECTED, G2 = [], [], []
+-SEARCH_STOP = None
+-(ROOT / 'snapshots').mkdir(exist_ok=True)
+-(ROOT / 'decisions').mkdir(exist_ok=True)
+-LEDGER = (ROOT / 'resource_ledger.jsonl').open('a', buffering=1)
+-RAW = (ROOT / 'score_bytes.bin').open('ab', buffering=0)
+-CHECKS = Budget(7000, 10**9, 8*2**30, 20)
+-EVAL_BUDGET = 8192
++TASKS, INDICES, EVALUATORS, OBSERVED = {}, {}, {}, {}
++TOTAL = {'actual_model_state_evaluations': 0, 'failed_model_calls': 0,
++         'slots_started': 0, 'GPU_device_seconds': 0}
++ROWS, BLOCKED = [], {}
++LEDGER = (ROOT / 'branch_ledger.jsonl').open('x', buffering=1)
++CHECKS = Budget(14000, 10**9, 8 * 2**30, 0)
++ACTIVE = None
+ 
+ 
+ class Stop(Exception):
+     pass
+ 
+ 
+-def emit(kind, **data):
+-    LEDGER.write(json.dumps({'kind': kind, 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), **data}) + '\n')
+-
+-
+-def save(name, obj):
+-    (ROOT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
+-
+-
+-def guard(n=0):
+-    if COUNTS['model_state_evaluations'] + n > EVAL_BUDGET:
+-        raise Stop('MODEL_STATE_EVALUATION_LIMIT')
+-    if time.process_time()-START+REG['CPU_ancillary_reserve_seconds'] >= 7200:
+-        raise Stop('CPU_LIMIT')
+-    if time.perf_counter()-WALL > 7000:
+-        raise Stop('WALL_GUARD')
+-
+-
+-def bits(value):
+-    return struct.pack('<f', value).hex()
++class Technical(Exception):
++    pass
++
++
++def emit(kind, **obj):
++    LEDGER.write(json.dumps({'kind': kind, 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), **obj}) + '\n')
++
++
++def save(path, obj):
++    p = ROOT / path
++    p.parent.mkdir(parents=True, exist_ok=True)
++    p.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
++
++
++def sha(p):
++    h = hashlib.sha256()
++    with Path(p).open('rb') as f:
++        for b in iter(lambda: f.read(2**20), b''):
++            h.update(b)
++    return h.hexdigest()
++
++
++def bits(v):
++    return struct.pack('<f', v).hex()
+ 
+ 
+ def value_from_bits(h):
+     return struct.unpack('<f', bytes.fromhex(h))[0]
+ 
+ 
+-def load_task(cid):
++def normalized(st):
++    obj = copy.deepcopy(st)
++    obj['heap'] = [[bits(h), serial, format(s, 'x'), s not in st['closed']] for h, serial, s in st['heap']]
++    obj['closed'] = [format(s, 'x') for s in sorted(st['closed'])]
++    obj['node'] = [[format(s, 'x'), g, None if p is None else format(p, 'x'), a] for s, (g, p, a) in sorted(st['node'].items())]
++    return obj
++
++
++def restored(obj):
++    st = copy.deepcopy(obj)
++    st['heap'] = [(value_from_bits(h), ser, int(s, 16)) for h, ser, s, valid in obj['heap']]
++    st['closed'] = {int(s, 16) for s in obj['closed']}
++    st['node'] = {int(s, 16): (g, None if p is None else int(p, 16), a) for s, g, p, a in obj['node']}
++    assert normalized(st) == obj and not st['pending_scores']
++    assert all(st['heap'][(i-1)//2] <= st['heap'][i] for i in range(1, len(st['heap'])))
++    return st
++
++
++def obj_digest(obj):
++    return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
++
++
++def future_scene(obj):
++    out = copy.deepcopy(obj)
++    for field in REG['coalescence']['excluded_cost_fields']:
++        out.pop(field)
++    # Heap layout is nonsemantic; preserve every logical entry, including stale entries.
++    out['heap'] = sorted(out['heap'], key=lambda e: (value_from_bits(e[0]), e[1], int(e[2], 16)))
++    return out
++
++
++def global_guard():
++    if time.process_time() - CPU_START + REG['CPU_ancillary_reserve_seconds'] >= 14400:
++        raise Stop('GLOBAL_CPU_LIMIT')
++    if TOTAL['actual_model_state_evaluations'] >= 32768:
++        raise Stop('GLOBAL_MODEL_STATE_LIMIT')
++
++
++def guard(forward=False):
++    global_guard()
++    if time.perf_counter() >= ACTIVE['deadline']:
++        raise Stop('SEARCH_WALL_LIMIT')
++    if forward and ACTIVE['actual_evaluations'] >= 4096:
++        raise Stop('BRANCH_MODEL_STATE_LIMIT')
++
++
++def alarm(signum, frame):
++    raise Stop('SEARCH_WALL_LIMIT')
++
++
++def note_value(cid, key, score):
++    namespace = (EVENTS[ACTIVE['event']]['task']['sha256'], EVENTS[ACTIVE['event']]['task']['domain_sha256'],
++                 key, REG['model']['sha256_actual'], PROTOCOL)
++    old = OBSERVED.get(namespace)
++    if old is not None and old != score:
++        emit('SCORE_CONSISTENCY_FAILURE', branch=ACTIVE['name'], state=key, previous=old, actual=score)
++        raise Technical('SAME_KEY_SCORE_BYTES_CHANGED')
++    OBSERVED[namespace] = score
++
++
++def load_event(e):
++    cid = e['task']['case_id']
+     if cid not in TASKS:
+-        info = REG['tasks'][cid]
+-        assert hashlib.sha256(Path(info['file']).read_bytes()).hexdigest() == info['sha256']
+-        domain = DP.DOMAIN_IPC if cid.startswith('ipc') else DP.DOMAIN_TYPED
+-        task = T.depots_task(domain, info['file'])
+-        TASKS[cid], INDEX[cid] = task, SuccessorIndex(task)
+-    return TASKS[cid], INDEX[cid]
+-
+-
+-def evaluator(cid, model):
+-    if (cid, model) not in EV:
+-        guard()
+-        emit('MODEL_LOAD_START', task=cid, model=model)
+-        v2 = REPO / 'runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z'
+-        ev = CE.make_evaluator(str(v2), model, 'cpu')
++        global_guard()
++        info = e['task']
++        task = T.depots_task(info['domain_file'], info['file'])
++        TASKS[cid], INDICES[cid] = task, SuccessorIndex(task)
++        ev = CE.make_evaluator(REG['model_run_root'], 'D0@820', 'cpu')
+         ev.model.eval()
+         for p in ev.model.parameters():
+             assert p.dtype == torch.float32 and p.device.type == 'cpu'
+             p.requires_grad_(False)
+-        task, _ = load_task(cid)
+-        ev.prepare(task, {'domain': str(DP.DOMAIN_IPC if cid.startswith('ipc') else DP.DOMAIN_TYPED), 'problem': REG['tasks'][cid]['file']}, CHECKS)
+-        EV[cid, model] = ev
+-        emit('MODEL_LOAD_END', task=cid, model=model)
+-    return EV[cid, model]
+-
+-
+-def raw_score(cid, model, s, reason):
+-    guard(1)
+-    ev = evaluator(cid, model)
+-    COUNTS['model_state_evaluations'] += 1
+-    seq = COUNTS['model_state_evaluations']
+-    emit('MODEL_STATE_START', sequence=seq, task=cid, state=format(s, 'x'), model=model, reason=reason, input_graphs=1)
++        ev.prepare(task, {'domain': info['domain_file'], 'problem': info['file']}, CHECKS)
++        EVALUATORS[cid] = ev
++    return TASKS[cid], INDICES[cid]
++
++
++def raw_score(cid, s):
++    guard(forward=True)
++    b = ACTIVE
++    b['actual_evaluations'] += 1
++    TOTAL['actual_model_state_evaluations'] += 1
++    seq = TOTAL['actual_model_state_evaluations']
++    key = format(s, 'x')
++    offset = b['raw'].tell()
++    emit('MODEL_STATE_START', slot=b['slot'], branch=b['name'], event=b['event'], sequence=seq,
++         branch_sequence=b['actual_evaluations'], state=key, input_graphs=1, model='D0@820', protocol=PROTOCOL, byte_offset=offset)
++    t0, c0 = time.perf_counter(), time.process_time()
+     try:
+-        with torch.inference_mode():
+-            v = ev.evaluate([s], CHECKS)[0]
++        # Arm only during the native call, so deadline delivery cannot corrupt ledger writes.
++        signal.setitimer(signal.ITIMER_REAL, max(0.000001, b['deadline']-time.perf_counter()))
++        try:
++            with torch.inference_mode():
++                v = EVALUATORS[cid].evaluate([s], CHECKS)[0]
++        finally:
++            signal.setitimer(signal.ITIMER_REAL, 0)
+         assert math.isfinite(v) and value_from_bits(bits(v)) == v
+-        RAW.write(struct.pack('<f', v))
+-        emit('MODEL_STATE_END', sequence=seq, status='OK', value_bits_le=bits(v), byte_offset=(seq-1)*4)
+-        return v
++        b['raw'].write(struct.pack('<f', v))
++        note_value(cid, key, bits(v))
++        emit('MODEL_STATE_END', sequence=seq, status='OK', value_bits_le=bits(v), byte_offset=offset,
++             wall_seconds=time.perf_counter()-t0, cpu_seconds=time.process_time()-c0)
+     except Exception as err:
+-        COUNTS['failed_model_calls'] += 1
+-        RAW.write(bytes(4))
+-        emit('MODEL_STATE_END', sequence=seq, status='FAILED', error=repr(err))
++        TOTAL['failed_model_calls'] += 1
++        if b['raw'].tell() == offset:
++            b['raw'].write(bytes(4))
++        emit('MODEL_STATE_END', sequence=seq, status='FAILED', error=repr(err), byte_offset=offset,
++             wall_seconds=time.perf_counter()-t0, cpu_seconds=time.process_time()-c0)
+         raise
++    guard()
++    return v
+ 
+ 
+ def search_score(st, states):
+     vals = []
+-    for s in states:
++    st['pending_scores'] = [format(s, 'x') for s in states]
++    for i, s in enumerate(states):
++        ACTIVE['interruption_position'] = {'phase': 'score_successors', 'pending_index': i, 'pending_count': len(states)}
++        guard()
+         key = format(s, 'x')
+         if key in st['score_cache']:
+             st['score_cache_hits'] += 1
+-            emit('CACHE_HIT', task=st['task'], model='D0@820', state=key, protocol=PROTOCOL)
++            note_value(st['task'], key, st['score_cache'][key])
++            emit('CACHE_HIT', slot=ACTIVE['slot'], state=key)
+         else:
+             st['score_cache_misses'] += 1
+-            emit('CACHE_MISS', task=st['task'], model='D0@820', state=key, protocol=PROTOCOL)
+-            st['score_cache'][key] = bits(raw_score(st['task'], 'D0@820', s, 'search_cache_miss'))
++            emit('CACHE_MISS', slot=ACTIVE['slot'], state=key)
++            st['score_cache'][key] = bits(raw_score(st['task'], s))
+         vals.append(value_from_bits(st['score_cache'][key]))
+     st['calls'] += 1
++    st['pending_scores'] = []
+     return vals
+ 
+ 
+-def blank(cid):
+-    task, _ = load_task(cid)
+-    return {'task': cid, 'task_sha256': REG['tasks'][cid]['sha256'], 'domain_sha256': REG['tasks'][cid]['domain_sha256'], 'scoring_protocol': PROTOCOL, 'model_sha256': REG['models']['D0@820']['sha256_actual'], 'heap': [], 'closed': set(), 'node': {task.init_mask:(0,None,None)}, 'serial':0, 'expanded':0, 'generated':0, 'duplicates':0, 'path_updates':0, 'calls':0, 'best_h':None, 'h_root':None, 'score_cache':{}, 'score_cache_hits':0, 'score_cache_misses':0, 'pending_scores':[], 'status':'RUNNING', 'plan':None}
+-
+-
+-def normalized(st):
+-    obj = copy.deepcopy(st)
+-    obj['heap'] = [[bits(h), serial, format(s,'x'), s not in st['closed']] for h,serial,s in st['heap']]
+-    obj['closed'] = [format(s,'x') for s in sorted(st['closed'])]
+-    obj['node'] = [[format(s,'x'), g, None if p is None else format(p,'x'), a] for s,(g,p,a) in sorted(st['node'].items())]
+-    return obj
+-
+-
+-def restored(obj):
+-    st = copy.deepcopy(obj)
+-    st['heap'] = [(value_from_bits(h), ser, int(s,16)) for h,ser,s,valid in obj['heap']]
+-    st['closed'] = {int(s,16) for s in obj['closed']}
+-    st['node'] = {int(s,16):(g,None if p is None else int(p,16),a) for s,g,p,a in obj['node']}
+-    assert normalized(st) == obj
+-    assert not st['pending_scores']
+-    return st
+-
+-
+-def digest(st):
+-    return hashlib.sha256(json.dumps(normalized(st), sort_keys=True, separators=(',',':')).encode()).hexdigest()
+-
+-
+-def step(st):
+-    task, index = load_task(st['task'])
+-    while st['heap']:
+-        h, serial, s = heapq.heappop(st['heap'])
+-        if s not in st['closed']:
+-            break
++def step(st, forced=None):
++    task, index = TASKS[st['task']], INDICES[st['task']]
++    ACTIVE['interruption_position'] = {'phase': 'pop'}
++    guard()
++    if forced is not None:
++        candidates = [i for i, (_, ser, s) in enumerate(st['heap']) if ser == forced['serial'] and format(s, 'x') == forced['state'] and s not in st['closed']]
++        assert len(candidates) == 1
++        i = candidates[0]
++        before = normalized(st)
++        h, serial, s = st['heap'].pop(i)
++        heapq.heapify(st['heap'])
++        after = normalized(st)
++        expected = copy.deepcopy(before)
++        expected['heap'] = [entry for entry in expected['heap'] if not (entry[1] == serial and entry[2] == format(s, 'x'))]
++        assert future_scene(expected) == future_scene(after)
++        assert {k: v for k, v in before.items() if k != 'heap'} == {k: v for k, v in after.items() if k != 'heap'}
++        emit('INTERVENTION_AUDIT', slot=ACTIVE['slot'], removed_state=format(s, 'x'), removed_serial=serial,
++             retained_original_D0_score_bits=bits(h), every_other_field_unchanged=True, remaining_logical_heap_exact=True)
+     else:
+-        st['status'] = 'OPEN_EXHAUSTED'
+-        return None
++        while st['heap']:
++            guard()
++            h, serial, s = heapq.heappop(st['heap'])
++            if s not in st['closed']:
++                break
++        else:
++            st['status'] = 'OPEN_EXHAUSTED'
++            return None
+     st['closed'].add(s)
+     st['expanded'] += 1
+-    g = st['node'][s][0]+1
++    g = st['node'][s][0] + 1
+     pending = []
+-    decision = {'expanded':st['expanded'], 'state':format(s,'x'), 'score_bits':bits(h), 'serial':serial}
+-    for a in index.applicable(s):
+-        t=(s & ~a.del_mask)|a.add_mask
++    decision = {'expanded': st['expanded'], 'state': format(s, 'x'), 'score_bits': bits(h), 'serial': serial}
++    for j, a in enumerate(index.applicable(s)):
++        ACTIVE['interruption_position'] = {'phase': 'generate_successor', 'action_position': j, 'action_index': a.index, 'popped': decision}
++        guard()
++        t = (s & ~a.del_mask) | a.add_mask
+         st['generated'] += 1
+         if task.solvable_by_relaxation and t & task.goal_mask == task.goal_mask:
+-            st['node'][t]=(g,s,a.index)
+-            acts=[]
+-            p=t
++            st['node'][t] = (g, s, a.index)
++            acts, p = [], t
+             while st['node'][p][1] is not None:
+-                _,p0,act=st['node'][p]
+-                acts.append(act); p=p0
+-            st['plan']=list(reversed(acts))
+-            st['status']='SOLVED'
++                _, p0, act = st['node'][p]
++                acts.append(act)
++                p = p0
++            st['plan'] = list(reversed(acts))
++            st['status'] = 'SOLVED'
+             return decision
+         if t in st['closed']:
+-            st['duplicates']+=1
++            st['duplicates'] += 1
+             continue
+-        old=st['node'].get(t)
++        old = st['node'].get(t)
+         if old is None:
+-            st['node'][t]=(g,s,a.index);pending.append(t)
+-        elif g<old[0]:
+-            st['node'][t]=(g,s,a.index);st['path_updates']+=1
++            st['node'][t] = (g, s, a.index)
++            pending.append(t)
++        elif g < old[0]:
++            st['node'][t] = (g, s, a.index)
++            st['path_updates'] += 1
+         else:
+-            st['duplicates']+=1
++            st['duplicates'] += 1
+     if pending:
+-        vals=search_score(st,pending)
+-        for t,v in zip(pending,vals):
+-            heapq.heappush(st['heap'],(v,st['serial'],t));st['serial']+=1
+-            if v<st['best_h']:st['best_h']=v
++        vals = search_score(st, pending)
++        for j, (t, v) in enumerate(zip(pending, vals)):
++            ACTIVE['interruption_position'] = {'phase': 'enqueue_successors', 'enqueue_index': j, 'count': len(pending)}
++            guard()
++            heapq.heappush(st['heap'], (v, st['serial'], t))
++            st['serial'] += 1
++            if v < st['best_h']:
++                st['best_h'] = v
+     return decision
+ 
+ 
+-def choose(entries, values):
+-    ordered=sorted((v,e[1],e[2]) for e,v in zip(entries,values))
+-    first=ordered[0]
+-    return {'state':format(first[2],'x'), 'serial':first[1], 'score_bits':bits(first[0]), 'minimum_ties':sum(v==first[0] for v,_,_ in ordered), 'top_second_gap':ordered[1][0]-first[0] if len(ordered)>1 else None}
+-
+-
+-DIAG_CACHE = {}
+-
+-
+-def screen(st, origin, force_three=False):
+-    cid=st['task'];entries=sorted(e for e in st['heap'] if e[2] not in st['closed'])
+-    if len(entries)<2:return None
+-    proposal=[]
+-    for model in REG['model_order']:
+-        vals=[]
+-        for _,ser,s in entries:
+-            key=(cid,model,s)
+-            if model=='D0@820' and format(s,'x') in st['score_cache']:
+-                v=value_from_bits(st['score_cache'][format(s,'x')])
+-            elif key in DIAG_CACHE:v=DIAG_CACHE[key]
+-            elif force_three:
+-                v=None
+-            else:
+-                v=raw_score(cid,model,s,'full_OPEN_prescreen');DIAG_CACHE[key]=v
+-            vals.append(v)
+-        if force_three:proposal.append(None)
+-        else:proposal.append(choose(entries,vals))
+-    main = force_three or (proposal[0]['state']==proposal[1]['state']!=proposal[2]['state'])
+-    row={'task':cid,'k':st['expanded'],'origin':origin,'valid_OPEN':len(entries),'prescreen':proposal,'status':'NO_MAIN_DISAGREEMENT'}
+-    CANDIDATES.append(row)
+-    if not main:return None
+-    if COUNTS['model_state_evaluations']+9*len(entries)>8192:
+-        row['status']='SKIPPED_COMPLETE_OPEN_REPEAT_BUDGET';return None
+-    repetitions=[]
+-    for rep in range(3):
+-        order=list(reversed(entries)) if rep==2 else entries
+-        choices={}
+-        for model in REG['model_order']:
+-            vals=[raw_score(cid,model,e[2], 'independent_OPEN_repeat_%d'%rep) for e in order]
+-            choices[model]=choose(order,vals)
+-        repetitions.append(choices)
+-    row['independent_repetitions']=repetitions
+-    states=[[r[m]['state'] for m in REG['model_order']] for r in repetitions]
+-    stable=states[0]==states[1]==states[2]
+-    relation=all(s[0]==s[1]!=s[2] for s in states)
+-    ties=any(r[m]['minimum_ties']!=1 for r in repetitions for m in REG['model_order'])
+-    row['status']='TIE_DEPENDENT_DISAGREEMENT' if stable and relation and ties else ('STABLE_MAIN_EVENT' if stable and relation else 'PROTOCOL_SENSITIVE_OR_UNSTABLE_EVENT')
+-    if row['status']!='STABLE_MAIN_EVENT':return None
+-    obj=normalized(st)
+-    name='%s_k%03d_%s'%(cid,st['expanded'],origin)
+-    save('snapshots/'+name+'.json',obj)
+-    row['snapshot']='snapshots/'+name+'.json';row['snapshot_sha256']=digest(st)
+-    row['snapshot_unchanged_by_observer']=True
+-    return {'row':row, 'snapshot':obj}
+-
+-
+-def prefix(cid, limit):
+-    guard()
+-    if COUNTS['search_prefix_and_restore_calls']>=6:raise Stop('PREFIX_RESTORE_CALL_LIMIT')
+-    COUNTS['search_prefix_and_restore_calls']+=1
+-    emit('SEARCH_START', call=COUNTS['search_prefix_and_restore_calls'], task=cid, role='qualification_prefix', expansion_cap=limit, intervention=False)
+-    st=blank(cid);task,_=load_task(cid)
+-    h=search_score(st,[task.init_mask])[0];st['best_h']=st['h_root']=h
+-    heapq.heappush(st['heap'],(h,0,task.init_mask));st['serial']=1
+-    candidate=None;records=[]
+-    path=ROOT/'decisions'/('%s_prefix.jsonl.gz'%cid)
+-    with gzip.open(path,'wt') as f:
+-        while st['status']=='RUNNING' and st['heap'] and st['expanded']<limit:
+-            guard()
+-            if candidate is None:
+-                got=screen(st,'fresh_prefix')
+-                if got:candidate=got
+-            before=digest(st);decision=step(st)
+-            after=normalized(st)
+-            rec={'before_sha256':before,'decision':decision,'after':after}
+-            records.append(rec);f.write(json.dumps(rec)+'\n')
+-    if st['status']=='RUNNING':st['status']='PREFIX_NODE_LIMIT'
+-    emit('SEARCH_END', task=cid, status=st['status'], expanded=st['expanded'], generated=st['generated'])
+-    return candidate,records,st
+-
+-
+-def replay(candidate, baseline=None):
+-    if COUNTS['search_prefix_and_restore_calls']>=6:raise Stop('PREFIX_RESTORE_CALL_LIMIT')
+-    row=candidate['row'];obj=candidate['snapshot'];cid=row['task']
+-    st=restored(obj)
+-    COUNTS['search_prefix_and_restore_calls']+=1
+-    emit('SEARCH_START', call=COUNTS['search_prefix_and_restore_calls'], task=cid, role='no_intervention_restore', expansion_cap=64 if cid.startswith('ipc') else 32, intervention=False)
+-    records=[];limit=64 if cid.startswith('ipc') else 32
+-    suffix = None if baseline is None else [r for r in baseline if r['decision'] and r['decision']['expanded']>obj['expanded']]
+-    if suffix is not None:limit=min(limit,len(suffix))
+-    for _ in range(limit):
+-        if st['status']!='RUNNING' or not st['heap']:break
+-        guard();before=digest(st);decision=step(st);records.append({'before_sha256':before,'decision':decision,'after':normalized(st)})
+-    path='decisions/%s_k%03d_restore%d.jsonl.gz'%(cid,obj['expanded'],COUNTS['search_prefix_and_restore_calls'])
+-    with gzip.open(ROOT/path,'wt') as f:
+-        for r in records:f.write(json.dumps(r)+'\n')
+-    emit('SEARCH_END', task=cid, role='no_intervention_restore', expanded_after=st['expanded'], steps=len(records), status=st['status'])
+-    return records
+-
+-
+-def compare(candidate, a, b):
+-    n=min(len(a),len(b),64)
+-    same=n>0 and all(a[i]==b[i] for i in range(n)) and len(a)==len(b)
+-    # Equality checks actual full content, not just hashes or CLOSED/Jaccard.
+-    obj={'task':candidate['row']['task'],'k':candidate['row']['k'],'next_pop_identical':bool(n and a[0]['decision']==b[0]['decision']), 'steps_compared':n, 'all_full_state_queue_parent_cache_counter_content_equal':same,'first_divergence':next((i for i in range(n) if a[i]!=b[i]),None),'status':'PASS' if same else 'TECHNICALLY_INVALID'}
+-    G2.append(obj)
+-    candidate['row']['G2']=obj
+-    return same
++def run_branch(slot):
++    global ACTIVE
++    e = EVENTS[slot['event']]
++    name = slot['branch']
++    directory = 'branches/' + slot['event'] + '/' + name
++    (ROOT / directory).mkdir(parents=True, exist_ok=False)
++    tload, cload = time.perf_counter(), time.process_time()
++    task, _ = load_event(e)
++    load_wall, load_cpu = time.perf_counter()-tload, time.process_time()-cload
++    tr, cr = time.perf_counter(), time.process_time()
++    p = PREV / e['snapshot']
++    assert sha(p) == e['snapshot_file_sha256']
++    initial = json.loads(p.read_text())
++    assert obj_digest(initial) == e['snapshot_semantic_sha256']
++    st = restored(initial)
++    assert st['model_sha256'] == REG['model']['sha256_actual'] and st['scoring_protocol'] == PROTOCOL
++    normal = min(x for x in st['heap'] if x[2] not in st['closed'])
++    assert (normal[1], format(normal[2], 'x'), bits(normal[0])) == tuple(e['choices']['D0@820'][k] for k in ['serial', 'state', 'score_bits'])
++    forced = e['choices']['T1@2460'] if name.startswith('B') else None
++    assert any(ser == e['choices']['T1@2460']['serial'] and format(s, 'x') == e['choices']['T1@2460']['state'] and s not in st['closed'] for _, ser, s in st['heap'])
++    ACTIVE = {'name': name, 'event': slot['event'], 'slot': slot['slot'], 'actual_evaluations': 0,
++              'deadline': float('inf'), 'raw': (ROOT / directory / 'score_bytes.bin').open('xb', buffering=0)}
++    for key, value in st['score_cache'].items():
++        note_value(st['task'], key, value)
++    save(directory + '/initial.json', initial)
++    restore_wall, restore_cpu = time.perf_counter()-tr, time.process_time()-cr
++    emit('BRANCH_START', **slot, load_wall_seconds=load_wall, load_cpu_seconds=load_cpu,
++         restore_wall_seconds=restore_wall, restore_cpu_seconds=restore_cpu, cache_source='ORIGINAL_SNAPSHOT_ONLY')
++    TOTAL['slots_started'] += 1
++    start, cstart = time.perf_counter(), time.process_time()
++    ACTIVE['deadline'] = start + 120
++    complete, count, log_wall, log_cpu, search_end = initial, 0, 0.0, 0.0, start
++    reason, partial, error = None, None, None
++    with gzip.open(ROOT / directory / 'steps.jsonl.gz', 'wt', compresslevel=1) as log:
++        try:
++            while st['status'] == 'RUNNING' and count < 512:
++                guard()
++                before = obj_digest(complete)
++                decision = step(st, forced if count == 0 else None)
++                guard()
++                signal.setitimer(signal.ITIMER_REAL, 0)
++                search_end = time.perf_counter()
++                tl, cl = time.perf_counter(), time.process_time()
++                after = normalized(st)
++                rec = {'before_sha256': before, 'decision': decision, 'after': after}
++                log.write(json.dumps(rec) + '\n')
++                log.flush()
++                complete = after
++                if decision is not None:
++                    count += 1
++                log_wall += time.perf_counter()-tl
++                log_cpu += time.process_time()-cl
++                if decision is None:
++                    break
++            reason = st['status'] if st['status'] != 'RUNNING' else 'EXPANSION_LIMIT'
++        except Stop as err:
++            reason = str(err)
++            partial = {'interruption_position': ACTIVE.get('interruption_position'), 'incomplete': normalized(st),
++                       'last_complete_steps': count, 'not_counted_as_complete_expansion': normalized(st) != complete}
++        except Exception as err:
++            reason = 'TECHNICALLY_INVALID'
++            error = repr(err)
++            BLOCKED[slot['event']] = error
++            partial = {'interruption_position': ACTIVE.get('interruption_position'), 'incomplete': normalized(st), 'error': error}
++        finally:
++            signal.setitimer(signal.ITIMER_REAL, 0)
++    elapsed, cpu = time.perf_counter()-start, time.process_time()-cstart
++    ACTIVE['raw'].close()
++    save(directory + '/final_complete.json', complete)
++    if partial is not None:
++        save(directory + '/partial_interrupted.json', partial)
++    plan_valid, plan_length = None, None
++    if complete['status'] == 'SOLVED':
++        plan = complete['plan']
++        action_ids = [task.actions[i].aid for i in plan]
++        final = task.replay(action_ids)
++        plan_valid = final is not None and task.goal_satisfied(final)
++        plan_length = len(plan)
++        save('plans/' + slot['event'] + '_' + name + '.json', {'indices': plan, 'action_ids': action_ids,
++             'legal_and_goal': plan_valid, 'final_state': None if final is None else format(final, 'x'), 'optimality': 'UNKNOWN'})
++        if not plan_valid:
++            reason = 'TECHNICALLY_INVALID'
++            BLOCKED[slot['event']] = 'PLAN_CONTRACT_FAILURE'
++    row = {**slot, 'status': complete['status'], 'stop_reason': reason, 'completed_additional_expansions': count,
++           'plan_valid': plan_valid, 'total_plan_length': plan_length, 'actual_model_state_evaluations': ACTIVE['actual_evaluations'],
++           'search_and_logging_wall_seconds': elapsed, 'last_complete_search_end_seconds': search_end-start,
++           'search_and_logging_cpu_seconds': cpu, 'logging_wall_seconds': log_wall, 'logging_cpu_seconds': log_cpu,
++           'load_wall_seconds': load_wall, 'load_cpu_seconds': load_cpu, 'restore_wall_seconds': restore_wall, 'restore_cpu_seconds': restore_cpu,
++           'deadline_detection_latency_seconds': max(0, elapsed-120) if reason == 'SEARCH_WALL_LIMIT' else 0,
++           'partial_expansion_saved': partial is not None, 'error': error, 'directory': directory,
++           'final_complete_sha256': obj_digest(complete), 'initial_semantic_sha256': obj_digest(initial)}
++    for key in ['generated', 'duplicates', 'path_updates', 'calls', 'score_cache_hits', 'score_cache_misses']:
++        row['new_' + key] = complete[key]-initial[key]
++    row['valid_OPEN'] = sum(entry[3] for entry in complete['heap'])
++    save(directory + '/receipt.json', row)
++    emit('BRANCH_END', **row)
++    print(json.dumps(row), flush=True)
++    return row
++
++
++def identity():
++    m = json.loads((ROOT / 'input_manifest.json').read_text())
++    failures = []
++    for path, expected in m['remote_file_hashes'].items():
++        if not Path(path).is_file() or sha(path) != expected:
++            failures.append(path)
++    status = subprocess.check_output(['git', '-C', str(REPO), 'status', '--porcelain=v1', '--untracked-files=all'])
++    head = subprocess.check_output(['git', '-C', str(REPO), 'rev-parse', 'HEAD'], text=True).strip()
++    return {'mismatches': failures, 'HEAD': head, 'status_sha256': hashlib.sha256(status).hexdigest(),
++            'status_lines': len(status.splitlines()), 'own_pid': os.getpid()}
+ 
+ 
+ def main():
+-    emit('STAGE_START', scope='G1_G2', protocol=PROTOCOL, phase_C_authorized=False)
+-    # The historical event is checked before any new prefix; its logical state is retained.
+-    oldpath=REG['old_p12_snapshot']
+-    class Restricted(pickle.Unpickler):
+-        def find_class(self,module,name):raise pickle.UnpicklingError('nonprimitive snapshot')
+-    old=Restricted(io.BytesIO(Path(oldpath).read_bytes())).load()
+-    seed=blank('ipc_p12')
+-    seed.update(old)
+-    for h,ser,s in seed['heap']:seed['score_cache'][format(s,'x')]=bits(h)
+-    # Original OPEN values are replaced only in a declared controlled-protocol copy.
+-    original_top=min(e for e in seed['heap'] if e[2] not in seed['closed'])[2]
+-    changed=[]
+-    for h,ser,s in seed['heap']:
+-        v=raw_score('ipc_p12','D0@820',s,'controlled_historical_OPEN_revalue')
+-        changed.append((v,ser,s));seed['score_cache'][format(s,'x')]=bits(v)
+-    seed['heap']=changed;heapq.heapify(seed['heap'])
+-    oldcandidate=screen(seed,'historical_k016',force_three=True)
+-    save('old_p12_protocol_comparison.json',{'original_next':format(original_top,'x'),'controlled_next':format(min(seed['heap'])[2],'x'),'logical_original_snapshot_retained':True,'queue_revalued':True,'event_survives_controlled_protocol':oldcandidate is not None,'qualification':CANDIDATES[-1]})
+-    struct_results=[]
+-    for cid in REG['struct_task_order']:
+-        c,records,final=prefix(cid,32)
+-        struct_results.append((c,records))
+-        save(cid+'_prefix_summary.json',{'status':final['status'],'expanded':final['expanded'],'candidate':None if c is None else c['row']})
+-    # Earliest p12 event is checked from its root rather than assuming k16 was earliest.
+-    p12c,p12records,p12final=prefix('ipc_p12',64)
+-    save('ipc_p12_prefix_summary.json',{'status':p12final['status'],'expanded':p12final['expanded'],'candidate':None if p12c is None else p12c['row']})
+-    if p12c:
+-        suffix=[r for r in p12records if r['decision'] and r['decision']['expanded']>p12c['snapshot']['expanded']]
+-        if compare(p12c,suffix,replay(p12c,p12records)):SELECTED.append(p12c['row'])
+-    elif oldcandidate:
+-        # This fallback stays exploratory; earliest status cannot be inferred if the new prefix had none.
+-        oldcandidate['row']['not_selected_reason']='not observed in canonical root prefix; historical protocol sensitivity remains separate'
+-    for c,records in struct_results:
+-        if c:
+-            suffix=[r for r in records if r['decision'] and r['decision']['expanded']>c['snapshot']['expanded']]
+-            if compare(c,suffix,replay(c,records)):SELECTED.append(c['row'])
+-            break
+-
+-
++    assert REG['authorization']['phase_C'] == 'APPROVED_BY_USER_EXECUTE'
++    before = identity()
++    save('identity_before.json', before)
++    assert not before['mismatches'] and before['HEAD'] == REG['expected_server_HEAD'] and before['status_sha256'] == REG['expected_status_sha256']
++    emit('STAGE_START', fixed_order=REG['slots'], protocol=PROTOCOL, precheck_forwards=0)
++    signal.signal(signal.SIGALRM, alarm)
++    resource.setrlimit(resource.RLIMIT_CPU, (14000, 14020))
++    for slot in REG['slots']:
++        if slot['event'] in BLOCKED:
++            row = {**slot, 'status': 'NOT_RUN', 'stop_reason': 'EVENT_STOPPED_TECHNICAL', 'error': BLOCKED[slot['event']], 'actual_model_state_evaluations': 0}
++            emit('SLOT_NOT_RUN', **row)
++            ROWS.append(row)
++            continue
++        try:
++            global_guard()
++            ROWS.append(run_branch(slot))
++        except Exception as err:
++            BLOCKED[slot['event']] = repr(err)
++            row = {**slot, 'status': 'FAILED_BEFORE_SEARCH', 'stop_reason': repr(err), 'actual_model_state_evaluations': 0}
++            emit('SLOT_FAILURE', **row)
++            ROWS.append(row)
++        save('branch_results.json', ROWS)
++
++
++fatal = None
+ try:
+-    resource.setrlimit(resource.RLIMIT_CPU,(7000,7100))
+     main()
+-except Stop as err:
+-    SEARCH_STOP=str(err);emit('STOP',reason=SEARCH_STOP)
+ except Exception as err:
+-    SEARCH_STOP='TECHNICAL_ERROR:'+repr(err);emit('ERROR',reason=SEARCH_STOP)
++    fatal = repr(err)
++    emit('STAGE_FAILURE', error=fatal)
+ finally:
+-    cpu=time.process_time()-START
+-    save('candidates.json',CANDIDATES)
+-    save('selected_events.json',SELECTED)
+-    save('G2_replay_checks.json',G2)
+-    save('gate_receipt.json',{'status':'ELIGIBLE_AWAITING_PHASE_C_APPROVAL' if SELECTED else ('STOPPED_AT_BUDGET' if SEARCH_STOP and 'LIMIT' in SEARCH_STOP else 'NO_ELIGIBLE_EVENT' if not SEARCH_STOP else 'TECHNICALLY_INVALID'),'stop_reason':SEARCH_STOP,'counts':COUNTS,'cpu_seconds':cpu,'wall_seconds':time.perf_counter()-WALL,'GPU_device_seconds':0,'phase_C_runs':0,'selected_event_count':len(SELECTED),'training':0,'certification':0,'graph_builds':0,'scoring_protocol':PROTOCOL})
+-    emit('STAGE_END',cpu_seconds=cpu,counts=COUNTS,phase_C_runs=0)
+-    RAW.close();LEDGER.close()
+-    print(json.dumps(json.loads((ROOT/'gate_receipt.json').read_text()),ensure_ascii=False),flush=True)
++    signal.setitimer(signal.ITIMER_REAL, 0)
++    for slot in REG['slots']:
++        if not any(row['slot'] == slot['slot'] for row in ROWS):
++            row = {**slot, 'status': 'NOT_RUN', 'stop_reason': fatal or 'STAGE_INTERRUPTED', 'actual_model_state_evaluations': 0}
++            ROWS.append(row)
++            emit('SLOT_NOT_RUN', **row)
++    save('branch_results.json', ROWS)
++    after = identity()
++    save('identity_after.json', after)
++    receipt = {'counts': TOTAL, 'fatal_error': fatal, 'blocked_events': BLOCKED,
++               'process_cpu_seconds': time.process_time()-CPU_START, 'wall_seconds': time.perf_counter()-WALL_START,
++               'CPU_ancillary_reserve_seconds': REG['CPU_ancillary_reserve_seconds'], 'training': 0, 'fitting': 0,
++               'certification': 0, 'full_graph_builds': 0, 'GPU_device_seconds': 0,
++               'old_inputs_unchanged': not after['mismatches'], 'server_checkout_unchanged': after['HEAD'] == REG['expected_server_HEAD'] and after['status_sha256'] == REG['expected_status_sha256']}
++    save('run_receipt.json', receipt)
++    emit('STAGE_END', **receipt)
++    LEDGER.close()
++    print(json.dumps(receipt), flush=True)
+--- /dev/null
++++ analyze.py
+@@ -0,0 +1,231 @@
++"""Saved-evidence-only verifier. No model loading, forward, or search."""
++import ast
++import copy
++import csv
++import gzip
++import hashlib
++import itertools
++import json
++import struct
++import sys
++import time
++from pathlib import Path
++
++START = time.process_time()
++ROOT = Path(sys.argv[1])
++REG = json.loads((ROOT / 'preregistration.json').read_text())
++PREV = Path(REG.get('analysis_previous_root', REG['previous_remote_root']))
++META = json.loads((PREV / 'event_approval_metadata.json').read_text())
++EVENTS = {e['event_id']: e for e in META['events']}
++ROWS = json.loads((ROOT / 'branch_results.json').read_text())
++RUN = json.loads((ROOT / 'run_receipt.json').read_text())
++# Import pure serialization and comparison functions only; never execute runner main/imports.
++tree = ast.parse((ROOT / 'phase_c.py').read_text())
++pure = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in ['value_from_bits', 'obj_digest', 'future_scene']]
++exec(compile(ast.Module(body=pure, type_ignores=[]), 'phase_c_pure', 'exec'), globals())
++
++
++def save(name, obj):
++    (ROOT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
++
++
++def records(path):
++    with gzip.open(path, 'rt') as f:
++        for line in f:
++            yield json.loads(line)
++
++
++def compare_logs(a, b):
++    n, mismatch = 0, None
++    for x, y in zip(records(a), records(b)):
++        if x != y:
++            mismatch = n
++            break
++        n += 1
++    return {'common_identical_complete_steps': n, 'first_full_content_mismatch_zero_based': mismatch, 'PASS_common_prefix': mismatch is None and n > 0}
++
++
++def log_info(path):
++    out = []
++    for i, rec in enumerate(records(path)):
++        s = rec['after']
++        out.append({'step': i+1, 'decision': rec['decision'], 'exact_sha256': obj_digest(s), 'future_sha256': obj_digest(future_scene(s)),
++                    'generated': s['generated'], 'duplicates': s['duplicates'], 'path_updates': s['path_updates'],
++                    'calls': s['calls'], 'cache_misses': s['score_cache_misses'], 'valid_OPEN': sum(e[3] for e in s['heap'])})
++    return out
++
++
++def record_at(path, k):
++    if k == 0:
++        return json.loads((path.parent / 'initial.json').read_text())
++    return next(rec['after'] for i, rec in enumerate(records(path), 1) if i == k)
++
++
++def verify_ledger():
++    starts, ends, failures = {}, {}, []
++    branches = {r['slot']: r for r in ROWS}
++    same_keys = {}
++    forward_by_slot = {}
++    interventions = []
++    for line in (ROOT / 'branch_ledger.jsonl').read_text().splitlines():
++        e = json.loads(line)
++        if e['kind'] == 'MODEL_STATE_START':
++            assert e['sequence'] not in starts
++            starts[e['sequence']] = e
++            forward_by_slot[e['slot']] = forward_by_slot.get(e['slot'], 0)+1
++        elif e['kind'] == 'MODEL_STATE_END':
++            assert e['sequence'] not in ends
++            ends[e['sequence']] = e
++            a = starts[e['sequence']]
++            rawpath = ROOT / branches[a['slot']]['directory'] / 'score_bytes.bin'
++            with rawpath.open('rb') as f:
++                f.seek(a['byte_offset'])
++                b = f.read(4).hex()
++            if e['status'] == 'OK':
++                assert b == e['value_bits_le']
++                key = (a['event'], a['state'], a['model'], a['protocol'])
++                assert key not in same_keys or same_keys[key] == b
++                same_keys[key] = b
++            else:
++                failures.append(e)
++        elif e['kind'] == 'INTERVENTION_AUDIT':
++            assert e['every_other_field_unchanged'] and e['remaining_logical_heap_exact']
++            interventions.append(e)
++    assert starts.keys() == ends.keys()
++    assert len(starts) == RUN['counts']['actual_model_state_evaluations']
++    for row in ROWS:
++        assert forward_by_slot.get(row['slot'], 0) == row['actual_model_state_evaluations'] <= 4096
++        if 'directory' in row:
++            assert (ROOT / row['directory'] / 'score_bytes.bin').stat().st_size == row['actual_model_state_evaluations']*4
++    assert len(starts) <= 32768
++    return {'actual_forward_start_end_pairs': len(starts), 'all_raw_score_bytes_verified': True, 'unique_scored_keys': len(same_keys),
++            'failed_or_interrupted_forward_records': failures, 'interventions': interventions, 'per_slot_forwards': forward_by_slot}
++
++
++LEDGER_CHECK = verify_ledger()
++REPEAT, ANALYSIS, COALESCENCE = [], [], []
++for eid in ['struct_n4_004_k008', 'ipc_p12_k002']:
++    e = EVENTS[eid]
++    rr = {r['branch']: r for r in ROWS if r['event'] == eid}
++    if any('directory' not in rr[b] for b in ['A', 'B', 'A_repeat', 'B_repeat']):
++        ANALYSIS.append({'event': eid, 'status': 'TECHNICALLY_INVALID', 'reason': 'MISSING_OR_NOT_RUN_SLOT'})
++        continue
++    paths = {b: ROOT / r['directory'] / 'steps.jsonl.gz' for b, r in rr.items()}
++    checks = {'event': eid, 'A_vs_A_repeat': compare_logs(paths['A'], paths['A_repeat']), 'B_vs_B_repeat': compare_logs(paths['B'], paths['B_repeat'])}
++    baseline_path = PREV / 'decisions' / (e['task']['case_id'] + '_prefix.jsonl.gz')
++    old = [r for r in records(baseline_path) if r['decision'] and r['decision']['expanded'] > e['k_completed_expansions']]
++    checks['old_suffix_steps'] = len(old)
++    checks['old_suffix'] = {}
++    for b in ['A', 'A_repeat']:
++        now = list(itertools.islice(records(paths[b]), len(old)))
++        mismatch = next((i for i, (x, y) in enumerate(zip(now, old)) if x != y), None)
++        checks['old_suffix'][b] = {'steps_compared': min(len(now), len(old)), 'first_mismatch': mismatch,
++                                  'all_available_old_suffix_reached': len(now) == len(old), 'PASS_common_prefix': mismatch is None and len(now) > 0}
++    valid = all(checks[k]['PASS_common_prefix'] for k in ['A_vs_A_repeat', 'B_vs_B_repeat']) and all(v['PASS_common_prefix'] for v in checks['old_suffix'].values())
++    for b in rr:
++        valid = valid and rr[b]['stop_reason'] != 'TECHNICALLY_INVALID'
++    checks['technical_validity'] = 'PASS' if valid else 'TECHNICALLY_INVALID'
++    REPEAT.append(checks)
++    data = {b: log_info(path) for b, path in paths.items()}
++    common = min(len(v) for v in data.values())
++    a, b = data['A'][:common], data['B'][:common]
++    seq_div = next((i+1 for i in range(1, common) if a[i]['decision'] != b[i]['decision']), None)
++    state_div = next((i+1 for i in range(1, common) if a[i]['exact_sha256'] != b[i]['exact_sha256']), None)
++    lcp = 0
++    for x, y in zip(a[1:], b[1:]):
++        if x['decision'] != y['decision']:
++            break
++        lcp += 1
++    # All cumulative checkpoints are indexed before candidate hash matches are confirmed by content.
++    co = {'event': eid, 'rule': REG['coalescence'], 'hash_candidates': [], 'content_confirmed_matches': [],
++          'scope': 'A/B initial plus complete checkpoints; (0,0) excluded as preintervention identity'}
++    def states_index(branch):
++        initial = json.loads((paths[branch].parent / 'initial.json').read_text())
++        return [{'step': 0, 'future_sha256': obj_digest(future_scene(initial)), 'exact_sha256': obj_digest(initial)}]+data[branch]
++    ai, bi = states_index('A'), states_index('B')
++    for rule in ['exact_sha256', 'future_sha256']:
++        lookup = {}
++        for x in ai:
++            lookup.setdefault(x[rule], []).append(x['step'])
++        for y in bi:
++            for i in lookup.get(y[rule], []):
++                j = y['step']
++                if i == j == 0:
++                    continue
++                candidate = {'rule': rule, 'A_step': i, 'B_step': j, 'sha256': y[rule]}
++                co['hash_candidates'].append(candidate)
++                xobj, yobj = record_at(paths['A'], i), record_at(paths['B'], j)
++                if rule == 'future_sha256':
++                    xobj, yobj = future_scene(xobj), future_scene(yobj)
++                assert xobj == yobj
++                co['content_confirmed_matches'].append(candidate)
++    co['status'] = 'CONFIRMED' if co['content_confirmed_matches'] else 'NO_OBSERVED_COALESCENCE_IN_SAVED_WINDOW'
++    COALESCENCE.append(co)
++    solved = all(r['status'] == 'SOLVED' and r['plan_valid'] for r in rr.values())
++    delta_e = rr['B']['completed_additional_expansions']-rr['A']['completed_additional_expansions'] if solved and valid else None
++    delta_l = rr['B']['total_plan_length']-rr['A']['total_plan_length'] if solved and valid else None
++    if not valid:
++        status = 'TECHNICALLY_INVALID'
++    elif solved:
++        status = 'VALID_COMPLETE_EFFECT' if delta_e != 0 or delta_l != 0 else 'VALID_COMPLETE_NO_OBSERVED_EFFECT'
++    elif co['content_confirmed_matches']:
++        status = 'VALID_COALESCENCE'
++    elif common > 1 and (seq_div is not None or state_div is not None):
++        status = 'VALID_BOUNDED_EFFECT'
++    else:
++        status = 'CENSORED_UNRESOLVED'
++    initial = json.loads((paths['A'].parent / 'initial.json').read_text())
++    fixed_window = {}
++    for branch in ['A', 'B', 'A_repeat', 'B_repeat']:
++        end = data[branch][common-1] if common else None
++        fixed_window[branch] = None if end is None else {k: end[k]-initial[{'cache_misses':'score_cache_misses'}.get(k, k)] for k in ['generated', 'duplicates', 'path_updates', 'calls', 'cache_misses']}
++        if end:
++            fixed_window[branch]['valid_OPEN'] = end['valid_OPEN']
++    opposite_pop = {}
++    for branch, target in [('A', e['choices']['T1@2460']['state']), ('B', e['choices']['D0@820']['state'])]:
++        hits = [r['step'] for r in data[branch] if r['decision'] and r['decision']['state'] == target]
++        opposite_pop[branch] = hits[0] if hits else None
++    ANALYSIS.append({'event': eid, 'status': status, 'technical_valid': valid, 'all_four_solved_and_plan_valid': solved,
++                     'delta_E_B_minus_A': delta_e, 'delta_L_B_minus_A': delta_l, 'common_complete_window_all_four': common,
++                     'first_subsequent_decision_divergence_step': seq_div, 'first_subsequent_full_scene_divergence_step': state_div,
++                     'ordered_common_prefix_excluding_intervention_step': lcp, 'fixed_window_metrics': fixed_window,
++                     'other_candidate_first_pop_step': opposite_pop, 'coalescence': co['status'],
++                     'complete_efficiency': 'OBSERVED_FOR_THIS_EVENT' if solved and valid else 'UNKNOWN',
++                     'H3': 'UNRESOLVED', 'optimality': 'UNKNOWN', 'coverage': 'SAME_PARENT_RELATION_FORM_COVERED_OPTIMAL_PATH_UNKNOWN' if eid.startswith('struct') else 'CROSS_PARENT_OPTIMAL_PATH_IDENTITY_UNKNOWN'})
++
++save('repeatability_checks.json', REPEAT)
++save('coalescence_checks.json', COALESCENCE)
++save('event_results.json', ANALYSIS)
++save('score_ledger_verification.json', LEDGER_CHECK)
++fields = sorted({k for r in ROWS for k in r})
++with (ROOT / 'results.csv').open('w', newline='') as f:
++    w = csv.DictWriter(f, fieldnames=fields)
++    w.writeheader()
++    w.writerows(ROWS)
++
++text = ['# 重复性核查', '', '比较每个完整检查点的实际内容，包括队列物理布局、父指针、g/action、CLOSED、评分缓存和计数。时间截断长度差单列。', '']
++for r in REPEAT:
++    text += ['## '+r['event'], '', '```json', json.dumps(r, ensure_ascii=False, indent=2), '```', '']
++(ROOT / 'repeatability_report.md').write_text('\n'.join(text))
++text = ['# 完整汇合核查', '', '规则在运行前冻结。先匹配摘要，再核对全部实际内容；未匹配只表示已保存窗口内未观察到汇合。', '',
++        '统计排除字段：'+', '.join(REG['coalescence']['excluded_cost_fields'])+'。保留所有父链接、缓存、有效与失效队列条目、插入序号及 serial。堆物理排列规范化为逻辑顺序。资源消耗另列；有限预算剩余额度不被宣称等价。', '']
++for r in COALESCENCE:
++    text += ['## '+r['event'], '', '```json', json.dumps(r, ensure_ascii=False, indent=2), '```', '']
++(ROOT / 'coalescence_report.md').write_text('\n'.join(text))
++text = ['# CP-DISR-Q2-PHASE-C-SINGLE-POP-V1 结果', '', '只在两份固定现场改变第一次出队，之后全部使用冻结 CPU/FP32 单状态 D0@820。', '',
++        '| 事件 | 裁决 | A 新增展开 | B 新增展开 | ΔE | A/B 计划长 | ΔL |', '|---|---|---:|---:|---:|---|---:|']
++for e in ANALYSIS:
++    rr = {r['branch']: r for r in ROWS if r['event'] == e['event']}
++    text.append('| {event} | {status} | {a} | {b} | {de} | {la}/{lb} | {dl} |'.format(**e, a=rr['A'].get('completed_additional_expansions', 'NA'), b=rr['B'].get('completed_additional_expansions', 'NA'), de=e.get('delta_E_B_minus_A'), la=rr['A'].get('total_plan_length'), lb=rr['B'].get('total_plan_length'), dl=e.get('delta_L_B_minus_A')))
++text += ['', '逐事件边界：', '']
++for e in ANALYSIS:
++    text += ['- '+e['event']+'：共同完整窗口 '+str(e.get('common_complete_window_all_four'))+' 步；排除干预当步后的首次决策分歧 '+str(e.get('first_subsequent_decision_divergence_step'))+'；完整效率 '+e.get('complete_efficiency','UNKNOWN')+'；汇合 '+e.get('coalescence','UNKNOWN')+'。']
++text += ['', 'p12 各支若截断，不把截断值代入真实总展开或加速比。Struct 的计划经过动作合同回放，最优性仍 UNKNOWN。A′/B′为技术重复，不能视为四个独立任务。', '',
++         'H2-C 只按上述两个事件裁决；不支持 T1 整体优劣或监督来源因果。H3 保持 UNRESOLVED。Struct 同父关系形式已有方法覆盖，具体最优路径条件未知；p12 跨父关系缺少最优路径身份。', '',
++         '训练、拟合、距离认证、GPU、完整图构建均为0。执行到本卡预算后停止，没有补跑、扩大面板、R4或新算法。', '',
++         '详细数据：results.csv、event_results.json、repeatability_checks.json、coalescence_checks.json、branch_ledger.jsonl、branches/及plans/。']
++(ROOT / 'research_decision.md').write_text('\n'.join(text)+'\n')
++cpu = time.process_time()-START
++save('analysis_receipt.json', {'role': 'saved_evidence_only', 'model_forwards': 0, 'search_runs': 0, 'cpu_seconds': cpu,
++     'old_inputs_unchanged': RUN['old_inputs_unchanged'], 'server_checkout_unchanged': RUN['server_checkout_unchanged'], 'raw_ledger_valid': True})
++print(json.dumps({'events': ANALYSIS, 'analysis_cpu_seconds': cpu}, ensure_ascii=False))
+--- /dev/null
++++ preregistration.json
+@@ -0,0 +1,135 @@
++{
++  "card": "CP-DISR-Q2-PHASE-C-SINGLE-POP-V1",
++  "client_date": "2026-10-11 Asia/Taipei",
++  "created_utc": "2026-10-11T00:53:12.920801+00:00",
++  "authorization": {
++    "phase_C": "APPROVED_BY_USER_EXECUTE",
++    "user_text": "执行",
++    "draft_status_overridden_by_explicit_user_request": true,
++    "remote": "Existing lab-xushijie3 SSH authorization in this conversation; same environment",
++    "publication": "Standing instruction: each card has a new branch; code and results push"
++  },
++  "parent_commit": "f3d8d655d172b338bb38ba7f638aa0fda355dc55",
++  "algorithm_baseline": "cc7d79d6fcb053bf0c16033e765a2e808de2aaac",
++  "expected_server_HEAD": "070b2bfa3863b93bb350578a57bfae91f7f5562a",
++  "expected_status_sha256": "7e28c12422978992210c8063dc71d675afd18b8ec35ab0f3972206dcea83e311",
++  "server_repository": "/home/xushijie3/work/graph_cp_disr",
++  "previous_remote_root": "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z",
++  "model": {
++    "path": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u00820.pt",
++    "sha256_actual": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
++    "sha256_recorded": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
++    "matches": true
++  },
++  "model_run_root": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z",
++  "protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
++  "protocol_settings": {
++    "threads": 1,
++    "rounding": "NONE",
++    "device": "cpu",
++    "path": "Original cli_ext.make_evaluator -> NeuralEval.evaluate([state]) -> model.state_values; no RGCN arithmetic rewrite",
++    "precision": "original FP32 weights",
++    "input_shape": "one graph per actual model invocation, regardless of total requested batch",
++    "deterministic_algorithms": true,
++    "id": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
++    "legacy_difference": "original GPU/chunk48 changed to CPU/native single-state; historical OPEN revalued only in separate controlled copy",
++    "cache_key": "task SHA/domain SHA + full state hex + model SHA + protocol ID; nested namespaces retain full key identity"
++  },
++  "caps": {
++    "events": 2,
++    "continuations": 8,
++    "expansions_each": 512,
++    "search_wall_seconds_each": 120,
++    "actual_model_states_each": 4096,
++    "actual_model_states_total": 32768,
++    "CPU_seconds": 14400,
++    "GPU_seconds": 0,
++    "training": 0,
++    "fitting": 0,
++    "certification": 0,
++    "full_graphs": 0
++  },
++  "CPU_ancillary_reserve_seconds": 300,
++  "slots": [
++    {
++      "slot": 1,
++      "event": "struct_n4_004_k008",
++      "branch": "A"
++    },
++    {
++      "slot": 2,
++      "event": "struct_n4_004_k008",
++      "branch": "B"
++    },
++    {
++      "slot": 3,
++      "event": "struct_n4_004_k008",
++      "branch": "B_repeat"
++    },
++    {
++      "slot": 4,
++      "event": "struct_n4_004_k008",
++      "branch": "A_repeat"
++    },
++    {
++      "slot": 5,
++      "event": "ipc_p12_k002",
++      "branch": "B"
++    },
++    {
++      "slot": 6,
++      "event": "ipc_p12_k002",
++      "branch": "A"
++    },
++    {
++      "slot": 7,
++      "event": "ipc_p12_k002",
++      "branch": "A_repeat"
++    },
++    {
++      "slot": 8,
++      "event": "ipc_p12_k002",
++      "branch": "B_repeat"
++    }
++  ],
++  "coalescence": {
++    "exact": "Previous normalized full content; SHA candidate then actual content equality",
++    "future": "Exclude only below nondecision statistics; preserve all other fields; sort heap logical entries, preserve actual serial values and counter; retain stale entries",
++    "excluded_cost_fields": [
++      "expanded",
++      "generated",
++      "duplicates",
++      "path_updates",
++      "calls",
++      "score_cache_hits",
++      "score_cache_misses"
++    ],
++    "exclusions_justification": "These are recorded statistics, not action/score/queue decision inputs in frozen step; external consumed resource costs and budget remainder reported separately. No claim of equal remaining wall time or remaining bounded budget.",
++    "scope": "All saved complete A/B checkpoints, including cross-depth pairs; initial (0,0) excluded; no match means only no observed coalescence"
++  },
++  "decision_rules": {
++    "repeat": "Actual complete content equality in common prefix. Wall-only length differences are censored, not automatic errors.",
++    "window": "All four common complete prefix; exclude intervention step for subsequent effects",
++    "complete": "delta_E=E_B-E_A; delta_L=L_B-L_A; require repeat validity and all four legal solutions",
++    "Struct_threshold": "Old 20 percent and 5 expansions canceled before outcome. Report every nonzero delta; no posthoc threshold",
++    "incomplete": "Interrupted expansion retained separately, not counted complete; resource requests still fully charged",
++    "score_consistency": "Audit observed values only; never provides cross-branch values; same key bytes mismatch stops related event",
++    "timing": "Deadline begins immediately before first pop after restore. Inclusive guard uses elapsed time including logging. SIGALRM inside step; checkpoint writing is separate record time. No new search after deadline; detection latency and last complete search end are reported.",
++    "cache": "Fresh deserialize original cache per slot; evaluator task/model lifecycle same G2; observational registry never used for inference"
++  },
++  "forbidden": [
++    "qualification rescreen",
++    "T1 forward",
++    "D0@2460 forward",
++    "new event",
++    "repair continuation",
++    "training",
++    "distance query",
++    "merge",
++    "R4"
++  ],
++  "code_sha256": {
++    "phase_c.py": "5570b1945f28c509588ca7cb2edc841de38016ff6b6b2c28aec5bf905ca8ca79",
++    "analyze.py": "2350ff74d54141eab6eb501dd3987392c077ddc4269f1b3800a3adf3b02bb166"
++  }
++}
+--- /dev/null
++++ input_manifest.json
+@@ -0,0 +1,763 @@
++{
++  "previous_published_commit": "f3d8d655d172b338bb38ba7f638aa0fda355dc55",
++  "protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
++  "events": [
++    {
++      "event_id": "ipc_p12_k002",
++      "task": {
++        "case_id": "ipc_p12",
++        "file": "/home/xushijie3/ext/downward-benchmarks/depot/p12.pddl",
++        "sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
++        "track": "ipc",
++        "actual_sha256": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
++        "domain_file": "/home/xushijie3/ext/downward-benchmarks/depot/domain.pddl",
++        "domain_sha256": "6bb9465e91b63ec5c30b7d21994ee886d59f88028d92d363753567e3e5fa1bdd"
++      },
++      "k_completed_expansions": 2,
++      "next_pop_number": 3,
++      "snapshot": "snapshots/ipc_p12_k002_fresh_prefix.json",
++      "snapshot_file_sha256": "15a2d7d9de41218831303ae3da4bfe32d6acf7f6cf5c050a1c46b1ac5ae0a072",
++      "snapshot_semantic_sha256": "308e88941bd7d48a7f76015640a87cd6042dd46943b10062bc1db70de17e0101",
++      "valid_OPEN": 26,
++      "closed": 2,
++      "nodes": 28,
++      "score_cache_entries": 28,
++      "choices": {
++        "D0@820": {
++          "state": "100000400001000001000000100000000002400000000401000000000800000020004000200000000000002000000004000000000000280e4d4243ffe08208020202108004020a0",
++          "serial": 25,
++          "score_bits": "46e73bc3",
++          "minimum_ties": 1,
++          "top_second_gap": 1.1358184814453125
++        },
++        "D0@2460": {
++          "state": "100000400001000001000000100000000002400000000401000000000800000020004000200000000000002000000004000000000000280e4d4243ffe08208020202108004020a0",
++          "serial": 25,
++          "score_bits": "6285eec2",
++          "minimum_ties": 1,
++          "top_second_gap": 4.232177734375
++        },
++        "T1@2460": {
++          "state": "10000040000100000100000010002000000240000000040100000000080000002000400020000000000000000000000400000000000028264f4243ffe08208022202108004020a0",
++          "serial": 11,
++          "score_bits": "70ec7dc2",
++          "minimum_ties": 1,
++          "top_second_gap": 1.9956398010253906
++        }
++      },
++      "independent_scoring_checks": 3,
++      "repeat_actual_invocations": 234,
++      "scoring_protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
++      "no_intervention_replay": {
++        "task": "ipc_p12",
++        "k": 2,
++        "next_pop_identical": true,
++        "steps_compared": 62,
++        "all_full_state_queue_parent_cache_counter_content_equal": true,
++        "first_divergence": null,
++        "status": "PASS"
++      },
++      "score_byte_ranges": [
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "D0@820",
++          "first_sequence": 2261,
++          "last_sequence": 2286,
++          "byte_offset": 9040,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "D0@2460",
++          "first_sequence": 2287,
++          "last_sequence": 2312,
++          "byte_offset": 9144,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "T1@2460",
++          "first_sequence": 2313,
++          "last_sequence": 2338,
++          "byte_offset": 9248,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "D0@820",
++          "first_sequence": 2339,
++          "last_sequence": 2364,
++          "byte_offset": 9352,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "D0@2460",
++          "first_sequence": 2365,
++          "last_sequence": 2390,
++          "byte_offset": 9456,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "T1@2460",
++          "first_sequence": 2391,
++          "last_sequence": 2416,
++          "byte_offset": 9560,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "D0@820",
++          "first_sequence": 2417,
++          "last_sequence": 2442,
++          "byte_offset": 9664,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "D0@2460",
++          "first_sequence": 2443,
++          "last_sequence": 2468,
++          "byte_offset": 9768,
++          "byte_length": 104
++        },
++        {
++          "task": "ipc_p12",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "T1@2460",
++          "first_sequence": 2469,
++          "last_sequence": 2494,
++          "byte_offset": 9872,
++          "byte_length": 104
++        }
++      ],
++      "phase_C_authorized": false
++    },
++    {
++      "event_id": "struct_n4_004_k008",
++      "task": {
++        "case_id": "struct_n4_004",
++        "file": "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/data/problems/struct/struct_n4_004.pddl",
++        "sha256": "57659f4588e58c83d17e4d48cb8e2e294c28fc002a1e61a1a4c6002275ba2f47",
++        "track": "typed",
++        "actual_sha256": "57659f4588e58c83d17e4d48cb8e2e294c28fc002a1e61a1a4c6002275ba2f47",
++        "domain_file": "/home/xushijie3/ext/pddl-generators/depots/domain.pddl",
++        "domain_sha256": "81def700212ae8b703f6352307eb588223da67b943ae9289b0661c8e72319e69"
++      },
++      "k_completed_expansions": 8,
++      "next_pop_number": 9,
++      "snapshot": "snapshots/struct_n4_004_k008_fresh_prefix.json",
++      "snapshot_file_sha256": "1af0c5d87b3ae89e824b2ce39efec4d7c075653ff0774cc42270d576785cff4e",
++      "snapshot_semantic_sha256": "e40a87cc9e2fc5bfc4949dee33490b0e2654b0c2c7a935169fd923cbc05d2782",
++      "valid_OPEN": 22,
++      "closed": 8,
++      "nodes": 30,
++      "score_cache_entries": 30,
++      "choices": {
++        "D0@820": {
++          "state": "2008040200011f7f65",
++          "serial": 28,
++          "score_bits": "d4740cc3",
++          "minimum_ties": 1,
++          "top_second_gap": 25.093429565429688
++        },
++        "D0@2460": {
++          "state": "2008040200011f7f65",
++          "serial": 28,
++          "score_bits": "6aa986c3",
++          "minimum_ties": 1,
++          "top_second_gap": 37.384033203125
++        },
++        "T1@2460": {
++          "state": "200000021081c47f41",
++          "serial": 29,
++          "score_bits": "f5bfa9c2",
++          "minimum_ties": 1,
++          "top_second_gap": 3.9065399169921875
++        }
++      },
++      "independent_scoring_checks": 3,
++      "repeat_actual_invocations": 198,
++      "scoring_protocol": "CPU_FP32_NATIVE_ONE_STATE_DETERMINISTIC_V1",
++      "no_intervention_replay": {
++        "task": "struct_n4_004",
++        "k": 8,
++        "next_pop_identical": true,
++        "steps_compared": 6,
++        "all_full_state_queue_parent_cache_counter_content_equal": true,
++        "first_divergence": null,
++        "status": "PASS"
++      },
++      "score_byte_ranges": [
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "D0@820",
++          "first_sequence": 1965,
++          "last_sequence": 1986,
++          "byte_offset": 7856,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "D0@2460",
++          "first_sequence": 1987,
++          "last_sequence": 2008,
++          "byte_offset": 7944,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_0",
++          "model": "T1@2460",
++          "first_sequence": 2009,
++          "last_sequence": 2030,
++          "byte_offset": 8032,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "D0@820",
++          "first_sequence": 2031,
++          "last_sequence": 2052,
++          "byte_offset": 8120,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "D0@2460",
++          "first_sequence": 2053,
++          "last_sequence": 2074,
++          "byte_offset": 8208,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_1",
++          "model": "T1@2460",
++          "first_sequence": 2075,
++          "last_sequence": 2096,
++          "byte_offset": 8296,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "D0@820",
++          "first_sequence": 2097,
++          "last_sequence": 2118,
++          "byte_offset": 8384,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "D0@2460",
++          "first_sequence": 2119,
++          "last_sequence": 2140,
++          "byte_offset": 8472,
++          "byte_length": 88
++        },
++        {
++          "task": "struct_n4_004",
++          "pass": "independent_OPEN_repeat_2",
++          "model": "T1@2460",
++          "first_sequence": 2141,
++          "last_sequence": 2162,
++          "byte_offset": 8560,
++          "byte_length": 88
++        }
++      ],
++      "phase_C_authorized": false
++    }
++  ],
++  "remote_file_hashes": {
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage1a_v11.py": "1a97690aab4be17c09ab8b8f05711fc9c4420bec955336aee9493692bb9a69e1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/runtime.py": "5bc5f091cb447e6eae3ba95f17f004554615706a696e592f5c61e1cac6777bff",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_fresh_confirm.py": "4e3bd440189ecbd0d07f5ba54026cb11e106728b5db7a190831804e99255930b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/struct_gen_analysis.py": "4eb5feab1350b580420cfcefe2dc21eb2974cf1a6f30820ee6f57ee884901c19",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/patch_identity.py": "a91497e732682f5d12da768328337db2fe65f9214569d272abbfa6bbe2d5b0a4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/validation.py": "c598878c8472762af850cab5029a99974b4f63bd3ed15081ed1cd48982e2f14e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/vlm_metrics.py": "3dd534f36296277c596d46c98590221e4cb2e1e789c3e3f571540f0892e1269d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage2a_p0.py": "029e4568a7392ce8a509af095b68bacfb3bf3f97bb7e426767b5ad63fd343265",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/skills.py": "b2c08e6d1b36ed05f3ff9ad3a3b7bf25f50911f280056eacd94caeb30a23bd6a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/tb_seedbal_analysis.py": "b8342f0bbd65648e051aeda7cc3100c126fd2a6f976f871a004dccfb798480c0",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/graph.py": "bd64609a3bef009bdb9f06fd46f01ef8d07beac2b7f8a417103d9b1758071034",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/contracts.py": "0fac13062584ae5b21eea9b7f2d535d07115e221c40b06f8a93ebc70d0b3d94c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_c1.py": "ab24cc160b71b142b3e400bc2b03dafaa7c34b48c114687c5330f45838b28457",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/vlm_provider.py": "72bd5dc995b3fdd4d756524068f4a2724f7e1f0c71ab3510bc3404094039ba32",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/cli.py": "29989c62ce472179049bc65cd4b23b894f2f7897436212b3cf331b506bbda3fa",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/vlm.py": "8cc025955fa098f79033f7a556af9ac9efff8b8873da237c9955b2b5080f345f",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_confirm_runtime.py": "d4cac1679dcfa10b470af99f272048457f9f9c253a15e3ea59096a306135a0fe",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/execution.py": "7737dff66e6c56f681f2d067999986d5177c25f3895aee1c867103733f72a8a8",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage2a_v11.py": "451fdbd96d82bac5ad737915e50a5363a9165908b2dc61d240e3d15cdc560b39",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/geom_constants.py": "a06dc9fb5f2d2a469519882602f5fb6c20842cf2d4df1761a748cb55dfbd7110",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage1a_smoke.py": "eba8eb6d1445a42d60e1083964ce08250f7cc018b5e6999c135e8cb62bcd527e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_eval_record.py": "eecb08b6a641da303b93cc521f55ca49fbe6d8f45183badded614b686110d7db",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/vlm_cache_pipeline.py": "4cf9f28a14edcb6156eeedb9abd8fbad55f5bdb6d243a5abc9aaef5d47ed0eeb",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage2a_explore.py": "ece72d5fc22bc6cb216a9dfdde7c01fe11307a803d7099b4c7b9627b9ed5a4b2",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/__init__.py": "c45f4721bc68ce4db6ffc25e9b1c64b0a366f1f8521ca3252ee8fe24e8e71816",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/common.py": "b0a4a6e460fa2b70d991f4d43e3c76bc033b348ca8861d149245c2b9d1e2ed70",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/facts.py": "0d01cdf49c07576f11fa6e5711bd7245827f54144e3515c757c1f181914a0a7d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage1a.py": "ba4f27ddd3cb41f1411c49a32c1aed788057f85c077d8b0b8378d517d20beb7a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_e1.py": "3537ba14c6fb0eb7ec92c570a14125c3a3e701acbb34713627db4eedc5b0e05c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage2a_startup_gate.py": "84acb8886fe09d48adf57f57a741a6283e7d5893c1ee087b119d9a5a2cab2e5e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_repctl.py": "eda59285e9e942153bd4ab55ccb5ed5950e7aa56fc89f7de8f147ad13a13d92c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/phase_a_v13_r3.py": "e381572f04b362793dc6cbc5268bf5d66ff339af6a4952fa9916e34e8bc42f87",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_analysis.py": "c518994be1dba1dd302cfc3ff821dd597a9ebc2b036dcda9b422892226dcddf6",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_classification.py": "45e295a62597f6d6719579d3ff5c18aaf626bb0b4c02f3c4d15b7eef0a9cb0ba",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage1a_v11_parallel.py": "67c231e49769779edf2dd81a71fcf2e4539c42a8065244228d95878f2cbd3cfd",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage1a_v11_final_eval.py": "3544a6f9e7d1c2d2e9a713fd4f84571d72b9f8302a24e84f9c1dd0e0bcbb98dc",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_qmark_policy.py": "1e17968c4a9776cbca983833926e4cb23dc45b10c9a60758cddb6e10bbf4f1fc",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb.py": "0536ff754ddf63a277ba87a5bf4d8c7e64c10a40394f5326a23439519d96013a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_seedbal.py": "336a4378723e9adbfad99e16671db10add176ddd20ea776b3c7db567ed375363",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/adapters.py": "3db83aeb94dda4729b19a3714ded27e2e2186f5ae542fc954aa359b9683c6299",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/tb_repctl_checks.py": "420b97a91a86676589644d4498534641be2db3b83a921cc915804da0394ce850",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/phase_a_v13_r1.py": "e8d46b4b2c56a7441a9ec0e66bd05f2d1dc99d3bad76bdbfb956d76bce1ef906",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/final_tb_structgen.py": "c0d560cabce8b1dabcd82181c0fdec7dbf357aeeec3d2883ed5caa42a7c0a970",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/neural.py": "17d031a3272dc0d4e4e2dbfc701ddf97bf3fbed38e5ebb8c4e7cda397d25a33a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/repctl_policy.py": "f986516dfd7e9779da7e1f1579f74b88bc9489a0ad5ebb7d0ed9e93a8cf90a81",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/struct_gen_runtime.py": "273e81f54073d5a84f4bf028e7aba312b05d694d4167eb4926835d5344ae3e0e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage0c.py": "75294d6c1e26850b5b782399992e0b450416a787e39f1c8b5ace6aa749bcd533",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/collector.py": "670b1a2c64cf94240ca138a12744c1b063dc39250907265855db1aacba5e5796",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/phase_a_v12.py": "886795e08d91f8010c1b7f04a469a76fa82de16d21fb563a051e07d3ae9183ab",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/struct_gen.py": "e8483078dc9501af1a08c8d740714a91dc69ff365f7b06ce0357ccd2404feff2",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/torch_rl.py": "e1fb60fc6c0d3110cb40aa5a8cfa7db2a5c902a3c473f25e7d33c7066a956f13",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/evaluation.py": "e16aa5661d45fbba18c770249515880828e51e67828372bfb2e4d19d01242782",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/fixtures.py": "11e1ffc1617daad4cb78571c90e6c000fd0891004b86dd6347c758720ecdf06d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/persistence.py": "3e10b9651c2e583703e920cb7167aa90fe19781b76cf19227d73bb66f9c50714",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/rl.py": "6aa5df99bc12d73d25d99e58ae95814e741db9ee6a78903b0f45ee0593fc6d6f",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/c1_blocksworld_policies.py": "f57c32be09651276d0719996dcaa060869dcf8f6e8183d37b8e497dc4ac4aad8",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/stage2a_runner.py": "6b94a17ec08a6ded1562de452304ec7fb0e1d89fa0cc535036a03d10aec07e84",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/prior.py": "078fd2742777c69a5016c363e96d49ddb103583216a03737b4a2958ca6e77b25",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/splits.py": "fef9bc210718c6589386141479bf85225c4152c6acf1491750482d4999df4e94",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/classification.py": "4c40f4df87cfadb9ac46d451356bf92ac730c74ae39f580e7ef3302218237056",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/canonical.py": "95c6e491cdbab40a9a4172e9051374a464b7028708f89fa1cc0af37ec0b7e59c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/a04p_controls.py": "4f9b5672386424e0d29edda5c68a7a2f8d422fd148dcb6ee373607bf865223cd",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/imitation_launch.py": "5e8d430826e4c4463bc3f048ac0516e2be105137befce7ebf782537a6b52d235",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/contracts.py": "79562d3c204fbb66bcccbaca4c3362cb3349a271ab6c2fc43dad33c7340673b7",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/__init__.py": "882eb9b0687b7113ae3e974ebb5590cd0d2120c001012e599718b636ba28c1e0",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/environment.py": "a99e60668b31246d2755a6358f0bf9f8fa139b1b6656b83fa5c84f7bbc9e4aec",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/eval_a03.py": "3c14e5be502bea40bcf52348bac3b777cdac997edce97d74058ab202002ea31d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/imitation.py": "d277dbd46528fe24765962722c0b265284965df3aaaa6e7c419c110bc1c40eab",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/planner.py": "2d62326cf91ce9d72d4c9268e0e7ccf6244129ce04f46a70a0d0921cfd1a438e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/scale_order.py": "d5799f2e1b171f85a00105c97ae6fcac0d6a779b0f3fd3ed60ad1c89eefb01ae",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/gp_attribution.py": "f246ff1618cc82fc251cddd073f84e52a0d0ed730bfa02f136a403da3d481334",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/scorer_control.py": "2d48b9f418c42d64464e6cc9b22f7c2b2f80eebb8862f7a6afe18f4980f35180",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/a04p_registry.py": "11035213085247f56dfb0a07b76326ad5596e393a62bfa0024467f3663923aaf",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/goal_progress.py": "80d12a63b51cbf279bb464d12b8c8f60b00333b604024fb1a7c9d88fb673fc60",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/goal_probe.py": "97b15dadc5cf0da834243080cc48d093b79542bb586c56f807e626523189e684",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/generator.py": "8e23f8491b4c19d35f97a211ff765a510af2763821b5f26796c46054e01bf382",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/metrics.py": "cd26fea264675b45b9f2037d22b66c8c1e11402931ce1195b697ba5fa23be345",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/train.py": "b367d5d810ca3884ce3af5b5ad56e48a4ba1460246126c69242a31d0f6830718",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/state.py": "a6d7ba370fa5bf2f75e069a6f0f0a9e024c094e634a573fa4e5da0c2204e3564",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/launch.py": "58ff20a4de71b41943a7de6aee15d7d8ecd0079cc6250cd976e30532fb647138",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/baselines/b_plan.py": "7758fdc0e58dcd4d99844c4c15dce17cde72a2c4f9a9e9ae84bee6f8bfe431e4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/baselines/__init__.py": "7a5b52e02e347325d9c6539e1872eb5ffb99a85a24bd01e0525ceb06e1ea95c4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_reference_bank.py": "071ff0ce5598c203ff2d071644e64cba8b9c61efc15053ad386850fc8fa898b1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_v3_isochronous.py": "568bc2882d3e76329a9e70418a61d8739d7bb50278ea920277768b19226e98f9",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_pilot.py": "d1f7061369808923a1ffd23e65ff634a29b2c70d8fc8787f7965c76b5ba21eb1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_evidence_review.py": "afe978a126ae6f2fa1772ef8ec1c795266895ab098e5c5865a02b4aa5b5e21ff",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_provider.py": "cd761111f866dda07922969ef57cf36644569ee69295b294b3be4f9e84060dc1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_provider.py": "b9dbec8dc39fb2b4f5d992f449d33d65a97011deeafc572031f2bca99741a0ff",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_pilot_v2_diag.py": "3ad0fbe003d63208de2da519b18f1083ad3d83099a4f2c97da72bff2cd9adc47",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_pilot_v2_geom.py": "c79b8129b8d96df76f19bfbebac23a02c46777fef8a3b835c2356a71b9e26dfd",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_evidence_closeout.py": "039bd287fb320e58ea8013e9ff07bbf34df56be28b2da17923d88ef37d321a4a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/__init__.py": "e76c97324345cf02aee298f932a485c07cb00e2436a714182ea4e5f7207b56b4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_revision_resume.py": "1372d856b48a09636028ab0e728e0ec147f5134ff84209e034a34036d1f85b1f",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_pilot_v2.py": "814a06e82f60e02ca0cf6219c74cc24c23ee01e106ffcd74c27e849b1fd2b37b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_staging_v2.py": "beb2fdcaa56109e74f8e49a0a4ba38e965b3945ad24b75aab0fd15960ecc98c8",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_representation.py": "8cdc799e8cdf9c9653c18edad49d85f9defc4e76bfe70b16e283ad4916f141ff",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_design.py": "12626b6a3e7cdf9f03f451002d6c6e824478f3a8c56a95d7006deed53aa762ef",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_family_a_soft_ordering_mvp.py": "8518d81307dbbb544262b8e4e7378421929ba43a6afa01e69c0af3c3c6ad8aa5",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_revision.py": "a4ad3ef50c56e7067fd50539d9bf85deac82f5a8d871197746d98e332c9d6f60",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_v3r1_reach_safe_mirror.py": "8a648eff4c77d51d1185cd6ac77e839232714bff16df789d0be99509f01cce0a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s4_tp_sr_pilot_v2_proto.py": "5712a82fff3f2fa240b7798f32c8c1d411bbc70ebd19e74ea3110af4602467ae",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_closeout.py": "11f90401bfdba00a9465c44bf94eefb74260bc116f148d52a9c76db5b090e624",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_obs_v2_r2.py": "bd0574632f09b1d110be6cabb379f10cc87115c53b514bcbfc612202106d4c24",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_e4_recovery.py": "097b5410ea7c904a4c0db01d9bf435679947996b1f011395ac3c16482d807384",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/family_b_obs_v2.py": "50abb1deeee8017e48b33ccc14c5706b9ef81f1c103d5df8b384b945b442512d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/analysis/s1_integration.py": "fe52ce398d78b5bab3e3ac717d94dc2552facf68d36abc5d474bf93b2d685fe6",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/depots.py": "fe04309df2bd68e2624f97b0bdc448e1d39976a548ba2eeaf57754f1fb413447",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/task.py": "0b083b1e2543de71ab83d06a7f63e8cc709238b33ebf4a9a4cfb0be696a0265d",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/parse.py": "258c57227f6776b22f2c3c955546c67f797d87798cd327b37fbf36f135f09c7c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/control.py": "4ee6b06b324691717bdcb87d9e3c1164064b8fdf6157ddfea6bde56eb328e1e2",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/bw_stage.py": "b79f8141c851384d6824cf30a0fa72b9704c336b0c8e263ec9ea8fe7f9185481",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/report.py": "1fff849d855982fc925af0469a7f258faa0e63a14f79b4882e1472289e435df2",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/data.py": "cfa1898637e57b6ef3079453e4cce7e46641fc3e5687ab65079b5ea105dcef99",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/exact_dist.cc": "e042a1b226723c0e0896a123241ea8320334b0216fbfa70a4ce84a65f45fd2f1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/sched.py": "f01a3fa74f79590be44a5b2c17e753634646fa1766e35cf29ba9e2546c89e5e6",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/stages.py": "b198602572142d6fc01a25ac930b77fb8ee64e896c2c2d946ae1a60762bb210f",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/model.py": "b0d62013594d36ee90038cfa4f31b5f844de59fcebe2a345b16a3c134d3aad86",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/train.py": "e8fcd27f61c43dec7bd533e6c32ae82916a3d7395fc98f076ec810d1cb4db541",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/evalkit.py": "e5e0407d017800bf67ef1ea474e241ad3d70c96f540ec6620801c1af079183f0",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/lookahead.py": "61577a6dfa248211937c81d51a85ad49cd575ec87dd94d2da868cadb1b6edba5",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/labels.py": "8fe2b8dfaff9584e6dbf30b7828f86c15b55f49a4de161e1b37eaab8efd95890",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/trainer.py": "f1c37dbc0025f85319279dcdc9684cfdd576f9d3d33b4008c7df21d6542dc2e0",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/common.py": "a6d720fcef8ed7b15b632aabf91e0dbf912b62d84126cfe7978c3ecc8db1d06b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/schedule.py": "8618dd49e837d347ccbb923f17f6c693fbbaabefc1dfb5eebf17f15417b6de26",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/heads_math.py": "3d844a8849e39b3e5ff7cabe43128cbc5814b2acddb605d3b2d868f3a1f48af8",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/blocksworld/method_serial/model.py": "10e87654e67d89dc0833da9bb601930bafe06aae14d332b600c5d6526442bac4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/verifier.py": "e342d9bcd0b6e3f2dddaf4aeb3da171e7b9e9cb56b946b216c74d568c7aa2482",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_sr_runtime.py": "7db3002c25f92fe014a71bd9b955c809fd079b84df43e5668148665bbcf62408",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/runtime_factory.py": "e9bd0f5d0508d06f46a600278c148bf0ccbabd95d3ecae7bc0e0307eb78d6646",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/safety.py": "98ce1cbb2c815decff334fccc798670e84fd64bdf955ee57434801ad02c8fe5c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/scene_capture.py": "a245761beefdfe2559f348ddf75656396e44423b388100c5534e6dbc00d4abe4",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_so_mvp_runtime.py": "bcff4daa6c4d31a54068a86b3724b888c5853f62019da608c9f8c2e5a8369d2b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/task_evaluator.py": "56c00df2660385401c09e2f6045e2deb91c4015a8159b50be1224580a22bed41",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/observations.py": "f0e44d52c5d8a631299cb1d350388133a78204896ccd11a9785745f290eaf977",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_sr_v2_runtime.py": "9bdd773c88421614ae854b71811f6ce469e7e6ae5a581919d08ae04606ab149b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/family_b_runtime_v2.py": "eee72c0914fedb41b9d477baeced2485d5f199bb225db7f8c1b7b03046ad8412",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/family_b_adapters.py": "65a62cd7603295866dd91187625b2041f2d14cedd73bccff394f4235fb56ba1b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/__init__.py": "92fc782e1ea7de203e0db80bfc8193d172f6fde04ff2ba9580cf78c3a8f90d37",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/snapshot.py": "9362e36758e2b01a037d492bdb7fddb052c4040b916f353814e172c938a18729",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_sr_generator.py": "a1044e3e3445c3093284740a6fc281c88466728b2e32a10cbb82041fb75824df",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/clock.py": "c29837ed0754261a3a4a16b416f289e66bce3203df3d7d29b7f9f71afc7b8e64",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/perception.py": "32b2ad455dbb418e13a4cd9cc16e8995b1bb5dc0f4bdd08d6ab1913c63930c7c",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/family_b_env.py": "5e24ea4d95380efb075b3e895d22bf50006db101cac987e4feb8f42b1f71e968",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/family_b_runtime.py": "7cb2ffc8980686328a9b2f8be57c6fd26129c36477a620d6e95b36593049c8ec",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/skill_executor.py": "fbd28608bc8e022b7741084d8b327cde175a5f41326bae66042f2dea38e39aed",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_sr_instrumentation.py": "569a0b1ac1faaa4ea52443fe5622fb849651bc67bb88157563fcc7f24e3842da",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/d0_env.py": "acca983f058d2061d737603a91df9acc98310e4bc9ee713659d66ab6c92b7c6e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/tp_sr_v2_env.py": "53a942306057ddc04f5f8cf352a65d87a6b4bb5145cc3f562b9d41cbc303de4a",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/family_b_obs_v2.py": "77b2ac9cce94cd59ee54f8e2e7ba6b72df36c7c06b8f240fc1d639cdcb19a49e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/platforms/libero/controllers/__init__.py": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/budget.py": "da3508ba39f1ae5696ba66edd7e068e8d66e90357df125e94a2fea4ee2e660b1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/evaluators.py": "e4ee28ad695ec81a6eee95fa375feb7e26961010d317ce904db0bac301798b06",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/engine.py": "a963f0f1a2248a6a9600c857aa3c26d0fa1293435e14f3257982fac8f75337f7",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/report.py": "f8edb8032ada2ae5564150822fb2826d3084ce7c36ba3b80bf422f4ef6fe5e79",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/runner.py": "8476aaca951766eabe2a1b61877e394c80199173355a9a473ccdafc052360a87",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/analysis.py": "1e223b4eb192f4e8ca6babcf832e7ea96ed5c97a9d34d580d57fec6eaa8be9c0",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/search_match/hadd_server.cc": "4efbcfb9da10b0d6fc5202aec242c7cb7fc824651ba02211a1822fafcaac1426",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/reports_a.py": "749501bdac1c82359ff605fedb6f627af5adb4844b98ed98f3495586d53f47b1",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/models.py": "f41e3df093853f17bfe233bb92d7e2c650e7662057d7c3de66333e0fbb93258b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/cli_ext.py": "5e58ff2b869fe427cbe633f692ffd8312b9a3b3e83fcc6d8e7fb56d8bea6a3c7",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/final.py": "c42a541d93cb5bbbb2377e58d520efd5debf5d4a258f443a290d42d4a651c03f",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/statelib.py": "9bddefe998f6213d285a764285efacd60188ce06f063498333a45c60bf69159b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/panel.py": "3a210cd739521a29632d8c660963b16d3f43440538446b65fa3df7a7ba4ecb9e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/w1.py": "520585b1c000a2d73b192e0c652fc30d1025bd158a6ce76895cfad7b4398616b",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/crossparent.py": "bd33d827a7d3f1571c322ff2d82fc02dfd6c1d14f084717d9e12ed6aee7c06ec",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/diagb.py": "17cbb253954f56478053482516f417168844fb55881a4fbc85693549b14b11b5",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/train.py": "7524284af8a6f2e40603b6614ace5c2fac46d00797f9e0814bc6106f78c2f922",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/compact/variants.py": "ea49a91d3361538e292211230d578acfaabec4e0d03ca4130f24c200f14b4cc5",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/checks.py": "bafc7f244fa58a296a9c0f3c70fcc3bc34f71aae10ea5ac15caeb78e543c7f36",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/observed.py": "7f5f63dbb314ca1216f8613cc362f9ae943ae3e63f9b7467dfb2009f4092e6ec",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/core.py": "a238d089c6cdd827a3a1f4d5677d2bd4fb8b13daf9a50b9bd13cfa317a561853",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/references.py": "a8162bf75be709a628a30ecc7c83860f740955df41a9e1966435fbf6af050054",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/labels.py": "33641947f6fe934e46f417a0589d0b3e52a2bd778428573f316bce3235e69642",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/bounds.py": "743ee9b9029f9f7d0675a2c6a938101fe4123d440497272c31d6e8ee39415efb",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/scope_diag/analysis.py": "43d90f3146007d1a0396927cfe5920592353a7a5546366ca02312d89f053a527",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/alt_engine.py": "93869fd2737c284765cac29b72da19de82017e2b6cafae8ac18824737fe095b9",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/fast_value.py": "7e70adedde3a56c76d72507fe9dc312e159c6a42d471c9a1f1ccd4dc21188d17",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/profiling.py": "44b9ce902b93eacc61efb7277d4fac2fbf421eac3fcecfbcd7e752a652f8e492",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/evaluators.py": "d9208f62e080754d6df447b7802f50beed7869662fb5433fc6ae8308ddd4c53e",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/verify.py": "749a12d7dc9c907f3ae50b46eff85cb7c605e670e2f9011339e4c8b9ee94cae9",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/report.py": "7e09f1a02c0c94b12214780d521a7ab51ec43a2cec48717ec212fc96a6cfb0be",
++    "/home/xushijie3/work/graph_cp_disr/src/cp_disr/pddl/fast_alt/runner.py": "f200c532eddccd2deb1dd97948817ac1aeb5068d4e304e77c2c7fb771cffc1ca",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial_post.py": "9c94d02dbedfa3c6595c7d64c61ecfcd3c4509c50a2e930b64ec7a5e69cd05f6",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_launch.py": "a42566f1a17f410052055a9a16f99b0d25404b5d2bef9e2421cc252cff14aa3b",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_seedbal_launch.py": "ffb14ec30b939a70045040bfe835374ac3aaf33397beda8053e0f3e720943615",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_v3_isochronous.py": "65a1eb402a91852660da3f84b48b240487f585affe303c94439f6dbcf64ee38a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_pilot.py": "5b138cac952b5fa10dc0a31356c58df52ff5a442e96189c683a5525315bec82e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_results.py": "62b79e0bde9ceac53e1024c9fc44d7d37877e9ebfe096f96162b2c091e8a7e94",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_c1_launch.py": "26f4dbd298ce37d6ca92c299f605e5a85975d28dfdab2d1509bb5a8420ff3113",
++    "/home/xushijie3/work/graph_cp_disr/scripts/tp_sr_v1_review.py": "22993855c4fc13598457f849bfd1eff92592b2e0d778a9a3f090309a355e1636",
++    "/home/xushijie3/work/graph_cp_disr/scripts/tb_seedbal_results.py": "f5a6142188d719726c56d8739460a2c589ccf8f1d16289ede2ea612b3aae672b",
++    "/home/xushijie3/work/graph_cp_disr/scripts/tb_repctl_results.py": "95bf75f4bc80e52e1323af1414e5f9fb590b15c567bf3ff36c9f963c84ce9067",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_depots_search_match.py": "4a6eeeb866e8c671c0a69e02fe87b18cd124546165b670b579e883ff4a680c58",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_scorer_control.py": "cc20a5ddbc189b45cc1dc7afe46629d500d87164f18c7dd97c828332813005b0",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_goal_lookahead.py": "0e70f24000663ebeda3163f44ca37046ddacf6412786832420c6a78a89682ac6",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_search_scope_diagnostic.py": "dc01ef4d50abd712716664537842a8743b90eac059d1b62ad5f53323f3eaf96d",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_scale_order.py": "6a1f4c74eea45d215da85111d14179c2619e635ed0652dad971a0dd7795bf0da",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_existing_evidence.py": "2a1cf4471314a4455ba40398911d1e38cbb6c5d64a66bea07351b3919b07b822",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_build.py": "eb1ad24fb256313602eec70deab0df8080df76a9d8b07a8c70e558a25c22c18a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_goal_progress.py": "b7b9873dbb4a104e7bad854c671b33ab81065f361767a3537c60287fce324272",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_single_revision.py": "edd3c27d10898059ea0270cc5e91adc4a80c620d6e76db6456f252e6e50a9764",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_gp_attribution.py": "fdacbbd35a02f28d96f723faf9e51f55b534d16d47bfc3481cae70cdc694afc9",
++    "/home/xushijie3/work/graph_cp_disr/scripts/tb_repctl_legacy_equivalence.py": "da6ad41b7729b7f185db4a12f8e2f2520a53801c54b8b068e648feba29855893",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_integration_closeout.py": "d0327002d75d06fc3db2842fd77c1074f026070e338ef9b16b5f3dd17bf5bdc3",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_depots_fast_alt.py": "6d41a2e714a054c93925d5b81e4a33dae4af357742139e4549d6831c8ff22191",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_targeted_mutations.py": "d90bb14d7b87ef455e6fa383134d3bc8e2ef584c1e477c5c9d9a733fc34bd507",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_evidence_closeout.py": "f8f4ed5390d510bcfb71ed90feadbc16da4158347655fe282430901f6fbfbed6",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_observation_review.py": "b2d46dd20fb234eabff473851397efc43f14ddd467280f56f7e20ec516b483aa",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_eval_prep_build.py": "4bce23531d54794fac61dd1e95941c5f0a6990cf22c5855c842913767d9aaaec",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s4_tp_sr_pilot_v2.py": "fc0d60d09cf29df8b5fb65b99d5a9cdeec72b8780a8eada06a3f31141eb6d585",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_stage6.py": "d28d308b48546512db778d1f848deacf0b939260c945f2635c1e2ac1391c7c9e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_staging_v2.py": "034c8b67b1cd8a3d32197d2f73ce96163d7b87589eefa45baaa4e74b0247a001",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s4_tp_sr_pilot_v2_test_receipt.py": "9655d9428405a6f1117999f630a85be95d4c73e79fa76eda26bef7f3b0b22a96",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_launch.py": "78b4e8896602c5b9491cbb2b39d48ed2ae18cb92a856df7b705634a667ef2669",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_eval.py": "fe29f35ef3835a0fe6eebf9a9646bc0a430cc6d7cd143e5aafcb4fed04b2418d",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_prior_existence.py": "99452b8231537ca19b154149a03976651334c1800c5426a0371c4f634d01780f",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_scale_order_post.py": "302635ab7c27612c820ff2f23cad9f928720f3a30ba170aca20e4dcf9d48f537",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s4_tp_sr_design.py": "4ca225e8bc1660f324e0230a844f0bda4296373dea6ed3a661399990bdfc52b3",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s4_family_a_soft_ordering_mvp.py": "288cc33675045b2f9b6193d5beeede381febbe9a0998ef496e6a84ff7196dc19",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_eval_prep_load_check.py": "ec3c07214f1244e8242a3f81e01f4406f2c68883c80f57ccbfd9222c4c103c04",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_method_serial.py": "bd7f462f16062d135d10084d49322e18652bc7f08b22756075ec54d4eb3ba21f",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_eval.py": "6e866b95ff3513676226684d832037b95b6ef3e1b311c1b9ae96986c658a3bb8",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_integration_mutations.py": "1805477abddcbd399eb80a398d31ba5266c9a153d9622a0ed3933d0f819cfe9c",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_qualify_scripted.py": "b41285f096fc0aedac252ef4a6971dede38db0c6a8c85e5d43851d5d7076a8d1",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_il.py": "8cd787ce8cb108e705fab4e5ae0361d23c82655d4c36b9af1fcd2ddbdd6ffb95",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s4_tp_sr_pilot_v2_amend.py": "30ffa72a4501ebb8a85233475cb43d5d37dce821b5951c53daf9ae260ca39163",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_v3r1_reach_safe_mirror.py": "b04a3672bedf3124c659b0d5553283faf17fe6cb66139a6a39a5c6bed821a6b1",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots_post.py": "cf612649d5ada43950e7b68f68f82eca21a896151d0b7ce47d57b8703d9ef9bd",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_behavior_validation.py": "66df79c3c1e305dfe658b97a45696561c05cd13d5b8ba271cbc5ca43c1191d38",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_e1_launch.py": "30eb11c1fb7e14fd079a55a1e3f977bb4876524aa883f70577f774975dcf585f",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_results.py": "cf61cbcc751be2b8e64787e817bf78ed000c42b0f07257157881cb7d42dfd478",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_holdout_post_checks.py": "e93e1db458ee433b181d64f16d9f2e1b082f8429edb7f02d51562de0833f0e4e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_qualify.py": "7e9582e4bc62266f36a215b6b7ef4735889b56a8000b170f0b080f4e36acdd73",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_compact_w1_fit.py": "7f746b5003149f13ee3157849c3f5a6281981a72fa501b6245dc85a12abcc0bf",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_compact_diagnosis_v2.py": "f30d1911826cf4e8d93d73c5d2eeef67c150e7aae3d90376bdf126a4488aa01e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_holdout_runner.py": "1a840e3bd9e8375771805c8ba8f4ecc887d67153b66ae6fdc6648ab304a7eea1",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_repctl_launch.py": "90784686038fc2e26fb4ba02b87fc476063f4351a59a4bd7d466040591983c88",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_results.py": "2ee57adb237e291ce6c8f443845bc6ada84c4bda59c4151468d99771fdf6ad9a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_qualify_amend.py": "44757e09af525d3517072c53f062df005f68b44bb90a049870ed4d5eed6ed7d1",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_prep_receipts.py": "bd35f6f19b5f7aafabffde34bb2a2cf521b74a1a146f3cff9bf65f3b56324506",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_engineering_review.py": "c4c17f4763aac80e9d48535f1250425bdb9029357345b8d88594ce9cbc7d1358",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_eval_a03.py": "195946fa2c4745e1e2e18ead4da563edf9e653d7451c78ebf53ce8ce88ef14f1",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_obs_v2_r2.py": "b8da39b418ff7562a6651372523dda4bc0c4f83ee561709bf035693806b4e799",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_il_eval.py": "6a3a881f34144a8106a9abc7db29408f3a444ea3a48f03d2f7c7e033940fd862",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_fresh_confirm_build.py": "4c814f38d930d8cf8de3b548d884441aa0db466e10fe78afd92403507adf17f9",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_eval_prep_finish.py": "d558c4273254b83f02d87973bcc166fc75bd8cada41582178a8ebf5587267926",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_structgen_launch.py": "a06a1467ae1fd92d8c01f669c9b8eee7a01802df8200db5d023f2a285c668eba",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_a04p.py": "4e0c1b9346a19faee723a725ebb4eaf7026f58e5eb89bf4429f45556420b5076",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_eval.py": "cec353853c508a04a9d06aad9d6f04b9fb1cb5c3bc8e278091f6c22173f2869a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/tb_repctl_receipts.py": "2c3f8c67732cb207d20d8de45d9c525087f26fdbae887ef236bf71f125faf98a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/final_tb_eval_prep_dev_check.py": "a01bfe236b92e4ead42b27f231ea2dae246a4cdfd946b1307ac2f7d5c879de6e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/struct_gen_release.py": "a6323bdebb264b59d21a6793e843a531a58f46dc7c423cf78d2373d82cc9b91e",
++    "/home/xushijie3/work/graph_cp_disr/scripts/s1_e4_recovery.py": "2e08038ace43830c471a92cdac156ef5a90f9f542564cc5b2befc67859493c1f",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_public_depots.py": "35a4d0acabc4d5c2519e383c27ee36021f934c381cf14167d460ef93b6ab362c",
++    "/home/xushijie3/work/graph_cp_disr/scripts/c1_bw_build.py": "d4c47a627741f00838780bf9d4ef0bb1f27625d770e214e58d43ac0120d7c1ee",
++    "/home/xushijie3/work/graph_cp_disr/scripts/family_b_obs_v2.py": "8350e0c3d513d217f2fe7c187a9e31a45ea4c0cf064cb2c052e2eb5f4bbf6dca",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_2a/run_matrix.py": "626aa780e925c0f572486589b1de8e94fa6357b58f107a51f7a8dee398db768f",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_1a/run_stage_1a.py": "b57136170d5776ee116ddf97921aa8f3b97975ef9462e151d46c41727e90a34c",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_1a/smoke_d0_env.py": "95a82d7305e52718d2f6684c6c7c649d3ff78a9836ec0bc96fd882281b35597a",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_1a/build_d0_split.py": "f3c70be46487b95a06de1912a25647730e9d4268141e20782a78425a2613e272",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_0c/validate_formal_scenes.py": "85ad0062659267360c66115bec7c4e358c0a638d470887dfc10dfd2a66fe5fce",
++    "/home/xushijie3/work/graph_cp_disr/scripts/stage_0c/capture_formal_scenes.py": "0fede08cc52df98c3d9d9910e9416e0b581029c55ad9e51e4f914212af2523e8",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_analysis.py": "323d269d5ea215e02bee8e278e2c7b22c262676117b99182d92d163f1464e31f",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v1_review.py": "94f9dc4ad3e11d67b822e5e0adfb19d75c16930db726e549bc26c610d3128ae6",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_policies.py": "03437e0056f3a50e19367cd7e5c478b011334667f9728a2c9632fe5205562bde",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_q_target_detach.py": "9794a092657d4e5dd780bcd7cb9dad6fa6f67e0d7a5d735bb8928cc9f10c01c0",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_zero_prior.py": "963be4f264b300ff262388e731db1a69eb9090be86f458b189534cc8a7e9c6a3",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_effect_conflicts.py": "d5364f970681e07d3192265fb8cdeb0259a38ef426328509c30d933b47d2c504",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_geometry.py": "c0cea59a3ef12a9c4fb96864d83f6526d17571423cf61185cfcbd683a5429906",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_runtime.py": "6cf7f7fecd1095e511bcb4f9391c2067d8cae680ff25a71e5eecbd57128c9a3d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_q_executed_only.py": "baa6d0bfdc930855331154e5fc10bb4d7f34f733d168446da9fbf396d38c2d95",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_audit_integrity_regression.py": "f5588c18261d835526a05338dab21477e35e77438add48a369e0d370d6b34a70",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_depots_fast_alt.py": "4ad128b0b142243cd8a6d320a6b7f52360d9b70ba856da6ca0774d31124ef7ba",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_phase_a_v12_config.py": "61f64322b0dda7bca3ab044395ada5675c4863deb5d584b59066e3c51b0dc391",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_permutation.py": "02d006e700c76b71215473a5e2cc843aefb8970110967f20e995b4d2cc080a09",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_gate_evidence_regression.py": "ca998a3ce136f201397313a6593b0b92b9eebef3289c36b68e76e166f5232d7b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_final_tb_eval_record.py": "96f53f2f97c84f6e5014c9cb87030ec797cae42f0f68ad19fd6c4453625ab048",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_scope_diag.py": "b7333dfd515ece939ba759a3643b5a86aa1397f13b5a55d6d2861b21a4325fdf",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_evidence_closeout.py": "b425b025bf41da3ed89eaca9554cf4369f2bfb5ede3bc9cad5c142364c5ceeb4",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_instrumentation.py": "2d4ef15ba3392465cafacc17343b0e48afe502d08c574aa02278f86b15104b27",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_dispatch_integration.py": "30f369c7c4fac93186c4dc25523d9f6fcce9e6f9ff562af3aaa194918e8ac14a",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_gate.py": "a03023556b36742d0ddb0c0adb941ed5793c81320379a048250020619e9e9c7d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_deadline_semantics.py": "42bb40c34e131b8c497e3e8811c76f3714d6ac9ea0ebbc558e81b75e7fdc45b8",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_ablation_switches.py": "17e5fc1faaec92af8e843be5067d5fa72b9ffe70519d1936f20537777edc0943",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_single_revision.py": "60f8ce5aeb3344ff2f0a228459647aef38edc379cc45eb3bf816b26afea6da97",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_revision_input_binding.py": "30b6e610a2f3252ba60b8b919b94b622629a40262d66e51c21176cb9ef280211",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_struct_gen_analysis.py": "4b1a6f005b0172b826c3ab91a81961985af0925d7493dd2d70bff10dbc17ca7b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_scheduler.py": "94992a023fb59718c179750495ea6ff31f536b356a48e2188f0ca8bd018134b0",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_depots_search_match.py": "f82de6c614a47c37ab02db61f19493f9c2b4b9fad474aae25e17e6519b345d7e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_analysis.py": "f516681cde99fbe16983e42ca2111f951f895cffe8563f9248ca48829cfd303d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_ppo_masks.py": "794f0d14d8e3e28d472596841b9674938998a5e39faf5acb1523edcff4f124af",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_gp_attribution.py": "ed45bfd960dd0a6f154355d1df12d2b640ef8c1519cfce1c91d090948df94108",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_duration_discount.py": "20037125ed266189e3f2d14c00d4e9de5e0bc7fa55bf9c9ff77aa607d992efee",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_clock_integrity.py": "09cad6c32ed791efd129e046c1e28fd700316389eaf776cb896325031129095e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_eval_a03.py": "c4b45e69fea19eb4fb464d95c7744046a4b1d6b842ea0ed7c91cfb72c76ccfe9",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_final_tb_e1.py": "3d10dfa0bb9bd22da8e8046f1547a96f38627126776f16e924a6bbd558c228cf",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_obs_v2_r2.py": "31c73648d3ab9fbec3236424a3b01f9d1ae2f818ad1b4a9dc5588fbecd5c3d3f",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_struct_gen_launch.py": "63f527d5347b3b591038bca93bf3a965deeb9e99ff10a43ae11205a546b10337",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_runner_behavior.py": "c6acf331bec569e2fbc4acf6124dd55aba0e9b205b6f404d8ec7f3cb35d4309b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_launch.py": "fd7e4d9f92b0c9e04627c46a8cf02f349881e7a28bac7e712a4973cad5ba0062",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_smdp_boundaries.py": "a4a03757033a59db57877c96e41590ef6273385a8ca151fdb9192720881ee838",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_prior_bound.py": "0ab73bdce0f8d6da8f48ba53d56b39328fe5de141669ac63d0a8b654fc193916",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_goal_alignment.py": "21d97927d0dd80a72d611b15ca91a6e5aeaa960f3250c3d1f30ee67a375fb43f",
++    "/home/xushijie3/work/graph_cp_disr/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_nominal_isolation.py": "f5d591a401190493afe6180610812e4e122a0b898f158fdc1bc9c2721b730de6",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_method_serial_driver.py": "e2416fc28497e414c172460a62dc811bc01e53479bd08ef294cc05e36f045cab",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_goal_progress.py": "4671e4cc7e56b7944200499ecad958525a7b1274d636dfb176eef13df72abb13",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_staging_v2.py": "d311ba9e0b9bec010d8a563f18719f6240c444b8f20403ac4246c5e2ff0065de",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage2a_p0_unit.py": "a01004fc076128696cb2da3908c6ef5d00f344d63ffb10eb9e35b0cbd21b422a",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s0_final_variants.py": "e5ece1d869c3620ccb1f2352d90c138d551dbfd7eec82d87e20cfd597bf3d617",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_permissions.py": "26d23d461e71e5d04fe96beab21d345cd4137680d35b10d81a679f980b2907b5",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_final_tb_launch.py": "42aa99d650e2a62545545a7e7ae8990805dea2fcc143136c96f062d6d093a90c",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage1a_p0_unit.py": "b148c953cf277e1ee2b6929bf01de444757806e21acab65ca3172de5f076fea7",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_final_tb_smoke_r2.py": "748374e95b1e4f135909537a24ee53ba5ded15a196a111bdf25b29960b298e2e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_goal_lookahead.py": "f4e7ddb96777c66282759f455bd46b033e88ce280de5d8f5adeb47956bd6903a",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_classification.py": "b859790c23a36ccf1fa3fe8373a943e60f97130caf5c8c57095bf5986d1888a4",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_scorer_control.py": "156058f416a39f380e14d9808d41ff4d167375f1a4b26fc12ac07a01c27a52fb",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_struct_gen.py": "96b86b86c3a84bdd14264b82391a1bf99ffde853737bd80c7fe4003171eb12e9",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_d7_amendment.py": "3952cca0c4f35e15c0e32670fb816861e601c29d228739ff22fdb447154cf8af",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_method_serial_math.py": "35d5bb2415734c32a7353910b031b6e7068b6c17d908396f835467961d39f87b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_prior_episode_fixed.py": "5f7f4998c533401205a3c52ba4c69dd090b47651abcf87f50709169870f2f9b7",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_final_tb_holdout_runner.py": "e9dccceaef9d0122ad27d57c8293de2ca318f8c29a30d89ee49344b9e7c8b6cf",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_phase_a_v13_r1.py": "cc4cbcce8fd6b38ea9f5e665e95c333a44f5d7f607345b7856dbd9990871ad9e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_a04p.py": "b58a21e2976aa888f0809a9b169d3cf3f94378490af876bb87e79c1010cc4a1e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_restore_receipt_integration.py": "ad5f61d1bb6dfebd7762dcfb7a4f05fd55714c37c6acf4ab7361f173d1f5f256",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_runtime_repair.py": "22dc5f2fd00925792ebb75a5871dab91a74a5e815f1201a158164df0c4ce477e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_geometry.py": "7fa01f9efd92af2c632bba22988ad48185de57a2076cba107a443699ebd30d77",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_planner.py": "566cb8e6895c3a190e291c033501005f78de590b283a8df0129524833e264ab0",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_revision_downstream.py": "2f12197ce487ad2644749a520046cf1c407ac6827fc83a34ed321439f6da3f61",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_diagnostic_gate.py": "2eb5211994568aaa77b7698c8420d48457214ce41fd94d1e0c62cd730b4d2145",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_cache_key_isolation.py": "4f41a032d6e790e19765dfe066a4e7fa7f151e6ef5a929bcf35ba9ba5b4fe1d3",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_runtime_gate.py": "a7484233fe48bb01bce91c00acac2297aab74c49ce61f247f4664274c8733166",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_three_valued_logic.py": "47c35b0fe864dc7baf7f24f788dde652ea2314e4bd5470869438b01c16af64fd",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_contracts.py": "bd94cd09ed0e0a45a73a8270b13ce0bccbb63a7c2c248500bc4f1ea5f9b9e250",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_scale_order.py": "01b74b5846b6a423922e838384c7f888063ae39c4ceff8ea02d22cea821a5401",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_obs_v2.py": "266e9ca60db06d7c03e82aea62ad131c9e3e1b7eba5ab58c57c9b56a35c4be16",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_finalize_loader_integration.py": "b2f585ccce8d4022df1fa02fefbf80a4026d87a484a0ba9767907480061c34c9",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_runtime.py": "33f84a714b9fac2383644e811d4462477ddd9515c8ee80dd1308f9b955ae6ca5",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage0d_empty_patch_identity.py": "40b6d26874dfec41116cbeca03fb796da90040a4c07788d10a0f3321719efe96",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_contract.py": "58e3bdbdd43583b71a970183cbd29b9a6e07ca053d6f5ab66fa1fc2eb1ea3c58",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_dispatch_behavior.py": "d15c25782ede2acd388839dfcd273d6a49c386f89506c42508bb4dc625df20ae",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_pddl_c1.py": "e5fa3aaee4fa156773619ce082306a63d0ebabd44d78654e73ad2fb4e68f97a6",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_recompute.py": "9576b98913c62122b96ef0e65b1a858227268f517b671ad5ebdaddffa3f0d956",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_b_plan.py": "0dd8cd3435b53da918961ec9c2a64c40e261872c6193ef52eae468219668b537",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_v3_isochronous.py": "a5a91e57fea4222a5f9b09774eb800147a8b1b4d424daefc2fa2494dec5b728b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_method_serial.py": "a994591495100d7d1a2f70d3aca2e187f0f1134f9f6e877a8fc9dd9cbd4fc7ed",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s4_tp_sr_scheduler.py": "3faf2138f748c9e50c171aea76d88a8d4a618d68f1c751703e23f348cc2257ee",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_soft_message_path.py": "2ff4507c19a5b8e4c6347689533a73c0ba7d64e0b1487cd5b403544ab73a1d67",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_result_gate.py": "103c60cb712b665bc939e35218cd681e046a8f846c426ced6a9d9560ab50efdc",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_node_alignment.py": "8989ee492076969b4b48ea072e8ee2784b69d2ab435bff3d8aa1c2e0b85b013d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_contract.py": "56ad2f47dad3b34ee45ddd447f75d1dffec54bb8c9d3196c24400d7447ccbbfc",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_e4_recovery.py": "8926f2d9391f956c68c786c2bc2025adc9eb27f67e9a3b6a51329dd7aad76e32",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_gate_behavior.py": "caed514d497dc754c529e3990c32ec2ce7130aa85b6909930feea8f253873754",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_v2_scheduler.py": "68be7593966d7d658ac08a6ee5cd284ceb23322f02ad20e16fd1a70a8bdd6d41",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_metrics.py": "4bf91f998075e42eff336f1daad6514a357aad53dd3aa5410e3dee1f16018cff",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_runner.py": "ac334742fcf2458e221bccfb9351be920cb7fff17bd965a5a53bb8fbf54b1d19",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s4_tp_sr_design.py": "4370ab668fab61048984d758397baf3c4e2a6b038ca6aa93ff089b181cd28d8d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage0b_v211.py": "1a40b086a97d095cc2c595a163b25dc8ee81c2ea7efb405b0c1e54ecc0dc5ab7",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage0c_pipeline.py": "341f0be34d7200a4a9102f269402a1e59bd12c57cb3417cb4d7078668d6de7a2",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_v3r1_reach_safe_mirror.py": "fa300422967efb0c225e8b2386a6ad6d78866a056538bc2cebe9e817b43ad0f8",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_imitation.py": "d8863e0563142f9c5a9ce79515021ee93309f9b76bca48ec8682e888afa9d444",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage0b_device_parity.py": "d5765f33197186b93544906ffb3706ad321fa202e5adc5ef0c55e19d18332df6",
++    "/home/xushijie3/work/graph_cp_disr/tests/conftest.py": "d9bddd0313b0e21c6d61af503c6b8b23285a91160fd07583bc170be0427ef6c1",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_shared_gradients.py": "7e018984a04ce038a216fd659c0eeb5a1822da48d6ce953953de0007a1914244",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_probe_evidence_behavior.py": "ba1485c2d7ff06f9f51995dec67934c9830977401e3876ccda65e285eb3a18c7",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_sr_generator.py": "671a9018e2c52770cc8036dad95cc426c37a016a8d1bda147b8ccb10e1fbec8b",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_splits.py": "2c08f03596514e1b83e5d51c9622ea7bea77d1feecefa0a88bf5d30a35ff1d56",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tb_repctl_semantics.py": "9ce35d9d5aa9da09395ed4fda03f07cc126021c13ebcfbb7bdb52299b8e98594",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stable_candidate_features.py": "4f3440866110ddedfcf634f0764f83880d64df02f3c1786687434f610cfd9434",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tb_seedbal.py": "0fe596b6436d229c616208d1c678bd44211196fbed3e90d4fcd7f937b93c929c",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_empty_candidates.py": "129ba1c6e7bbda9545da64c5a6ec5a6faaa5984d965d416550ca1bd73ee1dba1",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_tp_so_mvp_t6_amendment.py": "6b996568604ebad41f4fc1981ea5170a5cdf577a6d5aa49b5c4bb09081170f70",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_qmark.py": "adb512c4fbaa0c6e1bca192dd07f5ccc5a0ab34879895b2630e17358dc60bc17",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_witness_runner_regression.py": "16be5a29acd6de3646d92e3badef831a3827e51bed0d69a43d4fb35089f9bc92",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage1a_v11_config.py": "2a3ca12f8aa082a0099e299c27721526740983dceee733fed040501ed20c44d3",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_revision_provider_integration.py": "c91bae4ab793ad8d86642965fd5981e9d967e2a372febde347efabceda3cec0d",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_relation_validation.py": "2ad695f2e746b26f5f01b7040960bfc9d1e101e34110d2d339e0a13e1fd49bd5",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_recurrent_prefix.py": "8e149479467f73f586e881b54f88b87347c1e18fcf17f53195b822daacf06763",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_semantics.py": "8de1fef092453c3856cbc7c804826d99b3e1f794ce50e7bbf536ba25cdff6624",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_family_b_observation_review.py": "e77ea092b56f57dab3f0f71ddfcfb101495bc6df9896292022e5ab39700b4705",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_stage0b_extended.py": "3ff48c0c6895d1d4dfa62c993f07ed6b5d672919afd742f7ff5f4ed3a07a36a7",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_c1_bw_canonical.py": "ebf8475a4e47c560912f88fbd2b59e6b570918a67c28b8de9e3d5760ae785c1e",
++    "/home/xushijie3/work/graph_cp_disr/tests/test_s1_source_binding_integration.py": "4a6bbcac591156a89d9c88b8d7ad310f71c81e7d1a4305e2bdd073add8c7c06a",
++    "/home/xushijie3/work/graph_cp_disr/tests/helpers/final_tb_checks.py": "e9a84127fb00b5a7ac3d198cefcbda0fab0d8352bab6a65d4ac7d742fab1ccad",
++    "/home/xushijie3/work/graph_cp_disr/tests/helpers/s1_runner_doubles.py": "890a14ee5041c9f40d6af250124f799a1e0f8055128f6ba42e15739b4454024b",
++    "/home/xushijie3/work/graph_cp_disr/tests/helpers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++    "/home/xushijie3/work/graph_cp_disr/tests/helpers/smoke_r2_checks.py": "001918f6b260266e4771a9b0350a7c85a5d85a5c6cdb1bc4df5e46b69ec3e2ef",
++    "/home/xushijie3/work/graph_cp_disr/configs/c1_search_scope_diagnostic_v1.yaml": "a701d3338942db36b520b8e0491fff5d58181d68efd0254938f9f73a9c788001",
++    "/home/xushijie3/work/graph_cp_disr/configs/c1_compact_diagnosis_v2.yaml": "1cb3afd9ee0529b6db2fab64f878465722123a1034f4f1ceaaf7fa2ea63b9769",
++    "/home/xushijie3/work/graph_cp_disr/configs/c1_depots_search_match_v1.yaml": "a10328f12102f542e7e6c96290fa899d40d75a1390bd025f37d1a805004bc16e",
++    "/home/xushijie3/work/graph_cp_disr/configs/c1_depots_fast_alt_v3.yaml": "0863ff9d4797ac34dd6f8bff2ead2ee4c0bb11fb3fdbc63f6706b668917b85f6",
++    "/home/xushijie3/work/graph_cp_disr/configs/contracts/d0_runtime_skills.yaml": "353c6f1b60d4d6bd5034dc09763e4c297df6e8ae47da5b50a81ed1522ff92b2a",
++    "/home/xushijie3/work/graph_cp_disr/configs/contracts/skills.yaml": "cf05fe5093cb4382a61cdc59f72355ef95376bf852e977c71f5d911a191cc677",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/T_A.yaml": "e59b80efd461894673888de92c6ef83e69bf1b8175bbd619c159a1ade8de60c4",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/T_C.yaml": "576b98d0a88d14c2bbf69f46239db097a97a6f6f1e4277b6c2aff1886d68d68d",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/D0.yaml": "521a47d389c731b00521b9153d0817c568c4a1fed4dc9bb0816a43431f6e1d1d",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/tp_sr_v2_contract_registry.yaml": "723b336bd12afdbebb38e5e7cc54e10cb8f22d1c08db1798bd1240d8020dea24",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/stage_2a_contract_registry.yaml": "e5914909eb1d91a7cdffa11c18a91a0748edafc44dd06a2da1404d0bc151d00b",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/tp_so_mvp_contract_registry.yaml": "f5e45e697d999ab040c114a9eab5a84b3b022490f2f38a457aef9da0a8e4b631",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/stage_2a_action_registry.yaml": "2cbff92fb9c6f484303c9f933b03a8019fb45cb188fe8f8090df81ac4c6ff7ba",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/tp_fb_contract_registry.yaml": "9ebe74441b1f6ebe118ea872b20f524152fa5bd29fe624f5213e12f5e360b0c1",
++    "/home/xushijie3/work/graph_cp_disr/configs/runtime/tp_sr_contract_registry.yaml": "723b336bd12afdbebb38e5e7cc54e10cb8f22d1c08db1798bd1240d8020dea24",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/family_b_obs_v2_r2.yaml": "d02d0a84a847f08cd13404312701f32239fd1d2feacc53d55bb7301795aeb0bd",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s1_rev1.yaml": "bea4bf0d0c55ae793ef9b944a65d5656394b782098b38b8178fac567f87fb372",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_family_b_v3r1_reach_safe_mirror.yaml": "80a6b7d696de1856cce05323d3fee591c23b3cd2854791d97fb27b7741705ea3",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/family_b_staging_v2.yaml": "3064ee8b10f263429f9b4c087ed54fb4917c38ef41f7fe49a5bfb4f735b6b4cb",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_tp_sr_pilot_v2.yaml": "efe8aa0208ee3d9c1d24e5c859d621e54ffbfe10ace509cb65f3598c3d6a2a55",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_family_b_v3_isochronous.yaml": "74a422a25cef26cbd8fcb92c73c873cb93e4ceaa9bdaa94fe42b0e7723328640",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_tp_sr_design.yaml": "b598cfd0c9d601687ef0d504df993e1721af8fba43f8f68872615fbd35b05dd4",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_family_a_soft_ordering_mvp.yaml": "2f80581b6b740298da083e8cc8c80f1f9712a90c7988dc07f3cb07f960af2ca6",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/final_tb_e1_elastic_release.yaml": "e4f3e8eea3d8b07c7ffc5ed0d74fa1e726ceef54e6f1c3d457754aa4d1799dbe",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/s4_family_b_staging.yaml": "d57bbb5f8491bd7d6f13eaf511ffb52738fbeeda130c19f709a136a7988bf03b",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_A.yaml": "1fa3340f16732e8452a6498c526680400fd50769ad3335dc59019704bfdf3f35",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_C.yaml": "303edfd2f47cd62047ac6d7fe283c8f1d99015e46da78f7443b2ce80d99f9e72",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_P_SR.yaml": "0cd62bb53677df2d0cd594f9fadc475b655a9cf1e62db520f74eff7eaf7553a0",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_B.yaml": "9c8eb63137276932019bc9f6841f707a2f00411d0cd72be4d89248f4669c0314",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_P_FB.yaml": "538dc41f857c65a3d6b9de7f209f569209253ec50a81472a03a81d5340ef3f4d",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_P_SR_V2.yaml": "30855e1ca29b1b4ecbcd2f15c988d8a39cb94981ae75cf7d30a607fd02bba7a9",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/T_P_SO_MVP.yaml": "174d671ee7ba8d6313b3d13914e08e74834ee9925ad91701e5e3680aa10bae94",
++    "/home/xushijie3/work/graph_cp_disr/configs/tasks/resolved/D0.yaml": "5dd3d72d8bfb9e81d268956296e3f9af56dab21f564a9867960ef7b06e79ec28",
++    "/home/xushijie3/work/graph_cp_disr/configs/final_master/family_b_obs_v2/config.yaml": "55cb4b754948a31bb3b40954df206666df3c34e0997d40237f75485b81082ba7",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/registration.json": "20e68d32a7f83e6cdd586b26db3dbfb32578111eadbc217dce5fafc6f6150227",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/event_approval_metadata.json": "f7cd175728a7ba84c0aa4fad663cbc0a36b47b14b01d6c03367ca805a36ec79a",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/scoring_protocol.md": "99f8050086f9a0300b61e058ad3c2f19972cab335f8ca3b87c3e89b03dd30fa7",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/approval_package.md": "701c21c9afbbca386e48f2caf68122b9685c3a2f4a27f9035df34b6764f1f384",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/G2_replay_checks.json": "a77a7455c512699a98bfbcb34b2ca8daed9c1d7c2fc8a868c56817783ca6afcf",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/gate.py": "e40c4c966764e70e0f31ef7c393fcd2490b75f2cedf0bcbe19f29a5dfd80e42e",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/gate_receipt.json": "77d201c9c23ccc2e28b5b8907a32e73eecde40891b83fe84b5931cd46a2108ea",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/resource_summary.json": "75b679ecccc59d93d5da240642eaa300c926033dae4325aa4d2cb56ce3e2765b",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/runtime.json": "a3e668accc956a2c632d8cfd9e9c7570f550f3bfa4d6a384cdeb9abcd8798539",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/registration_assets.json": "b5c8a3e20602a96783584bc33fb8667ffc3639a38c137f94e2a4c6134f5c67bd",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/publication_final.json": "8e220fd913f3126f048766f0ca82d9277a17354e7d4ba8a64b0da1fee8579884",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/snapshots/ipc_p12_k002_fresh_prefix.json": "15a2d7d9de41218831303ae3da4bfe32d6acf7f6cf5c050a1c46b1ac5ae0a072",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/snapshots/struct_n4_004_k008_fresh_prefix.json": "1af0c5d87b3ae89e824b2ce39efec4d7c075653ff0774cc42270d576785cff4e",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/decisions/ipc_p12_prefix.jsonl.gz": "d6a6fe3c1b55805f610fbc7df918465fcb175c1a7166312d84b07348e20e675d",
++    "/home/xushijie3/work/cp_disr_q2_event_replay/Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z/decisions/struct_n4_004_prefix.jsonl.gz": "d8359b3a174062df9fe9ca9643dd4b6a7794a86980f1df58c6c9db51d2906972",
++    "/home/xushijie3/ext/downward-benchmarks/depot/p12.pddl": "261845f54e231be50b49d89d7cec8860344ea94bbde60d82a6ebf132d0590dec",
++    "/home/xushijie3/ext/downward-benchmarks/depot/domain.pddl": "6bb9465e91b63ec5c30b7d21994ee886d59f88028d92d363753567e3e5fa1bdd",
++    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/public_depots_rel_v1/20261008T063544Z_9898106e/data/problems/struct/struct_n4_004.pddl": "57659f4588e58c83d17e4d48cb8e2e294c28fc002a1e61a1a4c6002275ba2f47",
++    "/home/xushijie3/ext/pddl-generators/depots/domain.pddl": "81def700212ae8b703f6352307eb588223da67b943ae9289b0661c8e72319e69",
++    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u02460.pt": "b797d0c7d88378ae0ff47c619e8c7b10baa27a9ca2eee6d95538906f404a3e15",
++    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/D0/checkpoints/u00820.pt": "8f7d7620b63d08cfa204438167e857b1c45e82d06f4044d144f8d22ad1e129e6",
++    "/home/xushijie3/work/graph_cp_disr/runs/final_master/c1_route_b/compact_diagnosis_v2/20261009T165825Z/training/T1/checkpoints/u02460.pt": "d73ddf6ab5ac6b21e1fe398a83a63d5ba55dd9a5ae886de3ecdef4b43f9f8222"
++  },
++  "local_required_files": {
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\registration.json": "20e68d32a7f83e6cdd586b26db3dbfb32578111eadbc217dce5fafc6f6150227",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\event_approval_metadata.json": "f7cd175728a7ba84c0aa4fad663cbc0a36b47b14b01d6c03367ca805a36ec79a",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\scoring_protocol.md": "99f8050086f9a0300b61e058ad3c2f19972cab335f8ca3b87c3e89b03dd30fa7",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\approval_package.md": "701c21c9afbbca386e48f2caf68122b9685c3a2f4a27f9035df34b6764f1f384",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\G2_replay_checks.json": "a77a7455c512699a98bfbcb34b2ca8daed9c1d7c2fc8a868c56817783ca6afcf",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\gate.py": "e40c4c966764e70e0f31ef7c393fcd2490b75f2cedf0bcbe19f29a5dfd80e42e",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\gate_receipt.json": "77d201c9c23ccc2e28b5b8907a32e73eecde40891b83fe84b5931cd46a2108ea",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\resource_summary.json": "75b679ecccc59d93d5da240642eaa300c926033dae4325aa4d2cb56ce3e2765b",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\runtime.json": "a3e668accc956a2c632d8cfd9e9c7570f550f3bfa4d6a384cdeb9abcd8798539",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\registration_assets.json": "b5c8a3e20602a96783584bc33fb8667ffc3639a38c137f94e2a4c6134f5c67bd",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\publication_final.json": "8e220fd913f3126f048766f0ca82d9277a17354e7d4ba8a64b0da1fee8579884",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\snapshots\\ipc_p12_k002_fresh_prefix.json": "15a2d7d9de41218831303ae3da4bfe32d6acf7f6cf5c050a1c46b1ac5ae0a072",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\snapshots\\struct_n4_004_k008_fresh_prefix.json": "1af0c5d87b3ae89e824b2ce39efec4d7c075653ff0774cc42270d576785cff4e",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\decisions\\ipc_p12_prefix.jsonl.gz": "d6a6fe3c1b55805f610fbc7df918465fcb175c1a7166312d84b07348e20e675d",
++    "C:\\Users\\jackx\\Documents\\ChatGPT\\CP-DISR\\reports\\q2_event_replay_gate_v1\\Q2_EVENT_REPLAY_GATE_V1_20261010T164644Z\\decisions\\struct_n4_004_prefix.jsonl.gz": "d8359b3a174062df9fe9ca9643dd4b6a7794a86980f1df58c6c9db51d2906972"
++  },
++  "card_sha256": "4bab5e0041554a72850f12dc2f9fd5cb5522c53528ace1c075b1dd44a63a48b5",
++  "code_sha256": {
++    "phase_c.py": "5570b1945f28c509588ca7cb2edc841de38016ff6b6b2c28aec5bf905ca8ca79",
++    "analyze.py": "2350ff74d54141eab6eb501dd3987392c077ddc4269f1b3800a3adf3b02bb166"
++  },
++  "hash_kinds": "File hashes over actual bytes; semantic hashes over canonical full normalized JSON; not interchangeable",
++  "source_count": 429
++}
+--- /dev/null
++++ publish_card.ps1
+@@ -0,0 +1,45 @@
++param([Parameter(Mandatory=$true)][string]$Phase)
++$ErrorActionPreference='Stop'
++$root=$PSScriptRoot
++$gitDir='C:\Users\jackx\Documents\ChatGPT\CP-DISR\reports\git_publication_20261010\git_bridge.git'
++$branch='codex/cp-disr-q2-phase-c-single-pop-v1'
++$relative='reports/q2_phase_c_single_pop_v1/'+(Split-Path -Leaf $root)
++$last=Join-Path $root 'last_publication_commit.txt'
++$parent=if(Test-Path -LiteralPath $last){(Get-Content -LiteralPath $last -Raw).Trim()}else{'f3d8d655d172b338bb38ba7f638aa0fda355dc55'}
++$env:GIT_NO_LAZY_FETCH='1'
++$env:GIT_INDEX_FILE=Join-Path $root ('publication_'+[Guid]::NewGuid().ToString('N')+'.index')
++# Explicitly reviewed publication list. Original evidence and all binary data stay on disk.
++$include=@('experiment_card.md','phase_c.py','analyze.py','publish_card.ps1','preregistration.json','input_manifest.json','implementation_diff.patch','REPRODUCE.md','identity_before.json','identity_after.json','branch_results.json','run_receipt.json','repeatability_checks.json','repeatability_report.md','coalescence_checks.json','coalescence_report.md','score_ledger_verification.json','event_results.json','results.csv','research_decision.md','analysis_receipt.json','final_receipt.json','artifact_manifest.json','server_final_check.json','transfer_verification.json','plans/ipc_p12_k002_A.json','plans/ipc_p12_k002_B.json','plans/ipc_p12_k002_A_repeat.json','plans/ipc_p12_k002_B_repeat.json','plans/struct_n4_004_k008_A.json','plans/struct_n4_004_k008_B.json','plans/struct_n4_004_k008_A_repeat.json','plans/struct_n4_004_k008_B_repeat.json')
++$files=@(foreach($name in $include){$path=Join-Path $root $name;if(Test-Path -LiteralPath $path){Get-Item -LiteralPath $path}})
++$payload=@{}
++foreach($f in $files){$rel=[IO.Path]::GetRelativePath($root,$f.FullName).Replace('\','/');$payload[$rel]=@{bytes=$f.Length;sha256=(Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash.ToLowerInvariant()}}
++$manifestPath=Join-Path $root 'archive_manifest.json'
++[IO.File]::WriteAllText($manifestPath,(@{phase=$Phase;branch=$branch;parent=$parent;files=$payload;payload_count=$payload.Count}|ConvertTo-Json -Depth 10).Replace("`r`n","`n")+"`n",[Text.UTF8Encoding]::new($false))
++git --git-dir=$gitDir read-tree $parent
++if($LASTEXITCODE-ne0){throw 'read-tree failed'}
++foreach($f in (@($files.FullName)+@($manifestPath))){$rel=[IO.Path]::GetRelativePath($root,$f).Replace('\','/');$blob=git --git-dir=$gitDir hash-object -w --no-filters -- $f;if($LASTEXITCODE-ne0){throw 'hash-object failed'};git --git-dir=$gitDir update-index --add --cacheinfo "100644,$blob,$relative/$rel";if($LASTEXITCODE-ne0){throw 'update-index failed'}}
++$changed=@(git --git-dir=$gitDir diff --cached --name-only $parent)
++if($LASTEXITCODE-ne0 -or @($changed|Where-Object{!$_.StartsWith($relative+'/')}).Count-gt0){throw 'Non-card file changed'}
++# Old evidence bytes and pasted Markdown are preserved, including original hard breaks.
++git --git-dir=$gitDir -c core.whitespace=cr-at-eol diff --cached --check $parent -- "$relative/phase_c.py" "$relative/analyze.py" "$relative/publish_card.ps1" "$relative/research_decision.md"
++if($LASTEXITCODE-ne0){throw 'Whitespace check failed'}
++$tree=git --git-dir=$gitDir write-tree --missing-ok
++if($LASTEXITCODE-ne0){throw 'write-tree failed'}
++$body=Join-Path $root ('commit_body_'+$Phase+'.txt')
++[IO.File]::WriteAllText($body,"Q2-PHASE-C-SINGLE-POP-V1: $Phase`n",[Text.UTF8Encoding]::new($false))
++$sha=git --git-dir=$gitDir -c user.name=rollinpioneer -c user.email=1287282018@qq.com commit-tree $tree -p $parent -F $body
++if($LASTEXITCODE-ne0){throw 'commit-tree failed'}
++$old=if(Test-Path -LiteralPath $last){$parent}else{'0000000000000000000000000000000000000000'}
++git --git-dir=$gitDir update-ref "refs/heads/$branch" $sha $old
++if($LASTEXITCODE-ne0){throw 'update-ref failed'}
++foreach($f in (@($files.FullName)+@($manifestPath))){$rel=[IO.Path]::GetRelativePath($root,$f).Replace('\','/');$expect=git --git-dir=$gitDir hash-object --no-filters -- $f;$stored=git --git-dir=$gitDir rev-parse "${sha}:$relative/$rel";if($LASTEXITCODE-ne0 -or $expect-ne$stored){throw 'Blob verification failed'}}
++Remove-Item Env:\GIT_INDEX_FILE
++Remove-Item Env:\GIT_NO_LAZY_FETCH
++git --git-dir=$gitDir -c http.sslverify=true -c credential.username=rollinpioneer -c credential.interactive=false push origin "refs/heads/${branch}:refs/heads/$branch"
++if($LASTEXITCODE-ne0){throw 'push failed'}
++$remote=git --git-dir=$gitDir -c http.sslverify=true -c credential.username=rollinpioneer -c credential.interactive=false ls-remote --heads origin "refs/heads/$branch"
++if($LASTEXITCODE-ne0 -or ($remote-split'\s+')[0]-ne$sha){throw 'Remote verification failed'}
++[IO.File]::WriteAllText($last,$sha+"`n",[Text.UTF8Encoding]::new($false))
++$receipt=@{phase=$Phase;status='PUSHED_VERIFIED';commit=$sha;parent=$parent;branch=$branch;archive_path=$relative;payload_files=$payload.Count;updated_utc=[DateTime]::UtcNow.ToString('o')}
++[IO.File]::WriteAllText((Join-Path $root ('publication_'+$Phase+'.json')),($receipt|ConvertTo-Json).Replace("`r`n","`n")+"`n",[Text.UTF8Encoding]::new($false))
++Write-Output ($receipt|ConvertTo-Json -Compress)
+--- /dev/null
++++ REPRODUCE.md
+@@ -0,0 +1,9 @@
++# Phase C evidence reproduction
++
++Authorized execution only: phase_c.py <independent-root>. Never re-run without a separate approval; the eight slots have been consumed after execution.
++
++Saved-evidence verification: analyze.py <root>. This loads no model and performs no search. Requires previous G2 evidence at preregistration previous_remote_root (or explicit analysis_previous_root for a local evidence copy).
++
++Each branch owns the initial frozen cache, full checkpoints and raw little-endian FP32 bytes. branch_ledger.jsonl accounts for every actual single-state invocation including interruptions. Partial expansions are stored separately.
++
++Git preserves reviewed code, tables, lightweight results and complete hashes. Full raw evidence is retained on lab-xushijie3 and copied locally; artifact_manifest.json binds every archived file.
