@@ -35,7 +35,7 @@ for p in out.rglob('*'):
 for folder in (R/'runs').iterdir():
  if not folder.is_dir():continue
  for p in folder.iterdir():
-  if p.is_file() and p.name in ['guard_result.json','launch.json','monitor_takeover.json','evaluate.py','guard.py','run_job.sh','launch_job.py','EXPERIMENT_CARD.md']:light.append(p)
+  if p.is_file() and p.name in ['guard_result.json','launch.json','monitor_takeover.json','evaluate.py','guard.py','run_job.sh','launch_job.py','EXPERIMENT_CARD.md','actual_worker.py','actual_driver.sh']:light.append(p)
  d=folder/'data'
  if d.exists():
   for p in d.iterdir():

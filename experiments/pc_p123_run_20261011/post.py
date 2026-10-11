@@ -22,7 +22,7 @@ if rows:
  flat=[{k:v for k,v in r.items() if not isinstance(v,(dict,list))} for r in rows]
  keys=sorted(set().union(*(set(x) for x in flat)))
  with (R/'results/episode_metrics.csv').open('w',newline='') as f:
-  w=csv.DictWriter(f,fieldnames=keys);w.writeheader();w.writerows(flat)
+  w=csv.DictWriter(f,fieldnames=keys,lineterminator="\n");w.writeheader();w.writerows(flat)
 P1=[r for r in rows if r['condition'] in ['6_sparse','6_crowded'] and r['step']==200 and r['group']<8]
 if len(P1)==16:
  paired=[]
