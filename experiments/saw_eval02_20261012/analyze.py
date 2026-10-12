@@ -33,6 +33,10 @@ def main():
             for c in ('O','U'):
                 name=f'B_{model}_{c}_{s}';rows=readrows(ROOT/'results'/f'{name}.csv');allrows[c,s]=rows
                 assert len(rows)==250
+                for row in rows:
+                    task_info=env.unwrapped.task_infos[row['task']-1]
+                    ic=env.unwrapped.ij_to_xy(task_info['init_ij']);gc=env.unwrapped.ij_to_xy(task_info['goal_ij'])
+                    row.update(initial_offset_x=row['initial_x']-ic[0],initial_offset_y=row['initial_y']-ic[1],goal_offset_x=row['goal_x']-gc[0],goal_offset_y=row['goal_y']-gc[1])
                 bundle=pickle.load(open(ROOT/'runs'/f'{name}.pkl','rb'));raws[c,s]=bundle['trajectories']
                 for row,tr in zip(rows,bundle['trajectories']):failure_rows.append(dict(model=model,condition=c,stream=s,task=row['task'],episode=row['episode'],success=row['success'],**failure(env,tr,cal)))
                 for task in range(1,6):
@@ -62,7 +66,7 @@ def main():
                 scores.append(dict(model=model,condition=c,stream='pooled',task=task,n=len(cell),successes=int(k),success_rate=k/len(cell),wilson95_low=lo,wilson95_high=hi))
             for s in streams:
                 o=[r for r in allrows['O',s] if r['task']==task];u=[r for r in allrows['U',s] if r['task']==task]
-                for key in ('initial_x','initial_y','initial_vx','initial_vy','goal_x','goal_y','initial_distance'):
+                for key in ('initial_x','initial_y','initial_vx','initial_vy','goal_x','goal_y','initial_distance','initial_offset_x','initial_offset_y','goal_offset_x','goal_offset_y'):
                     x=np.array([r[key] for r in o]);y=np.array([r[key] for r in u]);pooled=np.sqrt((x.var(ddof=1)+y.var(ddof=1))/2)
                     ks=ks_2samp(x,y)
                     scenario_stats.append(dict(model=model,stream=s,task=task,feature=key,O_mean=float(x.mean()),U_mean=float(y.mean()),O_sd=float(x.std(ddof=1)),U_sd=float(y.std(ddof=1)),
@@ -74,12 +78,14 @@ def main():
                 same_steps=len(a['actions'])==len(b['actions']);same_traj=same_steps and np.array_equal(a['states'],b['states']) and np.array_equal(a['actions'],b['actions']) and a['flags']==b['flags']
                 matching.append(dict(model=model,stream=s,task=o['task'],episode=o['episode'],full_initial_state_equal=o['full_scene_sha256']==u['full_scene_sha256'],
                      position_goal_equal=o['position_goal_sha256']==u['position_goal_sha256'],initial_qvel_max_abs=float(np.max(np.abs(a['initial']['qvel']-b['initial']['qvel']))),
+                     post_step_qvel_exact_equal=same_steps and np.array_equal(a['qvel'][1:],b['qvel'][1:]),
                      states_actions_flags_exact_equal=same_traj,success_equal=o['success']==u['success'],steps_equal=same_steps))
     csv_rows(ROOT/'results/B_TASK_SCORES.csv',scores);csv_rows(ROOT/'results/B_TASK_DIFFERENCES.csv',comparisons)
     csv_rows(ROOT/'results/B_SCENE_DISTRIBUTIONS.csv',scenario_stats);csv_rows(ROOT/'results/B_SCENE_MATCHING.csv',matching);csv_rows(ROOT/'results/B_FAILURE_FEATURES.csv',failure_rows)
     write(ROOT/'results/B_SUMMARY.json',dict(overall=overall,total_formal_episodes=size['total_formal_episodes'],reset_flow_pairs=len(matching),
           exact_position_goal_pairs=sum(x['position_goal_equal'] for x in matching),exact_full_state_pairs=sum(x['full_initial_state_equal'] for x in matching),
           exact_states_actions_flags_pairs=sum(x['states_actions_flags_exact_equal'] for x in matching),
+          exact_post_step_qvel_pairs=sum(x['post_step_qvel_exact_equal'] for x in matching),
           uncertainty='Fixed-checkpoint fixed-task fixed-stream independent-cell bootstrap; no training-seed or all-stream interval. Descriptive task intervals unadjusted.',
           wall_seconds=time.monotonic()-start,cpu_process_seconds=time.process_time()-cpu,gpu_seconds=0))
     print('ANALYSIS_DONE',flush=True)
