@@ -32,8 +32,10 @@ def main():
     checks.append('actual GPU seed1/2 A/B update0 learner identity; all available CP counters, optimizer counts and states finite')
     for c in json.loads((ROOT/'results/SCENE_IDENTITIES.json').read_text())['scenes']:assert sha(c['path'])==c['sha256']
     resources=[json.loads(p.read_text()) for p in (ROOT/'receipts').glob('*_resource.json')];limits={'C-S':39600,'C-N':19800,'R':14400,'C-EVAL':14400,'T':9000,'T-EVAL':14400};used={g:sum(r['residency_seconds'] for r in resources if r['group']==g) for g in limits}
+    live=[json.loads(p.read_text()) for p in (ROOT/'receipts').glob('*_active.json')]
+    assert all(x['pid']==os.getpid() and x['group']=='R' for x in live),'OTHER_OWN_JOBS_STILL_ACTIVE'
+    for x in live:used[x['group']]+=time.time()-x['start']
     assert all(used[g]<=limits[g] for g in limits);assert max(r['peak_aggregate_mib'] for r in resources)<=12288
-    assert not list((ROOT/'receipts').glob('*_active.json')),'OWN_JOBS_STILL_ACTIVE'
     for phase in ['C','R','T']:
         p=ROOT/'receipts'/f'{phase}_EPISODE_BUDGET.json'
         if p.exists():x=json.loads(p.read_text());assert x['used']<=x['limit']

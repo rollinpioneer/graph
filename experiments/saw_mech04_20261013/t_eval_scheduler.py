@@ -16,7 +16,7 @@ def main():
             for p in paths:
                 c=next(x for x in json.loads(p.read_text()) if x['step']==0)
                 with open(c['path'],'rb') as f:s=pickle.load(f)
-                hashes.append(hashlib.sha256(pickle.dumps((s['agent'],s['actor_opt_state'],s['actor_rng'],s['stream_cursor']),4)).hexdigest())
+                hashes.append(hashlib.sha256(pickle.dumps((s['agent'],s['actor_opt_state'],s['actor_rng'],s['numpy_rng'],s['python_rng'],s['stream_cursor'],s['stream_manifest_sha256']),4)).hexdigest())
             passed=len(set(hashes))==1;write('T_ACTUAL_UPDATE0.json',dict(status='PASS' if passed else 'FAILED',serialized_agent_actor_optimizer_rng_cursor_sha256=hashes))
             # Root must preserve and invalidate any failure; identity never drives model selection.
             assert passed,'T_ACTUAL_UPDATE0_MISMATCH'

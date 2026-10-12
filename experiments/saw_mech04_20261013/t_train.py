@@ -9,12 +9,13 @@ def main(arm):
     env,data,val,cfg=load('pointmaze-large-stitch-v0','A');template=init_agent(data,cfg,0)
     with open(identity['path'],'rb') as f:source=pickle.load(f)
     ref=flax.serialization.from_state_dict(template,source['agent']);ref=jax.device_put(ref,jax.devices('gpu')[0]);params=subset(ref.network.params);opt=actor_optimizer(ref);rng=ref.rng
+    np.random.set_state(source['numpy_rng']);random.setstate(source['python_rng'])
     directory=ROOT/'runs'/label;directory.mkdir(exist_ok=False);stop=[False];signal.signal(signal.SIGUSR1,lambda *_:stop.__setitem__(0,True));start=time.monotonic();step=0;cps=[];status='RUNNING'
     initial=flax.serialization.to_state_dict(jax.device_get(ref));initial_actor=flax.serialization.to_state_dict(jax.device_get(params));initial_opt=flax.serialization.to_state_dict(jax.device_get(opt))
     def save(step):
         sync((params,opt));agent=policy(ref,params).replace(rng=rng);s=flax.serialization.to_state_dict(jax.device_get(agent));assert all(np.array_equal(x,y) for key in s['network']['params'] if key not in ACTOR_KEYS for x,y in zip(jax.tree_util.tree_leaves(s['network']['params'][key]),jax.tree_util.tree_leaves(initial['network']['params'][key])))
         assert __import__('pickle').dumps(s['network']['opt_state'],4)==__import__('pickle').dumps(initial['network']['opt_state'],4)
-        p=directory/f'params_{step}.pkl';state=dict(agent=s,reference=identity,student_step=step,reference_native_step=int(ref.network.step),actor_opt_state=flax.serialization.to_state_dict(jax.device_get(opt)),actor_rng=np.asarray(rng),stream_cursor=step,latent_rng_path=manifest['chunks'][max(0,(step-1)//1000)]['rng_path'] if step else identity['path'],latent_rng_meaning='source NumPy state at step0; sealed chunk end thereafter; cursor locates exact candidates',python_rng=source['python_rng'])
+        p=directory/f'params_{step}.pkl';state=dict(agent=s,reference=identity,student_step=step,reference_native_step=int(ref.network.step),actor_opt_state=flax.serialization.to_state_dict(jax.device_get(opt)),actor_rng=np.asarray(rng),numpy_rng=np.random.get_state(),python_rng=random.getstate(),stream_cursor=step,stream_manifest_sha256=sha(ROOT/'results/T_SHARED_STREAM.json'),latent_rng_path=manifest['chunks'][max(0,(step-1)//1000)]['rng_path'] if step else identity['path'],latent_rng_meaning='source NumPy state at step0; sealed chunk end thereafter; cursor locates exact candidates')
         with open(p,'xb') as f:pickle.dump(state,f,4)
         cps.append(dict(step=step,path=str(p),sha256=sha(p),frozen_parameters_and_reference_optimizer_equal=True,actor_optimizer_count=int(opt[0].count),reference_native_step=int(ref.network.step)))
         write_json(ROOT/'results'/f'{label}_checkpoints.json',cps)
