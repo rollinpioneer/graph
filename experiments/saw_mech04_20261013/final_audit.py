@@ -4,14 +4,16 @@ def main():
     checks=[];source=json.loads((ROOT/'receipts/TRAINING_SOURCE.json').read_text())
     for f in source['files']:assert sha(ROOT/f['path'])==f['sha256']
     checks.append('C startup source bytes unchanged')
+    original=json.loads((ROOT/'results/PREFLIGHT.json').read_text())
     for old in (OLD,EV,PREV):
+        recorded=next(x for x in original['original_manifests'] if x['root']==str(old));assert sha(old/'LIGHT_MANIFEST.json')==recorded['manifest_sha256']
         manifest=json.loads((old/'LIGHT_MANIFEST.json').read_text())
         for f in manifest['files']:assert sha(old/f['relative'])==f['sha256']
     official=OLD/'vendor/saw';assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=official,text=True).strip()=='3535a16c901e5de1233ac5a586401b3ddfa5e30d';assert not subprocess.check_output(['git','diff','HEAD','--name-only'],cwd=official,text=True).strip()
     for item in json.loads((ROOT/'results/PREFLIGHT.json').read_text())['readonly_checkpoints']:assert sha(item['path'])==item['sha256']
     for item in json.loads((ROOT/'results/DATA_IDENTITIES.json').read_text()):assert sha(item['path'])==item['sha256']
     checks.append('all original light manifests and readonly checkpoint files unchanged')
-    cps=[]
+    cps=[];initial_by_role={}
     for kind,v,seed in [(k,v,s) for k,vs in [('stitch',['A','B']),('navigate',['A'])] for v in vs for s in (1,2)]:
         label=f'C_{kind}_{v}_s{seed}';statusp=ROOT/'results'/f'{label}_training_status.json';resourcep=ROOT/'receipts'/f'{label}_resource.json'
         if not statusp.exists():cps.append(dict(label=label,status='NOT_EXECUTED',actual_updates=None,valid_complete_1M=False));continue
@@ -20,6 +22,9 @@ def main():
             assert sha(c['path'])==c['sha256']
             with open(c['path'],'rb') as f:s=pickle.load(f)
             assert s['step']==c['step'];assert int(s['agent']['network']['step'])==c['step']+1;assert int(s['agent']['network']['opt_state']['0']['count'])==c['step']
+            if c['step']==0:
+                expected=jax.random.split(jax.random.PRNGKey(seed),2)[0];assert np.array_equal(s['agent']['rng'],np.asarray(expected))
+                initial_by_role[kind,v,seed]=dict(params=digest(s['agent']['network']['params']),numpy_rng=digest(s['numpy_rng']))
             for x in jax.tree_util.tree_leaves(s['agent']):
                 a=np.asarray(x)
                 if np.issubdtype(a.dtype,np.number):assert np.isfinite(a).all()
@@ -29,6 +34,9 @@ def main():
     for seed in (1,2):
         p=ROOT/'results'/f'GPU_UPDATE0_s{seed}.json';assert p.exists();x=json.loads(p.read_text());assert x['agent_optimizer_rng_equal'] is True,x
         assert all(sha(path)==h for path,h in zip(x['paths'],x['sha256']))
+    for kind,v in [('stitch','A'),('stitch','B'),('navigate','A')]:
+        if (kind,v,1) in initial_by_role and (kind,v,2) in initial_by_role:
+            assert initial_by_role[kind,v,1]['params']!=initial_by_role[kind,v,2]['params'];assert initial_by_role[kind,v,1]['numpy_rng']!=initial_by_role[kind,v,2]['numpy_rng']
     checks.append('actual GPU seed1/2 A/B update0 learner identity; all available CP counters, optimizer counts and states finite')
     for c in json.loads((ROOT/'results/SCENE_IDENTITIES.json').read_text())['scenes']:assert sha(c['path'])==c['sha256']
     resources=[json.loads(p.read_text()) for p in (ROOT/'receipts').glob('*_resource.json')];limits={'C-S':39600,'C-N':19800,'R':14400,'C-EVAL':14400,'T':9000,'T-EVAL':14400};used={g:sum(r['residency_seconds'] for r in resources if r['group']==g) for g in limits}
@@ -53,6 +61,6 @@ def main():
                 for c in json.loads(p.read_text()):
                     assert sha(c['path'])==c['sha256'];assert c['frozen_parameters_and_reference_optimizer_equal'];assert c['actor_optimizer_count']==500000+c['step'];assert c['reference_native_step']==500001
         checks.append('T actual same initial actor/full optimizer/RNG; frozen modules/reference states unchanged; inherited actor count and sealed stream identity')
-    write(ROOT/'results/FINAL_AUDIT.json',dict(status='PASS',checks=checks,C_learners=cps,C_all_six_complete=all(c['valid_complete_1M'] for c in cps),used_residency_seconds=used,hard_limits_seconds=limits,R_control_steps=rc,source=source,SSH_cleanup='pending final publication; actual client exit recorded in local receipt after closing'))
+    write(ROOT/'results/FINAL_AUDIT.json',dict(status='PASS',checks=checks,C_learners=cps,C_all_six_complete=all(c['valid_complete_1M'] for c in cps),C_initial_seed_identity=[dict(kind=k,variant=v,seed=s,**x) for (k,v,s),x in initial_by_role.items()],used_residency_seconds=used,hard_limits_seconds=limits,R_control_steps=rc,source=source,SSH_cleanup='pending final publication; actual client exit recorded in local receipt after closing'))
     print('FINAL_AUDIT_PASS',all(c['valid_complete_1M'] for c in cps))
 if __name__=='__main__':main()
