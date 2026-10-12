@@ -64,15 +64,25 @@ def main():
     evidence=[]
     support=read(ROOT/'results/E3_SUPPORT.csv') if (ROOT/'results/E3_SUPPORT.csv').exists() else []
     gates=json.loads((ROOT/'results/E2_GATES.json').read_text()) if (ROOT/'results/E2_GATES.json').exists() else []
+    verified={v:read(ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv') if (ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv').exists() else [] for v in ('A','B')}
     for x in support:
         sid=x['snapshot_id'];g=next((g for g in gates if g['snapshot_id']==sid),{});branches={r['condition']:r for r in rr if r['snapshot_id']==sid}
-        evidence.append(dict(snapshot_id=sid,kind=x['kind'],task=x['task'],source_success=x['source_success'],E2_gate=g.get('status','NOT_EXECUTED'),gate_reason=g.get('reason'),
+        item=dict(snapshot_id=sid,kind=x['kind'],task=x['task'],source_success=x['source_success'],E2_gate=g.get('status','NOT_EXECUTED'),gate_reason=g.get('reason'),
             qpos_qvel_supported_neighbors=int(x['nearby_qpos_qvel_supported_count']),other_trajectory_neighbors=int(x['nearby_other_trajectory_supported_count']),
             A_goal_region_probability=float(x['future_goal_region_probability_A']),B_goal_region_probability=float(x['goal_region_probability_B']),
             C0_far_progress=float(branches['C0']['far_progress']) if branches else None,
             C1_near_success=branches.get('C1',{}).get('local_reached'),C2_near_success=branches.get('C2',{}).get('local_reached'),
             C3_control_success=branches.get('C3',{}).get('local_reached'),C4_far_progress=float(branches['C4']['far_progress']) if branches else None,
-            causal_scope='50-step local branch only; complete far task success and exact data state stitching not implied'))
+            causal_scope='50-step local branch only; complete far task success and exact data state stitching not implied')
+        for variant in ('A','B'):
+            v=next((r for r in verified[variant] if r['snapshot_id']==sid and r['target']=='near' and r['checkpoint_step']=='1000000'),None)
+            item.update({f'{variant}_1M_verified_near_log_rho':float(v['log_rho']) if v else None,
+                f'{variant}_1M_verified_near_rho':float(v['rho']) if v else None,
+                f'{variant}_1M_far_actor_norm':float(math.hypot(float(v['actor_0']),float(v['actor_1']))) if v else None,
+                f'{variant}_1M_near_teacher_norm':float(math.hypot(float(v['teacher_0']),float(v['teacher_1']))) if v else None,
+                f'{variant}_1M_heads_prefer_different_targets':v['head1_preferred']!=v['head2_preferred'] if v else None,
+                f'{variant}_1M_actor_teacher_mse':float(v['actor_teacher_mse']) if v else None})
+        evidence.append(item)
     save(ROOT/'results/EVIDENCE_MATRIX.csv',evidence)
     write(ROOT/'results/STATISTICAL_METHOD.json',dict(bootstrap_samples=10000,seed=203001,unit='whole paired episode',score_interval='Wilson 95%',difference_interval='paired percentile bootstrap 95%',
         limitations='single training seed; two scene groups; saturated all-success/all-failure paired bootstrap may be degenerate; Wilson score intervals retained; no cross-dataset causal comparison'))

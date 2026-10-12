@@ -87,10 +87,13 @@ def model_queries(variant):
     if branchfile.exists():
         rr=list(csv.DictReader(branchfile.open()));groups={r['snapshot_id']:{x['condition']:x for x in rr if x['snapshot_id']==r['snapshot_id']} for r in rr}
         trigger={k for k,v in groups.items() if v['C2']['local_reached']=='True' and v['C1']['local_reached']=='False'}
-    candidates=[];signals=[];grad_rows=[];identities=[];start=time.time()
+    candidates=[];signals=[];grad_rows=[];identities=[];missing=[];start=time.time()
     for kind in ('navigate','stitch'):
         for step in (100000,300000,500000,1000000):
-            agent,identity=load_checkpoint(kind,variant,step);identities.append(identity)
+            try:agent,identity=load_checkpoint(kind,variant,step)
+            except FileNotFoundError:
+                missing.append(dict(kind=kind,step=step));continue
+            identities.append(identity)
             for entry in [x for x in entries if x['kind']==kind]:
                 check_time();n=16;s=np.repeat(entry['scene']['qpos'][None],n,axis=0).astype(np.float32);g=np.repeat(entry['scene']['goal'][None],n,axis=0).astype(np.float32)
                 info={k:np.asarray(v) for k,v in sync(query(agent,s,g,entry['candidate_vectors'].astype(np.float32),np.repeat(entry['next_observation'][None],n,axis=0),np.repeat(entry['data_action'][None],n,axis=0))).items()}
@@ -112,7 +115,7 @@ def model_queries(variant):
             print('E3_QUERY',kind,variant,step,flush=True)
     csv_rows(ROOT/'results'/f'E3_{variant}_CANDIDATES.csv',candidates);csv_rows(ROOT/'results'/f'E3_{variant}_SIGNALS.csv',signals)
     if grad_rows:csv_rows(ROOT/'results'/f'E3_{variant}_GRADIENTS.csv',grad_rows)
-    write(ROOT/'receipts'/f'E3_{variant}_exit.json',dict(status='COMPLETED',candidates=len(candidates),real_tuple_signals=len(signals),gradient_trigger_snapshots=sorted(trigger),gradient_rows=len(grad_rows),seconds=time.time()-start,checkpoints=identities,training_updates=0))
+    write(ROOT/'receipts'/f'E3_{variant}_exit.json',dict(status='PARTIAL_MISSING_CHECKPOINTS' if missing else 'COMPLETED',missing_steps=missing,candidates=len(candidates),real_tuple_signals=len(signals),gradient_trigger_snapshots=sorted(trigger),gradient_rows=len(grad_rows),seconds=time.time()-start,checkpoints=identities,training_updates=0))
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('mode',choices=['prepare','A','B']);a=p.parse_args();prepare() if a.mode=='prepare' else model_queries(a.mode)

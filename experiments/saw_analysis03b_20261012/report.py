@@ -27,6 +27,15 @@ def main():
         for v in ('A','B'):
             rr=[r for r in final if r['kind']==kind and r['variant']==v and r['group']=='-1']
             overall.append(dict(dataset=kind,config=v,episodes=sum(int(r['n']) for r in rr),score=pct(np.mean([float(r['success_rate']) for r in rr])) if len(rr)==5 else 'NOT_EXECUTED / incomplete 1M prerequisite'))
+    ab=[]
+    for kind in ('navigate','stitch'):
+        rr=[r for r in pairs if r['kind']==kind]
+        if len(rr)==5:
+            delta=np.mean([float(r['paired_difference']) for r in rr])*100
+            cells='；'.join(f"Task{r['task']}：B−A {float(r['paired_difference'])*100:+.1f}个百分点，成对bootstrap95% [{float(r['paired_ci_low'])*100:+.1f}, {float(r['paired_ci_high'])*100:+.1f}]" for r in rr)
+            ab.append(f'{kind} 当前单训练seed配方的总体B−A差为{delta:+.1f}个百分点。{cells}。该区间只反映评价场景，未包含跨训练seed变异。')
+        else:ab.append(f'{kind} 未形成完整1M同场景A/B对照，正式采样敏感性保持未判定。')
+    abfindings='\n\n'.join(ab)
     total=sum(r['gpu_hours'] for r in resources);peak=max([r['peak_aggregate_mib'] for r in resources] or [0])
     cpuclock=json.loads((ROOT/'receipts/CLOCKS.json').read_text());finish=time.time()
     report=f'''# SAW-ANALYSIS-03B v2.0 执行报告
@@ -50,6 +59,8 @@ def main():
 ## 2. 冻结1M统一终点
 
 {table(overall,['dataset','config','episodes','score'])}
+
+{abfindings}
 
 {table(score_rows,['dataset','config','task','n','success','Wilson95']) if score_rows else '正式终点评价尚未执行。'}
 
@@ -80,6 +91,8 @@ E3_SUPPORT.csv记录真实失败/参照点的qpos/qvel邻域、原始目标区�
 E2没有出现C2近目标成功而C1失败的快照，预登记梯度触发门未满足，梯度分析如实记为未触发。EVIDENCE_MATRIX.csv汇总支持、反例与未判定边界。
 
 ## 6. 裁定、边界与下一项建议
+
+{abfindings}
 
 已支持：Navigate-A Task5发生真实阶段退化；在四个可控真实失败状态中，最终策略对原远目标产生近静止行为，切换经过可行性核验的近目标/控制目标可在部分状态启动有效局部运动。因此失败定位至少细化到最终actor的目标条件动作映射，不能概括成完全没有局部移动能力。
 

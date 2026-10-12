@@ -18,15 +18,18 @@ def check_time(phase='analysis'):
 
 def load_checkpoint(kind,variant,step):
     base=OLD if variant=='A' else ROOT
-    path=base/'runs'/f'formal_{kind}'/f'params_{step}.pkl'
     ident=json.loads((base/'results'/f'{kind}_checkpoints.json').read_text())
-    expected=next(x['sha256'] for x in ident if x['step']==step and Path(x['path']).name==path.name)
+    options=[x for x in ident if x['step']==step]
+    if not options:raise FileNotFoundError(f'MISSING_REGISTERED_CHECKPOINT:{kind}:{variant}:{step}')
+    item=next((x for x in options if Path(x['path']).name==f'params_{step}.pkl'),options[0])
+    path=Path(item['path']);expected=item['sha256']
     actual=sha(path);assert actual==expected
     env,data,val,config=load(f'pointmaze-large-{kind}-v0',variant)
     agent=init_agent(data,config)
     with open(path,'rb') as f:state=pickle.load(f)
     assert state['step']==step
     agent=flax.serialization.from_state_dict(agent,state['agent']);agent=jax.device_put(agent,jax.devices('cpu')[0])
+    assert int(agent.network.step)==step+1,'OPTIMIZER_COUNTER_MISMATCH: official TrainState starts at 1'
     assert all(np.isfinite(np.asarray(v)).all() for v in jax.tree_util.tree_leaves(agent.network.params))
     env.close()
     return agent,dict(path=str(path),sha256=actual,step=step,config=config)
@@ -63,7 +66,13 @@ def main(kind,variant,phase):
     scenes_id=json.loads((ROOT/'results'/f'{phase}_{kind}_SCENES_IDENTITY.json').read_text())
     assert sha(scenes_id['path'])==scenes_id['sha256']
     prefix=f'{phase}_{kind}_{variant}';all_rows=[];identities=[]
-    steps=(100000,300000,500000,1000000) if phase=='E1' else (1000000,)
+    planned=(100000,300000,500000,1000000) if phase=='E1' else (1000000,)
+    steps=list(planned);missing=[]
+    if variant=='B':
+        registered=json.loads((ROOT/'results'/f'{kind}_checkpoints.json').read_text())
+        available={x['step'] for x in registered};missing=[s for s in planned if s not in available]
+        steps=[s for s in planned if s in available]
+        if phase=='final' and missing:raise RuntimeError('NO_COMPLETE_1M_ENDPOINT')
     for step in steps:
         check_time('final' if phase=='final' else 'analysis');agent,identity=load_checkpoint(kind,variant,step);identities.append(identity);raw=[]
         for scene in scenes:
@@ -72,7 +81,7 @@ def main(kind,variant,phase):
         path=ROOT/'runs'/f'{prefix}_{step}_trajectories.pkl';dump(path,raw)
         csv_rows(ROOT/'results'/f'{prefix}.csv',all_rows)
         print(prefix,step,'DONE',len(all_rows),flush=True)
-    env.close();write_json(ROOT/'receipts'/f'{prefix}_exit.json',dict(status='COMPLETED',exit_code=0,episodes=len(all_rows),seconds=time.time()-start,checkpoints=identities))
+    env.close();write_json(ROOT/'receipts'/f'{prefix}_exit.json',dict(status='PARTIAL_MISSING_CHECKPOINTS' if missing else 'COMPLETED',exit_code=0,missing_steps=missing,episodes=len(all_rows),seconds=time.time()-start,checkpoints=identities))
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--kind',required=True);p.add_argument('--variant',required=True,choices=['A','B']);p.add_argument('--phase',required=True,choices=['E1','final']);a=p.parse_args();main(a.kind,a.variant,a.phase)

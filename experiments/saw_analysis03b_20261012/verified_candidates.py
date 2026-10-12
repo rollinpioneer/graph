@@ -5,12 +5,14 @@ def main(variant):
     with open(ROOT/'runs/E2_CANDIDATES.pkl','rb') as f:targets=pickle.load(f)
     with open(ROOT/'runs/E2_SNAPSHOTS.pkl','rb') as f:snaps={x['id']:x for x in pickle.load(f)}
     gates={x['snapshot_id']:x for x in json.loads((ROOT/'results/E2_GATES.json').read_text())}
-    branches=list(csv.DictReader((ROOT/'results/E2_BRANCHES.csv').open()));rows=[];probabilities=[]
+    branches=list(csv.DictReader((ROOT/'results/E2_BRANCHES.csv').open()));rows=[];missing=[]
     for kind in ('navigate','stitch'):
         raw=np.load(OLD/'vendor/data'/f'pointmaze-large-{kind}-v0.npz');obs=raw['observations'];valid=np.flatnonzero(1-raw['terminals'])
         env,data,val,config=load(f'pointmaze-large-{kind}-v0','A')
         for step in (100000,300000,500000,1000000):
-            agent,identity=load_checkpoint(kind,variant,step)
+            try:agent,identity=load_checkpoint(kind,variant,step)
+            except FileNotFoundError:
+                missing.append(dict(kind=kind,step=step));continue
             for target in [x for x in targets if snaps[x['snapshot_id']]['kind']==kind]:
                 check_time();snap=snaps[target['snapshot_id']];scene=snap['scene'];g=scene['goal'];s=scene['qpos'];cv=np.asarray([target['near']['goal'],target['control']['goal']],dtype=np.float32)
                 idx=np.array([target['near']['state_idx'],target['control']['state_idx']]);nextobs=obs[idx+1];actions=raw['actions'][idx]
@@ -34,7 +36,7 @@ def main(variant):
             print('E3_VERIFIED',kind,variant,step,flush=True)
         raw.close();env.close()
     csv_rows(ROOT/'results'/f'E3_{variant}_VERIFIED_TARGETS.csv',rows)
-    write(ROOT/'receipts'/f'E3_{variant}_verified_exit.json',dict(status='COMPLETED',rows=len(rows),additional_control_steps=0,training_updates=0,
+    write(ROOT/'receipts'/f'E3_{variant}_verified_exit.json',dict(status='PARTIAL_MISSING_CHECKPOINTS' if missing else 'COMPLETED',missing_steps=missing,rows=len(rows),additional_control_steps=0,training_updates=0,
         interpretation='post-E2 explanatory measurement of every preregistered E2 candidate; initial 16-candidate preregistered queries retained unchanged'))
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--variant',choices=['A','B'],required=True);main(p.parse_args().variant)
