@@ -1,0 +1,25 @@
+{
+  "calibration": "independent seed-0 pilot, before trained-model discovery; untrained distributions are not policy success targets",
+  "sources": {
+    "navigate": {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_navigate/eval_trajectories.pkl",
+      "sha256": "781f98828079e36971598929c6fa80591392a06b48f914dce48f0338f802e809",
+      "steps": 10000,
+      "qualified_steps": 7021
+    },
+    "stitch": {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_stitch/eval_trajectories.pkl",
+      "sha256": "9fbc354dd231be6a0f09c744c6b78812057d12296331482c12aa04544e0c86da",
+      "steps": 10000,
+      "qualified_steps": 10000
+    }
+  },
+  "raw_log_ratio_otsu_threshold": 0.0001,
+  "no_effect_ratio_threshold": 0.02,
+  "min_requested_displacement": 0.05,
+  "window_steps": 10,
+  "wall_proximity": 0.71,
+  "no_effect_definition": "at least 8/10 commanded moves have observed/requested displacement below calibrated cutoff; request magnitude > .05",
+  "wall_proxy": "near a wall rectangle within .71 distance (official sphere radius .7 plus .01 tolerance) and ineffective command; physical contact count includes floor, not treated as wall collision",
+  "revisit_definition": "repeated cells after consecutive equal cells collapsed; continuous counts, no abnormal-turn label"
+}
