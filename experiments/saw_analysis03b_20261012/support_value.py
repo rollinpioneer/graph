@@ -88,6 +88,21 @@ def model_queries(variant):
         rr=list(csv.DictReader(branchfile.open()));groups={r['snapshot_id']:{x['condition']:x for x in rr if x['snapshot_id']==r['snapshot_id']} for r in rr}
         trigger={k for k,v in groups.items() if v['C2']['local_reached']=='True' and v['C1']['local_reached']=='False'}
     candidates=[];signals=[];grad_rows=[];identities=[];missing=[];start=time.time()
+    gradient_batches={}
+    if trigger and variant=='B':
+        with open(ROOT/'runs/E2_CANDIDATES.pkl','rb') as f:verified={x['snapshot_id']:x for x in pickle.load(f)}
+        joint=list(csv.DictReader((ROOT/'results/E3_JOINT_SAMPLING_SUPPORT.csv').open()))
+        for kind in ('navigate','stitch'):
+            raw=np.load(OLD/'vendor/data'/f'pointmaze-large-{kind}-v0.npz');obs=raw['observations'];act=raw['actions']
+            for e in [x for x in entries if x['kind']==kind and x['snapshot_id'] in trigger]:
+                near=verified[e['snapshot_id']]['near'];i=near['state_idx'];w=near['waypoint_idx'];g=e['goal_idx']
+                j=next(x for x in joint if x['snapshot_id']==e['snapshot_id'] and x['group']=='E2_verified_near')
+                assert j['random_waypoint_matches']=='True'
+                gradient_batches[e['snapshot_id']]=(dict(observations=obs[[i]],next_observations=obs[[i+1]],actions=act[[i]],value_goals=obs[[g]],
+                    high_actor_goals=obs[[g]],high_actor_targets=obs[[w]],low_actor_goals=obs[[w]],rewards=np.array([float(i==g)-1]),masks=np.array([float(i!=g)])),
+                    dict(state_idx=i,goal_idx=g,waypoint_idx=w,qpos_match_error=near['qpos_error'],qvel_match_error=near['qvel_error'],
+                        tuple_scope='actual E2 verified target and native B random-goal waypoint; raw state approximates physical snapshot'))
+            raw.close()
     for kind in ('navigate','stitch'):
         for step in (100000,300000,500000,1000000):
             try:agent,identity=load_checkpoint(kind,variant,step)
@@ -111,7 +126,8 @@ def model_queries(variant):
                     candidates.append(row)
                 actual={k:float(v) for k,v in sync(losses(agent,entry['batch'])).items()};signals.append(dict(snapshot_id=entry['snapshot_id'],kind=kind,variant=variant,checkpoint_step=step,state_idx=entry['state_idx'],goal_idx=entry['goal_idx'],waypoint_idx=entry['waypoint_idx'],**actual))
                 if entry['snapshot_id'] in trigger:
-                    gr={k:float(v) for k,v in sync(gradients(agent,entry['batch'])).items()};grad_rows.append(dict(snapshot_id=entry['snapshot_id'],kind=kind,variant=variant,checkpoint_step=step,**gr))
+                    batch,meta=gradient_batches.get(entry['snapshot_id'],(entry['batch'],dict(state_idx=entry['state_idx'],goal_idx=entry['goal_idx'],waypoint_idx=entry['waypoint_idx'],tuple_scope='registered real data tuple')))
+                    gr={k:float(v) for k,v in sync(gradients(agent,batch)).items()};grad_rows.append(dict(snapshot_id=entry['snapshot_id'],kind=kind,variant=variant,checkpoint_step=step,**meta,**gr))
             print('E3_QUERY',kind,variant,step,flush=True)
     csv_rows(ROOT/'results'/f'E3_{variant}_CANDIDATES.csv',candidates);csv_rows(ROOT/'results'/f'E3_{variant}_SIGNALS.csv',signals)
     if grad_rows:csv_rows(ROOT/'results'/f'E3_{variant}_GRADIENTS.csv',grad_rows)

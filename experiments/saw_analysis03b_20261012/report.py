@@ -18,6 +18,18 @@ def main():
     e1=read(ROOT/'results/E1_TRANSITIONS.csv');main_e1=next(x for x in e1 if x['kind']=='navigate' and x['variant']=='A' and x['task']=='5' and x['early_step']=='300000' and x['late_step']=='1000000')
     gates=json.loads((ROOT/'results/E2_GATES.json').read_text());branches=read(ROOT/'results/E2_BRANCHES.csv');e2=read(ROOT/'results/E2_SUMMARY.csv')
     controls=json.loads((ROOT/'receipts/E2_budget.json').read_text())['used'];gpass=sum(x['status']=='PASS' for x in gates)
+    bfile=ROOT/'results/E2_AB_MATCHED_FAILED.csv'
+    bp=read(bfile) if bfile.exists() else []
+    if bp:
+        cc=[x for x in bp if x['condition']=='C0']
+        bnote=f"B终点前冻结的补充复测使用同一4个已有A失败快照，共20条C0—C4分支。C0平均净位移：A {np.mean([float(x['A_displacement']) for x in cc]):.4f}，B {np.mean([float(x['B_displacement']) for x in cc]):.4f}；50步内原远目标成功：A {sum(x['A_far_success']=='True' for x in cc)}/4，B {sum(x['B_far_success']=='True' for x in cc)}/4。所有条件的逐状态成对差在E2_AB_MATCHED_FAILED.csv，完整B轨迹留服务器。这是A证据驱动、B终点前固定的解释性复测，不能当作总体成功率或最初未消费的确认集。"
+    else:bnote='B受控补充复测未执行；若缺少完整1M，保持未执行，不以其他检查点代替。'
+    gradient_counts=[]
+    for v in ('A','B'):
+        p=ROOT/'receipts'/f'E3_{v}_exit.json'
+        d=json.loads(p.read_text()) if p.exists() else {}
+        gradient_counts.append(f"{v}：{len(d.get('gradient_trigger_snapshots',[]))}个状态触发、{d.get('gradient_rows',0)}条阶段梯度记录")
+    gradient_note='；'.join(gradient_counts)
     epochs=read(ROOT/'results/E1_SCORES.csv');score_rows=[]
     for r in final:
         if r['group']!='-1':continue
@@ -81,13 +93,15 @@ Navigate-A Task5的300k→1M：同20场景，早期成功{main_e1['first_success
 
 ## 4. E2匹配局部分支
 
-固定32候选，{gpass}通过恢复、下一步源轨迹重放和近/控制目标可行性检查，共{len(branches)}条分支，总控制步（含E2自检及E3数据链）{controls}/10000。未通过的{32-gpass}个候选不替换；具体原因在E2_GATES.json。所有近目标由预登记数据位置/速度支持与特权坐标控制验证，不以分支成绩选近目标。
+固定32候选，{gpass}通过恢复、下一步源轨迹重放和近/控制目标可行性检查，A共{len(branches)}条分支，总控制步（含B补充复测、E2自检及E3数据链）{controls}/10000。未通过的{32-gpass}个候选不替换；具体原因在E2_GATES.json。所有近目标由预登记数据位置/速度支持与特权坐标控制验证，不以分支成绩选近目标。
 
 {table(e2,['kind','source_success','condition','n','local_reached','far_success','far_progress_mean','displacement_mean'])}
 
 可控失败状态只有Navigate四例；Stitch失败候选没有通过近目标准入，不能给出其受控因果分支结论。四例Navigate的C0在原远目标下50步净位移平均约0.0022；C1达到近目标2/4，C2为1/4，C3控制目标3/4。最终actor具备部分局部执行能力，短actor没有显示总体更强。局部切换后没有任何原远目标完整成功，故不能宣称恢复任务。C3也可触发移动，说明尚不能把行为改变归因于某个独特有利Waypoint。C4与E1共同说明策略随阶段变化，欧氏远目标进展不当作最优路线价值。
 
 C0低运动主要是小动作，而不是满足大动作撞墙阈值后的持续无效运动；零“ineffective_steps”不等于有效导航。每条原始分支保留动作、真实目标/临时策略条件目标、完整sim状态和原成功判定。
+
+{bnote}
 
 ## 5. E3证据矩阵
 
@@ -97,7 +111,7 @@ E3_SUPPORT.csv记录真实失败/参照点的qpos/qvel邻域、原始目标区�
 
 固定16候选的价值双头、优势、截断和actor/teacher/data动作见E3_A/B_CANDIDATES.csv。所有预选E2近/控制目标又被完整复用于离线价值测量，见E3_A/B_VERIFIED_TARGETS.csv；这是E2后解释性补测，无新增控制步或训练。未因成绩替换候选。真实数据tuple上的原版损失跨阶段保留E3_A/B_SIGNALS.csv，目标是否在A采样段内单独标记。离线动作差、权重饱和和排序分歧仅为证据，不单独判根因。
 
-E2没有出现C2近目标成功而C1失败的快照，预登记梯度触发门未满足，梯度分析如实记为未触发。EVIDENCE_MATRIX.csv汇总支持、反例与未判定边界。
+A的E2没有出现C2近目标成功而C1失败的快照。各配置按自己的物理证据触发离线梯度，结果为：{gradient_note}。没有证据则如实未触发；B若触发，使用实际E2验证目标对应的真实数据tuple，仍不更新参数。梯度余弦不能单独解释全任务失败。EVIDENCE_MATRIX.csv汇总支持、反例与未判定边界。
 
 模块参数对比：{module_note} 参数差异不自动解释其功能或来源，不能将两个采样概率的改变直接简化成“只有actor参数变化”。MODULE_IDENTITY.csv保留逐模块误差；数字训练轨迹和后端差异的原因未在本轮做额外训练控制。
 
