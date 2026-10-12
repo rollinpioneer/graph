@@ -57,7 +57,7 @@ def main():
             if z and all(x['complete']=='True' for x in z):
                 y=[int(x['success']) for x in z];lo,hi=wilson(y);ts.append(dict(arm=key[0],student_step=key[1],task=task,n=len(z),success=sum(y),success_rate=float(np.mean(y)),ci95_low=lo,ci95_high=hi))
     table(P/'results/T_TASK_SCORES.csv',ts)
-    for first,second in [(1,0),(2,0),(3,1),(3,0)]+[(a,-1) for a in range(4)]:
+    for first,second in [(1,0),(2,0),(2,1),(3,1),(3,0)]+[(a,-1) for a in range(4)]:
         aa=td.get((first,100000));bb=td.get((second,0 if second==-1 else 100000))
         if not aa or not bb or len(aa)!=500 or len(bb)!=500 or any(x['complete']!='True' for x in aa+bb):continue
         for task in range(6):
@@ -66,6 +66,6 @@ def main():
             tc.append(dict(first_arm=first,second_arm=second,task=task,prespecified_main_task=task in (1,3),meaningful_short_effect=meaningful,**out))
     table(P/'results/T_PAIRED_CONTRASTS.csv',tc)
     approved=(P/'receipts/T_AUTHORIZATION.json').exists() and json.loads((P/'receipts/T_AUTHORIZATION.json').read_text())['approved']
-    write(P/'results/T_SUMMARY.json',dict(status='NOT_EXECUTED_AWAITING_SEPARATE_APPROVAL' if not approved else 'FOUR_FINALS_COMPLETE' if all((a,100000) in td and len(td[a,100000])==500 for a in range(4)) else 'PARTIAL_OR_PENDING',contrasts=tc,single_common_training_seed=0))
+    write(P/'results/T_SUMMARY.json',dict(status='NOT_EXECUTED_AWAITING_SEPARATE_APPROVAL' if not approved else 'FOUR_FINALS_COMPLETE' if all((a,100000) in td and len(td[a,100000])==500 and all(x['complete']=='True' for x in td[a,100000]) for a in range(4)) else 'PARTIAL_OR_PENDING',contrasts=tc,single_common_training_seed=0))
     print(json.dumps(summary,ensure_ascii=False))
 if __name__=='__main__':main()

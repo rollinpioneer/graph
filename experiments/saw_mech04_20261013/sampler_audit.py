@@ -1,4 +1,4 @@
-"""Observe the unchanged official sampler and pilot exactly 1000 updates."""
+"""Observe the unchanged official sampler; CPU-only, zero parameter updates."""
 import argparse, copy, importlib.metadata
 from common import *
 
