@@ -1,5 +1,5 @@
 """Verify actual execution and stage an explicit own-experiment lightweight list."""
-import hashlib,json,pickle,subprocess,time
+import csv,hashlib,json,pickle,subprocess,time
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parent;W=ROOT.parents[1]
@@ -19,6 +19,23 @@ def main():
     assert not list((ROOT/'receipts').glob('*_active.json')),'GPU_JOB_STILL_ACTIVE'
     budget=json.loads((ROOT/'receipts/E1_budget.json').read_text());assert budget['used']<=1600
     assert json.loads((ROOT/'receipts/E2_budget.json').read_text())['used']<=10000
+    final_budget=json.loads((ROOT/'receipts/final_budget.json').read_text());assert final_budget['used']<=2000
+    cpu=json.loads((ROOT/'receipts/CPU_COMPLETION.json').read_text())
+    assert cpu['analysis_finish']<=cpu['analysis_deadline'] and cpu['final_finish']<=cpu['final_deadline']
+    evaluation=[]
+    for phase in ('E1','final'):
+        for kind in ('navigate','stitch'):
+            for variant in ('A','B'):
+                p=ROOT/'results'/f'{phase}_{kind}_{variant}.csv'
+                if not p.exists():continue
+                rows=list(csv.DictReader(p.open()))
+                receipt=json.loads((ROOT/'receipts'/f'{phase}_{kind}_{variant}_exit.json').read_text())
+                assert len(rows)==receipt['episodes'] and receipt['exit_code']==0
+                assert max(float(r['restore_max_error']) for r in rows)<=1e-10
+                assert len({(r['checkpoint_step'],r['scene_id']) for r in rows})==len(rows)
+                evaluation.append(dict(phase=phase,kind=kind,variant=variant,episodes=len(rows),status=receipt['status']))
+    assert sum(x['episodes'] for x in evaluation if x['phase']=='E1')==budget['used']
+    assert sum(x['episodes'] for x in evaluation if x['phase']=='final')==final_budget['used']
     resources=[json.loads(p.read_text()) for p in (ROOT/'receipts').glob('*_resource.json')]
     assert len(resources)==4 and sum(x['gpu_residency_upper_seconds'] for x in resources)<=19800
     assert all(x['peak_aggregate_mib']<=12288 for x in resources)
@@ -58,6 +75,7 @@ def main():
     write(ROOT/'EVIDENCE_INDEX.json',dict(server_root=str(ROOT),files=index,checkpoints=checkpoints,input_references=json.loads((ROOT/'results/READ_ONLY_ASSETS.json').read_text()),training_source=sourcefiles,
         note='Large files remain server-only; weights are not published; raw pre-correction replay gate measurements remain immutable and are interpreted by E3_REPLAY_GATE_AUDIT.json'))
     write(ROOT/'results/ARCHIVE_VALIDATION.json',dict(status='PASS',scientific=scientific,training_sources=sourcefiles,E1_episodes=budget['used'],E2_control_steps=json.loads((ROOT/'receipts/E2_budget.json').read_text())['used'],
+        final_episodes=final_budget['used'],evaluation=evaluation,CPU_completion=cpu,
         total_GPU_seconds=sum(x['gpu_residency_upper_seconds'] for x in resources),raw_evidence_files=len(index),large_weights_staged=False))
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=W,text=True).strip()
     write(ROOT/'BRANCH_INFO.json',dict(branch='codex/saw-analysis-03b-20261012',url='https://github.com/rollinpioneer/graph/tree/codex/saw-analysis-03b-20261012',
@@ -74,6 +92,7 @@ def main():
     subprocess.run(['git','add','--']+[str(p.relative_to(W)) for p in allow],cwd=W,check=True)
     staged=subprocess.check_output(['git','diff','--cached','--name-only'],cwd=W,text=True).splitlines()
     assert all(p.startswith('experiments/saw_analysis03b_20261012/') for p in staged)
-    subprocess.run(['git','diff','--cached','--check'],cwd=W,check=True)
+    check=subprocess.run(['git','diff','--cached','--check'],cwd=W,capture_output=True,text=True)
+    assert check.returncode==0,'STAGED_WHITESPACE_CHECK:'+check.stdout[:1200]
     print('ARCHIVE_VALIDATION_PASS',len(allow),flush=True)
 if __name__=='__main__':main()

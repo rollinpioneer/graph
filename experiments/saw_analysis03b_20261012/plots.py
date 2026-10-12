@@ -16,7 +16,7 @@ def main():
                 rr=sorted([x for x in rows if x['kind']==kind and int(x['task'])==task and x['variant']==variant],key=lambda x:int(x['checkpoint_step']))
                 if not rr:continue
                 xs=[int(x['checkpoint_step'])/1000 for x in rr];ys=np.array([float(x['success_rate']) for x in rr]);lo=np.array([float(x['ci_low']) for x in rr]);hi=np.array([float(x['ci_high']) for x in rr])
-                ax.errorbar(xs,ys,yerr=np.vstack([ys-lo,hi-ys]),marker='o',capsize=3,color=color,label=variant)
+                ax.errorbar(xs,ys,yerr=np.maximum(0,np.vstack([ys-lo,hi-ys])),marker='o',capsize=3,color=color,label=variant)
             ax.set_title(f'{kind.title()} / Task {task}');ax.set_ylim(-.04,1.04);ax.grid(alpha=.2)
             if column==0:ax.set_ylabel('Success rate / Wilson 95% CI')
             if row==1:ax.set_xlabel('Updates (thousands)')
@@ -28,7 +28,7 @@ def main():
             for variant,shift,color in [('A',-.18,'#2563eb'),('B',.18,'#d97706')]:
                 x=[r for r in rr if r['kind']==kind and r['variant']==variant and r['group']=='-1'];x=sorted(x,key=lambda x:int(x['task']))
                 if not x:continue
-                yy=np.array([float(r['success_rate']) for r in x]);lo=np.array([float(r['ci_low']) for r in x]);hi=np.array([float(r['ci_high']) for r in x]);ax.bar(np.array([int(r['task']) for r in x])+shift,yy,width=.34,color=color,label=variant,yerr=np.vstack([yy-lo,hi-yy]),capsize=3)
+                yy=np.array([float(r['success_rate']) for r in x]);lo=np.array([float(r['ci_low']) for r in x]);hi=np.array([float(r['ci_high']) for r in x]);ax.bar(np.array([int(r['task']) for r in x])+shift,yy,width=.34,color=color,label=variant,yerr=np.maximum(0,np.vstack([yy-lo,hi-yy])),capsize=3)
             ax.set_title(kind.title());ax.set_xlabel('Official task');ax.set_ylim(0,1.06);ax.grid(axis='y',alpha=.2);ax.legend()
         axes[0].set_ylabel('Success rate / Wilson 95% CI');fig.suptitle('Frozen 1M endpoint only; n=100 per task, two independent scene groups');fig.tight_layout();export(fig,'final_scores')
     rr=read(ROOT/'results/E2_BRANCHES.csv');failure_ids=sorted(set(x['snapshot_id'] for x in rr if x['source_success']=='False'))

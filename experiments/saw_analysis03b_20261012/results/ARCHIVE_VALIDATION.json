@@ -1,0 +1,126 @@
+{
+  "status": "PASS",
+  "scientific": [
+    {
+      "kind": "navigate",
+      "config_diff": {
+        "actor_p_randomgoal": [
+          0.0,
+          0.5
+        ],
+        "actor_p_trajgoal": [
+          1.0,
+          0.5
+        ]
+      },
+      "status": "SINGLE_SEED_B_COMPARISON",
+      "updates": 1000000
+    },
+    {
+      "kind": "stitch",
+      "config_diff": {
+        "actor_p_randomgoal": [
+          0.0,
+          0.5
+        ],
+        "actor_p_trajgoal": [
+          1.0,
+          0.5
+        ]
+      },
+      "status": "SINGLE_SEED_B_COMPARISON",
+      "updates": 1000000
+    }
+  ],
+  "training_sources": [
+    {
+      "path": "common.py",
+      "sha256": "f121ebdab1ddb306106fcb5fa47d24eeb2ae2803fab9981b212be1912e571ad1",
+      "training_start_commit": "388ded0a23258ed43e12093825b17fe80b7510fc"
+    },
+    {
+      "path": "train.py",
+      "sha256": "ecceec81a22a40604ffe3b2358b138470b01f7ff30f7dd2569d1970b2ace92e8",
+      "training_start_commit": "388ded0a23258ed43e12093825b17fe80b7510fc"
+    },
+    {
+      "path": "resource_guard.py",
+      "sha256": "18040dca6bbaada2e226946d5d56bcc2442abc6ad837ff494a6bcf9c4e73b378",
+      "training_start_commit": "388ded0a23258ed43e12093825b17fe80b7510fc"
+    }
+  ],
+  "E1_episodes": 1600,
+  "E2_control_steps": 7113,
+  "final_episodes": 2000,
+  "evaluation": [
+    {
+      "phase": "E1",
+      "kind": "navigate",
+      "variant": "A",
+      "episodes": 400,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "E1",
+      "kind": "navigate",
+      "variant": "B",
+      "episodes": 400,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "E1",
+      "kind": "stitch",
+      "variant": "A",
+      "episodes": 400,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "E1",
+      "kind": "stitch",
+      "variant": "B",
+      "episodes": 400,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "final",
+      "kind": "navigate",
+      "variant": "A",
+      "episodes": 500,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "final",
+      "kind": "navigate",
+      "variant": "B",
+      "episodes": 500,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "final",
+      "kind": "stitch",
+      "variant": "A",
+      "episodes": 500,
+      "status": "COMPLETED"
+    },
+    {
+      "phase": "final",
+      "kind": "stitch",
+      "variant": "B",
+      "episodes": 500,
+      "status": "COMPLETED"
+    }
+  ],
+  "CPU_completion": {
+    "analysis_start": 1791805588.38757,
+    "analysis_deadline": 1791819988.3875701,
+    "final_start": 1791814785.2441406,
+    "final_deadline": 1791829185.2441409,
+    "analysis_finish": 1791815408.2680004,
+    "final_finish": 1791815094.592754,
+    "analysis_wall_seconds": 9819.880430459976,
+    "final_wall_seconds": 309.3486132621765
+  },
+  "total_GPU_seconds": 15330.285487413406,
+  "raw_evidence_files": 140,
+  "large_weights_staged": false
+}

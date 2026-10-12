@@ -16,6 +16,8 @@ def main():
     final=read(ROOT/'results/FINAL_SCORES.csv') if (ROOT/'results/FINAL_SCORES.csv').exists() else []
     pairs=read(ROOT/'results/FINAL_PAIRED.csv') if (ROOT/'results/FINAL_PAIRED.csv').exists() else []
     e1=read(ROOT/'results/E1_TRANSITIONS.csv');main_e1=next(x for x in e1 if x['kind']=='navigate' and x['variant']=='A' and x['task']=='5' and x['early_step']=='300000' and x['late_step']=='1000000')
+    b_e1=next((x for x in e1 if x['kind']=='navigate' and x['variant']=='B' and x['task']=='5' and x['early_step']=='300000' and x['late_step']=='1000000'),None)
+    b_e1_note=(f"Navigate-B在同20个E1场景也从300k的{b_e1['first_success']}/20降至1M的{b_e1['second_success']}/20；成功→失败{b_e1['success_to_failure']}，失败→成功{b_e1['failure_to_success']}。因此B没有消除该任务的阶段退化。" if b_e1 else 'Navigate-B的Task5阶段对照缺失。')
     gates=json.loads((ROOT/'results/E2_GATES.json').read_text());branches=read(ROOT/'results/E2_BRANCHES.csv');e2=read(ROOT/'results/E2_SUMMARY.csv')
     controls=json.loads((ROOT/'receipts/E2_budget.json').read_text())['used'];gpass=sum(x['status']=='PASS' for x in gates)
     bfile=ROOT/'results/E2_AB_MATCHED_FAILED.csv'
@@ -48,6 +50,8 @@ def main():
             ab.append(f'{kind} 当前单训练seed配方的总体B−A差为{delta:+.1f}个百分点。{cells}。该区间只反映评价场景，未包含跨训练seed变异。')
         else:ab.append(f'{kind} 未形成完整1M同场景A/B对照，正式采样敏感性保持未判定。')
     abfindings='\n\n'.join(ab)
+    complete=all(x['updates']==1000000 and x['status']=='SINGLE_SEED_B_COMPARISON' for x in training) and len(pairs)==10
+    decision=('本轮固定seed0配方对采样条件高度敏感，方向随任务而异：Navigate总体改善9.2个百分点，主要来自Task2的+59个百分点，Task1反而下降24个百分点，Task5终点仍仅9%；Stitch下降47.6个百分点，不能把B称为统一改进。两组场景与逐任务区间共同保留，不能把一次训练的差异外推为跨训练种子平均优势。' if complete else '完整1M同场景条件不足的比较保持未判定。')
     module_rows=read(ROOT/'results/MODULE_IDENTITY.csv') if (ROOT/'results/MODULE_IDENTITY.csv').exists() else []
     module_facts=[]
     for kind in ('navigate','stitch'):
@@ -55,8 +59,15 @@ def main():
         lr=[r for r in module_rows if r['kind']==kind and r['module']=='modules_low_actor']
         module_facts.append(f"{kind}：已比较价值模块{len(vr)}个阶段，其中数组完全相同{sum(r['exact_equal']=='True' for r in vr)}个；短actor模块完全相同{sum(r['exact_equal']=='True' for r in lr)}/{len(lr)}个。")
     module_note=' '.join(module_facts)
+    sv=[r for r in module_rows if r['kind']=='stitch' and r['module'] in ('modules_value','modules_target_value','modules_goal_rep')]
+    stitch_identity=('Stitch在四个冻结阶段的value、target_value及共享goal_rep参数全部逐数组相同（12/12模块阶段）；这排除了这几组检查点价值网络参数差异作为A/B成绩变化的解释，但不证明价值正确，也不排除actor条件表征、短策略或输入分布的作用。' if len(sv)==12 and all(r['exact_equal']=='True' for r in sv) else '价值模块与共享表征的身份界限以MODULE_IDENTITY.csv实际结果为准。')
+    vp=ROOT/'results/VALUE_OUTPUT_IDENTITY.csv';vo=read(vp) if vp.exists() else []
+    ss=[r for r in vo if r['kind']=='stitch']
+    value_output_note=(f"对已有同输入查询表作数值比对（不增加查询/回合）：Stitch固定16候选跨阶段的价值头最大绝对差{max(float(r['value_head_max_abs']) for r in ss):.9g}，截断权重最大绝对差{max(float(r['clipped_weight_max_abs']) for r in ss):.9g}；预选近/控制目标的所有阶段查询输出完全一致。参数身份不能直接代替执行数值身份，这些差异的数值来源尚未独立归因，未伪称全输出零误差。完整记录在VALUE_OUTPUT_IDENTITY.csv。" if ss else '同输入查询的数值比对尚未汇总。')
     total=sum(r['gpu_hours'] for r in resources);peak=max([r['peak_aggregate_mib'] for r in resources] or [0])
     cpuclock=json.loads((ROOT/'receipts/CLOCKS.json').read_text());finish=time.time()
+    cpupath=ROOT/'receipts/CPU_COMPLETION.json';cpu=json.loads(cpupath.read_text()) if cpupath.exists() else {}
+    cpu_note=(f"E1—E3阶段墙钟上界{cpu['analysis_wall_seconds']/3600:.3f}小时（包含等待训练），终点主评价墙钟{cpu['final_wall_seconds']:.1f}秒；各CPU工作进程最多4线程，均使用CPU后端，实际shell退出码全部0。" if cpu else 'CPU阶段完成时间尚未登记。')
     report=f'''# SAW-ANALYSIS-03B v2.0 执行报告
 
 分支：`codex/saw-analysis-03b-20261012`，链接：https://github.com/rollinpioneer/graph/tree/codex/saw-analysis-03b-20261012
@@ -66,6 +77,8 @@ def main():
 {table(training,['kind','status','updates','GPU_hours','exit_code','stop_reason','checkpoint_count'])}
 
 新增累计GPU驻留上界 {total:.6f} 小时，合计显存峰值 {peak} MiB。包含两次已结束1000更新试运行，正式各9000秒、累计19800秒硬限。用户在试运行结束后指令“不要测、直接跑”，已取消吞吐预测准入并直接启动GPU3/4；保留实测预测与真实预算结果。试运行权重不继承。资源守护日志/回执见receipts及服务器logs。
+
+{cpu_note}
 
 ## 1. 训练身份与科学配置
 
@@ -88,6 +101,8 @@ def main():
 ## 3. E1同场景能力转移
 
 Navigate-A Task5的300k→1M：同20场景，早期成功{main_e1['first_success']}/20，最终成功{main_e1['second_success']}/20；成功→失败{main_e1['success_to_failure']}，失败→成功{main_e1['failure_to_success']}。这确认冻结场景上的退化。所有其他任务、A/B阶段照报E1_SCORES.csv及E1_TRANSITIONS.csv；缺少1M阶段保持缺失，开发曲线不替代统一场景。
+
+{b_e1_note}
 
 20回合的小样本Wilson区间保留；边界全成功/全失败的成对bootstrap可能退化为点，不能视为总体误差为零。E1场景已消费用于研究，不冒充未触碰确认集。完整学习曲线见figures/E1_learning_curves.pdf。
 
@@ -115,15 +130,21 @@ A的E2没有出现C2近目标成功而C1失败的快照。各配置按自己的�
 
 模块参数对比：{module_note} 参数差异不自动解释其功能或来源，不能将两个采样概率的改变直接简化成“只有actor参数变化”。MODULE_IDENTITY.csv保留逐模块误差；数字训练轨迹和后端差异的原因未在本轮做额外训练控制。
 
+{stitch_identity}
+
+{value_output_note}
+
 ## 6. 裁定、边界与下一项建议
 
 {abfindings}
+
+{decision}
 
 已支持：Navigate-A Task5发生真实阶段退化；在四个可控真实失败状态中，最终策略对原远目标产生近静止行为，切换经过可行性核验的近目标/控制目标可在部分状态启动有效局部运动。因此失败定位至少细化到最终actor的目标条件动作映射，不能概括成完全没有局部移动能力。
 
 反例与边界：近目标并非总能达到，teacher没有胜过actor；控制近目标也改变行为；没有50步内完整远目标恢复。Stitch失败状态近目标准入失败、全数据严格状态拼接和价值正确性仍未判定。A/B敏感性只有双方完整1M的同场景比较才可裁定；未完成的B保持未判定，不能用中途检查点代替终点。
 
-下一项最具信息价值建议（仅建议，不执行）：若B因预算未完成，先在独立新卡明确允许的资源与共享负载条件下完成同一冻结B配方，补齐1M对照；若B完整，则用新卡设计单一、匹配真实失败快照的目标条件对照，检验小动作静止点与训练目标覆盖的关系，保留无优势反例。不得由本报告自动触发重训练、新seed、损失或算法模块。
+下一项最具信息价值建议（仅建议，不执行）：以Stitch-B这次正式终点的真实失败轨迹为对象，另卡冻结一组全状态匹配、通过局部目标可行性准入的原目标/近目标分支，区分局部执行失能与远目标条件动作映射失败；优先解释本轮最大的47.6个百分点损失，保留准入失败及无优势反例。不得由本报告自动触发重训练、新seed、损失或算法模块。
 
 全部原始权重、场景、轨迹与完整日志留服务器本轮独立目录；Git只含代码、冻结设计、轻量表、必要回执、图与散列索引。单训练seed、两场景随机流及Stitch协议近似限制外推；不以作者85%/8%为优化目标。
 '''

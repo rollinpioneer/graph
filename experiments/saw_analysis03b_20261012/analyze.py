@@ -62,6 +62,7 @@ def main():
                     far_progress_mean=float(np.mean([float(r['far_progress']) for r in tr])),displacement_mean=float(np.mean([float(r['net_displacement']) for r in tr])),ineffective_steps_mean=float(np.mean([float(r['ineffective_steps']) for r in tr]))))
     save(ROOT/'results/E2_SUMMARY.csv',e2)
     evidence=[]
+    bpath=ROOT/'results/E2_B_BRANCHES.csv';bbranches=read(bpath) if bpath.exists() else []
     support=read(ROOT/'results/E3_SUPPORT.csv') if (ROOT/'results/E3_SUPPORT.csv').exists() else []
     gates=json.loads((ROOT/'results/E2_GATES.json').read_text()) if (ROOT/'results/E2_GATES.json').exists() else []
     verified={v:read(ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv') if (ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv').exists() else [] for v in ('A','B')}
@@ -86,6 +87,11 @@ def main():
         j=next((r for r in joint if r['snapshot_id']==sid and r['group']=='E2_verified_near'),None)
         item['A_joint_far_region_verified_waypoint_probability']=float(j['joint_far_region_waypoint_probability_A']) if j else None
         item['B_joint_far_region_verified_waypoint_probability']=float(j['joint_far_region_waypoint_probability_B']) if j else None
+        bs={r['condition']:r for r in bbranches if r['snapshot_id']==sid}
+        item.update(B_C0_far_progress=float(bs['C0']['far_progress']) if bs else None,
+            B_C0_net_displacement=float(bs['C0']['net_displacement']) if bs else None,
+            B_C1_near_success=bs.get('C1',{}).get('local_reached'),B_C2_near_success=bs.get('C2',{}).get('local_reached'),
+            B_C3_control_success=bs.get('C3',{}).get('local_reached'),B_physical_scope='fixed explanatory replay of all four A gate-qualified failures' if bs else 'NOT_EXECUTED')
         evidence.append(item)
     save(ROOT/'results/EVIDENCE_MATRIX.csv',evidence)
     write(ROOT/'results/STATISTICAL_METHOD.json',dict(bootstrap_samples=10000,seed=203001,unit='whole paired episode',score_interval='Wilson 95%',difference_interval='paired percentile bootstrap 95%',
