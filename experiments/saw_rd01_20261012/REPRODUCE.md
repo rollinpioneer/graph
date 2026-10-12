@@ -62,3 +62,7 @@ vendor/venv/bin/python failure_map.py --mode build
 Do not run confirmation until the discovery evidence and the conditional intervention decision are recorded. Confirmation uses the preregistered fresh seeds and separate state-goal samples. At most 64 matched state-waypoint pairs (128 policy segments) across discovery and confirmation. Any extra segments or actor training require a separate budget decision.
 
 Raw trajectories, model/optimizer/RNG checkpoints, NPZ datasets and complete logs remain on the server. Git contains scripts, protocol, dependency lock, light CSV/JSON metrics, diagnostics, reports, figures and hashes. This is a single-training-seed implementation evaluation; Stitch protocol gaps limit direct comparison to the authors' Appendix J.
+
+## Completed CPU synthesis and archive
+
+After both confirmation diagnoses, run `synthesize.py`, `plots.py`, `report_and_index.py` with CUDA hidden and JAX_PLATFORMS=cpu. Inspect figures, then `archive_light.py` validates full checkpoint arrays, finite loss tables, final sample counts, caps and official source identities, normalizes finished CSVs, writes LIGHT_MANIFEST.json and stages the explicit lightweight allowlist. No command in this section trains a new baseline.

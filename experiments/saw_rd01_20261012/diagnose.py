@@ -181,7 +181,7 @@ def run(kind,phase,do_rollouts=True):
             if v.ndim!=1: continue
             finite=v[np.isfinite(v)]
             full_summary[k]=dict(finite_count=len(finite),nonfinite_count=int((~np.isfinite(v)).sum()),
-                                 mean=float(finite.mean()) if len(finite) else None,
+                                 mean=float(np.mean(finite,dtype=np.float64)) if len(finite) else None,
                                  q50=float(np.quantile(finite,.5)) if len(finite) else None,
                                  q90=float(np.quantile(finite,.9)) if len(finite) else None,
                                  q99=float(np.quantile(finite,.99)) if len(finite) else None)

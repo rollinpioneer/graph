@@ -1,0 +1,741 @@
+{
+  "server_root": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012",
+  "official_source_commit": "3535a16c901e5de1233ac5a586401b3ddfa5e30d",
+  "critical_official_source": [
+    {
+      "relative": "impls/agents/saw.py",
+      "sha256": "31f1f2bca782f53838532bede5a0ace2265e2b61593cb94f80ce81a71e4ddbef"
+    },
+    {
+      "relative": "impls/main.py",
+      "sha256": "375fad6375047ff59f3baea408ab7197784c1ec1457588a78a631025e434faee"
+    },
+    {
+      "relative": "impls/hyperparameters.sh",
+      "sha256": "2a2eda087b355b8f7d131a716b50074098012bf48e2c1191dcfeb33fa2342f9c"
+    },
+    {
+      "relative": "impls/utils/datasets.py",
+      "sha256": "52c373922a87e1ba8ad8b3b96c3474d5e6385e2ea2c7206930f7a8a315816609"
+    },
+    {
+      "relative": "impls/utils/evaluation.py",
+      "sha256": "4d9a2732bc9ef89ce99fbc0f07a76d3f4d035783af3a658251709140ff9de3d5"
+    },
+    {
+      "relative": "impls/utils/networks.py",
+      "sha256": "e7e4c4a439b691911e5ae6c2653f253c5703e6b5d190d813e28ebc32e7306094"
+    },
+    {
+      "relative": "impls/utils/flax_utils.py",
+      "sha256": "5b6a8e9a919bf57dae0c1454f327ded4235385f9d9dcd1e62263fe4fad9fd484"
+    },
+    {
+      "relative": "ogbench/utils.py",
+      "sha256": "f503a3a0497f91ce02958abae5770f3e08c9d6a3a740687c828c996fedb24e9b"
+    },
+    {
+      "relative": "ogbench/locomaze/maze.py",
+      "sha256": "ff996f7b6257859a2ed6cc77e00affd08b769175407bd612fac1a25c5f12f85e"
+    },
+    {
+      "relative": "ogbench/locomaze/point.py",
+      "sha256": "eb9125a4b0f0cbeeb4a6a5a1e45bfd8b938a8bad9352a3e5d72dc2ac8f1987f6"
+    },
+    {
+      "relative": "ogbench/locomaze/__init__.py",
+      "sha256": "f8f0875cf73fdf25eb5230d5a7fe5c8e41c7a6ae0419de79783b01b1ca17991c"
+    },
+    {
+      "relative": "pyproject.toml",
+      "sha256": "378c9cb5479d885cf68421d475bc8921231dd9d8321c49c32dc3e678cc18507d"
+    }
+  ],
+  "raw_files": [
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-navigate-v0-val.npz",
+      "relative": "vendor/data/pointmaze-large-navigate-v0-val.npz",
+      "bytes": 2040807,
+      "sha256": "19e6b510c800b865d5c3f9e4335941a602731184fa683eb99face7c5405b6ec4"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-navigate-v0.npz",
+      "relative": "vendor/data/pointmaze-large-navigate-v0.npz",
+      "bytes": 20398507,
+      "sha256": "82a73ed8de90ad2b8bf89069253e961918438d127d7f7c7f09c81e642d0d2c61"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-stitch-v0-val.npz",
+      "relative": "vendor/data/pointmaze-large-stitch-v0-val.npz",
+      "bytes": 1996992,
+      "sha256": "32e2c21a4d71b9cb5f21b0e2d6cf9f7d3b3bb40ca293bfb5209a6f5e7359827a"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-stitch-v0.npz",
+      "relative": "vendor/data/pointmaze-large-stitch-v0.npz",
+      "bytes": 19930254,
+      "sha256": "9add335e598e48ebc483447d61415a9755ffb738ddfc406cb9708b2a238992e8"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/final_navigate/confirmation.json",
+      "relative": "runs/final_navigate/confirmation.json",
+      "bytes": 275399,
+      "sha256": "07c76114c1402c554b97d4024bb1b8bd9e97c0d396aaaeb9b3469d0838ae6eb0"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/final_navigate/confirmation_trajectories.pkl",
+      "relative": "runs/final_navigate/confirmation_trajectories.pkl",
+      "bytes": 7704146,
+      "sha256": "898360eab3d26bbb2aef1c97f75c55726245541a4c3d79758147e07703a6ae0e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/final_stitch/confirmation.json",
+      "relative": "runs/final_stitch/confirmation.json",
+      "bytes": 275379,
+      "sha256": "deb3a11f296e5d3cb96ccbc693d1588c96e8fa982450ccb346b60686f135a689"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/final_stitch/confirmation_trajectories.pkl",
+      "relative": "runs/final_stitch/confirmation_trajectories.pkl",
+      "bytes": 9248332,
+      "sha256": "29b29d81724140c1ac550577c1a5d1b494b4c9941b8c6832a1bee37fb1cbdd7e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/config.json",
+      "relative": "runs/formal_navigate/config.json",
+      "bytes": 1548,
+      "sha256": "47f4c4cfc391f11fb9b51af48ea5ed4e016832969b403161b1f701a270636eed"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_1.json",
+      "relative": "runs/formal_navigate/development_1.json",
+      "bytes": 275695,
+      "sha256": "e12e4fe5e5ff70e0c907d34935abb701fc14733d7a6eddeb87437012df1866fb"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_100000.json",
+      "relative": "runs/formal_navigate/development_100000.json",
+      "bytes": 275660,
+      "sha256": "872b474a058ed6a875ff1e79a6a47350e36b755cb373bd28fef814c6abe73e53"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_1000000.json",
+      "relative": "runs/formal_navigate/development_1000000.json",
+      "bytes": 276070,
+      "sha256": "d2e45227226f049e9e709ebc6037694c22621dec6deb91bcbdbcb64e0debf7d2"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_1000000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_1000000_trajectories.pkl",
+      "bytes": 7469338,
+      "sha256": "6003b205b4c9c6f40dde72c086e9151b8165c28b33cfe721dcfb6c04d9f15a1e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_100000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_100000_trajectories.pkl",
+      "bytes": 8145132,
+      "sha256": "e93425e3d7c37fe567620d4bc85254e91815ca3e870ecc2c00716fcc122d645c"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_1_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_1_trajectories.pkl",
+      "bytes": 14129983,
+      "sha256": "78fed48d33d08874df2fc65152cfc96f9c550c4426344c6fa63bdf22a7f0e832"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_200000.json",
+      "relative": "runs/formal_navigate/development_200000.json",
+      "bytes": 275596,
+      "sha256": "2537ff2b7bd585505395ad3f86a656ac4cd6d54a83b3685f2c61d67a7b06f010"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_200000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_200000_trajectories.pkl",
+      "bytes": 6362959,
+      "sha256": "5fc7e9b5ead64f8657fe4549d6c0a719c751a779535ad013fa4f34c8935b7e46"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_300000.json",
+      "relative": "runs/formal_navigate/development_300000.json",
+      "bytes": 275585,
+      "sha256": "18c627596dcf43fc1a2023ab1d9146cb5e23184df5398a40bbc82bd33938471f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_300000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_300000_trajectories.pkl",
+      "bytes": 5315974,
+      "sha256": "d50a6bcfff9883198a57d8d160e8efc8ff9139a9fef3e4a755e3662cdb2dcdbb"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_400000.json",
+      "relative": "runs/formal_navigate/development_400000.json",
+      "bytes": 275563,
+      "sha256": "32d84ce4d72980a667688ad1509c8f3065a878411c03b70ea72cb58488cdedd0"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_400000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_400000_trajectories.pkl",
+      "bytes": 4952048,
+      "sha256": "a054c71d5ae186e8484c4541d886e7e91ed3964a1e749bab64b8b43bb2052451"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_500000.json",
+      "relative": "runs/formal_navigate/development_500000.json",
+      "bytes": 275520,
+      "sha256": "d07c5aba3ceec18643fa33fd4e22930a07b8351f1f950be6e6ac3e0dc68680cd"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_500000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_500000_trajectories.pkl",
+      "bytes": 5365405,
+      "sha256": "b2ba69301207ddb152fbb85a8b00f201dbf7bd6710baf9c7164b92dd0d4db42a"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_600000.json",
+      "relative": "runs/formal_navigate/development_600000.json",
+      "bytes": 275472,
+      "sha256": "2456cdd121d8edba00bef8e2cf7fd9ff13fad11f4b8e4ffe116661cba14b8fec"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_600000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_600000_trajectories.pkl",
+      "bytes": 5808402,
+      "sha256": "a7531ed35138be90a726a5cccb5b0cbfb2e6ea0bd23e4fa9d5deee66940369a1"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_700000.json",
+      "relative": "runs/formal_navigate/development_700000.json",
+      "bytes": 275550,
+      "sha256": "930bbda094a93220a240fd4deab455f8554b055a2e13f528f00084f2e9936409"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_700000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_700000_trajectories.pkl",
+      "bytes": 6236895,
+      "sha256": "6ce59ca31d2d037e4bfb0d6a908413450d279141dc26123f8cb86dee5eb11a2f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_800000.json",
+      "relative": "runs/formal_navigate/development_800000.json",
+      "bytes": 275534,
+      "sha256": "8755749b4d5562b72468094abe005e3a6cfc67901df27233e69cc4c902825c02"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_800000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_800000_trajectories.pkl",
+      "bytes": 6061951,
+      "sha256": "3dc91dde0b3995e36cf95c1b2e8bf6faf5fbb88ca67f4b4aed5cb565cb49e00d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_900000.json",
+      "relative": "runs/formal_navigate/development_900000.json",
+      "bytes": 275807,
+      "sha256": "90c2817d6f7b9798f24c9b9d595f3ab7f9639b415a9b174d65ffee7b70ef524f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/development_900000_trajectories.pkl",
+      "relative": "runs/formal_navigate/development_900000_trajectories.pkl",
+      "bytes": 6280921,
+      "sha256": "562ed477028397e00898f790bb7579b326658cd3411ac2b5f9f35ce7cd5761ad"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/params_0.pkl",
+      "relative": "runs/formal_navigate/params_0.pkl",
+      "bytes": 47047158,
+      "sha256": "43aecefa5ea129d304562b51dcab4536963025f4f166c4f2110f3d1f0b2b231a"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/params_100000.pkl",
+      "relative": "runs/formal_navigate/params_100000.pkl",
+      "bytes": 51332028,
+      "sha256": "3cfbb49f06d186cfc82d0100009a430f7fd184d476fa5c3492369315b19945a5"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/params_1000000.pkl",
+      "relative": "runs/formal_navigate/params_1000000.pkl",
+      "bytes": 51332028,
+      "sha256": "2d79774f5efbb9d22a17da85cf87854a8000b703d84eb2e84dbf120fa768eb1d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/params_300000.pkl",
+      "relative": "runs/formal_navigate/params_300000.pkl",
+      "bytes": 51332027,
+      "sha256": "60d7b746ff620c979bf207471e5fe4d715cb962ddde0d8b91b4d53857352e722"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_navigate/params_500000.pkl",
+      "relative": "runs/formal_navigate/params_500000.pkl",
+      "bytes": 51332027,
+      "sha256": "9dd6624eb74f3bec74de6b0f3902056a804c400bcb43e9192905e504ed239da8"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/config.json",
+      "relative": "runs/formal_stitch/config.json",
+      "bytes": 1546,
+      "sha256": "1a9bf7b18dac7552a0b10bd30a42f43ddb9d2b8bba660454c03a0beb606b8d74"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_1.json",
+      "relative": "runs/formal_stitch/development_1.json",
+      "bytes": 275664,
+      "sha256": "6bcf7080a034a2ce78329f41d459882dc6cb63fdaba695dd1912e7959c7dcc56"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_100000.json",
+      "relative": "runs/formal_stitch/development_100000.json",
+      "bytes": 275559,
+      "sha256": "5ebbcb17646b52dd8a0b2b6ddb1e562ab40892d0e744fb7abc92a896c49d9dad"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_1000000.json",
+      "relative": "runs/formal_stitch/development_1000000.json",
+      "bytes": 276135,
+      "sha256": "f29c921cc564f29591c86ab1163b4e5c8d820cf2175a137bee39996afdfbf532"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_1000000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_1000000_trajectories.pkl",
+      "bytes": 9274436,
+      "sha256": "fce275e65358c11ff814b28209538b77f515b0ccd5f931e005dfb308d3f1cdf9"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_100000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_100000_trajectories.pkl",
+      "bytes": 10011553,
+      "sha256": "740e441ebbc6dcc3ee8b6725533e65bc5fa007992b547eb80ca7983954e5e8e5"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_1_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_1_trajectories.pkl",
+      "bytes": 14129939,
+      "sha256": "0360d2821bf3f41cfae6536fd97acefdf160945fe3332d5ea5633a38455c5810"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_200000.json",
+      "relative": "runs/formal_stitch/development_200000.json",
+      "bytes": 275713,
+      "sha256": "7773c6248964d8f57e22dd25bd909704ba424bee7126a1b82fe344248263c10b"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_200000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_200000_trajectories.pkl",
+      "bytes": 10043372,
+      "sha256": "4f7a8d4a7206457f36ecc2de69343e39e9633e7d23a4a9e369f8736184a283a8"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_300000.json",
+      "relative": "runs/formal_stitch/development_300000.json",
+      "bytes": 275681,
+      "sha256": "d28bdd6d7a1d03fcefb7ab7dbaf6c237d7b76ea29550773747aedff0c3fddd3d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_300000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_300000_trajectories.pkl",
+      "bytes": 10045856,
+      "sha256": "02f71dc5aa33dfffdaa3e3e9c5114d5c1497ffad2381a1ba949d2483bf319e8f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_400000.json",
+      "relative": "runs/formal_stitch/development_400000.json",
+      "bytes": 275762,
+      "sha256": "16e84d375c5325bf410446b4a5a59d35fc7ea5a916816be889b376462f4ea590"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_400000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_400000_trajectories.pkl",
+      "bytes": 10031081,
+      "sha256": "58eb0690a10ef438d85fb5cc60ea0d8747a5e27f08bb3f9e8e4a9384f6322ce9"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_500000.json",
+      "relative": "runs/formal_stitch/development_500000.json",
+      "bytes": 275606,
+      "sha256": "14587a36ece15e38c4f770a335dac0ce099a69737f919ba1ccb412dfe0893c6f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_500000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_500000_trajectories.pkl",
+      "bytes": 9684483,
+      "sha256": "ddacf83fc19c7825e2045068c29e1ac1c3c2e6b4daf0d32fa01efedc37582b7f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_600000.json",
+      "relative": "runs/formal_stitch/development_600000.json",
+      "bytes": 275664,
+      "sha256": "2af2e772729dc21bb3e8260eaa3267d0aed6b570abf2443896f8ee0a65d13455"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_600000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_600000_trajectories.pkl",
+      "bytes": 10076290,
+      "sha256": "33cb707f4f36ad3143a8e5dcb980ccb8f0442dfcd91b5af363d7cb88bf1efdad"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_700000.json",
+      "relative": "runs/formal_stitch/development_700000.json",
+      "bytes": 275581,
+      "sha256": "d2e422074c3dc30a3e43b7ed00e61f526b81ca4566062fde37f9a0da23c631e6"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_700000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_700000_trajectories.pkl",
+      "bytes": 9973980,
+      "sha256": "7729b64abeeb65350ee78b5dfac7b4c3b4d9b8d495b9ea9ffa226c6b0f7a785b"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_800000.json",
+      "relative": "runs/formal_stitch/development_800000.json",
+      "bytes": 275600,
+      "sha256": "1013d9747f50a5d2d0124ab8e24773f6d57819673cb62f901966d268d026a2ea"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_800000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_800000_trajectories.pkl",
+      "bytes": 10142346,
+      "sha256": "98270eea11d070e7fbb6b5b90b93ebc7a3926c46ed5261babba76e1f37aec5bc"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_900000.json",
+      "relative": "runs/formal_stitch/development_900000.json",
+      "bytes": 275687,
+      "sha256": "ac09dde2c6585c39905f6e45ba988feb9e01523c2ad9e64071fb9c721a71c06f"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/development_900000_trajectories.pkl",
+      "relative": "runs/formal_stitch/development_900000_trajectories.pkl",
+      "bytes": 8217330,
+      "sha256": "d752da214e69408972394fc60aa6227cfb8150fd8e1fe72b6d2450cec744144c"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/params_0.pkl",
+      "relative": "runs/formal_stitch/params_0.pkl",
+      "bytes": 47047158,
+      "sha256": "4f58f43486d3b9d7c81e3fb66e361ddaf98bd80c2493408551774286e06a9107"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/params_100000.pkl",
+      "relative": "runs/formal_stitch/params_100000.pkl",
+      "bytes": 51332028,
+      "sha256": "baeafad6442288bd9bb67b0a6c33902c5cc5c6a76e944f27ba8a97ad51e7f74e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/params_1000000.pkl",
+      "relative": "runs/formal_stitch/params_1000000.pkl",
+      "bytes": 51332028,
+      "sha256": "85df2128b4eb58c56388ac975ffc78b020021a1532c16354f6ca4042e9dc0fea"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/params_300000.pkl",
+      "relative": "runs/formal_stitch/params_300000.pkl",
+      "bytes": 51332027,
+      "sha256": "fe312f599a43101a67995481c9a51d19ba6e0709752134a9ced88e07105a30a4"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/formal_stitch/params_500000.pkl",
+      "relative": "runs/formal_stitch/params_500000.pkl",
+      "bytes": 51332027,
+      "sha256": "c1cb28fbcafe791c435df0766195c55cb2cd5edf0ae705703986aaadba86cf1a"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate-val_raw_index.npz",
+      "relative": "runs/navigate-val_raw_index.npz",
+      "bytes": 2049040,
+      "sha256": "fc32efcdf2a8f62bc746868c07516e1b072ea29fb391b41b66db6e593ba46a9d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_D4_4096_raw.npz",
+      "relative": "runs/navigate_D4_4096_raw.npz",
+      "bytes": 293357,
+      "sha256": "57c32f7b1b59bd5e63b81ed5ffa524be63b90a4788b4dce4c0853133e19a3ffa"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_confirmation_local_rollouts.pkl",
+      "relative": "runs/navigate_confirmation_local_rollouts.pkl",
+      "bytes": 35093,
+      "sha256": "392917a95fe8ce86e42ef7c7a9220039bd5f1bd4f30cd23e6b3b04745d580659"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_discovery_local_rollouts.pkl",
+      "relative": "runs/navigate_discovery_local_rollouts.pkl",
+      "bytes": 36588,
+      "sha256": "6c39aad9691dfe12a32a906842a9e4caa93dbb6ed1bd09758195c9e22b6f1dc5"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_raw_index.npz",
+      "relative": "runs/navigate_raw_index.npz",
+      "bytes": 20453231,
+      "sha256": "3ef7da283087f69fad18c0a791ba7050388283345a20269387bd36bab86a3ac0"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_sampler_probe.npz",
+      "relative": "runs/navigate_sampler_probe.npz",
+      "bytes": 278173,
+      "sha256": "91495180a1f6e016ebe067480b29ca9c222f7ec0de015a97b22567083295856e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_navigate/eval.json",
+      "relative": "runs/pilot_navigate/eval.json",
+      "bytes": 11240,
+      "sha256": "e49bfec349fc61122e0f2eca50c1a2948b08df1b35e785e30fc36102f5f4a0d8"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_navigate/eval_trajectories.pkl",
+      "relative": "runs/pilot_navigate/eval_trajectories.pkl",
+      "bytes": 565603,
+      "sha256": "781f98828079e36971598929c6fa80591392a06b48f914dce48f0338f802e809"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_navigate/params_1006.pkl",
+      "relative": "runs/pilot_navigate/params_1006.pkl",
+      "bytes": 51332026,
+      "sha256": "bfc130256c14ca3166a7a35d31ac7dfc0df7ebca60adc6e4bbadbc1a27f1fb1e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_stitch/eval.json",
+      "relative": "runs/pilot_stitch/eval.json",
+      "bytes": 11251,
+      "sha256": "99246b5861e2334b46602ffb1bbb5d8f29faa315ddd8935485d796f4784a32fe"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_stitch/eval_trajectories.pkl",
+      "relative": "runs/pilot_stitch/eval_trajectories.pkl",
+      "bytes": 565599,
+      "sha256": "9fbc354dd231be6a0f09c744c6b78812057d12296331482c12aa04544e0c86da"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/pilot_stitch/params_1006.pkl",
+      "relative": "runs/pilot_stitch/params_1006.pkl",
+      "bytes": 51332026,
+      "sha256": "b18f834d5f3a58692a2c2f1fa7ebc56a5d8166fa75de63e885c8842c44c098c2"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch-val_raw_index.npz",
+      "relative": "runs/stitch-val_raw_index.npz",
+      "bytes": 2002991,
+      "sha256": "b35769d3e6315411abf9db9a9c444f48517eb2057d9bc336cda954fafad8f631"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_D4_4096_raw.npz",
+      "relative": "runs/stitch_D4_4096_raw.npz",
+      "bytes": 294828,
+      "sha256": "e70ba9fc9aa4c94adbfe352b3fad9504dc67bbf56ada2f638c7b4a1bdbeef76e"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_confirmation_local_rollouts.pkl",
+      "relative": "runs/stitch_confirmation_local_rollouts.pkl",
+      "bytes": 23659,
+      "sha256": "66fb1696dfc52d09f92f49012f3273759277bb346cb835d5ab192a9ef8d84f47"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_discovery_local_rollouts.pkl",
+      "relative": "runs/stitch_discovery_local_rollouts.pkl",
+      "bytes": 31956,
+      "sha256": "ea5398db4f0048ec8e18ed3be8badc7a818352249ee827473c6faa45dcff73a7"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_raw_index.npz",
+      "relative": "runs/stitch_raw_index.npz",
+      "bytes": 19979269,
+      "sha256": "d1e4e2c9a50d9c544b996fde8a5f9a9d22504c5c207a6a1d5d176ab55a196ca7"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_sampler_probe.npz",
+      "relative": "runs/stitch_sampler_probe.npz",
+      "bytes": 275506,
+      "sha256": "484737a8e40d7720ae48987a09149d64d9f13b0f122b3ea86a0e38a4a1c9af84"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/confirmation_navigate.log",
+      "relative": "logs/confirmation_navigate.log",
+      "bytes": 73,
+      "sha256": "4bf4a5dab1fc0968e0ab641049d9d03214c5241fc930b60a5bea0dea365ea781"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/confirmation_stitch.log",
+      "relative": "logs/confirmation_stitch.log",
+      "bytes": 98,
+      "sha256": "ac520343fd0179e142d76ac2fc9df1cdfadba7a25248ab293b9555332b81fdfa"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/cpu_audit.log",
+      "relative": "logs/cpu_audit.log",
+      "bytes": 213,
+      "sha256": "65381532b6853cad9468d03d0666c21b7bc9dbe0962aa9c4694fa8ddc6a369b3"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/cpu_monitor.log",
+      "relative": "logs/cpu_monitor.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/d1_cpu.log",
+      "relative": "logs/d1_cpu.log",
+      "bytes": 12,
+      "sha256": "848e4a23cefbb97c11bbbd57b450cec3485c52aba785e56e20d655fcfe3f4f25"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/dependency_install.log",
+      "relative": "logs/dependency_install.log",
+      "bytes": 4595,
+      "sha256": "97e880f294a04ed9bdf13a3776907975fdb1bb8476ff832939ac2b9e01361663"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/discovery_navigate.log",
+      "relative": "logs/discovery_navigate.log",
+      "bytes": 326,
+      "sha256": "328e612ee87dec24aa26fd11243c98d843b30d9e2d6b51d34fd070def5efbb49"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/discovery_stitch.log",
+      "relative": "logs/discovery_stitch.log",
+      "bytes": 71,
+      "sha256": "86a7d47e0f82df1e7a165183745819fe9b7723516c6f0019fd81532d2dc7eed5"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/download_pointmaze-large-navigate-v0-val.log",
+      "relative": "logs/download_pointmaze-large-navigate-v0-val.log",
+      "bytes": 791,
+      "sha256": "cf9b5203dec3023b2d63165008c6f363d72e78c486daf149625d3656054452aa"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/download_pointmaze-large-navigate-v0.log",
+      "relative": "logs/download_pointmaze-large-navigate-v0.log",
+      "bytes": 1028,
+      "sha256": "35ed41a2aeb542c6e4d0c6add4bdd7503c70e49e5e64ae7e468501791478741b"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/download_pointmaze-large-stitch-v0-val.log",
+      "relative": "logs/download_pointmaze-large-stitch-v0-val.log",
+      "bytes": 554,
+      "sha256": "7e8e238c5add674aba7b08eebe2ba6ecd74260629cb34269bbde603d566c44db"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/download_pointmaze-large-stitch-v0.log",
+      "relative": "logs/download_pointmaze-large-stitch-v0.log",
+      "bytes": 1897,
+      "sha256": "23b5b24793abe94a18ba6ba7c683715b8abdb0a823d6a828da5afd6293b499d8"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/event_calibration.log",
+      "relative": "logs/event_calibration.log",
+      "bytes": 23,
+      "sha256": "57669041f0cc2b01da92b378ede84609e728bc2b973275cfee94909f285a48c3"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/failure_map.log",
+      "relative": "logs/failure_map.log",
+      "bytes": 17,
+      "sha256": "bc72ba7e6432c205b6c4d04890c0f2f6ae36327d044c9afe17cb693220db7a98"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/final_navigate.log",
+      "relative": "logs/final_navigate.log",
+      "bytes": 31,
+      "sha256": "460a6be9727c26153099c1fd4e905d2ee6f37c8b8af4db4fb772ecdb09fec450"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/final_stitch.log",
+      "relative": "logs/final_stitch.log",
+      "bytes": 29,
+      "sha256": "4ff699ca86fa247b15e93669f432b3bad53ed60103cb01f2a81376bb33b387e0"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/finish_pipeline.log",
+      "relative": "logs/finish_pipeline.log",
+      "bytes": 1113,
+      "sha256": "c746529189dcf49e3948f5c2c85a7853799a18afcd48fada3e8d3669529cc2ef"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/formal_navigate.log",
+      "relative": "logs/formal_navigate.log",
+      "bytes": 13837,
+      "sha256": "bfb86015b554ae8e2a5526e51f25976c7415adab97380b51f0fcfcf951d39305"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/formal_navigate_guard.log",
+      "relative": "logs/formal_navigate_guard.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/formal_stitch.log",
+      "relative": "logs/formal_stitch.log",
+      "bytes": 13383,
+      "sha256": "1f936c13aa4804082dcef4b2f02454078e7e99bd942c353556f5048e5e345491"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/formal_stitch_guard.log",
+      "relative": "logs/formal_stitch_guard.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/import_smoke.log",
+      "relative": "logs/import_smoke.log",
+      "bytes": 1945,
+      "sha256": "6ceeb79c39c95bb591f516a3c32e7b8794d43beaec117416b6d060b7838f9f86"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/import_smoke_after_repair1.log",
+      "relative": "logs/import_smoke_after_repair1.log",
+      "bytes": 113,
+      "sha256": "d35688bb3a73d5c8e0566670b77f2877b703f207a19c8946138c9565f0ba64e0"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/input_coverage.log",
+      "relative": "logs/input_coverage.log",
+      "bytes": 20,
+      "sha256": "8781b131b39eae2df2ce47f07ea1d2062787a3d91de42c05043d22b3516d2c7b"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/official_checkout.log",
+      "relative": "logs/official_checkout.log",
+      "bytes": 43,
+      "sha256": "cbd58ecd04192bb500810d1340564019f8d2cfd50b13bd4e4bc64c6b0b1465cf"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/official_clone.log",
+      "relative": "logs/official_clone.log",
+      "bytes": 104,
+      "sha256": "0e338c2447d62af77557900bd1dbef51b09b3360ff8830cf568c8239f3034115"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/pilot_navigate.log",
+      "relative": "logs/pilot_navigate.log",
+      "bytes": 544,
+      "sha256": "479061e04793fb1069d46177e2439f50120c839dec57e3131427c50b28269ec6"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/pilot_navigate_guard.log",
+      "relative": "logs/pilot_navigate_guard.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/pilot_stitch.log",
+      "relative": "logs/pilot_stitch.log",
+      "bytes": 522,
+      "sha256": "85b5efacca541f6c5718650abcd075cc935851fae001fbf0378f45031eaa755d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/pilot_stitch_guard.log",
+      "relative": "logs/pilot_stitch_guard.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/repair_cycle_1.log",
+      "relative": "logs/repair_cycle_1.log",
+      "bytes": 341,
+      "sha256": "01a6707256d25921b0e661658734f22676ef3732728f0b4eaa68985e8a53306d"
+    },
+    {
+      "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/logs/venv_create.log",
+      "relative": "logs/venv_create.log",
+      "bytes": 274,
+      "sha256": "4c1144bd8ac6d2f5e143522244b3d4f335384686362f231c843793dd108cb234"
+    }
+  ],
+  "lightweight_evidence": "LIGHT_MANIFEST.json lists exact committed code/config/reports/results identities; raw weights/data/full logs are excluded from Git"
+}

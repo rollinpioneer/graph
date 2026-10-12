@@ -1,0 +1,87 @@
+{
+  "phase_gpu_seconds": {
+    "S0": 83.53811667498667,
+    "S1": 13986.030608494999,
+    "S2_S4": 0
+  },
+  "total_gpu_seconds": 14069.568725169986,
+  "total_gpu_hours": 3.9082135347694402,
+  "peak_aggregate_memory_mib": 2460,
+  "peak_aggregate_memory_gib": 2.40234375,
+  "formal_jobs": {
+    "navigate": {
+      "label": "formal_navigate",
+      "pid": 3450873,
+      "command": [
+        "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/venv/bin/python",
+        "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/train.py",
+        "--kind",
+        "navigate"
+      ],
+      "exit_code": 0,
+      "gpu_residency_upper_seconds": 6825.210189731995,
+      "gpu_hours": 1.8958917193699987,
+      "peak_aggregate_mib": 2460,
+      "stop_reason": null
+    },
+    "stitch": {
+      "label": "formal_stitch",
+      "pid": 3450872,
+      "command": [
+        "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/venv/bin/python",
+        "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/train.py",
+        "--kind",
+        "stitch"
+      ],
+      "exit_code": 0,
+      "gpu_residency_upper_seconds": 7160.8204187630035,
+      "gpu_hours": 1.9891167829897232,
+      "peak_aggregate_mib": 2460,
+      "stop_reason": null
+    }
+  },
+  "local_policy_segments": 122,
+  "candidate_state_goal_groups": 128,
+  "training_updates": {
+    "navigate": 1000000,
+    "stitch": 1000000
+  },
+  "training_seeds": [
+    0
+  ],
+  "extra_actor_training_updates": 0,
+  "extra_baseline_training": false,
+  "CPU_final_eval": {
+    "navigate": {
+      "wall_seconds": 96.12634504798916,
+      "process_cpu_seconds": 95.256346076
+    },
+    "stitch": {
+      "wall_seconds": 119.05669616698287,
+      "process_cpu_seconds": 118.09162763600001
+    }
+  },
+  "CPU_diagnosis": {
+    "navigate": {
+      "discovery": {
+        "wall_seconds": 19.394886307010893,
+        "process_cpu_seconds": 29.09499803
+      },
+      "confirmation": {
+        "wall_seconds": 11.541126908006845,
+        "process_cpu_seconds": 14.561747454999999
+      }
+    },
+    "stitch": {
+      "discovery": {
+        "wall_seconds": 21.440295142994728,
+        "process_cpu_seconds": 28.750586028
+      },
+      "confirmation": {
+        "wall_seconds": 10.900251807004679,
+        "process_cpu_seconds": 13.96837882
+      }
+    }
+  },
+  "measurement_note": "All complete GPU-child wall time charged, including import/load and CPU evaluation while GPU model resident; CPU-only final/diagnosis processes explicitly hide CUDA. Formal CPU ticks are separate lower-bound snapshots. Initial CPU install/audit timing was not fully instrumented; logs retained, no invented exact CPU cost."
+}
