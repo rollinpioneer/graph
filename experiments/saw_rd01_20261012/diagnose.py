@@ -62,12 +62,23 @@ def run(kind,phase,do_rollouts=True):
         if len(chosen)<32: chosen=np.r_[chosen,[x for x in eligible if x not in set(chosen)][:32-len(chosen)]]
         ids,i,_,low,g,w=idx[chosen].T
     n=np.minimum(i+1,len(obs)-1)
-    info=sync(probe(agent,obs[i],obs[g],obs[w],obs[n],raw['actions'][i]))
+    original_g=g.copy()
+    goal_vectors=obs[g].copy()
+    external=np.arange(len(i))%2==1
+    with separate_numpy(config_seed+1000000):
+        task_goals=np.asarray([u.add_noise(u.ij_to_xy(u.task_infos[t%5]['goal_ij'])) for t in range(len(i))],dtype=obs.dtype)
+    goal_vectors[external]=task_goals[external]
+    g=g.copy();g[external]=-1
+    end=dataset.terminal_locs[np.searchsorted(dataset.terminal_locs,i)]
+    w=w.copy();w[external]=np.minimum(i[external]+25,end[external])
+    info=sync(probe(agent,obs[i],goal_vectors,obs[w],obs[n],raw['actions'][i]))
     info={k:np.asarray(v) for k,v in info.items()}
     tuple_rows=[]
     for t in range(len(i)):
         row=dict(dataset=kind,phase=phase,sample_id=int(ids[t]),state_idx=int(i[t]),goal_idx=int(g[t]),waypoint_idx=int(w[t]),
-                 high_horizon=int(g[t]-i[t]),waypoint_horizon=int(w[t]-i[t]))
+                 original_sampled_goal_idx=int(original_g[t]),goal_source='registered_task_goal' if external[t] else 'original_future_goal',
+                 goal_x=float(goal_vectors[t,0]),goal_y=float(goal_vectors[t,1]),goal_distance=float(np.linalg.norm(goal_vectors[t]-obs[i[t]])),
+                 high_horizon=-1 if external[t] else int(g[t]-i[t]),waypoint_horizon=int(w[t]-i[t]))
         row.update({k:float(v[t]) for k,v in info.items() if v.ndim==1})
         for k in ('actor','teacher'):
             for d in range(2): row[f'{k}_{d}']=float(info[k][t,d])
@@ -79,13 +90,14 @@ def run(kind,phase,do_rollouts=True):
     end=dataset.terminal_locs[np.searchsorted(dataset.terminal_locs,i)]
     candidates=np.minimum(i[:,None]+offsets[None,:],end[:,None])
     candidates=np.c_[candidates,g]
-    flat_s=np.repeat(obs[i],16,axis=0); flat_g=np.repeat(obs[g],16,axis=0)
-    cinfo=sync(probe(agent,flat_s,flat_g,obs[candidates.ravel()],np.repeat(obs[n],16,axis=0),np.repeat(raw['actions'][i],16,axis=0)))
+    candidate_vectors=np.concatenate([obs[candidates[:,:15]],goal_vectors[:,None,:]],axis=1)
+    flat_s=np.repeat(obs[i],16,axis=0); flat_g=np.repeat(goal_vectors,16,axis=0)
+    cinfo=sync(probe(agent,flat_s,flat_g,candidate_vectors.reshape(-1,2),np.repeat(obs[n],16,axis=0),np.repeat(raw['actions'][i],16,axis=0)))
     cinfo={k:np.asarray(v).reshape((len(i),16)+np.asarray(v).shape[1:]) for k,v in cinfo.items()}
     candidate_rows=[]; conflict=[]; disagreement=[]; progress_rank=[]
     for t in range(len(i)):
-        geo=geodesic(u,obs[candidates[t]],obs[g[t]])
-        sgeo=float(geodesic(u,obs[[i[t]]],obs[g[t]])[0])
+        geo=geodesic(u,candidate_vectors[t],goal_vectors[t])
+        sgeo=float(geodesic(u,obs[[i[t]]],goal_vectors[t])[0])
         rho=cinfo['rho'][t].copy()
         supported=(candidates[t]>i[t])&(candidates[t]<=i[t]+25)
         unique_seen=set()
@@ -107,10 +119,13 @@ def run(kind,phase,do_rollouts=True):
         for c,wi in enumerate(candidates[t]):
             future_steps=int(wi-i[t]); supported_short=(0<=future_steps<=25)
             row=dict(dataset=kind,phase=phase,sample_id=int(ids[t]),candidate_id=c,state_idx=int(i[t]),goal_idx=int(g[t]),waypoint_idx=int(wi),
+                     goal_source='registered_task_goal' if external[t] else 'original_future_goal',
+                     goal_x=float(goal_vectors[t,0]),goal_y=float(goal_vectors[t,1]),
+                     candidate_source='external_task_goal_reference' if wi<0 else 'recorded_state',
                      actual_data_future_steps=future_steps,actual_original_trajectory_id=int(np.searchsorted(np.flatnonzero(raw['terminals']),i[t])),
-                     same_original_trajectory=bool(np.searchsorted(np.flatnonzero(raw['terminals']),i[t])==np.searchsorted(np.flatnonzero(raw['terminals']),wi)),
+                     same_original_trajectory=bool(wi>=0 and np.searchsorted(np.flatnonzero(raw['terminals']),i[t])==np.searchsorted(np.flatnonzero(raw['terminals']),wi)),
                      empirical_within_25_steps=supported_short,cell_progress=float(sgeo-geo[c]),
-                     waypoint_distance=float(np.linalg.norm(obs[wi]-obs[i[t]])),
+                     waypoint_distance=float(np.linalg.norm(candidate_vectors[t,c]-obs[i[t]])),
                      unique_candidate_count=len(np.unique(candidates[t])),ranking=int(np.sum(values>values[c])))
             row.update({k:float(v[t,c]) for k,v in cinfo.items() if v.ndim==2})
             candidate_rows.append(row)
@@ -169,6 +184,12 @@ def run(kind,phase,do_rollouts=True):
                                  q90=float(np.quantile(finite,.9)) if len(finite) else None,
                                  q99=float(np.quantile(finite,.99)) if len(finite) else None)
     summary=dict(kind=kind,phase=phase,checkpoint=identity,state_goal_groups=len(i),candidates_per_group=16,
+                 diagnostic_goal_groups={label:dict(n=int(mask.sum()),goal_distance_mean=float(np.linalg.norm(goal_vectors[mask]-obs[i[mask]],axis=1).mean()),
+                                                      value_head_abs_difference_mean=float(np.abs(info['v1'][mask]-info['v2'][mask]).mean()),
+                                                      matching_error_mean=float(info['mean_squared_difference'][mask].mean()),
+                                                      weighted_matching_error_mean=float((info['rho'][mask]*info['mean_squared_difference'][mask]).mean()),
+                                                      rho_saturation=float(np.mean(info['log_rho'][mask]>=np.log(100))))
+                                         for label,mask in [('original_future_goal',~external),('registered_task_goal',external)]},
                  tuple_rho_saturation=float(np.mean(info['log_rho']>=np.log(100))),
                  candidate_rho_saturation=float(np.mean(cinfo['log_rho']>=np.log(100))),
                  candidate_rho_before_float32_overflow_fraction=float(np.mean(~np.isfinite(cinfo['rho_before']))),
