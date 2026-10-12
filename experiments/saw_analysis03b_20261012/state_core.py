@@ -49,4 +49,3 @@ def env_new(kind):
     return env
 mode=jax.jit(lambda a,s,g:np_clip(a.network.select('actor')(s,g,temperature=0.).mode()))
 def np_clip(x):return jax.numpy.clip(x,-1,1)
-
