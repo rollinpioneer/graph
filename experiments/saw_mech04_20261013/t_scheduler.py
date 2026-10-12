@@ -14,10 +14,15 @@ def queue(gpu,cores,arms):
 def main():
     assert json.loads((ROOT/'receipts/T_AUTHORIZATION.json').read_text())['approved'] is True
     baseline=ROOT/'receipts/Teval_T-1_0_exit.json'
-    while not baseline.exists():time.sleep(5)
+    resource=ROOT/'receipts/Teval_T-1_0_resource.json'
+    while not (baseline.exists() and resource.exists()):
+        if resource.exists() and not baseline.exists():
+            (ROOT/'results/T_PRETRAIN_BEHAVIOR_GATE.json').write_text(json.dumps(dict(status='BASELINE_TECHNICAL_FAILED',training_updates=0),indent=2)+'\n')
+            (ROOT/'receipts/T_SCHEDULER_EXIT.json').write_text(json.dumps(dict(status='NOT_EXECUTED_BASELINE_TECHNICAL_FAILED',arms=[]),indent=2)+'\n');return
+        time.sleep(5)
     x=json.loads(baseline.read_text());rows=list(csv.DictReader(open(ROOT/'results/Teval_T-1_0_episodes.csv')))
     learned={t:sum(int(r['success']) for r in rows if r['task']==str(t) and r['complete']=='True') for t in (1,3)}
-    passed=x['status']=='COMPLETE' and len(rows)==500 and all(learned[t]>0 for t in (1,3))
+    passed=x['status']=='COMPLETE' and json.loads(resource.read_text())['exit_code']==0 and len(rows)==500 and all(learned[t]>0 for t in (1,3))
     (ROOT/'results/T_PRETRAIN_BEHAVIOR_GATE.json').write_text(json.dumps(dict(status='PASS' if passed else 'SCIENTIFIC_GATE_FAILED',baseline_episodes=len(rows),task1_task3_success_counts=learned,note='Fresh-scene baseline checked before all student updates; old source development100%/94% established ability; zero fresh successes in a main task pauses T, never changes seeds or source checkpoint'),indent=2)+'\n')
     if not passed:
         (ROOT/'receipts/T_SCHEDULER_EXIT.json').write_text(json.dumps(dict(status='NOT_EXECUTED_SCIENTIFIC_GATE_FAILED',arms=[]),indent=2)+'\n');return
