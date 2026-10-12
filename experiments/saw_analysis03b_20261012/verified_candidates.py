@@ -25,7 +25,7 @@ def main(variant):
                     row=dict(snapshot_id=sid,kind=kind,variant=variant,checkpoint_step=step,target=label,state_idx=i,waypoint_idx=item['waypoint_idx'],
                         qpos_match_error=item['qpos_error'],qvel_match_error=item['qvel_error'],
                         privileged_feasibility=gate.get('feasibility_'+label),E2_gate=gate['status'],
-                        actor_near_reached=br.get('C1' if c==0 else 'C3',{}).get('local_reached'),teacher_near_reached=br.get('C2',{}).get('local_reached') if c==0 else None,
+                        source_A_actor_near_reached=br.get('C1' if c==0 else 'C3',{}).get('local_reached'),source_A_teacher_near_reached=br.get('C2',{}).get('local_reached') if c==0 else None,
                         A_goal_region_probability=pa,B_goal_region_probability=.5*(pa+pr),
                         head1_preferred=int(np.argmax(info['w1'])),head2_preferred=int(np.argmax(info['w2'])),rho_saturated=bool(info['log_rho'][c]>=np.log(100)),
                         rho_before=float(info['rho_before'][c]) if np.isfinite(info['rho_before'][c]) else None,rho_before_finite=bool(np.isfinite(info['rho_before'][c])))

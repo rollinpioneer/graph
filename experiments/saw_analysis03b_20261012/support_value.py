@@ -83,7 +83,7 @@ def prepare():
 
 def model_queries(variant):
     with open(ROOT/'runs/E3_QUERY_ENTRIES.pkl','rb') as f:entries=pickle.load(f)
-    branchfile=ROOT/'results/E2_BRANCHES.csv';trigger=set()
+    branchfile=ROOT/'results'/('E2_B_BRANCHES.csv' if variant=='B' else 'E2_BRANCHES.csv');trigger=set()
     if branchfile.exists():
         rr=list(csv.DictReader(branchfile.open()));groups={r['snapshot_id']:{x['condition']:x for x in rr if x['snapshot_id']==r['snapshot_id']} for r in rr}
         trigger={k for k,v in groups.items() if v['C2']['local_reached']=='True' and v['C1']['local_reached']=='False'}
