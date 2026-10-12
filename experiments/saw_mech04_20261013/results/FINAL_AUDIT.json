@@ -1,0 +1,183 @@
+{
+  "status": "PASS",
+  "checks": [
+    "C startup source bytes unchanged",
+    "all original light manifests and readonly checkpoint files unchanged",
+    "actual GPU seed1/2 A/B update0 learner identity; all available CP counters, optimizer counts and states finite",
+    "separate own residency, aggregate VRAM, scene hashes, episode/control step caps, no live guarded jobs"
+  ],
+  "C_learners": [
+    {
+      "label": "C_stitch_A_s1",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    },
+    {
+      "label": "C_stitch_A_s2",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    },
+    {
+      "label": "C_stitch_B_s1",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    },
+    {
+      "label": "C_stitch_B_s2",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    },
+    {
+      "label": "C_navigate_A_s1",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    },
+    {
+      "label": "C_navigate_A_s2",
+      "status": "COMPLETE_1M",
+      "actual_updates": 1000000,
+      "registered_stages": [
+        0,
+        100000,
+        300000,
+        500000,
+        1000000
+      ],
+      "resource_exit": 0,
+      "valid_complete_1M": true
+    }
+  ],
+  "C_all_six_complete": true,
+  "C_initial_seed_identity": [
+    {
+      "kind": "stitch",
+      "variant": "A",
+      "seed": 1,
+      "params": "b3eddd4c6db3d95914e366d2cfe7acf28a57f322b448b39fcf6fdea0cbfd558a",
+      "numpy_rng": "875adb6c867f6fda3aa9314bc64ad48fcc8ce211a4b2b76205b4d9f2dc7f52f8"
+    },
+    {
+      "kind": "stitch",
+      "variant": "A",
+      "seed": 2,
+      "params": "be7808725ae1e7a1f5a960de378688452fdeca23f5dc0bf830a56c5987140998",
+      "numpy_rng": "1958c9917b09d0e8d8a01ca3b876f3ba24d002cedeab948161205149e8fc856f"
+    },
+    {
+      "kind": "stitch",
+      "variant": "B",
+      "seed": 1,
+      "params": "b3eddd4c6db3d95914e366d2cfe7acf28a57f322b448b39fcf6fdea0cbfd558a",
+      "numpy_rng": "875adb6c867f6fda3aa9314bc64ad48fcc8ce211a4b2b76205b4d9f2dc7f52f8"
+    },
+    {
+      "kind": "stitch",
+      "variant": "B",
+      "seed": 2,
+      "params": "be7808725ae1e7a1f5a960de378688452fdeca23f5dc0bf830a56c5987140998",
+      "numpy_rng": "1958c9917b09d0e8d8a01ca3b876f3ba24d002cedeab948161205149e8fc856f"
+    },
+    {
+      "kind": "navigate",
+      "variant": "A",
+      "seed": 1,
+      "params": "b3eddd4c6db3d95914e366d2cfe7acf28a57f322b448b39fcf6fdea0cbfd558a",
+      "numpy_rng": "875adb6c867f6fda3aa9314bc64ad48fcc8ce211a4b2b76205b4d9f2dc7f52f8"
+    },
+    {
+      "kind": "navigate",
+      "variant": "A",
+      "seed": 2,
+      "params": "be7808725ae1e7a1f5a960de378688452fdeca23f5dc0bf830a56c5987140998",
+      "numpy_rng": "1958c9917b09d0e8d8a01ca3b876f3ba24d002cedeab948161205149e8fc856f"
+    }
+  ],
+  "used_residency_seconds": {
+    "C-S": 26264.7179851532,
+    "C-N": 13750.597306966782,
+    "R": 520.1623675823212,
+    "C-EVAL": 1696.2658061981201,
+    "T": 0,
+    "T-EVAL": 0
+  },
+  "hard_limits_seconds": {
+    "C-S": 39600,
+    "C-N": 19800,
+    "R": 14400,
+    "C-EVAL": 14400,
+    "T": 9000,
+    "T-EVAL": 14400
+  },
+  "R_control_steps": {
+    "used": 45729,
+    "limit": 120000
+  },
+  "source": {
+    "commit": "d77ca7d4c68d809058f273f6fdd4e23ea5e92703",
+    "official": "3535a16c901e5de1233ac5a586401b3ddfa5e30d",
+    "files": [
+      {
+        "path": "common.py",
+        "sha256": "a426e7bd49fc908c6d2895cdd7196cd06790bad2d87a2637e8575afd90f8c9bd"
+      },
+      {
+        "path": "train_native.py",
+        "sha256": "336603c284e5a098ffd08d2c2480e051f06244ddb603ee6a385f4c4eb09fbd26"
+      },
+      {
+        "path": "guard.py",
+        "sha256": "a06487bec5ead71a3fb7d312c9a721e298488cbbfa2e611dbc7b510588d94ec5"
+      },
+      {
+        "path": "scheduler.py",
+        "sha256": "cebc7e2297140f239820c99c8f16e0c93bfd23e2dfc990e31800af1e63bf53ac"
+      }
+    ]
+  },
+  "SSH_cleanup": "pending final publication; actual client exit recorded in local receipt after closing"
+}
