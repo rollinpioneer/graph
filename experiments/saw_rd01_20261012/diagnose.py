@@ -28,8 +28,8 @@ def probe(agent,s,g,w,n,a):
     v=(v1+v2)/2; wv=(w1+w2)/2; nv=(n1+n2)/2
     log_rho=3*(wv-v); log_awr=3*(nv-v)
     return dict(v1=v1,v2=v2,w1=w1,w2=w2,v=v,wv=wv,waypoint_adv=wv-v,
-                log_rho=log_rho,rho_before=jnp.exp(jnp.clip(log_rho,-80,80)),rho=jnp.exp(jnp.minimum(log_rho,jnp.log(100.))),
-                one_step_adv=nv-v,awr_before=jnp.exp(jnp.clip(log_awr,-80,80)),awr=jnp.exp(jnp.minimum(log_awr,jnp.log(100.))),
+                log_rho=log_rho,rho_before=jnp.exp(log_rho),rho=jnp.minimum(jnp.exp(log_rho),100.),
+                one_step_adv=nv-v,awr_before=jnp.exp(log_awr),awr=jnp.minimum(jnp.exp(log_awr),100.),
                 actor=actor,teacher=teacher,mean_squared_difference=jnp.sum((actor-teacher)**2,axis=-1),
                 actor_data_mse=jnp.sum((actor-a)**2,axis=-1),teacher_data_mse=jnp.sum((teacher-a)**2,axis=-1))
 
@@ -159,10 +159,19 @@ def run(kind,phase,do_rollouts=True):
             chunks.append({k:np.asarray(v) for k,v in x.items()})
         full={k:np.concatenate([c[k] for c in chunks]) for k in chunks[0]}
         np.savez_compressed(ROOT/'runs'/f'{kind}_D4_4096_raw.npz',**full)
-        full_summary={k:dict(mean=float(v.mean()),q50=float(np.quantile(v,.5)),q90=float(np.quantile(v,.9)),q99=float(np.quantile(v,.99))) for k,v in full.items() if v.ndim==1}
+        full_summary={}
+        for k,v in full.items():
+            if v.ndim!=1: continue
+            finite=v[np.isfinite(v)]
+            full_summary[k]=dict(finite_count=len(finite),nonfinite_count=int((~np.isfinite(v)).sum()),
+                                 mean=float(finite.mean()) if len(finite) else None,
+                                 q50=float(np.quantile(finite,.5)) if len(finite) else None,
+                                 q90=float(np.quantile(finite,.9)) if len(finite) else None,
+                                 q99=float(np.quantile(finite,.99)) if len(finite) else None)
     summary=dict(kind=kind,phase=phase,checkpoint=identity,state_goal_groups=len(i),candidates_per_group=16,
                  tuple_rho_saturation=float(np.mean(info['log_rho']>=np.log(100))),
                  candidate_rho_saturation=float(np.mean(cinfo['log_rho']>=np.log(100))),
+                 candidate_rho_before_float32_overflow_fraction=float(np.mean(~np.isfinite(cinfo['rho_before']))),
                  value_head_rank_disagreement=float(np.mean(disagreement)),
                  value_vs_cell_distance_correlation_mean=float(np.mean(progress_rank)) if progress_rank else None,
                  value_geometry_inference='correlation is descriptive, not a correctness label; empirical future candidates verified from full recorded states',
