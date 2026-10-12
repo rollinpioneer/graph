@@ -1,0 +1,214 @@
+{
+  "args": {
+    "out": "/home/xushijie3/work/graph_pc_infochain05_card_20261012/experiments/pc_infochain05_run_20261012/runs/validate6_permuted/data",
+    "n": 6,
+    "scene_seed": 1205736,
+    "policy_seed": 1205836,
+    "steps": 200,
+    "role": "validation",
+    "arm": "permuted"
+  },
+  "environment": {
+    "name": "PandaPush",
+    "physics_engine": "physx",
+    "env": {
+      "numEnvs": 1,
+      "envSpacing": 1.5,
+      "episodeLength": 200,
+      "clipObservations": 1.1,
+      "clipActions": 1.0,
+      "actionScale": 1.0,
+      "startPositionNoise": 0.0,
+      "startRotationNoise": 0.0,
+      "frankaPositionNoise": 0.0,
+      "frankaRotationNoise": 0.0,
+      "frankaDofNoise": 0.0,
+      "aggregateMode": 3,
+      "controlType": "osc",
+      "controlFrequency": 3,
+      "tableDims": [
+        0.5,
+        0.6,
+        0.05
+      ],
+      "tablePos": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "cubeSize": 0.035,
+      "numObjects": 6,
+      "numColors": 6,
+      "RandColor": true,
+      "RandNumObj": false,
+      "RandNumObjDist": [
+        0.3,
+        0.3,
+        0.4
+      ],
+      "asset": {
+        "assetRoot": "assets",
+        "assetFileNameFranka": "urdf/franka_description/robots/franka_panda_gripper.urdf"
+      },
+      "enableDebugVis": false,
+      "enableCameraSensors": true,
+      "cameraRes": 128,
+      "cameraSupersampleRatio": 2,
+      "numObservations": 21,
+      "numActions": 7
+    },
+    "sim": {
+      "dt": 0.01667,
+      "substeps": 2,
+      "up_axis": "z",
+      "use_gpu_pipeline": true,
+      "gravity": [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      "physx": {
+        "num_threads": 4,
+        "solver_type": 1,
+        "use_gpu": true,
+        "num_position_iterations": 8,
+        "num_velocity_iterations": 1,
+        "contact_offset": 0.005,
+        "rest_offset": 0.0,
+        "bounce_threshold_velocity": 0.2,
+        "max_depenetration_velocity": 1000.0,
+        "default_buffer_size_multiplier": 5.0,
+        "max_gpu_contact_pairs": 1048576,
+        "num_subscenes": 4,
+        "contact_collection": 0
+      }
+    },
+    "task": {
+      "randomize": false
+    }
+  },
+  "body_map": [
+    {
+      "actor": 0,
+      "name": "panda_link0",
+      "index_env": 0
+    },
+    {
+      "actor": 0,
+      "name": "panda_link1",
+      "index_env": 1
+    },
+    {
+      "actor": 0,
+      "name": "panda_link2",
+      "index_env": 2
+    },
+    {
+      "actor": 0,
+      "name": "panda_link3",
+      "index_env": 3
+    },
+    {
+      "actor": 0,
+      "name": "panda_link4",
+      "index_env": 4
+    },
+    {
+      "actor": 0,
+      "name": "panda_link5",
+      "index_env": 5
+    },
+    {
+      "actor": 0,
+      "name": "panda_link6",
+      "index_env": 6
+    },
+    {
+      "actor": 0,
+      "name": "panda_link7",
+      "index_env": 7
+    },
+    {
+      "actor": 0,
+      "name": "panda_hand",
+      "index_env": 8
+    },
+    {
+      "actor": 0,
+      "name": "panda_leftfinger",
+      "index_env": 9
+    },
+    {
+      "actor": 0,
+      "name": "panda_leftfinger_tip",
+      "index_env": 10
+    },
+    {
+      "actor": 0,
+      "name": "panda_rightfinger",
+      "index_env": 11
+    },
+    {
+      "actor": 0,
+      "name": "panda_rightfinger_tip",
+      "index_env": 12
+    },
+    {
+      "actor": 0,
+      "name": "panda_grip_site",
+      "index_env": 13
+    },
+    {
+      "actor": 0,
+      "name": "panda_hand_y_axis",
+      "index_env": 14
+    },
+    {
+      "actor": 0,
+      "name": "panda_hand_z_axis",
+      "index_env": 15
+    },
+    {
+      "actor": 1,
+      "name": "box",
+      "index_env": 16
+    },
+    {
+      "actor": 2,
+      "name": "box",
+      "index_env": 17
+    },
+    {
+      "actor": 3,
+      "name": "box",
+      "index_env": 18
+    },
+    {
+      "actor": 4,
+      "name": "box",
+      "index_env": 19
+    },
+    {
+      "actor": 5,
+      "name": "box",
+      "index_env": 20
+    },
+    {
+      "actor": 6,
+      "name": "box",
+      "index_env": 21
+    },
+    {
+      "actor": 7,
+      "name": "box",
+      "index_env": 22
+    },
+    {
+      "actor": 8,
+      "name": "box",
+      "index_env": 23
+    }
+  ],
+  "task_physics": "official untouched; no isolated goal-render flags",
+  "initial_sha256": "ede3a16cfc0556d7b4f23d46edb2b38d8f28782bc3e092452a8393886d11c45b"
+}

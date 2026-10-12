@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-12T01:57:20.781644+00:00",
+  "role": "missing-field supplementation, all200 controls, unmodified official task physics",
+  "scale_frozen_using_cost_only": true,
+  "pilot_receipts": [
+    "runs/record_resource_pilot/guard_result.json",
+    "runs/record_resource_retry/guard_result.json"
+  ],
+  "cost_sample_s_max": 1.695653164992109,
+  "estimated_two_GPU_contexts": true,
+  "full_episodes": 2,
+  "per_n": {
+    "3": 1,
+    "6": 1
+  },
+  "steps": 200,
+  "guard_seconds_each": 800,
+  "supplement_phase_max_gpu_s": 1800,
+  "reason_smaller_than_suggested6": "conservative2GPU-context cost of per-step RGB/DLP/H5/fullnoise recording;2full+pilot max1678GPU s",
+  "episodes": [
+    {
+      "n": 3,
+      "scene_seed": 1205523,
+      "policy_seed": 1205623
+    },
+    {
+      "n": 6,
+      "scene_seed": 1205526,
+      "policy_seed": 1205626
+    }
+  ],
+  "source_sha256": {
+    "rollout.py": "9a47f9d0ac1ec3a10ac6af877f63d977d2d78a47569e412cb25e300e736de11a",
+    "runtime.py": "4f69b23898acf30e58893f648be3a05f3f817a559bb1d1bd8b7c5a7a9ac660fd",
+    "guard.py": "4b9d42955ba8fb654627481d2232bb7de0bf163539800f6a63d36dcd3e0be923"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-12T01:58:54.154236+00:00",
+  "selected_only_path": "short-term sampling correlation; hypothesis screening, not proposed algorithm",
+  "rationale": "same-input numerical A0, all B>0;6C noise case4 has5/28 opposite first-XY-direction seed pairs, historical returning paths. C>B in4/6, so input/control explanations remain plausible; no presumption sampling is primary",
+  "source_probe": {
+    "episode_id": "PC_P12303/P1_sparse8/trajectory/slot01",
+    "steps": [
+      80,
+      90
+    ],
+    "median_B": 0.06589581817388535,
+    "median_C": 0.05512399226427078,
+    "median_D": 0.09897911548614502
+  },
+  "role": "fresh independent matched scene pairs, not original failed-trajectory reproduction",
+  "arms": {
+    "permuted": "25whole-call RNG seeds each repeated8times, random permutation across200closedloopcontrols",
+    "blocked": "same25seeds each repeated8times,8control contiguousblocks; current RGB and DLP updated everycontrol"
+  },
+  "only_difference": "temporal ordering of exactly identical full-sampler-noise multiset;1model call/control;200controls;T100H5;batch1slot0;firstaction executed",
+  "same_raw_noise_multiset_gate": "noise_content_sha256 counts exactly equal across arms; all101draws recorded; pairedinitialstate/goal/color identity checked",
+  "pairs": [
+    {
+      "n": 3,
+      "scene_seed": 1205733,
+      "policy_seed": 1205833
+    },
+    {
+      "n": 6,
+      "scene_seed": 1205736,
+      "policy_seed": 1205836
+    }
+  ],
+  "full_episodes": 4,
+  "guard_s_each": 950,
+  "phase_max_gpu_s": 3800,
+  "resource_selection_before_new_outcomes": true,
+  "resource_reference": "8control supplement resource pilot; conservative twoGPUcontext charging;4episodes max3200 GPU s",
+  "hypothesis_predictions": {
+    "S_contributes": "blocked schedule lowers eligible consecutive executedXYaction reversals>=25%, reduces circuitous no-progress windows or improves pendingcenterapproach>=1cm, with later effective progress; must inspect sameepisode spatial facts and both pairs, no population claim",
+    "input_or_control_dominates": "blocked noise verified but input-sensitive/control-dependent switching or poor approach/progress persists; action smoothing alone is insufficient",
+    "unresolved": "only action reversals change; floors/falls/conflictingpairs; zeroeligible reversals; no matched baseline return behavior; first target action direction never a correctness criterion"
+  },
+  "metrics": {
+    "eligible_action_turns": "adjacent executed XY actions both norm>=.05, cosine<0",
+    "circuitous_windows": "20control windows, path>=.03m,R<.3; alongside strict no-progress and pendingapproach",
+    "progress": "original per-object XY error reduction>=.01m andgoal fraction, allfallsretained",
+    "geometry": "actual tip/cube OBB percontrol only, no contacts/interstep exclusion"
+  },
+  "freeze_files_sha256": {
+    "rollout.py": "9a47f9d0ac1ec3a10ac6af877f63d977d2d78a47569e412cb25e300e736de11a",
+    "runtime.py": "4f69b23898acf30e58893f648be3a05f3f817a559bb1d1bd8b7c5a7a9ac660fd",
+    "guard.py": "4b9d42955ba8fb654627481d2232bb7de0bf163539800f6a63d36dcd3e0be923",
+    "runs/noise_formal/data/noise_test_results.json": "0842287fb7a689da2d33498a9711d1fb9e0151d5b4c1d66247facd518d9d1543",
+    "runs/targets3/data/goal_test_results.json": "e95e2e03b2a35dc6e5ca2fa710677c9505f5c242567a955d5926debb9f4803c8",
+    "runs/targets6/data/goal_test_results.json": "8dc11f04bb145f49369f13eeb251340de2bd977c129a4027841a599b039b85f2"
+  },
+  "cost_only_amendment": "receipts/resource_reallocation.json",
+  "sequential_episodes": true,
+  "amended_utc": "2026-10-12T02:03:44.181416+00:00"
+}
