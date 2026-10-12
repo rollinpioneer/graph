@@ -23,6 +23,7 @@ def main():
     for p in sorted((P/'results').glob('Ceval_*_episodes.csv')):
         rows=read(p);r=rows[0];key=(r['kind'],r['variant'],int(r['training_seed']),int(r['checkpoint_step']));cdata[key]=rows
         for task in [0,1,2,3,4,5]:
+            if task==0 and r['scope']!='full':continue
             selected=rows if task==0 else [x for x in rows if int(x['task'])==task]
             if not selected:continue
             full=all(x['complete']=='True' for x in selected);y=[int(x['success']) for x in selected if x['complete']=='True'];lo,hi=wilson(y) if y else (None,None)
