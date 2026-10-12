@@ -9,7 +9,14 @@ def main():
         for seed in (1,2):jobs.append([k,v,seed,1000000,'full'])
     for seed in (1,2):
         for step in (100000,300000,500000):jobs.append(['navigate','A',seed,step,'monitor'])
-    pending=jobs.copy();running={};finished=[];available=['80-83','84-87','88-91']
+    # A path-only coordinator correction never cancels or repeats an evaluation.
+    while list((ROOT/'receipts').glob('Ceval_*_active.json')):time.sleep(5)
+    finished=[];pending=[]
+    for job in jobs:
+        k,v,seed,step,scope=job;label=f'Ceval_{k}_{v}_s{seed}_{step}_{scope}';receipt=ROOT/'receipts'/f'{label}_resource.json'
+        if receipt.exists():finished.append(dict(label=label,job=job,exit_code=json.loads(receipt.read_text())['exit_code'],adopted_existing_job=True))
+        else:pending.append(job)
+    running={};available=['80-83','84-87','88-91']
     def write(name,x):
         p=ROOT/'receipts'/name;t=p.with_suffix('.tmp');t.write_text(json.dumps(x,indent=2)+'\n');t.replace(p)
     write('EVALUATION_SOURCE.json',dict(files={n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in ['eval_frozen.py','eval_scheduler.py','frozen.py','state_core.py']}))
@@ -26,7 +33,7 @@ def main():
             if seed:
                 cps=ROOT/'results'/f'C_{k}_{v}_s{seed}_checkpoints.json'
                 ready=cps.exists() and any(c['step']==step for c in json.loads(cps.read_text()))
-                runexit=ROOT/'receipts'/f'C_{k}_{v}_s{seed}_exit.json'
+                runexit=ROOT/'results'/f'C_{k}_{v}_s{seed}_training_status.json'
                 resource=ROOT/'receipts'/f'C_{k}_{v}_s{seed}_resource.json'
                 if step==1000000:ready=ready and runexit.exists() and resource.exists() and json.loads(runexit.read_text())['status']=='COMPLETE_1M' and json.loads(resource.read_text())['exit_code']==0
                 if not ready:
