@@ -1,0 +1,900 @@
+{
+  "navigate": {
+    "name": "pointmaze-large-navigate-v0",
+    "env_spec": "pointmaze-large-v0",
+    "max_episode_steps": 1000,
+    "observation_shape": [
+      2
+    ],
+    "action_shape": [
+      2
+    ],
+    "action_low": [
+      -1.0,
+      -1.0
+    ],
+    "action_high": [
+      1.0,
+      1.0
+    ],
+    "action_semantics": "qpos += 0.2*clipped_action; qvel zero then 5 MuJoCo steps",
+    "goal_tolerance": 1.0,
+    "normalization": "none",
+    "maze_map": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "tasks": [
+      {
+        "task_name": "task1",
+        "init_ij": [
+          1,
+          1
+        ],
+        "init_xy": [
+          0.0,
+          0.0
+        ],
+        "goal_ij": [
+          7,
+          10
+        ],
+        "goal_xy": [
+          36.0,
+          24.0
+        ]
+      },
+      {
+        "task_name": "task2",
+        "init_ij": [
+          5,
+          4
+        ],
+        "init_xy": [
+          12.0,
+          16.0
+        ],
+        "goal_ij": [
+          7,
+          1
+        ],
+        "goal_xy": [
+          0.0,
+          24.0
+        ]
+      },
+      {
+        "task_name": "task3",
+        "init_ij": [
+          7,
+          4
+        ],
+        "init_xy": [
+          12.0,
+          24.0
+        ],
+        "goal_ij": [
+          1,
+          10
+        ],
+        "goal_xy": [
+          36.0,
+          0.0
+        ]
+      },
+      {
+        "task_name": "task4",
+        "init_ij": [
+          3,
+          8
+        ],
+        "init_xy": [
+          28.0,
+          8.0
+        ],
+        "goal_ij": [
+          5,
+          4
+        ],
+        "goal_xy": [
+          12.0,
+          16.0
+        ]
+      },
+      {
+        "task_name": "task5",
+        "init_ij": [
+          1,
+          1
+        ],
+        "init_xy": [
+          0.0,
+          0.0
+        ],
+        "goal_ij": [
+          5,
+          4
+        ],
+        "goal_xy": [
+          12.0,
+          16.0
+        ]
+      }
+    ],
+    "config": {
+      "actor_geom_discount": 0.99,
+      "actor_geom_sample": false,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "actor_p_curgoal": 0.0,
+      "actor_p_randomgoal": 0.0,
+      "actor_p_trajgoal": 1.0,
+      "agent_name": "saw",
+      "awr_alpha": 3.0,
+      "batch_size": 1024,
+      "const_std": true,
+      "dataset_class": "HGCDataset",
+      "discount": 0.99,
+      "discrete": false,
+      "encoder": null,
+      "expectile": 0.7,
+      "frame_stack": null,
+      "gc_negative": true,
+      "kl_alpha": 3.0,
+      "layer_norm": true,
+      "low_actor_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "low_alpha": 3.0,
+      "lr": 0.0003,
+      "p_aug": 0.0,
+      "rep_dim": 10,
+      "share_goal_rep": false,
+      "subgoal_steps": 25,
+      "tau": 0.005,
+      "value_geom_sample": true,
+      "value_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "value_p_curgoal": 0.2,
+      "value_p_randomgoal": 0.3,
+      "value_p_trajgoal": 0.5
+    },
+    "goal_noise": 1,
+    "qpos_size": 2,
+    "qvel_size": 2,
+    "training_reward": "0 at identical sampled state index, otherwise -1",
+    "masks": "0 at identical goal index, otherwise 1; not dataset terminals",
+    "env_reward": "1 success, 0 otherwise; terminate_at_goal True",
+    "files": [
+      {
+        "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-navigate-v0.npz",
+        "sha256": "82a73ed8de90ad2b8bf89069253e961918438d127d7f7c7f09c81e642d0d2c61",
+        "fields": {
+          "observations": {
+            "shape": [
+              1001000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "actions": {
+            "shape": [
+              1001000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "terminals": {
+            "shape": [
+              1001000
+            ],
+            "dtype": "bool",
+            "finite": true
+          },
+          "qpos": {
+            "shape": [
+              1001000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "qvel": {
+            "shape": [
+              1001000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          }
+        },
+        "trajectories": 1000,
+        "trajectory_length_min": 1001,
+        "trajectory_length_max": 1001,
+        "raw_index": {
+          "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate_raw_index.npz",
+          "sha256": "3ef7da283087f69fad18c0a791ba7050388283345a20269387bd36bab86a3ac0"
+        },
+        "terminal_rows_have_no_valid_next_transition": true
+      },
+      {
+        "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-navigate-v0-val.npz",
+        "sha256": "19e6b510c800b865d5c3f9e4335941a602731184fa683eb99face7c5405b6ec4",
+        "fields": {
+          "observations": {
+            "shape": [
+              100100,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "actions": {
+            "shape": [
+              100100,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "terminals": {
+            "shape": [
+              100100
+            ],
+            "dtype": "bool",
+            "finite": true
+          },
+          "qpos": {
+            "shape": [
+              100100,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "qvel": {
+            "shape": [
+              100100,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          }
+        },
+        "trajectories": 100,
+        "trajectory_length_min": 1001,
+        "trajectory_length_max": 1001,
+        "raw_index": {
+          "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/navigate-val_raw_index.npz",
+          "sha256": "fc32efcdf2a8f62bc746868c07516e1b072ea29fb391b41b66db6e593ba46a9d"
+        },
+        "terminal_rows_have_no_valid_next_transition": true
+      }
+    ],
+    "sampler": {
+      "checks": {
+        "valid_transition": true,
+        "low_exact_25_or_terminal": true,
+        "future_goal_same_official_segment": true,
+        "waypoint_exact": true,
+        "reward_exact": true,
+        "masks_exact": true
+      },
+      "samples": 4096,
+      "current_value_goal_fraction": 0.20458984375,
+      "value_goal_other_trajectory_fraction": 0.294921875,
+      "high_goal_future_fraction": 1.0,
+      "compact_terminal_remapping": "official loader marks both final raw row and predecessor terminal; valid rows exclude final raw row; sampler preserved exactly"
+    },
+    "sampler_logging_rng_equal": true,
+    "evaluator_checks": [
+      {
+        "label": "success",
+        "success": 1.0,
+        "expected": 1,
+        "terminated": true,
+        "truncated": false,
+        "distance": 0.0
+      },
+      {
+        "label": "non_success",
+        "success": 0.0,
+        "expected": 0,
+        "terminated": false,
+        "truncated": false,
+        "distance": 1.5
+      },
+      {
+        "label": "short_positive",
+        "success": 1.0,
+        "expected": 1,
+        "terminated": true,
+        "truncated": false,
+        "distance": 0.8500000000000001
+      }
+    ]
+  },
+  "stitch": {
+    "name": "pointmaze-large-stitch-v0",
+    "env_spec": "pointmaze-large-v0",
+    "max_episode_steps": 1000,
+    "observation_shape": [
+      2
+    ],
+    "action_shape": [
+      2
+    ],
+    "action_low": [
+      -1.0,
+      -1.0
+    ],
+    "action_high": [
+      1.0,
+      1.0
+    ],
+    "action_semantics": "qpos += 0.2*clipped_action; qvel zero then 5 MuJoCo steps",
+    "goal_tolerance": 1.0,
+    "normalization": "none",
+    "maze_map": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "tasks": [
+      {
+        "task_name": "task1",
+        "init_ij": [
+          1,
+          1
+        ],
+        "init_xy": [
+          0.0,
+          0.0
+        ],
+        "goal_ij": [
+          7,
+          10
+        ],
+        "goal_xy": [
+          36.0,
+          24.0
+        ]
+      },
+      {
+        "task_name": "task2",
+        "init_ij": [
+          5,
+          4
+        ],
+        "init_xy": [
+          12.0,
+          16.0
+        ],
+        "goal_ij": [
+          7,
+          1
+        ],
+        "goal_xy": [
+          0.0,
+          24.0
+        ]
+      },
+      {
+        "task_name": "task3",
+        "init_ij": [
+          7,
+          4
+        ],
+        "init_xy": [
+          12.0,
+          24.0
+        ],
+        "goal_ij": [
+          1,
+          10
+        ],
+        "goal_xy": [
+          36.0,
+          0.0
+        ]
+      },
+      {
+        "task_name": "task4",
+        "init_ij": [
+          3,
+          8
+        ],
+        "init_xy": [
+          28.0,
+          8.0
+        ],
+        "goal_ij": [
+          5,
+          4
+        ],
+        "goal_xy": [
+          12.0,
+          16.0
+        ]
+      },
+      {
+        "task_name": "task5",
+        "init_ij": [
+          1,
+          1
+        ],
+        "init_xy": [
+          0.0,
+          0.0
+        ],
+        "goal_ij": [
+          5,
+          4
+        ],
+        "goal_xy": [
+          12.0,
+          16.0
+        ]
+      }
+    ],
+    "config": {
+      "actor_geom_discount": 0.99,
+      "actor_geom_sample": false,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "actor_p_curgoal": 0.0,
+      "actor_p_randomgoal": 0.0,
+      "actor_p_trajgoal": 1.0,
+      "agent_name": "saw",
+      "awr_alpha": 3.0,
+      "batch_size": 1024,
+      "const_std": true,
+      "dataset_class": "HGCDataset",
+      "discount": 0.99,
+      "discrete": false,
+      "encoder": null,
+      "expectile": 0.7,
+      "frame_stack": null,
+      "gc_negative": true,
+      "kl_alpha": 3.0,
+      "layer_norm": true,
+      "low_actor_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "low_alpha": 3.0,
+      "lr": 0.0003,
+      "p_aug": 0.0,
+      "rep_dim": 10,
+      "share_goal_rep": false,
+      "subgoal_steps": 25,
+      "tau": 0.005,
+      "value_geom_sample": true,
+      "value_hidden_dims": [
+        512,
+        512,
+        512
+      ],
+      "value_p_curgoal": 0.2,
+      "value_p_randomgoal": 0.3,
+      "value_p_trajgoal": 0.5
+    },
+    "goal_noise": 1,
+    "qpos_size": 2,
+    "qvel_size": 2,
+    "training_reward": "0 at identical sampled state index, otherwise -1",
+    "masks": "0 at identical goal index, otherwise 1; not dataset terminals",
+    "env_reward": "1 success, 0 otherwise; terminate_at_goal True",
+    "files": [
+      {
+        "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-stitch-v0.npz",
+        "sha256": "9add335e598e48ebc483447d61415a9755ffb738ddfc406cb9708b2a238992e8",
+        "fields": {
+          "observations": {
+            "shape": [
+              1005000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "actions": {
+            "shape": [
+              1005000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "terminals": {
+            "shape": [
+              1005000
+            ],
+            "dtype": "bool",
+            "finite": true
+          },
+          "qpos": {
+            "shape": [
+              1005000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "qvel": {
+            "shape": [
+              1005000,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          }
+        },
+        "trajectories": 5000,
+        "trajectory_length_min": 201,
+        "trajectory_length_max": 201,
+        "raw_index": {
+          "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch_raw_index.npz",
+          "sha256": "d1e4e2c9a50d9c544b996fde8a5f9a9d22504c5c207a6a1d5d176ab55a196ca7"
+        },
+        "terminal_rows_have_no_valid_next_transition": true
+      },
+      {
+        "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-stitch-v0-val.npz",
+        "sha256": "32e2c21a4d71b9cb5f21b0e2d6cf9f7d3b3bb40ca293bfb5209a6f5e7359827a",
+        "fields": {
+          "observations": {
+            "shape": [
+              100500,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "actions": {
+            "shape": [
+              100500,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "terminals": {
+            "shape": [
+              100500
+            ],
+            "dtype": "bool",
+            "finite": true
+          },
+          "qpos": {
+            "shape": [
+              100500,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          },
+          "qvel": {
+            "shape": [
+              100500,
+              2
+            ],
+            "dtype": "float32",
+            "finite": true
+          }
+        },
+        "trajectories": 500,
+        "trajectory_length_min": 201,
+        "trajectory_length_max": 201,
+        "raw_index": {
+          "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/runs/stitch-val_raw_index.npz",
+          "sha256": "b35769d3e6315411abf9db9a9c444f48517eb2057d9bc336cda954fafad8f631"
+        },
+        "terminal_rows_have_no_valid_next_transition": true
+      }
+    ],
+    "sampler": {
+      "checks": {
+        "valid_transition": true,
+        "low_exact_25_or_terminal": true,
+        "future_goal_same_official_segment": true,
+        "waypoint_exact": true,
+        "reward_exact": true,
+        "masks_exact": true
+      },
+      "samples": 4096,
+      "current_value_goal_fraction": 0.203857421875,
+      "value_goal_other_trajectory_fraction": 0.29638671875,
+      "high_goal_future_fraction": 1.0,
+      "compact_terminal_remapping": "official loader marks both final raw row and predecessor terminal; valid rows exclude final raw row; sampler preserved exactly"
+    },
+    "sampler_logging_rng_equal": true,
+    "evaluator_checks": [
+      {
+        "label": "success",
+        "success": 1.0,
+        "expected": 1,
+        "terminated": true,
+        "truncated": false,
+        "distance": 0.0
+      },
+      {
+        "label": "non_success",
+        "success": 0.0,
+        "expected": 0,
+        "terminated": false,
+        "truncated": false,
+        "distance": 1.5
+      },
+      {
+        "label": "short_positive",
+        "success": 1.0,
+        "expected": 1,
+        "terminated": true,
+        "truncated": false,
+        "distance": 0.8500000000000001
+      }
+    ]
+  }
+}
