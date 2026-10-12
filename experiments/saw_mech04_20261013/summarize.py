@@ -19,7 +19,7 @@ def paired(x,y):
     lo,hi=np.quantile(draws,[.025,.975]);groups={str(g):float(np.mean([int(a[k]['success'])-int(b[k]['success']) for k in ids if int(a[k]['group'])==g])) for g in (0,1)}
     return dict(n=len(ids),difference_pp=float(delta.mean()*100),ci95_low_pp=float(lo*100),ci95_high_pp=float(hi*100),first_success_second_failure=sum(int(a[k]['success'])==1 and int(b[k]['success'])==0 for k in ids),first_failure_second_success=sum(int(a[k]['success'])==0 and int(b[k]['success'])==1 for k in ids),group0_difference_pp=groups['0']*100,group1_difference_pp=groups['1']*100)
 def main():
-    cdata={};scores=[]
+    cdata={};scores=[];stream_scores=[]
     for p in sorted((P/'results').glob('Ceval_*_episodes.csv')):
         rows=read(p);r=rows[0];key=(r['kind'],r['variant'],int(r['training_seed']),int(r['checkpoint_step']));cdata[key]=rows
         for task in [0,1,2,3,4,5]:
@@ -28,7 +28,20 @@ def main():
             if not selected:continue
             full=all(x['complete']=='True' for x in selected);y=[int(x['success']) for x in selected if x['complete']=='True'];lo,hi=wilson(y) if y else (None,None)
             scores.append(dict(kind=key[0],variant=key[1],training_seed=key[2],checkpoint_step=key[3],scope=r['scope'],task=task,n=len(selected),completed_n=len(y),success=sum(y),success_rate=float(np.mean(y)) if y and full else None,ci95_low=lo,ci95_high=hi,valid_full_endpoint=full and r['scope']=='full' and len(rows)==500,seed_role='discovery' if key[2]==0 else 'independent_training_confirmation'))
+            for group in (0,1):
+                z=[x for x in selected if int(x['group'])==group];yy=[int(x['success']) for x in z if x['complete']=='True'];a,b=wilson(yy) if yy else (None,None)
+                stream_scores.append(dict(kind=key[0],variant=key[1],training_seed=key[2],checkpoint_step=key[3],scope=r['scope'],task=task,group=group,stream=z[0]['scene_stream'] if z else '',n=len(z),completed_n=len(yy),success=sum(yy),success_rate=float(np.mean(yy)) if yy and len(yy)==len(z) else None,ci95_low=a,ci95_high=b))
     table(P/'results/C_TASK_SCORES.csv',scores)
+    table(P/'results/C_STREAM_TASK_SCORES.csv',stream_scores)
+    seed_summary=[]
+    for kind,variant in [('stitch','A'),('stitch','B'),('navigate','A')]:
+        for task in range(6):
+            for scope,seeds in [('confirmation_seeds1_2',[1,2]),('all_observed_including_discovery_seed0',[0,1,2])]:
+                z=[x for x in scores if x['kind']==kind and x['variant']==variant and x['task']==task and x['training_seed'] in seeds and x['checkpoint_step']==1000000 and x['valid_full_endpoint']]
+                if not z:continue
+                values=[x['success_rate']*100 for x in z]
+                seed_summary.append(dict(kind=kind,variant=variant,task=task,analysis_scope=scope,n_training_seeds=len(z),all_requested_seeds_available=len(z)==len(seeds),mean_score_pp=float(np.mean(values)),sample_sd_pp=float(np.std(values,ddof=1)) if len(z)>1 else None,min_score_pp=min(values),max_score_pp=max(values),raw_seed_scores_pp=json.dumps({str(x['training_seed']):x['success_rate']*100 for x in z})))
+    table(P/'results/C_TRAINING_SEED_SUMMARY.csv',seed_summary)
     contrasts=[];cs=[];cn=[]
     for seed in (0,1,2):
         aa=cdata.get(('stitch','A',seed,1000000));bb=cdata.get(('stitch','B',seed,1000000))
@@ -45,6 +58,8 @@ def main():
                 out=dict(kind='navigate',training_seed=seed,contrast='Task5_300k_minus_1M',task=5,**paired(x,y));contrasts.append(out);e=float(np.mean([int(r['success']) for r in x]))*100;l=float(np.mean([int(r['success']) for r in y]))*100
                 cn.append(dict(training_seed=seed,Task5_300k=e,Task5_1M=l,drop_pp=e-l,criterion=e>=30 and e-l>=20))
     table(P/'results/C_PAIRED_CONTRASTS.csv',contrasts)
+    nz=[x['drop_pp'] for x in cn]
+    table(P/'results/C_N_DROP_SEED_SUMMARY.csv',[dict(n_training_seeds=len(nz),mean_drop_pp=float(np.mean(nz)) if nz else None,sample_sd_drop_pp=float(np.std(nz,ddof=1)) if len(nz)>1 else None,min_drop_pp=min(nz) if nz else None,max_drop_pp=max(nz) if nz else None,raw_drop_pp=json.dumps({str(x['training_seed']):x['drop_pp'] for x in cn}))])
     confirm=[x for x in cs if x['training_seed']>0]
     sc='PENDING' if len(confirm)!=2 else 'LARGE_DIFFERENCE_REPLICATED_TWO_SEEDS' if all(x['delta_pp']>=20 for x in confirm) else 'DIRECTION_CONSISTENT_MAGNITUDE_UNSTABLE' if all(x['delta_pp']>0 for x in confirm) else 'SEED_SENSITIVE_ORIGINAL_LARGE_GAP_UNSTABLE'
     nc='PENDING' if len(cn)!=2 else 'DECLINE_REPLICATED_TWO_SEEDS' if all(x['criterion'] for x in cn) else 'EARLY_LEARNING_TIME_OR_PROBABILITY_SEED_DEPENDENT' if any(x['Task5_300k']<30 for x in cn) else 'SEED0_STAGE_DECLINE_UNSTABLE'
