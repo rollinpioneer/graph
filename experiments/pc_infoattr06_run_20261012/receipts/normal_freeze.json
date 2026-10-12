@@ -1,0 +1,62 @@
+{
+  "utc": "2026-10-12T04:34:44.407760+00:00",
+  "full_episodes": 4,
+  "steps_each": 200,
+  "sampling": "normal uninterrupted seeded random stream; no per-call reseeding",
+  "plans": [
+    {
+      "name": "normal3_scene1",
+      "n": 3,
+      "gpu": 3,
+      "scene_seed": 1206203,
+      "policy_seed": 1206303
+    },
+    {
+      "name": "normal6_scene2",
+      "n": 6,
+      "gpu": 6,
+      "scene_seed": 1206216,
+      "policy_seed": 1206316
+    },
+    {
+      "name": "normal3_scene3",
+      "n": 3,
+      "gpu": 3,
+      "scene_seed": 1206223,
+      "policy_seed": 1206323
+    },
+    {
+      "name": "normal6_scene4",
+      "n": 6,
+      "gpu": 6,
+      "scene_seed": 1206236,
+      "policy_seed": 1206336
+    }
+  ],
+  "gpus": [
+    3,
+    6
+  ],
+  "max_gpu_seconds_each": 1200,
+  "phase_reserved_gpu_s": 4800,
+  "two_gpu_contexts_conservative": true,
+  "pilot_sample_wall_s": [
+    1.3785327340010554,
+    1.190678081009537,
+    1.210514750011498,
+    1.221181165019516,
+    1.2032922049984336,
+    1.2047599980141968,
+    1.198967129981611,
+    1.2555769119935576
+  ],
+  "pilot_excludes_outcome_from_decision": true,
+  "decision": "four tier to preserve>=2200GPUseconds for optional discriminating branch and margin; loading/retries charged",
+  "source_sha256": {
+    "rollout.py": "9a47f9d0ac1ec3a10ac6af877f63d977d2d78a47569e412cb25e300e736de11a",
+    "runtime.py": "4f69b23898acf30e58893f648be3a05f3f817a559bb1d1bd8b7c5a7a9ac660fd",
+    "guard.py": "6e70b16c9abe4f8374557769f849209850720d172c24fd7fe4bd45ec587e1d39",
+    "launch_normal.py": "5e7271827e4bc9137f58de750188beffe6a5cc61dee6efa672b909cb333695d1",
+    "analysis.py": "7932a9c4d8e4cc7de37b45e871562b23759750e78420b4b898e9068d29c3f592"
+  }
+}

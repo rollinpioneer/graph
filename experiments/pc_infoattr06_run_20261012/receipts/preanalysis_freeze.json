@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-12T04:30:59.859646+00:00",
+  "authorization": "user execute 2026-10-12 overrides historical card-only status",
+  "card_sha256": "11711ea4242a3dcd412262109c0f575b44b0325d313e83495f3fa14c34750e4d",
+  "calibration": [
+    "supplement3",
+    "supplement6"
+  ],
+  "calibration_frames": [
+    0,
+    10,
+    30,
+    50
+  ],
+  "holdout": [
+    "validate3_permuted"
+  ],
+  "holdout_frames": [
+    0,
+    50,
+    100,
+    199
+  ],
+  "diagnostic": [
+    "validate6_permuted",
+    "validate6_blocked",
+    "validate3_blocked"
+  ],
+  "diagnostic_fixed_frames": [
+    0,
+    50,
+    68,
+    88,
+    108,
+    150,
+    199
+  ],
+  "goal_included": true,
+  "separate_by_scene": true,
+  "calibration_sees_outcome": false,
+  "rule": "nearest standardized appearance prototypes from geometrically labelled isolated calibration particles; objon>.1; no diagnostic truth access until scoring",
+  "threshold_pixel": 10,
+  "calibration_label_radius_px": 8,
+  "min_predicted_confidence_gap": 0.15,
+  "max_standardized_feature_distance": 3,
+  "four_or_six_decision": "after8stepcostpilot before new outcomes; reserve validation",
+  "pilot": {
+    "n": 6,
+    "scene_seed": 1206006,
+    "policy_seed": 1206106,
+    "steps": 8
+  },
+  "memory_limit_mib": 12288,
+  "gpu_seconds_limit": 7200,
+  "offline_policy_call_limit": 96
+}
