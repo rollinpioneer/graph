@@ -7,7 +7,8 @@ for kind in ('navigate','stitch'):
     status=root/'results'/f'{kind}_training_status.json'
     if status.exists():x=json.loads(status.read_text());last=x['step'];state=x['status']
     else:state='RUNNING'
-    out.append(f'{kind[0].upper()}={last//1000}k' + ('' if state=='RUNNING' else ':'+state))
+    short={'SINGLE_SEED_B_COMPARISON':'DONE','BUDGET_STOP':'STOP','FAILED':'FAIL'}.get(state,state)
+    out.append(f'{kind[0].upper()}={last//1000}k' + ('' if state=='RUNNING' else ':'+short))
 live=[json.loads(f.read_text()) for f in r.glob('*_active.json')];done=[json.loads(f.read_text()) for f in r.glob('*_resource.json')]
 hours=(sum(x['gpu_residency_upper_seconds'] for x in done)+sum(time.time()-x['start'] for x in live))/3600
 pids={x['pid'] for x in live};mem=0

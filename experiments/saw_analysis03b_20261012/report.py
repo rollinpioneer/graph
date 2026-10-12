@@ -36,6 +36,13 @@ def main():
             ab.append(f'{kind} 当前单训练seed配方的总体B−A差为{delta:+.1f}个百分点。{cells}。该区间只反映评价场景，未包含跨训练seed变异。')
         else:ab.append(f'{kind} 未形成完整1M同场景A/B对照，正式采样敏感性保持未判定。')
     abfindings='\n\n'.join(ab)
+    module_rows=read(ROOT/'results/MODULE_IDENTITY.csv') if (ROOT/'results/MODULE_IDENTITY.csv').exists() else []
+    module_facts=[]
+    for kind in ('navigate','stitch'):
+        vr=[r for r in module_rows if r['kind']==kind and r['module']=='modules_value']
+        lr=[r for r in module_rows if r['kind']==kind and r['module']=='modules_low_actor']
+        module_facts.append(f"{kind}：已比较价值模块{len(vr)}个阶段，其中数组完全相同{sum(r['exact_equal']=='True' for r in vr)}个；短actor模块完全相同{sum(r['exact_equal']=='True' for r in lr)}/{len(lr)}个。")
+    module_note=' '.join(module_facts)
     total=sum(r['gpu_hours'] for r in resources);peak=max([r['peak_aggregate_mib'] for r in resources] or [0])
     cpuclock=json.loads((ROOT/'receipts/CLOCKS.json').read_text());finish=time.time()
     report=f'''# SAW-ANALYSIS-03B v2.0 执行报告
@@ -84,11 +91,15 @@ C0低运动主要是小动作，而不是满足大动作撞墙阈值后的持续
 
 ## 5. E3证据矩阵
 
-E3_SUPPORT.csv记录真实失败/参照点的qpos/qvel邻域、原始目标区域、原版A/B采样概率；E3_DATA_REPLAYS.json保存真实数据动作链检查。数据不含完整MuJoCo integration，近似qpos/qvel衔接成功仍不声称严格完整状态拼接。地图连通未用作控制能力证明。
+E3_SUPPORT.csv记录真实失败/参照点的qpos/qvel邻域、原始目标区域、原版A/B采样概率；E3_JOINT_SAMPLING_SUPPORT.csv进一步区分目标区域与具体Waypoint的联合概率，包含每个预选候选及已验证E2目标。能到达的near候选不自动等于原版训练Waypoint可提供的候选。E3_DATA_REPLAYS.json保存真实数据动作链检查。数据不含完整MuJoCo integration，近似qpos/qvel衔接成功仍不声称严格完整状态拼接。地图连通未用作控制能力证明。
+
+21个预选近目标对应的具体记录tuple中，20个在A采样器下“原远目标1单位邻域＋该Waypoint”的条件联合概率为0，B则21个均为正。这证明B扩展了这些tuple的联合目标支持；不证明所有邻近数据状态在A完全没有支持，不证明目标中心精确坐标有正概率，也不证明可达近目标能帮助完成远目标。
 
 固定16候选的价值双头、优势、截断和actor/teacher/data动作见E3_A/B_CANDIDATES.csv。所有预选E2近/控制目标又被完整复用于离线价值测量，见E3_A/B_VERIFIED_TARGETS.csv；这是E2后解释性补测，无新增控制步或训练。未因成绩替换候选。真实数据tuple上的原版损失跨阶段保留E3_A/B_SIGNALS.csv，目标是否在A采样段内单独标记。离线动作差、权重饱和和排序分歧仅为证据，不单独判根因。
 
 E2没有出现C2近目标成功而C1失败的快照，预登记梯度触发门未满足，梯度分析如实记为未触发。EVIDENCE_MATRIX.csv汇总支持、反例与未判定边界。
+
+模块参数对比：{module_note} 参数差异不自动解释其功能或来源，不能将两个采样概率的改变直接简化成“只有actor参数变化”。MODULE_IDENTITY.csv保留逐模块误差；数字训练轨迹和后端差异的原因未在本轮做额外训练控制。
 
 ## 6. 裁定、边界与下一项建议
 

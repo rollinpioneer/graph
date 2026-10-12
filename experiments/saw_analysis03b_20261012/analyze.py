@@ -65,6 +65,7 @@ def main():
     support=read(ROOT/'results/E3_SUPPORT.csv') if (ROOT/'results/E3_SUPPORT.csv').exists() else []
     gates=json.loads((ROOT/'results/E2_GATES.json').read_text()) if (ROOT/'results/E2_GATES.json').exists() else []
     verified={v:read(ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv') if (ROOT/'results'/f'E3_{v}_VERIFIED_TARGETS.csv').exists() else [] for v in ('A','B')}
+    joint=read(ROOT/'results/E3_JOINT_SAMPLING_SUPPORT.csv') if (ROOT/'results/E3_JOINT_SAMPLING_SUPPORT.csv').exists() else []
     for x in support:
         sid=x['snapshot_id'];g=next((g for g in gates if g['snapshot_id']==sid),{});branches={r['condition']:r for r in rr if r['snapshot_id']==sid}
         item=dict(snapshot_id=sid,kind=x['kind'],task=x['task'],source_success=x['source_success'],E2_gate=g.get('status','NOT_EXECUTED'),gate_reason=g.get('reason'),
@@ -82,6 +83,9 @@ def main():
                 f'{variant}_1M_near_teacher_norm':float(math.hypot(float(v['teacher_0']),float(v['teacher_1']))) if v else None,
                 f'{variant}_1M_heads_prefer_different_targets':v['head1_preferred']!=v['head2_preferred'] if v else None,
                 f'{variant}_1M_actor_teacher_mse':float(v['actor_teacher_mse']) if v else None})
+        j=next((r for r in joint if r['snapshot_id']==sid and r['group']=='E2_verified_near'),None)
+        item['A_joint_far_region_verified_waypoint_probability']=float(j['joint_far_region_waypoint_probability_A']) if j else None
+        item['B_joint_far_region_verified_waypoint_probability']=float(j['joint_far_region_waypoint_probability_B']) if j else None
         evidence.append(item)
     save(ROOT/'results/EVIDENCE_MATRIX.csv',evidence)
     write(ROOT/'results/STATISTICAL_METHOD.json',dict(bootstrap_samples=10000,seed=203001,unit='whole paired episode',score_interval='Wilson 95%',difference_interval='paired percentile bootstrap 95%',
