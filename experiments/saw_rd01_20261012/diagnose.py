@@ -86,12 +86,20 @@ def run(kind,phase,do_rollouts=True):
     for t in range(len(i)):
         geo=geodesic(u,obs[candidates[t]],obs[g[t]])
         sgeo=float(geodesic(u,obs[[i[t]]],obs[g[t]])[0])
-        rho=cinfo['rho'][t]; p=rho/(rho.sum()+1e-30)
+        rho=cinfo['rho'][t].copy()
+        supported=(candidates[t]>i[t])&(candidates[t]<=i[t]+25)
+        unique_seen=set()
+        for c,wi in enumerate(candidates[t]):
+            if int(wi) in unique_seen: supported[c]=False
+            unique_seen.add(int(wi))
+        rho=rho*supported
+        p=rho/(rho.sum()+1e-30)
         teachers=cinfo['teacher'][t]; actor=cinfo['actor'][t,0]; target=(p[:,None]*teachers).sum(0)
         spread=float((p[:,None]*(teachers-target)**2).sum())
         conflict.append(dict(sample_id=int(ids[t]),weighted_teacher_variance=spread,
                              actor_to_weighted_teacher_mse=float(((actor-target)**2).sum()),
-                             weight_effective_candidates=float(1/np.sum(p**2)),max_weight_fraction=float(p.max())))
+                             supported_unique_candidates=int(supported.sum()),
+                             weight_effective_candidates=float(1/(np.sum(p**2)+1e-30)),max_weight_fraction=float(p.max())))
         values=cinfo['wv'][t]; head1=cinfo['w1'][t]; head2=cinfo['w2'][t]
         order1=np.argsort(np.argsort(head1)); order2=np.argsort(np.argsort(head2))
         disagreement.append(float(np.mean(order1!=order2)))
@@ -160,6 +168,9 @@ def run(kind,phase,do_rollouts=True):
                  value_geometry_inference='correlation is descriptive, not a correctness label; empirical future candidates verified from full recorded states',
                  D4_matching_error_mean=float(np.mean(info['mean_squared_difference'])),D4_weighted_matching_error_mean=float(np.mean(info['rho']*info['mean_squared_difference'])),
                  D4_teacher_variance_mean=float(np.mean([x['weighted_teacher_variance'] for x in conflict])),
+                 D4_teacher_validity='unique empirical short future support; actual low-actor execution checked separately for selected original waypoints',
+                 actor_mean_action_clip_fraction=float(np.mean(np.any(np.abs(info['actor'])>1,axis=1))),
+                 teacher_mean_action_clip_fraction=float(np.mean(np.any(np.abs(info['teacher'])>1,axis=1))),
                  D4_full_training_style_4096=full_summary,
                  D3_segments=len(rollouts),D3_success={k:float(np.mean([r['success'] for r in rollouts if r['actor_type']==k])) for k in ['low_actor','actor']} if rollouts else None,
                  seconds=time.monotonic()-start,cpu_process_seconds=time.process_time()-cpu_start,
