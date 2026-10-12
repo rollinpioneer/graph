@@ -21,3 +21,5 @@ R未消费确认：Navigate Task5两流1270131/1370131，各5完整场景，A300
 统计：各任务Wilson95%；固定权重、同完整场景成对bootstrap10000次，analysis seed2030130。报告两流、成功→失败及反向。跨seed均值、样本标准差与范围，保留seed0发现/seed1/2确认身份；不能将回合数当训练seed数。C-S每新seed A-B≥20百分点，C-N每新seed300k Task5≥30%且下降≥20个百分点，按原卡原门裁定。
 
 T在R交付后单独批准，按共同Stitch-A500k起点、冻结value/target/shared goal_rep/low_actor及其状态，actor与专用编码器四臂最多100k，独立GPU2.5小时。C-NB/C-M未执行。原卡引用的REASSESSMENT当前本地未发现，作为背景引用未冒称已读，其冻结事实依据03B原始归档核验。
+
+R-A同时间参照明确采用按scene_id排序第一条Task5主轨迹的预定首分叉窗口时间；Task1/2 scene0/1在该时间取同±5参考点。若参照已终止，保留时间不匹配标记，不延长或替换轨迹。
