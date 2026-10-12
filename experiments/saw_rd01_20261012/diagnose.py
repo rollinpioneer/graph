@@ -117,7 +117,7 @@ def run(kind,phase,do_rollouts=True):
         disagreement.append(float(np.mean(order1!=order2)))
         if np.std(values)>0 and np.std(geo)>0: progress_rank.append(float(np.corrcoef(values,-geo)[0,1]))
         for c,wi in enumerate(candidates[t]):
-            future_steps=int(wi-i[t]); supported_short=(0<=future_steps<=25)
+            future_steps=-1 if wi<0 else int(wi-i[t]); supported_short=(0<=future_steps<=25)
             row=dict(dataset=kind,phase=phase,sample_id=int(ids[t]),candidate_id=c,state_idx=int(i[t]),goal_idx=int(g[t]),waypoint_idx=int(wi),
                      goal_source='registered_task_goal' if external[t] else 'original_future_goal',
                      goal_x=float(goal_vectors[t,0]),goal_y=float(goal_vectors[t,1]),
