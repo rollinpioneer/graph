@@ -67,10 +67,10 @@ def main():
                      turn_within_waypoint_fraction=float(np.mean(np.asarray(turns)>0)),high_goal_same_cell_fraction=float(np.mean(goalgeo==0)),
                      task_support=support,geom_metric_note='privileged cell BFS; discontinuous, ignores within-cell position and velocity, not discounted value ground truth')
         with open(ROOT/'results'/f'{kind}_cell_support.csv','w',newline='') as f:
-            writer=csv.writer(f); writer.writerow(['i','j','visits'])
+            writer=csv.writer(f,lineterminator='\n'); writer.writerow(['i','j','visits'])
             for cell,n in sorted(occupancy.items()): writer.writerow([*cell,n])
         with open(ROOT/'results'/f'{kind}_sampler_geometry.csv','w',newline='') as f:
-            writer=csv.writer(f); writer.writerow(['sample_id','state_idx','goal_idx','waypoint_idx','high_horizon','waypoint_horizon','cell_distance','cell_progress','turns'])
+            writer=csv.writer(f,lineterminator='\n'); writer.writerow(['sample_id','state_idx','goal_idx','waypoint_idx','high_horizon','waypoint_horizon','cell_distance','cell_progress','turns'])
             for row in zip(indices[:,0],i,g,w,high_horizon,waypoint_horizon,goalgeo,progress,turns): writer.writerow(row)
         result[kind]=summary; env.close()
     result['comparison']=dict(same_map=True,same_tasks=True,warning='dataset horizon, coverage and collection policy differ simultaneously; this is not a single-factor stitching causal experiment')

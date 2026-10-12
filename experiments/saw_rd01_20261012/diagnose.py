@@ -37,7 +37,7 @@ def probe(agent,s,g,w,n,a):
 def rows_to_csv(path,rows):
     keys=list(rows[0]) if rows else []
     with open(path,'w',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=keys); w.writeheader(); w.writerows(rows)
+        w=csv.DictWriter(f,fieldnames=keys,lineterminator='\n'); w.writeheader(); w.writerows(rows)
 
 
 def run(kind,phase,do_rollouts=True):
