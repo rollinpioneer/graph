@@ -56,13 +56,18 @@ def main():
             x=[r for r in early if int(r['task'])==5];y=[r for r in late if int(r['task'])==5]
             if len(x)==len(y)==100 and all(r['complete']=='True' for r in x+y):
                 out=dict(kind='navigate',training_seed=seed,contrast='Task5_300k_minus_1M',task=5,**paired(x,y));contrasts.append(out);e=float(np.mean([int(r['success']) for r in x]))*100;l=float(np.mean([int(r['success']) for r in y]))*100
-                cn.append(dict(training_seed=seed,Task5_300k=e,Task5_1M=l,drop_pp=e-l,criterion=e>=30 and e-l>=20))
+                def stage_rate(step):
+                    rr=[r for r in cdata.get(('navigate','A',seed,step),[]) if r['task']=='5' and r['complete']=='True']
+                    return float(np.mean([int(r['success']) for r in rr]))*100 if len(rr)==100 else None
+                at100=stage_rate(100000);at500=stage_rate(500000)
+                description='CAPABILITY_ALREADY_LOST_BEFORE_300K_PRIMARY_WINDOW' if e<30 and at100 is not None and at100>=30 else 'CAPABILITY_NOT_ESTABLISHED_AT_PRIMARY_300K' if e<30 else 'PREREGISTERED_DECLINE_CRITERION_MET' if e-l>=20 else 'CAPABILITY_RETAINED_OR_PRIMARY_DROP_BELOW_20PP'
+                cn.append(dict(training_seed=seed,Task5_100k_descriptive=at100,Task5_300k=e,Task5_500k_descriptive=at500,Task5_1M=l,drop_pp=e-l,criterion=e>=30 and e-l>=20,stage_description=description))
     table(P/'results/C_PAIRED_CONTRASTS.csv',contrasts)
     nz=[x['drop_pp'] for x in cn]
     table(P/'results/C_N_DROP_SEED_SUMMARY.csv',[dict(n_training_seeds=len(nz),mean_drop_pp=float(np.mean(nz)) if nz else None,sample_sd_drop_pp=float(np.std(nz,ddof=1)) if len(nz)>1 else None,min_drop_pp=min(nz) if nz else None,max_drop_pp=max(nz) if nz else None,raw_drop_pp=json.dumps({str(x['training_seed']):x['drop_pp'] for x in cn}))])
     confirm=[x for x in cs if x['training_seed']>0]
     sc='PENDING' if len(confirm)!=2 else 'LARGE_DIFFERENCE_REPLICATED_TWO_SEEDS' if all(x['delta_pp']>=20 for x in confirm) else 'DIRECTION_CONSISTENT_MAGNITUDE_UNSTABLE' if all(x['delta_pp']>0 for x in confirm) else 'SEED_SENSITIVE_ORIGINAL_LARGE_GAP_UNSTABLE'
-    nc='PENDING' if len(cn)!=2 else 'DECLINE_REPLICATED_TWO_SEEDS' if all(x['criterion'] for x in cn) else 'EARLY_LEARNING_TIME_OR_PROBABILITY_SEED_DEPENDENT' if any(x['Task5_300k']<30 for x in cn) else 'SEED0_STAGE_DECLINE_UNSTABLE'
+    nc='PENDING' if len(cn)!=2 else 'DECLINE_REPLICATED_TWO_SEEDS' if all(x['criterion'] for x in cn) else 'PREREGISTERED_300K_TO_1M_PATTERN_SEED_DEPENDENT' if any(x['Task5_300k']<30 for x in cn) else 'SEED0_STAGE_DECLINE_UNSTABLE'
     summary=dict(C_S=dict(status=sc,all_seed_scores=cs,confirmation_seed_count=len(confirm),delta_mean_pp=float(np.mean([x['delta_pp'] for x in confirm])) if confirm else None,delta_sample_sd_pp=float(np.std([x['delta_pp'] for x in confirm],ddof=1)) if len(confirm)>1 else None,delta_range_pp=[min(x['delta_pp'] for x in confirm),max(x['delta_pp'] for x in confirm)] if confirm else None),C_N=dict(status=nc,confirmation=cn),note='Wilson and paired stratified bootstrap describe these fixed weights/scenes. Independent training units are new seeds1/2, not 500 episodes. Seed0 discovery scores on new scenes do not replace original03B scores.')
     write(P/'results/C_SUMMARY.json',summary)
     td={};ts=[];tc=[]
