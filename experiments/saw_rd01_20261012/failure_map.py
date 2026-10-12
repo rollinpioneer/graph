@@ -59,7 +59,7 @@ def build():
                      repeated_cell_visits=len(compressed)-unique,max_cell_visits=max(visit.values()),
                      revisit_fraction=(len(compressed)-unique)/max(1,len(compressed)),no_effect_steps=int(no_effect.sum()),
                      persistent_no_effect=bool((window>=8).any()),wall_no_effect_proxy_steps=int((wall&no_effect).sum()),
-                     wall_near_steps=int(wall.sum()),normal_small_action_steps=int((request<=config['min_requested_displacement']).sum()))
+                     wall_near_steps=int(wall.sum()),small_command_steps=int((request<=config['min_requested_displacement']).sum()))
             rows.append(row)
         from diagnose import rows_to_csv
         rows_to_csv(ROOT/'results'/f'{kind}_FAILURE_MAP.csv',rows)
