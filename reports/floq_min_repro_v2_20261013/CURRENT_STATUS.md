@@ -1,25 +1,21 @@
-# FLOQ monitoring handoff
+# Final FLOQ monitoring handoff
 
-Receipt snapshot (server time): 2026-10-14T05:01:11.464362.
+All registered training/evaluation tasks complete. Monitoring lab is PAUSED; the app update was verified.
 
-| Job | Updates | Delta from previous monitor | Phase | Matched checkpoints done |
-|---|---:|---:|---|---:|
-| FQL-0 | 1000000 | 0 | COMPLETE | 10 |
-| FQL-1 | 1000000 | 0 | COMPLETE | 10 |
-| GFP-0 | 1000000 | 0 | COMPLETE | 10 |
-| GFP-1 | 1000000 | 0 | COMPLETE | 10 |
-| floq-P1 | 5000 | 0 | P1_PASSED | 0 |
-| floq-0 | 1904600 | 167100 | TRAINING_RUNNING | 0 |
-| floq-1 | 1880000 | 165200 | NATIVE_EVALUATING | 0 |
+| Job | Updates | Final phase | Matched checkpoints complete |
+|---|---:|---|---:|
+| FQL-0 | 1000000 | COMPLETE | 10 |
+| FQL-1 | 1000000 | COMPLETE | 10 |
+| GFP-0 | 1000000 | COMPLETE | 10 |
+| GFP-1 | 1000000 | COMPLETE | 10 |
+| floq-P1 | 5000 | P1_PASSED | 0 |
+| floq-0 | 2000000 | COMPLETE | 0 |
+| floq-1 | 2000000 | COMPLETE | 0 |
 
-Inspection alerts: [].
+FLOQ: B - FUNCTIONAL_REPRODUCED. Frozen 2M native endpoints: seed0 98.0% / seed1 94.0%; equal mean 96.0%. Two seeds; author aggregation remains unverified.
 
-Manager alive: True. Unregistered account training/evaluation/GPU processes: 0.
+All 1M/2M checkpoint hashes verified; no NaN/Inf, numerical/entry failure or missing native episodes. No unregistered account training/evaluation/GPU process was found at the closing inspection. Q-Flow remains PAPER_REPRODUCTION_BLOCKED.
 
-Entry progress gives the current phase; manager status may lag by its polling interval. Evaluation pauses are normal. Checkpoints are scheduled at 1M and 2M. Early curves are intermediate observations, not the frozen 2M primary result.
+Formal GPU residence 12.5775 h; parallel wall time 6.3328 h. Full results: PERFORMANCE_REPORT.md; identity: REPRO_IDENTITY.md; costs: COST_REPORT.md; research conditions: RESEARCH_ADMISSION.md.
 
-Available system RAM 361.9 GiB; free disk 344.7 GiB. Whole-card GPU utilization includes other users.
-
-The 30-minute heartbeat remains ACTIVE. Q-Flow remains PAPER_REPRODUCTION_BLOCKED. Prior FQL/GFP scores are excluded from this new-card Git archive.
-
-Full trace: ROOT/receipts/monitor/latest.json; lightweight trace: patrols/20261014_0500.json.
+Final process inspection epoch: 1791927847.1100514. No training process was stopped to close monitoring or SSH. Prior FQL/GFP scores and old branches were not pushed.

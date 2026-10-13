@@ -1,0 +1,831 @@
+{
+  "created_epoch": 1791927725.4780354,
+  "source_commit": "3d60e638b42bbef018c56cb1199ff37c3470520d",
+  "classification": "B — FUNCTIONAL_REPRODUCED",
+  "primary_protocol": "FROZEN_2M_NATIVE_50",
+  "seeds": [
+    {
+      "seed": 0,
+      "step": 2000000,
+      "episodes": 50,
+      "successes": 49.0,
+      "success": 0.98,
+      "return_": -475.22,
+      "episode_length": 476.2,
+      "protocol": "FROZEN_2M_NATIVE_50"
+    },
+    {
+      "seed": 1,
+      "step": 2000000,
+      "episodes": 50,
+      "successes": 47.0,
+      "success": 0.94,
+      "return_": -531.44,
+      "episode_length": 532.38,
+      "protocol": "FROZEN_2M_NATIVE_50"
+    }
+  ],
+  "success": {
+    "mean": 0.96,
+    "std_ddof0": 0.020000000000000018,
+    "std_ddof1": 0.028284271247461926,
+    "seed_count": 2
+  },
+  "return_": {
+    "mean": -503.33000000000004,
+    "std_ddof0": 28.110000000000014,
+    "std_ddof1": 39.75354323830772,
+    "seed_count": 2
+  },
+  "author_reference": {
+    "task": "antmaze-large-task1(*)",
+    "success_percent_mean": 94,
+    "success_percent_dispersion": 4,
+    "seeds": 3,
+    "aggregation": "UNVERIFIED",
+    "source": "https://arxiv.org/html/2509.06863v2"
+  },
+  "formal_costs": [
+    {
+      "seed": 0,
+      "gpu": 3,
+      "start_epoch": 1791903795.4458125,
+      "end_epoch": 1791926299.7090082,
+      "gpu_residence_hours": 6.247936856018172,
+      "process_lifetime_hours": 6.251184221042527,
+      "cpu_user_seconds": 21784.5,
+      "cpu_system_seconds": 2715.62,
+      "cpu_total_hours": 6.805588888888889,
+      "mean_cpu_cores": 1.0886879426749483,
+      "gpu_peak_mib": 954,
+      "process_tree_rss_peak_bytes": 2094583808,
+      "native_evaluation_count": 101,
+      "native_episode_count": 5050,
+      "native_evaluation_seconds": 6129.720020055771,
+      "native_eval_median_seconds": 54.56256914138794,
+      "steady_logged_update_median_ms": 8.074359369277953,
+      "steady_logged_update_p10_ms": 7.922864151000978,
+      "steady_logged_update_p90_ms": 8.436633825302124,
+      "steady_window_count": 293,
+      "aggregate_non_eval_updates_per_second": 122.14081202389501
+    },
+    {
+      "seed": 1,
+      "gpu": 6,
+      "start_epoch": 1791903795.8975239,
+      "end_epoch": 1791926593.3794322,
+      "gpu_residence_hours": 6.329518121745851,
+      "process_lifetime_hours": 6.332633863422606,
+      "cpu_user_seconds": 22058.53,
+      "cpu_system_seconds": 2751.46,
+      "cpu_total_hours": 6.891663888888888,
+      "mean_cpu_cores": 1.0882776483723857,
+      "gpu_peak_mib": 954,
+      "process_tree_rss_peak_bytes": 2073051136,
+      "native_evaluation_count": 101,
+      "native_episode_count": 5050,
+      "native_evaluation_seconds": 6424.445343255997,
+      "native_eval_median_seconds": 60.372326612472534,
+      "steady_logged_update_median_ms": 8.073072528839113,
+      "steady_logged_update_p10_ms": 7.932447338104248,
+      "steady_logged_update_p90_ms": 8.372897148132324,
+      "steady_window_count": 293,
+      "aggregate_non_eval_updates_per_second": 122.15205115142386
+    }
+  ],
+  "formal_gpu_hours": 12.577454977764024,
+  "formal_wall_hours": 6.332759338816007,
+  "formal_cpu_hours": 13.697252777777777,
+  "p1_gpu_hours": 0.06663756635453966,
+  "p1_plus_formal_gpu_hours": 12.644092544118564,
+  "parameter_origins": "report/actual_parameter_origins.csv",
+  "dataset_identity": {
+    "ogbench": "1.1.2",
+    "files": [
+      {
+        "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/home/.ogbench/data/antmaze-large-navigate-v0.npz",
+        "resolved_path": "/home/xushijie3/work/flow_baselines_preflight_20261013/home/.ogbench/data/antmaze-large-navigate-v0.npz",
+        "bytes": 242877817,
+        "sha256": "2dbe946ac107ca5ac524f82f7a72efa951ceab0be915201d6b32e612d823f2e7"
+      },
+      {
+        "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/home/.ogbench/data/antmaze-large-navigate-v0-val.npz",
+        "resolved_path": "/home/xushijie3/work/flow_baselines_preflight_20261013/home/.ogbench/data/antmaze-large-navigate-v0-val.npz",
+        "bytes": 24302303,
+        "sha256": "e9a4126825faefb57c34c29f1ee423858dbc4b6f71d9a9846a8b8bdb908b44a1"
+      }
+    ],
+    "source": "Official OGBench download reused read-only from prior experiment"
+  },
+  "identities": [
+    {
+      "seed": 0,
+      "source_commit": "3d60e638b42bbef018c56cb1199ff37c3470520d",
+      "config_sha256": "8ed2f832d1e888f2b42a85d50bb56fa22b6e2db6519d4887fa3a2d643703adc6",
+      "initial_agent_tree_sha256": "993c0295b642cf3d19f38987e48bcd4c09fa4b2ed3bf90284d27786f0c65517a",
+      "initial_network_sha256": "72f11ad6def9abf6c99a1f2e8e271ff6d38dc747b5907445cea44d474a9760f2",
+      "matrix_precision": "None",
+      "x64": false,
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed0/cpu_time.txt",
+        "taskset",
+        "-c",
+        "35,41,48,47",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/bin/python",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/scripts/native_entry.py",
+        "--env_name=antmaze-large-navigate-singletask-v0",
+        "--agent=agents/floq.py",
+        "--agent.alpha=10",
+        "--offline_steps=2000000",
+        "--online_steps=0",
+        "--seed=0",
+        "--save_dir=/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed0/outputs",
+        "--project_name=CP_FLOQ",
+        "--run_group=FLOQ_MIN_REPRO_V2_P2",
+        "--eval_interval=20000",
+        "--eval_episodes=50",
+        "--save_interval=1000000"
+      ],
+      "environment_overrides": {
+        "HOME": "/home/xushijie3/work/floq_min_repro_v2_20261013/home",
+        "CUDA_VISIBLE_DEVICES": "3",
+        "LD_LIBRARY_PATH": "/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cuda_runtime/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cusparse/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/curand/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cudnn/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cufft/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cublas/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cuda_cupti/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cusolver/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/nccl/lib",
+        "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "WANDB_MODE": "offline"
+      },
+      "initial_jax_rng": [
+        4146024105,
+        967050713
+      ],
+      "initial_numpy_state_sha256": "d31d57a8ce5f0ec9d34cb79a83078172b7ae4ef50376e5c9ea57eb8aa264648a",
+      "initial_python_state_sha256": "58ae6fb433941c12f62693dbc475e5d07ed8e961a2ee47986acad525f9defd02",
+      "evaluation_environment": {
+        "spec_id": "antmaze-large-singletask-v0",
+        "max_episode_steps": 1000,
+        "observation_shape": [
+          29
+        ],
+        "action_shape": [
+          8
+        ],
+        "action_low": [
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        "action_high": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "task": {
+          "cur_task_id": 1,
+          "maze_map": [
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "train": {
+          "observations": {
+            "shape": [
+              1000000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "604fd26608194883900db31a7e6ee669920b701a1702d8ad9bb39f4b6696d1d2"
+          },
+          "actions": {
+            "shape": [
+              1000000,
+              8
+            ],
+            "dtype": "float32",
+            "sha256": "8ba93d52295e847730102477558e7d935a1c0a7f6a3c25c1d1a5f01aa2233125"
+          },
+          "terminals": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "ec40871edd0bab8564fcad1995fb25973023dd397cce23f1e92be44df6283a3b"
+          },
+          "next_observations": {
+            "shape": [
+              1000000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "6fc212b33f37a399259164e378e1fc8c7f622f1c61a5f4253e1b1fc22642580c"
+          },
+          "rewards": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "547bb27cd4051775a5477224ce062c0b468a1518f1e128d3df52d4fec585f102"
+          },
+          "masks": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "07bc024f1676016915c6deb18ca008e93d227b7c7a32c94098454285a81b4151"
+          }
+        },
+        "validation": {
+          "observations": {
+            "shape": [
+              100000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "dc299162c4064d139cc2e9b504834fb5cddf168edf0ef04757deacc050aaf8b9"
+          },
+          "actions": {
+            "shape": [
+              100000,
+              8
+            ],
+            "dtype": "float32",
+            "sha256": "a40f60bd86abbbc5b038ea5f53cd5dba6d66961d4797e23c4b5d95b842792586"
+          },
+          "terminals": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "95e6ed36cab45352f9c40a1b9f68ba0f831c64a8ab22aaaf19884012145ca0ae"
+          },
+          "next_observations": {
+            "shape": [
+              100000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "0aa8284a3ec91545abca9e9331812191f913c4dff03312615c10a058d781c6f9"
+          },
+          "rewards": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "265413cb9f7a9f6c3596ce19b04aaf47013f331dbed284484a7589c6da054256"
+          },
+          "masks": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "ac693c581eead6aa397ee16f9e64d6e45864462d34fc3d66c77bd4e5386d7674"
+          }
+        },
+        "rewards_min": -1.0,
+        "rewards_max": 0.0,
+        "eval_rng_initial": {
+          "bit_generator": "PCG64",
+          "state": {
+            "state": 138082702186094097429075642280065708399,
+            "inc": 123306640761932033792087715515293474427
+          },
+          "has_uint32": 0,
+          "uinteger": 0
+        }
+      },
+      "last_training_row": {
+        "training/actor/actor_loss": 87.13582,
+        "training/actor/bc_flow_loss": 0.2952549,
+        "training/actor/distill_loss": 0.019366715,
+        "training/actor/mse": 0.08565095,
+        "training/actor/q": -86.6469,
+        "training/actor/q_loss": 86.6469,
+        "training/critic/critic_loss": 8.791006,
+        "training/critic/distilled_critic_loss": 0.075729966,
+        "training/critic/floq_loss": 8.715276,
+        "training/critic/q": -86.75784,
+        "training/critic/td_error": 0.048662107,
+        "training/critic/var_flow_returns": 0.025643358,
+        "training/grad/max": 844.3513,
+        "training/grad/min": -1623.5197,
+        "training/grad/norm": 7438.8745,
+        "validation/actor/actor_loss": 86.65143,
+        "validation/actor/bc_flow_loss": 0.3170422,
+        "validation/actor/distill_loss": 0.026506133,
+        "validation/actor/mse": 0.08604027,
+        "validation/actor/q": -86.06933,
+        "validation/actor/q_loss": 86.06933,
+        "validation/critic/critic_loss": 13.586395,
+        "validation/critic/distilled_critic_loss": 0.14607292,
+        "validation/critic/floq_loss": 13.440321,
+        "validation/critic/q": -86.1649,
+        "validation/critic/td_error": 0.4471292,
+        "validation/critic/var_flow_returns": 0.041476224,
+        "time/epoch_time": 0.008010922956466675,
+        "time/total_time": 22422.68520259857,
+        "step": 2000000.0
+      }
+    },
+    {
+      "seed": 1,
+      "source_commit": "3d60e638b42bbef018c56cb1199ff37c3470520d",
+      "config_sha256": "8ed2f832d1e888f2b42a85d50bb56fa22b6e2db6519d4887fa3a2d643703adc6",
+      "initial_agent_tree_sha256": "899ce487731401bf47609d36182d729900047b2c02f42eb772c0f7c4adcc6dd7",
+      "initial_network_sha256": "f8f9972834653d0a21eac0a4f81957890811446da14786bad95090c38dd4bde8",
+      "matrix_precision": "None",
+      "x64": false,
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed1/cpu_time.txt",
+        "taskset",
+        "-c",
+        "111,34,36,44",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/bin/python",
+        "/home/xushijie3/work/floq_min_repro_v2_20261013/scripts/native_entry.py",
+        "--env_name=antmaze-large-navigate-singletask-v0",
+        "--agent=agents/floq.py",
+        "--agent.alpha=10",
+        "--offline_steps=2000000",
+        "--online_steps=0",
+        "--seed=1",
+        "--save_dir=/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed1/outputs",
+        "--project_name=CP_FLOQ",
+        "--run_group=FLOQ_MIN_REPRO_V2_P2",
+        "--eval_interval=20000",
+        "--eval_episodes=50",
+        "--save_interval=1000000"
+      ],
+      "environment_overrides": {
+        "HOME": "/home/xushijie3/work/floq_min_repro_v2_20261013/home",
+        "CUDA_VISIBLE_DEVICES": "6",
+        "LD_LIBRARY_PATH": "/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cuda_runtime/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cusparse/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/curand/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cudnn/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cufft/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cublas/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cuda_cupti/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/cusolver/lib:/home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/lib/python3.8/site-packages/nvidia/nccl/lib",
+        "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "WANDB_MODE": "offline"
+      },
+      "initial_jax_rng": [
+        2441914641,
+        1384938218
+      ],
+      "initial_numpy_state_sha256": "241610e7adf5abcac3c03703ba4450bd96e166c16fde2971f4e60621df01c932",
+      "initial_python_state_sha256": "95d9970691287f085063e90cc11c16fa228ad3243dc9fe01e2b9b865a290dec5",
+      "evaluation_environment": {
+        "spec_id": "antmaze-large-singletask-v0",
+        "max_episode_steps": 1000,
+        "observation_shape": [
+          29
+        ],
+        "action_shape": [
+          8
+        ],
+        "action_low": [
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        "action_high": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "task": {
+          "cur_task_id": 1,
+          "maze_map": [
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "train": {
+          "observations": {
+            "shape": [
+              1000000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "604fd26608194883900db31a7e6ee669920b701a1702d8ad9bb39f4b6696d1d2"
+          },
+          "actions": {
+            "shape": [
+              1000000,
+              8
+            ],
+            "dtype": "float32",
+            "sha256": "8ba93d52295e847730102477558e7d935a1c0a7f6a3c25c1d1a5f01aa2233125"
+          },
+          "terminals": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "ec40871edd0bab8564fcad1995fb25973023dd397cce23f1e92be44df6283a3b"
+          },
+          "next_observations": {
+            "shape": [
+              1000000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "6fc212b33f37a399259164e378e1fc8c7f622f1c61a5f4253e1b1fc22642580c"
+          },
+          "rewards": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "547bb27cd4051775a5477224ce062c0b468a1518f1e128d3df52d4fec585f102"
+          },
+          "masks": {
+            "shape": [
+              1000000
+            ],
+            "dtype": "float32",
+            "sha256": "07bc024f1676016915c6deb18ca008e93d227b7c7a32c94098454285a81b4151"
+          }
+        },
+        "validation": {
+          "observations": {
+            "shape": [
+              100000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "dc299162c4064d139cc2e9b504834fb5cddf168edf0ef04757deacc050aaf8b9"
+          },
+          "actions": {
+            "shape": [
+              100000,
+              8
+            ],
+            "dtype": "float32",
+            "sha256": "a40f60bd86abbbc5b038ea5f53cd5dba6d66961d4797e23c4b5d95b842792586"
+          },
+          "terminals": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "95e6ed36cab45352f9c40a1b9f68ba0f831c64a8ab22aaaf19884012145ca0ae"
+          },
+          "next_observations": {
+            "shape": [
+              100000,
+              29
+            ],
+            "dtype": "float32",
+            "sha256": "0aa8284a3ec91545abca9e9331812191f913c4dff03312615c10a058d781c6f9"
+          },
+          "rewards": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "265413cb9f7a9f6c3596ce19b04aaf47013f331dbed284484a7589c6da054256"
+          },
+          "masks": {
+            "shape": [
+              100000
+            ],
+            "dtype": "float32",
+            "sha256": "ac693c581eead6aa397ee16f9e64d6e45864462d34fc3d66c77bd4e5386d7674"
+          }
+        },
+        "rewards_min": -1.0,
+        "rewards_max": 0.0,
+        "eval_rng_initial": {
+          "bit_generator": "PCG64",
+          "state": {
+            "state": 304458183866430212102314418679076061393,
+            "inc": 196870884308243915838460309529564993419
+          },
+          "has_uint32": 0,
+          "uinteger": 0
+        }
+      },
+      "last_training_row": {
+        "training/actor/actor_loss": 89.20722,
+        "training/actor/bc_flow_loss": 0.33033994,
+        "training/actor/distill_loss": 0.019774627,
+        "training/actor/mse": 0.08297919,
+        "training/actor/q": -88.67914,
+        "training/actor/q_loss": 88.67914,
+        "training/critic/critic_loss": 8.874338,
+        "training/critic/distilled_critic_loss": 0.1273487,
+        "training/critic/floq_loss": 8.746989,
+        "training/critic/q": -88.85777,
+        "training/critic/td_error": 0.058144223,
+        "training/critic/var_flow_returns": 0.041567974,
+        "training/grad/max": 807.5596,
+        "training/grad/min": -2365.7273,
+        "training/grad/norm": 7183.288,
+        "validation/actor/actor_loss": 87.45467,
+        "validation/actor/bc_flow_loss": 0.36584496,
+        "validation/actor/distill_loss": 0.026877817,
+        "validation/actor/mse": 0.08254139,
+        "validation/actor/q": -86.82005,
+        "validation/actor/q_loss": 86.82005,
+        "validation/critic/critic_loss": 12.399868,
+        "validation/critic/distilled_critic_loss": 0.112073384,
+        "validation/critic/floq_loss": 12.287794,
+        "validation/critic/q": -86.96811,
+        "validation/critic/td_error": 0.14323145,
+        "validation/critic/var_flow_returns": 0.042590387,
+        "time/epoch_time": 0.007984264278411866,
+        "time/total_time": 22711.77773165703,
+        "step": 2000000.0
+      }
+    }
+  ],
+  "anomalies": [],
+  "checkpoint_hashes_verified": true,
+  "matched_evaluation": "NOT_RUN_BY_THIS_FROZEN_CARD",
+  "baseline_admission": "Engineering and static Critic-interface admission; conditional research baseline",
+  "H1": "Not confirmed against author aggregation; descriptive two-seed endpoint result only",
+  "H2": "Static interfaces plus P1 probes verified; no replacement experiment",
+  "old_scores_excluded_from_this_git_archive": true,
+  "limits": [
+    "Two seeds instead of three; 50 episodes per endpoint",
+    "Author aggregation window unverified",
+    "Native evaluation scenes are not matched to prior FQL/GFP",
+    "GPU residency includes evaluation and shared-card time; not exclusive GPU kernel time",
+    "No causal Critic comparison or novel algorithm experiment"
+  ],
+  "automation_status": "PAUSED",
+  "automation_id": "lab",
+  "completion_inspection_epoch": 1791927847.1100514
+}
