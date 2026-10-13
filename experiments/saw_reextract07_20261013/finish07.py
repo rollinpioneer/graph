@@ -27,6 +27,9 @@ assert all(gone(j['pid']) for x in workflows for j in x['jobs'])
 assert all(gone(x['cpu_evaluation']['pid']) for x in workflows)
 ident=read(ROOT/'REFERENCE_AND_INIT_IDENTITY.json');cal=read(ROOT/'results/P_continuation/GATE_CALIBRATION.json')
 assert all(sha(x['reference']['path'])==x['reference']['sha256'] and sha(x['init_path'])==x['init_sha256'] for x in ident)
+assert all(sha(x['reference']['config_path'])==x['reference']['config_sha256'] for x in ident)
+dataset=read(ROOT/'receipts/DATA_IDENTITY.json');assert sha(dataset['path'])==dataset['actual_sha256']==dataset['expected_sha256']
+bank=read(ROOT/'EVALUATION_BANK.json');assert sha(bank['path'])==bank['sha256'] and sha(bank['distance_bank_path'])==bank['distance_bank_sha256'] and sha(bank['d06_core_path'])==bank['d06_core_sha256']
 assert all(sha(x['path'])==x['sha256'] for x in cal)
 for x in cal:
     c=np.load(x['path']);assert len(c['cost'])==16384 and np.isfinite(c['cost']).all()
@@ -134,6 +137,7 @@ resource_record=dict(status='ALL_EXPERIMENT_WORKERS_EXITED',snapshot_epoch=time.
 write(ROOT/'RESOURCE_AND_EXIT.json',resource_record)
 admin=read(ROOT/'receipts/ADMINISTRATIVE_CPU_AFFINITY.json');advance=read(ROOT/'receipts/ADVANCE_PROCESS.json')
 resource_record.update(administrative_CPU_monitoring_limitation=admin['limitation'],subsequent_administrative_CPU_affinity=[75],advance_driver_RSS_peak_bytes=advance['process_peak_RSS_bytes'],conservative_combined_RSS_peak_bound_bytes=resource_record['owned_RSS_peak_bytes']+advance['process_peak_RSS_bytes'],CPU_statistics_job_wall_seconds=sum(x.get('elapsed_seconds',0) for x in advance['jobs'] if x['script']=='analyze07.py'))
+resource_record['conservative_combined_RSS_peak_bound_scope']='Bound constructed from observed workflow peak plus idle driver peak; excludes unobserved transport-gap peak.'
 if (ROOT/'receipts/SSH_TRANSPORT_RECOVERY.json').exists():
     resource_record.update(SSH_transport_recovery=read(ROOT/'receipts/SSH_TRANSPORT_RECOVERY.json'),I_monitor_gap_start_epoch=workflows[0]['monitor_gap_start_epoch'],I_monitor_gap_end_epoch=workflows[0]['monitor_gap_end_epoch'],peak_resource_scope='Observed supervisor samples; no peak reconstructed for transport-related monitor gap. Administrative pre-binding core usage also unmeasured.',adopted_worker_native_exit_codes_unavailable=True,all_adopted_worker_completion_and_checkpoints_verified=True)
 assert resource_record['conservative_combined_RSS_peak_bound_bytes']<16*1024**3
