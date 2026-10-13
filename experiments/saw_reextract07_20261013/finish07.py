@@ -134,6 +134,8 @@ resource_record=dict(status='ALL_EXPERIMENT_WORKERS_EXITED',snapshot_epoch=time.
 write(ROOT/'RESOURCE_AND_EXIT.json',resource_record)
 admin=read(ROOT/'receipts/ADMINISTRATIVE_CPU_AFFINITY.json');advance=read(ROOT/'receipts/ADVANCE_PROCESS.json')
 resource_record.update(administrative_CPU_monitoring_limitation=admin['limitation'],subsequent_administrative_CPU_affinity=[75],advance_driver_RSS_peak_bytes=advance['process_peak_RSS_bytes'],conservative_combined_RSS_peak_bound_bytes=resource_record['owned_RSS_peak_bytes']+advance['process_peak_RSS_bytes'],CPU_statistics_job_wall_seconds=sum(x.get('elapsed_seconds',0) for x in advance['jobs'] if x['script']=='analyze07.py'))
+if (ROOT/'receipts/SSH_TRANSPORT_RECOVERY.json').exists():
+    resource_record.update(SSH_transport_recovery=read(ROOT/'receipts/SSH_TRANSPORT_RECOVERY.json'),I_monitor_gap_start_epoch=workflows[0]['monitor_gap_start_epoch'],I_monitor_gap_end_epoch=workflows[0]['monitor_gap_end_epoch'],peak_resource_scope='Observed supervisor samples; no peak reconstructed for transport-related monitor gap. Administrative pre-binding core usage also unmeasured.',adopted_worker_native_exit_codes_unavailable=True,all_adopted_worker_completion_and_checkpoints_verified=True)
 assert resource_record['conservative_combined_RSS_peak_bound_bytes']<16*1024**3
 
 scores=pd.read_csv(stats/'PRIMARY_WINDOW_SCORES.csv');contrasts=pd.read_csv(stats/'PAIRED_BLOCK_CONTRASTS.csv');local=pd.read_csv(stats/'DISTANCE_SUMMARY.csv');summary=pd.read_csv(stats/'TRAINING_BLOCK_DESCRIPTIVES.csv')
@@ -184,6 +186,8 @@ Y为300k/400k/500k三个点、五任务等权均分，单位百分数；差值�
 GPU驻留逐作业整段生命周期相加：P {Pseconds/3600:.4f}小时，I {Iseconds/3600:.4f}小时，II {IIseconds/3600:.4f}小时，总计{resource_record['total_conservative_GPU_hours']:.4f}小时。包含加载、JIT、门控、训练及保存；既有参照训练成本没有归零。CPU评价进程墙钟（含等待检查点）{resource_record['CPU_evaluation_process_wall_seconds_including_watch_idle']/3600:.3f}小时。自有显存峰值{resource_record['owned_GPU_peak_bytes']/1024**3:.3f}GiB，自有RSS峰值{resource_record['owned_RSS_peak_bytes']/1024**3:.3f}GiB，CPU核并集72–75。全部实验子进程已退出；最终Git发布后再记录SSH客户端真实退出。
 
 上述CPU并集来自正式训练/评价/分析工作进程的固定亲和性。前期管理shell/Git未纳入此工作进程监控；一次小型推送报告默认112个压缩线程，其实际同时使用核数未测，不能把这一阶段的管理开销宣称也已核验为4核以内。发现后shell及后续归档子进程绑定75，Git压缩显式1线程；原回执见receipts/ADMINISTRATIVE_CPU_AFFINITY.json。
+
+原SSH客户端结束后，三个独立会话的a0及CPU评价仍继续运行，监控/顺序管理进程退出。建立替代保活长会话，仅恢复管理并接管原进程，随后首次启动原计划a1。正式训练重启数0，原源码、Adam/RNG状态和结果保留。初始SSH工具会话5744的客户端已确认结束，替代会话79137用于后续执行和发布。监控中断区间未采样的资源峰值无法追溯；已接管进程的原生退出码未被原父进程收取，标为不可恢复，以完整500k状态、全部正式检查点、散列与实际进程退出核验完成，不伪造原生退出码0。上述显存/RSS峰值是已观测样本的峰值。
 
 轻量代码、配置、逐回合CSV、区间、审计、图与回执上传本分支；权重、银行、完整轨迹和日志留服务器，由[RAW_ARTIFACT_INDEX.json](RAW_ARTIFACT_INDEX.json)给路径、大小和SHA。最终提交及传输核验见本地交接材料。
 '''
