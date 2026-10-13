@@ -4,12 +4,12 @@
 
 固定官方 SHA：3d60e638b42bbef018c56cb1199ff37c3470520d。分支：[codex/floq-min-repro-v2-20261013](https://github.com/rollinpioneer/graph/tree/codex/floq-min-repro-v2-20261013)。服务器 ROOT：/home/xushijie3/work/floq_min_repro_v2_20261013。
 
-Snapshot 2026-10-13T23:37:37.006347 (server time).
+Snapshot 2026-10-14T00:01:28.930281 (server time).
 
 | Run | GPU | updates/2M | phase | own VRAM peak MiB |
 |---|---:|---:|---|---:|
-| floq-0 | 3 | 140000 | NATIVE_EVALUATING | 954 |
-| floq-1 | 6 | 149000 | TRAINING_RUNNING | 954 |
+| floq-0 | 3 | 255700 | TRAINING_RUNNING | 954 |
+| floq-1 | 6 | 260000 | NATIVE_EVALUATING | 954 |
 
 ## P1 工程证据
 
@@ -23,7 +23,7 @@ P1 原生评价耗时 104.96 秒；5k 训练循环日志耗时 153.16 秒，扣�
 
 Task1 作者参考94±4%，3 seeds；作者检查点聚合窗口尚未核实。按卡片授权冻结主结果为2M原生50回合，报告两个种子、均值、总体/样本标准差；不能使用最高分。完整训练之前不标记A/B/C，不声称完成论文复现。详见 EXECUTION_FREEZE.md 与 CRITIC_INTERFACES.md。
 
-已有FQL两个种子完成1M训练，正在Matched评价；GFP两个种子训练和Matched评价均完成。它们的不同更新数、配置/环境和评价口径是混杂因素，不单独归因于Critic。旧实验归档分支本轮不推送。
+已有FQL和GFP共四条1M训练及全部Matched评价均完成。它们的不同更新数、配置/环境和评价口径是混杂因素，不单独归因于Critic。旧实验归档分支本轮不推送。
 
 ## 定时监控与后续交接
 
