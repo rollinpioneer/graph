@@ -64,9 +64,9 @@ out=ROOT/'results'/f'{MODE}_STATISTICS';out.mkdir(exist_ok=False)
 export(out/'CHECKPOINT_SCORES.csv',score);export(out/'PRIMARY_WINDOW_SCORES.csv',taskstats);export(out/'PAIRED_BLOCK_CONTRASTS.csv',contrast)
 summaries=[]
 for a in arms:
-    vals=np.array([ys[r,a] for r in range(3)]);summaries.append(dict(series=f'a{a}',n=3,mean_percent=float(vals.mean()),sample_sd=float(vals.std(ddof=1)),minimum=float(vals.min()),maximum=float(vals.max()),raw_values=json.dumps(vals.tolist())))
+    vals=np.array([ys[r,a] for r in range(3)]);summaries.append(dict(series=f'a{a}',n=3,unit='percent',mean_value=float(vals.mean()),sample_sd=float(vals.std(ddof=1)),minimum=float(vals.min()),maximum=float(vals.max()),raw_values=json.dumps(vals.tolist())))
 for name,a,b in contrasts:
-    vals=np.array([ys[r,a]-ys[r,b] for r in range(3)]);summaries.append(dict(series=name,n=3,mean_percent=float(vals.mean()),sample_sd=float(vals.std(ddof=1)),minimum=float(vals.min()),maximum=float(vals.max()),raw_values=json.dumps(vals.tolist())))
+    vals=np.array([ys[r,a]-ys[r,b] for r in range(3)]);summaries.append(dict(series=name,n=3,unit='percentage_points',mean_value=float(vals.mean()),sample_sd=float(vals.std(ddof=1)),minimum=float(vals.min()),maximum=float(vals.max()),raw_values=json.dumps(vals.tolist())))
 export(out/'TRAINING_BLOCK_DESCRIPTIVES.csv',summaries)
 # Exact original 68 main common-support conditions (including 12 middle d6), with
 # target->distance->channel->start weighting and start-cluster bootstrap.
