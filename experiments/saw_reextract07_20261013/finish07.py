@@ -63,7 +63,7 @@ assert not episodes.duplicated(['block','arm','student_step','scene_id']).any()
 export(ROOT/'EPISODES.csv',episodes)
 for f in ['CHECKPOINT_SCORES.csv','PRIMARY_WINDOW_SCORES.csv','PAIRED_BLOCK_CONTRASTS.csv','TRAINING_BLOCK_DESCRIPTIVES.csv','DISTANCE_SUMMARY.csv','DISTANCE_CONTRASTS.csv','DISTANCE_START_CLUSTERS.csv']:
     assert not (ROOT/f).exists();shutil.copyfile(stats/f,ROOT/f)
-distance=pd.concat([pd.read_csv(ROOT/'results'/f'b{r}_a{a}_u500000_distance.csv') for r in range(3) for a in arms],ignore_index=True)
+distance=pd.concat([pd.read_csv(ROOT/'results'/f'b{r}_a{a}_u500000_distance.csv',keep_default_na=False) for r in range(3) for a in arms],ignore_index=True)
 assert len(distance)==len(arms)*3*93;export(ROOT/'DISTANCE_PROBE.csv',distance)
 local_errors=[]
 for row in distance.to_dict('records'):
