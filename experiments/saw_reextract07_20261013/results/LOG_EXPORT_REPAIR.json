@@ -1,0 +1,24 @@
+{
+  "kind": "PURE_LOG_EXPORT_REPAIR",
+  "live_a0_not_restarted": true,
+  "formal_updates_unchanged": true,
+  "optimizer_and_loss_math_unchanged": true,
+  "sampling_random_streams_unchanged": true,
+  "reference_unchanged": true,
+  "reason": "Region x/y -> row/column conversion was reversed in diagnostic CSV. Required actual tuple cost/tau and true trajectory IDs also added to logging.",
+  "old_source": {
+    "files": {
+      "/home/xushijie3/work/graph_saw_reextract07_20261013/experiments/saw_reextract07_20261013/common07.py": "362a93a6856c0c385cbb44b2154b116906ef014c18e876d41ad1d112acaaa72a",
+      "/home/xushijie3/work/graph_saw_reextract07_20261013/experiments/saw_reextract07_20261013/train07.py": "3001e5dd95d9a76fdbc214c9f35dfbcf0b4a920c7447e6f157c6f9212d46da6a"
+    },
+    "student_initialization": "exact sealed CPU arrays",
+    "post_P_changes": "optimizer finite check and detailed failure receipt only; loss/optimizer/sampler unchanged",
+    "matmul_precision": "highest"
+  },
+  "new_source_files": {
+    "/home/xushijie3/work/graph_saw_reextract07_20261013/experiments/saw_reextract07_20261013/common07.py": "362a93a6856c0c385cbb44b2154b116906ef014c18e876d41ad1d112acaaa72a",
+    "/home/xushijie3/work/graph_saw_reextract07_20261013/experiments/saw_reextract07_20261013/train07.py": "4c7ad04f84eafd4aa29cbbbeb34fefe22c562504f0c96f7c37592c96af61dc61"
+  },
+  "legacy_a0_plan": "Retain original CSV and replay exact base/F/R streams, verifying states at every saved checkpoint, to export corrected diagnostics on actually executed 25k tuples.",
+  "contribution_timing": "Loss CSV is pre-update; logged contributions are same batch after the update."
+}

@@ -41,7 +41,7 @@ def main(r,arm):
         path=directory/f'actor_{u}.pkl';dump(path,dict(params=p,actor_opt=o,student_step=u,reference=ident['reference'],reference_native_step=int(ref.network.step),student_rng=np.asarray(rng),sampler_state=sampler.state(),bank_sha256=bank['sha256'],tau=tau,matmul_precision='highest',source_commit=source_commit,source_files=source_files))
         cp=dict(block=r,arm=arm,step=u,path=str(path),sha256=sha(path),bytes=path.stat().st_size,formal_savepoint=formal,adam_count=int(o[0].count),reference_full_state_sha256=before,frozen_reference_exactly_unchanged=True,audit_tuple_count=256,audit_bank_sha256=sha(ap),awr_gradient_norm=an,waypoint_gradient_norm=wn,gradient_inner_product=dot,student_parameter_sha256=tree_sha(p),base_F_original_R_rng_state_sha256=hashlib.sha256(json.dumps(sampler.state()['generators'][:3],sort_keys=True).encode()).hexdigest())
         cps.append(cp);write(ROOT/'results'/f'{label}_checkpoints.json',cps)
-    log=open(ROOT/'results'/f'{label}_training.csv','x',newline='');fields=['block','arm','step','elapsed_seconds','loss','awr','waypoint','window_F_samples','window_R_samples','window_candidate_mean','window_max_batch_candidate_p99','window_candidate_max','window_unpadded_forward_pairs','F_awr_contribution','R_awr_contribution','F_wp_contribution','R_wp_contribution','F_awr_q05','F_awr_q50','F_awr_q95','R_awr_q05','R_awr_q50','R_awr_q95','F_wp_q05','F_wp_q50','F_wp_q95','R_wp_q05','R_wp_q50','R_wp_q95','data_action_norm_mean','teacher_action_norm_mean','student_action_norm_mean','goal_unique_fraction','goal_same_trajectory_fraction','goal_region_NW','goal_region_NE','goal_region_SW','goal_region_SE']
+    log=open(ROOT/'results'/f'{label}_training.csv','x',newline='');fields=['block','arm','step','elapsed_seconds','loss','awr','waypoint','window_F_samples','window_R_samples','window_candidate_mean','window_max_batch_candidate_p99','window_candidate_max','window_unpadded_forward_pairs','F_awr_contribution','R_awr_contribution','F_wp_contribution','R_wp_contribution','F_awr_q05','F_awr_q50','F_awr_q95','R_awr_q05','R_awr_q50','R_awr_q95','F_wp_q05','F_wp_q50','F_wp_q95','R_wp_q05','R_wp_q50','R_wp_q95','data_action_norm_mean','teacher_action_norm_mean','student_action_norm_mean','goal_unique_fraction','goal_same_trajectory_fraction','goal_region_NW','goal_region_NE','goal_region_SW','goal_region_SE','tau','F_cost_q05','F_cost_q50','F_cost_q95','R_cost_q05','R_cost_q50','R_cost_q95','supervision_raw_path','supervision_raw_sha256']
     writer=csv.DictWriter(log,fieldnames=fields,lineterminator='\n');writer.writeheader()
     window_candidates=window_forward=0;window_batches=0;window_p99=0.;window_max=0
     try:
@@ -68,8 +68,14 @@ def main(r,arm):
                     for name,wgt in [('awr',rho),('wp',omega)]:
                         for key,q in [('q05',.05),('q50',.5),('q95',.95)]:row[f'{branch}_{name}_{key}']=float(np.quantile(wgt[sl],q)) if len(wgt[sl]) else ''
                 # Region boundaries fixed from the audited 9x12 maze, diagnostic only.
-                cells=np.floor((b['high_actor_goals']+6)/4).astype(int)
+                cells=np.floor((b['high_actor_goals']+6)/4).astype(int)[:,::-1]
                 for reg in ('NW','NE','SW','SE'):row[f'goal_region_{reg}']=float(np.mean((cells[:,0]<=4 if reg[0]=='N' else cells[:,0]>4)&(cells[:,1]<=5 if reg[1]=='W' else cells[:,1]>5)))
+                cc=cost_fixed(ref,b['observations'],b['high_actor_goals']);row['tau']=tau
+                for branch,sl in masks.items():
+                    for key,q in [('q05',.05),('q50',.5),('q95',.95)]:row[f'{branch}_cost_{key}']=float(np.quantile(cc[sl],q)) if len(cc[sl]) else ''
+                rawpath=directory/f'SUPERVISION_{u}.pkl'
+                dump(rawpath,dict(step=u,indices=ix,cost=cc,tau=tau,source_trajectory_ids=np.searchsorted(data.terminal_locs,ix['i']),goal_trajectory_ids=np.searchsorted(data.terminal_locs,ix['goal']),goal_cells=cells,sampler_state=sampler.state(),source_files=source_files,loss_contributions_timing='same executed batch, post-update student; update loss CSV pre-update'))
+                row.update(supervision_raw_path=str(rawpath),supervision_raw_sha256=sha(rawpath))
                 writer.writerow(row);log.flush();window_candidates=window_forward=window_batches=0;window_p99=0.;window_max=0
             if u%100000==0:save(u)
         if step==500000:status='COMPLETE_500K'
