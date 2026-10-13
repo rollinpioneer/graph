@@ -82,6 +82,9 @@ Pmon=[read(q) for q in (ROOT/'receipts').glob('P_*_MONITOR.json')];assert len(Pm
 Pseconds=sum(x['conservative_gpu_seconds'] for x in Pmon);Iseconds=workflows[0]['conservative_gpu_seconds'];IIseconds=workflows[1]['conservative_gpu_seconds'] if both else 0
 resource_record=dict(status='ALL_EXPERIMENT_WORKERS_EXITED',snapshot_epoch=time.time(),P_GPU_seconds=Pseconds,I_GPU_seconds=Iseconds,II_GPU_seconds=IIseconds,total_conservative_GPU_seconds=Pseconds+Iseconds+IIseconds,total_conservative_GPU_hours=(Pseconds+Iseconds+IIseconds)/3600,GPU_accounting='Each owned GPU job entire child lifetime, includes loading/JIT/gates/checkpoints; sum across concurrent workers. Prior reference1M costs remain prior costs.',owned_GPU_peak_bytes=max([x['peak_owned_gpu_bytes'] for x in Pmon+workflows]),owned_RSS_peak_bytes=max([x.get('peak_rss_bytes',x.get('peak_owned_rss_bytes',0)) for x in Pmon+workflows]),CPU_affinity=[72,73,74,75],CPU_core_union_limit=4,CPU_evaluation_process_wall_seconds_including_watch_idle=sum(read(ROOT/'receipts'/f'{s}_EVALUATION_EXIT.json')['elapsed_seconds'] for s in phases),CPU_preparation_job_wall_seconds=read(ROOT/'RUN_APPENDIX.json')['seconds']+sum(x['elapsed_seconds'] for x in Pmon),CPU_log_replay_seconds=replay['elapsed_seconds'],counter=counter,time_cost_limits_removed=True,memory_and_scientific_count_caps_retained=True,SSH_closed=False,SSH_note='Session remains open for publishing. Actual client closure is recorded afterward in local publication receipt.',round_wall_seconds_so_far=time.time()-read(ROOT/'receipts/REGISTRATION.json')['start_epoch'])
 write(ROOT/'RESOURCE_AND_EXIT.json',resource_record)
+admin=read(ROOT/'receipts/ADMINISTRATIVE_CPU_AFFINITY.json');advance=read(ROOT/'receipts/ADVANCE_PROCESS.json')
+resource_record.update(administrative_CPU_monitoring_limitation=admin['limitation'],subsequent_administrative_CPU_affinity=[75],advance_driver_RSS_peak_bytes=advance['process_peak_RSS_bytes'],conservative_combined_RSS_peak_bound_bytes=resource_record['owned_RSS_peak_bytes']+advance['process_peak_RSS_bytes'],CPU_statistics_job_wall_seconds=sum(x.get('elapsed_seconds',0) for x in advance['jobs'] if x['script']=='analyze07.py'))
+assert resource_record['conservative_combined_RSS_peak_bound_bytes']<16*1024**3
 
 scores=pd.read_csv(stats/'PRIMARY_WINDOW_SCORES.csv');contrasts=pd.read_csv(stats/'PAIRED_BLOCK_CONTRASTS.csv');local=pd.read_csv(stats/'DISTANCE_SUMMARY.csv');summary=pd.read_csv(stats/'TRAINING_BLOCK_DESCRIPTIVES.csv')
 ys=finalgate['raw_window_scores'];rows=[]
@@ -98,7 +101,7 @@ report=f'''# SAW-REEXTRACT-07 执行报告
 
 **I 的 H-R 门{hdr}；{ii}。** 本轮完成 {len(arms)*3} 条各500k学生训练，共{execution['formal_updates']:,}正式更新，{len(episodes):,}完整评价回合（含750个来源A回合），{len(distance)}条封存局部轨迹、{counter['local_control_steps']:,}局部控制步。X未授权、未执行；未补跑或挑检查点。
 
-分支：[codex/saw-reextract-07-20261013](https://github.com/rollinpioneer/graph/tree/codex/saw-reextract-07-20261013))。来源基点6d16c1271b3fad563c58d9b2e34b48418b910860。用户后续明确“解除时间成本限制”；原GPU/CPU时限与成本预测门已撤销，500k、三个配对块、科学准入门、4核与12GiB显存/16GiB RSS/50GiB产物上限保留。
+分支：[codex/saw-reextract-07-20261013](https://github.com/rollinpioneer/graph/tree/codex/saw-reextract-07-20261013)。来源基点6d16c1271b3fad563c58d9b2e34b48418b910860。用户后续明确“解除时间成本限制”；原GPU/CPU时限与成本预测门已撤销，500k、三个配对块、科学准入门、4核与12GiB显存/16GiB RSS/50GiB产物上限保留。
 
 ## 正式结果
 
@@ -129,6 +132,8 @@ Y为300k/400k/500k三个点、五任务等权均分，单位百分数；差值�
 ## 资源与归档
 
 GPU驻留逐作业整段生命周期相加：P {Pseconds/3600:.4f}小时，I {Iseconds/3600:.4f}小时，II {IIseconds/3600:.4f}小时，总计{resource_record['total_conservative_GPU_hours']:.4f}小时。包含加载、JIT、门控、训练及保存；既有参照训练成本没有归零。CPU评价进程墙钟（含等待检查点）{resource_record['CPU_evaluation_process_wall_seconds_including_watch_idle']/3600:.3f}小时。自有显存峰值{resource_record['owned_GPU_peak_bytes']/1024**3:.3f}GiB，自有RSS峰值{resource_record['owned_RSS_peak_bytes']/1024**3:.3f}GiB，CPU核并集72–75。全部实验子进程已退出；最终Git发布后再记录SSH客户端真实退出。
+
+上述CPU并集来自正式训练/评价/分析工作进程的固定亲和性。前期管理shell/Git未纳入此工作进程监控；一次小型推送报告默认112个压缩线程，其实际同时使用核数未测，不能把这一阶段的管理开销宣称也已核验为4核以内。发现后shell及后续归档子进程绑定75，Git压缩显式1线程；原回执见receipts/ADMINISTRATIVE_CPU_AFFINITY.json。
 
 轻量代码、配置、逐回合CSV、区间、审计、图与回执上传本分支；权重、银行、完整轨迹和日志留服务器，由[RAW_ARTIFACT_INDEX.json](RAW_ARTIFACT_INDEX.json)给路径、大小和SHA。最终提交及传输核验见本地交接材料。
 '''
