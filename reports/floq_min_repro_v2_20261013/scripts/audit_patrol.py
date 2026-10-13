@@ -114,6 +114,26 @@ def audit(root, tag, previous_close_tag):
             x['config_hash_matches'] = hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest() == x['config_sha256']
             if not x['config_hash_matches']:
                 alerts.append(dict(job=j['job'], type='CONFIG_HASH_MISMATCH'))
+            x['checkpoint_identity_checks'] = []
+            index = p / 'checkpoint_index.jsonl'
+            for checkpoint in rows(index) if index.exists() else []:
+                check = dict(step=checkpoint['step'], path=checkpoint['path'],
+                             expected_bytes=checkpoint['bytes'], expected_sha256=checkpoint['sha256'])
+                try:
+                    weight = pathlib.Path(checkpoint['path']).resolve()
+                    weight.relative_to(p.resolve())
+                    digest = hashlib.sha256()
+                    with weight.open('rb') as stream:
+                        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                            digest.update(chunk)
+                    check.update(actual_bytes=weight.stat().st_size, actual_sha256=digest.hexdigest())
+                    check['matches'] = (check['actual_bytes'] == check['expected_bytes'] and
+                                        check['actual_sha256'] == check['expected_sha256'])
+                except (OSError, ValueError) as error:
+                    check.update(matches=False, error=str(error))
+                x['checkpoint_identity_checks'].append(check)
+                if not check['matches']:
+                    x['checkpoint_errors'].append(check)
             if step > 1000000 and x['checkpoint_count'] == 0:
                 alerts.append(dict(job=j['job'], type='DUE_1M_CHECKPOINT_MISSING'))
         for key in ['checkpoint_errors', 'nonfinite_loss_samples', 'last_csv_nonfinite', 'failure',
@@ -162,6 +182,9 @@ def audit(root, tag, previous_close_tag):
                 writer.writerow([z['step'], z['metrics']['success'], z['metrics']['episode.return'],
                                  z['episodes'], z['duration_seconds'], 'INTERMEDIATE_NOT_PRIMARY'])
         files.extend(rel + '/' + f for f in ['status.json', 'training_progress.json', 'native_curve.csv'])
+        if (p / 'checkpoint_index.jsonl').exists():
+            shutil.copy2(p / 'checkpoint_index.jsonl', d / 'checkpoint_index.jsonl')
+            files.append(rel + '/checkpoint_index.jsonl')
     text = ['# FLOQ monitoring handoff', '', 'Receipt snapshot (server time): ' + receipt['time_server'] + '.', '',
             '| Job | Updates | Delta from previous monitor | Phase | Matched checkpoints done |',
             '|---|---:|---:|---|---:|']
