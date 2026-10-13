@@ -250,12 +250,17 @@ for path,prior in registration['original_worktrees'].items():
     head=subprocess.check_output(['git','-C',path,'rev-parse','HEAD'],text=True).strip();state=subprocess.check_output(['git','-C',path,'status','--short'],text=True)
     actual=dict(head=head,status_count=len(state.splitlines()),status_sha256=hashlib.sha256(state.encode()).hexdigest());assert actual==prior;protected[path]=actual
 write(ROOT/'receipts/ORIGINAL_WORKTREE_PROTECTION.json',dict(status='PASS',original_worktrees=protected))
-raw=[]
+raw=[];pending_logs=set()
+for pid in [os.getpid(),advance['pid']]:
+    try:
+        q=Path(os.readlink(f'/proc/{pid}/fd/1'))
+        if q.is_file() and q.is_relative_to(ROOT/'runs'):pending_logs.add(str(q))
+    except OSError:pass
 for d in [ROOT/'runs',ROOT/'source_ref',ROOT/'results/P_continuation/runs']:
     for q in sorted(d.rglob('*')):
-        if q.is_file():raw.append(dict(path=str(q),sha256=sha(q),bytes=q.stat().st_size))
+        if q.is_file() and str(q) not in pending_logs:raw.append(dict(path=str(q),sha256=sha(q),bytes=q.stat().st_size))
 assert sum(x['bytes'] for x in raw)<50*1024**3
-write(ROOT/'RAW_ARTIFACT_INDEX.json',dict(raw_files=raw,total_new_raw_bytes=sum(x['bytes'] for x in raw),reference_files=[x['reference'] for x in ident],evaluation_bank=read(ROOT/'EVALUATION_BANK.json'),raw_outputs_stay_on_server=True))
+write(ROOT/'RAW_ARTIFACT_INDEX.json',dict(raw_files=raw,total_new_raw_bytes=sum(x['bytes'] for x in raw),reference_files=[x['reference'] for x in ident],evaluation_bank=read(ROOT/'EVALUATION_BANK.json'),raw_outputs_stay_on_server=True,pending_active_management_logs=sorted(pending_logs),requires_postprocess_seal_after_all_workers_exit=True))
 write(ROOT/'SOURCE_DEPENDENCY_INDEX.json',dict(official_saw_commit=read(ROOT/'RUN_APPENDIX.json')['official_saw_commit'],source_snapshots=[x for x in raw if str(ROOT/'source_ref')+'/' in x['path']],audited_environment_core=dict(path=bank['d06_core_path'],sha256=bank['d06_core_sha256']),locked_versions=read(ROOT/'RUN_APPENDIX.json')['versions'],reference_configs=[dict(path=x['reference']['config_path'],sha256=x['reference']['config_sha256']) for x in ident]))
 resource_record.update(final_export_seconds=time.time()-started,final_export_peak_RSS_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,new_round_bytes_snapshot=sum(q.stat().st_size for q in ROOT.rglob('*') if q.is_file()))
 assert resource_record['new_round_bytes_snapshot']<50*1024**3;write(ROOT/'RESOURCE_AND_EXIT.json',resource_record)
