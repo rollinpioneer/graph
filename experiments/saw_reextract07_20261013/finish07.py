@@ -67,7 +67,8 @@ for row in distance.to_dict('records'):
     assert sha(row['trace_path'])==row['trace_sha256']
     with open(row['trace_path'],'rb') as f:trace=pickle.load(f)
     xy=np.asarray(trace['states']);action=np.asarray(trace['actions']);raw=np.asarray(trace['raw_actions'])
-    assert len(action)==25 and len(xy)==26 and np.array_equal(np.clip(raw,-1,1),action)
+    assert 1<=len(action)<=25 and len(action)==row['steps'] and len(xy)==len(action)+1 and np.array_equal(np.clip(raw,-1,1),action)
+    assert len(action)==25 or row['terminated'] or row['truncated']
     cells=np.trunc((xy+6)/4).astype(int)[:,::-1];start=tuple(json.loads(row['start_cell']));firsts=[tuple(x) for x in json.loads(row['firsts'])]
     exited=[(i,tuple(c)) for i,c in enumerate(cells[1:],1) if tuple(c)!=start]
     first_exit=exited[0][1] if exited else None;correct=int(first_exit in firsts) if first_exit else 0
@@ -120,7 +121,7 @@ if oldcal.exists():
 write(oldcal,cal)
 write(ROOT/'P_RESULT_SELECTION.json',dict(authoritative_P_directory='results/P_continuation',authoritative_calibration='GATE_CALIBRATION.json',original_unadmitted_calibration='results/P_initial_unadmitted/GATE_CALIBRATION.json',initial_P_failure='P_ADMISSION.json',initial_budget_prediction='results/P_continuation/P_ADMISSION.json',time_cost_override='receipts/TIME_COST_AMENDMENT.json',original_budget_prediction_preserved=True,highest_precision_fixed_before_all_training_updates=True))
 
-counter=read(ROOT/'receipts/EVALUATION_COUNTER.json');assert counter['complete_episodes']==len(episodes) and counter['local_trajectories']==len(distance) and counter['local_control_steps']==len(distance)*25 and counter['technical_episodes']==0
+counter=read(ROOT/'receipts/EVALUATION_COUNTER.json');assert counter['complete_episodes']==len(episodes) and counter['local_trajectories']==len(distance) and counter['local_control_steps']==int(distance.steps.sum()) and counter['technical_episodes']==0
 assert counter['complete_episodes']<=12200 and counter['local_control_steps']<=32000
 assert all(read(ROOT/'results'/f'b{r}_a{a}_u{u}_evaluation.json')['independent_success_termination_recomputation'] for r in range(3) for a in arms for u in (100000,200000,300000,400000,500000))
 if not both:
