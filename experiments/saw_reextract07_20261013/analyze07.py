@@ -68,7 +68,7 @@ for a in arms:
 for name,a,b in contrasts:
     vals=np.array([ys[r,a]-ys[r,b] for r in range(3)]);summaries.append(dict(series=name,n=3,mean_percent=float(vals.mean()),sample_sd=float(vals.std(ddof=1)),minimum=float(vals.min()),maximum=float(vals.max()),raw_values=json.dumps(vals.tolist())))
 export(out/'TRAINING_BLOCK_DESCRIPTIVES.csv',summaries)
-# Exact original 68 main near/far common-support conditions, with the original
+# Exact original 68 main common-support conditions (including 12 middle d6), with
 # target->distance->channel->start weighting and start-cluster bootstrap.
 distance=pd.concat([pd.read_csv(ROOT/'results'/f'b{r}_a{a}_u500000_distance.csv') for r in range(3) for a in arms],ignore_index=True)
 main=distance[distance.bank=='main'].copy();main['channel']=main.firsts.map(lambda z:json.dumps(json.loads(z)[0],separators=(',',':')));main['start_key']=main.start_cell.map(lambda z:json.dumps(json.loads(z),separators=(',',':')))
@@ -91,7 +91,7 @@ for r in range(3):
             v=np.mean(channels,axis=0);values.append(v);startrows.append(dict(block=r,arm=a,start_cell=st,near_CBR=float(v[0]),far_CBR=float(v[1])))
         values=np.asarray(values);localpoints[r,a]=values.mean(axis=0);bo=values[draw].mean(axis=1)
         for i,band in enumerate(('near','far')):
-            lo,hi=np.quantile(bo[:,i],[.025,.975]);localrows.append(dict(block=r,arm=a,band=band,CBR=float(values[:,i].mean()),start_cluster_ci_low=float(lo),start_cluster_ci_high=float(hi),start_clusters=8,common_conditions=68))
+            lo,hi=np.quantile(bo[:,i],[.025,.975]);localrows.append(dict(block=r,arm=a,band=band,CBR=float(values[:,i].mean()),start_cluster_ci_low=float(lo),start_cluster_ci_high=float(hi),start_clusters=8,common_conditions=68,near_far_conditions=56,middle_d6_conditions_excluded_from_near_far=12))
 local_contrasts=[]
 for r in range(3):
     rng=np.random.default_rng(29101307+r);draw=rng.integers(0,8,size=(5000,8))

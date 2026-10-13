@@ -7,7 +7,7 @@ phase=sys.argv[1];assert phase in ('I','II')
 auth=json.loads((ROOT/'receipts/AUTHORIZATION.json').read_text());assert auth['time_cost_limits_removed'] and auth[phase]
 if phase=='II':assert json.loads((ROOT/'results/I_GATE.json').read_text())['H_R_pass']
 ledger=ROOT/'receipts'/f'{phase}_WORKFLOW_MONITOR.json';assert not ledger.exists()
-arms=[0,1] if phase=='I' else [2,3];slots={r:list(arms) for r in range(3)};jobs=[];running={};cpu=None;cpu_job=None;start=time.time();peakrss=peakgpu=0;reason=None
+arms=[0,1] if phase=='I' else [2,3];slots={r:list(arms) for r in range(3)};jobs=[];running={};cpu=None;cpu_job=None;start=time.time();peakrss=peakgpu=0;reason=None;last_file_check=0;new_bytes=0
 def save(p,x):
     tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(x,indent=2)+'\n');tmp.replace(p)
 def launch(r,a):
@@ -44,12 +44,12 @@ while running:
         elif slots[r] and not reason:launch(r,slots[r].pop(0))
     # Evaluation code is separately committed and frozen before a ready receipt appears.
     ready=ROOT/'receipts/EVAL_CODE_READY.json'
-    if phase=='I' and cpu is None and ready.exists() and not reason:
+    if cpu is None and ready.exists() and not reason:
         info=json.loads(ready.read_text());assert hashlib.sha256((ROOT/'evaluate07.py').read_bytes()).hexdigest()==info['evaluate_sha256']
-        f=open(ROOT/'runs/I_evaluate.log','x');env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES='',JAX_PLATFORMS='cpu',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',XLA_FLAGS='--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1')
-        cpu=subprocess.Popen([sys.executable,'evaluate07.py','--phase','I','--watch'],cwd=ROOT,env=env,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
+        f=open(ROOT/'runs'/f'{phase}_evaluate.log','x');env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES='',JAX_PLATFORMS='cpu',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',XLA_FLAGS='--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1')
+        cpu=subprocess.Popen([sys.executable,'evaluate07.py','--phase',phase,'--watch'],cwd=ROOT,env=env,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
         cpu_job=dict(pid=cpu.pid,start_epoch=time.time(),status='RUNNING',cpu=[75]);cpu_log=f
-    if cpu and cpu.poll() is not None:
+    if cpu and cpu.poll() is not None and cpu_job['status']=='RUNNING':
         cpu_log.close();cpu_job.update(exit_code=cpu.returncode,elapsed_seconds=time.time()-cpu_job['start_epoch'],child_exited=True,status='COMPLETE' if cpu.returncode==0 else 'FAILED')
         if cpu.returncode:reason='CPU_EVALUATION_FAILED';stop_all()
     roots=[p.pid for p,_,_ in running.values()]+([cpu.pid] if cpu and cpu.poll() is None else [])
@@ -61,10 +61,13 @@ while running:
             if int(pid) in ids:gpu+=int(mem)*1024**2
     except Exception as exc:reason='GPU_MONITOR_UNAVAILABLE:'+repr(exc)
     peakrss=max(peakrss,rss);peakgpu=max(peakgpu,gpu)
+    if time.time()-last_file_check>=30:
+        new_bytes=sum(p.stat().st_size for p in ROOT.rglob('*') if p.is_file());last_file_check=time.time()
+    if new_bytes>50*1024**3:reason='NEW_ARTIFACT_BYTES_CAP'
     if gpu>12*1024**3:reason='OWNED_AGGREGATE_GPU_MEMORY_CAP'
     if rss>16*1024**3:reason='OWNED_AGGREGATE_RSS_CAP'
     if reason:stop_all()
-    save(ledger,dict(phase=phase,status='STOPPING' if reason else 'RUNNING',reason=reason,start_epoch=start,elapsed_seconds=time.time()-start,jobs=jobs,cpu_evaluation=cpu_job,peak_owned_gpu_bytes=peakgpu,peak_owned_rss_bytes=peakrss,time_cost_limits_removed=True,conservative_gpu_seconds=sum(x.get('conservative_gpu_seconds',time.time()-x['start_epoch']) for x in jobs),CPU_union=[72,73,74,75]))
+    save(ledger,dict(phase=phase,status='STOPPING' if reason else 'RUNNING',reason=reason,start_epoch=start,elapsed_seconds=time.time()-start,jobs=jobs,cpu_evaluation=cpu_job,peak_owned_gpu_bytes=peakgpu,peak_owned_rss_bytes=peakrss,time_cost_limits_removed=True,conservative_gpu_seconds=sum(x.get('conservative_gpu_seconds',time.time()-x['start_epoch']) for x in jobs),CPU_union=[72,73,74,75],new_artifact_bytes_snapshot=new_bytes))
     time.sleep(5)
     if reason:
         for p,_,_ in running.values():
