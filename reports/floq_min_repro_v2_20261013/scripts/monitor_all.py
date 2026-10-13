@@ -6,6 +6,8 @@ import time
 import pathlib
 import subprocess
 import psutil
+import csv
+import math
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OLD = pathlib.Path('/home/xushijie3/work/flow_baselines_preflight_20261013')
@@ -88,10 +90,34 @@ def main():
                 except ValueError:
                     pass
         error = read(directory/'entry_failure.json') or read(directory/'numerical_failure.json')
+        matched_complete = sorted(int(p.name.split('_')[1]) for p in directory.glob('matched_*_final.json')
+                                  if read(p).get('returncode', 0) == 0)
+        flags = read(directory/'expanded_flags.json')
+        log_dir = pathlib.Path(flags.get('save_dir', progress.get('checkpoint_directory', str(directory))))
+        train_csv = log_dir/'train.csv'
+        csv_nonfinite = []
+        last_csv_step = None
+        if train_csv.exists():
+            with train_csv.open() as f:
+                rows = list(csv.DictReader(f))
+            if rows:
+                last_csv_step = rows[-1].get('step')
+                for key, value in rows[-1].items():
+                    try:
+                        if not math.isfinite(float(value)):
+                            csv_nonfinite.append(key)
+                    except (TypeError, ValueError):
+                        pass
+        checkpoints = directory/'checkpoint_index.jsonl'
+        checkpoint_count = len(checkpoints.read_text().splitlines()) if checkpoints.exists() else 0
         jobs.append(dict(job=label,path=str(directory),
                          status={k:status[k] for k in key_fields if k in status},
                          progress=progress, live_processes=live,
                          latest_native_evaluation=latest_eval,
+                         matched_completed_checkpoints=matched_complete,
+                         checkpoint_index_count=checkpoint_count,
+                         last_training_csv_step=last_csv_step,
+                         nonfinite_columns_in_latest_training_or_validation_row=csv_nonfinite,
                          failure=error if error else None))
     additional=[]
     for p in psutil.process_iter(['pid','username','name']):
@@ -124,7 +150,9 @@ def main():
     stamp=time.strftime('%Y%m%d_%H%M%S',time.localtime(now))
     p=d/(stamp+'.json')
     p.write_text(json.dumps(result,indent=2))
-    (d/'latest.json').write_text(json.dumps(result,indent=2))
+    temp=d/'latest.tmp'
+    temp.write_text(json.dumps(result,indent=2))
+    temp.replace(d/'latest.json')
     print(json.dumps(result,indent=2))
 
 

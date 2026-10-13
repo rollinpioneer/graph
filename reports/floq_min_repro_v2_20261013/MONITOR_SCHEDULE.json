@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "id": "lab",
+  "kind": "heartbeat",
+  "name": "Lab 全训练巡检",
+  "prompt": "监控 lab-xushijie3 上 xushijie3 账号所有仍在运行的训练和评价任务，包括 FQL/GFP 前轮与 FLOQ-MIN-REPRO-V2。遵循当前任务的 AGENTS.md：每轮只建立一个带保活的 SSH 长会话，复用后正常退出并确认本轮客户端结束，不通过停止实验清理连接。使用 /home/xushijie3/work/floq_min_repro_v2_20261013/envs/floq/bin/python 执行同根目录 scripts/monitor_all.py；读取 receipts/monitor/latest.json、receipts/queue.json、各 runs/status.json、training_progress.json、损失、原生评价与检查点索引。登记账号下其他发现的训练/评价/GPU 进程并检查其进展；仅查看其他用户的汇总资源占用。与上次回执比较，简明报告更新步数、训练/评价阶段、GPU 与内存、持续 NaN/Inf、进程退出、停滞或保存缺失以及任务完成，正常的编译和评价间隔不误报失败。记录可追溯轻量回执。FLOQ 正式范围固定 seeds 0/1 各 2M、online=0、官方 commit 3d60e638b42bbef018c56cb1199ff37c3470520d，无时间预算；P0/P1通过才启动已批准的 P2，由现有 run_manager.py 负责，不重复启动。最新资源规则是直接选择没有本账号进程、利用率和显存最空闲的卡，允许共享其他用户 GPU，保留显存余量。不得新增任务、补种子、延长训练、调参、改动旧实验或自动重启。Q-Flow 正式训练继续 PAPER_REPRODUCTION_BLOCKED。FLOQ 完成后按 EXECUTION_FREEZE.md 固定 2M 原生50回合主结果、保留全曲线及1M/2M检查点，生成身份、性能与成本、Critic接口及研究准入报告；两种子和作者聚合未核实的限制必须说明。轻量结果和相关代码仅归档到已登记新卡分支 codex/floq-min-repro-v2-20261013，明确暂存清单、正常提交推送后验证远端SHA；此前 FQL/Q-Flow/GFP 分支仍按明确禁止推送处理。同步本地 reports/floq_min_repro_v2_20261013 交接材料。全部登记训练和评价结束后给最终完成汇总并暂停本监控；若出现新的本账号任务则一并报告。",
+  "status": "ACTIVE",
+  "rrule": "FREQ=MINUTELY;INTERVAL=30",
+  "target_thread_id": "01a134ec-69a7-73f3-b590-392d2c849f65",
+  "created_at": 1791903592439,
+  "updated_at": 1791903592439
+}
