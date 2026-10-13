@@ -1,0 +1,53 @@
+{
+  "status": "FROZEN_BEFORE_ANY_CURRENT_MODEL_QUERY",
+  "sample_seed": 26061301,
+  "bootstrap_seed": 26061303,
+  "bootstrap_repetitions": 500,
+  "bootstrap_unit": "original_trajectory; identical F/R base indices retained",
+  "S1_pairs": 8192,
+  "S1_tuple_count": 16384,
+  "S1_unique_base_indices": 8157,
+  "S2_groups": 32,
+  "S2_eligible_groups": 25,
+  "S2_tuple_count": 1642,
+  "probe_cap": 32768,
+  "worst_case_count_including_six_model_consistency_and_ref_queries": 18602,
+  "source_dataset": {
+    "path": "/home/xushijie3/work/graph_saw_rd01_20261012/experiments/saw_rd01_20261012/vendor/data/pointmaze-large-stitch-v0.npz",
+    "sha256": "9add335e598e48ebc483447d61415a9755ffb738ddfc406cb9708b2a238992e8",
+    "bytes": 19930254
+  },
+  "frozen_bank_sha256": "dd135e2799c81fa10502be55176c94a6dab5fd3542674face7bd6a8762d0b639",
+  "native_sampler": "HGCDataset; card HGCDDataset is a spelling variation",
+  "S1": [
+    {
+      "branch": "F",
+      "path": "/home/xushijie3/work/graph_saw_distance06_20261013/experiments/saw_distance06_20261013/runs/S1_F_TUPLES.npz",
+      "sha256": "e7012243d3fd3084f67876a5e46391fb00031ed4b2fe8a0001618866e8031f9c",
+      "count": 8192
+    },
+    {
+      "branch": "R",
+      "path": "/home/xushijie3/work/graph_saw_distance06_20261013/experiments/saw_distance06_20261013/runs/S1_R_TUPLES.npz",
+      "sha256": "8315718d4b59eb01ff68c6b4291055a2c76073755a991eb65a07b20bea3f9b78",
+      "count": 8192
+    }
+  ],
+  "S2": {
+    "path": "/home/xushijie3/work/graph_saw_distance06_20261013/experiments/saw_distance06_20261013/runs/S2_TUPLES.npz",
+    "sha256": "5e20bb98251e87eeb67ded8928d024d7ff61473ef59ae30cc99755d9d341ba1b"
+  },
+  "S2_group_selection": "one lexicographic condition per start x near/far x region; round robin start if >32",
+  "S2_neighborhood_selection": "nearest representative per original trajectory, then nearest remaining; <=64; final distance/trajectory/index sort",
+  "S2_high_weight_direction_audit": "top quartile of each loss coefficient; continuous minimum cosine/max angle, no multimodality verdict",
+  "paired_checks": {
+    "shared_rng_consumption": true,
+    "shared_reward_masks_and_base": true,
+    "future_waypoint": true,
+    "random_waypoint": true,
+    "random_goals_valid": true
+  },
+  "seconds": 2.444448232650757,
+  "parameter_updates": 0,
+  "physical_control_steps": 0
+}

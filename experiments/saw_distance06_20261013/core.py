@@ -162,6 +162,11 @@ def model_entries():
 def load_agent(item):
     guard(); config = get_config().to_dict()
     if item['variant'] == 'B': config.update(actor_p_trajgoal=.5, actor_p_randomgoal=.5)
+    if 'config_path' in item:
+        source_config = json.loads(Path(item['config_path']).read_text())['config']
+        normalized = lambda v: json.loads(json.dumps(v, default=lambda x: x.tolist() if hasattr(x, 'tolist') else str(x)))
+        assert normalized(config) == normalized(source_config), 'FROZEN_CONFIG_MISMATCH'
+        assert sha(item['config_path']) == item['config_sha256']
     # Shape-only initialization is not a gradient update; no dataset sampling or optimizer step.
     agent = SAWAgent.create(item['seed'], np.zeros((1, 2), np.float32), np.zeros((1, 2), np.float32), config)
     with open(item['path'], 'rb') as f: saved = pickle.load(f)
