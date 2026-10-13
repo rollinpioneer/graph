@@ -4,12 +4,12 @@
 
 固定官方 SHA：3d60e638b42bbef018c56cb1199ff37c3470520d。分支：[codex/floq-min-repro-v2-20261013](https://github.com/rollinpioneer/graph/tree/codex/floq-min-repro-v2-20261013)。服务器 ROOT：/home/xushijie3/work/floq_min_repro_v2_20261013。
 
-Snapshot 2026-10-14T00:01:28.930281 (server time).
+Snapshot 2026-10-14T00:31:14.658761 (server time).
 
 | Run | GPU | updates/2M | phase | own VRAM peak MiB |
 |---|---:|---:|---|---:|
-| floq-0 | 3 | 255700 | TRAINING_RUNNING | 954 |
-| floq-1 | 6 | 260000 | NATIVE_EVALUATING | 954 |
+| floq-0 | 3 | 400300 | TRAINING_RUNNING | 954 |
+| floq-1 | 6 | 415500 | TRAINING_RUNNING | 954 |
 
 ## P1 工程证据
 
