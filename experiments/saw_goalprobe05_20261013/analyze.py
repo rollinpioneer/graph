@@ -44,6 +44,21 @@ def main():
             da=float(sf.loc[state_id,'A']);db=float(sf.loc[state_id,'B']);br=r[(r.seed==seed)&(r.state_id==state_id)&(r.goal_index==gi)&(r.variant=='B')].iloc[0]
             counter.append(dict(seed=seed,state_id=state_id,goal_index=gi,A_correct=int(row.A),B_correct=int(row.B),D_A=da,D_B=db,B_distinguishes_at_least_as_much_as_A=db>=da,B_correct_with_larger_D=bool(row.B and db>=da),B_category=br.category,is_supporting_divergence=bool(row.A and not row.B)))
     rows(ROOT/'PAIRED_CONTRASTS.csv',contrasts);rows(ROOT/'NEGATIVE_CONTROLS.csv',negative);rows(ROOT/'results/ALL_P1_PAIRED_TESTS.csv',counter);write(ROOT/'results/SUPPORT_GATES.json',gates)
+    score_uncertainty=[]
+    for seed in (0,1,2):
+        for group in ('P1','P2','P3'):
+            f=r[(r.seed==seed)&(r.group==group)];clusters=sorted(f.cluster.unique());rng=np.random.default_rng(9051302+seed*10+int(group[-1]));draws={'A':[],'B':[]}
+            per={v:[f[(f.cluster==c)&(f.variant==v)].correct.to_numpy(float) for c in clusters] for v in ('A','B')}
+            for k in range(10000):
+                selected=rng.integers(len(clusters),size=len(clusters))
+                for v in ('A','B'):draws[v].append(float(np.concatenate([per[v][i] for i in selected]).mean()))
+            for v in ('A','B'):score_uncertainty.append(dict(seed=seed,group=group,variant=v,CBR=float(f[f.variant==v].correct.mean()),CI95_low=float(np.quantile(draws[v],.025)),CI95_high=float(np.quantile(draws[v],.975)),clusters=len(clusters),training_seeds=1))
+    rows(ROOT/'results/SCORE_UNCERTAINTY.csv',score_uncertainty)
+    strat=[]
+    for (seed,group,source,variant),f in r.groupby(['seed','group','source','variant']):
+        sf=s[(s.seed==seed)&(s.group==group)&(s.source==source)&(s.variant==variant)&(s.goal_index==0)]
+        strat.append(dict(seed=int(seed),group=group,source=source,variant=variant,states=f.state_id.nunique(),goal_tests=len(f),CBR=float(f.correct.mean()),mean_goal_pair_D=float(sf.D_clipped.mean()),mean_action_norm=float(f.mean_action_norm.mean()),mean_displacement=float(f.displacement.mean()),wrong_channel=int((f.category=='wrong_channel').sum()),no_motion=int((f.category=='no_motion').sum())))
+    rows(ROOT/'results/SOURCE_STRATIFIED_RESULTS.csv',strat)
     offline=s[s.offline_alignment_status!='UNMEASURABLE'].copy();offline.to_csv(ROOT/'results/OFFLINE_ALIGNMENT.csv',index=False)
     descriptive=[]
     for group in ('P1','P2','P3'):
@@ -61,7 +76,9 @@ def main():
     fig,axes=plt.subplots(1,3,figsize=(12,4),sharey=True)
     for ax,group in zip(axes,['P1','P2','P3']):
         v=[x for x in contrasts if x['group']==group and x['metric']=='correct'];x=np.arange(3)
-        ax.bar(x-.18,[100*z['A'] for z in v],.36,label='A');ax.bar(x+.18,[100*z['B'] for z in v],.36,label='B');ax.set_xticks(x,['seed 0','seed 1','seed 2']);ax.set_title(group);ax.set_ylim(0,105);ax.set_ylabel('Correct first channel (%)');ax.legend()
+        for variant,dx in [('A',-.18),('B',.18)]:
+            estimates=[z for z in score_uncertainty if z['group']==group and z['variant']==variant];values=np.array([100*z['CBR'] for z in estimates]);low=np.array([100*z['CI95_low'] for z in estimates]);high=np.array([100*z['CI95_high'] for z in estimates]);ax.bar(x+dx,values,.36,yerr=[values-low,high-values],capsize=3,label=variant)
+        ax.set_xticks(x,['seed 0','seed 1','seed 2']);ax.set_title(group);ax.set_ylim(0,105);ax.set_ylabel('Correct first channel (%)');ax.legend()
     fig.suptitle('Local 25-step channel entry; does not measure distant task success');fig.tight_layout();fig.savefig(ROOT/'figures/CBR_BY_SEED_AND_CONTROL.png',dpi=180);plt.close(fig)
     fig,axes=plt.subplots(2,3,figsize=(12,7))
     for j,seed in enumerate((0,1,2)):
@@ -81,14 +98,16 @@ def main():
     for category in ('correct','wrong_channel','not_left_region','no_motion'):
         matches=candidates[candidates.category==category]
         if len(matches):choices.append(matches.iloc[0].to_dict())
-    fig,axes=plt.subplots(1,4,figsize=(16,4))
+    fig,axes=plt.subplots(1,4,figsize=(16,4));env=env_new();maze=env.unwrapped.maze_map.copy();env.close()
     for ax,category in zip(axes,('correct','wrong_channel','not_left_region','no_motion')):
         selected=[z for z in choices if z['category']==category]
         if not selected:ax.text(.5,.5,'No observed test in class',ha='center');ax.set_title(category);continue
-        c=selected[0];t=pickle.load(open(c['trace_path'],'rb'));xy=t['states'];ax.plot(xy[:,0],xy[:,1],'-o',ms=2,label='policy')
-        cells=t['route'];reference=np.array([[4*cell[1]-4,4*cell[0]-4] for cell in cells]);ax.plot(reference[:,0],reference[:,1],'--',alpha=.6,label='BFS reference');ax.scatter(t['initial']['qpos'][0],t['initial']['qpos'][1],s=60,marker='s');ax.set_aspect('equal');ax.set_title(f'{category}\n{c["variant"]} s{int(c["seed"])} {c["state_id"]} g{int(c["goal_index"])}');ax.legend()
+        c=selected[0];t=pickle.load(open(c['trace_path'],'rb'));xy=t['states'];start=t['initial']['qpos']
+        for cell in np.argwhere(maze==1):ax.add_patch(plt.Rectangle((4*cell[1]-6,4*cell[0]-6),4,4,color='.85',zorder=0))
+        ax.plot(xy[:,0],xy[:,1],'-o',ms=2,label='policy')
+        cells=t['route'];reference=np.array([[4*cell[1]-4,4*cell[0]-4] for cell in cells]);ax.plot(reference[:,0],reference[:,1],'--',alpha=.6,label='BFS reference');ax.scatter(start[0],start[1],s=60,marker='s');ax.set_xlim(start[0]-6,start[0]+6);ax.set_ylim(start[1]-6,start[1]+6);ax.set_aspect('equal');ax.set_title(f'{category}\n{c["variant"]} s{int(c["seed"])} {c["state_id"]} g{int(c["goal_index"])}');ax.legend()
     fig.suptitle('First lexicographic test per outcome class; no selection by best score');fig.tight_layout();fig.savefig(ROOT/'figures/REPRESENTATIVE_TRACES.png',dpi=180);plt.close(fig);write(ROOT/'results/REPRESENTATIVE_SELECTION.json',dict(rule='first lexicographic (seed,state_id,goal_index,variant) per P1 outcome class',selected=choices))
-    lines=['# SAW-GOALPROBE-05 mechanism verdict','',f'**{verdict}**','', 'All estimates use the preregistered first cell exit within at most 25 steps. No successful local exit means that the distant official task was completed.','', '| Seed | P1 A | P1 B | P1 A−B, pp (cluster 95% CI) | P2 A−B, pp | Gates 1/2/3 |','|---|---:|---:|---:|---:|---|']
+    lines=['# SAW-GOALPROBE-05 mechanism verdict','',f'**{verdict}**','', 'All estimates use the preregistered first cell exit within at most 25 steps. A successful local exit does not mean that the distant official task was completed.','', '| Seed | P1 A | P1 B | P1 A−B, pp (cluster 95% CI) | P2 A−B, pp | Gates 1/2/3 |','|---|---:|---:|---:|---:|---|']
     for g in gates:
         z=next(x for x in contrasts if x['seed']==g['seed'] and x['group']=='P1' and x['metric']=='correct')
         lines.append(f'| {g["seed"]} | {100*z["A"]:.2f}% | {100*z["B"]:.2f}% | {100*z["A_minus_B"]:.2f} [{100*z["CI95_low"]:.2f}, {100*z["CI95_high"]:.2f}] | {g["P2_CBR_delta_pp"]:.2f} | {g["gate1"]}/{g["gate2"]}/{g["gate3"]} |')
