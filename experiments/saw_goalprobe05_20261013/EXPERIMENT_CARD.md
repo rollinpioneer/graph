@@ -425,3 +425,7 @@ P2至少需要8个有效状态；若不足，同样不能声称负对照充分�
 - 独立工作区：`/home/xushijie3/work/graph_saw_goalprobe05_20261013`
 - 结果目录：`experiments/saw_goalprobe05_20261013`
 - 补充技术标准见 PREREGISTRATION.json，在加载查询本轮模型前冻结。
+
+## 14. 完成登记（条件与判据不变）
+
+64状态全部准入，6模型768次CPU局部测试完成；物理控制步21249，训练更新0、GPU0。H0未获支持；来源、负对照、反例、区间与复现边界见 HYPOTHESIS_VERDICT.md 和 REPRODUCTION_REPORT.md。完整轨迹留服务器。

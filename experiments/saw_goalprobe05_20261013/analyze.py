@@ -97,7 +97,7 @@ def main():
     choices=[];candidates=r[r.group=='P1'].sort_values(['seed','state_id','goal_index','variant'])
     for category in ('correct','wrong_channel','not_left_region','no_motion'):
         matches=candidates[candidates.category==category]
-        if len(matches):choices.append(matches.iloc[0].to_dict())
+        if len(matches):choices.append({k:(None if pd.isna(v) else v) for k,v in matches.iloc[0].to_dict().items()})
     fig,axes=plt.subplots(1,4,figsize=(16,4));env=env_new();maze=env.unwrapped.maze_map.copy();env.close()
     for ax,category in zip(axes,('correct','wrong_channel','not_left_region','no_motion')):
         selected=[z for z in choices if z['category']==category]
