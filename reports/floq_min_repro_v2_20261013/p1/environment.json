@@ -1,0 +1,266 @@
+{
+  "spec_id": "antmaze-large-singletask-v0",
+  "max_episode_steps": 1000,
+  "observation_shape": [
+    29
+  ],
+  "action_shape": [
+    8
+  ],
+  "action_low": [
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "action_high": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "task": {
+    "cur_task_id": 1,
+    "maze_map": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ]
+  },
+  "train": {
+    "observations": {
+      "shape": [
+        1000000,
+        29
+      ],
+      "dtype": "float32",
+      "sha256": "604fd26608194883900db31a7e6ee669920b701a1702d8ad9bb39f4b6696d1d2"
+    },
+    "actions": {
+      "shape": [
+        1000000,
+        8
+      ],
+      "dtype": "float32",
+      "sha256": "8ba93d52295e847730102477558e7d935a1c0a7f6a3c25c1d1a5f01aa2233125"
+    },
+    "terminals": {
+      "shape": [
+        1000000
+      ],
+      "dtype": "float32",
+      "sha256": "ec40871edd0bab8564fcad1995fb25973023dd397cce23f1e92be44df6283a3b"
+    },
+    "next_observations": {
+      "shape": [
+        1000000,
+        29
+      ],
+      "dtype": "float32",
+      "sha256": "6fc212b33f37a399259164e378e1fc8c7f622f1c61a5f4253e1b1fc22642580c"
+    },
+    "rewards": {
+      "shape": [
+        1000000
+      ],
+      "dtype": "float32",
+      "sha256": "547bb27cd4051775a5477224ce062c0b468a1518f1e128d3df52d4fec585f102"
+    },
+    "masks": {
+      "shape": [
+        1000000
+      ],
+      "dtype": "float32",
+      "sha256": "07bc024f1676016915c6deb18ca008e93d227b7c7a32c94098454285a81b4151"
+    }
+  },
+  "validation": {
+    "observations": {
+      "shape": [
+        100000,
+        29
+      ],
+      "dtype": "float32",
+      "sha256": "dc299162c4064d139cc2e9b504834fb5cddf168edf0ef04757deacc050aaf8b9"
+    },
+    "actions": {
+      "shape": [
+        100000,
+        8
+      ],
+      "dtype": "float32",
+      "sha256": "a40f60bd86abbbc5b038ea5f53cd5dba6d66961d4797e23c4b5d95b842792586"
+    },
+    "terminals": {
+      "shape": [
+        100000
+      ],
+      "dtype": "float32",
+      "sha256": "95e6ed36cab45352f9c40a1b9f68ba0f831c64a8ab22aaaf19884012145ca0ae"
+    },
+    "next_observations": {
+      "shape": [
+        100000,
+        29
+      ],
+      "dtype": "float32",
+      "sha256": "0aa8284a3ec91545abca9e9331812191f913c4dff03312615c10a058d781c6f9"
+    },
+    "rewards": {
+      "shape": [
+        100000
+      ],
+      "dtype": "float32",
+      "sha256": "265413cb9f7a9f6c3596ce19b04aaf47013f331dbed284484a7589c6da054256"
+    },
+    "masks": {
+      "shape": [
+        100000
+      ],
+      "dtype": "float32",
+      "sha256": "ac693c581eead6aa397ee16f9e64d6e45864462d34fc3d66c77bd4e5386d7674"
+    }
+  },
+  "rewards_min": -1.0,
+  "rewards_max": 0.0,
+  "eval_rng_initial": {
+    "bit_generator": "PCG64",
+    "state": {
+      "state": 288891710199921292205389941334642588309,
+      "inc": 178497964297737722426915774144661253333
+    },
+    "has_uint32": 0,
+    "uinteger": 0
+  }
+}
