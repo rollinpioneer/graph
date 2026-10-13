@@ -8,6 +8,12 @@ assert phase in ('P','I','II','CPU_PREP','CPU_EVAL')
 start=time.time(); cap={'P':1800,'I':1800,'II':2700,'CPU_PREP':14400,'CPU_EVAL':28800}[phase]
 rec=ROOT/'receipts'/f'{phase}_{Path(script).stem}_MONITOR.json'
 assert not rec.exists()
+previous=0
+if phase=='P':
+    for q in (ROOT/'receipts').glob('P_*_MONITOR.json'):
+        x=json.loads(q.read_text());assert x.get('child_exited'), 'PREVIOUS_P_STILL_RUNNING'
+        previous+=x['conservative_gpu_seconds']
+    cap-=previous;assert cap>0,'P_CUMULATIVE_BUDGET_EXHAUSTED'
 def save(x):
     q=rec.with_suffix('.tmp');q.write_text(json.dumps(x,indent=2)+'\n');q.replace(rec)
 def tree(pid):
@@ -50,6 +56,6 @@ while p.poll() is None:
     save(dict(phase=phase,status=status,pid=p.pid,start_epoch=start,elapsed_seconds=time.time()-start,peak_rss_bytes=peakrss,peak_owned_gpu_bytes=peakgpu,cpu_affinity=sorted(os.sched_getaffinity(0)),conservative_gpu_seconds=time.time()-start if phase in ('P','I','II') else 0))
     time.sleep(2)
 rc=p.wait();f.close();elapsed=time.time()-start
-save(dict(phase=phase,status=status if reason else ('COMPLETE' if rc==0 else 'FAILED'),reason=reason,exit_code=rc,pid=p.pid,child_exited=True,start_epoch=start,elapsed_seconds=elapsed,peak_rss_bytes=peakrss,peak_owned_gpu_bytes=peakgpu,cpu_affinity=sorted(os.sched_getaffinity(0)),conservative_gpu_seconds=elapsed if phase in ('P','I','II') else 0))
+save(dict(phase=phase,status=status if reason else ('COMPLETE' if rc==0 else 'FAILED'),reason=reason,exit_code=rc,pid=p.pid,child_exited=True,start_epoch=start,elapsed_seconds=elapsed,prior_same_phase_gpu_seconds=previous,peak_rss_bytes=peakrss,peak_owned_gpu_bytes=peakgpu,cpu_affinity=sorted(os.sched_getaffinity(0)),conservative_gpu_seconds=elapsed if phase in ('P','I','II') else 0))
 print('MONITOR_DONE',phase,rc,elapsed,flush=True)
 sys.exit(rc or (1 if reason else 0))

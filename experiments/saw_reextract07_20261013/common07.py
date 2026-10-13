@@ -9,6 +9,7 @@ MECH = Path('/home/xushijie3/work/graph_saw_mech04_20261013/experiments/saw_mech
 D06 = Path('/home/xushijie3/work/graph_saw_distance06_20261013/experiments/saw_distance06_20261013')
 sys.path.insert(0, str(OLD/'vendor/saw/impls'))
 import jax, jax.numpy as jnp, numpy as np, optax, flax.serialization, ogbench
+jax.config.update('jax_default_matmul_precision','highest')
 from agents.saw import SAWAgent, get_config
 from utils.datasets import Dataset, HGCDataset
 KEYS = ('modules_actor', 'modules_actor_goal_rep_def')
@@ -50,8 +51,16 @@ def load_ref(item):
     assert KEYS[0] in a.network.params and KEYS[1] in a.network.params
     return jax.device_put(a,jax.devices()[0])
 def fresh(r):
-    a=SAWAgent.create(71001300+r,np.zeros((1,2),np.float32),np.zeros((1,2),np.float32),get_config().to_dict())
-    p={k:a.network.params[k] for k in KEYS}; o=optax.adam(3e-4).init(p)
+    path=ROOT/'runs'/f'INIT_b{r}.pkl'
+    if path.exists():
+        identity=json.loads((ROOT/'REFERENCE_AND_INIT_IDENTITY.json').read_text())[r]
+        assert sha(path)==identity['init_sha256']
+        with open(path,'rb') as f:s=pickle.load(f)
+        p=jax.device_put(s['params']);assert tree_sha(p)==identity['four_arm_parameter_sha256'][0]
+    else:
+        a=SAWAgent.create(71001300+r,np.zeros((1,2),np.float32),np.zeros((1,2),np.float32),get_config().to_dict())
+        p={k:a.network.params[k] for k in KEYS}
+    o=optax.adam(3e-4).init(p)
     assert int(o[0].count)==0
     assert all(np.count_nonzero(np.asarray(x))==0 for x in jax.tree_util.tree_leaves((o[0].mu,o[0].nu)))
     return p,o
