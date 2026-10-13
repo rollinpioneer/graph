@@ -43,6 +43,15 @@ def goal_pairs(geom, c):
             if a[1]==b[1] and a[2]==1 and b[2]==2:controls.append(((a[1],a[0],b[0]),[a[0],b[0]]))
     return (min(pairs)[1] if pairs else None), (min(controls)[1] if controls else None)
 
+def export(bank,audit,accepted,e,geo):
+    table=[]
+    def js(x):return json.dumps(x,default=lambda v:int(v) if isinstance(v,np.integer) else v.tolist())
+    for item in bank:
+        for gi in (0,1):
+            goals=item['goals'];table.append(dict(state_id=item['state_id'],group=item['group'],cluster=item['cluster'],source=item['source'],source_path=item['source_path'],source_scene_id=item['source_scene_id'],snapshot_bank_sha256=sha(ROOT/'runs/FROZEN_BANK.pkl'),qpos=js(item['scene']['qpos']),qvel=js(item['scene']['qvel']),integration_sha256=hashlib.sha256(item['scene']['integration'].tobytes()).hexdigest(),reset_seed=item['scene']['reset_seed'],goal_index=gi,goal=js(goals[gi]),cell=js(item['cell']),goal_cell=js(item['goal_cells'][gi]),BFS_edges=geo.distances[tuple(item['goal_cells'][gi])][tuple(item['cell'])],first_channels=js(item['firsts'][gi]),reference_route=js(item['routes'][gi]),euclidean_distance=float(np.linalg.norm(goals[gi]-item['scene']['qpos'])),offline_index=item['offline_index'],offline_action=js(item['data_action']) if item['data_action'] is not None else 'UNMEASURABLE',admitted=item['admitted']))
+    rows(ROOT/'SCENE_AND_GOAL_BANK.csv',table);write(ROOT/'ADMISSION_AUDIT.json',dict(status='COMPLETE',policy_outputs_used=False,states=audit,accepted=accepted,group_counts={g:sum(x['admitted'] and x['group']==g for x in bank) for g in ('P1','P2','P3')},P1_junctions=len(set(x['cluster'] for x in bank if x['admitted'] and x['group']=='P1')),state_repeat_tolerance=1e-10,physics_controller=PREREG['controller']))
+    write(ROOT/'receipts/PREPARE_EXIT.json',dict(exit_code=0,epoch=time.time(),control_steps=json.loads((ROOT/'receipts/CONTROL_BUDGET.json').read_text())['used'],bank_sha256=sha(ROOT/'runs/FROZEN_BANK.pkl'),admission_sha256=sha(ROOT/'ADMISSION_AUDIT.json'),preregistration_sha256=sha(ROOT/'PREREGISTRATION.json')))
+
 def main():
     assert not (ROOT/'receipts/RESOURCE_START.json').exists(), 'NO_RERUN'
     write(ROOT/'receipts/RESOURCE_START.json',dict(epoch=time.time(),pid=os.getpid(),affinity=sorted(os.sched_getaffinity(0)),devices=[str(d) for d in jax.devices()],GPU_hours=0,GPU_MiB=0,new_training_updates=0))
@@ -100,12 +109,7 @@ def main():
         audit.append(dict(state_id=item['state_id'],group=item['group'],cluster=item['cluster'],restore_error=error,full_integration_repeat_exact=True,admitted=valid,goals=results,reason='PASS' if valid else 'REFERENCE_CHANNEL_NOT_ENTERED_WITHIN_25'))
         if valid:accepted.append(item['state_id'])
         guard()
-    table=[]
-    for item in bank:
-        for gi in (0,1):
-            goals=item['goals'];table.append(dict(state_id=item['state_id'],group=item['group'],cluster=item['cluster'],source=item['source'],source_path=item['source_path'],source_scene_id=item['source_scene_id'],snapshot_bank_sha256=sha(ROOT/'runs/FROZEN_BANK.pkl'),qpos=json.dumps(item['scene']['qpos'].tolist()),qvel=json.dumps(item['scene']['qvel'].tolist()),integration_sha256=hashlib.sha256(item['scene']['integration'].tobytes()).hexdigest(),reset_seed=item['scene']['reset_seed'],goal_index=gi,goal=json.dumps(goals[gi].tolist()),cell=json.dumps(item['cell']),goal_cell=json.dumps(item['goal_cells'][gi]),BFS_edges=geo.distances[tuple(item['goal_cells'][gi])][tuple(item['cell'])],first_channels=json.dumps(item['firsts'][gi]),reference_route=json.dumps(item['routes'][gi]),euclidean_distance=float(np.linalg.norm(goals[gi]-item['scene']['qpos'])),offline_index=item['offline_index'],offline_action=json.dumps(item['data_action'].tolist()) if item['data_action'] is not None else 'UNMEASURABLE',admitted=item['admitted']))
-    rows(ROOT/'SCENE_AND_GOAL_BANK.csv',table);write(ROOT/'ADMISSION_AUDIT.json',dict(status='COMPLETE',policy_outputs_used=False,states=audit,accepted=accepted,group_counts={g:sum(x['admitted'] and x['group']==g for x in bank) for g in ('P1','P2','P3')},P1_junctions=len(set(x['cluster'] for x in bank if x['admitted'] and x['group']=='P1')),state_repeat_tolerance=1e-10,physics_controller=PREREG['controller']))
-    write(ROOT/'receipts/PREPARE_EXIT.json',dict(exit_code=0,epoch=time.time(),control_steps=json.loads((ROOT/'receipts/CONTROL_BUDGET.json').read_text())['used'],bank_sha256=sha(ROOT/'runs/FROZEN_BANK.pkl'),admission_sha256=sha(ROOT/'ADMISSION_AUDIT.json'),preregistration_sha256=sha(ROOT/'PREREGISTRATION.json')))
+    export(bank,audit,accepted,e,geo)
     e.close();print('PREPARE_COMPLETE',len(bank),len(accepted),flush=True)
 
 if __name__=='__main__':main()

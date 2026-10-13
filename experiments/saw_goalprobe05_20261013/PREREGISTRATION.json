@@ -1,0 +1,75 @@
+{
+  "version": "SAW-GOALPROBE-05 supplement 1; frozen before any model query",
+  "seed": 9051301,
+  "bootstrap_seed": 9051302,
+  "bootstrap_draws": 10000,
+  "max_states": 64,
+  "max_models": 6,
+  "max_steps_per_rollout": 25,
+  "max_control_steps": 25000,
+  "CPU_wall_seconds": 14400,
+  "CPU_cores": [
+    72,
+    73,
+    74,
+    75
+  ],
+  "GPU_hours": 0,
+  "GPU_MiB": 0,
+  "training_updates": 0,
+  "initial_region": "official maze cell: nearest-center square, half-width 2; first cell exit determines channel; no post-exit correction changes first choice",
+  "P1": "first six lexicographically ordered degree>=3 cells with unique-first, different-channel equal-BFS-length goal pairs (prefer 3 then 2 then 4 edges), four states per junction",
+  "P1_offsets": [
+    [
+      -0.25,
+      -0.25
+    ],
+    [
+      -0.25,
+      0.25
+    ],
+    [
+      0.25,
+      -0.25
+    ],
+    [
+      0.25,
+      0.25
+    ]
+  ],
+  "P2": "same junctions, first lexicographically ordered shared unique initial channel; closest reachable goal at 1 edge and another at 2 edges",
+  "P2_offsets": [
+    [
+      -0.15,
+      -0.15
+    ],
+    [
+      -0.15,
+      0.15
+    ],
+    [
+      0.15,
+      -0.15
+    ],
+    [
+      0.15,
+      0.15
+    ]
+  ],
+  "offline_substitution": "fourth state per group/junction: nearest exact recorded qpos within radius .45 of cell center, qvel norm <=.1, nonterminal, observations exactly qpos; unique index; otherwise keep geometry fourth state",
+  "offline_alignment": "only substituted exact observed/qpos/qvel data record, index+action recorded; original dataset integration unknown and reconstructed physics marked; no nearest-neighbor alignment on other states",
+  "P3": "archived C stitch full initial snapshots, Task1/3, first four episodes in each of two streams; original official goal plus geometry goal with a different unique first channel if available, else same; minimize BFS distance mismatch then goal cell",
+  "P3_ambiguity": "all BFS optimal first channels are accepted; lexicographic canonical path used for controller and descriptive progress, never enters P1 mechanism decision",
+  "controller": "clip((center of canonical first neighboring cell - observation)/.2, -1,1); independent, no model queried; PointEnv is direct .2 position increment and zeroes qvel before stepping",
+  "admission": "both goals must physically enter a valid first channel within 25 steps; no A/B-dependent deletion/replacement; full restore <=1e-10 and deterministic replay <=1e-10",
+  "CPU_history_action_tolerance": 1e-06,
+  "state_restore_tolerance": 1e-10,
+  "no_motion_max_displacement": 0.1,
+  "small_clipped_action_norm": 0.1,
+  "support_gate_1": "seed1 and seed2 P1 CBR A-B >= .15 each",
+  "support_gate_2": "both seed1/2 P1 mean clipped goal-pair action L2 B < A AND among A-correct/B-incorrect paired goal tests, mean state L2 B < A; report raw sensitivity too; strict inequality has no invented minimum",
+  "support_gate_3": "both seed1/2 P2 CBR A-B < .15, used as conservative operational definition of no comparable general deficit; also report projected progress and P1-P2 interaction, small-action/no-motion counterexamples",
+  "uncertainty": "within training seed, paired cluster bootstrap resamples entire junction/source clusters and keeps all states, two goals, A/B together; percentile95%; three training seeds descriptive only",
+  "figures_selection": "first lexicographic (seed,state_id,goal_index,variant) test in each P1 correct/wrong_channel/not_left_region/no_motion class; all missing classes marked; additional paired divergences first per seed",
+  "exclusions": "physics/geometry only before policy; insufficient P1<16 or junctions<4 or P2<8 => descriptive only; all exclusions retained; no threshold/goal/window changes after freeze"
+}
