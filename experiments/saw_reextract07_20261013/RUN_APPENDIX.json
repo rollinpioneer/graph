@@ -1,5 +1,5 @@
 {
-  "status": "I_ADMITTED_AFTER_TIME_COST_LIMIT_REMOVAL",
+  "status": "COMPLETE_I_STOP_II_REGISTERED_H_R_GATE",
   "authorization_request": "Human user requested 执行; explicit P+I versus conditional II choice pending. No GPU computation authorized by this receipt.",
   "branch": "codex/saw-reextract-07-20261013",
   "base": "6d16c1271b3fad563c58d9b2e34b48418b910860",
@@ -81,5 +81,26 @@
   "final_P_results": "results/P_continuation/",
   "fresh_init_implementation": "Reload exact sealed INIT_b*.pkl and initialize a new Adam from those arrays for every arm/pilot.",
   "time_cost_amendment": "receipts/TIME_COST_AMENDMENT.json",
-  "job_schedule": "3 block workers: a0 then a1; conditionalII a2 then a3. GPU0 A100. Affinity72+r; CPU evaluator/monitor75. Combined4cores."
+  "job_schedule": "3 block workers: a0 then a1; conditionalII a2 then a3. GPU0 A100. Affinity72+r; CPU evaluator/monitor75. Combined4cores.",
+  "final_execution": {
+    "status": "COMPLETE_I_STOP_II_REGISTERED_H_R_GATE",
+    "P": "COMPLETE_WITH_RETAINED_ZERO_UPDATE_FAILURE_AND_REPAIR",
+    "I": "COMPLETE_SIX_500K_STUDENTS",
+    "II": "NOT_EXECUTED_H_R_GATE_FAILED",
+    "X": "NOT_AUTHORIZED_NOT_EXECUTED",
+    "formal_updates": 3000000,
+    "pilot_updates": 4000,
+    "pilot_weights_discarded": true,
+    "formal_restarts": 0,
+    "complete_episodes": 6450,
+    "source_A_episodes": 750,
+    "local_trajectories": 558,
+    "local_control_steps": 13950,
+    "student_checkpoint_selection": "All planned points; primary fixed average300k/400k/500k",
+    "time_cost_limits_removed": true,
+    "scientific_sample_and_memory_caps_retained": true
+  },
+  "original_time_cost_fields_are_historical_and_superseded": true,
+  "active_time_cost_limits": null,
+  "final_source_commit_before_export": "8ed06a4678a60bb3720930911992aaf7eed41dff"
 }
