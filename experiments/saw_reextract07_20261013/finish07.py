@@ -62,6 +62,28 @@ for f in ['CHECKPOINT_SCORES.csv','PRIMARY_WINDOW_SCORES.csv','PAIRED_BLOCK_CONT
     assert not (ROOT/f).exists();shutil.copyfile(stats/f,ROOT/f)
 distance=pd.concat([pd.read_csv(ROOT/'results'/f'b{r}_a{a}_u500000_distance.csv') for r in range(3) for a in arms],ignore_index=True)
 assert len(distance)==len(arms)*3*93;export(ROOT/'DISTANCE_PROBE.csv',distance)
+local_errors=[]
+for row in distance.to_dict('records'):
+    assert sha(row['trace_path'])==row['trace_sha256']
+    with open(row['trace_path'],'rb') as f:trace=pickle.load(f)
+    xy=np.asarray(trace['states']);action=np.asarray(trace['actions']);raw=np.asarray(trace['raw_actions'])
+    assert len(action)==25 and len(xy)==26 and np.array_equal(np.clip(raw,-1,1),action)
+    cells=np.trunc((xy+6)/4).astype(int)[:,::-1];start=tuple(json.loads(row['start_cell']));firsts=[tuple(x) for x in json.loads(row['firsts'])]
+    exited=[(i,tuple(c)) for i,c in enumerate(cells[1:],1) if tuple(c)!=start]
+    first_exit=exited[0][1] if exited else None;correct=int(first_exit in firsts) if first_exit else 0
+    assert correct==row['correct'] and first_exit==(tuple(json.loads(row['first_exit'])) if json.loads(row['first_exit']) is not None else None)
+    path=float(np.linalg.norm(np.diff(xy,axis=0),axis=1).sum());maximum=float(np.linalg.norm(xy-xy[0],axis=1).max())
+    assert abs(path-row['path_length'])<=1e-9 and abs(maximum-row['maximum_displacement'])<=1e-9
+    norm=np.linalg.norm(action,axis=1);assert abs(norm.mean()-row['mean_action_norm'])<=1e-9
+    def reversals(v):
+        return sum(np.linalg.norm(a)>.01 and np.linalg.norm(b)>.01 and np.dot(a,b)/(np.linalg.norm(a)*np.linalg.norm(b))<-.5 for a,b in zip(v[:-1],v[1:]))
+    dr=reversals(np.diff(xy,axis=0));ar=reversals(action)
+    repeat=sum(any(np.linalg.norm(xy[i]-xy[j])<=.1 for j in range(i-2)) for i in range(3,len(xy)))
+    assert dr==row['displacement_reversals'] and ar==row['action_reversals'] and repeat==row['repeated_visit_steps']
+    inferred=np.linalg.norm(xy[1:]-trace['goal_xy'],axis=1)<=1.0
+    assert np.array_equal(inferred,np.asarray(trace['termination_success'])[:,2].astype(bool))
+    local_errors.append(dict(block=row['block'],arm=row['arm'],condition_id=row['condition_id'],CBR_exact=True,flags_exact=True,clip_exact=True,morphology_exact=True,path_length_error=abs(path-row['path_length']),maximum_displacement_error=abs(maximum-row['maximum_displacement'])))
+export(ROOT/'LOCAL_INDEPENDENT_RECOMPUTATION.csv',pd.DataFrame(local_errors))
 legacy=pd.read_csv(ROOT/'results/LEGACY_A0_CORRECTED_SUPERVISION.csv')
 new=[]
 for r in range(3):
