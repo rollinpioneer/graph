@@ -1,7 +1,7 @@
 """Bounded own-process CPU phase; no intervention in other users' jobs."""
 import os, sys, time, json, subprocess, pathlib, signal
 root=pathlib.Path(__file__).resolve().parent
-phase=sys.argv[1];assert phase in ('prepare','signal_prepare','execute','signal','behavior_analysis','audit06','finalize')
+phase=sys.argv[1];assert phase in ('prepare','signal_prepare','execute','signal06','behavior_analysis','audit06','finalize')
 assert os.environ.get('CUDA_VISIBLE_DEVICES')=='' and os.environ.get('JAX_PLATFORMS')=='cpu'
 assert len(os.sched_getaffinity(0))<=4
 start=json.loads((root/'receipts/RESOURCE_START.json').read_text())['start_epoch']
