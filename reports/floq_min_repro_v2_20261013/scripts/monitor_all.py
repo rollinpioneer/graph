@@ -89,9 +89,25 @@ def main():
                     latest_eval=json.loads(lines[-1])
                 except ValueError:
                     pass
+        if latest_eval is None and (directory/'native_episodes.jsonl').exists():
+            records = (directory/'native_episodes.jsonl').read_text().splitlines()
+            if records:
+                old_eval = json.loads(records[-1])
+                latest_eval = dict(step=old_eval.get('training_updates'),
+                                   policy=old_eval.get('policy'),
+                                   episodes=len(old_eval.get('episodes', [])),
+                                   metrics=old_eval.get('metrics', {}))
+        loss_nonfinite = []
+        samples = directory/'loss_samples.jsonl'
+        if samples.exists():
+            for line in samples.read_text().splitlines():
+                row = json.loads(line)
+                for key, value in row.get('metrics', {}).items():
+                    if isinstance(value, (int, float)) and not math.isfinite(value):
+                        loss_nonfinite.append(dict(step=row.get('step'), metric=key))
         error = read(directory/'entry_failure.json') or read(directory/'numerical_failure.json')
         matched_complete = sorted(int(p.name.split('_')[1]) for p in directory.glob('matched_*_final.json')
-                                  if read(p).get('returncode', 0) == 0)
+                                  if read(p).get('exit_code', read(p).get('returncode')) == 0)
         flags = read(directory/'expanded_flags.json')
         log_dir = pathlib.Path(flags.get('save_dir', progress.get('checkpoint_directory', str(directory))))
         train_csv = log_dir/'train.csv'
@@ -109,13 +125,23 @@ def main():
                     except (TypeError, ValueError):
                         pass
         checkpoints = directory/'checkpoint_index.jsonl'
-        checkpoint_count = len(checkpoints.read_text().splitlines()) if checkpoints.exists() else 0
+        indices = [json.loads(line) for line in checkpoints.read_text().splitlines()] if checkpoints.exists() else []
+        checkpoint_count = len(indices)
+        checkpoint_errors = []
+        for index in indices:
+            path = pathlib.Path(index.get('checkpoint', index.get('path', '')))
+            if not path.is_file():
+                checkpoint_errors.append(dict(path=str(path), error='MISSING'))
+            elif index.get('bytes') is not None and path.stat().st_size != index['bytes']:
+                checkpoint_errors.append(dict(path=str(path), error='SIZE_MISMATCH'))
         jobs.append(dict(job=label,path=str(directory),
                          status={k:status[k] for k in key_fields if k in status},
                          progress=progress, live_processes=live,
                          latest_native_evaluation=latest_eval,
                          matched_completed_checkpoints=matched_complete,
                          checkpoint_index_count=checkpoint_count,
+                         indexed_checkpoint_errors=checkpoint_errors,
+                         nonfinite_loss_samples=loss_nonfinite,
                          last_training_csv_step=last_csv_step,
                          nonfinite_columns_in_latest_training_or_validation_row=csv_nonfinite,
                          failure=error if error else None))
@@ -127,7 +153,7 @@ def main():
             cmd = p.cmdline()
             programs = [s for s in cmd if s.endswith('.py')]
             appears_training = any(any(k in pathlib.Path(s).name.lower() for k in
-                                     ['train','main','learn','eval']) for s in programs)
+                                     ['train','main','learn','eval','native_entry']) for s in programs)
             if p.pid in own_gpu_pids or appears_training:
                 association = next((label for label,dir in roots if any(str(dir) in s for s in cmd)),None)
                 x = cpu_process(p)
