@@ -1,5 +1,15 @@
 """Verify immutable input assets, complete learners, own budgets, and sealed scene identity."""
 from preflight import *
+def assert_array_tree_equal(a,b):
+    if isinstance(a,dict):
+        assert isinstance(b,dict) and set(a)==set(b)
+        for key in a:assert_array_tree_equal(a[key],b[key])
+    elif isinstance(a,(list,tuple)):
+        assert isinstance(b,(list,tuple)) and len(a)==len(b)
+        for x,y in zip(a,b):assert_array_tree_equal(x,y)
+    else:
+        x=np.asarray(a);y=np.asarray(b)
+        assert x.shape==y.shape and x.dtype==y.dtype and np.array_equal(x,y)
 def main():
     checks=[];source=json.loads((ROOT/'receipts/TRAINING_SOURCE.json').read_text())
     for f in source['files']:assert sha(ROOT/f['path'])==f['sha256']
@@ -51,16 +61,45 @@ def main():
     checks.append('separate own residency, aggregate VRAM, scene hashes, episode/control step caps, no live guarded jobs')
     for p in list((ROOT/'results').glob('Ceval_*_episodes.csv'))+list((ROOT/'results').glob('Reval_*_episodes.csv'))+list((ROOT/'results').glob('Teval_*_episodes.csv')):
         rows=list(csv.DictReader(open(p)));assert len({r['scene_id'] for r in rows})==len(rows);assert max(float(r['initial_restore_error']) for r in rows)<=1e-10;assert all(int(r['steps'])<=1000 for r in rows)
+    tcps=[]
     if (ROOT/'receipts/T_AUTHORIZATION.json').exists() and json.loads((ROOT/'receipts/T_AUTHORIZATION.json').read_text())['approved']:
         tsrc=json.loads((ROOT/'receipts/T_TRAINING_SOURCE.json').read_text())
         for name,h in tsrc['files'].items():assert sha(ROOT/name)==h
         identity=json.loads((ROOT/'receipts/T_ACTUAL_UPDATE0.json').read_text());assert identity['status']=='PASS'
+        scene_identity=json.loads((ROOT/'results/T_SCENE_IDENTITIES.json').read_text());assert sha(scene_identity['path'])==scene_identity['sha256'];assert scene_identity['count']==500
+        with open(scene_identity['path'],'rb') as f:tscenes=pickle.load(f)
+        tscene_hash={x['scene_id']:digest(x) for x in tscenes};assert len(tscene_hash)==500
+        stream_path=ROOT/'results/T_SHARED_STREAM.json';stream=json.loads(stream_path.read_text());stream_sha=sha(stream_path)
+        old_stream=next(x for x in json.loads((ROOT/'LIGHT_MANIFEST.json').read_text())['files'] if x['relative']=='results/T_SHARED_STREAM.json');assert stream_sha==old_stream['sha256']
+        assert sha(stream['source']['path'])==stream['source']['sha256']
+        for chunk in stream['chunks']:assert sha(chunk['path'])==chunk['sha256']
+        with open(stream['source']['path'],'rb') as f:tref=pickle.load(f)
+        actor_keys=set(json.loads((ROOT/'results/T_CPU_ADMISSION.json').read_text())['trainable_keys']);actual_initial_hashes=[]
         for arm in range(4):
             p=ROOT/'results'/f'T{arm}_checkpoints.json'
             if p.exists():
+                steps=[]
                 for c in json.loads(p.read_text()):
                     assert sha(c['path'])==c['sha256'];assert c['frozen_parameters_and_reference_optimizer_equal'];assert c['actor_optimizer_count']==500000+c['step'];assert c['reference_native_step']==500001
+                    with open(c['path'],'rb') as f:s=pickle.load(f)
+                    assert s['student_step']==s['stream_cursor']==c['step'];assert s['stream_manifest_sha256']==stream_sha
+                    assert int(s['agent']['network']['step'])==s['reference_native_step']==500001
+                    assert int(s['actor_opt_state']['0']['count'])==500000+c['step']
+                    assert_array_tree_equal(s['agent']['network']['opt_state'],tref['agent']['network']['opt_state'])
+                    assert set(s['agent']['network']['params'])==set(tref['agent']['network']['params'])
+                    for key in s['agent']['network']['params']:
+                        if key not in actor_keys:assert_array_tree_equal(s['agent']['network']['params'][key],tref['agent']['network']['params'][key])
+                    for x in jax.tree_util.tree_leaves((s['agent'],s['actor_opt_state'])):
+                        a=np.asarray(x)
+                        if np.issubdtype(a.dtype,np.number):assert np.isfinite(a).all()
+                    if c['step']==0:actual_initial_hashes.append(hashlib.sha256(pickle.dumps((s['agent'],s['actor_opt_state'],s['actor_rng'],s['numpy_rng'],s['python_rng'],s['stream_cursor'],s['stream_manifest_sha256']),4)).hexdigest())
+                    steps.append(c['step'])
+                status=json.loads((ROOT/'results'/f'T{arm}_training_status.json').read_text());resource=json.loads((ROOT/'receipts'/f'T{arm}_resource.json').read_text())
+                tcps.append(dict(arm=arm,status=status['status'],student_updates=status['student_updates'],registered_stages=steps,resource_exit=resource['exit_code'],valid_complete_100k=status['status']=='COMPLETE_100K' and status['student_updates']==100000 and resource['exit_code']==0 and all(x in steps for x in (0,25000,50000,100000))))
+        assert actual_initial_hashes==identity['serialized_agent_actor_optimizer_rng_cursor_sha256'];assert len(set(actual_initial_hashes))==1
+        for p in (ROOT/'results').glob('Teval_*_episodes.csv'):
+            rows=list(csv.DictReader(open(p)));assert all(x['scene_sha256']==tscene_hash[x['scene_id']] for x in rows)
         checks.append('T actual same initial actor/full optimizer/RNG; frozen modules/reference states unchanged; inherited actor count and sealed stream identity')
-    write(ROOT/'results/FINAL_AUDIT.json',dict(status='PASS',checks=checks,C_learners=cps,C_all_six_complete=all(c['valid_complete_1M'] for c in cps),C_initial_seed_identity=[dict(kind=k,variant=v,seed=s,**x) for (k,v,s),x in initial_by_role.items()],used_residency_seconds=used,hard_limits_seconds=limits,R_control_steps=rc,source=source,SSH_cleanup='pending final publication; actual client exit recorded in local receipt after closing'))
+    write(ROOT/'results/FINAL_AUDIT.json',dict(status='PASS',checks=checks,C_learners=cps,C_all_six_complete=all(c['valid_complete_1M'] for c in cps),C_initial_seed_identity=[dict(kind=k,variant=v,seed=s,**x) for (k,v,s),x in initial_by_role.items()],T_learners=tcps,T_all_four_complete=len(tcps)==4 and all(x['valid_complete_100k'] for x in tcps),used_residency_seconds=used,hard_limits_seconds=limits,R_control_steps=rc,source=source,SSH_cleanup='pending final publication; actual client exit recorded in local receipt after closing'))
     print('FINAL_AUDIT_PASS',all(c['valid_complete_1M'] for c in cps))
 if __name__=='__main__':main()

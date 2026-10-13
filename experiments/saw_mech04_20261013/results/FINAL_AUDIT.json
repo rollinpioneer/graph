@@ -4,7 +4,8 @@
     "C startup source bytes unchanged",
     "all original light manifests and readonly checkpoint files unchanged",
     "actual GPU seed1/2 A/B update0 learner identity; all available CP counters, optimizer counts and states finite",
-    "separate own residency, aggregate VRAM, scene hashes, episode/control step caps, no live guarded jobs"
+    "separate own residency, aggregate VRAM, scene hashes, episode/control step caps, no live guarded jobs",
+    "T actual same initial actor/full optimizer/RNG; frozen modules/reference states unchanged; inherited actor count and sealed stream identity"
   ],
   "C_learners": [
     {
@@ -137,13 +138,68 @@
       "numpy_rng": "1958c9917b09d0e8d8a01ca3b876f3ba24d002cedeab948161205149e8fc856f"
     }
   ],
+  "T_learners": [
+    {
+      "arm": 0,
+      "status": "COMPLETE_100K",
+      "student_updates": 100000,
+      "registered_stages": [
+        0,
+        25000,
+        50000,
+        100000
+      ],
+      "resource_exit": 0,
+      "valid_complete_100k": true
+    },
+    {
+      "arm": 1,
+      "status": "COMPLETE_100K",
+      "student_updates": 100000,
+      "registered_stages": [
+        0,
+        25000,
+        50000,
+        100000
+      ],
+      "resource_exit": 0,
+      "valid_complete_100k": true
+    },
+    {
+      "arm": 2,
+      "status": "COMPLETE_100K",
+      "student_updates": 100000,
+      "registered_stages": [
+        0,
+        25000,
+        50000,
+        100000
+      ],
+      "resource_exit": 0,
+      "valid_complete_100k": true
+    },
+    {
+      "arm": 3,
+      "status": "COMPLETE_100K",
+      "student_updates": 100000,
+      "registered_stages": [
+        0,
+        25000,
+        50000,
+        100000
+      ],
+      "resource_exit": 0,
+      "valid_complete_100k": true
+    }
+  ],
+  "T_all_four_complete": true,
   "used_residency_seconds": {
     "C-S": 26264.7179851532,
     "C-N": 13750.597306966782,
-    "R": 520.1623675823212,
+    "R": 541.8135771751404,
     "C-EVAL": 1696.2658061981201,
-    "T": 0,
-    "T-EVAL": 0
+    "T": 1085.8858823776245,
+    "T-EVAL": 1233.2219972610474
   },
   "hard_limits_seconds": {
     "C-S": 39600,

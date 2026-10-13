@@ -29,11 +29,19 @@ def main():
     lines += ['', '若100k已成功而300k已失败，应描述为能力在主窗口之前已丢失，不能称从未学会；若300k→1M维持或改善，也不能用另一个早期阶段替换预登记主结论。']
     lines += ['',f'C-N预登记裁定：**{cs["C_N"]["status"]}**。判据固定300k成功≥30%并在1M下降≥20百分点；不事后替换为最好的早期阶段。', '', '全部任务、两流、Wilson区间、同场景成对bootstrap及成功→失败/反向转移见 C_TASK_SCORES.csv、C_STREAM_TASK_SCORES.csv / C_PAIRED_CONTRASTS.csv。跨训练seed的均值、样本标准差、范围及每个原始值见 C_TRAINING_SEED_SUMMARY.csv 与 C_N_DROP_SEED_SUMMARY.csv；新seed1/2确认与含seed0的观察性汇总分开。bootstrap按任务/流分层；它只描述固定权重的场景误差。真正独立训练确认单位仅seed1/2，seed0参与发现与设计，不用500回合冒称500独立模型。旧03B同场景 Navigate A/B64.0%/73.2%、Stitch51.2%/3.6%保持原身份；本轮新场景seed0分数另列，不覆盖旧值。','', '## R 行为与监督追踪','', '完整详情见 R_AUDIT.md 及全部索引、负例、tuple/权重、梯度和物理可行性表。Navigate新保留10场景A300k9/10→A1M0/10。所有83锚点完整状态重放通过；Navigate近邻支持49/54、Stitch29/29。真实远目标不换，局部目标成功不等于原任务成功。','', 'R1在seed0同状态晚期行为损失上有条件支持；R2的损失来源根因仍未判定。价值/权重饱和、梯度余弦或动作差只能作解释线索，不能单独证明因果。','', '## T 有界干预','', f'T执行状态：**{ts["status"]}**。准备使用同Stitch-A500k起点、继承actor Adam计数500000，冻结参照模块与完整参照优化器；学生专用优化器独立保存。CPU准入只算梯度、0更新。候选流1024slot逐字节锁定，mask与两项损失分母相同；T0全未来，T1半未来/1024，T2半未来/512，T3半未来+半随机/1024。','']
     if ts['contrasts']:
+        tscores=read(P/'results/T_TASK_SCORES.csv');names={-1:'原A500k共同起点',0:'T0 F100',1:'T1 F50-mask',2:'T2 F50-renorm',3:'T3 F50+R50'}
+        lines += ['| T模型 | 五任务平均 | Task1 | Task2 | Task3 | Task4 | Task5 |','|---|---:|---:|---:|---:|---:|---:|']
+        for arm in (-1,0,1,2,3):
+            z=[x for x in tscores if int(x['arm'])==arm and int(x['student_step'])==(0 if arm==-1 else 100000)]
+            if len(z)==6:lines.append('|'+names[arm]+'|'+'|'.join(f"{float(next(x for x in z if int(x['task'])==t)['success_rate'])*100:.1f}%" for t in range(6))+'|')
+        lines += ['', '四臂实际起点权重、完整参照、学生优化器和随机状态一致；每个保存阶段直接重核冻结模块和参照优化器。学生100k时actor Adam计数600000，完整参照native计数保持500001，不当作1M联合训练。T训练启动源码f6f6b7fb851044de86b8fc4b793737a8253dd70a；源文件SHA见T_TRAINING_SOURCE.json。', '', '预登记竞争解释及其适用边界见T_INTERPRETATION.md；所有主任务与负面对照完整报告。', '']
         lines += ['| 终点对比 | Task | 差（百分点） | 成对95%区间 | 两流差 | 预定短效应门 |','|---|---:|---:|---|---|---|']
         lines += [f'|T{x["first_arm"]}−T{x["second_arm"]}|{x["task"]}|{x["difference_pp"]:+.1f}|[{x["ci95_low_pp"]:.1f},{x["ci95_high_pp"]:.1f}]|{x["group0_difference_pp"]:+.1f}/{x["group1_difference_pp"]:+.1f}|{x["meaningful_short_effect"]}|' for x in ts['contrasts'] if x['task'] in (1,3)]
     lines += ['', '即使T完成，仍只适用于共同seed0起点和冻结价值/教师下的100k干预，不等于完整联合A/B因果，也不触发重训练或新算法。25k/50k用于描述，不挑最优点。若未获单独批准，T按未执行归档，H1/H2未知。','', '## 身份、资源与复现边界','', f'累计驻留小时：{budget}；GPU合计{sum(budget[g] for g in ["C-S","C-N","T"]):.6f}，本轮自有GPU进程合计显存峰值{max((r["peak_aggregate_mib"] for r in resources),default=0)}MiB。预算C-S11、C-N5.5、T2.5分开计账；R和C评价各CPU4小时，T评价CPU独立列账。实际结束与源资产核验见 FINAL_AUDIT.json。','', '原官方代码3535a16c901e5de1233ac5a586401b3ddfa5e30d与数据只读；正式训练启动d77ca7d4c68d809058f273f6fdd4e23ea5e92703，TRAINING_SOURCE.json中四文件字节在结束重核。原配置回执sampler字符串残留“NumPy seed0”，实际源码init_agent(...,seed)使用1/2；以training_seed、update0完整RNG与源码为准，这是记录文字问题，不改运行权重/采样。','', 'Stitch依然是原作者协议近似，不能声称恢复原始专用训练协议或解释论文8%；本轮无新算法、不据结果择种子。原前置REASSESSMENT本地未发现，冻结事实已用03B原始材料核验。大型权重、轨迹、完整日志与索引流留服务器，RAW_ARTIFACT_INDEX.json登记路径/SHA；轻量代码、配置、全部分母/成绩、资源与负例归档当前分支，不合并、不强推。']
+    if (P/'receipts/T_AUDIT_REPRESENTATION_REPAIR.json').exists():
+        lines += ['', '只读最终审计首轮用pickle对象字节比较参考优化器，发生断言失败；原代码final_audit_pickle_attempt.py及R_T_final_audit回执保留。复核145个数值叶子无数值、形状或dtype变化后，改为逐数组严格相等检查；R_T_final_audit_v2重核全部四臂所有阶段通过。此为分析检查实现修正，无训练/评价/检查点重跑或修改；失败审计的CPU驻留也计入R。']
     (P/'REPRODUCTION_REPORT.md').write_text('\n'.join(lines)+'\n')
-    meaningful=[x for x in ts['contrasts'] if x['first_arm']==3 and x['second_arm']==1 and x['task'] in (1,3) and x['meaningful_short_effect'] and x['difference_pp']<0]
+    meaningful=[x for x in ts['contrasts'] if ts['status']=='FOUR_FINALS_COMPLETE' and x['first_arm']==3 and x['second_arm']==1 and x['task'] in (1,3) and x['meaningful_short_effect'] and x['difference_pp']<0]
     h2='SUPPORTED_CONDITIONALLY' if meaningful else 'UNKNOWN'
     verdict=['# 预登记假设裁定','', '| 假设 | 裁定 | 证据与边界 |','|---|---|---|', '|R1|SUPPORTED_CONDITIONALLY|seed0同状态动作分叉、50步行为损失及新10场景9→0；C跨seed阶段现象另表，不等于根因|', '|R2|UNKNOWN|native tuple、权重与梯度已测，相关性不足以指定AWR/Waypoint或权重的因果作用|', '|H1|UNKNOWN|未来曝光/剂量的纯因果解释不可由完整A/B单独判定；T全部对照如实列示|', f'|H2|{h2}|T3−T1主任务的预登记终点、两流、15pp及区间门；限一个共同起点，负向证据须结合R局部链，不能外推所有随机监督|', '|H3|UNKNOWN|局部动作/链与监督关联不等于特定失效根因；不同时扩展多个算法模块|','', f'C-S：{cs["C_S"]["status"]}；C-N：{cs["C_N"]["status"]}。C验证基础现象，不能代替H1/H2机制干预。全部反例见原表，未完成条件不当低分反例。']
     (P/'HYPOTHESIS_VERDICT.md').write_text('\n'.join(verdict)+'\n')
@@ -44,6 +52,9 @@ def main():
     elif stitch_stable:
         nexttext='优先解释仅保留：冻结参照下新增随机目标监督的净作用（仅在T达门时有条件支持）。' if meaningful else 'Stitch配置差异按两个新seed得到较强确认；目前没有单一损失根因获得因果确认，优先问题仅保留同未来监督条件下随机目标信号的净作用。'
         minimal='T未获批准时只待原四臂执行门，不追加算法或训练种子。T完成仍未形成明确效应则按UNKNOWN停止，不加训至出现差异。若形成预定短程负效应，最小后续是另卡核验同一干预在一个独立、已保存500k起点是否成立；须独立批准，不扩大为1M新方法。'
+        if ts['status']=='FOUR_FINALS_COMPLETE' and not meaningful:
+            nexttext='Stitch完整A/B差异在两个新seed确认；T在共同冻结起点未形成预设的主任务15pp净害门。任务间小幅负向/正向变化与区间完整保留，不能称没有变化或四臂等价；H1/H2对原完整联合训练主要原因仍UNKNOWN。'
+            minimal='本轮按短程未判定停止，不加训、换起点、调阈值或启动新算法；不以Task4或最好中间阶段替换Task1/3正式终点。若未来另立机制卡，最多围绕同未来监督下随机目标信号的净作用提出一个明确可证伪对照，并独立批准预算；当前不自动执行。'
     elif decline_stable:
         nexttext='Stitch的大幅采样差异尚不稳定，优先问题仅保留已学动作映射的训练阶段保持。不能用Stitch特定seed失败作为通用采样机制的基础。'
         minimal='下一步最多提出一个有界因果对照：从已经成功的固定早期Navigate起点，在同场景下比较冻结价值/教师的actor续训与未续训参照。另立卡和预算，不在本轮自动运行；不同时增加多个损失模块。'

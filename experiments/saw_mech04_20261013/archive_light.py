@@ -12,7 +12,7 @@ def main():
         for p in sorted((P/directory).rglob('*')):
             if p.is_file():raw.append(dict(path=str(p),relative=str(p.relative_to(P)),bytes=p.stat().st_size,sha256=sha(p)))
     (P/'RAW_ARTIFACT_INDEX.json').write_text(json.dumps(dict(server_root=str(P),files=raw),indent=2)+'\n')
-    rootnames=['.gitignore','.gitattributes','requirements.lock','EXPERIMENT_CARD_FROZEN.md','REQUESTED_CARD.md','FROZEN_RUN_APPENDIX.md','R_AUDIT.md','T_FROZEN_PROTOCOL.md','REPRODUCTION_REPORT.md','HYPOTHESIS_VERDICT.md','NEXT_DECISION.md','RAW_ARTIFACT_INDEX.json']
+    rootnames=['.gitignore','.gitattributes','requirements.lock','EXPERIMENT_CARD_FROZEN.md','REQUESTED_CARD.md','FROZEN_RUN_APPENDIX.md','R_AUDIT.md','T_FROZEN_PROTOCOL.md','T_INTERPRETATION.md','REPRODUCTION_REPORT.md','HYPOTHESIS_VERDICT.md','NEXT_DECISION.md','RAW_ARTIFACT_INDEX.json']
     files=[P/n for n in rootnames if (P/n).exists()]+sorted(P.glob('*.py'))
     for directory,extensions in [('results',{'.csv','.json'}),('receipts',{'.json'}),('figures',{'.png','.pdf'})]:
         files += [p for p in sorted((P/directory).glob('*')) if p.is_file() and p.suffix in extensions and not p.name.endswith('_active.json')]
