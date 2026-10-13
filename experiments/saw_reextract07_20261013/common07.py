@@ -85,7 +85,7 @@ def finite(x):return jnp.all(jnp.stack([jnp.all(jnp.isfinite(v)) for v in jax.tr
 def update(ref,p,o,b):
     (l,info),g=jax.value_and_grad(loss,argnums=1,has_aux=True)(ref,p,b)
     d,o=optax.adam(3e-4).update(g,o,p);p=optax.apply_updates(p,d)
-    return p,o,dict(info,loss=l,finite=finite((l,g,p)))
+    return p,o,dict(info,loss=l,finite=finite((l,g,p,o)))
 @jax.jit
 def cost(ref,s,g):
     v1,v2=ref.network.select('value')(s,g);return -(v1+v2)/2
@@ -122,7 +122,10 @@ class Sampler:
         pending=np.flatnonzero(~accepts(c));forward=len(i)
         # Fixed chunks of four per pending slot, take earliest accepted; consumption is saved.
         while len(pending):
-            assert np.all(used[pending]<4096), 'R_SLOT_UNFILLED'
+            if not np.all(used[pending]<4096):
+                path=ROOT/'runs'/f'R_SLOT_FAILURE_b{self.r}_step{self.cursor}_{"high" if high else "low"}.pkl'
+                dump(path,dict(indices=i,pending_slots=pending,candidate_counts=used,original_goals=g0,tau=tau,high=high,sampler_state=self.state()))
+                raise RuntimeError('R_SLOT_UNFILLED:'+str(path))
             chunk=min(4,int(4096-used[pending].max()))
             gi=self.random(self.extra,len(pending)*chunk).reshape(len(pending),chunk)
             cs=cost_fixed(ref,np.repeat(self.obs[i[pending]],chunk,axis=0),self.obs[gi.ravel()]).reshape(len(pending),chunk)

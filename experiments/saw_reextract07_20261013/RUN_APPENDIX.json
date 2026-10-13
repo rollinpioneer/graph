@@ -1,5 +1,5 @@
 {
-  "status": "P_ADMISSION_READY",
+  "status": "I_ADMITTED_AFTER_TIME_COST_LIMIT_REMOVAL",
   "authorization_request": "Human user requested 执行; explicit P+I versus conditional II choice pending. No GPU computation authorized by this receipt.",
   "branch": "codex/saw-reextract-07-20261013",
   "base": "6d16c1271b3fad563c58d9b2e34b48418b910860",
@@ -63,16 +63,23 @@
     "II": true,
     "II_scope_pending": false,
     "X": false,
-    "gpu_hours_cap": 8.0,
-    "P_hours_cap": 0.5,
-    "I_hours_cap": 3.0,
+    "gpu_hours_cap": null,
+    "P_hours_cap": null,
+    "I_hours_cap": null,
     "epoch": 1791868838.7185767,
-    "II_hours_cap": 4.5,
-    "full_approval_epoch": 1791869070.005076
+    "II_hours_cap": null,
+    "full_approval_epoch": 1791869070.005076,
+    "time_cost_limits_removed": true,
+    "time_cost_amendment_source": "Direct human instruction: 解除时间成本限制",
+    "time_cost_amendment_epoch": 1791871391.96316,
+    "cpu_preparation_hours_cap": null,
+    "cpu_evaluation_hours_cap": null
   },
   "matmul_precision": "highest",
   "P_repair_receipt": "results/P_NUMERICAL_REPAIR.json",
   "P_initial_failure_preserved": "P_ADMISSION.json",
   "final_P_results": "results/P_continuation/",
-  "fresh_init_implementation": "Reload exact sealed INIT_b*.pkl and initialize a new Adam from those arrays for every arm/pilot."
+  "fresh_init_implementation": "Reload exact sealed INIT_b*.pkl and initialize a new Adam from those arrays for every arm/pilot.",
+  "time_cost_amendment": "receipts/TIME_COST_AMENDMENT.json",
+  "job_schedule": "3 block workers: a0 then a1; conditionalII a2 then a3. GPU0 A100. Affinity72+r; CPU evaluator/monitor75. Combined4cores."
 }
