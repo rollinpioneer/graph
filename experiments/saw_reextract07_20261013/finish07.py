@@ -1,5 +1,5 @@
 """Final pure export/audit; reads existing results, never runs models or physics."""
-import os,sys,json,csv,hashlib,time,subprocess,shutil,resource
+import os,sys,json,csv,hashlib,time,subprocess,shutil,resource,pickle
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent;WORK=ROOT.parent.parent
 sys.path.insert(0,'/home/xushijie3/work/graph_saw_goalprobe05_20261013/experiments/saw_goalprobe05_20261013/vendor/analysis_deps')
@@ -28,6 +28,13 @@ assert all(gone(x['cpu_evaluation']['pid']) for x in workflows)
 ident=read(ROOT/'REFERENCE_AND_INIT_IDENTITY.json');cal=read(ROOT/'results/P_continuation/GATE_CALIBRATION.json')
 assert all(sha(x['reference']['path'])==x['reference']['sha256'] and sha(x['init_path'])==x['init_sha256'] for x in ident)
 assert all(sha(x['path'])==x['sha256'] for x in cal)
+for x in cal:
+    c=np.load(x['path']);assert len(c['cost'])==16384 and np.isfinite(c['cost']).all()
+    assert float(np.sort(c['cost'])[int(np.ceil(.95*16384))-1])==x['tau']
+old_initial=ROOT/'runs/CALIBRATION_b0.npz'
+if old_initial.exists():
+    old=np.load(old_initial);new=np.load(cal[0]['path'])
+    assert np.array_equal(old['indices'],new['indices']) and np.array_equal(old['goal_indices'],new['goal_indices'])
 pilots=read(ROOT/'results/P_continuation/P_PILOTS.json');assert sum(x['updates'] for x in pilots)==4000 and all(x['weights_discarded'] for x in pilots)
 audit=read(ROOT/'results/P_continuation/LOSS_AND_GRADIENT_AUDIT.json');assert all(x['frozen_native_gradients_zero'] for x in audit)
 replay=read(ROOT/'results/LEGACY_LOG_REPLAY_AUDIT.json');assert replay['status']=='COMPLETE'
@@ -63,6 +70,26 @@ for r in range(3):
         df['logging_origin']='DURING_ACTUAL_TRAINING_BATCH';df['cost_numeric_device']='GPU highest';new.append(df)
 sup=pd.concat([legacy]+new,ignore_index=True);assert len(sup)==len(arms)*3*20
 export(ROOT/'SUPERVISION_EXPOSURE.csv',sup)
+actual_pairing=[]
+for r in range(3):
+    for u in range(25000,500001,25000):
+        a0=sup[(sup.block==r)&(sup.arm==0)&(sup.step==u)].iloc[0]
+        assert sha(a0.supervision_raw_path)==a0.supervision_raw_sha256
+        with open(a0.supervision_raw_path,'rb') as f:base=pickle.load(f)
+        for a in arms[1:]:
+            row=sup[(sup.block==r)&(sup.arm==a)&(sup.step==u)].iloc[0]
+            assert sha(row.supervision_raw_path)==row.supervision_raw_sha256
+            with open(row.supervision_raw_path,'rb') as f:sample=pickle.load(f)
+            for k in ['i','future','original_random','random_waypoint']:assert np.array_equal(base['indices'][k],sample['indices'][k])
+            for k in ['goal','waypoint']:assert np.array_equal(base['indices'][k][:512],sample['indices'][k][:512])
+            assert sample['sampler_state']['generators'][:3]==base['sampler_state']['generators'][:3]
+            assert np.array_equal(sample['indices']['waypoint'][512:],sample['indices']['random_waypoint'][512:])
+            assert sample['tau']==cal[r]['tau']
+            if a==1:assert np.array_equal(sample['indices']['goal'][512:],sample['indices']['original_random'][512:])
+            if a==2:assert np.all(sample['cost'][512:]<=sample['tau'])
+            if a==3:assert np.all(sample['cost'][512:]>sample['tau'])
+            actual_pairing.append(dict(block=r,arm=a,step=u,full_base_F_original_R_exact=True,actual_first_F512_exact=True,R512_present=True,random_waypoint_unchanged=True,accepted_goal_rule_verified=True))
+formal_pair_audit=read(ROOT/'SAMPLER_PAIRING_AUDIT.json');formal_pair_audit['actual_logged_25k_tuple_comparisons']=actual_pairing;write(ROOT/'SAMPLER_PAIRING_AUDIT.json',formal_pair_audit)
 export(ROOT/'GRADIENT_AUDIT.csv',pd.DataFrame([{k:v for k,v in x.items() if k not in ('path',)} for x in allcps]))
 man=read(ROOT/'results/P_continuation/GATE_MANIPULATION.json');export(ROOT/'GATE_MANIPULATION.csv',pd.DataFrame(man))
 oldcal=ROOT/'GATE_CALIBRATION.json'
