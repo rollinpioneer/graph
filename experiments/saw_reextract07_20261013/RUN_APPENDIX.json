@@ -1,0 +1,73 @@
+{
+  "status": "P_ADMISSION_READY",
+  "authorization_request": "Human user requested 执行; explicit P+I versus conditional II choice pending. No GPU computation authorized by this receipt.",
+  "branch": "codex/saw-reextract-07-20261013",
+  "base": "6d16c1271b3fad563c58d9b2e34b48418b910860",
+  "official_saw_commit": "3535a16c901e5de1233ac5a586401b3ddfa5e30d",
+  "python": "3.10.19",
+  "versions": {
+    "jax": "0.4.35",
+    "jaxlib": "0.4.34",
+    "flax": "0.10.2",
+    "optax": "0.2.4",
+    "numpy": "1.26.4",
+    "mujoco": "3.2.7",
+    "gymnasium": "1.0.0"
+  },
+  "roots": {
+    "student": 71001300,
+    "calibration": 73001300,
+    "base": 74001300,
+    "future": 75001300,
+    "original_random": 76001300,
+    "replenishment": 77001300,
+    "student_internal": 78001300,
+    "manipulation": 79001300
+  },
+  "rng_implementation": "Independent NumPy default_rng generators, saved state per checkpoint. Rejection replenishment has separate generator; base/F/original R reset to same seeds in each arm. Earliest accepted goal among chunks of four; all evaluated candidates billed.",
+  "pilot_order": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "pilot_block": 0,
+  "pilots_discarded": true,
+  "gpu_max_hours": {
+    "P": 0.5,
+    "I": 3.0,
+    "II": 4.5,
+    "total": 8.0
+  },
+  "formal_per_job_hours": {
+    "I": 0.5,
+    "II": 0.75
+  },
+  "cpu_cores": [
+    72,
+    73,
+    74,
+    75
+  ],
+  "cpu_preparation_analysis_cap_seconds": 14400,
+  "cpu_eval_probe_cap_seconds": 28800,
+  "peak_owned_gpu_memory_cap_gib": 12,
+  "combined_rss_cap_gib": 16,
+  "new_raw_cap_gib": 50,
+  "X_authorized": false,
+  "seconds": 10.495463092986029,
+  "authorization": {
+    "source": "Direct human approval: P＋I＋满足门槛后II，合计最多8 GPU小时",
+    "P": true,
+    "I": true,
+    "II": true,
+    "II_scope_pending": false,
+    "X": false,
+    "gpu_hours_cap": 8.0,
+    "P_hours_cap": 0.5,
+    "I_hours_cap": 3.0,
+    "epoch": 1791868838.7185767,
+    "II_hours_cap": 4.5,
+    "full_approval_epoch": 1791869070.005076
+  }
+}
