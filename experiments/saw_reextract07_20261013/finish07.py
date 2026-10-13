@@ -256,6 +256,7 @@ for d in [ROOT/'runs',ROOT/'source_ref',ROOT/'results/P_continuation/runs']:
         if q.is_file():raw.append(dict(path=str(q),sha256=sha(q),bytes=q.stat().st_size))
 assert sum(x['bytes'] for x in raw)<50*1024**3
 write(ROOT/'RAW_ARTIFACT_INDEX.json',dict(raw_files=raw,total_new_raw_bytes=sum(x['bytes'] for x in raw),reference_files=[x['reference'] for x in ident],evaluation_bank=read(ROOT/'EVALUATION_BANK.json'),raw_outputs_stay_on_server=True))
+write(ROOT/'SOURCE_DEPENDENCY_INDEX.json',dict(official_saw_commit=read(ROOT/'RUN_APPENDIX.json')['official_saw_commit'],source_snapshots=[x for x in raw if str(ROOT/'source_ref')+'/' in x['path']],audited_environment_core=dict(path=bank['d06_core_path'],sha256=bank['d06_core_sha256']),locked_versions=read(ROOT/'RUN_APPENDIX.json')['versions'],reference_configs=[dict(path=x['reference']['config_path'],sha256=x['reference']['config_sha256']) for x in ident]))
 resource_record.update(final_export_seconds=time.time()-started,final_export_peak_RSS_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,new_round_bytes_snapshot=sum(q.stat().st_size for q in ROOT.rglob('*') if q.is_file()))
 assert resource_record['new_round_bytes_snapshot']<50*1024**3;write(ROOT/'RESOURCE_AND_EXIT.json',resource_record)
 print('FINAL_EXPORT_DONE',execution['status'],scientific,flush=True)
