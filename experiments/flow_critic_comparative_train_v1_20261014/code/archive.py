@@ -10,7 +10,7 @@ def main():
     files=[]
     for base in ['code','configs','reports','receipts']:
         for p in (ROOT/base).rglob('*'):
-            if p.is_file() and p.suffix in ['.py','.json','.jsonl','.csv','.md','.lock'] and p.name!='manager.lock':
+            if p.is_file() and p.suffix in ['.py','.json','.jsonl','.csv','.md','.lock'] and p.name not in ['manager.lock','evaluation_manager.lock','light_artifact_manifest.json']:
                 if p.stat().st_size>5000000:raise RuntimeError('Unexpected large lightweight artifact '+str(p))
                 files.append(p)
     files.append(ROOT/'EXPERIMENT_CARD.md')
@@ -38,7 +38,7 @@ def main():
     for p in sorted(set(files)):
         relative=p.relative_to(ROOT);dest=REPO/PREFIX/relative;dest.parent.mkdir(parents=True,exist_ok=True)
         shutil.copyfile(p,dest);staged.append(str(PREFIX/relative))
-        identities.append(dict(path=str(relative),size=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()))
+        identities.append(dict(path=str(relative),size=dest.stat().st_size,sha256=hashlib.sha256(dest.read_bytes()).hexdigest()))
     manifest=ROOT/'reports/light_artifact_manifest.json';manifest.write_text(json.dumps(identities,indent=2))
     dest=REPO/PREFIX/'reports/light_artifact_manifest.json';shutil.copyfile(manifest,dest)
     staged.append(str(dest.relative_to(REPO)))
@@ -52,7 +52,7 @@ def main():
         print(git('diff','--cached','--stat'),flush=True)
         subprocess.run(['git','-C',str(REPO),'commit','-m',sys.argv[1] if len(sys.argv)>1 else 'Archive comparative batch progress'],check=True)
     env=dict(os.environ,GIT_SSH_COMMAND='ssh -i /home/xushijie3/.ssh/graph_cp_disr_deploy_ed25519 -o IdentitiesOnly=yes')
-    subprocess.run(['git','-C',str(REPO),'push','-u','origin',BRANCH],env=env,check=True)
+    subprocess.run(['git','-C',str(REPO),'-c','pack.threads=4','push','-u','origin',BRANCH],env=env,check=True)
     local=git('rev-parse','HEAD')
     remote=subprocess.check_output(['git','-C',str(REPO),'ls-remote','origin','refs/heads/'+BRANCH],env=env,text=True).split()[0]
     assert local==remote,'Remote SHA mismatch'

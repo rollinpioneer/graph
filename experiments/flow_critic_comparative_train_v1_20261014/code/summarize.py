@@ -32,6 +32,29 @@ for name,data in [('results',rows),('costs',cost)]:
     keys=sorted(set(k for x in data for k in x))
     with (ROOT/'reports'/f'{name}.csv').open('w',newline='') as f:
         w=csv.DictWriter(f,fieldnames=keys);w.writeheader();w.writerows(data)
+paired=[]
+for prefix in ['G','D']:
+    seed_deltas=[]
+    for seed in [0,1]:
+        left=ROOT/'runs'/f'{prefix}0_seed{seed}'/'matched_verified'
+        right=ROOT/'runs'/f'{prefix}1_seed{seed}'/'matched_verified'
+        checks=[]
+        for step in [800000,900000,1000000]:
+            a=left/f'{step}.json';b=right/f'{step}.json'
+            if not a.exists() or not b.exists():continue
+            aa=json.loads(a.read_text());bb=json.loads(b.read_text())
+            equal=[e['initial_observation_sha256'] for e in aa['episodes']]==[e['initial_observation_sha256'] for e in bb['episodes']]
+            checks.append(dict(step=step,initial_conditions_equal=equal,delta_success=bb['success_rate']-aa['success_rate'] if equal else None))
+        valid=len(checks)==3 and all(x['initial_conditions_equal'] for x in checks)
+        delta=sum(x['delta_success'] for x in checks)/3 if valid else None
+        if delta is not None:seed_deltas.append(delta)
+        paired.append(dict(host_pair=prefix,seed=seed,status='MATCHED_VALID' if valid else 'PENDING_OR_PROTOCOL_MISMATCH',
+            checkpoints=checks,last3_delta=delta))
+    if len(seed_deltas)==2:
+        mean=sum(seed_deltas)/2;std=(sum((x-mean)**2 for x in seed_deltas))**.5
+        paired.append(dict(host_pair=prefix,two_seed_mean_delta=mean,two_seed_sample_std_delta=std,
+            limitation='Two seeds; preliminary pairwise task-specific evidence'))
+(ROOT/'reports/paired_comparison.json').write_text(json.dumps(paired,indent=2))
 finished=(ROOT/'receipts/manager_finished.json').exists() and (ROOT/'receipts/evaluation_manager_finished.json').exists()
 (ROOT/'reports/final_review.md').write_text('# Comparative batch review\n\nStatus: '+('ALL_REGISTERED_JOBS_ENDED' if finished else 'RUNNING')+
     '\n\nCompare G0/G1 only on HumanoidMaze and D0/D1 only on Cube-double. Two seeds are preliminary evidence. '
