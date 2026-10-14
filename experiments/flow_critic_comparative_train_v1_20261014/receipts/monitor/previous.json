@@ -1,8 +1,7 @@
 {
-  "epoch": 1791977475.0306509,
+  "epoch": 1791978200.0766413,
   "queue": {
     "active": {
-      "D0_seed0": "T1",
       "D0_seed1": "T1",
       "D1_seed0": "T3",
       "D1_seed1": "T3",
@@ -12,23 +11,25 @@
     "automatic_retry": false,
     "baseline_barrier": false,
     "completed": [
+      "D0_seed0",
       "G0_seed0",
       "G0_seed1"
     ],
     "coordinator_entrypoint": "code/all_eight_manager.py",
-    "epoch": 1791977460.2341962,
+    "epoch": 1791978195.3160083,
     "failed": [],
     "start_epoch": 1791962303.8230023,
     "total_formal_update_cap": 8000000
   },
   "evaluation_queue": {
     "completed": [
+      "G0_seed0",
       "G0_seed1"
     ],
     "failed": [],
     "skipped": [],
-    "active": "G0_seed0",
-    "epoch": 1791977461.142136,
+    "active": "D0_seed0",
+    "epoch": 1791978196.5099041,
     "optimizer_updates": 0
   },
   "runs": {
@@ -79,7 +80,7 @@
         "T3": null
       },
       "native_evals": 20,
-      "matched_evals": 2
+      "matched_evals": 3
     },
     "G0_seed1": {
       "status": {
@@ -139,19 +140,19 @@
         "worker_pid": 74129
       },
       "progress": {
-        "elapsed": 9993.507111310959,
-        "epoch": 1791977447.470743,
+        "elapsed": 10722.2275993824,
+        "epoch": 1791978176.1912317,
         "health": {
-          "adam_count": 448348.0,
+          "adam_count": 476032.0,
           "finite": 1.0,
-          "metric_max": 27604.92578125,
-          "parameter_max": 6.210324287414551,
-          "state_step": 448349.0
+          "metric_max": 29173.65234375,
+          "parameter_max": 6.287232875823975,
+          "state_step": 476033.0
         },
         "job": "G1_seed0",
         "pid": 74156,
         "stage": "TRAINING",
-        "updates": 448348
+        "updates": 476032
       },
       "exits": {
         "T1": null,
@@ -193,19 +194,19 @@
         "worker_pid": 84864
       },
       "progress": {
-        "elapsed": 9916.745838165283,
-        "epoch": 1791977460.7832031,
+        "elapsed": 10636.136239051819,
+        "epoch": 1791978180.1736042,
         "health": {
-          "adam_count": 425000.0,
+          "adam_count": 461352.0,
           "finite": 1.0,
-          "metric_max": 18518.15234375,
-          "parameter_max": 6.118815898895264,
-          "state_step": 425001.0
+          "metric_max": 25437.5703125,
+          "parameter_max": 6.18950891494751,
+          "state_step": 461353.0
         },
         "job": "G1_seed1",
         "pid": 84865,
         "stage": "TRAINING",
-        "updates": 425000
+        "updates": 461352
       },
       "exits": {
         "T1": null,
@@ -240,33 +241,51 @@
     },
     "D0_seed0": {
       "status": {
+        "end_epoch": 1791978075.2372892,
+        "exit_code": 0,
         "gpu": 5,
         "phase": "T1",
-        "start_epoch": 1791962304.666402,
-        "status": "RUNNING",
-        "worker_pid": 2273893
+        "status": "COMPLETED",
+        "updates": 1000000
       },
       "progress": {
-        "elapsed": 15162.734931230545,
-        "epoch": 1791977468.1189322,
-        "health": {
-          "adam_count": 985000.0,
-          "finite": 1.0,
-          "metric_max": 197.68226623535156,
-          "parameter_max": 5.2103776931762695,
-          "state_step": 985001.0
-        },
+        "elapsed": 15762.266519069672,
+        "epoch": 1791978067.6505203,
         "job": "D0_seed0",
+        "phase": "T1",
         "pid": 2273897,
-        "stage": "TRAINING",
-        "updates": 985000
+        "stage": "PHASE_COMPLETED",
+        "updates": 1000000
       },
       "exits": {
-        "T1": null,
+        "T1": {
+          "automatic_restart": false,
+          "end_epoch": 1791978075.2372892,
+          "exit_code": 0,
+          "final_progress": {
+            "elapsed": 15762.266519069672,
+            "epoch": 1791978067.6505203,
+            "job": "D0_seed0",
+            "phase": "T1",
+            "pid": 2273897,
+            "stage": "PHASE_COMPLETED",
+            "updates": 1000000
+          },
+          "gpu_resident_hours": 4.380714135302438,
+          "native_pid": 2273897,
+          "phase": "T1",
+          "resources": {
+            "cpu_seconds": 12115.18,
+            "gpu_memory_mib": 954,
+            "rss_kb": 3126208
+          },
+          "start_epoch": 1791962304.666402,
+          "status": "PASS"
+        },
         "T2": null,
         "T3": null
       },
-      "native_evals": 10,
+      "native_evals": 11,
       "matched_evals": 0
     },
     "D0_seed1": {
@@ -278,26 +297,19 @@
         "worker_pid": 2273998
       },
       "progress": {
-        "elapsed": 15162.74219584465,
-        "epoch": 1791977468.3248801,
-        "health": {
-          "adam_count": 962437.0,
-          "finite": 1.0,
-          "metric_max": 149.0450897216797,
-          "parameter_max": 6.093297004699707,
-          "state_step": 962438.0
-        },
+        "elapsed": 15752.932035923004,
+        "epoch": 1791978058.5147197,
         "job": "D0_seed1",
         "pid": 2274004,
-        "stage": "TRAINING",
-        "updates": 962437
+        "stage": "MATCHED_EVALUATION",
+        "updates": 1000000
       },
       "exits": {
         "T1": null,
         "T2": null,
         "T3": null
       },
-      "native_evals": 10,
+      "native_evals": 11,
       "matched_evals": 0
     },
     "D1_seed0": {
@@ -309,19 +321,19 @@
         "worker_pid": 89820
       },
       "progress": {
-        "elapsed": 9857.855237007141,
-        "epoch": 1791977447.3775764,
+        "elapsed": 10593.248454809189,
+        "epoch": 1791978182.7707942,
         "health": {
-          "adam_count": 501335.0,
+          "adam_count": 538259.0,
           "finite": 1.0,
-          "metric_max": 3113.809326171875,
-          "parameter_max": 5.416875839233398,
-          "state_step": 501336.0
+          "metric_max": 6627.94775390625,
+          "parameter_max": 5.559825420379639,
+          "state_step": 538260.0
         },
         "job": "D1_seed0",
         "pid": 89827,
         "stage": "TRAINING",
-        "updates": 501335
+        "updates": 538259
       },
       "exits": {
         "T1": null,
@@ -363,19 +375,19 @@
         "worker_pid": 89974
       },
       "progress": {
-        "elapsed": 9876.207974433899,
-        "epoch": 1791977465.7303715,
+        "elapsed": 10605.140472888947,
+        "epoch": 1791978194.66287,
         "health": {
-          "adam_count": 511759.0,
+          "adam_count": 553444.0,
           "finite": 1.0,
-          "metric_max": 3034.796875,
-          "parameter_max": 5.874855041503906,
-          "state_step": 511760.0
+          "metric_max": 4754.14111328125,
+          "parameter_max": 6.1601057052612305,
+          "state_step": 553445.0
         },
         "job": "D1_seed1",
         "pid": 89990,
         "stage": "TRAINING",
-        "updates": 511759
+        "updates": 553444
       },
       "exits": {
         "T1": null,
@@ -409,194 +421,174 @@
       "matched_evals": 0
     }
   },
-  "gpu": "0, 32894 MiB, 7571 MiB, 70 %\n1, 37948 MiB, 2516 MiB, 47 %\n2, 24846 MiB, 15618 MiB, 100 %\n3, 10855 MiB, 29609 MiB, 67 %\n4, 7515 MiB, 32949 MiB, 96 %\n5, 15509 MiB, 24956 MiB, 96 %\n6, 11448 MiB, 29017 MiB, 98 %\n7, 4821 MiB, 35643 MiB, 70 %\n",
-  "own_processes": "    PID    PPID ELAPSED %CPU %MEM   RSS COMMAND\n  74129 3744621   10022  0.0  0.0 13584 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.job.json T3\n  74156   74129   10022 35.9  1.4 7781300 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.gate.json seed=0 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_0 restore_epoch=50000\n  79115   74156    9997  0.0  0.0 12656 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  79116   74156    9997  1.7  0.1 846880 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  79117   74156    9997  1.7  0.1 843156 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  79118   74156    9997  1.7  0.1 842496 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  79119   74156    9997  1.7  0.1 843320 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  79120   74156    9997  1.7  0.1 844284 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  79121   74156    9997  1.7  0.1 849176 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  79122   74156    9997  1.7  0.1 847496 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  79123   74156    9997  1.7  0.1 844140 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  79124   74156    9997  1.7  0.1 848244 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  79125   74156    9997  1.7  0.1 842672 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n  84864 3744621    9931  0.0  0.0 13596 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.job.json T3\n  84865   84864    9931 35.1  1.4 7468496 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.gate.json seed=1 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_1 restore_epoch=50000\n  87155   84865    9909  0.0  0.0 12656 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  87156   84865    9909  1.8  0.1 844472 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  87157   84865    9909  1.7  0.1 849140 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  87158   84865    9909  1.7  0.1 842104 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  87159   84865    9909  1.7  0.1 849028 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  87160   84865    9909  1.7  0.1 844004 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  87161   84865    9909  1.7  0.1 845656 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  87162   84865    9909  1.7  0.1 843764 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  87165   84865    9909  1.7  0.1 846396 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  87168   84865    9909  1.7  0.1 843092 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  87170   84865    9909  1.7  0.1 847340 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n  89820 3744621    9886  0.0  0.0 13592 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.job.json T3\n  89827   89820    9886 53.7  0.5 2771712 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.gate.json --seed=0 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed0 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output/dummy/D1_seed0/sd000_20261014_162149 --restore_epoch=50000\n  89974 3744621    9886  0.0  0.0 13592 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.job.json T3\n  89990   89974    9886 53.9  0.5 2782632 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.gate.json --seed=1 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed1 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output/dummy/D1_seed1/sd001_20261014_162149 --restore_epoch=50000\n 195322  195319     151  0.0  0.0  7900 sshd-session: xushijie3@pts/29\n 195427  195322     151  0.0  0.0  7540 -bash\n 249098  195427       0 13.3  0.0 12172 python code/monitor_all.py\n 249222  249098       0  0.0  0.0  6484 ps -u 1100 -o pid,ppid,etimes,pcpu,pmem,rss,args\n1673874       1   16716  0.0  0.0 14740 /usr/lib/systemd/systemd --user\n1673877 1673874   16716  0.0  0.0  2860 (sd-pam)\n2273893       1   15170  0.0  0.0 13572 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed0.job.json T1\n2273897 2273893   15170 77.0  0.5 2956584 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed0.gate.json --seed=0 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D0_seed0/output --agent=agents/dfql.py --agent.critic_type=scalar --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D0_seed0\n2273998       1   15170  0.0  0.0 13572 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed1.job.json T1\n2274004 2273998   15170 74.4  0.5 2960468 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed1.gate.json --seed=1 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D0_seed1/output --agent=agents/dfql.py --agent.critic_type=scalar --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D0_seed1\n3744621       1   11373  0.0  0.0 11392 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/all_eight_manager.py\n3872394       1   11100  0.0  0.0 12768 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/evaluation_manager.py --adopt-all-eight-parallel\n4014061 3872394     944 60.1  0.2 1237108 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/matched_verified.py G0_seed0\n",
-  "available_memory_kb": 385540460,
+  "gpu": "0, 30565 MiB, 9900 MiB, 100 %\n1, 37948 MiB, 2516 MiB, 44 %\n2, 23821 MiB, 16644 MiB, 100 %\n3, 11879 MiB, 28586 MiB, 74 %\n4, 7719 MiB, 32745 MiB, 75 %\n5, 15025 MiB, 25440 MiB, 83 %\n6, 11446 MiB, 29019 MiB, 98 %\n7, 4823 MiB, 35641 MiB, 61 %\n",
+  "own_processes": "    PID    PPID ELAPSED %CPU %MEM   RSS COMMAND\n  74129 3744621   10747  0.0  0.0 13600 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.job.json T3\n  74156   74129   10747 35.3  1.4 7781276 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.gate.json seed=0 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_0 restore_epoch=50000\n  79115   74156   10722  0.0  0.0 12656 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  79116   74156   10722  1.6  0.1 846860 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  79117   74156   10722  1.6  0.1 843132 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  79118   74156   10722  1.6  0.1 842476 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  79119   74156   10722  1.6  0.1 843300 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  79120   74156   10722  1.6  0.1 844260 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  79121   74156   10722  1.6  0.1 849156 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  79122   74156   10722  1.6  0.1 847472 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  79123   74156   10722  1.6  0.1 844120 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  79124   74156   10722  1.6  0.1 848224 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  79125   74156   10722  1.6  0.1 842648 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n  84864 3744621   10656  0.0  0.0 13604 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.job.json T3\n  84865   84864   10656 35.1  1.4 7468476 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.gate.json seed=1 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_1 restore_epoch=50000\n  87155   84865   10634  0.0  0.0 12656 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  87156   84865   10634  1.7  0.1 844448 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  87157   84865   10634  1.6  0.1 849120 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  87158   84865   10634  1.6  0.1 842080 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  87159   84865   10634  1.6  0.1 849008 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  87160   84865   10634  1.6  0.1 843980 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  87161   84865   10634  1.6  0.1 845632 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  87162   84865   10634  1.6  0.1 843744 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  87165   84865   10634  1.6  0.1 846372 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  87168   84865   10634  1.6  0.1 843068 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  87170   84865   10634  1.6  0.1 847316 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n  89820 3744621   10611  0.0  0.0 13592 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.job.json T3\n  89827   89820   10611 53.4  0.5 2769768 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.gate.json --seed=0 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed0 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output/dummy/D1_seed0/sd000_20261014_162149 --restore_epoch=50000\n  89974 3744621   10611  0.0  0.0 13596 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.job.json T3\n  89990   89974   10611 53.9  0.5 2780692 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.gate.json --seed=1 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed1 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output/dummy/D1_seed1/sd001_20261014_162149 --restore_epoch=50000\n 195322  195319     876  0.0  0.0  7900 sshd-session: xushijie3@pts/29\n 195427  195322     876  0.0  0.0  7628 -bash\n 508398 3872394     123 77.0  0.3 1661508 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/matched_verified.py D0_seed0\n 565314  195427       0 16.6  0.0 12176 python code/monitor_all.py\n 565473  565314       0  0.0  0.0  6508 ps -u 1100 -o pid,ppid,etimes,pcpu,pmem,rss,args\n 565474   89974       0  0.0  0.0 34468 nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits\n1673874       1   17441  0.0  0.0 14740 /usr/lib/systemd/systemd --user\n1673877 1673874   17441  0.0  0.0  2860 (sd-pam)\n2273998       1   15895  0.0  0.0 13588 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed1.job.json T1\n2274004 2273998   15895 74.6  0.5 3133908 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D0_seed1.gate.json --seed=1 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D0_seed1/output --agent=agents/dfql.py --agent.critic_type=scalar --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D0_seed1\n3744621       1   12098  0.0  0.0 11392 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/all_eight_manager.py\n3872394       1   11825  0.0  0.0 12772 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/evaluation_manager.py --adopt-all-eight-parallel\n",
+  "available_memory_kb": 384382064,
   "changes": {
     "G1_seed0": {
       "previous": {
-        "elapsed": 9891.07437133789,
-        "epoch": 1791977345.0380034,
+        "elapsed": 10553.770563364029,
+        "epoch": 1791978007.7341955,
         "health": {
-          "adam_count": 444516.0,
+          "adam_count": 469592.0,
           "finite": 1.0,
-          "metric_max": 29030.234375,
-          "parameter_max": 6.196779251098633,
-          "state_step": 444517.0
+          "metric_max": 28479.896484375,
+          "parameter_max": 6.272245407104492,
+          "state_step": 469593.0
         },
         "job": "G1_seed0",
         "pid": 74156,
         "stage": "TRAINING",
-        "updates": 444516
+        "updates": 469592
       },
       "current": {
-        "elapsed": 9993.507111310959,
-        "epoch": 1791977447.470743,
+        "elapsed": 10722.2275993824,
+        "epoch": 1791978176.1912317,
         "health": {
-          "adam_count": 448348.0,
+          "adam_count": 476032.0,
           "finite": 1.0,
-          "metric_max": 27604.92578125,
-          "parameter_max": 6.210324287414551,
-          "state_step": 448349.0
+          "metric_max": 29173.65234375,
+          "parameter_max": 6.287232875823975,
+          "state_step": 476033.0
         },
         "job": "G1_seed0",
         "pid": 74156,
         "stage": "TRAINING",
-        "updates": 448348
+        "updates": 476032
       }
     },
     "G1_seed1": {
       "previous": {
-        "elapsed": 9808.166872262955,
-        "epoch": 1791977352.204238,
+        "elapsed": 10465.524660110474,
+        "epoch": 1791978009.5620255,
         "health": {
-          "adam_count": 418488.0,
+          "adam_count": 452880.0,
           "finite": 1.0,
-          "metric_max": 38351.8203125,
-          "parameter_max": 6.106884956359863,
-          "state_step": 418489.0
+          "metric_max": 38181.3515625,
+          "parameter_max": 6.1736321449279785,
+          "state_step": 452881.0
         },
         "job": "G1_seed1",
         "pid": 84865,
         "stage": "TRAINING",
-        "updates": 418488
+        "updates": 452880
       },
       "current": {
-        "elapsed": 9916.745838165283,
-        "epoch": 1791977460.7832031,
+        "elapsed": 10636.136239051819,
+        "epoch": 1791978180.1736042,
         "health": {
-          "adam_count": 425000.0,
+          "adam_count": 461352.0,
           "finite": 1.0,
-          "metric_max": 18518.15234375,
-          "parameter_max": 6.118815898895264,
-          "state_step": 425001.0
+          "metric_max": 25437.5703125,
+          "parameter_max": 6.18950891494751,
+          "state_step": 461353.0
         },
         "job": "G1_seed1",
         "pid": 84865,
         "stage": "TRAINING",
-        "updates": 425000
+        "updates": 461352
       }
     },
     "D0_seed0": {
       "previous": {
-        "elapsed": 15038.999369621277,
-        "epoch": 1791977344.3833706,
-        "health": {
-          "adam_count": 975000.0,
-          "finite": 1.0,
-          "metric_max": 199.86561584472656,
-          "parameter_max": 5.1694512367248535,
-          "state_step": 975001.0
-        },
+        "elapsed": 15486.551890611649,
+        "epoch": 1791977791.9358916,
         "job": "D0_seed0",
         "pid": 2273897,
-        "stage": "TRAINING",
-        "updates": 975000
+        "stage": "MATCHED_EVALUATION",
+        "updates": 1000000
       },
       "current": {
-        "elapsed": 15162.734931230545,
-        "epoch": 1791977468.1189322,
-        "health": {
-          "adam_count": 985000.0,
-          "finite": 1.0,
-          "metric_max": 197.68226623535156,
-          "parameter_max": 5.2103776931762695,
-          "state_step": 985001.0
-        },
+        "elapsed": 15762.266519069672,
+        "epoch": 1791978067.6505203,
         "job": "D0_seed0",
+        "phase": "T1",
         "pid": 2273897,
-        "stage": "TRAINING",
-        "updates": 985000
+        "stage": "PHASE_COMPLETED",
+        "updates": 1000000
       }
     },
     "D0_seed1": {
       "previous": {
-        "elapsed": 15038.318840742111,
-        "epoch": 1791977343.9015248,
-        "health": {
-          "adam_count": 952407.0,
-          "finite": 1.0,
-          "metric_max": 168.44288635253906,
-          "parameter_max": 6.071037292480469,
-          "state_step": 952408.0
-        },
+        "component": "Actor",
+        "elapsed": 15600.137532711029,
+        "epoch": 1791977905.7202168,
         "job": "D0_seed1",
         "pid": 2274004,
-        "stage": "TRAINING",
-        "updates": 952407
+        "stage": "NATIVE_EVALUATION",
+        "updates": 1000000
       },
       "current": {
-        "elapsed": 15162.74219584465,
-        "epoch": 1791977468.3248801,
-        "health": {
-          "adam_count": 962437.0,
-          "finite": 1.0,
-          "metric_max": 149.0450897216797,
-          "parameter_max": 6.093297004699707,
-          "state_step": 962438.0
-        },
+        "elapsed": 15752.932035923004,
+        "epoch": 1791978058.5147197,
         "job": "D0_seed1",
         "pid": 2274004,
-        "stage": "TRAINING",
-        "updates": 962437
+        "stage": "MATCHED_EVALUATION",
+        "updates": 1000000
       }
     },
     "D1_seed0": {
       "previous": {
-        "component": "Actor",
-        "elapsed": 9621.309515476227,
-        "epoch": 1791977210.8318546,
-        "job": "D1_seed0",
-        "pid": 89827,
-        "stage": "NATIVE_EVALUATION",
-        "updates": 500000
-      },
-      "current": {
-        "elapsed": 9857.855237007141,
-        "epoch": 1791977447.3775764,
+        "elapsed": 10404.991506814957,
+        "epoch": 1791977994.513846,
         "health": {
-          "adam_count": 501335.0,
+          "adam_count": 528114.0,
           "finite": 1.0,
-          "metric_max": 3113.809326171875,
-          "parameter_max": 5.416875839233398,
-          "state_step": 501336.0
+          "metric_max": 3340.6220703125,
+          "parameter_max": 5.422118186950684,
+          "state_step": 528115.0
         },
         "job": "D1_seed0",
         "pid": 89827,
         "stage": "TRAINING",
-        "updates": 501335
+        "updates": 528114
+      },
+      "current": {
+        "elapsed": 10593.248454809189,
+        "epoch": 1791978182.7707942,
+        "health": {
+          "adam_count": 538259.0,
+          "finite": 1.0,
+          "metric_max": 6627.94775390625,
+          "parameter_max": 5.559825420379639,
+          "state_step": 538260.0
+        },
+        "job": "D1_seed0",
+        "pid": 89827,
+        "stage": "TRAINING",
+        "updates": 538259
       }
     },
     "D1_seed1": {
       "previous": {
-        "elapsed": 9758.295619249344,
-        "epoch": 1791977347.818016,
+        "elapsed": 10401.8434176445,
+        "epoch": 1791977991.3658147,
         "health": {
-          "adam_count": 505000.0,
+          "adam_count": 541699.0,
           "finite": 1.0,
-          "metric_max": 3724.4140625,
-          "parameter_max": 5.804225921630859,
-          "state_step": 505001.0
+          "metric_max": 3319.948974609375,
+          "parameter_max": 6.0754570960998535,
+          "state_step": 541700.0
         },
         "job": "D1_seed1",
         "pid": 89990,
         "stage": "TRAINING",
-        "updates": 505000
+        "updates": 541699
       },
       "current": {
-        "elapsed": 9876.207974433899,
-        "epoch": 1791977465.7303715,
+        "elapsed": 10605.140472888947,
+        "epoch": 1791978194.66287,
         "health": {
-          "adam_count": 511759.0,
+          "adam_count": 553444.0,
           "finite": 1.0,
-          "metric_max": 3034.796875,
-          "parameter_max": 5.874855041503906,
-          "state_step": 511760.0
+          "metric_max": 4754.14111328125,
+          "parameter_max": 6.1601057052612305,
+          "state_step": 553445.0
         },
         "job": "D1_seed1",
         "pid": 89990,
         "stage": "TRAINING",
-        "updates": 511759
+        "updates": 553444
       }
     }
   }

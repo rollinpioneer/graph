@@ -1,0 +1,106 @@
+{
+  "epoch": 1791978201.266054,
+  "ssh_client_local_pid": 49936,
+  "session_id": 27776,
+  "same_session_reused_after_interruption": true,
+  "optimizer_updates_this_monitor": 0,
+  "experimental_processes_stopped": 0,
+  "training_restarts": 0,
+  "migration_executed": false,
+  "audit_status": "RUNNING_HEALTHY",
+  "issues": [],
+  "resource_watches": [],
+  "runs": {
+    "G0_seed0": {
+      "updates": 1000000,
+      "stage": "PHASE_COMPLETED",
+      "native_state": "ABSENT",
+      "gpu": 6
+    },
+    "G0_seed1": {
+      "updates": 1000000,
+      "stage": "PHASE_COMPLETED",
+      "native_state": "ABSENT",
+      "gpu": 7
+    },
+    "G1_seed0": {
+      "updates": 476032,
+      "stage": "TRAINING",
+      "native_state": "R",
+      "gpu": 2
+    },
+    "G1_seed1": {
+      "updates": 461352,
+      "stage": "TRAINING",
+      "native_state": "R",
+      "gpu": 3
+    },
+    "D0_seed0": {
+      "updates": 1000000,
+      "stage": "PHASE_COMPLETED",
+      "native_state": "ABSENT",
+      "gpu": 5
+    },
+    "D0_seed1": {
+      "updates": 1000000,
+      "stage": "MATCHED_EVALUATION",
+      "native_state": "R",
+      "gpu": 4
+    },
+    "D1_seed0": {
+      "updates": 538259,
+      "stage": "TRAINING",
+      "native_state": "R",
+      "gpu": 5
+    },
+    "D1_seed1": {
+      "updates": 553444,
+      "stage": "TRAINING",
+      "native_state": "R",
+      "gpu": 7
+    }
+  },
+  "controllers": {
+    "manager_started.json": {
+      "pid": 3744621,
+      "state": "S",
+      "receipt": {
+        "baseline_barrier": false,
+        "entrypoint": "code/all_eight_manager.py",
+        "jobs": [
+          "G0_seed0",
+          "G0_seed1",
+          "G1_seed0",
+          "G1_seed1",
+          "D0_seed0",
+          "D0_seed1",
+          "D1_seed0",
+          "D1_seed1"
+        ],
+        "pid": 3744621,
+        "start_epoch": 1791962303.8230023
+      }
+    },
+    "evaluation_manager_started.json": {
+      "pid": 3872394,
+      "state": "S",
+      "receipt": {
+        "pid": 3872394,
+        "epoch": 1791966374.4771326,
+        "optimizer_updates": 0
+      }
+    }
+  },
+  "evaluation_queue": {
+    "completed": [
+      "G0_seed0",
+      "G0_seed1"
+    ],
+    "failed": [],
+    "skipped": [],
+    "active": "D0_seed0",
+    "epoch": 1791978196.5099041,
+    "optimizer_updates": 0
+  },
+  "cleanup": "Normal shell exit requested; client absence to be verified locally."
+}
