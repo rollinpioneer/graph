@@ -7,14 +7,21 @@ def read(p,default=None):
     except FileNotFoundError:return default
 def write(p,x):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(x,indent=2))
 lock=(ROOT/'receipts/evaluation_manager.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-adopt='--adopt-authorized-startup-repair' in sys.argv
+parallel='--adopt-all-eight-parallel' in sys.argv
+adopt='--adopt-authorized-startup-repair' in sys.argv or parallel
 if (ROOT/'receipts/evaluation_manager_started.json').exists() and not adopt:raise RuntimeError('No duplicate evaluation manager')
 if adopt:
-    assert read(ROOT/'reports/gfp_startup_failure_and_fix.json',{}).get('restart_authorized') is True
-    if (ROOT/'receipts/evaluation_manager_adopted.json').exists():raise RuntimeError('Coordinator already adopted')
-    write(ROOT/'receipts/evaluation_manager_adopted.json',dict(epoch=time.time(),optimizer_updates=0))
+    auth=read(ROOT/'receipts/all_eight_parallel_authorized.json',{}) if parallel else read(ROOT/'reports/gfp_startup_failure_and_fix.json',{})
+    assert auth.get('authorized' if parallel else 'restart_authorized') is True
+    marker=ROOT/'receipts'/('evaluation_manager_parallel_adopted.json' if parallel else 'evaluation_manager_adopted.json')
+    if marker.exists():raise RuntimeError('Coordinator already adopted')
+    previous=read(ROOT/'receipts/evaluation_queue.json',{})
+    assert previous.get('active') is None,'Do not interrupt an evaluation child'
+    write(marker,dict(epoch=time.time(),optimizer_updates=0))
 write(ROOT/'receipts/evaluation_manager_started.json',dict(pid=os.getpid(),epoch=time.time(),optimizer_updates=0))
 jobs=read(ROOT/'configs/jobs.json');done=set();failed=set();skipped=set();active=None
+if parallel:
+    done=set(previous.get('completed',[]));failed=set(previous.get('failed',[]));skipped=set(previous.get('skipped',[]))
 while len(done|failed|skipped)<len(jobs):
     if active:
         proc,j,start,gpu=active
@@ -40,7 +47,9 @@ while len(done|failed|skipped)<len(jobs):
                 try:
                     if Path('/proc/'+pid).stat().st_uid==os.getuid():own.add(uuid)
                 except FileNotFoundError:pass
-            candidates=[row.split(',') for row in inventory.splitlines() if row.split(',')[1].strip() not in own and int(row.split(',')[2])>=16384]
+            candidates=[row.split(',') for row in inventory.splitlines() if int(row.split(',')[2])>=17408]
+            unshared=[row for row in candidates if row[1].strip() not in own]
+            if unshared:candidates=unshared
             if not candidates:
                 write(ROOT/'receipts/evaluation_resource_block.json',dict(status='RESOURCE_BLOCKED',job=key,epoch=time.time()))
                 failed.add(key);continue
