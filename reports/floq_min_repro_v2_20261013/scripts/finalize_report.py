@@ -89,9 +89,15 @@ def markdown_reports(root, archive, result, files):
                  '及逐回合初始观察哈希保留在服务器回执；2M 评价状态和 100 条逐回合轻量表另存 `final/`。', '',
                  '## 完整命令与参数', '',
                  '实际入口是工程包装器导入固定官方 main；仅切换 W&B offline、记录既有数值/RNG、每 100 更新检查有限性，'
-                 '不增加算法项或随机采样。正式训练不运行 P1 探针。以下命令在 `ROOT/source` 执行；路径与环境覆盖原样记录。', '']
+                 '不增加算法项或随机采样。正式训练不运行 P1 探针。以下是已执行命令的记录，在 `ROOT/source` 执行；'
+                 '环境字段由 launch 回执及 run_manager.py 补全，包括包装器必需变量和精度变量的显式清除。', '']
     for entry in result['identities']:
-        command = ['env'] + [key + '=' + value for key, value in entry['environment_overrides'].items()] + entry['command']
+        environment = dict(entry['environment_overrides'])
+        environment.update(MUJOCO_GL='egl', PYTHONUNBUFFERED='1', MPLBACKEND='Agg',
+                           FLOQ_RUN_DIR=str(root / 'runs' / ('formal_seed%d' % entry['seed'])),
+                           FLOQ_PHASE='P2', FLOQ_SOURCE_COMMIT=SOURCE)
+        command = ['env', '-u', 'JAX_DEFAULT_MATMUL_PRECISION', '-u', 'JAX_ENABLE_X64']
+        command += [key + '=' + value for key, value in environment.items()] + entry['command']
         identity += ['Seed %d：' % entry['seed'], '', '```bash', 'cd ' + shlex.quote(str(root / 'source')),
                      ' '.join(shlex.quote(part) for part in command), '```', '',
                      '全部展开模型参数：`formal/formal_seed%d/actual_config.json`；全部实际 flags：'
