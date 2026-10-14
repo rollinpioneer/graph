@@ -13,6 +13,11 @@ def main():
             if p.is_file() and p.suffix in ['.py','.json','.jsonl','.csv','.md','.lock'] and p.name not in ['manager.lock','evaluation_manager.lock','light_artifact_manifest.json']:
                 if p.stat().st_size>5000000:raise RuntimeError('Unexpected large lightweight artifact '+str(p))
                 files.append(p)
+    for name in ['learning_curves','diagnostics','critic_components']:
+        for ext in ['png','pdf']:
+            p=ROOT/'reports/figures'/f'{name}.{ext}'
+            assert p.exists() and p.stat().st_size<5000000
+            files.append(p)
     files.append(ROOT/'EXPERIMENT_CARD.md')
     for host in ['gfp','dfql']:
         work=ROOT/f'workspaces/{host}_floq'
