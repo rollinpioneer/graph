@@ -1,5 +1,5 @@
 {
-  "epoch": 1791991736.9941018,
+  "epoch": 1791993716.5267332,
   "queue": {
     "active": {
       "G1_seed0": "T3"
@@ -16,7 +16,7 @@
       "G1_seed1"
     ],
     "coordinator_entrypoint": "code/all_eight_manager.py",
-    "epoch": 1791991726.6625526,
+    "epoch": 1791993706.807226,
     "failed": [],
     "start_epoch": 1791962303.8230023,
     "total_formal_update_cap": 8000000
@@ -34,7 +34,7 @@
     "failed": [],
     "skipped": [],
     "active": null,
-    "epoch": 1791991728.6298206,
+    "epoch": 1791993708.7385085,
     "optimizer_updates": 0
   },
   "runs": {
@@ -145,19 +145,13 @@
         "worker_pid": 74129
       },
       "progress": {
-        "elapsed": 24278.76318335533,
-        "epoch": 1791991732.7268155,
-        "health": {
-          "adam_count": 927304.0,
-          "finite": 1.0,
-          "metric_max": 25656.28515625,
-          "parameter_max": 7.634995460510254,
-          "state_step": 927305.0
-        },
+        "component": "Actor",
+        "elapsed": 26114.604306936264,
+        "epoch": 1791993568.5679386,
         "job": "G1_seed0",
         "pid": 74156,
-        "stage": "TRAINING",
-        "updates": 927304
+        "stage": "NATIVE_EVALUATION",
+        "updates": 1000000
       },
       "exits": {
         "T1": null,
@@ -505,34 +499,34 @@
       "matched_evals": 3
     }
   },
-  "gpu": "0, 4374 MiB, 36091 MiB, 30 %\n1, 37031 MiB, 3434 MiB, 57 %\n2, 23963 MiB, 16502 MiB, 94 %\n3, 3598 MiB, 36867 MiB, 36 %\n4, 5742 MiB, 34722 MiB, 27 %\n5, 14917 MiB, 25547 MiB, 33 %\n6, 10760 MiB, 29705 MiB, 40 %\n7, 6387 MiB, 34077 MiB, 30 %\n",
-  "own_processes": "    PID    PPID ELAPSED %CPU %MEM   RSS COMMAND\n  74129 3744621   24284  0.0  0.0 13788 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.job.json T3\n  74156   74129   24283 30.5  1.4 7664852 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.gate.json seed=0 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_0 restore_epoch=50000\n  79115   74156   24259  0.0  0.0 12752 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  79116   74156   24259  1.5  0.1 697812 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  79117   74156   24259  1.5  0.1 684808 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  79118   74156   24259  1.5  0.1 679428 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  79119   74156   24259  1.5  0.1 680232 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  79120   74156   24259  1.5  0.1 681724 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  79121   74156   24259  1.5  0.1 686088 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  79122   74156   24259  1.5  0.1 684340 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  79123   74156   24259  1.5  0.1 681756 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  79124   74156   24259  1.5  0.1 685128 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  79125   74156   24259  1.5  0.1 679496 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n 893418  893415      31  0.0  0.0  7972 sshd-session: xushijie3@pts/1\n 893424  893418      31  0.0  0.0  7544 -bash\n 897026  893424       0 15.0  0.0 12188 python code/monitor_all.py\n 897125  897026       0  0.0  0.0  7060 ps -u 1100 -o pid,ppid,etimes,pcpu,pmem,rss,args\n1673874       1   30978  0.0  0.0 14740 /usr/lib/systemd/systemd --user\n1673877 1673874   30978  0.0  0.0  2860 (sd-pam)\n3744621       1   25635  0.0  0.0 11592 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/all_eight_manager.py\n3872394       1   25362  0.0  0.0 12732 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/evaluation_manager.py --adopt-all-eight-parallel\n",
-  "available_memory_kb": 409195568,
+  "gpu": "0, 4378 MiB, 36087 MiB, 25 %\n1, 5 MiB, 40460 MiB, 0 %\n2, 23965 MiB, 16500 MiB, 94 %\n3, 24978 MiB, 15487 MiB, 81 %\n4, 27964 MiB, 12501 MiB, 80 %\n5, 37183 MiB, 3282 MiB, 93 %\n6, 32553 MiB, 7911 MiB, 98 %\n7, 26739 MiB, 13725 MiB, 62 %\n",
+  "own_processes": "    PID    PPID ELAPSED %CPU %MEM   RSS COMMAND\n  74129 3744621   26263  0.0  0.0 13832 /usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.job.json T3\n  74156   74129   26263 30.1  1.4 7643104 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.gate.json seed=0 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_0 restore_epoch=50000\n  79115   74156   26238  0.0  0.0 12752 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)\n  79116   74156   26238  1.5  0.1 677608 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork\n  79117   74156   26238  1.5  0.1 673168 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork\n  79118   74156   26238  1.5  0.1 659228 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork\n  79119   74156   26238  1.5  0.1 660040 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork\n  79120   74156   26238  1.5  0.1 661520 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork\n  79121   74156   26238  1.4  0.1 665876 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork\n  79122   74156   26238  1.5  0.1 663988 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork\n  79123   74156   26238  1.5  0.1 661552 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork\n  79124   74156   26238  1.4  0.1 664936 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork\n  79125   74156   26238  1.5  0.1 659276 /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork\n1418155 1418095     210  0.0  0.0  7928 sshd-session: xushijie3@pts/1\n1418156 1418155     210  0.0  0.0  7588 -bash\n1472831 1418156       0 14.2  0.0 12176 python code/monitor_all.py\n1472942 1472831       0  700  0.0  6608 ps -u 1100 -o pid,ppid,etimes,pcpu,pmem,rss,args\n1673874       1   32957  0.0  0.0 14740 /usr/lib/systemd/systemd --user\n1673877 1673874   32957  0.0  0.0  2860 (sd-pam)\n3744621       1   27615  0.0  0.0 11592 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/all_eight_manager.py\n3872394       1   27342  0.0  0.0 12732 python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/evaluation_manager.py --adopt-all-eight-parallel\n",
+  "available_memory_kb": 396873740,
   "changes": {
     "G1_seed0": {
       "previous": {
-        "component": "Actor",
-        "elapsed": 23202.502690076828,
-        "epoch": 1791990656.466322,
-        "job": "G1_seed0",
-        "pid": 74156,
-        "stage": "NATIVE_EVALUATION",
-        "updates": 900000
-      },
-      "current": {
-        "elapsed": 24278.76318335533,
-        "epoch": 1791991732.7268155,
+        "elapsed": 26075.28911590576,
+        "epoch": 1791993529.2527478,
         "health": {
-          "adam_count": 927304.0,
+          "adam_count": 998544.0,
           "finite": 1.0,
-          "metric_max": 25656.28515625,
-          "parameter_max": 7.634995460510254,
-          "state_step": 927305.0
+          "metric_max": 26969.017578125,
+          "parameter_max": 7.501820087432861,
+          "state_step": 998545.0
         },
         "job": "G1_seed0",
         "pid": 74156,
         "stage": "TRAINING",
-        "updates": 927304
+        "updates": 998544
+      },
+      "current": {
+        "component": "Actor",
+        "elapsed": 26114.604306936264,
+        "epoch": 1791993568.5679386,
+        "job": "G1_seed0",
+        "pid": 74156,
+        "stage": "NATIVE_EVALUATION",
+        "updates": 1000000
       }
     }
   }

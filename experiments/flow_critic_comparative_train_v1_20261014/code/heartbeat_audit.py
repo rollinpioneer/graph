@@ -13,6 +13,10 @@ def sha(p):
 def proc(pid):
     try:return Path(f'/proc/{pid}/stat').read_text().split()[2]
     except FileNotFoundError:return 'ABSENT'
+def active_gpu_indices(runs,own_gpu):
+    live={v.get('gpu') for v in runs.values() if v.get('gpu') is not None and v.get('native_state') not in ['ABSENT','Z']}
+    return live | {v['gpu'] for v in own_gpu}
+
 def main():
     current=read(ROOT/'receipts/monitor/latest.json')
     previous=read(ROOT/'receipts/monitor/previous.json') or {}
@@ -122,7 +126,8 @@ def main():
             agg['processes']+=1;agg['memory_mib']+=int(a[2])
     out['own_gpu_processes']=own_gpu;out['other_users_gpu_aggregate']=others
     out['unknown_own_gpu_pids']=[x['pid'] for x in own_gpu if x['pid'] not in {p['pid'] for p in account}]
-    active_gpus={v['gpu'] for v in out['runs'].values()}
+    active_gpus=active_gpu_indices(out['runs'],own_gpu)
+    out['active_own_gpu_indices']=sorted(active_gpus)
     out['resource_watches']=[dict(gpu=x['index'],free_mib=x['free_mib'],reserve_mib=4096,
                                     classification='RESERVE_BELOW_FREEZE_NOT_TRAINING_FAILURE')
                               for x in out['gpu_summary'] if x['index'] in active_gpus and x['free_mib']<4096]
