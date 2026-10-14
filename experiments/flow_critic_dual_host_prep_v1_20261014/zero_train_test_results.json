@@ -1,0 +1,1280 @@
+{
+  "card": "FLOW-CRITIC-DUAL-HOST-PREP-V1",
+  "status": "ZERO_TRAIN_VERIFIED",
+  "optimizer_steps": 0,
+  "online_learning": false,
+  "training_started": false,
+  "hosts": {
+    "gfp": {
+      "devices": [
+        "cuda:0"
+      ],
+      "forbidden_call_count": 0,
+      "host": "gfp",
+      "jax": "0.6.2",
+      "online_learning": false,
+      "optimizer_steps": 0,
+      "precision": {
+        "enable_x64": false,
+        "matmul_precision": "None"
+      },
+      "status": "ZERO_TRAIN_VERIFIED",
+      "tests": [
+        {
+          "details": {
+            "backup_ensemble_before_sample": true,
+            "distillation_target_stop_gradient": true,
+            "ema_arrays_only": true,
+            "endpoint_clip_before_gradient": true,
+            "integral_atol": 1e-06,
+            "noise_sum": 8
+          },
+          "seconds": 2.2311878204345703,
+          "status": "PASS",
+          "test": "Z2_Z3_Z4_Z5_Z6_synthetic_fixtures"
+        },
+        {
+          "details": {
+            "current_state_vabc_preserved": true,
+            "dfql_multistep": true,
+            "next_state_value": true,
+            "source_mean_order": true
+          },
+          "seconds": 0.3681192398071289,
+          "status": "PASS",
+          "test": "Z3_host_action_and_state_sources"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 61.42303514480591,
+          "status": "PASS",
+          "test": "Z0_humanoidmaze-medium-navigate-singletask-task1-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "cecd9c0ff13dc2986f54ae159bd334ffcfcd338d23cf3d5c852b27abef7d5fb6",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor": 1.9776245360222717,
+              "modules_critic": 279.80737745473033,
+              "modules_floq": 306.6557756594571,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 3.4860632326876764
+            },
+            "loss": 418.2217712402344
+          },
+          "seconds": 33.02223348617554,
+          "status": "PASS",
+          "test": "Z1_humanoidmaze-medium-navigate-singletask-task1-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.995,
+            "noise_range": [
+              -19.999999999999982,
+              0.0
+            ],
+            "q_support": [
+              -201.99999999999983,
+              1.9999999999999982
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.3871281147003174,
+          "status": "PASS",
+          "test": "Z2_humanoidmaze-medium-navigate-singletask-task1-v0_encoding"
+        },
+        {
+          "details": {
+            "Actor Q": {
+              "modules_actor": 1.3113713888818959,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Actor endpoint distillation": {
+              "modules_actor": 5.410970162111346,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 242.6435315786546,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Guidance frozen": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor": 0.0,
+              "modules_critic": 292.4263079943747,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "VaBC": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 3.05156047755819
+            }
+          },
+          "seconds": 40.867881774902344,
+          "status": "PASS",
+          "test": "Z4_humanoidmaze-medium-navigate-singletask-task1-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "one-step + VaBC",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.71661376953125e-05,
+          "status": "PASS",
+          "test": "Z5_humanoidmaze-medium-navigate-singletask-task1-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/gfp_humanoidmaze-medium-navigate-singletask-task1-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "46b2907656d1ca5907353d95ecb47ed8d2e0d18292a6005a8ed90eb133b67029"
+          },
+          "seconds": 0.6923964023590088,
+          "status": "PASS",
+          "test": "Z7_humanoidmaze-medium-navigate-singletask-task1-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "46b2907656d1ca5907353d95ecb47ed8d2e0d18292a6005a8ed90eb133b67029",
+            "state_sha256_before": "46b2907656d1ca5907353d95ecb47ed8d2e0d18292a6005a8ed90eb133b67029"
+          },
+          "seconds": 0.4928770065307617,
+          "status": "PASS",
+          "test": "Z8_humanoidmaze-medium-navigate-singletask-task1-v0_zero_update_state_proof"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 49.62856936454773,
+          "status": "PASS",
+          "test": "Z0_cube-double-play-singletask-task2-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "5b043257471a164ae6d663a8d4dfa10253d52d857437e86b822ec56786cf670d",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor": 0.33607481109078335,
+              "modules_critic": 545.824812059455,
+              "modules_floq": 713.8472988712188,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.09666544624297305
+            },
+            "loss": 416.623779296875
+          },
+          "seconds": 25.882301807403564,
+          "status": "PASS",
+          "test": "Z1_cube-double-play-singletask-task2-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.99,
+            "noise_range": [
+              -19.999999999999982,
+              0.0
+            ],
+            "q_support": [
+              -200.9999999999998,
+              0.9999999999999991
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.38265419006347656,
+          "status": "PASS",
+          "test": "Z2_cube-double-play-singletask-task2-v0_encoding"
+        },
+        {
+          "details": {
+            "Actor Q": {
+              "modules_actor": 0.2628491923098629,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Actor endpoint distillation": {
+              "modules_actor": 0.23628287849888602,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 642.1882218477539,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Guidance frozen": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor": 0.0,
+              "modules_critic": 568.5616422954131,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "VaBC": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.14666060117390153
+            }
+          },
+          "seconds": 28.07249426841736,
+          "status": "PASS",
+          "test": "Z4_cube-double-play-singletask-task2-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "one-step + VaBC",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.5974044799804688e-05,
+          "status": "PASS",
+          "test": "Z5_cube-double-play-singletask-task2-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/gfp_cube-double-play-singletask-task2-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "c7f106d44fdf50253facdd1bd26acc8d238a195564c723785fe0dc48472a2025"
+          },
+          "seconds": 0.4719269275665283,
+          "status": "PASS",
+          "test": "Z7_cube-double-play-singletask-task2-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "c7f106d44fdf50253facdd1bd26acc8d238a195564c723785fe0dc48472a2025",
+            "state_sha256_before": "c7f106d44fdf50253facdd1bd26acc8d238a195564c723785fe0dc48472a2025"
+          },
+          "seconds": 0.349778413772583,
+          "status": "PASS",
+          "test": "Z8_cube-double-play-singletask-task2-v0_zero_update_state_proof"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 43.13721561431885,
+          "status": "PASS",
+          "test": "Z0_antmaze-large-navigate-singletask-task1-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "298ff9594df3795de5f3117afe815147ba0990db39e4d9b00b79b5fc5a314102",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor": 1.970172013377981,
+              "modules_critic": 681.3477454981324,
+              "modules_floq": 883.6338626931845,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 2.9599229040809356
+            },
+            "loss": 411.41473388671875
+          },
+          "seconds": 21.90026617050171,
+          "status": "PASS",
+          "test": "Z1_antmaze-large-navigate-singletask-task1-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.995,
+            "noise_range": [
+              -19.999999999999982,
+              0.0
+            ],
+            "q_support": [
+              -201.99999999999983,
+              1.9999999999999982
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.38025832176208496,
+          "status": "PASS",
+          "test": "Z2_antmaze-large-navigate-singletask-task1-v0_encoding"
+        },
+        {
+          "details": {
+            "atol": 2e-05,
+            "host_next_action_callback": true,
+            "loss_and_all_parameter_gradients_compared": true,
+            "reference": "AST-extracted pinned FloQAgent.critic_loss",
+            "rtol": 2e-05
+          },
+          "seconds": 20.5344078540802,
+          "status": "PASS",
+          "test": "Z4_antmaze-large-navigate-singletask-task1-v0_pinned_floq_loss_control"
+        },
+        {
+          "details": {
+            "Actor Q": {
+              "modules_actor": 1.7664163651851954,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Actor endpoint distillation": {
+              "modules_actor": 4.454973397994802,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 762.2566368470024,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Guidance frozen": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor": 0.0,
+              "modules_critic": 707.1682358116658,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 0.0
+            },
+            "VaBC": {
+              "modules_actor": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_critic": 0.0,
+              "modules_target_floq": 0.0,
+              "modules_vabc": 3.2051500181893378
+            }
+          },
+          "seconds": 25.954378128051758,
+          "status": "PASS",
+          "test": "Z4_antmaze-large-navigate-singletask-task1-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "one-step + VaBC",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.3113021850585938e-05,
+          "status": "PASS",
+          "test": "Z5_antmaze-large-navigate-singletask-task1-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/gfp_antmaze-large-navigate-singletask-task1-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "6863763577261f3f5f6f8bdbd5a94ba7e3a07570f0fc3ea96a0fb9bccad7cc45"
+          },
+          "seconds": 0.5866959095001221,
+          "status": "PASS",
+          "test": "Z7_antmaze-large-navigate-singletask-task1-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "6863763577261f3f5f6f8bdbd5a94ba7e3a07570f0fc3ea96a0fb9bccad7cc45",
+            "state_sha256_before": "6863763577261f3f5f6f8bdbd5a94ba7e3a07570f0fc3ea96a0fb9bccad7cc45"
+          },
+          "seconds": 0.38567328453063965,
+          "status": "PASS",
+          "test": "Z8_antmaze-large-navigate-singletask-task1-v0_zero_update_state_proof"
+        }
+      ]
+    },
+    "dfql": {
+      "devices": [
+        "cuda:0"
+      ],
+      "forbidden_call_count": 0,
+      "host": "dfql",
+      "jax": "0.6.2",
+      "online_learning": false,
+      "optimizer_steps": 0,
+      "precision": {
+        "enable_x64": false,
+        "matmul_precision": "None"
+      },
+      "status": "ZERO_TRAIN_VERIFIED",
+      "tests": [
+        {
+          "details": {
+            "backup_ensemble_before_sample": true,
+            "distillation_target_stop_gradient": true,
+            "ema_arrays_only": true,
+            "endpoint_clip_before_gradient": true,
+            "integral_atol": 1e-06,
+            "noise_sum": 8
+          },
+          "seconds": 2.2563092708587646,
+          "status": "PASS",
+          "test": "Z2_Z3_Z4_Z5_Z6_synthetic_fixtures"
+        },
+        {
+          "details": {
+            "current_state_vabc_preserved": true,
+            "dfql_multistep": true,
+            "next_state_value": true,
+            "source_mean_order": true
+          },
+          "seconds": 0.3606224060058594,
+          "status": "PASS",
+          "test": "Z3_host_action_and_state_sources"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 69.33592391014099,
+          "status": "PASS",
+          "test": "Z0_humanoidmaze-medium-navigate-singletask-task1-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "cecd9c0ff13dc2986f54ae159bd334ffcfcd338d23cf3d5c852b27abef7d5fb6",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor_bc_flow": 35.59792431137073,
+              "modules_critic": 279.80737745473033,
+              "modules_floq": 318.27369876834234,
+              "modules_target_floq": 0.0
+            },
+            "loss": 425.2415466308594
+          },
+          "seconds": 32.9468834400177,
+          "status": "PASS",
+          "test": "Z1_humanoidmaze-medium-navigate-singletask-task1-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.995,
+            "noise_range": [
+              -19.999999999999982,
+              0.0
+            ],
+            "q_support": [
+              -201.99999999999983,
+              1.9999999999999982
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.3813936710357666,
+          "status": "PASS",
+          "test": "Z2_humanoidmaze-medium-navigate-singletask-task1-v0_encoding"
+        },
+        {
+          "details": {
+            "atol": 2e-05,
+            "host_next_action_callback": true,
+            "loss_and_all_parameter_gradients_compared": true,
+            "reference": "AST-extracted pinned FloQAgent.critic_loss",
+            "rtol": 2e-05
+          },
+          "seconds": 25.210097312927246,
+          "status": "PASS",
+          "test": "Z4_humanoidmaze-medium-navigate-singletask-task1-v0_pinned_floq_loss_control"
+        },
+        {
+          "details": {
+            "DFQL BC": {
+              "modules_actor_bc_flow": 35.561684066974664,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "DFQL terminal Q guidance": {
+              "modules_actor_bc_flow": 0.12730631282492372,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 250.86697281260624,
+              "modules_target_floq": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 292.4263079943747,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            }
+          },
+          "seconds": 25.051437616348267,
+          "status": "PASS",
+          "test": "Z4_humanoidmaze-medium-navigate-singletask-task1-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "multi-step tanh velocity",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.239776611328125e-05,
+          "status": "PASS",
+          "test": "Z5_humanoidmaze-medium-navigate-singletask-task1-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_humanoidmaze-medium-navigate-singletask-task1-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853"
+          },
+          "seconds": 0.5586593151092529,
+          "status": "PASS",
+          "test": "Z7_humanoidmaze-medium-navigate-singletask-task1-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853",
+            "state_sha256_before": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853"
+          },
+          "seconds": 0.44192051887512207,
+          "status": "PASS",
+          "test": "Z8_humanoidmaze-medium-navigate-singletask-task1-v0_zero_update_state_proof"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 63.75800395011902,
+          "status": "PASS",
+          "test": "Z0_cube-double-play-singletask-task2-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "5b043257471a164ae6d663a8d4dfa10253d52d857437e86b822ec56786cf670d",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor_bc_flow": 2.2225286112052594,
+              "modules_critic": 545.824812059455,
+              "modules_floq": 717.3172045528016,
+              "modules_target_floq": 0.0
+            },
+            "loss": 417.9039001464844
+          },
+          "seconds": 29.73028254508972,
+          "status": "PASS",
+          "test": "Z1_cube-double-play-singletask-task2-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.99,
+            "noise_range": [
+              -19.999999999999982,
+              0.0
+            ],
+            "q_support": [
+              -200.9999999999998,
+              0.9999999999999991
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.3932669162750244,
+          "status": "PASS",
+          "test": "Z2_cube-double-play-singletask-task2-v0_encoding"
+        },
+        {
+          "details": {
+            "atol": 2e-05,
+            "host_next_action_callback": true,
+            "loss_and_all_parameter_gradients_compared": true,
+            "reference": "AST-extracted pinned FloQAgent.critic_loss",
+            "rtol": 2e-05
+          },
+          "seconds": 20.957757711410522,
+          "status": "PASS",
+          "test": "Z4_cube-double-play-singletask-task2-v0_pinned_floq_loss_control"
+        },
+        {
+          "details": {
+            "DFQL BC": {
+              "modules_actor_bc_flow": 1.7902271836901438,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "DFQL terminal Q guidance": {
+              "modules_actor_bc_flow": 0.03607788176229104,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 651.9374437749475,
+              "modules_target_floq": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 568.5616422954131,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            }
+          },
+          "seconds": 23.33958673477173,
+          "status": "PASS",
+          "test": "Z4_cube-double-play-singletask-task2-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "multi-step tanh velocity",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.2159347534179688e-05,
+          "status": "PASS",
+          "test": "Z5_cube-double-play-singletask-task2-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_cube-double-play-singletask-task2-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55"
+          },
+          "seconds": 0.21324372291564941,
+          "status": "PASS",
+          "test": "Z7_cube-double-play-singletask-task2-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55",
+            "state_sha256_before": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55"
+          },
+          "seconds": 0.155670166015625,
+          "status": "PASS",
+          "test": "Z8_cube-double-play-singletask-task2-v0_zero_update_state_proof"
+        },
+        {
+          "details": {
+            "atol": 0,
+            "identical_rng": true,
+            "no_floq_params": true,
+            "rtol": 0
+          },
+          "seconds": 58.221184730529785,
+          "status": "PASS",
+          "test": "Z0_puzzle-3x3-play-singletask-task4-v0"
+        },
+        {
+          "details": {
+            "batch_sha256": "c1ea8fc89f08de7d42652ebbd693d6049cef3a7e4928e15687007506d8ff8725",
+            "critic_shape": [
+              2,
+              256
+            ],
+            "device": "cuda:0",
+            "flow_shape": [
+              2,
+              256,
+              1
+            ],
+            "gradient_norms": {
+              "modules_actor_bc_flow": 2.090824117369985,
+              "modules_critic": 3879.112549178045,
+              "modules_floq": 3347.0995345878805,
+              "modules_target_floq": 0.0
+            },
+            "loss": 8125.67578125
+          },
+          "seconds": 29.2858669757843,
+          "status": "PASS",
+          "test": "Z1_puzzle-3x3-play-singletask-task4-v0_full_loss_and_gradient_JIT"
+        },
+        {
+          "details": {
+            "HL_Gauss_atol": 2e-06,
+            "host_discount": 0.99,
+            "noise_range": [
+              -89.99999999999993,
+              0.0
+            ],
+            "q_support": [
+              -900.9999999999992,
+              0.9999999999999991
+            ],
+            "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+          },
+          "seconds": 0.3992176055908203,
+          "status": "PASS",
+          "test": "Z2_puzzle-3x3-play-singletask-task4-v0_encoding"
+        },
+        {
+          "details": {
+            "atol": 2e-05,
+            "host_next_action_callback": true,
+            "loss_and_all_parameter_gradients_compared": true,
+            "reference": "AST-extracted pinned FloQAgent.critic_loss",
+            "rtol": 2e-05
+          },
+          "seconds": 23.1302387714386,
+          "status": "PASS",
+          "test": "Z4_puzzle-3x3-play-singletask-task4-v0_pinned_floq_loss_control"
+        },
+        {
+          "details": {
+            "DFQL BC": {
+              "modules_actor_bc_flow": 1.5474858642259575,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "DFQL terminal Q guidance": {
+              "modules_actor_bc_flow": 0.15508517656779874,
+              "modules_critic": 0.0,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            },
+            "Flow Critic": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 0.0,
+              "modules_floq": 2578.9127177672567,
+              "modules_target_floq": 0.0
+            },
+            "Scalar distillation": {
+              "modules_actor_bc_flow": 0.0,
+              "modules_critic": 4013.4892305772873,
+              "modules_floq": 0.0,
+              "modules_target_floq": 0.0
+            }
+          },
+          "seconds": 25.046850204467773,
+          "status": "PASS",
+          "test": "Z4_puzzle-3x3-play-singletask-task4-v0_parameter_gradient_routes"
+        },
+        {
+          "details": {
+            "actor_type": "multi-step tanh velocity",
+            "host_methods_inherited_verbatim": true
+          },
+          "seconds": 1.2874603271484375e-05,
+          "status": "PASS",
+          "test": "Z5_puzzle-3x3-play-singletask-task4-v0_host_actor_preserved"
+        },
+        {
+          "details": {
+            "old_whole_agent_compatible": false,
+            "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_puzzle-3x3-play-singletask-task4-v0.msgpack",
+            "random_init_only": true,
+            "sha256": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff"
+          },
+          "seconds": 0.5170369148254395,
+          "status": "PASS",
+          "test": "Z7_puzzle-3x3-play-singletask-task4-v0_new_combination_roundtrip"
+        },
+        {
+          "details": {
+            "final_state_step": 1,
+            "initialized_state_step": 1,
+            "optimizer_steps": 0,
+            "params_rng_optimizer_unchanged": true,
+            "state_sha256_after": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff",
+            "state_sha256_before": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff"
+          },
+          "seconds": 0.4253246784210205,
+          "status": "PASS",
+          "test": "Z8_puzzle-3x3-play-singletask-task4-v0_zero_update_state_proof"
+        }
+      ]
+    }
+  },
+  "additional_tests": {
+    "existing_restore_gfp": {
+      "status": "PASS",
+      "optimizer_steps": 0,
+      "results": [
+        {
+          "method": "gfp",
+          "seed": 0,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/flow_baselines_preflight_20261013/runs/formal_gfp_seed0/gfp_OGBench_Env_antmaze_large_navigate_singletask_task1_v0/date_20261013_212141_seed_0/params_1000000.pkl",
+          "checkpoint_sha256_before": "5bb8058de28dca5acc3f42aa9bcc827f3fc5d6c5b53243fa23e1ee9d82866d6a",
+          "checkpoint_sha256_after": "5bb8058de28dca5acc3f42aa9bcc827f3fc5d6c5b53243fa23e1ee9d82866d6a",
+          "state_sha256_before": "770e48adc3462a1433e42d440f8bebe7bf477574846f92a7ebbe14d647d029b4",
+          "state_sha256_after": "770e48adc3462a1433e42d440f8bebe7bf477574846f92a7ebbe14d647d029b4",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -197.6676025390625,
+          "action_gradient_norm": 0.9066130518913269,
+          "device": "TFRT_CPU_0"
+        },
+        {
+          "method": "gfp",
+          "seed": 1,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/flow_baselines_preflight_20261013/runs/formal_gfp_seed1/gfp_OGBench_Env_antmaze_large_navigate_singletask_task1_v0/date_20261013_212141_seed_1/params_1000000.pkl",
+          "checkpoint_sha256_before": "74556b88c08eca65e795b6e3e5da2cfc60d10a4b8106c5d4867856a383300e81",
+          "checkpoint_sha256_after": "74556b88c08eca65e795b6e3e5da2cfc60d10a4b8106c5d4867856a383300e81",
+          "state_sha256_before": "0c7f7b2b2af869f6a0e0080ca7dd2ff49026eed6f8ed9809cfb1c5c81e370b3a",
+          "state_sha256_after": "0c7f7b2b2af869f6a0e0080ca7dd2ff49026eed6f8ed9809cfb1c5c81e370b3a",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -196.84124755859375,
+          "action_gradient_norm": 1.726004958152771,
+          "device": "TFRT_CPU_0"
+        }
+      ]
+    },
+    "existing_restore_fql": {
+      "status": "PASS",
+      "optimizer_steps": 0,
+      "results": [
+        {
+          "method": "fql",
+          "seed": 0,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/flow_baselines_preflight_20261013/runs/formal_fql_seed0/dummy/Formal/sd000_20261013_212139/params_1000000.pkl",
+          "checkpoint_sha256_before": "4b5651a13e576b77d1ce4e455c7b56180aea41120cf43c43947e3496793c62f6",
+          "checkpoint_sha256_after": "4b5651a13e576b77d1ce4e455c7b56180aea41120cf43c43947e3496793c62f6",
+          "state_sha256_before": "0c5a9b248cc4fe8408ca8b8e0896976b8ef6ff502c90d5019cf9aa1daaf7b6e9",
+          "state_sha256_after": "0c5a9b248cc4fe8408ca8b8e0896976b8ef6ff502c90d5019cf9aa1daaf7b6e9",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -100.88961029052734,
+          "action_gradient_norm": 0.057257864624261856,
+          "device": "TFRT_CPU_0"
+        },
+        {
+          "method": "fql",
+          "seed": 1,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/flow_baselines_preflight_20261013/runs/formal_fql_seed1/dummy/Formal/sd001_20261013_212139/params_1000000.pkl",
+          "checkpoint_sha256_before": "046752578e6bd89d5e5a5931928540dba211906d392d9ae0c29d06dd76eee3fd",
+          "checkpoint_sha256_after": "046752578e6bd89d5e5a5931928540dba211906d392d9ae0c29d06dd76eee3fd",
+          "state_sha256_before": "c399de27759698f32720c10f9bd56989e53af215009449065b0950e873b74b1d",
+          "state_sha256_after": "c399de27759698f32720c10f9bd56989e53af215009449065b0950e873b74b1d",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -100.84909057617188,
+          "action_gradient_norm": 0.08213482052087784,
+          "device": "TFRT_CPU_0"
+        }
+      ]
+    },
+    "existing_restore_floq": {
+      "status": "PASS",
+      "optimizer_steps": 0,
+      "results": [
+        {
+          "method": "floq",
+          "seed": 0,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed0/outputs/CP_FLOQantmaze-large-navigate-singletask-v0/FLOQ_MIN_REPRO_V2_P2/sd000_20261013_230319/params_1000000.pkl",
+          "checkpoint_sha256_before": "3331529659496da50329fa4fe1072e030a4242eb8fcf3963dc5ce49e3494cb4b",
+          "checkpoint_sha256_after": "3331529659496da50329fa4fe1072e030a4242eb8fcf3963dc5ce49e3494cb4b",
+          "state_sha256_before": "d8630c5860ffcb5c663c348b653fc7d324b254c736f8d17ccc1ed32d1e9b7af0",
+          "state_sha256_after": "d8630c5860ffcb5c663c348b653fc7d324b254c736f8d17ccc1ed32d1e9b7af0",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -98.83796691894531,
+          "action_gradient_norm": 0.39383113384246826,
+          "device": "<bound method ArrayImpl.device of Array([[-98.94218 , -98.92315 , -98.91288 , -98.855804, -98.75307 ,\n        -98.677956, -98.7873  , -98.72834 ],\n       [-98.87215 , -98.98361 , -98.97551 , -98.89554 , -98.76267 ,\n        -98.73869 , -98.84888 , -98.74965 ]], dtype=float32)>",
+          "flow_shape": [
+            2,
+            8,
+            1
+          ]
+        },
+        {
+          "method": "floq",
+          "seed": 0,
+          "epoch": 2000000,
+          "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed0/outputs/CP_FLOQantmaze-large-navigate-singletask-v0/FLOQ_MIN_REPRO_V2_P2/sd000_20261013_230319/params_2000000.pkl",
+          "checkpoint_sha256_before": "3b833fbb19525ef793ee2890ced914ee4f96eef2c5ac0c6c11b23cfe51dce832",
+          "checkpoint_sha256_after": "3b833fbb19525ef793ee2890ced914ee4f96eef2c5ac0c6c11b23cfe51dce832",
+          "state_sha256_before": "1bf9cef69fdd230436f392d30e42ba98205a5d8bb950057c847ed11fb72125a6",
+          "state_sha256_after": "1bf9cef69fdd230436f392d30e42ba98205a5d8bb950057c847ed11fb72125a6",
+          "restored_state_step": 2000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -98.50595092773438,
+          "action_gradient_norm": 0.35236090421676636,
+          "device": "<bound method ArrayImpl.device of Array([[-98.65552 , -98.650406, -98.60979 , -98.49413 , -98.451324,\n        -98.36875 , -98.51112 , -98.37477 ],\n       [-98.61432 , -98.60608 , -98.551605, -98.526596, -98.397766,\n        -98.391815, -98.4889  , -98.40226 ]], dtype=float32)>",
+          "flow_shape": [
+            2,
+            8,
+            1
+          ]
+        },
+        {
+          "method": "floq",
+          "seed": 1,
+          "epoch": 1000000,
+          "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed1/outputs/CP_FLOQantmaze-large-navigate-singletask-v0/FLOQ_MIN_REPRO_V2_P2/sd001_20261013_230319/params_1000000.pkl",
+          "checkpoint_sha256_before": "bb60af6af48cc170d95b674125946a1591a6e58b882a58f0a1746e87de2d835f",
+          "checkpoint_sha256_after": "bb60af6af48cc170d95b674125946a1591a6e58b882a58f0a1746e87de2d835f",
+          "state_sha256_before": "34ccf612e64effa4bda13c635f2f647e4687f1cf5aa31a0b7c99c82756b3afec",
+          "state_sha256_after": "34ccf612e64effa4bda13c635f2f647e4687f1cf5aa31a0b7c99c82756b3afec",
+          "restored_state_step": 1000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -98.91663360595703,
+          "action_gradient_norm": 0.4155431091785431,
+          "device": "<bound method ArrayImpl.device of Array([[-98.9521  , -99.068535, -98.971634, -98.94828 , -98.82712 ,\n        -98.79366 , -98.93104 , -98.89662 ],\n       [-98.99984 , -99.08614 , -98.98783 , -98.963165, -98.81359 ,\n        -98.777275, -98.86595 , -98.78342 ]], dtype=float32)>",
+          "flow_shape": [
+            2,
+            8,
+            1
+          ]
+        },
+        {
+          "method": "floq",
+          "seed": 1,
+          "epoch": 2000000,
+          "path": "/home/xushijie3/work/floq_min_repro_v2_20261013/runs/formal_seed1/outputs/CP_FLOQantmaze-large-navigate-singletask-v0/FLOQ_MIN_REPRO_V2_P2/sd001_20261013_230319/params_2000000.pkl",
+          "checkpoint_sha256_before": "a1732ab81416745b5749e1af5e44c16bd65a0627bc4581765a4c4f699973fb16",
+          "checkpoint_sha256_after": "a1732ab81416745b5749e1af5e44c16bd65a0627bc4581765a4c4f699973fb16",
+          "state_sha256_before": "6f9bc304299ede7da34ff76ef568fbf5a084f3622e166013b6c9dd6d5c2fe020",
+          "state_sha256_after": "6f9bc304299ede7da34ff76ef568fbf5a084f3622e166013b6c9dd6d5c2fe020",
+          "restored_state_step": 2000001,
+          "optimizer_steps": 0,
+          "q_shape": [
+            2,
+            8
+          ],
+          "q_mean": -98.30137634277344,
+          "action_gradient_norm": 0.3168655037879944,
+          "device": "<bound method ArrayImpl.device of Array([[-98.35069 , -98.477066, -98.3828  , -98.329346, -98.18577 ,\n        -98.12596 , -98.21796 , -98.262566],\n       [-98.3554  , -98.45324 , -98.34724 , -98.303116, -98.25609 ,\n        -98.17668 , -98.32728 , -98.27085 ]], dtype=float32)>",
+          "flow_shape": [
+            2,
+            8,
+            1
+          ]
+        }
+      ]
+    },
+    "source_value_mapping": {
+      "status": "PASS",
+      "optimizer_steps": 0,
+      "results": [
+        {
+          "seed": 0,
+          "epoch": 1000000,
+          "status": "PASS",
+          "all_value_keys_mapped": [
+            "modules_critic",
+            "modules_floq",
+            "modules_target_floq"
+          ],
+          "missing": [],
+          "atol": 0.0005,
+          "rtol": 0.0005,
+          "max_abs_difference": {
+            "q": 7.62939453125e-06,
+            "grad": 2.1280720829963684e-07,
+            "flow": 1.52587890625e-05,
+            "target": 7.62939453125e-06
+          },
+          "source_discount": 0.99,
+          "purpose": "original floq value module equivalence only; no host value reuse or optimizer restore"
+        },
+        {
+          "seed": 0,
+          "epoch": 2000000,
+          "status": "PASS",
+          "all_value_keys_mapped": [
+            "modules_critic",
+            "modules_floq",
+            "modules_target_floq"
+          ],
+          "missing": [],
+          "atol": 0.0005,
+          "rtol": 0.0005,
+          "max_abs_difference": {
+            "q": 1.52587890625e-05,
+            "grad": 2.7567148208618164e-07,
+            "flow": 7.62939453125e-06,
+            "target": 1.52587890625e-05
+          },
+          "source_discount": 0.99,
+          "purpose": "original floq value module equivalence only; no host value reuse or optimizer restore"
+        },
+        {
+          "seed": 1,
+          "epoch": 1000000,
+          "status": "PASS",
+          "all_value_keys_mapped": [
+            "modules_critic",
+            "modules_floq",
+            "modules_target_floq"
+          ],
+          "missing": [],
+          "atol": 0.0005,
+          "rtol": 0.0005,
+          "max_abs_difference": {
+            "q": 2.288818359375e-05,
+            "grad": 4.6193599700927734e-07,
+            "flow": 7.62939453125e-06,
+            "target": 7.62939453125e-06
+          },
+          "source_discount": 0.99,
+          "purpose": "original floq value module equivalence only; no host value reuse or optimizer restore"
+        },
+        {
+          "seed": 1,
+          "epoch": 2000000,
+          "status": "PASS",
+          "all_value_keys_mapped": [
+            "modules_critic",
+            "modules_floq",
+            "modules_target_floq"
+          ],
+          "missing": [],
+          "atol": 0.0005,
+          "rtol": 0.0005,
+          "max_abs_difference": {
+            "q": 1.52587890625e-05,
+            "grad": 1.862645149230957e-07,
+            "flow": 7.62939453125e-06,
+            "target": 1.52587890625e-05
+          },
+          "source_discount": 0.99,
+          "purpose": "original floq value module equivalence only; no host value reuse or optimizer restore"
+        }
+      ]
+    },
+    "target_definition_test": {
+      "status": "PASS",
+      "test": "Z6",
+      "optimizer_steps": 0,
+      "synthetic_arrays_only": true,
+      "source_timing": "pre-optimizer online params (one-update lag)",
+      "gfp_keys": [
+        "modules_target_floq",
+        "modules_target_critic"
+      ],
+      "dfql_keys": [
+        "modules_target_floq"
+      ],
+      "atol": 1e-06
+    },
+    "zero_update_artifact_audit": {
+      "status": "PASS",
+      "optimizer_steps": 0,
+      "source_checks": [
+        {
+          "source": "dfql",
+          "unchanged_files": 25,
+          "commit": "8b6b15803cc1e5605ad1524553a2c95e103b0bad"
+        },
+        {
+          "source": "floq",
+          "unchanged_files": 59,
+          "commit": "3d60e638b42bbef018c56cb1199ff37c3470520d"
+        },
+        {
+          "source": "fql",
+          "unchanged_files": 23,
+          "commit": "e8cd16eb490332924dfa2492097219f181765933"
+        },
+        {
+          "source": "gfp",
+          "unchanged_files": 55,
+          "commit": "1abbd5f0e287caf9bda70e7bc655d0a499ac8401"
+        }
+      ],
+      "checkpoints_unchanged": 44,
+      "original_restore_and_mapping_receipts": [
+        "existing_restore_gfp.json",
+        "existing_restore_fql.json",
+        "existing_restore_floq.json",
+        "source_value_mapping.json"
+      ],
+      "original_repository_branch_head_status_unchanged": true,
+      "own_processes_at_audit": "    PID ELAPSED %CPU   RSS COMMAND\n1277321    1602  0.0 14688 /usr/lib/systemd/systemd --user\n1277323    1602  0.0  2876 (sd-pam)\n1277346    1601  0.0  7632 sshd-session: xushijie3@pts/0\n1277347    1601  0.0  7436 -bash\n1372045       3  1.0 14616 python3 -\n1372046       3 99.7 23432 /home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/envs/dfql/bin/python /home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/scripts/audit_contracts.py\n1372110       0  0.0  6832 ps -u 1100 -o pid,etimes,pcpu,rss,args\n",
+      "namespace_network_sha256": "cfc53f1db0712dabefd8436f7b274615115d283086a8b033ce520ebd91c7b666",
+      "original_baseline_source_files_unchanged": 78
+    }
+  },
+  "test_protocol": {
+    "initialization_seed": 14014,
+    "loss_rng_seed": 81214,
+    "batch_index_seed": 14014,
+    "batch_size": 256,
+    "source_restore_batch_size": 8,
+    "scalar_path_atol": 0,
+    "scalar_path_rtol": 0,
+    "source_loss_atol": 2e-05,
+    "source_loss_rtol": 2e-05,
+    "value_mapping_atol": 0.0005,
+    "value_mapping_rtol": 0.0005
+  },
+  "limitations": [
+    "No performance, training stability, cost or novelty conclusion",
+    "No DFQL trained weights / Baseline reproduction",
+    "No new-task Baseline reproduction",
+    "Named prior reports unavailable; card and pinned source define engineering contract",
+    "Old whole Agents are not declared compatible with combined parameter/optimizer trees"
+  ],
+  "timestamp": 1791955762.8927608
+}
