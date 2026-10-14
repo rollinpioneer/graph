@@ -1,6 +1,6 @@
 {
-  "epoch": 1791981451.860864,
-  "monitor_epoch": 1791981451.534163,
+  "epoch": 1791982741.3004935,
+  "monitor_epoch": 1791982740.897645,
   "optimizer_updates_this_audit": 0,
   "queue": {
     "active": {
@@ -18,7 +18,7 @@
       "G0_seed1"
     ],
     "coordinator_entrypoint": "code/all_eight_manager.py",
-    "epoch": 1791981450.6518543,
+    "epoch": 1791982740.8076167,
     "failed": [],
     "start_epoch": 1791962303.8230023,
     "total_formal_update_cap": 8000000
@@ -33,7 +33,7 @@
     "failed": [],
     "skipped": [],
     "active": null,
-    "epoch": 1791981437.1643624,
+    "epoch": 1791982727.2766292,
     "optimizer_updates": 0
   },
   "runs": {
@@ -45,7 +45,7 @@
       "prior_updates": 1000000,
       "native_pid": 2752701,
       "native_state": "ABSENT",
-      "progress_age_seconds": 6097.6,
+      "progress_age_seconds": 7387.0,
       "health": null,
       "native_evaluations": 20,
       "matched_evaluations": 3,
@@ -182,7 +182,7 @@
       "prior_updates": 1000000,
       "native_pid": 2752820,
       "native_state": "ABSENT",
-      "progress_age_seconds": 6279.0,
+      "progress_age_seconds": 7568.4,
       "health": null,
       "native_evaluations": 20,
       "matched_evaluations": 3,
@@ -315,19 +315,19 @@
       "gpu": 2,
       "phase": "T3",
       "stage": "TRAINING",
-      "updates": 585000,
-      "prior_updates": 575000,
+      "updates": 619632,
+      "prior_updates": 597292,
       "native_pid": 74156,
       "native_state": "S",
-      "progress_age_seconds": 7.1,
+      "progress_age_seconds": 1.0,
       "health": {
-        "adam_count": 585000.0,
+        "adam_count": 619632.0,
         "finite": 1.0,
-        "metric_max": 21038.25390625,
-        "parameter_max": 6.6102142333984375,
-        "state_step": 585001.0
+        "metric_max": 25045.99609375,
+        "parameter_max": 6.811363697052002,
+        "state_step": 619633.0
       },
-      "native_evaluations": 10,
+      "native_evaluations": 12,
       "matched_evaluations": 0,
       "csv_checks": [
         {
@@ -353,24 +353,24 @@
         },
         {
           "path": "runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_164418_seed_0/train.csv",
-          "rows": 107,
+          "rows": 113,
           "last": {
-            "training/actor/VaBC_loss": "0.1770011",
-            "training/actor/actor_loss": "1.1826233",
-            "training/actor/q_data": "-186.61057",
-            "training/actor/q_loss": "1.0",
-            "training/actor/q_ref": "-186.51358",
-            "training/critic/critic_loss": "59.59831",
-            "training/critic/distilled_critic_loss": "1.990476",
-            "training/critic/floq_loss": "57.60783",
-            "training/critic/q": "-186.55386",
-            "training/critic/target_q": "-186.68503",
-            "training/critic/td_error": "0.6512131",
-            "training/grad/norm": "21038.254",
-            "step": "585000"
+            "training/actor/VaBC_loss": "0.20695944",
+            "training/actor/actor_loss": "1.2128593",
+            "training/actor/q_data": "-186.08472",
+            "training/actor/q_loss": "0.9999962",
+            "training/actor/q_ref": "-186.04568",
+            "training/critic/critic_loss": "66.7095",
+            "training/critic/distilled_critic_loss": "0.8638375",
+            "training/critic/floq_loss": "65.845665",
+            "training/critic/q": "-186.02342",
+            "training/critic/target_q": "-185.91139",
+            "training/critic/td_error": "1.7459397",
+            "training/grad/norm": "23257.896",
+            "step": "615000"
           },
           "nonfinite": [],
-          "max_numeric_abs": 585000.0
+          "max_numeric_abs": 615000.0
         }
       ],
       "checkpoints": [
@@ -432,6 +432,16 @@
           "checkpoint_sha256": "8316a5d9ffa6783dfc802a025571cc6288603da3a3bafc499c5b5a74fb2c110c",
           "config_sha256": "c9446a40d32e452e50e00c9cd93fb37b19b4a634c35af5a5869d32bbfee374ed",
           "state_sha256": "3068d17f693e51e0774179770a49f7bc2d5824c6fd46dcb7c4893cce0848112f",
+          "rng_exists": true
+        },
+        {
+          "epoch": 600000,
+          "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_164418_seed_0/params_600000.pkl",
+          "exists": true,
+          "size": 102510894,
+          "checkpoint_sha256": "799ea3e4e64dbfdf442c3650f70b3c66be6dd250d3e22da19278478d4a1b1a0f",
+          "config_sha256": "c9446a40d32e452e50e00c9cd93fb37b19b4a634c35af5a5869d32bbfee374ed",
+          "state_sha256": "ea4a57cdfbc1cd35ec0a54ddece3603c529191079ee1c7e6bca070f1c29f5932",
           "rng_exists": true
         }
       ],
@@ -541,17 +551,17 @@
       "gpu": 3,
       "phase": "T3",
       "stage": "TRAINING",
-      "updates": 601932,
-      "prior_updates": 600000,
+      "updates": 680000,
+      "prior_updates": 620000,
       "native_pid": 84865,
-      "native_state": "R",
-      "progress_age_seconds": 0.4,
+      "native_state": "S",
+      "progress_age_seconds": 3.4,
       "health": {
-        "adam_count": 601932.0,
+        "adam_count": 680000.0,
         "finite": 1.0,
-        "metric_max": 22603.8359375,
-        "parameter_max": 6.3304548263549805,
-        "state_step": 601933.0
+        "metric_max": 27545.990234375,
+        "parameter_max": 6.298694133758545,
+        "state_step": 680001.0
       },
       "native_evaluations": 12,
       "matched_evaluations": 0,
@@ -579,24 +589,24 @@
         },
         {
           "path": "runs/G1_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_164547_seed_1/train.csv",
-          "rows": 110,
+          "rows": 126,
           "last": {
-            "training/actor/VaBC_loss": "0.17182338",
-            "training/actor/actor_loss": "1.1778255",
-            "training/actor/q_data": "-185.77237",
-            "training/actor/q_loss": "0.99999994",
-            "training/actor/q_ref": "-185.70781",
-            "training/critic/critic_loss": "62.870693",
-            "training/critic/distilled_critic_loss": "1.9909725",
-            "training/critic/floq_loss": "60.879723",
-            "training/critic/q": "-185.86707",
-            "training/critic/target_q": "-185.74731",
-            "training/critic/td_error": "1.072669",
-            "training/grad/norm": "24777.559",
-            "step": "600000"
+            "training/actor/VaBC_loss": "0.21364462",
+            "training/actor/actor_loss": "1.218664",
+            "training/actor/q_data": "-186.2445",
+            "training/actor/q_loss": "1.0",
+            "training/actor/q_ref": "-186.216",
+            "training/critic/critic_loss": "71.68301",
+            "training/critic/distilled_critic_loss": "2.2572718",
+            "training/critic/floq_loss": "69.425735",
+            "training/critic/q": "-186.265",
+            "training/critic/target_q": "-186.35588",
+            "training/critic/td_error": "0.89949715",
+            "training/grad/norm": "27545.99",
+            "step": "680000"
           },
           "nonfinite": [],
-          "max_numeric_abs": 600000.0
+          "max_numeric_abs": 680000.0
         }
       ],
       "checkpoints": [
@@ -781,7 +791,7 @@
       "prior_updates": 1000000,
       "native_pid": 2273897,
       "native_state": "ABSENT",
-      "progress_age_seconds": 3383.9,
+      "progress_age_seconds": 4673.2,
       "health": null,
       "native_evaluations": 11,
       "matched_evaluations": 3,
@@ -915,7 +925,7 @@
       "prior_updates": 1000000,
       "native_pid": 2274004,
       "native_state": "ABSENT",
-      "progress_age_seconds": 3057.6,
+      "progress_age_seconds": 4346.9,
       "health": null,
       "native_evaluations": 11,
       "matched_evaluations": 3,
@@ -1045,17 +1055,17 @@
       "gpu": 5,
       "phase": "T3",
       "stage": "TRAINING",
-      "updates": 700001,
-      "prior_updates": 696572,
+      "updates": 771695,
+      "prior_updates": 718343,
       "native_pid": 89827,
-      "native_state": "S",
-      "progress_age_seconds": 25.0,
+      "native_state": "R",
+      "progress_age_seconds": 24.1,
       "health": {
-        "adam_count": 700001.0,
+        "adam_count": 771695.0,
         "finite": 1.0,
-        "metric_max": 2822.6962890625,
-        "parameter_max": 6.7888875007629395,
-        "state_step": 700002.0
+        "metric_max": 3679.02099609375,
+        "parameter_max": 7.1255364418029785,
+        "state_step": 771696.0
       },
       "native_evaluations": 8,
       "matched_evaluations": 0,
@@ -1081,22 +1091,22 @@
         },
         {
           "path": "runs/D1_seed0/output/dummy/D1_seed0/sd000_20261014_164633/train.csv",
-          "rows": 130,
+          "rows": 144,
           "last": {
-            "training/actor/actor_loss": "0.109059215",
-            "training/actor/q": "-81.34327",
-            "training/actor/q_loss": "-0.071373895",
-            "training/critic/critic_loss": "137.52458",
-            "training/critic/distilled_critic_loss": "2.465599",
-            "training/critic/floq_loss": "135.05899",
-            "training/critic/q": "-82.94517",
-            "training/critic/target_q": "-83.243904",
-            "training/critic/td_error": "3.352279",
-            "training/grad/norm": "3074.4072",
-            "step": "700000"
+            "training/actor/actor_loss": "0.09875454",
+            "training/actor/q": "-49.214733",
+            "training/actor/q_loss": "-0.044159386",
+            "training/critic/critic_loss": "121.41095",
+            "training/critic/distilled_critic_loss": "4.1176214",
+            "training/critic/floq_loss": "117.29333",
+            "training/critic/q": "-50.36782",
+            "training/critic/target_q": "-49.63537",
+            "training/critic/td_error": "2.113207",
+            "training/grad/norm": "5321.405",
+            "step": "770000"
           },
           "nonfinite": [],
-          "max_numeric_abs": 700000.0
+          "max_numeric_abs": 770000.0
         }
       ],
       "checkpoints": [
@@ -1283,17 +1293,17 @@
       "gpu": 7,
       "phase": "T3",
       "stage": "TRAINING",
-      "updates": 720000,
-      "prior_updates": 705000,
+      "updates": 798727,
+      "prior_updates": 738717,
       "native_pid": 89990,
-      "native_state": "R",
-      "progress_age_seconds": 0.6,
+      "native_state": "S",
+      "progress_age_seconds": 9.8,
       "health": {
-        "adam_count": 720000.0,
+        "adam_count": 798727.0,
         "finite": 1.0,
-        "metric_max": 3456.13134765625,
-        "parameter_max": 7.206151485443115,
-        "state_step": 720001.0
+        "metric_max": 2800.159423828125,
+        "parameter_max": 7.675260066986084,
+        "state_step": 798728.0
       },
       "native_evaluations": 8,
       "matched_evaluations": 0,
@@ -1319,22 +1329,22 @@
         },
         {
           "path": "runs/D1_seed1/output/dummy/D1_seed1/sd001_20261014_164633/train.csv",
-          "rows": 134,
+          "rows": 149,
           "last": {
-            "training/actor/actor_loss": "0.124899276",
-            "training/actor/q": "-79.42886",
-            "training/actor/q_loss": "-0.05573853",
-            "training/critic/critic_loss": "89.73317",
-            "training/critic/distilled_critic_loss": "1.5349181",
-            "training/critic/floq_loss": "88.19824",
-            "training/critic/q": "-80.70975",
-            "training/critic/target_q": "-80.6068",
-            "training/critic/td_error": "1.6055242",
-            "training/grad/norm": "3456.1313",
-            "step": "720000"
+            "training/actor/actor_loss": "0.08621474",
+            "training/actor/q": "-56.529503",
+            "training/actor/q_loss": "-0.086749636",
+            "training/critic/critic_loss": "114.42146",
+            "training/critic/distilled_critic_loss": "2.7061524",
+            "training/critic/floq_loss": "111.71531",
+            "training/critic/q": "-58.235878",
+            "training/critic/target_q": "-58.13334",
+            "training/critic/td_error": "2.3301978",
+            "training/grad/norm": "3725.006",
+            "step": "795000"
           },
           "nonfinite": [],
-          "max_numeric_abs": 720000.0
+          "max_numeric_abs": 795000.0
         }
       ],
       "checkpoints": [
@@ -1519,7 +1529,7 @@
     }
   },
   "issues": [],
-  "available_memory_gib": 372.89,
+  "available_memory_gib": 375.05,
   "controllers": {
     "manager_started.json": {
       "pid": 3744621,
@@ -1555,23 +1565,23 @@
     {
       "pid": 74129,
       "ppid": 3744621,
-      "elapsed_seconds": 13998,
+      "elapsed_seconds": 15288,
       "cpu_percent": 0.0,
-      "rss_kb": 13640,
+      "rss_kb": 13664,
       "args": "/usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.job.json T3"
     },
     {
       "pid": 74156,
       "ppid": 74129,
-      "elapsed_seconds": 13998,
-      "cpu_percent": 33.3,
-      "rss_kb": 7793560,
+      "elapsed_seconds": 15287,
+      "cpu_percent": 32.8,
+      "rss_kb": 7800132,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed0.gate.json seed=0 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_0 restore_epoch=50000"
     },
     {
       "pid": 79115,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
+      "elapsed_seconds": 15263,
       "cpu_percent": 0.0,
       "rss_kb": 12656,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)"
@@ -1579,103 +1589,103 @@
     {
       "pid": 79116,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 846664,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.7,
+      "rss_kb": 846200,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork"
     },
     {
       "pid": 79117,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 842940,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 842444,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork"
     },
     {
       "pid": 79118,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 842280,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 841820,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork"
     },
     {
       "pid": 79119,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 843104,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 842640,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork"
     },
     {
       "pid": 79120,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 844060,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.7,
+      "rss_kb": 843564,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork"
     },
     {
       "pid": 79121,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 848960,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 848496,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork"
     },
     {
       "pid": 79122,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 847276,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 846780,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork"
     },
     {
       "pid": 79123,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 843924,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.7,
+      "rss_kb": 843460,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork"
     },
     {
       "pid": 79124,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 848028,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 847564,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork"
     },
     {
       "pid": 79125,
       "ppid": 74156,
-      "elapsed_seconds": 13973,
-      "cpu_percent": 1.5,
-      "rss_kb": 842448,
+      "elapsed_seconds": 15263,
+      "cpu_percent": 1.6,
+      "rss_kb": 841984,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork"
     },
     {
       "pid": 84864,
       "ppid": 3744621,
-      "elapsed_seconds": 13908,
+      "elapsed_seconds": 15197,
       "cpu_percent": 0.0,
-      "rss_kb": 13652,
+      "rss_kb": 13676,
       "args": "/usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.job.json T3"
     },
     {
       "pid": 84865,
       "ppid": 84864,
-      "elapsed_seconds": 13908,
-      "cpu_percent": 35.5,
-      "rss_kb": 7469728,
+      "elapsed_seconds": 15197,
+      "cpu_percent": 36.0,
+      "rss_kb": 7469232,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python main.py wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/G1_seed1.gate.json seed=1 env_name=humanoidmaze-medium-navigate-singletask-task1-v0 save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output agent.critic_type=floq offline_steps=1000000 online_steps=0 dataset_on_gpu=true n_steps_fused=4 is_final=true eval_episodes=100 n_eval_envs=10 eval_interval=100000 save_interval=100000 save_last_checkpoint=true log_interval=5000 log_on_wandb=false log_locally=true video_episodes=0 hydra.run.dir=. hydra.output_subdir=null restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/G1_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261014_162148_seed_1 restore_epoch=50000"
     },
     {
       "pid": 87155,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
+      "elapsed_seconds": 15175,
       "cpu_percent": 0.0,
       "rss_kb": 12656,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.resource_tracker import main;main(115)"
@@ -1683,119 +1693,119 @@
     {
       "pid": 87156,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.9,
-      "rss_kb": 844248,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.7,
+      "rss_kb": 843752,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=122) --multiprocessing-fork"
     },
     {
       "pid": 87157,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 848924,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 848460,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=125) --multiprocessing-fork"
     },
     {
       "pid": 87158,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 841880,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.7,
+      "rss_kb": 841416,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=128) --multiprocessing-fork"
     },
     {
       "pid": 87159,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 848812,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 848348,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=131) --multiprocessing-fork"
     },
     {
       "pid": 87160,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 843784,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 843320,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=134) --multiprocessing-fork"
     },
     {
       "pid": 87161,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 845432,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 844936,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=137) --multiprocessing-fork"
     },
     {
       "pid": 87162,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.7,
-      "rss_kb": 843552,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 843088,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=140) --multiprocessing-fork"
     },
     {
       "pid": 87165,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 846172,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 845676,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=143) --multiprocessing-fork"
     },
     {
       "pid": 87168,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.8,
-      "rss_kb": 842876,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 842380,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=146) --multiprocessing-fork"
     },
     {
       "pid": 87170,
       "ppid": 84865,
-      "elapsed_seconds": 13885,
-      "cpu_percent": 1.7,
-      "rss_kb": 847116,
+      "elapsed_seconds": 15175,
+      "cpu_percent": 1.6,
+      "rss_kb": 846620,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=116, pipe_handle=149) --multiprocessing-fork"
     },
     {
       "pid": 89820,
       "ppid": 3744621,
-      "elapsed_seconds": 13863,
+      "elapsed_seconds": 15152,
       "cpu_percent": 0.0,
-      "rss_kb": 13648,
+      "rss_kb": 13668,
       "args": "/usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.job.json T3"
     },
     {
       "pid": 89827,
       "ppid": 89820,
-      "elapsed_seconds": 13863,
-      "cpu_percent": 53.4,
-      "rss_kb": 2769128,
+      "elapsed_seconds": 15152,
+      "cpu_percent": 53.0,
+      "rss_kb": 2769104,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed0.gate.json --seed=0 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed0 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed0/output/dummy/D1_seed0/sd000_20261014_162149 --restore_epoch=50000"
     },
     {
       "pid": 89974,
       "ppid": 3744621,
-      "elapsed_seconds": 13862,
+      "elapsed_seconds": 15152,
       "cpu_percent": 0.0,
-      "rss_kb": 13660,
+      "rss_kb": 13684,
       "args": "/usr/bin/python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/run_manager.py --worker /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.job.json T3"
     },
     {
       "pid": 89990,
       "ppid": 89974,
-      "elapsed_seconds": 13862,
-      "cpu_percent": 54.4,
-      "rss_kb": 2780064,
+      "elapsed_seconds": 15152,
+      "cpu_percent": 54.3,
+      "rss_kb": 2780040,
       "args": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/dfql/bin/python main.py --wiring_gate=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/configs/D1_seed1.gate.json --seed=1 --env_name=cube-double-play-singletask-task2-v0 --save_dir=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output --agent=agents/dfql.py --agent.critic_type=floq --agent.alpha=2 --agent.discount=0.99 --agent.q_agg=mean --offline_steps=1000000 --online_steps=0 --eval_episodes=50 --eval_interval=100000 --save_interval=100000 --log_interval=5000 --wandb_mode=disabled --video_episodes=0 --run_group=D1_seed1 --agent.block_depth=2 --agent.block_width=512 --restore_path=/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/runs/D1_seed1/output/dummy/D1_seed1/sd001_20261014_162149 --restore_epoch=50000"
     },
     {
       "pid": 1673874,
       "ppid": 1,
-      "elapsed_seconds": 20692,
+      "elapsed_seconds": 21982,
       "cpu_percent": 0.0,
       "rss_kb": 14740,
       "args": "/usr/lib/systemd/systemd --user"
@@ -1803,47 +1813,47 @@
     {
       "pid": 1673877,
       "ppid": 1673874,
-      "elapsed_seconds": 20692,
+      "elapsed_seconds": 21981,
       "cpu_percent": 0.0,
       "rss_kb": 2860,
       "args": "(sd-pam)"
     },
     {
-      "pid": 1964659,
-      "ppid": 1964549,
-      "elapsed_seconds": 32,
+      "pid": 2495422,
+      "ppid": 2495295,
+      "elapsed_seconds": 30,
       "cpu_percent": 0.0,
-      "rss_kb": 7940,
-      "args": "sshd-session: xushijie3@pts/15"
+      "rss_kb": 7908,
+      "args": "sshd-session: xushijie3@pts/20"
     },
     {
-      "pid": 1964712,
-      "ppid": 1964659,
-      "elapsed_seconds": 32,
+      "pid": 2495443,
+      "ppid": 2495422,
+      "elapsed_seconds": 30,
       "cpu_percent": 0.0,
-      "rss_kb": 7596,
+      "rss_kb": 7576,
       "args": "-bash"
     },
     {
-      "pid": 1980028,
-      "ppid": 1964712,
+      "pid": 2516799,
+      "ppid": 2495443,
       "elapsed_seconds": 0,
-      "cpu_percent": 19.0,
-      "rss_kb": 12176,
+      "cpu_percent": 15.3,
+      "rss_kb": 12172,
       "args": "python code/monitor_all.py"
     },
     {
-      "pid": 1980139,
-      "ppid": 1980028,
+      "pid": 2516866,
+      "ppid": 2516799,
       "elapsed_seconds": 0,
-      "cpu_percent": 0.0,
-      "rss_kb": 7156,
+      "cpu_percent": 900.0,
+      "rss_kb": 7188,
       "args": "ps -u 1100 -o pid,ppid,etimes,pcpu,pmem,rss,args"
     },
     {
       "pid": 3744621,
       "ppid": 1,
-      "elapsed_seconds": 15350,
+      "elapsed_seconds": 16639,
       "cpu_percent": 0.0,
       "rss_kb": 11596,
       "args": "python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/all_eight_manager.py"
@@ -1851,7 +1861,7 @@
     {
       "pid": 3872394,
       "ppid": 1,
-      "elapsed_seconds": 15077,
+      "elapsed_seconds": 16366,
       "cpu_percent": 0.0,
       "rss_kb": 12776,
       "args": "python /home/xushijie3/work/flow_critic_comparative_train_v1_20261014/code/evaluation_manager.py --adopt-all-eight-parallel"
@@ -1861,51 +1871,51 @@
   "gpu_summary": [
     {
       "index": 0,
-      "used_mib": 17343,
-      "free_mib": 23121,
-      "utilization_percent": 0
+      "used_mib": 18505,
+      "free_mib": 21960,
+      "utilization_percent": 22
     },
     {
       "index": 1,
       "used_mib": 37031,
       "free_mib": 3434,
-      "utilization_percent": 88
+      "utilization_percent": 53
     },
     {
       "index": 2,
-      "used_mib": 23823,
-      "free_mib": 16642,
+      "used_mib": 23959,
+      "free_mib": 16506,
       "utilization_percent": 93
     },
     {
       "index": 3,
       "used_mib": 10855,
       "free_mib": 29609,
-      "utilization_percent": 68
+      "utilization_percent": 13
     },
     {
       "index": 4,
-      "used_mib": 3594,
-      "free_mib": 36870,
-      "utilization_percent": 30
+      "used_mib": 3600,
+      "free_mib": 36864,
+      "utilization_percent": 34
     },
     {
       "index": 5,
       "used_mib": 16127,
       "free_mib": 24338,
-      "utilization_percent": 100
+      "utilization_percent": 99
     },
     {
       "index": 6,
-      "used_mib": 11788,
-      "free_mib": 28677,
-      "utilization_percent": 100
+      "used_mib": 10760,
+      "free_mib": 29705,
+      "utilization_percent": 98
     },
     {
       "index": 7,
-      "used_mib": 4821,
-      "free_mib": 35643,
-      "utilization_percent": 79
+      "used_mib": 4823,
+      "free_mib": 35641,
+      "utilization_percent": 77
     }
   ],
   "own_gpu_processes": [
@@ -2032,8 +2042,8 @@
   ],
   "other_users_gpu_aggregate": {
     "0": {
-      "processes": 2,
-      "memory_mib": 14054
+      "processes": 3,
+      "memory_mib": 15210
     },
     "1": {
       "processes": 1,
@@ -2041,7 +2051,7 @@
     },
     "2": {
       "processes": 4,
-      "memory_mib": 16468
+      "memory_mib": 16604
     },
     "3": {
       "processes": 2,
@@ -2049,19 +2059,19 @@
     },
     "4": {
       "processes": 2,
-      "memory_mib": 3574
+      "memory_mib": 3580
     },
     "5": {
       "processes": 4,
       "memory_mib": 14876
     },
     "6": {
-      "processes": 3,
-      "memory_mib": 11760
+      "processes": 2,
+      "memory_mib": 10740
     },
     "7": {
       "processes": 2,
-      "memory_mib": 3580
+      "memory_mib": 3582
     }
   },
   "unknown_own_gpu_pids": [],
