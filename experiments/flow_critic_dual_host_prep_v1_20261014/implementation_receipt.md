@@ -5,7 +5,7 @@ Status: **ZERO_TRAIN_VERIFIED**. GFP + floq Critic and DFQL + floq Critic implem
 **This card executed 0 optimizer/parameter updates, 0 training runs and no online learning.** GPU work consisted solely of forward, loss, gradient and JIT checks. New random-state tests use initialized state step 1, unchanged afterward; restored historical model step values are also unchanged.
 
 Server root: `/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014`.
-Local archive branch: `codex/flow-critic-dual-host-prep-v1-20261014`. No push, PR or merge. Original primary repository branch, HEAD and working status are unchanged.
+Local archive branch: `codex/flow-critic-dual-host-prep-v1-20261014`. Preparation initially completed without push, PR or merge. The subsequent user instruction “推送” authorizes publication of this registered branch only: https://github.com/rollinpioneer/graph/tree/codex/flow-critic-dual-host-prep-v1-20261014. PR/merge and training remain unauthorized. Original primary repository branch, HEAD and working status are unchanged.
 
 Completed: required pinned sources and private host environments, official data loading/relabeling for four tasks, existing-asset identity audit, namespaced floq expected-value core, host adapters, 12 complete G0/G1/D0/D1 task configurations and six differences, and Z0–Z8 verification. Original host files and network utilities are unchanged; source snapshot files are read-only.
 

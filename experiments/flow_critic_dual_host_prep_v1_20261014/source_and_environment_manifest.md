@@ -3,7 +3,7 @@
 Card: FLOW-CRITIC-DUAL-HOST-PREP-V1. Authorized endpoint: asset preparation, two implementations, zero-training acceptance. Training, optimizer updates, online learning, Git push, PR and merge are not authorized.
 
 Server root: `/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014`.
-Archive branch: `codex/flow-critic-dual-host-prep-v1-20261014`, local to the server repository; no remote branch is created by this card.
+Archive branch: `codex/flow-critic-dual-host-prep-v1-20261014`, initially local to the server repository; subsequent user authorization on 2026-10-14 permits publication at https://github.com/rollinpioneer/graph/tree/codex/flow-critic-dual-host-prep-v1-20261014.
 
 | Asset | Fixed commit | Acquisition |
 |---|---|---|
@@ -37,4 +37,4 @@ Tests use NVIDIA A100-SXM4-40GB GPUs 3 and 7 for the two host suites, float32 pa
 
 The two named prior reports were not found in the approved local/remote workspace searches and remain `MISSING_USER_ACCESS`. The card and fixed sources provide the implemented contract; no conclusions are attributed to unavailable reports. No DFQL trained weights or new-task Baseline reproduction are claimed.
 
-The branch was created from the repository's existing `origin/main` without altering the primary checkout or its untracked artifacts. All pushes are prohibited for this card, overriding the standing archive-push convention.
+The branch was created from the repository's existing `origin/main` without altering the primary checkout or its untracked artifacts. The preparation phase prohibited pushing. The subsequent user instruction “推送” authorizes ordinary publication of this registered branch, while training, PR and merge remain unauthorized.
