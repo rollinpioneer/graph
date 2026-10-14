@@ -118,7 +118,11 @@ def main():
             agg['processes']+=1;agg['memory_mib']+=int(a[2])
     out['own_gpu_processes']=own_gpu;out['other_users_gpu_aggregate']=others
     out['unknown_own_gpu_pids']=[x['pid'] for x in own_gpu if x['pid'] not in {p['pid'] for p in account}]
-    out['status']='ISSUES' if out['issues'] else 'RUNNING_HEALTHY'
+    active_gpus={v['gpu'] for v in out['runs'].values()}
+    out['resource_watches']=[dict(gpu=x['index'],free_mib=x['free_mib'],reserve_mib=4096,
+                                    classification='RESERVE_BELOW_FREEZE_NOT_TRAINING_FAILURE')
+                              for x in out['gpu_summary'] if x['index'] in active_gpus and x['free_mib']<4096]
+    out['status']='ISSUES' if out['issues'] else ('RUNNING_RESOURCE_WATCH' if out['resource_watches'] else 'RUNNING_HEALTHY')
     path=ROOT/'receipts/monitor'/time.strftime('audit_%Y%m%dT%H%M%SZ.json',time.gmtime(out['epoch']))
     path.write_text(json.dumps(out,indent=2));(ROOT/'receipts/monitor/audit_latest.json').write_text(json.dumps(out,indent=2))
     print('AUDIT',out['status'],str(path.relative_to(ROOT)))
