@@ -1,6 +1,7 @@
 """Read-only heartbeat audit; never creates/updates/restores a live Agent."""
 from pathlib import Path
 import json,hashlib,time,subprocess,os,csv,math
+from controller_completion import completed_work
 ROOT=Path(__file__).resolve().parents[1]
 def read(p):
     return json.loads(p.read_text()) if p.exists() else None
@@ -87,8 +88,11 @@ def main():
     out['controllers']={}
     for name in ['manager_started.json','evaluation_manager_started.json']:
         value=read(ROOT/'receipts'/name);pid=value['pid']
-        state=proc(pid);out['controllers'][name]=dict(pid=pid,state=state,receipt=value)
-        if state in ['ABSENT','Z']:out['issues'].append(dict(reason='Controller absent/zombie',controller=name))
+        state=proc(pid)
+        terminal=completed_work(name,current,ROOT)
+        out['controllers'][name]=dict(pid=pid,state=state,receipt=value,terminal_work_receipts_verified=terminal)
+        if state in ['ABSENT','Z'] and not terminal:
+            out['issues'].append(dict(reason='Controller absent/zombie with unfinished or unverified work',controller=name))
     account=[]
     for line in current['own_processes'].splitlines()[1:]:
         a=line.split(None,6)
