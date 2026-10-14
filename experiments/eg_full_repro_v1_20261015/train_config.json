@@ -6,8 +6,24 @@
   "upstream_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
   "seed": 20261015,
   "camera": "kinect",
-  "train_scene_ids_inclusive": [0, 99],
-  "test_scene_ids_inclusive": {"seen": [100, 129], "similar": [130, 159], "novel": [160, 189]},
+  "train_scene_ids_inclusive": [
+    0,
+    99
+  ],
+  "test_scene_ids_inclusive": {
+    "seen": [
+      100,
+      129
+    ],
+    "similar": [
+      130,
+      159
+    ],
+    "novel": [
+      160,
+      189
+    ]
+  },
   "frames_per_scene": 256,
   "training_frames": 25600,
   "test_frames": 23040,
@@ -25,7 +41,32 @@
   "training_replicates": 1,
   "preflight_passed": false,
   "formal_training_started": false,
-  "official_reference_ap_percent": {"seen": 62.59, "similar": 51.73, "novel": 19.54},
-  "measured_ap_percent": {"seen": null, "similar": null, "novel": null},
-  "upstream_defaults_pending_source_audit": true
+  "official_reference_ap_percent": {
+    "seen": 62.59,
+    "similar": 51.73,
+    "novel": 19.54
+  },
+  "measured_ap_percent": {
+    "seen": null,
+    "similar": null,
+    "novel": null
+  },
+  "upstream_defaults_pending_source_audit": false,
+  "weight_decay": 0,
+  "num_view": 300,
+  "num_angle": 12,
+  "num_depth": 4,
+  "m_point": 1024,
+  "grasp_max_width": 0.1,
+  "graspness_threshold": 0.1,
+  "objectness_loss_weight": 1,
+  "graspness_loss_weight": 10,
+  "view_loss_weight": 100,
+  "angle_loss_weight": 1,
+  "depth_loss_weight": 1,
+  "score_loss_weight": 1,
+  "width_loss_weight": 10,
+  "dataloader_workers": 2,
+  "inference_batch_size": 4,
+  "collision_thresh": 0
 }

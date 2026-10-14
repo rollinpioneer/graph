@@ -1,0 +1,138 @@
+diff --git a/dataset/generate_economic.py b/dataset/generate_economic.py
+index 6eb608f..9b0b17e 100644
+--- a/dataset/generate_economic.py
++++ b/dataset/generate_economic.py
+@@ -28,7 +28,7 @@ if __name__ == "__main__":
+ 
+     # collect the labels from object-level to scene-level
+     number = 0
+-    for label_path in os.listdir(scenes_data_folders):
++    for label_path in [f"scene_{i:04d}" for i in range(100)]:
+         print(f"---------The {number} scenes----------")
+         meta = scio.loadmat(os.path.join(scenes_data_folders, label_path, cfgs.camera_type, 'meta', '0000.mat'))
+         obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
+diff --git a/dataset/generate_graspness.py b/dataset/generate_graspness.py
+index 002d16c..86fed43 100755
+--- a/dataset/generate_graspness.py
++++ b/dataset/generate_graspness.py
+@@ -1,7 +1,7 @@
+ import numpy as np
+ import os
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
++# EG-FULL-REPRO-V1: respect the caller CUDA_VISIBLE_DEVICES mapping.
+ 
+ from PIL import Image
+ import scipy.io as scio
+@@ -119,6 +119,8 @@ if __name__ == '__main__':
+ 
+             max_graspness = np.max(cloud_masked_graspness)
+             min_graspness = np.min(cloud_masked_graspness)
++            if not np.isfinite(cloud_masked_graspness).all() or max_graspness <= min_graspness:
++                raise ValueError(f"Invalid graspness: scene={scene_id} frame={ann_id} min={min_graspness} max={max_graspness}")
+             cloud_masked_graspness = (cloud_masked_graspness - min_graspness) / (max_graspness - min_graspness)
+ 
+             np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)
+diff --git a/train.py b/train.py
+index 011836c..825101b 100755
+--- a/train.py
++++ b/train.py
+@@ -3,12 +3,20 @@ import os
+ import numpy as np
+ import math
+ import time
++import random
++import json
+ 
+ # PyTorch Libraries
+ import torch
+ import torch.optim as optim
+ from torch.utils.data import DataLoader
+ 
++EXPERIMENT_SEED = int(os.environ.get("EG_SEED", "20261015"))
++random.seed(EXPERIMENT_SEED)
++np.random.seed(EXPERIMENT_SEED)
++torch.manual_seed(EXPERIMENT_SEED)
++torch.cuda.manual_seed_all(EXPERIMENT_SEED)
++
+ # Config
+ from utils.arguments import cfgs
+ 
+@@ -67,6 +75,12 @@ if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
+     net.load_state_dict(checkpoint['model_state_dict'])
+     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+     start_epoch = checkpoint['epoch']
++    if 'rng_state' in checkpoint:
++        rng = checkpoint['rng_state']
++        random.setstate(rng['python'])
++        np.random.set_state(rng['numpy'])
++        torch.set_rng_state(rng['torch'])
++        torch.cuda.set_rng_state_all(rng['cuda'])
+     log_string("-> loaded checkpoint %s (epoch: %d)" % (CHECKPOINT_PATH, start_epoch))
+ 
+ 
+@@ -86,6 +100,8 @@ def adjust_learning_rate(optimizer, epoch):
+ # ------TRAINING BEGIN  ------------
+ def train_one_epoch():
+     stat_dict = {}  # collect statistics
++    epoch_totals = {}
++    epoch_batches = 0
+     adjust_learning_rate(optimizer, EPOCH_CNT)
+     # set model to training mode
+     net.train()
+@@ -113,6 +129,8 @@ def train_one_epoch():
+         # Compute loss and gradients, update parameters.
+         loss, end_points = get_loss_economicgrasp(end_points)
+ 
++        if not torch.isfinite(loss):
++            raise FloatingPointError(f"Nonfinite training loss: epoch={EPOCH_CNT} batch={batch_idx}")
+         loss.backward()
+         if (batch_idx + 1) % 1 == 0:
+             optimizer.step()
+@@ -126,6 +144,15 @@ def train_one_epoch():
+                 if key not in stat_dict: stat_dict[key] = 0
+                 stat_dict[key] += end_points[key].item()
+ 
++        row = {key: float(end_points[key].item()) for key in end_points if ("A" in key or "B" in key or "D" in key) and torch.is_tensor(end_points[key]) and end_points[key].numel() == 1}
++        if not all(math.isfinite(v) for v in row.values()):
++            raise FloatingPointError("Nonfinite training diagnostic")
++        epoch_batches += 1
++        for key, value in row.items():
++            epoch_totals[key] = epoch_totals.get(key, 0.0) + value
++        with open(os.path.join(cfgs.log_dir, "batch_metrics.jsonl"), "a") as metrics:
++            metrics.write(json.dumps({"epoch": EPOCH_CNT + 1, "batch": batch_idx + 1, "global_step": EPOCH_CNT * num_batches + batch_idx + 1, "lr": get_current_lr(EPOCH_CNT), "metrics": row}) + "\n")
++
+         batch_interval = 20
+ 
+         if (batch_idx + 1) % batch_interval == 0:
+@@ -140,6 +167,8 @@ def train_one_epoch():
+ 
+         data_start_time = time.time()
+ 
++    return {key: value / epoch_batches for key, value in epoch_totals.items()}
++
+ 
+ def train(start_epoch):
+     global EPOCH_CNT
+@@ -148,12 +177,19 @@ def train(start_epoch):
+         log_string(f'**** EPOCH {epoch:<3} ****')
+         log_string('Current learning rate: %f' % (get_current_lr(epoch)))
+ 
+-        np.random.seed()
+-        train_one_epoch()
++        np.random.seed(EXPERIMENT_SEED + epoch)
++        torch.cuda.reset_peak_memory_stats()
++        epoch_started = time.perf_counter()
++        epoch_metrics = train_one_epoch()
++        torch.cuda.synchronize()
++        with open(os.path.join(cfgs.log_dir, "epoch_metrics.jsonl"), "a") as metrics:
++            metrics.write(json.dumps({"epoch": epoch + 1, "metrics": epoch_metrics, "lr": get_current_lr(epoch), "wall_seconds": time.perf_counter() - epoch_started, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(), "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved()}) + "\n")
+ 
+         # Save checkpoint
+         save_dict = {'epoch': epoch + 1,  # after training one epoch, the start_epoch should be epoch+1
+                      'optimizer_state_dict': optimizer.state_dict(),
++                     'seed': EXPERIMENT_SEED,
++                     'rng_state': {'python': random.getstate(), 'numpy': np.random.get_state(), 'torch': torch.get_rng_state(), 'cuda': torch.cuda.get_rng_state_all()},
+                      }
+         try:  # with nn.DataParallel() the net is added as a submodule of DataParallel
+             save_dict['model_state_dict'] = net.module.state_dict()

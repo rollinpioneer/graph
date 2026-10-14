@@ -1,0 +1,39 @@
+diff --git a/src/3rdparty/concurrent_unordered_map.cuh b/src/3rdparty/concurrent_unordered_map.cuh
+index ed8e1b2..7a38ab4 100644
+--- a/src/3rdparty/concurrent_unordered_map.cuh
++++ b/src/3rdparty/concurrent_unordered_map.cuh
+@@ -1,3 +1,4 @@
++#include <thrust/execution_policy.h>
+ /*
+  * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
+  *
+diff --git a/src/convolution_kernel.cuh b/src/convolution_kernel.cuh
+index aed7227..6e040d4 100644
+--- a/src/convolution_kernel.cuh
++++ b/src/convolution_kernel.cuh
+@@ -1,3 +1,4 @@
++#include <thrust/execution_policy.h>
+ /*  Copyright (c) Chris Choy (chrischoy@ai.stanford.edu).
+  *
+  *  Permission is hereby granted, free of charge, to any person obtaining a copy
+diff --git a/src/coordinate_map_gpu.cu b/src/coordinate_map_gpu.cu
+index fb7325d..0c0a202 100644
+--- a/src/coordinate_map_gpu.cu
++++ b/src/coordinate_map_gpu.cu
+@@ -1,3 +1,5 @@
++#include <thrust/unique.h>
++#include <thrust/remove.h>
+ /*
+  * Copyright (c) 2020 NVIDIA CORPORATION.
+  * Copyright (c) 2018-2020 Chris Choy (chrischoy@ai.stanford.edu)
+diff --git a/src/spmm.cu b/src/spmm.cu
+index 8891a56..33df080 100644
+--- a/src/spmm.cu
++++ b/src/spmm.cu
+@@ -1,3 +1,6 @@
++#include <thrust/execution_policy.h>
++#include <thrust/reduce.h>
++#include <thrust/sort.h>
+ /*
+  * Copyright (c) 2020 NVIDIA Corporation.
+  * Copyright (c) 2018-2020 Chris Choy (chrischoy@ai.stanford.edu).

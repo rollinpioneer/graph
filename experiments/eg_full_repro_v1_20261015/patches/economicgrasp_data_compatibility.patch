@@ -1,0 +1,35 @@
+diff --git a/dataset/generate_economic.py b/dataset/generate_economic.py
+index 6eb608f..9b0b17e 100644
+--- a/dataset/generate_economic.py
++++ b/dataset/generate_economic.py
+@@ -28,7 +28,7 @@ if __name__ == "__main__":
+ 
+     # collect the labels from object-level to scene-level
+     number = 0
+-    for label_path in os.listdir(scenes_data_folders):
++    for label_path in [f"scene_{i:04d}" for i in range(100)]:
+         print(f"---------The {number} scenes----------")
+         meta = scio.loadmat(os.path.join(scenes_data_folders, label_path, cfgs.camera_type, 'meta', '0000.mat'))
+         obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
+diff --git a/dataset/generate_graspness.py b/dataset/generate_graspness.py
+index 002d16c..86fed43 100755
+--- a/dataset/generate_graspness.py
++++ b/dataset/generate_graspness.py
+@@ -1,7 +1,7 @@
+ import numpy as np
+ import os
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
++# EG-FULL-REPRO-V1: respect the caller CUDA_VISIBLE_DEVICES mapping.
+ 
+ from PIL import Image
+ import scipy.io as scio
+@@ -119,6 +119,8 @@ if __name__ == '__main__':
+ 
+             max_graspness = np.max(cloud_masked_graspness)
+             min_graspness = np.min(cloud_masked_graspness)
++            if not np.isfinite(cloud_masked_graspness).all() or max_graspness <= min_graspness:
++                raise ValueError(f"Invalid graspness: scene={scene_id} frame={ann_id} min={min_graspness} max={max_graspness}")
+             cloud_masked_graspness = (cloud_masked_graspness - min_graspness) / (max_graspness - min_graspness)
+ 
+             np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)

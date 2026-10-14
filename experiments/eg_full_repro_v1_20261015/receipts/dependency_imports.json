@@ -1,0 +1,12 @@
+{
+  "command": [
+    "bash",
+    "-c",
+    "source \"$1/environment.sh\"; export CUDA_VISIBLE_DEVICES=0; python -m pip check; python -c \"import torch,torchvision,numpy,scipy,open3d,tensorboard,graspnetAPI; print(graspnetAPI.__file__)\"",
+    "eg",
+    "/home/xushijie3/work/eg_full_repro_v1_20261015"
+  ],
+  "rc": 0,
+  "stdout": "No broken requirements found.\n/home/xushijie3/work/eg_full_repro_v1_20261015/runtime/conda/lib/python3.10/site-packages/graspnetAPI/__init__.py\n",
+  "stderr": "WARNING:root:Failed to import geometry msgs in rigid_transformations.py.\nWARNING:root:Failed to import ros dependencies in rigid_transforms.py\nWARNING:root:autolab_core not installed as catkin package, RigidTransform ros methods will be unavailable\n"
+}

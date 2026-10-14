@@ -1,0 +1,18 @@
+{
+  "name": "minkowski_build",
+  "command": [
+    "bash",
+    "-c",
+    "source \"$1/environment.sh\"; export LIBRARY_PATH=\"$CONDA_PREFIX/lib:$CUDA_HOME/lib\"; cd \"$1/runtime/MinkowskiEngine\"; exec python setup.py install --force_cuda --blas=openblas --blas_include_dirs=\"$CONDA_PREFIX/include\" --cuda_home=\"$CUDA_HOME\"",
+    "eg",
+    "/home/xushijie3/work/eg_full_repro_v1_20261015"
+  ],
+  "cwd": null,
+  "started_utc": "2026-10-14T17:24:43.273275+00:00",
+  "runner_pid": 2143724,
+  "status": "FAILED",
+  "child_pid": 2143725,
+  "returncode": 1,
+  "ended_utc": "2026-10-14T17:24:48.535434+00:00",
+  "wall_seconds": 5.262196779251099
+}
