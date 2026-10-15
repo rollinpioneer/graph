@@ -1,0 +1,109 @@
+{
+  "time": 1792068737.5154927,
+  "training_scope": "GFP/ReBRAC task4 seeds0/1 each1M",
+  "new_training_jobs": 2,
+  "reused_completed_jobs": 2,
+  "optimizer_updates_extra": 0,
+  "branch": "codex/gfp-task4-baseline-pilot-v1-20261015",
+  "automation": {
+    "id": "lab",
+    "status": "ACTIVE",
+    "interval_minutes": 30
+  },
+  "runs": {
+    "GFP_seed0": {
+      "status.json": {
+        "status": "RUNNING",
+        "worker_pid": 4163162,
+        "pid": 4163179,
+        "start_unix": 1792068049.4005318,
+        "gpu": 0
+      },
+      "training_progress.json": {
+        "component": "Flow",
+        "elapsed": 637.9644658565521,
+        "epoch": 1792068688.2266293,
+        "job": "GFP_seed0",
+        "pid": 4163179,
+        "stage": "NATIVE_EVALUATION",
+        "updates": 100000
+      },
+      "dispatch_admission.json": {
+        "actual_updates": 4,
+        "checkpoint": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_0/dispatch_admission",
+        "completed_updates": 4,
+        "health": {
+          "adam_count": 4.0,
+          "finite": 1.0,
+          "metric_max": 43.31058120727539,
+          "parameter_max": 1.0011906623840332,
+          "state_step": 5.0
+        },
+        "path": "official_gpu_sampler_fused",
+        "restored_state_sha256": "71ea62dd6dcdbb70f835facc021d4975440fb5c31d168c1a6ffd4a6cf7d8c7a1",
+        "status": "PASS"
+      }
+    },
+    "GFP_seed1": {
+      "status.json": {
+        "status": "RUNNING",
+        "worker_pid": 4163163,
+        "pid": 4163180,
+        "start_unix": 1792068049.4005218,
+        "gpu": 4
+      },
+      "training_progress.json": {
+        "component": "Flow",
+        "elapsed": 663.2840898036957,
+        "epoch": 1792068713.5457833,
+        "job": "GFP_seed1",
+        "pid": 4163180,
+        "stage": "NATIVE_EVALUATION",
+        "updates": 100000
+      },
+      "dispatch_admission.json": {
+        "actual_updates": 4,
+        "checkpoint": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_1/dispatch_admission",
+        "completed_updates": 4,
+        "health": {
+          "adam_count": 4.0,
+          "finite": 1.0,
+          "metric_max": 373.1859130859375,
+          "parameter_max": 1.001188039779663,
+          "state_step": 5.0
+        },
+        "path": "official_gpu_sampler_fused",
+        "restored_state_sha256": "333b3db96d2cfa1d829e2f3195a5623efc321146b1975d4eeddf9211b9d19921",
+        "status": "PASS"
+      }
+    },
+    "ReBRAC_seed0": {
+      "status.json": {
+        "exit_code": 0,
+        "source": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s0",
+        "status": "COMPLETED_ADOPTED",
+        "step": 1000000
+      },
+      "progress.json": {
+        "step": 800000,
+        "episodes_completed": 69,
+        "time": 1792068733.9604635,
+        "optimizer_updates": 0
+      }
+    },
+    "ReBRAC_seed1": {
+      "status.json": {
+        "exit_code": 0,
+        "source": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s1",
+        "status": "COMPLETED_ADOPTED",
+        "step": 1000000
+      },
+      "progress.json": {
+        "step": 800000,
+        "episodes_completed": 68,
+        "time": 1792068735.2748895,
+        "optimizer_updates": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# T1-A activation and continuation
+
+Scope and immutable evaluation/Z2 bounds are in EXPERIMENT_CARD.md. Branch codex/gfp-task4-baseline-pilot-v1-20261015. Training is active, results are not yet final.
+
+- GFP seeds0/1: newly launched on GPUs0/4. Both first native fused updates passed numerical/counter/full-save-restore admission; these four updates count inside each1M. Never restart automatically.
+- ReBRAC seeds0/1: existing task4 original-control jobs in grebrac_l1_v1_20261015 finished1M with exit0. Admitted read-only after original-loss/gradient exact equivalence (max difference0), official hyperparameters, matching dependencies/data and all five required checkpoints. This supplies the two specified baselines without duplicate2M training. Selection was fixed seeds0/1, not performance. Existing guided variants and seeds2/3 are excluded.
+- ReBRAC old native evaluation uses simple spawn; new GFP uses previously verified inherited-global-RNG spawn. Preserve native numbers separately. Unified matched evaluations control global/reset/policy RNG for all four models. Old NumPy/Python RNG checkpoint sidecars and continuous health telemetry are absent; do not claim old checkpoints verified for exact training continuation.
+
+Controllers are already dispatched; identities in receipts/controllers_dispatched.json. evaluation_manager.py evaluates each completed job at800k/900k/1M once,100 episodes each, saves complete numerical trajectories. z2_manager.py waits for GFP completion, then probe/analyze/plots/spatial execute purely read-only. Do not start duplicate controllers. Native process exits and receipts are authoritative.
+
+Monitor with system python code/monitor_all.py. Existing lab heartbeat resumed every30min; ordinary progress stays quiet. Exceptions preserve artifacts and stop affected new work without retry or tuning. Check real process liveness if manager output becomes stale.
+
+When completed: run code/topology.py (the already-running Z2 coordinator predates its addition) and code/summarize.py to assert all initial hashes and create last-three results and spatial occupancy. Compare task4 reports/controlled_effects.json, distance_metrics.json and spatial_guidance.json against task1 /home/xushijie3/work/gfp_guidance_distance_z01_20261015. Inspect data_coverage.json and matched failure/success occupancy by checkpoint and seed, accounting for unequal visit duration and trajectory clusters. The whole-batch normalization and original sample draws are unchanged. Future data progress is only a collection-policy proxy. H1a alone cannot establish harmful guidance or explain task4. Write one joint diagnostic report with GO/DIAGNOSE/NO-GO, costs, native/matched separation and two-seed limits. No automatic additional training.
+
+Archive code/card/configs/metrics/receipts with code/archive.py, inspect explicit manifest/staged diff and branch, commit/push normally with deployment identity, verify remote SHA. Large checkpoints/data/trajs/full logs remain on server. Sync this folder's light handoff to local reports/gfp_task4_baseline_pilot_v1_20261015. Pause lab after final delivery.

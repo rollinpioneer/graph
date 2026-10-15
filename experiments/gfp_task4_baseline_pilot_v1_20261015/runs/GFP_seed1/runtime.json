@@ -1,0 +1,59 @@
+{
+  "agent_config": {
+    "action_dim": 21,
+    "actor_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "actor_layer_norm": false,
+    "agent_name": "gfp",
+    "alpha": 0.3,
+    "batch_size": 256,
+    "discount": 0.995,
+    "encode_time_dim": 64,
+    "encoder": null,
+    "eta_temperature": 0.001,
+    "eta_temperature_online": 0.001,
+    "flow_steps": 10,
+    "guidance_agg": "min",
+    "guidance_fn": "softmax",
+    "layer_norm": true,
+    "log_metrics": true,
+    "lr": 0.0003,
+    "normalize_q_loss": true,
+    "ob_dims": [
+      69
+    ],
+    "q_agg": "mean",
+    "target_agg": "mean",
+    "target_use_next": false,
+    "tau": 0.005,
+    "value_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ]
+  },
+  "devices": [
+    "cuda:0"
+  ],
+  "gate": {
+    "critic_type": "scalar",
+    "host": "gfp",
+    "online_learning_allowed": false,
+    "optimizer_steps_allowed": 1000000,
+    "seed": 1,
+    "stage": "T1",
+    "task": "humanoidmaze-medium-navigate-singletask-task4-v0",
+    "training_authorized": true
+  },
+  "initial_step": 1,
+  "jax_enable_x64": false,
+  "jax_version": "0.6.2",
+  "matmul_precision": "None",
+  "output_dir": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_1",
+  "pid": 4163180
+}

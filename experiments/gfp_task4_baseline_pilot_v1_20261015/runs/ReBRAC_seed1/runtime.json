@@ -1,0 +1,75 @@
+{
+  "adopted": true,
+  "cfg": {
+    "agent": {
+      "actor_fc_scale": 0.01,
+      "actor_freq": 2,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "actor_layer_norm": false,
+      "actor_noise": 0.2,
+      "actor_noise_clip": 0.5,
+      "agent_name": "rebrac",
+      "alpha_actor": 0.01,
+      "alpha_critic": 0.01,
+      "batch_size": 256,
+      "discount": 0.995,
+      "encoder": null,
+      "eta_temperature": 0.001,
+      "guidance": false,
+      "guidance_normalize": true,
+      "layer_norm": true,
+      "lr": 0.0003,
+      "q_agg": "mean",
+      "tanh_squash": true,
+      "tau": 0.005,
+      "value_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    "balanced_sampling": false,
+    "buffer_size": 2000000,
+    "dataset_on_gpu": true,
+    "env_name": "humanoidmaze-medium-navigate-singletask-task4-v0",
+    "eval_episodes": 100,
+    "eval_flow_policy": true,
+    "eval_interval": 100000,
+    "is_final": true,
+    "log_interval": 5000,
+    "log_locally": true,
+    "log_metrics": true,
+    "log_on_wandb": false,
+    "n_eval_envs": 10,
+    "n_steps_fused": 4,
+    "offline_steps": 1000000,
+    "online_steps": 0,
+    "pixel_based": {
+      "encoder": "impala_small",
+      "frame_stack": 3,
+      "p_aug": 0.5
+    },
+    "restore_epoch": null,
+    "restore_path": null,
+    "save_dir": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s1/out/rebrac_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_193135_seed_1",
+    "save_interval": 100000,
+    "save_last_checkpoint": true,
+    "seed": 1,
+    "video_episodes": 0,
+    "video_frame_skip": 3,
+    "wandb": {
+      "group": "Final",
+      "project": "gfp",
+      "settings": {
+        "x_disable_stats": true
+      }
+    }
+  },
+  "output_dir": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s1/out/rebrac_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_193135_seed_1"
+}
