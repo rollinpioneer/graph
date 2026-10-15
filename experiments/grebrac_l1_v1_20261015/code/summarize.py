@@ -17,6 +17,7 @@ def num(x):
     except (TypeError, ValueError):
         return None
 
+# success.csv already stores percentages (utils/evaluation.py: 100 * eval_info["success"]).
 rows = []
 for d in sorted(glob.glob(os.path.join(runs_dir, "*_task*_s*"))):
     m = re.match(r"([RG])_task(\d)_s(\d+)$", os.path.basename(d))
@@ -31,7 +32,7 @@ for d in sorted(glob.glob(os.path.join(runs_dir, "*_task*_s*"))):
     final = next((num(r.get("final_Actor")) for r in succ if num(r.get("final_Actor")) is not None), None)
     last = train[-1] if train else {}
     exitj = json.load(open(os.path.join(d, "exit.json"))) if os.path.exists(os.path.join(d, "exit.json")) else None
-    rss = None
+    rss = wall = None
     tv = os.path.join(d, "time_v.txt")
     if os.path.exists(tv):
         for line in open(tv):
@@ -43,16 +44,16 @@ for d in sorted(glob.glob(os.path.join(runs_dir, "*_task*_s*"))):
         arm=arm, task=task, seed=seed,
         step=int(float(last.get("step", 0) or 0)),
         n_evals=len(curve),
-        success_by_100k=[None if c is None else round(100 * c, 2) for c in curve],
-        final_actor=None if final is None else round(100 * final, 2),
-        last3_mean=round(100 * sum(curve[-3:]) / 3, 2) if len(curve) >= 10 else None,
+        success_by_100k=[None if c is None else round(c, 2) for c in curve],
+        final_actor=None if final is None else round(final, 2),
+        last3_mean=round(sum(curve[-3:]) / 3, 2) if len(curve) >= 10 else None,
         train_time_s=num(last.get("time/total_time")),
         val_q_mean=num(last.get("validation/critic/q_mean")),
         val_guidance=num(last.get("validation/actor/guidance")),
         val_g_above_75=num(last.get("validation/actor/guidance_above_75")),
         val_g_above_10=num(last.get("validation/actor/guidance_above_10")),
         val_mse=num(last.get("validation/actor/mse")),
-        exit=exitj, max_rss_gib=None if rss is None else round(rss, 2),
+        exit=exitj, max_rss_gib=None if rss is None else round(rss, 2), wall=wall,
     ))
 
 json.dump(rows, open(os.path.join(out_dir, "per_run.json"), "w"), indent=1)
