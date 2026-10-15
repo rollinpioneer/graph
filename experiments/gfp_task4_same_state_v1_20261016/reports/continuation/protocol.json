@@ -1,0 +1,19 @@
+{
+  "source_commit": "0fad5452a634a602b6c2fe7510ec5d612fb5ddfe",
+  "states": [
+    "s1_e010_t0061",
+    "s1_e003_t0056"
+  ],
+  "scope": "All 96 existing branches for the two requested states; 0 new simulation/model calls/training",
+  "time_axis": "h=0 is captured state; action[h] produces observation[h+1]; original episode index=h+61 or h+56",
+  "stable": "head>=1.2 and torso_zz>=0.7",
+  "low": "head<0.6 or torso_zz<0.3",
+  "events": "first leaving initial cell and first return; cardinal x thresholds do not encode torque direction",
+  "sustained_west": "10 consecutive observations with COM vx<-0.1m/s",
+  "sustained_low": "10 consecutive observations with head<0.6 or torso_zz<0.3",
+  "sustained_pair_position": "first 20 consecutive observations with |paired root x difference|>=0.5m, signed difference also retained",
+  "sustained_pair_action": "first 20 consecutive actions with between-policy RMS difference>=0.2 per actuator; descriptive only",
+  "comparison": "common saved follow-up RNG; no causal attribution from differing actions at already divergent states",
+  "new_environment_steps": 0,
+  "optimizer_updates": 0
+}

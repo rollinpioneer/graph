@@ -3,7 +3,7 @@ import json,hashlib,shutil,subprocess
 R=Path(__file__).resolve().parents[1];A=R/'archive_worktree';PREFIX=Path('experiments/gfp_task4_same_state_v1_20261016');BRANCH='codex/gfp-task4-same-state-v1-20261016'
 assert subprocess.check_output(['git','-C',str(A),'branch','--show-current'],text=True).strip()==BRANCH
 files=[R/'EXPERIMENT_CARD.md']
-for pat in ['code/*.py','configs/*.json','reports/*.md','reports/*.json','reports/*.csv','reports/*.png','receipts/*.json','receipts/*.jsonl','attempts/*/*.json','attempts/*/*.py']:files.extend(R.glob(pat))
+for pat in ['code/*.py','configs/*.json','reports/*.md','reports/*.json','reports/*.csv','reports/*.png','reports/continuation/*.md','reports/continuation/*.json','reports/continuation/*.csv','reports/continuation/*.png','receipts/*.json','receipts/*.jsonl','attempts/*/*.json','attempts/*/*.py']:files.extend(R.glob(pat))
 manifest=[]
 for p in sorted(set(files)):
  if p.name=='archive_manifest.json':continue
