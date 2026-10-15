@@ -1,30 +1,17 @@
 # EG-FULL-REPRO-V1 持续执行交接
 
-所有后续工作沿用本卡分支 `codex/eg-full-repro-v1-20261015`，服务器根目录 `/home/xushijie3/work/eg_full_repro_v1_20261015`，Git检出为 `archive_worktree`。每轮复用一个保活SSH长会话，最后关闭自己的连接，后台作业保持运行。
+本卡分支 `codex/eg-full-repro-v1-20261015`，服务器根目录 `/home/xushijie3/work/eg_full_repro_v1_20261015`；Git为archive_worktree。每轮复用一个保活SSH长会话，结束关闭自己的客户端，不以结束实验来清理SSH。
 
-## 当前任务
+原始数据全量核验PASS；无需Google登录。官方ZIP CRC与镜像全TAR SHA及完整数据内容检查均已通过，不重复下载。当前快照 2026-10-15T04:14:54.654677+00:00：Graspness 9868/25600，4个CPU分片运行，resume_cpu_preparation.py依次继续Economic和全量监督检查，成功状态PREPARATION_COMPLETE_PENDING_REAL_SMOKE。以服务器实时状态和回执为准。
 
-数据获取已经恢复；不需要Google Drive账号。镜像全TAR SHA与独立官方ZIP逐文件CRC双重核验，随后打开全部图像/meta和原始标签。模型官方CRC已PASS；其他组件正在下载。
+旧execution_pipeline.py协调器和两个GPU标签任务已结束，不可盲目重启。新CPU适配/抽样逐哈希对照证据和有意取消原因见CPU_PREPARATION_ADAPTATION.json、CPU_KNN_CROSS_SCENE_CHECK.json、GPU_CONTENTION_PAUSE.json。现有7,820帧已保留，CPU继续原官方标签含义；全部监督PASS才可放行。
 
-`data_recovery/data_driver.py`负责下载、SHA验证、选择性解包及删除本轮已核验TAR；`raw_validation_driver.py`在全量解包结束后自动执行官方CRC比对和全部原始内容检查；`execution_pipeline.py`正在等待RAW验证PASS，然后按本卡顺序自动继续。实际状态读远端 `data_recovery/PIPELINE_STATUS.json`、`DATA_ACQUISITION_STATUS.json`、`RAW_VALIDATION_DRIVER.json` 及 `logs/`；归档SNAPSHOT只是本次提交时点，不能作实时依据。进程身份见 BACKGROUND_PROCESS_IDENTITIES.json，核对/proc启动时间和命令防PID复用。不要重复启动正在运行的管理器或作业。
+准备PASS后运行data_recovery/resume_training_after_preparation.py：它检查固定源码补丁身份、真实8帧两个batch4更新的Smoke（有限损失/梯度、参数更新、模型+优化器保存重载），然后唯一正式训练（seed20261015，随机初始化，10epoch/batch4/64,000更新）。Smoke权重不进入正式训练。此脚本当前尚未启动；禁止重复启动。训练中断优先恢复本实验checkpoint与optimizer/RNG，不能换参重训。
 
-## 后续已实现的门
+用户明确允许本卡共享GPU0、1并记录负载；GPU_SHARING_POLICY.json约束共享卡0/1启动时至少24GiB空闲。其他卡继续当前空闲检查。resource_jobs记录进程组、GPU显存/利用率和共享compute进程；不影响其他任务。每个大产物保留24GiB磁盘余量。
 
-1. scene0和99前2帧：原计算路径与场景缓存生成标签逐元素、dtype、文件哈希完全相同后才启用缓存。
-2. 3个当前空闲GPU按场景模3分片生成全部Graspness，再用2个CPU作业按场景模2生成全部Economic标签；阈值/筛选/网络/损失均保持官方。写入原子化，恢复须有摘要回执，拒绝未知覆盖。
-3. 所有25600帧的工作区掩码对应、标签摘要、Economic索引/数值/对象点坐标；scene0/50/99固定原始监督语义探针。
-4. 真实8个预登记训练样本、两个batch4更新；所有分项损失/梯度/参数检查，模型及优化器checkpoint重载。Smoke权重不能进入正式训练。
-5. 唯一种子20261015，原训练脚本10epoch/batch4，严格64000更新，逐batch/epoch日志、原子checkpoint、RNG保存。只在全部门通过后启动。
-6. 检查10个checkpoint、日志更新连续性、官方epoch cosine及最终真实帧有效解码，然后按seen/similar/novel完整测试，proc4，collision_thresh0；保存原始预测、实际采样输入、AP张量、分项计时和抓取数。
+用户要求只有正式长时训练启用economicgrasp-v1定时监控（20分钟），目前PAUSED。准备、Smoke、测试、分析持续在当前轮执行。实际正式训练启动且首批更新有限后才激活，结束后暂停。
 
-GPU在每个作业启动时实查空闲，无其他compute进程且显存占用<=100MiB/利用率<=1%；不占用历史空闲卡，不干扰别人。resource_jobs保存独立进程组资源采样及退出回执。三分片会等待当前可用资源，不能将正常等待当失败。所有大文件写入保留24GiB磁盘余量，触及门槛应停在该阶段，不能填满盘或删旧资产。
+训练退出后，当前轮或下一次训练监控回合持续执行summarize_training.py检查10个checkpoint、64,000连续更新、官方cosine和最终真实帧预测，然后依次官方完整Seen/Similar/Novel（各30场景x256，API proc4，collision_thresh0，保存确切输入）。沿用execution_pipeline.py已注册函数，不能重跑其整条主流程。summarize_evaluation.py检查AP张量、23,040预测和90场景结果。
 
-## 评价完成后仍需处理
-
-执行器以 `EVALUATED_PENDING_BAD_CASE_AND_FINAL_ARCHIVE` 结束，不能称全卡完成。继续按卡选每划分3最低AP+1中位场景、每场景2最低帧+1中位帧，最多36帧，按ID破同分；利用保存的确切输入重放中间输出，用官方eval_grasp重新诊断所选帧并核对原AP。保存RGB/depth/抓取姿态图、分数/碰撞/质量和场景AP，人工检查视觉与定量证据，明确探索性选择和机制不确定性。最后补齐所有报告、checkpoint/数据/日志哈希索引和研究决策意见，不增加模型训练。
-
-## 故障/恢复
-
-门失败先读对应log和receipt，保留现场、定位原因。允许确定性工程修复；不改主要配方、模型、监督阈值、AP或跳样本。执行器故障不会自动重新训练；正式训练如中断优先从本实验最新完整checkpoint恢复optimizer/epoch/RNG，保留中断尝试、日志尾与失败checkpoint。不得因指标差而重训换参。source patch SHA在实际数据门后记录于PIPELINE_STATUS；实质改动需更新补丁及说明。
-
-用户最新要求：只有正式长时训练期间才启用每20分钟的监控 `economicgrasp-v1`；下载、核验、监督生成、短检查、测试和分析阶段持续在当前轮执行，不以定时跟进替代持续工作。当前监控已PAUSED，训练启动后才启用，训练结束时暂停并持续接续评价。远端nohup作业独立继续。科研进展优先，只修复实际阻塞或影响科研结论的问题，不扩展执行框架。
+最后做有界探索性Bad Case：每划分3个最低AP+1中位场景，每场景2最低+1中位帧（最多36），按ID破同分；用确切保存输入重放中间输出、官方eval_grasp核对质量/碰撞/AP，保存RGB/depth/抓取图与分数，区分表现与未证实原因；不修改模型重训。补齐最终报告、哈希索引、训练耗时和峰值显存，沿用本分支提交轻量结果并推送核验。当前尚无本卡正式训练权重或AP，不能报完整复现成功。

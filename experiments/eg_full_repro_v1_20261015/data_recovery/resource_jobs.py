@@ -19,12 +19,18 @@ def acquire_gpu(name,preferred=None):
    s=snapshot()
    for gpu in s['gpus']:
     if preferred is not None and gpu['index']!=preferred:continue
-    if gpu['memory_used_mib']>100 or gpu['utilization_percent']>1 or any(p['uuid']==gpu['uuid'] for p in s['compute_processes']):continue
+    policy_path=R/'data_recovery/GPU_SHARING_POLICY.json'
+    policy=json.loads(policy_path.read_text()) if policy_path.exists() else {}
+    allowed=set(policy.get('allowed_shared_gpu_indices',[])) & {0,1}
+    sharing= gpu['index'] in allowed
+    if sharing:
+     if gpu['memory_total_mib']-gpu['memory_used_mib'] < max(24576,int(policy.get('minimum_free_memory_mib',24576))):continue
+    elif gpu['memory_used_mib']>100 or gpu['utilization_percent']>1 or any(p['uuid']==gpu['uuid'] for p in s['compute_processes']):continue
     f=(R/'data_recovery'/f'gpu_{gpu["index"]}.lock').open('a')
     try:fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
     except BlockingIOError:f.close();continue
     return gpu,f,s
-  (R/'receipts'/f'{name}.waiting.json').write_text(json.dumps({'status':'WAITING_FOR_CURRENTLY_IDLE_GPU','snapshot':s,'preferred':preferred},indent=2))
+  (R/'receipts'/f'{name}.waiting.json').write_text(json.dumps({'status':'WAITING_FOR_AUTHORIZED_AVAILABLE_GPU','snapshot':s,'preferred':preferred},indent=2))
   time.sleep(20)
 def own_processes(pgid):
  out=[]
@@ -55,7 +61,7 @@ def run(name,command,cwd=None,gpu=False,preferred=None):
     ps=own_processes(child.pid);row={'unix':time.time(),'processes':ps,'rss_bytes':sum(p['rss_bytes'] for p in ps)}
     receipt['peak_own_rss_bytes']=max(receipt['peak_own_rss_bytes'],row['rss_bytes'])
     if gpu:
-     s=snapshot();ids={p['pid'] for p in ps};own=[p for p in s['compute_processes'] if p['pid'] in ids]
+     s=snapshot();row['selected_gpu_snapshot']=next(g for g in s['gpus'] if g['uuid']==chosen['uuid']);ids={p['pid'] for p in ps};own=[p for p in s['compute_processes'] if p['pid'] in ids]
      row['own_gpu_processes']=own;row['foreign_compute_on_selected_gpu']=[p for p in s['compute_processes'] if p['uuid']==chosen['uuid'] and p['pid'] not in ids]
      used=sum(p['memory_mib'] or 0 for p in own);receipt['peak_own_gpu_memory_mib']=max(receipt['peak_own_gpu_memory_mib'],used)
     sf.write(json.dumps(row)+'\n');sf.flush();save()

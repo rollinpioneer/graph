@@ -1,0 +1,40 @@
+{
+  "status": "CPU_ADAPTER_ADMITTED",
+  "reason": "Later foreign GPU workloads; preserve all existing verified labels and continue CPU preprocessing without sharing GPU",
+  "raw_data_gate": "PASS",
+  "original_cache_equivalence": "PASS",
+  "cpu_fixed_four_frames": "PASS",
+  "cpu_cross_scene_frames": 36,
+  "cpu_cross_scene_scenes": 12,
+  "all_compared_NPY_hashes_equal": true,
+  "labels_preserved": 7820,
+  "model_or_training_recipe_changed": false,
+  "supervision_thresholds_changed": false,
+  "events": [
+    {
+      "pid": 3242007,
+      "action": "SIGTERM_then_SIGCONT_only_own_paused_label_worker",
+      "unix": 1792037232.304061
+    },
+    {
+      "pid": 3242022,
+      "action": "SIGTERM_then_SIGCONT_only_own_paused_label_worker",
+      "unix": 1792037232.3042452
+    },
+    {
+      "shard": 0,
+      "status": "FAIL",
+      "returncode": -15
+    },
+    {
+      "shard": 1,
+      "status": "FAIL",
+      "returncode": -15
+    },
+    {
+      "pid": 2986979,
+      "action": "terminate_only_own_waiting_GPU_coordinator"
+    }
+  ],
+  "time_unix": 1792037252.3419218
+}

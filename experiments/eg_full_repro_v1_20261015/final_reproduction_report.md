@@ -1,9 +1,7 @@
-# EconomicGrasp V1：原始数据通过，完整监督生成中
+# EconomicGrasp V1：完整原始数据通过，监督准备持续中
 
-当前结论：原始数据取得成功，完整来源与内容核验PASS；标签缓存优化在四个固定真实帧上与官方原路径完全相同。全量Graspness当前快照2103/25,600帧，持续运行。
+快照 2026-10-15T04:14:54.654677+00:00：原始数据PASS；Graspness 9868/25,600。GPU原路径与场景缓存四帧一致；CPU预处理与GPU对照（原四帧、另12场景36帧）数组和文件哈希一致。完整监督、真实Smoke、10epoch/64,000更新、三划分AP和Bad Case尚未完成，实测AP保持null。
 
-完整监督、真实Smoke、单种子10Epoch/64,000更新、Seen/Similar/Novel官方AP和Bad Case尚未完成；实测AP保持null，不能报告完整复现成功。环境及CUDA算子工程检查此前已通过，官方权重工程检查不算本次训练结果。
+已保留原GPU生成7,820帧，4个CPU任务继续；暂停与有意取消仅涉及本卡预处理。用户已授权共享GPU0、1并要求记录负载。所有阈值、模型和训练配方保持；CPU准备适配与抽样验证局限完整披露于data_report.md及对应代码证据。
 
-用户最新规则：仅正式长时训练期间启用定时监控，其余阶段持续执行。当前监控已暂停，准备阶段保持本轮保活SSH会话。研究进展优先，只修复实际阻塞或影响结论的问题。
-
-分支 `codex/eg-full-repro-v1-20261015`，https://github.com/rollinpioneer/graph/tree/codex/eg-full-repro-v1-20261015 。原始目录 `/home/xushijie3/work/eg_full_repro_v1_20261015`，输出 `runs/EG_FULL_V1`；轻量证据见data_report.md、data_recovery/，后续入口见CONTINUATION.md。
+仅正式长时训练启用定时监控，其余阶段持续执行。分支 https://github.com/rollinpioneer/graph/tree/codex/eg-full-repro-v1-20261015 ，服务器输出 `/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1`。仍为部分完成，不能宣称复现成功。
