@@ -12,19 +12,128 @@ index 6eb608f..9b0b17e 100644
          meta = scio.loadmat(os.path.join(scenes_data_folders, label_path, cfgs.camera_type, 'meta', '0000.mat'))
          obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
 diff --git a/dataset/generate_graspness.py b/dataset/generate_graspness.py
-index 002d16c..86fed43 100755
+index 002d16c..0bf4d8a 100755
 --- a/dataset/generate_graspness.py
 +++ b/dataset/generate_graspness.py
-@@ -1,7 +1,7 @@
+@@ -1,7 +1,9 @@
  import numpy as np
  import os
++import hashlib
++import json
  
 -os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 +# EG-FULL-REPRO-V1: respect the caller CUDA_VISIBLE_DEVICES mapping.
  
  from PIL import Image
  import scipy.io as scio
-@@ -119,6 +119,8 @@ if __name__ == '__main__':
+@@ -20,18 +22,28 @@ import argparse
+ parser = argparse.ArgumentParser()
+ parser.add_argument('--dataset_root', default='/home/xiaoming/dataset/graspnet', help='the root of the GraspNet dataset')
+ parser.add_argument('--camera_type', default='kinect', help='Camera split [realsense/kinect]')
++parser.add_argument('--scene_start', type=int, default=0)
++parser.add_argument('--scene_end', type=int, default=100)
++parser.add_argument('--scene_stride', type=int, default=1)
++parser.add_argument('--frame_end', type=int, default=256)
++parser.add_argument('--output_root', default=None)
++parser.add_argument('--cache_scene_graspness', action='store_true')
++parser.add_argument('--resume_verified', action='store_true')
+ 
+ 
+ if __name__ == '__main__':
+     cfgs = parser.parse_args()
+     dataset_root = cfgs.dataset_root   # set dataset root
+     camera_type = cfgs.camera_type   # kinect / realsense
+-    save_path_root = os.path.join(dataset_root, 'graspness')
++    save_path_root = cfgs.output_root or os.path.join(dataset_root, 'graspness')
++    assert 0 <= cfgs.scene_start < cfgs.scene_end <= 100 and cfgs.scene_stride > 0
++    assert 0 < cfgs.frame_end <= 256
+ 
+     num_views, num_angles, num_depths = 300, 12, 4
+     fric_coef_thresh = 0.8
+     point_grasp_num = num_views * num_angles * num_depths
+-    for scene_id in range(0, 100):
++    for scene_id in range(cfgs.scene_start, cfgs.scene_end, cfgs.scene_stride):
++        scene_cache = {}
+         save_path = os.path.join(save_path_root, 'scene_' + str(scene_id).zfill(4), camera_type)
+         if not os.path.exists(save_path):
+             os.makedirs(save_path)
+@@ -41,7 +53,7 @@ if __name__ == '__main__':
+         for j in range(len(labels)):
+             collision_dump.append(labels['arr_{}'.format(j)])
+ 
+-        for ann_id in range(256):
++        for ann_id in range(cfgs.frame_end):
+             # get scene point cloud
+             print('generating scene: {} ann: {}'.format(scene_id, ann_id))
+             depth = np.array(Image.open(os.path.join(dataset_root, 'scenes', 'scene_' + str(scene_id).zfill(4),
+@@ -69,27 +81,55 @@ if __name__ == '__main__':
+             cloud_masked = cloud[mask]
+             objectness_label = seg[mask]
+ 
++            output_file = os.path.join(save_path, str(ann_id).zfill(4) + '.npy')
++            receipt_file = output_file + '.sha256.json'
++            if os.path.exists(output_file):
++                if not cfgs.resume_verified or not os.path.exists(receipt_file):
++                    raise FileExistsError(f'Refusing unverified overwrite: {output_file}')
++                with open(receipt_file) as f:
++                    receipt = json.load(f)
++                with open(output_file, 'rb') as f:
++                    digest = hashlib.sha256(f.read()).hexdigest()
++                existing = np.load(output_file)
++                if digest != receipt['sha256'] or existing.shape != (len(cloud_masked), 1) or not np.isfinite(existing).all() or existing.min() < 0 or existing.max() > 1:
++                    raise ValueError(f'Invalid existing supervision: {output_file}')
++                print(f'verified resume: {output_file}', flush=True)
++                continue
++
+             # get scene object and grasp info
+             scene_reader = xmlReader(os.path.join(dataset_root, 'scenes', 'scene_' + str(scene_id).zfill(4),
+                                                   camera_type, 'annotations', '%04d.xml' % ann_id))
+             pose_vectors = scene_reader.getposevectorlist()
+             obj_list, pose_list = get_obj_pose_list(camera_pose, pose_vectors)
+             grasp_labels = {}
+-            for i in obj_list:
+-                file = np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(i).zfill(3))))
+-                grasp_labels[i] = (file['points'].astype(np.float32), file['offsets'].astype(np.float32),
+-                                   file['scores'].astype(np.float32))
+-
++            if not cfgs.cache_scene_graspness:
++                for i in obj_list:
++                    file = np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(i).zfill(3))))
++                    grasp_labels[i] = (file['points'].astype(np.float32), file['offsets'].astype(np.float32),
++                                       file['scores'].astype(np.float32))
++    
+             grasp_points = []
+             grasp_points_graspness = []
+             for i, (obj_idx, trans_) in enumerate(zip(obj_list, pose_list)):
+-                sampled_points, offsets, fric_coefs = grasp_labels[obj_idx]
+-                collision = collision_dump[i]  # Npoints * num_views * num_angles * num_depths
++                if cfgs.cache_scene_graspness:
++                    key = (i, obj_idx)
++                    if key not in scene_cache:
++                        with np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(obj_idx).zfill(3)))) as file:
++                            cached_points = file['points'].astype(np.float32)
++                            cached_scores = file['scores'].astype(np.float32)
++                        cached_valid = ((cached_scores <= fric_coef_thresh) & (cached_scores > 0) & ~collision_dump[i])
++                        cached_graspness = np.sum(cached_valid.reshape(cached_points.shape[0], -1), axis=1) / point_grasp_num
++                        scene_cache[key] = (cached_points, cached_graspness)
++                    sampled_points, graspness = scene_cache[key]
++                else:
++                    sampled_points, offsets, fric_coefs = grasp_labels[obj_idx]
++                    collision = collision_dump[i]  # Npoints * num_views * num_angles * num_depths
++                    num_points = sampled_points.shape[0]
++    
++                    valid_grasp_mask = ((fric_coefs <= fric_coef_thresh) & (fric_coefs > 0) & ~collision)
++                    valid_grasp_mask = valid_grasp_mask.reshape(num_points, -1)
++                    graspness = np.sum(valid_grasp_mask, axis=1) / point_grasp_num
+                 num_points = sampled_points.shape[0]
+-
+-                valid_grasp_mask = ((fric_coefs <= fric_coef_thresh) & (fric_coefs > 0) & ~collision)
+-                valid_grasp_mask = valid_grasp_mask.reshape(num_points, -1)
+-                graspness = np.sum(valid_grasp_mask, axis=1) / point_grasp_num
+                 target_points = transform_points(sampled_points, trans_)
+                 target_points = transform_points(target_points, np.linalg.inv(camera_pose))  # fix bug
+                 grasp_points.append(target_points)
+@@ -119,6 +159,18 @@ if __name__ == '__main__':
  
              max_graspness = np.max(cloud_masked_graspness)
              min_graspness = np.min(cloud_masked_graspness)
@@ -32,7 +141,18 @@ index 002d16c..86fed43 100755
 +                raise ValueError(f"Invalid graspness: scene={scene_id} frame={ann_id} min={min_graspness} max={max_graspness}")
              cloud_masked_graspness = (cloud_masked_graspness - min_graspness) / (max_graspness - min_graspness)
  
-             np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)
+-            np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)
++            temporary = output_file + '.egpartial'
++            with open(temporary, 'wb') as f:
++                np.save(f, cloud_masked_graspness)
++                f.flush()
++                os.fsync(f.fileno())
++            os.replace(temporary, output_file)
++            with open(output_file, 'rb') as f:
++                digest = hashlib.sha256(f.read()).hexdigest()
++            with open(receipt_file, 'w') as f:
++                json.dump({'sha256': digest, 'shape': list(cloud_masked_graspness.shape), 'scene': scene_id, 'frame': ann_id}, f)
++
 diff --git a/train.py b/train.py
 index 011836c..825101b 100755
 --- a/train.py

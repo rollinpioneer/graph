@@ -3,7 +3,7 @@
 - 实验编号：EG-FULL-REPRO-V1。
 - 类型：官方 Baseline 完整复现与有界失败案例分析。
 - 执行授权：用户于 2026-10-15 直接要求执行本方案；常见工程排障、独立环境安装、非破坏性适配、断点恢复、结果整理及本卡 Git 推送已授权。
-- 状态：准备阶段执行中；已确认数据下载阻塞，尚未通过正式训练放行门。
+- 状态：数据获取已恢复，完整数据下载及核验进行中；尚未通过正式训练放行门。
 - 论文：An Economic Framework for 6-DoF Grasp Detection，ECCV 2024。
 - 官方代码：https://github.com/iSEE-Laboratory/EconomicGrasp 。
 - 固定上游提交：`4119bdcd6bf5d3712a110f78ca87504dd359eec0`。
