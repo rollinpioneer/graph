@@ -1,46 +1,83 @@
 {
-  "unix": 1792041897.5706232,
-  "utc": "2026-10-15T05:24:57.570602+00:00",
-  "status": "RUNNING",
-  "stage": "FORMAL_TRAINING",
-  "attempt": 2,
-  "optimizer_updates": 321,
-  "target_updates": 64000,
-  "completed_epochs": 0,
-  "seed": 20261015,
-  "training_replicates": 1,
+  "status": "CANCELLED_AND_TRAINING_RESULTS_DELETED_BY_USER",
+  "reason": "User replaces full training with a new25percent subset and requests removal of old training results",
+  "unix": 1792042689.7521088,
   "pid": 2125371,
-  "process_start_ticks": "42028591",
-  "gpu_index": 0,
-  "open_file_soft_limit": 65536,
-  "main_open_fds": 193,
-  "all_logged_losses_finite": true,
-  "first_failed_attempt_updates": 9,
-  "first_failed_attempt_checkpoint_count": 0,
+  "process_group": 2125371,
+  "updates_before_stop": 1000,
   "last_metrics": {
     "epoch": 1,
-    "batch": 321,
-    "global_step": 321,
+    "batch": 1000,
+    "global_step": 1000,
     "lr": 0.001,
     "metrics": {
-      "D: Graspable Points": 5118.75,
-      "B: Objectness Loss": 0.25553998351097107,
-      "D: Objectness Acc": 0.8847249746322632,
-      "B: Graspness Loss": 0.020133333280682564,
-      "B: View Loss": 0.010558470152318478,
-      "B: Angle Loss": 0.9727779626846313,
-      "D: Angle Acc": 0.7674418687820435,
-      "B: Depth Loss": 0.4579377770423889,
-      "D: Depth Acc": 0.8511627912521362,
-      "B: Score Loss": 0.851413369178772,
-      "D: Score Acc": 0.7527132034301758,
-      "B: Width Loss": 0.06364420056343079,
-      "A: Overall Loss": 4.431291580200195
+      "D: Graspable Points": 3151.5,
+      "B: Objectness Loss": 0.1732485294342041,
+      "D: Objectness Acc": 0.9364624619483948,
+      "B: Graspness Loss": 0.012510363012552261,
+      "B: View Loss": 0.011065407656133175,
+      "B: Angle Loss": 1.0413001775741577,
+      "D: Angle Acc": 0.7091187238693237,
+      "B: Depth Loss": 0.608964204788208,
+      "D: Depth Acc": 0.7580234408378601,
+      "B: Score Loss": 0.9584516286849976,
+      "D: Score Acc": 0.6800815463066101,
+      "B: Width Loss": 0.06100562587380409,
+      "A: Overall Loss": 4.6236653327941895
     }
   },
-  "peak_own_gpu_memory_mib_so_far": 3964,
-  "peak_own_rss_bytes_so_far": 3141181440,
-  "timed_monitor": "economicgrasp-v1 PAUSED at explicit user request; do not resume automatically",
-  "ssh_session_open": true,
-  "snapshot_updated_unix": 1792042055.5070355
+  "batch_metrics_sha256": "45cf624e14d65de3aae6a9b6ba8f29502546b5158a17dbd42913f9541681d0d8",
+  "checkpoint_count": 0,
+  "data_and_supervision_preserved": true,
+  "native_returncode": -15,
+  "deleted_files": [
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/train/batch_metrics.jsonl",
+      "bytes": 562616,
+      "sha256": "45cf624e14d65de3aae6a9b6ba8f29502546b5158a17dbd42913f9541681d0d8"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/train/log_train.txt",
+      "bytes": 30290,
+      "sha256": "536159cf40ce3b322dcfa94a682297e15fce0013800d836afe894603cd8d1888"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/train_attempt1_nofile_failure/batch_metrics.jsonl",
+      "bytes": 5011,
+      "sha256": "e55b21684a8552a16b6ed2b3191a6607d30d7b9bd0e654cacd7980e2297b4af3"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/train_attempt1_nofile_failure/log_train.txt",
+      "bytes": 723,
+      "sha256": "a81cab2e31e3eca06113d3b9261ab6ae0c9a55d8fa4f3ac12beed73f422e9bcc"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/logs/formal_training.log",
+      "bytes": 4795,
+      "sha256": "79f0e3cda8f5cbdf1510730b27fb46715889ed433d86caddf4513bdd723c310d"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/logs/formal_training.resources.jsonl",
+      "bytes": 1929,
+      "sha256": "11775f0b9214b9e01eec86d69f6001fca7a369e3121dc0f494e9c88cc5646bc2"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/logs/formal_training_attempt2.log",
+      "bytes": 30771,
+      "sha256": "d4a56c881008e305908edb49183d28da6f92d0a5b80c0d4514be68a52e0a892e"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/logs/formal_training_attempt2.resources.jsonl",
+      "bytes": 47135,
+      "sha256": "1fa6289524f9555cb17900f11800431800782e7583a7b2fded311820133a5750"
+    },
+    {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/smoke/smoke_checkpoint.tar",
+      "bytes": 189275882,
+      "sha256": "cbee483c2891fdacffaa1f16dba9cfb732ce63789237579556c328a88d6a733b"
+    }
+  ],
+  "deleted_bytes": 189959152,
+  "deletion_unix": 1792042777.1308966,
+  "replacement": "EG-SUB25-V1"
 }
