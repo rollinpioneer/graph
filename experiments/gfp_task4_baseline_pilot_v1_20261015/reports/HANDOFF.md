@@ -15,4 +15,4 @@ When completed: run code/topology.py (the already-running Z2 coordinator predate
 Archive code/card/configs/metrics/receipts with code/archive.py, inspect explicit manifest/staged diff and branch, commit/push normally with deployment identity, verify remote SHA. Large checkpoints/data/trajs/full logs remain on server. Sync this folder's light handoff to local reports/gfp_task4_baseline_pilot_v1_20261015. Pause lab after final delivery.
 
 ## Latest monitor
-20261015T135022Z: GFP seeds0/1 observed[615000, 655000]. Both progressing with finite logged metrics and intact100k-600k checkpoints. Both coordinators alive, ReBRAC matched already completed; GFP matched/Z2 correctly waiting. No new own-account training/evaluation jobs. No restarts or parameter changes.
+20261015T142026Z: both GFP seeds observed900k in native evaluation (not a stall), logged metrics finite. Checkpoints through800k present; new700k/800k hashes verified. The900k checkpoint follows evaluation and is not prematurely marked missing. Both coordinators alive; GFP matched/Z2 wait for normal training completion. ReBRAC matched already complete. No new own-account training/evaluation jobs or restarts.
