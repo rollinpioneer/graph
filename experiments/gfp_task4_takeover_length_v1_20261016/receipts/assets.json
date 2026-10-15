@@ -1,0 +1,88 @@
+[
+  {
+    "host": "gfp",
+    "checkpoint": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_1/params_1000000.pkl",
+    "checkpoint_sha256": "a6093497b666f780945c92fcca6532d8d8ea155bc99b57e88c67c1cfd9bbb66e",
+    "state_sha256": "55abe3e90e11a0c6cb410a7b0bc6365d4a00540f757a8f512c494116ecbabfc1",
+    "step": 1000001,
+    "config": {
+      "action_dim": 21,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "actor_layer_norm": false,
+      "agent_name": "gfp",
+      "alpha": 0.3,
+      "batch_size": 256,
+      "discount": 0.995,
+      "encode_time_dim": 64,
+      "encoder": null,
+      "eta_temperature": 0.001,
+      "eta_temperature_online": 0.001,
+      "flow_steps": 10,
+      "guidance_agg": "min",
+      "guidance_fn": "softmax",
+      "layer_norm": true,
+      "log_metrics": true,
+      "lr": 0.0003,
+      "normalize_q_loss": true,
+      "ob_dims": [
+        69
+      ],
+      "q_agg": "mean",
+      "target_agg": "mean",
+      "target_use_next": false,
+      "tau": 0.005,
+      "value_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ]
+    }
+  },
+  {
+    "host": "rebrac",
+    "checkpoint": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s1/out/rebrac_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_193135_seed_1/params_1000000.pkl",
+    "checkpoint_sha256": "fd4257effddcaba8d61f626eb72d3e930f52d479ada99891f0fd8c0ca4c41610",
+    "state_sha256": "c833e17bd807419d423504f1a58cf07628f3575b854219fcc361c1d893453a9b",
+    "step": 1000001,
+    "config": {
+      "actor_fc_scale": 0.01,
+      "actor_freq": 2,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "actor_layer_norm": false,
+      "actor_noise": 0.2,
+      "actor_noise_clip": 0.5,
+      "agent_name": "rebrac",
+      "alpha_actor": 0.01,
+      "alpha_critic": 0.01,
+      "batch_size": 256,
+      "discount": 0.995,
+      "encoder": null,
+      "eta_temperature": 0.001,
+      "guidance": false,
+      "guidance_normalize": true,
+      "layer_norm": true,
+      "lr": 0.0003,
+      "q_agg": "mean",
+      "tanh_squash": true,
+      "tau": 0.005,
+      "value_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "log_metrics": true
+    }
+  }
+]
