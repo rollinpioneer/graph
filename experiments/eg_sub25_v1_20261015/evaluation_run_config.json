@@ -1,0 +1,68 @@
+{
+  "experiment_id": "EG-SUB25-V1",
+  "seed": 20261015,
+  "camera": "kinect",
+  "batch_size": 4,
+  "num_points": 20000,
+  "voxel_size": 0.005,
+  "collision_thresh": 0,
+  "input_cache": "one immutable NPZ per frame reused exactly across models",
+  "models": {
+    "subset": {
+      "epoch": 10,
+      "path": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/train/economicgrasp_epoch10.tar",
+      "bytes": 189294618,
+      "sha256": "9eb793cfdcaf18cf6dfd1a41294a97db9eddf2b3e97cc208ab21009ad1d71950",
+      "optimizer_updates": 16000
+    },
+    "official": {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/downloads/economicgrasp_kinect.tar",
+      "sha256": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a"
+    }
+  },
+  "partitions": {
+    "dev": [
+      8,
+      36,
+      41,
+      44,
+      58,
+      65,
+      73,
+      75,
+      80,
+      86
+    ],
+    "diagnostic_seen": [
+      119,
+      122
+    ],
+    "diagnostic_novel": [
+      188,
+      189
+    ]
+  },
+  "inference_models": {
+    "dev": [
+      "subset"
+    ],
+    "diagnostic_seen": [
+      "subset",
+      "official"
+    ],
+    "diagnostic_novel": [
+      "subset",
+      "official"
+    ]
+  },
+  "frames_per_scene": 256,
+  "api_eval_processes": 4,
+  "worker_omp_threads": 1,
+  "nice_increment": 10,
+  "graspnet_api_eval_scene_sha256": "2565bc13d9e41cc6355a92160da3ce8b99c3052fa14e8f24646a996a20c7a986",
+  "model_source_patch_sha256": "67e69d3eeb1f6f10b073f23f51da7c568bc4d445b6515eef0440aba815b851d0",
+  "pair_failure_operational_criterion": "Top1 official evaluated grasp fails friction<=0.4 force closure; AP separately continuous",
+  "spatial_pair_probe_max_center_distance_m": 0.01,
+  "bad_case_selection": "Per fixed diagnostic scene:2 lowest subset frame AP and1 median, ties by frame ID;12frames total; exploratory",
+  "started_unix": 1792054662.1547778
+}
