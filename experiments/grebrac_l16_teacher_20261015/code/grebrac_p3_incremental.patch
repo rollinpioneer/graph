@@ -1,0 +1,93 @@
+diff -ru -x __pycache__ gfp_p2/agents/rebrac.py gfp_p3/agents/rebrac.py
+--- gfp_p2/agents/rebrac.py
++++ gfp_p3/agents/rebrac.py
+@@ -78,7 +78,20 @@
+         lam = jax.lax.stop_gradient(1 / jnp.abs(q).mean())
+         actor_loss = -(lam * q).mean()
+         guidance_info = dict()
+-        if self.config["guidance"]:
++        teacher_loss = 0.0
++        if self.config["guidance"] and self.config["guidance_ref"] == "teacher":
++            # GFP structure with a deterministic teacher: the actor's BC target is the teacher's
++            # action (unweighted, like GFP's distillation); the guidance weights the teacher's BC.
++            teacher_actions = jax.lax.stop_gradient(
++                self.network.select("teacher")(batch["observations"]).mode()
++            )
++            mse_teacher = jnp.square(actions - teacher_actions).sum(axis=-1)
++            bc_loss = (self.config["alpha_actor"] * mse_teacher).mean()
++            teacher_loss, guidance_info = self.teacher_loss(
++                batch, grad_params, jax.lax.stop_gradient(actions), lam
++            )
++            guidance_info["mse_teacher"] = mse_teacher.mean()
++        elif self.config["guidance"]:
+             # G-ReBRAC: weight the BC term with GFP's guidance (softmax form).
+             # Reference action: the actor itself, or an independently trained BC network.
+             if self.config["guidance_ref"] == "bc":
+@@ -92,7 +105,7 @@
+         else:
+             bc_loss = (self.config["alpha_actor"] * mse).mean()
+ 
+-        total_loss = actor_loss + bc_loss
++        total_loss = actor_loss + bc_loss + teacher_loss
+ 
+         if self.config["tanh_squash"]:
+             action_std = dist._distribution.stddev()
+@@ -114,8 +127,24 @@
+         mse = jnp.square(ref_actions - batch["actions"]).sum(axis=-1).mean()
+         return mse, {"mse": mse}
+ 
+-    def compute_guidance(self, batch, actor_actions, lam):
+-        """GFP guidance weights (gfp.py compute_guidance) with `actor_actions` as the reference."""
++    def teacher_loss(self, batch, grad_params, actor_actions, lam):
++        """Guidance-weighted MSE behavior cloning for the deterministic teacher (GFP's VaBC loss)."""
++        teacher_actions = self.network.select("teacher")(batch["observations"], params=grad_params).mode()
++        weights, info = self.compute_guidance(
++            batch, actor_actions, lam, ref_actions2=jax.lax.stop_gradient(teacher_actions)
++        )
++        mse = jnp.square(teacher_actions - batch["actions"]).sum(axis=-1)
++        loss = (weights * mse).mean()
++        info["teacher_loss"] = loss
++        info["teacher_mse"] = mse.mean()
++        return loss, info
++
++    def compute_guidance(self, batch, actor_actions, lam, ref_actions2=None):
++        """GFP guidance weights (gfp.py compute_guidance) with `actor_actions` as the reference.
++
++        With `ref_actions2`, the reference value is min(Q(s, actor_actions), Q(s, ref_actions2)),
++        as in GFP's guidance_agg="min".
++        """
+         agg_fn = getattr(jnp, self.config["q_agg"])
+         obs = batch["observations"]
+         q_data = agg_fn(
+@@ -124,6 +153,11 @@
+         q_ref = agg_fn(
+             self.network.select("target_critic")(obs, actions=actor_actions), axis=0
+         )
++        if ref_actions2 is not None:
++            q_ref2 = agg_fn(
++                self.network.select("target_critic")(obs, actions=ref_actions2), axis=0
++            )
++            q_ref = jnp.minimum(q_ref, q_ref2)
+         scale = lam / self.config["eta_temperature"]
+         scl_q_data = scale * q_data
+         scl_q_ref = scale * q_ref
+@@ -310,6 +344,9 @@
+         if config["guidance"] and config["guidance_ref"] == "bc":
+             # Independent BC reference for the guidance weight (same architecture as the actor).
+             network_info["bc_ref"] = (copy.deepcopy(actor_def), (ex_observations,))
++        if config["guidance"] and config["guidance_ref"] == "teacher":
++            # Deterministic teacher in place of GFP's VaBC flow (same architecture as the actor).
++            network_info["teacher"] = (copy.deepcopy(actor_def), (ex_observations,))
+         networks = {k: v[0] for k, v in network_info.items()}
+         network_args = {k: v[1] for k, v in network_info.items()}
+ 
+diff -ru -x __pycache__ gfp_p2/config/agent/rebrac.yaml gfp_p3/config/agent/rebrac.yaml
+--- gfp_p2/config/agent/rebrac.yaml
++++ gfp_p3/config/agent/rebrac.yaml
+@@ -19,4 +19,6 @@
+ eta_temperature: 1e-3
+ guidance_normalize: True
+ # Guidance reference action: actor (L1 G-ReBRAC) | bc (independent BC network)
++# | teacher (GFP structure with a deterministic teacher: g weights the teacher's BC with
++#   reference min(Q(s,actor), Q(s,teacher)); the actor's BC target is the teacher's action)
+ guidance_ref: actor

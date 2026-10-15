@@ -1,0 +1,24 @@
+# tests/test_teacher.py on CPU (JAX_PLATFORMS=cpu), 2026-10-15, source = official 1abbd5f + p1 + p2 + p3_incremental
+# reference arrays: orig_off.npy / patched_on_norm.npy from L1 tests/test_grebrac.py;
+# p2_bc_ref.npy from `test_teacher.py P2_ROOT save_bc_ref` run on the p2 source (L1.5)
+{
+ "off_equals_orig": true,
+ "actor_ref_equals_p1_on_norm": true,
+ "bc_ref_equals_p2": true,
+ "teacher_module_present": true,
+ "init_other_modules_unchanged": true,
+ "teacher_grad_independent_of_alpha_actor": true,
+ "actor_critic_grad_independent_of_eta": true,
+ "teacher_grad_depends_on_eta": true,
+ "actor_grad_depends_on_alpha_actor": true,
+ "teacher_finite": true,
+ "teacher_mse_first_last": [6.801, 5.695],
+ "mse_teacher_first_last": [0.0011, 21.3491],
+ "guidance_first_last": [0.543, 0.4333],
+ "weight_max_last": 1.0,
+ "teacher_params_moved": true,
+ "validation_keys": true,
+ "validation_finite": true
+}
+# note: random synthetic batch; mse_teacher (actor vs teacher) grows on it because the random critic's
+# Q gradient dominates alpha_actor=0.01. Real-data behaviour is checked in the 2k-step smoke run.
