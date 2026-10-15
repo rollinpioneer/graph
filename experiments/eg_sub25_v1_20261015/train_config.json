@@ -27,11 +27,12 @@
   "updates_per_epoch": 1600,
   "num_workers": 2,
   "split_sha256": "bdf75f905271f4672de2407da3c095f257082fa46cd4099d9f16ebecbd258157",
-  "runtime_patch_sha256": "d696f56691eab150d3ba987e6bd5fd3df284478a66242714a95c8d730c71dd28",
+  "runtime_patch_sha256": "67e69d3eeb1f6f10b073f23f51da7c568bc4d445b6515eef0440aba815b851d0",
   "runtime_source_sha256": {
     "dataset/generate_economic.py": "56c02ab0bb60c571de3352aacd4089f4781a819bfeaa6d1c3a98cc5fcb9d1002",
     "dataset/generate_graspness.py": "ff946ce43de9e9d681984c8e7515aeadcd294f3f949f98acf40a99a254f6edf4",
     "dataset/graspnet_dataset.py": "78b367540aff88f3177a490271965287f6ada4087c922cdfdb23eebb3156c0d2",
+    "models/economicgrasp.py": "cedd97d2f93556fdc87f2506bc227c4fde36e8d8df2f5ebab2d37bd9f0a4ba91",
     "test.py": "a77a0057f161fa4b388cff3d2e811b9b9f097d65e93a7aa2db012924f86268ed",
     "train.py": "c16ddf213eb9c6a5bbea7cdd750f339d72fcec627551317fa0dbe435c0e92889",
     "utils/arguments.py": "338e0b6153f108f884a20086c1d3831bb19ccaa7beb74560f262c763b4ac52ab"
@@ -43,5 +44,7 @@
   "gpu_policy": "Use currently least-loaded eligible GPU; shared0/1 authorized, >=24GiB free; others must be currently idle",
   "preflight_passed": false,
   "formal_training_started": false,
-  "comparison_limitations": "25percent subset baseline, not a full-paper reproduction; dev scenes are from official training partition; official pretrained only independently assessed on official test scenes"
+  "comparison_limitations": "25percent subset baseline, not a full-paper reproduction; dev scenes are from official training partition; official pretrained only independently assessed on official test scenes",
+  "smoke_batch_order": "official shuffle=True, fixed seed and official worker initializer",
+  "empty_graspable_behavior": "explicit stop; no fallback/threshold/algorithm change"
 }

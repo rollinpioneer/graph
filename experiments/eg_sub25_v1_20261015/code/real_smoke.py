@@ -17,7 +17,8 @@ assert len(dataset)==6400
 manifest=json.loads((R/'data_recovery/frozen_split.json').read_text())
 indices=[manifest['train_scene_ids'].index(s)*128+manifest['train_frame_ids'].index(f) for s,f in manifest['smoke_pairs']]
 assert len(set(indices))==80
-loader=DataLoader(Subset(dataset,indices),batch_size=4,shuffle=False,num_workers=2,collate_fn=collate_fn)
+def my_worker_init_fn(worker_id):np.random.seed(np.random.get_state()[1][0]+worker_id)
+loader=DataLoader(Subset(dataset,indices),batch_size=4,shuffle=True,num_workers=2,worker_init_fn=my_worker_init_fn,collate_fn=collate_fn)
 net=economicgrasp(seed_feat_dim=512,is_training=True).cuda();net.train();optimizer=torch.optim.Adam(net.parameters(),lr=.001,weight_decay=0)
 def cuda(value):
  if torch.is_tensor(value):return value.cuda()
@@ -25,6 +26,7 @@ def cuda(value):
  if isinstance(value,list):return [cuda(v) for v in value]
  raise TypeError(type(value))
 rows=[];initial={k:v.detach().cpu().clone() for k,v in net.named_parameters()}
+np.random.seed(SEED)
 for step,batch in enumerate(loader,1):
  data=cuda(batch);optimizer.zero_grad();end=net(data);end['epoch']=0;loss,end=get_loss(end)
  metrics={k:float(v.detach().cpu()) for k,v in end.items() if k.startswith(('A:','B:','D:')) and torch.is_tensor(v) and v.numel()==1}
