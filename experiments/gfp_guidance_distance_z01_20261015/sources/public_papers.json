@@ -1,0 +1,46 @@
+{
+  "access_date": "2026-10-15",
+  "gfp": {
+    "url": "https://arxiv.org/html/2512.03973v2",
+    "version": "v2",
+    "official_commit": "1abbd5f0e287caf9bda70e7bc655d0a499ac8401",
+    "seeds": 8,
+    "checkpoints": [
+      800000,
+      900000,
+      1000000
+    ],
+    "episodes_per_checkpoint": 100,
+    "uncertainty": "standard deviation across training seeds"
+  },
+  "optiflow": {
+    "url": "https://arxiv.org/html/2609.15883v1",
+    "repo": "https://github.com/Yonsei-DILLab/OptiFlow",
+    "table": 9,
+    "task": "humanoidmaze-medium-navigate-singletask-task4-v0",
+    "success_percent": 19.1,
+    "standard_error": 5.4,
+    "seeds": 8,
+    "evaluation": "100 episodes at final 1M checkpoint; not GFP last-three aggregation",
+    "same_table_GFP": [
+      0.1,
+      0.1
+    ],
+    "same_table_ReBRAC": [
+      10.5,
+      4.4
+    ],
+    "same_table_FQL": [
+      3.0,
+      1.4
+    ],
+    "conclusion": "Task4 not solved; different aggregation prevents direct matched comparison with GFP CSV"
+  },
+  "qgf": {
+    "url": "https://arxiv.org/html/2606.11087v1",
+    "repo": "https://github.com/zhouzypaul/qgf",
+    "scope": "OGBench manipulation/action chunking and goal-conditioned evaluation; no HumanoidMaze result found",
+    "reported_setting": "100M-data manipulation tasks, action chunk length 5, typically 500k updates and 10 seeds",
+    "comparison": "Not a matched HumanoidMaze-medium task4 result"
+  }
+}
