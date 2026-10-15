@@ -4,7 +4,7 @@ import json,subprocess,shutil,hashlib
 R=Path(__file__).resolve().parents[1];A=R/'archive_worktree';prefix=Path('experiments/gfp_task4_baseline_pilot_v1_20261015');D=A/prefix
 branch=subprocess.check_output(['git','-C',str(A),'branch','--show-current'],text=True).strip();assert branch=='codex/gfp-task4-baseline-pilot-v1-20261015'
 files=[R/'EXPERIMENT_CARD.md']
-for pattern in ['code/*.py','configs/*.json','reports/*.md','reports/*.json','reports/*.csv','reports/*.png','reports/*.pdf','receipts/*.json','workspaces/gfp/main.py','workspaces/gfp/training_wiring.py','workspaces/gfp/batch_hooks.py','workspaces/gfp/evaluation_process.py']:
+for pattern in ['code/*.py','configs/*.json','reports/*.md','reports/*.json','reports/*.csv','reports/*.png','reports/*.pdf','reports/start_failure/*.json','reports/start_failure/*.md','reports/start_failure/*.csv','reports/start_failure/*.png','reports/start_failure/*.pdf','receipts/*.json','workspaces/gfp/main.py','workspaces/gfp/training_wiring.py','workspaces/gfp/batch_hooks.py','workspaces/gfp/evaluation_process.py']:
  files.extend(R.glob(pattern))
 for name in ['GFP_seed0','GFP_seed1','ReBRAC_seed0','ReBRAC_seed1']:
  d=R/'runs'/name
