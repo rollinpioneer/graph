@@ -1,0 +1,89 @@
+{
+  "card": "GFP-PROPOSAL-ROBUSTNESS-V1",
+  "frozen_utc": "2026-10-15T08:23:42.345283+00:00",
+  "branch": "codex/gfp-proposal-robustness-v1-20261015",
+  "parent_commit": "d2ff3ed3767a4ae584fbd8c2a32525e4da414cd7",
+  "parent_root": "/home/xushijie3/work/gfp_mechanism_and_condition_screen_v1_20261015",
+  "task": "humanoidmaze-medium-navigate-singletask-task1-v0",
+  "states": 12,
+  "first_actions_per_state": 3,
+  "new_sequence_seeds": [
+    2026101501,
+    2026101502,
+    2026101503,
+    2026101504,
+    2026101505,
+    2026101506,
+    2026101507
+  ],
+  "new_branches_max": 252,
+  "branch_steps_max": 300,
+  "new_environment_steps_max": 75600,
+  "optimizer_updates": 0,
+  "training_authorized": false,
+  "checkpoint": 1000000,
+  "model_seeds": [
+    0,
+    1
+  ],
+  "key_rule": "PRNGKey(sequence seed); split 300 times; index 0 unused; subsequent action h uses subkey[h]. Same keys for all candidates and states.",
+  "environment_rule": "Restore full integration state and mj_step1 phase, goal, elapsed steps, original global and environment RNG. First action from saved parent NPZ. Remaining policy is original frozen Actor. Stop on native termination/truncation or 300.",
+  "primary": "Seven NEW suffixes; paired wins/losses/ties and success counts per state; B versus A, C versus A, C versus B.",
+  "secondary": "Parent suffix 0 separately; eight-suffix pooled result includes selected exploratory evidence.",
+  "replication_targets": [
+    {
+      "state": "near_goal_s0_e007_t964",
+      "candidate": "resampled_actor"
+    },
+    {
+      "state": "near_goal_s0_e021_t1227",
+      "candidate": "vabc"
+    },
+    {
+      "state": "near_goal_s1_e033_t1292",
+      "candidate": "resampled_actor"
+    },
+    {
+      "state": "pre_stall_s0_e027_t1287",
+      "candidate": "vabc"
+    }
+  ],
+  "operational_rule": {
+    "per_target": "At least 4 paired success wins and at most 1 paired success loss in seven new suffixes",
+    "continue_narrow_hypothesis": "At least 2 of 4 predeclared rescued state/candidate pairs meet rule",
+    "otherwise": "Do not claim stable general defect; stop expansion. Exploratory practical threshold, not statistical significance."
+  },
+  "metrics": {
+    "success": "Native success within 300 steps",
+    "progress": "initial-final and initial-min Euclidean goal distance; descriptive, not route optimality",
+    "stagnation": "Each complete 100-step window (101 positions): max displacement from window start <0.5m; fraction; NA for <100 steps",
+    "collision": "Wall contact step count and fraction using block_ geom names",
+    "other": [
+      "return",
+      "discounted partial return gamma=0.995",
+      "path length",
+      "xy displacement",
+      "head height <1m fraction, not a fall diagnosis"
+    ]
+  },
+  "stops": [
+    "Nonfinite arrays",
+    "Initial restore error >1e-8",
+    "First transition error >1e-8 or reward/termination mismatch",
+    "Checkpoint/Agent hash changed",
+    "Budget exceeded"
+  ],
+  "limitations": [
+    "Selected states, not population rate",
+    "Fixed action per source, no deployable selection rule",
+    "Shared suffixes create cross-state dependence",
+    "300 steps is local, not full-horizon Q",
+    "No training/tuning/modules/new first actions/additional suffixes/retries"
+  ],
+  "source_hashes": {
+    "/home/xushijie3/work/gfp_mechanism_and_condition_screen_v1_20261015/configs/states.json": "e0b6d505bdf7d1f2ca1360219876ffd0c1919a120dd6c62556a270660aad75a7",
+    "/home/xushijie3/work/gfp_mechanism_and_condition_screen_v1_20261015/reports/branch_results.json": "fd22457cd7c4bf1bbb93094a4d78856bf74c53b624e191c8f5a9cbdbdaf4f8ce",
+    "/home/xushijie3/work/gfp_proposal_robustness_v1_20261015/configs/states.json": "e0b6d505bdf7d1f2ca1360219876ffd0c1919a120dd6c62556a270660aad75a7",
+    "/home/xushijie3/work/gfp_proposal_robustness_v1_20261015/configs/first_actions.json": "3dfa027f83a872543f5532d599e4e5b8c56a6a616522f9674078f9e15aca2615"
+  }
+}

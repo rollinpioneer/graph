@@ -1,0 +1,19 @@
+import json,hashlib,datetime
+from pathlib import Path
+import numpy as np
+R=Path(__file__).resolve().parents[1];B=Path('/home/xushijie3/work/gfp_mechanism_and_condition_screen_v1_20261015')
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,x):p.write_text(json.dumps(x,indent=2))
+assert not (R/'configs/frozen_protocol.json').exists()
+(R/'configs/states.json').write_bytes((B/'configs/states.json').read_bytes())
+rows=json.loads((B/'reports/branch_results.json').read_text());assert len(rows)==36
+acts=[]
+for x in rows:
+ p=Path(x['path']);assert sha(p)==x['sha256']
+ with np.load(p) as f:a=f['actions'][0]
+ acts.append(dict(state=x['state'],candidate=x['candidate'],path=str(p),sha256=x['sha256'],action=a.tolist(),action_dtype=str(a.dtype),action_sha256=hashlib.sha256(a.tobytes()).hexdigest()))
+save(R/'configs/first_actions.json',acts)
+rescues=[dict(state=s,candidate=c) for s,c in [('near_goal_s0_e007_t964','resampled_actor'),('near_goal_s0_e021_t1227','vabc'),('near_goal_s1_e033_t1292','resampled_actor'),('pre_stall_s0_e027_t1287','vabc')]]
+protocol=dict(card='GFP-PROPOSAL-ROBUSTNESS-V1',frozen_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),branch='codex/gfp-proposal-robustness-v1-20261015',parent_commit='d2ff3ed3767a4ae584fbd8c2a32525e4da414cd7',parent_root=str(B),task='humanoidmaze-medium-navigate-singletask-task1-v0',states=12,first_actions_per_state=3,new_sequence_seeds=list(range(2026101501,2026101508)),new_branches_max=252,branch_steps_max=300,new_environment_steps_max=75600,optimizer_updates=0,training_authorized=False,checkpoint=1000000,model_seeds=[0,1],key_rule='PRNGKey(sequence seed); split 300 times; index 0 unused; subsequent action h uses subkey[h]. Same keys for all candidates and states.',environment_rule='Restore full integration state and mj_step1 phase, goal, elapsed steps, original global and environment RNG. First action from saved parent NPZ. Remaining policy is original frozen Actor. Stop on native termination/truncation or 300.',primary='Seven NEW suffixes; paired wins/losses/ties and success counts per state; B versus A, C versus A, C versus B.',secondary='Parent suffix 0 separately; eight-suffix pooled result includes selected exploratory evidence.',replication_targets=rescues,operational_rule=dict(per_target='At least 4 paired success wins and at most 1 paired success loss in seven new suffixes',continue_narrow_hypothesis='At least 2 of 4 predeclared rescued state/candidate pairs meet rule',otherwise='Do not claim stable general defect; stop expansion. Exploratory practical threshold, not statistical significance.'),metrics=dict(success='Native success within 300 steps',progress='initial-final and initial-min Euclidean goal distance; descriptive, not route optimality',stagnation='Each complete 100-step window (101 positions): max displacement from window start <0.5m; fraction; NA for <100 steps',collision='Wall contact step count and fraction using block_ geom names',other=['return','discounted partial return gamma=0.995','path length','xy displacement','head height <1m fraction, not a fall diagnosis']),stops=['Nonfinite arrays','Initial restore error >1e-8','First transition error >1e-8 or reward/termination mismatch','Checkpoint/Agent hash changed','Budget exceeded'],limitations=['Selected states, not population rate','Fixed action per source, no deployable selection rule','Shared suffixes create cross-state dependence','300 steps is local, not full-horizon Q','No training/tuning/modules/new first actions/additional suffixes/retries'],source_hashes={str(p):sha(p) for p in [B/'configs/states.json',B/'reports/branch_results.json',R/'configs/states.json',R/'configs/first_actions.json']})
+save(R/'configs/frozen_protocol.json',protocol)
+print('FROZEN',protocol['frozen_utc'],sha(R/'configs/frozen_protocol.json'),len(acts))
