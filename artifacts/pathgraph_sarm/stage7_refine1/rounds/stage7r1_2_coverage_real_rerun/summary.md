@@ -1,3 +1,0 @@
-# Summary
-
-COVERAGE_REAL_RERUN_COMPLETE.

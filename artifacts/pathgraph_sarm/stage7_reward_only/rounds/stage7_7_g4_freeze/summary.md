@@ -1,3 +1,0 @@
-# Summary
-
-G4: GO_STAGE8_REWARD_ONLY.

@@ -1,3 +1,0 @@
-# Summary
-
-TARGETED_REPAIR_SCOPE_LOCKED.
