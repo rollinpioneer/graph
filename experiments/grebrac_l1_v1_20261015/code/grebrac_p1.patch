@@ -1,0 +1,86 @@
+diff -ru a/agents/rebrac.py b/agents/rebrac.py
+--- a/agents/rebrac.py	2026-10-15 10:39:40.193843662 +0000
++++ b/agents/rebrac.py	2026-10-15 10:40:09.697054977 +0000
+@@ -6,6 +6,7 @@
+ import jax
+ import jax.numpy as jnp
+ import optax
++from jax.scipy.special import logsumexp
+ 
+ from utils.encoders import encoder_modules
+ from utils.flax_utils import ModuleDict, TrainState, nonpytree_field
+@@ -76,7 +77,15 @@
+         # Normalize Q values by the absolute mean to make the loss scale invariant.
+         lam = jax.lax.stop_gradient(1 / jnp.abs(q).mean())
+         actor_loss = -(lam * q).mean()
+-        bc_loss = (self.config["alpha_actor"] * mse).mean()
++        guidance_info = dict()
++        if self.config["guidance"]:
++            # G-ReBRAC: weight the BC term with GFP's guidance (softmax form, actor reference).
++            weights, guidance_info = self.compute_guidance(
++                batch, jax.lax.stop_gradient(actions), lam
++            )
++            bc_loss = (self.config["alpha_actor"] * weights * mse).mean()
++        else:
++            bc_loss = (self.config["alpha_actor"] * mse).mean()
+ 
+         total_loss = actor_loss + bc_loss
+ 
+@@ -91,7 +100,42 @@
+             "bc_loss": bc_loss,
+             "std": action_std.mean(),
+             "mse": mse.mean(),
++            **guidance_info,
++        }
++
++    def compute_guidance(self, batch, actor_actions, lam):
++        """GFP guidance weights (gfp.py compute_guidance) with the actor action as reference."""
++        agg_fn = getattr(jnp, self.config["q_agg"])
++        obs = batch["observations"]
++        q_data = agg_fn(
++            self.network.select("target_critic")(obs, actions=batch["actions"]), axis=0
++        )
++        q_ref = agg_fn(
++            self.network.select("target_critic")(obs, actions=actor_actions), axis=0
++        )
++        scale = lam / self.config["eta_temperature"]
++        scl_q_data = scale * q_data
++        scl_q_ref = scale * q_ref
++        log_denominator = logsumexp(jnp.stack([scl_q_data, scl_q_ref], axis=-1), axis=-1)
++        guidance = jnp.exp(scl_q_data - log_denominator)
++        if self.config["guidance_normalize"]:
++            # Keep the batch-average BC strength of the tuned ReBRAC alpha_actor.
++            weights = guidance / jnp.maximum(guidance.mean(), 1e-6)
++        else:
++            weights = guidance
++        weights = jax.lax.stop_gradient(weights)
++        info = {
++            "q_data": q_data.mean(),
++            "q_ref": q_ref.mean(),
++            "scaled_q_diff": (scl_q_data - scl_q_ref).mean(),
++            "guidance": guidance.mean(),
++            "guidance_above_10": jnp.mean(guidance > 0.1),
++            "guidance_above_25": jnp.mean(guidance > 0.25),
++            "guidance_above_50": jnp.mean(guidance > 0.5),
++            "guidance_above_75": jnp.mean(guidance > 0.75),
++            "weight_max": weights.max(),
+         }
++        return weights, info
+ 
+     @partial(jax.jit, static_argnames=("full_update",))
+     def total_loss(self, batch, grad_params, full_update=True, rng=None):
+diff -ru a/config/agent/rebrac.yaml b/config/agent/rebrac.yaml
+--- a/config/agent/rebrac.yaml	2026-10-15 10:39:40.194135750 +0000
++++ b/config/agent/rebrac.yaml	2026-10-15 10:39:59.213942798 +0000
+@@ -12,4 +12,9 @@
+ actor_noise: 0.2
+ actor_noise_clip: 0.5
+ actor_fc_scale: 0.01
+-tanh_squash: True
+\ No newline at end of file
++tanh_squash: True
++
++# G-ReBRAC: GFP guidance on the BC term (False = original ReBRAC)
++guidance: False
++eta_temperature: 1e-3
++guidance_normalize: True
