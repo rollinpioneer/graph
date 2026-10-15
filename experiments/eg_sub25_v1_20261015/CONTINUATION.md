@@ -1,3 +1,9 @@
+# 2026-10-15最新状态：训练已完成并核验PASS
+
+训练于台北16:44:05正常退出，10epoch/16000更新，10个checkpoint严格加载、最终真实开发帧有效解码PASS。实时状态为TRAINING_VALIDATED_PENDING_EVALUATION，入口阶段DEV_AP_AND_PAIRED_DIAGNOSIS_PENDING。正式训练和训练管理器均结束，不要再次启动run_card*.py或重训。下次直接按已冻结evaluation_protocol.json执行开发AP、两模型官方场景配对诊断与Bad Case；当前没有AP结果。详见reproduction_report.md、TRAINING_COMPLETE.json、epoch_results.csv。定时跟进保持PAUSED。
+
+以下为训练启动时的交接记录，状态应以上述最新记录为准。
+
 # EG-SUB25-V1 当前交接
 
 新卡分支codex/eg-sub25-v1-20261015，服务器根目录 `/home/xushijie3/work/eg_sub25_v1_20261015`；归档工作区仍为 `/home/xushijie3/work/eg_full_repro_v1_20261015/archive_worktree`，当前已切本卡分支。旧全量训练按用户要求在1000更新取消，自训练结果和完整训练日志已删除，停止/删除证据归档。旧根目录中的数据、监督、Conda/CUDA、官方预训练权重仍被新卡复用，绝不能删除旧根目录。
