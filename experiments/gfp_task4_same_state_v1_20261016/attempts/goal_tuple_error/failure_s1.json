@@ -1,0 +1,10 @@
+{
+  "error": "AttributeError(\"'tuple' object has no attribute 'copy'\")",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/xushijie3/work/gfp_task4_same_state_v1_20261016/code/probe.py\", line 150, in <module>\n    admit(states[0]);save(R/'receipts'/f'pilot_s{seed}.json',dict(status='PASS'));stage='waiting_pilot_gate';wait_gate('pilot_gate.json')\n    ^^^^^^^^^^^^^^^^\n  File \"/home/xushijie3/work/gfp_task4_same_state_v1_20261016/code/probe.py\", line 96, in admit\n    snap=capture(ob,ks[t]);path=R/'states'/f'{c[\"id\"]}.pkl'\n         ^^^^^^^^^^^^^^^^^\n  File \"/home/xushijie3/work/gfp_task4_same_state_v1_20261016/code/probe.py\", line 75, in capture\n    return dict(data=copy.copy(u.data),integration=integration,observation=np.asarray(ob).copy(),goal=u.cur_goal_xy.copy(),geom_pos=u.model.geom_pos.copy(),task_id=u.cur_task_id,task_info=copy.deepcopy(u.cur_task_info),env_rng=copy.deepcopy(u.np_random.bit_generator.state),action_space_rng=copy.deepcopy(env.action_space.np_random.bit_generator.state),numpy_rng=np.random.get_state(),python_rng=random.getstate(),policy_key=np.asarray(k),wrappers=[{n:copy.deepcopy(vars(e)[n]) for n in ['_elapsed_steps','_has_reset','_checked_reset','_checked_step'] if n in vars(e)} for e in wrappers()])\n                                                                                                      ^^^^^^^^^^^^^^^^^^\nAttributeError: 'tuple' object has no attribute 'copy'\n",
+  "stage": "restore_admission",
+  "current": "s1_e003_t0056",
+  "branches": 0,
+  "physical_environment_steps": 96,
+  "external_environment_steps": 56,
+  "optimizer_updates": 0
+}
