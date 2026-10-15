@@ -1,3 +1,9 @@
+# Completed: GFP task4 pilot
+
+Training, all 1,200 matched episodes, and pure Z2 completed. Final report: JOINT_DIAGNOSTIC_REPORT.md. Decision DIAGNOSE; no further training or module work authorized. All four real exits0, all initial observation hashes match, 30 checkpoint files verified. Archive/push this card only; pause lab after delivery.
+
+## Historical activation notes (superseded by completion)
+
 # T1-A activation and continuation
 
 Scope and immutable evaluation/Z2 bounds are in EXPERIMENT_CARD.md. Branch codex/gfp-task4-baseline-pilot-v1-20261015. Training is active, results are not yet final.

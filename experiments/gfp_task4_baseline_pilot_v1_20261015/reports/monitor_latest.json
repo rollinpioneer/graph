@@ -1,298 +1,197 @@
 {
-  "time": 1792073958.5061069,
-  "previous_time": 1792072155.794459,
-  "training": {
+  "time": 1792076839.8073726,
+  "runs": {
     "GFP_seed0": {
-      "updates": 900000,
-      "delta": 285000,
-      "stage": "NATIVE_EVALUATION",
-      "alive": true,
-      "health": null,
-      "checkpoints": [
-        100000,
-        200000,
-        300000,
-        400000,
-        500000,
-        600000,
-        700000,
-        800000
-      ],
-      "new_checkpoint_hashes_verified": [
-        700000,
-        800000
-      ],
-      "train_rows": 180,
-      "new_rows_checked": 54,
-      "nonfinite": [],
-      "last_train": {
-        "training/actor/VaBC_loss": "0.17269708",
-        "training/actor/actor_loss": "1.1786878",
-        "training/actor/distill_loss": "0.019968914",
-        "training/actor/guidance": "0.4578916",
-        "training/actor/guidance_above_01": "0.92578125",
-        "training/actor/guidance_above_10": "0.85546875",
-        "training/actor/guidance_above_25": "0.7265625",
-        "training/actor/guidance_above_40": "0.5859375",
-        "training/actor/guidance_above_50": "0.453125",
-        "training/actor/guidance_above_75": "0.1796875",
-        "training/actor/q_data": "-159.62204",
-        "training/actor/q_loss": "1.0",
-        "training/actor/q_ref": "-159.55351",
-        "training/actor/scaled_q_data": "-1001.4783",
-        "training/actor/scaled_q_ref": "-1001.04834",
-        "training/critic/critic_loss": "0.7454717",
-        "training/critic/q_max": "-11.802828",
-        "training/critic/q_mean": "-159.65846",
-        "training/critic/q_min": "-200.52762",
-        "training/critic/tgt_q_mean": "-159.38669",
-        "training/grad/max": "1.5200357",
-        "training/grad/min": "-1.3160461",
-        "training/grad/norm": "31.702091",
-        "validation/critic/critic_loss": "1.444704",
-        "validation/critic/q_mean": "-161.37149",
-        "validation/critic/tgt_q_mean": "-161.26242",
-        "validation/critic/q_max": "-2.9511814",
-        "validation/critic/q_min": "-192.89009",
-        "validation/actor/actor_loss": "1.1716508",
-        "validation/actor/VaBC_loss": "0.16572487",
-        "validation/actor/distill_loss": "0.019753056",
-        "validation/actor/q_loss": "1.0",
-        "validation/actor/q_data": "-161.34834",
-        "validation/actor/q_ref": "-161.25696",
-        "validation/actor/scaled_q_data": "-1001.8921",
-        "validation/actor/scaled_q_ref": "-1001.3246",
-        "validation/actor/guidance": "0.44932392",
-        "validation/actor/guidance_above_01": "0.94921875",
-        "validation/actor/guidance_above_10": "0.828125",
-        "validation/actor/guidance_above_25": "0.69921875",
-        "validation/actor/guidance_above_40": "0.56640625",
-        "validation/actor/guidance_above_50": "0.421875",
-        "validation/actor/guidance_above_75": "0.19921875",
-        "time/total_time": "5845.920680999756",
-        "step": "900000"
+      "status.json": {
+        "status": "COMPLETED",
+        "exit_code": 0,
+        "worker_pid": 4163162,
+        "gpu": 0
       },
-      "native": [
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
+      "training_progress.json": {
+        "elapsed": 6843.491244792938,
+        "epoch": 1792074893.7534087,
+        "job": "GFP_seed0",
+        "phase": "T1",
+        "pid": 4163179,
+        "stage": "PHASE_COMPLETED",
+        "updates": 1000000
+      },
+      "dispatch_admission.json": {
+        "actual_updates": 4,
+        "checkpoint": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed0/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_0/dispatch_admission",
+        "completed_updates": 4,
+        "health": {
+          "adam_count": 4.0,
+          "finite": 1.0,
+          "metric_max": 43.31058120727539,
+          "parameter_max": 1.0011906623840332,
+          "state_step": 5.0
         },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "1.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        }
-      ]
+        "path": "official_gpu_sampler_fused",
+        "restored_state_sha256": "71ea62dd6dcdbb70f835facc021d4975440fb5c31d168c1a6ffd4a6cf7d8c7a1",
+        "status": "PASS"
+      },
+      "exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 6861.684209108353,
+        "cpu_seconds": 7532.55202,
+        "max_rss_kib": 7649068,
+        "finished_utc": "2026-10-15T14:35:11.084751+00:00"
+      },
+      "matched/progress.json": {
+        "step": 1000000,
+        "episodes_completed": 100,
+        "time": 1792076037.349453,
+        "optimizer_updates": 0
+      },
+      "matched/completed.json": {
+        "status": "PASS",
+        "optimizer_updates": 0,
+        "time": 1792076037.807719
+      },
+      "matched_exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 1110.1586666107178,
+        "gpu": 1
+      }
     },
     "GFP_seed1": {
-      "updates": 900000,
-      "delta": 245000,
-      "stage": "NATIVE_EVALUATION",
-      "alive": true,
-      "health": null,
-      "checkpoints": [
-        100000,
-        200000,
-        300000,
-        400000,
-        500000,
-        600000,
-        700000,
-        800000
-      ],
-      "new_checkpoint_hashes_verified": [
-        700000,
-        800000
-      ],
-      "train_rows": 180,
-      "new_rows_checked": 46,
-      "nonfinite": [],
-      "last_train": {
-        "training/actor/VaBC_loss": "0.1647746",
-        "training/actor/actor_loss": "1.1705118",
-        "training/actor/distill_loss": "0.019124052",
-        "training/actor/guidance": "0.46842724",
-        "training/actor/guidance_above_01": "0.921875",
-        "training/actor/guidance_above_10": "0.83984375",
-        "training/actor/guidance_above_25": "0.72265625",
-        "training/actor/guidance_above_40": "0.58203125",
-        "training/actor/guidance_above_50": "0.47265625",
-        "training/actor/guidance_above_75": "0.2265625",
-        "training/actor/q_data": "-160.93637",
-        "training/actor/q_loss": "1.0",
-        "training/actor/q_ref": "-160.8538",
-        "training/actor/scaled_q_data": "-1001.8534",
-        "training/actor/scaled_q_ref": "-1001.3395",
-        "training/critic/critic_loss": "0.5786801",
-        "training/critic/q_max": "-4.78686",
-        "training/critic/q_mean": "-160.88693",
-        "training/critic/q_min": "-193.7111",
-        "training/critic/tgt_q_mean": "-160.76729",
-        "training/grad/max": "1.3763021",
-        "training/grad/min": "-1.749799",
-        "training/grad/norm": "24.113636",
-        "validation/critic/critic_loss": "1.0796502",
-        "validation/critic/q_mean": "-164.25345",
-        "validation/critic/tgt_q_mean": "-164.06903",
-        "validation/critic/q_max": "-54.565815",
-        "validation/critic/q_min": "-194.61629",
-        "validation/actor/actor_loss": "1.2138041",
-        "validation/actor/VaBC_loss": "0.20783876",
-        "validation/actor/distill_loss": "0.019884717",
-        "validation/actor/q_loss": "1.0",
-        "validation/actor/q_data": "-164.27399",
-        "validation/actor/q_ref": "-164.30579",
-        "validation/actor/scaled_q_data": "-1001.22",
-        "validation/actor/scaled_q_ref": "-1001.41364",
-        "validation/actor/guidance": "0.48472303",
-        "validation/actor/guidance_above_01": "0.96875",
-        "validation/actor/guidance_above_10": "0.859375",
-        "validation/actor/guidance_above_25": "0.7421875",
-        "validation/actor/guidance_above_40": "0.57421875",
-        "validation/actor/guidance_above_50": "0.47265625",
-        "validation/actor/guidance_above_75": "0.2265625",
-        "time/total_time": "5848.869476079941",
-        "step": "900000"
+      "status.json": {
+        "status": "COMPLETED",
+        "exit_code": 0,
+        "worker_pid": 4163163,
+        "gpu": 4
       },
-      "native": [
-        {
-          "success_Actor": "1.0",
-          "success_Flow": "1.0",
-          "final_Actor": "",
-          "final_Flow": ""
+      "training_progress.json": {
+        "elapsed": 6959.061272621155,
+        "epoch": 1792075009.3229666,
+        "job": "GFP_seed1",
+        "phase": "T1",
+        "pid": 4163180,
+        "stage": "PHASE_COMPLETED",
+        "updates": 1000000
+      },
+      "dispatch_admission.json": {
+        "actual_updates": 4,
+        "checkpoint": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/output/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task4_v0/date_20261015_204054_seed_1/dispatch_admission",
+        "completed_updates": 4,
+        "health": {
+          "adam_count": 4.0,
+          "finite": 1.0,
+          "metric_max": 373.1859130859375,
+          "parameter_max": 1.001188039779663,
+          "state_step": 5.0
         },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "1.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        },
-        {
-          "success_Actor": "0.0",
-          "success_Flow": "0.0",
-          "final_Actor": "",
-          "final_Flow": ""
-        }
-      ]
+        "path": "official_gpu_sampler_fused",
+        "restored_state_sha256": "333b3db96d2cfa1d829e2f3195a5623efc321146b1975d4eeddf9211b9d19921",
+        "status": "PASS"
+      },
+      "exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 6968.8937265872955,
+        "cpu_seconds": 7534.6186099999995,
+        "max_rss_kib": 7643712,
+        "finished_utc": "2026-10-15T14:36:58.294261+00:00"
+      },
+      "matched/progress.json": {
+        "step": 1000000,
+        "episodes_completed": 100,
+        "time": 1792076138.7702568,
+        "optimizer_updates": 0
+      },
+      "matched/completed.json": {
+        "status": "PASS",
+        "optimizer_updates": 0,
+        "time": 1792076139.0830178
+      },
+      "matched_exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 1140.0291106700897,
+        "gpu": 0
+      }
+    },
+    "ReBRAC_seed0": {
+      "status.json": {
+        "exit_code": 0,
+        "source": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s0",
+        "status": "COMPLETED_ADOPTED",
+        "step": 1000000
+      },
+      "matched/progress.json": {
+        "step": 1000000,
+        "episodes_completed": 100,
+        "time": 1792069803.924026,
+        "optimizer_updates": 0
+      },
+      "matched/completed.json": {
+        "status": "PASS",
+        "optimizer_updates": 0,
+        "time": 1792069804.2710235
+      },
+      "matched_exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 1410.213858127594,
+        "gpu": 1
+      }
+    },
+    "ReBRAC_seed1": {
+      "status.json": {
+        "exit_code": 0,
+        "source": "/home/xushijie3/work/grebrac_l1_v1_20261015/runs/formal/R_task4_s1",
+        "status": "COMPLETED_ADOPTED",
+        "step": 1000000
+      },
+      "matched/progress.json": {
+        "step": 1000000,
+        "episodes_completed": 100,
+        "time": 1792069907.233427,
+        "optimizer_updates": 0
+      },
+      "matched/completed.json": {
+        "status": "PASS",
+        "optimizer_updates": 0,
+        "time": 1792069907.7336724
+      },
+      "matched_exit.json": {
+        "exit_code": 0,
+        "wall_seconds": 1500.0448653697968,
+        "gpu": 5
+      }
     }
   },
   "controllers": {
-    "evaluation_manager.json": {
-      "pid": 4182656,
-      "alive": true
+    "evaluation_queue.json": {
+      "active": {},
+      "completed": [
+        "GFP_seed0",
+        "GFP_seed1",
+        "ReBRAC_seed0",
+        "ReBRAC_seed1"
+      ],
+      "failed": {},
+      "time": 1792076160.1032624
     },
-    "z2_manager.json": {
-      "pid": 4182657,
-      "alive": true
+    "evaluation_finished.json": {
+      "completed": [
+        "GFP_seed0",
+        "GFP_seed1",
+        "ReBRAC_seed0",
+        "ReBRAC_seed1"
+      ],
+      "failed": {},
+      "time": 1792076190.10363
+    },
+    "z2_completed.json": {
+      "status": "PASS",
+      "time": 1792075088.1035507,
+      "gpu": 0,
+      "wall_seconds": 68.55274081230164,
+      "optimizer_updates": 0,
+      "environment_steps": 0
     }
   },
-  "alerts": [],
-  "resources": {
-    "gpu": "0, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 14, 12222, 28242\n1, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 20, 27406, 13059\n2, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 86, 14815, 25649\n3, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 76, 37808, 2657\n4, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 96, 17884, 22580\n5, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 2, 6019, 34445\n6, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 100, 21113, 19351\n7, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 94, 24435, 16030\n",
-    "ram": "               total        used        free      shared  buff/cache   available\nMem:          515095      141623       29322       23707      371213      373471\nSwap:           4095        4060          35\n"
-  },
-  "evaluation_queue": {
-    "active": {},
-    "completed": [
-      "ReBRAC_seed0",
-      "ReBRAC_seed1"
-    ],
-    "failed": {},
-    "time": 1792073999.7492895
-  },
-  "z2": "WAITING_FOR_BOTH_GFP_FINISHED",
-  "additional_own_account_training_or_evaluation_processes": [],
-  "own_gpu_resources": [
-    "4163179, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 3144",
-    "4164654, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164652, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164651, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164649, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164655, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164656, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164653, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164648, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164650, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4164657, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 570",
-    "4163180, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 3068",
-    "4164641, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164642, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164637, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164639, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164645, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164640, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164644, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164646, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164638, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424",
-    "4164643, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 424"
-  ]
+  "gpu": "0, GPU-4120c94f-c9c2-6653-a0ec-41957aa85822, 59, 14786, 25678\n1, GPU-61a23cf4-84c2-e7d3-596e-438966258945, 9, 26406, 14059\n2, GPU-eb22e795-17aa-d14d-4ed6-dff343fbaaeb, 87, 14815, 25650\n3, GPU-ac34f6d2-4fea-acf3-1f89-766dfa2bbaf7, 100, 37807, 2657\n4, GPU-dc70602e-3b9d-ab0a-ee9c-d3a900565ca4, 42, 10913, 29552\n5, GPU-1f8161f4-7f19-0357-a0c7-fb7f6e5fd384, 40, 6019, 34445\n6, GPU-dd290d6b-aa94-38e2-8dd5-9d1c76287408, 97, 21115, 19350\n7, GPU-71e35dc1-6901-b158-8674-68043fafa2b1, 3, 4254, 36211\n",
+  "ram": "               total        used        free      shared  buff/cache   available\nMem:          515095      108070       15890       20488      414979      407025\nSwap:           4095        4095           0\n",
+  "own_processes": "    PID    PPID ELAPSED %CPU   RSS COMMAND\n 576369  576364    1113  0.0  8256 sshd-session: xushijie3@pts/19\n 576390  576369    1113  0.0  7820 -bash\n 652053  576390       0  8.3 12008 python3 code/monitor_all.py\n 652059  652053       0  0.0  6656 ps -u 1100 -o pid,ppid,etimes,%cpu,rss,args\n3291679       1   22445  0.0 14848 /usr/lib/systemd/systemd --user\n3291681 3291679   22445  0.0  2920 (sd-pam)\n"
 }
