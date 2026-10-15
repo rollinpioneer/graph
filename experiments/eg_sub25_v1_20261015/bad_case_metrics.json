@@ -1,0 +1,1948 @@
+{
+  "status": "PASS",
+  "selected_case_count": 12,
+  "paired_diagnostic_frames": 1024,
+  "top1_validity_criterion": "Native ranked evaluated top1:0<friction<=0.4 and no collision;not robot success",
+  "paired_top1_categories": {
+    "diagnostic_seen": {
+      "both_valid04": 272,
+      "subset_invalid_official_valid04": 113,
+      "both_invalid04": 59,
+      "subset_valid_official_invalid04": 68
+    },
+    "diagnostic_novel": {
+      "both_valid04": 166,
+      "subset_invalid_official_valid04": 146,
+      "both_invalid04": 132,
+      "subset_valid_official_invalid04": 68
+    }
+  },
+  "ranking_summary": {
+    "diagnostic_seen": {
+      "subset": {
+        "frames": 512,
+        "top1_collision_frames": 103,
+        "top1_bad_but_later_good04_frames": 172,
+        "any_valid04_candidate_frames": 512
+      },
+      "official": {
+        "frames": 512,
+        "top1_collision_frames": 27,
+        "top1_bad_but_later_good04_frames": 127,
+        "any_valid04_candidate_frames": 512
+      }
+    },
+    "diagnostic_novel": {
+      "subset": {
+        "frames": 512,
+        "top1_collision_frames": 143,
+        "top1_bad_but_later_good04_frames": 278,
+        "any_valid04_candidate_frames": 512
+      },
+      "official": {
+        "frames": 512,
+        "top1_collision_frames": 129,
+        "top1_bad_but_later_good04_frames": 200,
+        "any_valid04_candidate_frames": 512
+      }
+    }
+  },
+  "all24_replays_match": true,
+  "cases": [
+    {
+      "partition": "diagnostic_seen",
+      "scene": 119,
+      "frame": 22,
+      "selection": "lowest_1",
+      "subset_ap_percent": 50.397598576041204,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.158984375,
+        "valid_depth_fraction": 0.7721082899305556,
+        "min_visible_class_image_fraction": 0.0019227430555555556,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 50.397598576041204,
+          "ap04_percent": 42.03347458439954,
+          "ap08_percent": 61.952402708038875,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.2,
+            "top50_valid04_count": 12
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5742,
+            "graspable_points": 3203,
+            "graspness_quantiles": [
+              -1.7846735715866089,
+              -0.014046791940927505,
+              0.10237488895654678,
+              0.4390401542186737,
+              5.9271416664123535
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.958984375,
+            "fps_background_count": 42,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 42,
+              "3": 173,
+              "9": 364,
+              "12": 13,
+              "28": 1,
+              "52": 117,
+              "53": 13,
+              "59": 138,
+              "61": 22,
+              "64": 141
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 53.256237849576074,
+          "ap04_percent": 42.7621513534028,
+          "ap08_percent": 63.79299348545094,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.3,
+            "top50_valid04_count": 18
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5729,
+            "graspable_points": 3011,
+            "graspness_quantiles": [
+              -14.889718055725098,
+              -0.02556525170803069,
+              0.08622884005308151,
+              0.4158366024494171,
+              5.42982292175293
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9765625,
+            "fps_background_count": 24,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 24,
+              "3": 189,
+              "9": 344,
+              "12": 18,
+              "28": 3,
+              "52": 109,
+              "53": 2,
+              "59": 169,
+              "61": 13,
+              "64": 153
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 7,
+        "official_evaluated_rank": 11,
+        "center_distance_m": 0.0040126841092885815,
+        "rotation_geodesic_degrees": 164.73348886205315,
+        "width_difference_m": 0.00573381781578064,
+        "depth_difference_m": 0.009999999776482582,
+        "subset_quality": 0.8,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0119_frame_0022.jpg"
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 119,
+      "frame": 27,
+      "selection": "lowest_2",
+      "subset_ap_percent": 51.25956386219751,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.15041341145833334,
+        "valid_depth_fraction": 0.8526378038194444,
+        "min_visible_class_image_fraction": 0.0016048177083333333,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 51.25956386219751,
+          "ap04_percent": 43.125592235013364,
+          "ap08_percent": 63.697040846110816,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.4,
+            "top50_valid04_count": 17
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5845,
+            "graspable_points": 3502,
+            "graspness_quantiles": [
+              -1.8449105024337769,
+              -0.018976856023073196,
+              0.09128066897392273,
+              0.4996606409549713,
+              4.2758331298828125
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.96484375,
+            "fps_background_count": 36,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 36,
+              "3": 192,
+              "9": 259,
+              "12": 25,
+              "28": 2,
+              "52": 114,
+              "53": 7,
+              "59": 152,
+              "61": 22,
+              "64": 215
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 64.03802447875573,
+          "ap04_percent": 57.18449557948699,
+          "ap08_percent": 75.91551012554841,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.2,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.3,
+            "top50_valid04_count": 28
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6006,
+            "graspable_points": 3429,
+            "graspness_quantiles": [
+              -13.609771728515625,
+              -0.01601170003414154,
+              0.1339292749762535,
+              0.47231969237327576,
+              4.832281589508057
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.958984375,
+            "fps_background_count": 42,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 42,
+              "3": 197,
+              "9": 262,
+              "12": 26,
+              "28": 4,
+              "52": 91,
+              "53": 3,
+              "59": 172,
+              "61": 21,
+              "64": 206
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 24,
+        "official_evaluated_rank": 31,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 177.0701374808188,
+        "width_difference_m": 0.010969609022140503,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.6,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0119_frame_0027.jpg"
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 119,
+      "frame": 226,
+      "selection": "median",
+      "subset_ap_percent": 73.9885848305402,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.14373589409722223,
+        "valid_depth_fraction": 0.8407671440972222,
+        "min_visible_class_image_fraction": 0.00032335069444444447,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 73.9885848305402,
+          "ap04_percent": 60.59777833531963,
+          "ap08_percent": 92.04170826834743,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.0,
+            "top50_valid04_count": 22
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5317,
+            "graspable_points": 3350,
+            "graspness_quantiles": [
+              -1.1491721868515015,
+              -0.016195829957723618,
+              0.11887644976377487,
+              0.5030705869197848,
+              3.5340611934661865
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9482421875,
+            "fps_background_count": 53,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 53,
+              "3": 263,
+              "9": 175,
+              "12": 16,
+              "28": 1,
+              "52": 134,
+              "53": 23,
+              "59": 58,
+              "61": 61,
+              "64": 240
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 71.07461173794782,
+          "ap04_percent": 65.8948013242471,
+          "ap08_percent": 85.19396564200233,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.2,
+            "top50_valid04_count": 22
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5403,
+            "graspable_points": 3141,
+            "graspness_quantiles": [
+              -22.71283531188965,
+              -0.014554664492607117,
+              0.14013776183128357,
+              0.5087482929229736,
+              4.574432849884033
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9638671875,
+            "fps_background_count": 37,
+            "visible_sampled_classes": [
+              3,
+              9,
+              12,
+              28,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "classes_with_fps_centers": [
+              3,
+              9,
+              12,
+              52,
+              53,
+              59,
+              61,
+              64
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 37,
+              "3": 276,
+              "9": 172,
+              "12": 12,
+              "52": 116,
+              "53": 19,
+              "59": 97,
+              "61": 56,
+              "64": 239
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 24,
+        "official_evaluated_rank": 22,
+        "center_distance_m": 0.004727426198642772,
+        "rotation_geodesic_degrees": 46.66139296482348,
+        "width_difference_m": 0.0028427615761756897,
+        "depth_difference_m": 0.0,
+        "subset_quality": -1.0,
+        "subset_collision": true,
+        "official_quality": 0.2,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0119_frame_0226.jpg"
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 122,
+      "frame": 11,
+      "selection": "lowest_1",
+      "subset_ap_percent": 15.080496171662636,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 10,
+        "visible_segmentation_classes": 10,
+        "foreground_image_fraction": 0.13664930555555554,
+        "valid_depth_fraction": 0.7979600694444444,
+        "min_visible_class_image_fraction": 0.0026497395833333334,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 15.080496171662636,
+          "ap04_percent": 11.600120838552563,
+          "ap08_percent": 20.03226500398037,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 7,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.9,
+            "top50_valid04_count": 8
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 7593,
+            "graspable_points": 1164,
+            "graspness_quantiles": [
+              -1.5792911052703857,
+              -0.024525748938322066,
+              0.0078064799308776855,
+              0.30369915962219246,
+              8.024932861328125
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.984375,
+            "fps_background_count": 16,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              31,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 16,
+              "1": 3,
+              "6": 42,
+              "8": 430,
+              "10": 91,
+              "18": 49,
+              "21": 173,
+              "22": 44,
+              "31": 23,
+              "42": 153
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 51.93775625369682,
+          "ap04_percent": 45.54490094417177,
+          "ap08_percent": 63.67721433056146,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.1,
+            "top50_valid04_count": 13
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 7636,
+            "graspable_points": 1138,
+            "graspness_quantiles": [
+              -12.731416702270508,
+              -0.030619710683822632,
+              0.01056315004825592,
+              0.29509198963642136,
+              6.739462375640869
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.984375,
+            "fps_background_count": 16,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              31,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 16,
+              "6": 65,
+              "8": 468,
+              "10": 74,
+              "18": 52,
+              "21": 169,
+              "22": 44,
+              "31": 22,
+              "42": 114
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 29,
+        "official_evaluated_rank": 18,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 45.88347367095688,
+        "width_difference_m": 0.005575262010097504,
+        "depth_difference_m": 0.0,
+        "subset_quality": -1.0,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0122_frame_0011.jpg"
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 122,
+      "frame": 108,
+      "selection": "lowest_2",
+      "subset_ap_percent": 16.45697243915532,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 10,
+        "visible_segmentation_classes": 10,
+        "foreground_image_fraction": 0.1540939670138889,
+        "valid_depth_fraction": 0.8294965277777778,
+        "min_visible_class_image_fraction": 0.0012456597222222222,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 16.45697243915532,
+          "ap04_percent": 16.41303128476467,
+          "ap08_percent": 19.411274371158882,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.8,
+            "top50_valid04_count": 7
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6457,
+            "graspable_points": 828,
+            "graspness_quantiles": [
+              -3.2063159942626953,
+              -0.025337173044681544,
+              0.019379872828722,
+              0.3324137330055237,
+              6.620159149169922
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.98828125,
+            "fps_background_count": 12,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 12,
+              "6": 36,
+              "8": 449,
+              "10": 137,
+              "18": 57,
+              "21": 249,
+              "22": 7,
+              "30": 17,
+              "42": 60
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 43.35500730671038,
+          "ap04_percent": 43.38622614527163,
+          "ap08_percent": 52.59626246639398,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.3,
+            "top50_valid04_count": 12
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6549,
+            "graspable_points": 884,
+            "graspness_quantiles": [
+              -15.849085807800293,
+              -0.06769182831048966,
+              0.012311764061450958,
+              0.3118092715740204,
+              7.814812660217285
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9873046875,
+            "fps_background_count": 13,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 13,
+              "6": 30,
+              "8": 501,
+              "10": 147,
+              "18": 55,
+              "21": 185,
+              "22": 10,
+              "30": 21,
+              "31": 3,
+              "42": 59
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 46,
+        "official_evaluated_rank": 49,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 77.51485127483946,
+        "width_difference_m": 0.008863203227519989,
+        "depth_difference_m": 0.009999999776482582,
+        "subset_quality": -1.0,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0122_frame_0108.jpg"
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 122,
+      "frame": 174,
+      "selection": "median",
+      "subset_ap_percent": 37.007995585606274,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 10,
+        "visible_segmentation_classes": 10,
+        "foreground_image_fraction": 0.16861436631944443,
+        "valid_depth_fraction": 0.8933355034722222,
+        "min_visible_class_image_fraction": 0.00171875,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 37.007995585606274,
+          "ap04_percent": 30.881125479245362,
+          "ap08_percent": 42.397469368978605,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 3,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.5,
+            "top50_valid04_count": 10
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 7888,
+            "graspable_points": 963,
+            "graspness_quantiles": [
+              -2.4243204593658447,
+              -0.021334145218133926,
+              0.014026686549186707,
+              0.2961563169956207,
+              6.178318500518799
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.990234375,
+            "fps_background_count": 10,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 10,
+              "6": 16,
+              "8": 394,
+              "10": 143,
+              "18": 48,
+              "21": 87,
+              "22": 21,
+              "30": 25,
+              "31": 75,
+              "42": 205
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 60.073270011026366,
+          "ap04_percent": 54.71018343095502,
+          "ap08_percent": 73.58103262396214,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.2,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.2,
+            "top50_valid04_count": 20
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 8005,
+            "graspable_points": 994,
+            "graspness_quantiles": [
+              -15.036355018615723,
+              -0.025821486115455625,
+              0.010049939155578613,
+              0.32206288278102957,
+              3.985689163208008
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.98828125,
+            "fps_background_count": 12,
+            "visible_sampled_classes": [
+              1,
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "classes_with_fps_centers": [
+              6,
+              8,
+              10,
+              18,
+              21,
+              22,
+              30,
+              31,
+              42
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 12,
+              "6": 36,
+              "8": 433,
+              "10": 111,
+              "18": 48,
+              "21": 82,
+              "22": 46,
+              "30": 15,
+              "31": 31,
+              "42": 210
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 31,
+        "official_evaluated_rank": 31,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 152.19377001554807,
+        "width_difference_m": 0.010374069213867188,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.8,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0122_frame_0174.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 188,
+      "frame": 137,
+      "selection": "lowest_1",
+      "subset_ap_percent": 19.24057978066881,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.09170572916666667,
+        "valid_depth_fraction": 0.8355696614583333,
+        "min_visible_class_image_fraction": 0.0013313802083333333,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 19.24057978066881,
+          "ap04_percent": 14.088551195506364,
+          "ap08_percent": 24.389576598738216,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 9,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.8,
+            "top50_valid04_count": 11
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4330,
+            "graspable_points": 1783,
+            "graspness_quantiles": [
+              -3.036076545715332,
+              -0.02356510907411575,
+              0.04956907220184803,
+              0.3909985691308979,
+              6.963029861450195
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9697265625,
+            "fps_background_count": 31,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 31,
+              "18": 51,
+              "21": 76,
+              "27": 15,
+              "28": 3,
+              "31": 9,
+              "52": 227,
+              "63": 241,
+              "64": 154,
+              "67": 217
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 47.59609851801692,
+          "ap04_percent": 38.5177786139564,
+          "ap08_percent": 58.52941381895822,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": 0.6,
+            "top1_collision": false,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.4,
+            "top50_valid04_count": 15
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4209,
+            "graspable_points": 1175,
+            "graspness_quantiles": [
+              -13.093693733215332,
+              -0.041258037090301514,
+              0.05303075537085533,
+              0.32456427812576294,
+              8.319355964660645
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9794921875,
+            "fps_background_count": 21,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 21,
+              "18": 66,
+              "21": 67,
+              "27": 25,
+              "28": 11,
+              "31": 10,
+              "52": 250,
+              "63": 282,
+              "64": 149,
+              "67": 143
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 30,
+        "official_evaluated_rank": 19,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 43.78993920430521,
+        "width_difference_m": 0.00030022114515304565,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.6,
+        "subset_collision": false,
+        "official_quality": 0.2,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0188_frame_0137.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 188,
+      "frame": 154,
+      "selection": "lowest_2",
+      "subset_ap_percent": 21.317020230182113,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.09170572916666667,
+        "valid_depth_fraction": 0.8355696614583333,
+        "min_visible_class_image_fraction": 0.0013313802083333333,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 21.317020230182113,
+          "ap04_percent": 8.370156889593606,
+          "ap08_percent": 31.57295657609216,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 8,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.4,
+            "top50_valid04_count": 5
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4209,
+            "graspable_points": 1734,
+            "graspness_quantiles": [
+              -2.7317280769348145,
+              -0.020040255784988397,
+              0.05246839113533497,
+              0.3815540671348572,
+              5.984496593475342
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9716796875,
+            "fps_background_count": 29,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 29,
+              "18": 59,
+              "21": 61,
+              "27": 17,
+              "28": 4,
+              "31": 9,
+              "52": 211,
+              "63": 230,
+              "64": 182,
+              "67": 222
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 47.062313259621554,
+          "ap04_percent": 47.27102220761163,
+          "ap08_percent": 57.49249306351057,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.3,
+            "top50_valid04_count": 16
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4139,
+            "graspable_points": 1097,
+            "graspness_quantiles": [
+              -16.543426513671875,
+              -0.03416644036769867,
+              0.056049250066280365,
+              0.33040088713169136,
+              4.79953670501709
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9775390625,
+            "fps_background_count": 23,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 23,
+              "18": 69,
+              "21": 64,
+              "27": 24,
+              "28": 11,
+              "31": 16,
+              "52": 184,
+              "63": 267,
+              "64": 236,
+              "67": 130
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 4,
+        "official_evaluated_rank": 4,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 43.563791247184014,
+        "width_difference_m": 0.0201307013630867,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.6,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0188_frame_0154.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 188,
+      "frame": 232,
+      "selection": "median",
+      "subset_ap_percent": 43.64275430433672,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 9,
+        "visible_segmentation_classes": 9,
+        "foreground_image_fraction": 0.09170572916666667,
+        "valid_depth_fraction": 0.8355696614583333,
+        "min_visible_class_image_fraction": 0.0013313802083333333,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 43.64275430433672,
+          "ap04_percent": 36.80556723108264,
+          "ap08_percent": 57.56575348288643,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.5,
+            "top50_valid04_count": 12
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4306,
+            "graspable_points": 1640,
+            "graspness_quantiles": [
+              -1.867521047592163,
+              -0.01958902925252914,
+              0.04981514438986778,
+              0.3877871632575995,
+              6.502335071563721
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9755859375,
+            "fps_background_count": 25,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 25,
+              "18": 59,
+              "21": 68,
+              "27": 23,
+              "31": 10,
+              "52": 235,
+              "63": 219,
+              "64": 189,
+              "67": 196
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 50.62150727790679,
+          "ap04_percent": 45.62760787078898,
+          "ap08_percent": 63.838679720791816,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.5,
+            "top50_valid04_count": 19
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 4240,
+            "graspable_points": 1087,
+            "graspness_quantiles": [
+              -13.272076606750488,
+              -0.0359322726726532,
+              0.04658234119415283,
+              0.3396879732608795,
+              6.323916912078857
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.98046875,
+            "fps_background_count": 20,
+            "visible_sampled_classes": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "classes_with_fps_centers": [
+              18,
+              21,
+              27,
+              28,
+              31,
+              52,
+              63,
+              64,
+              67
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 20,
+              "18": 73,
+              "21": 70,
+              "27": 38,
+              "28": 2,
+              "31": 20,
+              "52": 225,
+              "63": 262,
+              "64": 178,
+              "67": 136
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 17,
+        "official_evaluated_rank": 13,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 13.478910034268708,
+        "width_difference_m": 0.0008202977478504181,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.6,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0188_frame_0232.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 189,
+      "frame": 15,
+      "selection": "lowest_1",
+      "subset_ap_percent": 10.82966673250882,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 7,
+        "visible_segmentation_classes": 7,
+        "foreground_image_fraction": 0.12995768229166665,
+        "valid_depth_fraction": 0.7317805989583334,
+        "min_visible_class_image_fraction": 0.0014138454861111112,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 10.82966673250882,
+          "ap04_percent": 4.102464864490327,
+          "ap08_percent": 12.240759593721526,
+          "ranking": {
+            "evaluated_grasps": 39,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 10,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.7,
+            "top50_valid04_count": 2
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6566,
+            "graspable_points": 2131,
+            "graspness_quantiles": [
+              -2.3706748485565186,
+              -0.029362566769123074,
+              0.04558398760855198,
+              0.358145534992218,
+              4.711995601654053
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9970703125,
+            "fps_background_count": 3,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              20,
+              36,
+              66
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 3,
+              "4": 460,
+              "5": 243,
+              "20": 1,
+              "36": 44,
+              "66": 273
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 32.97850642338101,
+          "ap04_percent": 23.13430365456756,
+          "ap08_percent": 42.74083063615894,
+          "ranking": {
+            "evaluated_grasps": 41,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.4,
+            "top50_valid04_count": 7
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6935,
+            "graspable_points": 1819,
+            "graspness_quantiles": [
+              -14.97044849395752,
+              -0.024429112672805786,
+              0.04389470815658569,
+              0.3239049077033999,
+              9.135322570800781
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9970703125,
+            "fps_background_count": 3,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              36,
+              66
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 3,
+              "4": 366,
+              "5": 337,
+              "36": 51,
+              "66": 267
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 13,
+        "official_evaluated_rank": 25,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 165.00004097113603,
+        "width_difference_m": 0.003612615168094635,
+        "depth_difference_m": 0.0,
+        "subset_quality": -1.0,
+        "subset_collision": true,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0189_frame_0015.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 189,
+      "frame": 13,
+      "selection": "lowest_2",
+      "subset_ap_percent": 13.436564643481052,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 7,
+        "visible_segmentation_classes": 7,
+        "foreground_image_fraction": 0.13546440972222223,
+        "valid_depth_fraction": 0.7542415364583334,
+        "min_visible_class_image_fraction": 0.002041015625,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 13.436564643481052,
+          "ap04_percent": 7.057066663563011,
+          "ap08_percent": 19.343754397066967,
+          "ranking": {
+            "evaluated_grasps": 49,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 7,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.5,
+            "top50_valid04_count": 2
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6855,
+            "graspable_points": 2032,
+            "graspness_quantiles": [
+              -1.9599616527557373,
+              -0.031282663345336914,
+              0.03413524851202965,
+              0.3313567340373993,
+              4.799892425537109
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9912109375,
+            "fps_background_count": 9,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 9,
+              "4": 438,
+              "5": 197,
+              "7": 26,
+              "20": 1,
+              "36": 52,
+              "66": 300,
+              "68": 1
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 29.081660583384394,
+          "ap04_percent": 23.08721514427779,
+          "ap08_percent": 37.94966234990432,
+          "ranking": {
+            "evaluated_grasps": 38,
+            "top1_valid04": false,
+            "top1_quality": -1.0,
+            "top1_collision": true,
+            "first_valid04_rank": 3,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.5,
+            "top50_valid04_count": 7
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 7016,
+            "graspable_points": 1617,
+            "graspness_quantiles": [
+              -17.341337203979492,
+              -0.014978557825088498,
+              0.05519475042819977,
+              0.3414277732372284,
+              9.708097457885742
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9912109375,
+            "fps_background_count": 9,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              36,
+              66
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 9,
+              "4": 375,
+              "5": 296,
+              "36": 66,
+              "66": 278
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 31,
+        "official_evaluated_rank": 3,
+        "center_distance_m": 0.0,
+        "rotation_geodesic_degrees": 82.35513911578435,
+        "width_difference_m": 0.008864149451255798,
+        "depth_difference_m": 0.0,
+        "subset_quality": -1.0,
+        "subset_collision": true,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0189_frame_0013.jpg"
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 189,
+      "frame": 168,
+      "selection": "median",
+      "subset_ap_percent": 37.740340883484514,
+      "exploratory_posthoc": true,
+      "scene_observations": {
+        "metadata_object_count": 7,
+        "visible_segmentation_classes": 7,
+        "foreground_image_fraction": 0.13101236979166667,
+        "valid_depth_fraction": 0.8217610677083333,
+        "min_visible_class_image_fraction": 0.0033615451388888887,
+        "limitation": "Visible area and object count are complexity proxies;occlusion is not directly measured"
+      },
+      "models": {
+        "subset": {
+          "ap_percent": 37.740340883484514,
+          "ap04_percent": 28.020049942329976,
+          "ap08_percent": 44.199190308234016,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": true,
+            "top1_quality": 0.4,
+            "top1_collision": false,
+            "first_valid04_rank": 1,
+            "top1_bad_but_later_good04": false,
+            "top10_collision_fraction": 0.4,
+            "top50_valid04_count": 7
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 5714,
+            "graspable_points": 2531,
+            "graspness_quantiles": [
+              -1.636671543121338,
+              -0.025612372905015945,
+              0.057031553238630295,
+              0.33013981580734253,
+              5.322622299194336
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9970703125,
+            "fps_background_count": 3,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              20,
+              36,
+              66
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 3,
+              "4": 344,
+              "5": 223,
+              "20": 75,
+              "36": 43,
+              "66": 336
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        },
+        "official": {
+          "ap_percent": 39.05534018844499,
+          "ap04_percent": 19.464015493737406,
+          "ap08_percent": 54.103985873144275,
+          "ranking": {
+            "evaluated_grasps": 50,
+            "top1_valid04": false,
+            "top1_quality": 0.6,
+            "top1_collision": false,
+            "first_valid04_rank": 2,
+            "top1_bad_but_later_good04": true,
+            "top10_collision_fraction": 0.2,
+            "top50_valid04_count": 6
+          },
+          "point_selection_replay": {
+            "sampled_points": 20000,
+            "objectness_positive": 6015,
+            "graspable_points": 1647,
+            "graspness_quantiles": [
+              -14.608990669250488,
+              -0.07354609668254852,
+              0.026711732149124146,
+              0.27771827578544617,
+              8.364958763122559
+            ],
+            "fps_centers": 1024,
+            "fps_foreground_fraction": 0.9912109375,
+            "fps_background_count": 9,
+            "visible_sampled_classes": [
+              4,
+              5,
+              7,
+              20,
+              36,
+              66,
+              68
+            ],
+            "classes_with_fps_centers": [
+              4,
+              5,
+              20,
+              36,
+              66
+            ],
+            "fps_counts_by_semantic_class": {
+              "0": 9,
+              "4": 320,
+              "5": 213,
+              "20": 106,
+              "36": 53,
+              "66": 323
+            }
+          },
+          "replay_prediction_matches": true,
+          "replay_max_abs_difference": 0.0
+        }
+      },
+      "nearby_center_pose_probe": {
+        "subset_evaluated_rank": 18,
+        "official_evaluated_rank": 19,
+        "center_distance_m": 0.009734198782563272,
+        "rotation_geodesic_degrees": 15.000001177469748,
+        "width_difference_m": 0.0031804144382476807,
+        "depth_difference_m": 0.0,
+        "subset_quality": 0.8,
+        "subset_collision": false,
+        "official_quality": 0.4,
+        "interpretation": "Nearby centers and different pose/quality are an observation;point/contact/width/depth confounding remains,no head-specific causal proof"
+      },
+      "figure": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/bad_cases/figures/scene_0189_frame_0168.jpg"
+    }
+  ],
+  "causal_status": "Exploratory observations only;no module-level cause has been proven"
+}

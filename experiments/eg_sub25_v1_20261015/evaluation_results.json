@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "model_frame_evaluations": 4608,
+  "scene_evaluations": 18,
+  "summaries": {
+    "dev": {
+      "subset": {
+        "scenes": [
+          8,
+          36,
+          41,
+          44,
+          58,
+          65,
+          73,
+          75,
+          80,
+          86
+        ],
+        "frames": 2560,
+        "ap_percent": 51.4037925196861,
+        "ap04_percent": 43.17265082326324,
+        "ap08_percent": 62.314058541650994,
+        "inference_wall_seconds": 267.47315645217896,
+        "forward_decode_ms_per_frame": 40.43554957568176,
+        "input_manifest_sha256": "e8f6668af21136b35e2fecc587ad96862090c30228dbef6796c2c6993b5e9cfb"
+      }
+    },
+    "diagnostic_seen": {
+      "subset": {
+        "scenes": [
+          119,
+          122
+        ],
+        "frames": 512,
+        "ap_percent": 54.70872391428626,
+        "ap04_percent": 48.764542335092244,
+        "ap08_percent": 65.66450520226711,
+        "inference_wall_seconds": 49.94714021682739,
+        "forward_decode_ms_per_frame": 30.505502339906343,
+        "input_manifest_sha256": "6242737f6d986b015cd4ace7e14b2b0f345152f56078a64c66da3d68a02c7ba5"
+      },
+      "official": {
+        "scenes": [
+          119,
+          122
+        ],
+        "frames": 512,
+        "ap_percent": 64.10353195989768,
+        "ap04_percent": 57.77069445319779,
+        "ap08_percent": 76.93665926322325,
+        "inference_wall_seconds": 13.158445119857788,
+        "forward_decode_ms_per_frame": 22.295220140676975,
+        "input_manifest_sha256": "6242737f6d986b015cd4ace7e14b2b0f345152f56078a64c66da3d68a02c7ba5"
+      }
+    },
+    "diagnostic_novel": {
+      "subset": {
+        "scenes": [
+          188,
+          189
+        ],
+        "frames": 512,
+        "ap_percent": 40.12994792954102,
+        "ap04_percent": 29.268051044367084,
+        "ap08_percent": 50.903160713066434,
+        "inference_wall_seconds": 48.42586636543274,
+        "forward_decode_ms_per_frame": 33.177825689676865,
+        "input_manifest_sha256": "5590897d91a7c6b049a67ffa15d65281dc1c64a148e66a144b2b7034413d0389"
+      },
+      "official": {
+        "scenes": [
+          188,
+          189
+        ],
+        "frames": 512,
+        "ap_percent": 47.08921874843042,
+        "ap04_percent": 37.083907742926655,
+        "ap08_percent": 58.76807853723185,
+        "inference_wall_seconds": 26.061568021774292,
+        "forward_decode_ms_per_frame": 47.42253023880494,
+        "input_manifest_sha256": "5590897d91a7c6b049a67ffa15d65281dc1c64a148e66a144b2b7034413d0389"
+      }
+    }
+  },
+  "paired_scene_results": [
+    {
+      "partition": "diagnostic_seen",
+      "scene": 119,
+      "subset_ap_percent": 72.83685289245675,
+      "official_ap_percent": 77.27813317315204,
+      "subset_minus_official_pp": -4.441280280695295
+    },
+    {
+      "partition": "diagnostic_seen",
+      "scene": 122,
+      "subset_ap_percent": 36.58059493611576,
+      "official_ap_percent": 50.92893074664331,
+      "subset_minus_official_pp": -14.348335810527551
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 188,
+      "subset_ap_percent": 43.90435368140183,
+      "official_ap_percent": 49.61387292927547,
+      "subset_minus_official_pp": -5.709519247873644
+    },
+    {
+      "partition": "diagnostic_novel",
+      "scene": 189,
+      "subset_ap_percent": 36.35554217768021,
+      "official_ap_percent": 44.564564567585336,
+      "subset_minus_official_pp": -8.209022389905122
+    }
+  ],
+  "paired_input_manifests_equal": true,
+  "AP_definition": "Mean official precision tensor over complete256frames,top1..50,frictions0.2..1.2;percent units",
+  "dev_interpretation": "Held-out scenes from official training partition;development only",
+  "official_scene_interpretation": "Frozen exploratory test scenes,not full Seen/Novel split AP",
+  "checkpoints": {
+    "subset": {
+      "epoch": 10,
+      "path": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/train/economicgrasp_epoch10.tar",
+      "bytes": 189294618,
+      "sha256": "9eb793cfdcaf18cf6dfd1a41294a97db9eddf2b3e97cc208ab21009ad1d71950",
+      "optimizer_updates": 16000
+    },
+    "official": {
+      "path": "/home/xushijie3/work/eg_full_repro_v1_20261015/downloads/economicgrasp_kinect.tar",
+      "sha256": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a"
+    }
+  },
+  "native_eval_scene_sha256": "2565bc13d9e41cc6355a92160da3ce8b99c3052fa14e8f24646a996a20c7a986",
+  "bad_case_status": "COMPLETE",
+  "bad_case_cases": 12,
+  "artifact_index": {
+    "path": "/home/xushijie3/work/eg_sub25_v1_20261015/runs/EG_SUB25_V1/evaluation/EVALUATION_ARTIFACT_INDEX.csv.gz",
+    "files": 12949,
+    "total_bytes": 3374587926,
+    "index_sha256": "97ddf179c310843866e0df269a25693ea572f0e40c8542a49830a99f234f56f8",
+    "coverage": "Immutable input caches,predictions,native AP/evaluated-candidate tensors,bad-case tensors/observations/figures and evaluation logs;training checkpoint hashes are in TRAINING_COMPLETE.json"
+  }
+}
