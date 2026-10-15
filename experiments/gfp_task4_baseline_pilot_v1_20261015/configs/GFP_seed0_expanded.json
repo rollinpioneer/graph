@@ -1,0 +1,71 @@
+{
+  "seed": 0,
+  "env_name": "humanoidmaze-medium-navigate-singletask-task4-v0",
+  "is_final": true,
+  "wandb": {
+    "project": "gfp",
+    "group": "Final",
+    "settings": {
+      "x_disable_stats": true
+    }
+  },
+  "save_dir": "exp",
+  "restore_epoch": null,
+  "restore_path": null,
+  "dataset_on_gpu": true,
+  "n_steps_fused": 4,
+  "n_eval_envs": 10,
+  "offline_steps": 1000000,
+  "online_steps": 0,
+  "buffer_size": 2000000,
+  "balanced_sampling": false,
+  "eval_flow_policy": true,
+  "log_metrics": true,
+  "log_on_wandb": false,
+  "log_locally": true,
+  "log_interval": 5000,
+  "eval_interval": 100000,
+  "save_interval": 100000,
+  "save_last_checkpoint": true,
+  "eval_episodes": 100,
+  "video_episodes": 0,
+  "video_frame_skip": 3,
+  "agent": {
+    "lr": 0.0003,
+    "batch_size": 256,
+    "actor_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "value_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "layer_norm": true,
+    "actor_layer_norm": false,
+    "discount": 0.995,
+    "tau": 0.005,
+    "encoder": null,
+    "agent_name": "gfp",
+    "alpha": 0.3,
+    "eta_temperature": 0.001,
+    "q_agg": "mean",
+    "target_agg": "mean",
+    "guidance_agg": "min",
+    "flow_steps": 10,
+    "eta_temperature_online": null,
+    "guidance_fn": "softmax",
+    "normalize_q_loss": true,
+    "target_use_next": false,
+    "encode_time_dim": 64
+  },
+  "pixel_based": {
+    "p_aug": 0.5,
+    "frame_stack": 3,
+    "encoder": "impala_small"
+  }
+}

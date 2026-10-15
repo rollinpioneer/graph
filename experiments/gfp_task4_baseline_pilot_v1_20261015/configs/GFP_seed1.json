@@ -1,0 +1,42 @@
+{
+  "job": "GFP_seed1",
+  "gpu": 4,
+  "command": [
+    "taskset",
+    "-c",
+    "12-23",
+    "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/envs/gfp/bin/python",
+    "main.py",
+    "agent=gfp",
+    "env_name=humanoidmaze-medium-navigate-singletask-task4-v0",
+    "seed=1",
+    "offline_steps=1000000",
+    "online_steps=0",
+    "is_final=true",
+    "log_on_wandb=false",
+    "eval_episodes=100",
+    "n_eval_envs=10",
+    "eval_interval=100000",
+    "log_interval=5000",
+    "save_interval=100000",
+    "save_last_checkpoint=true",
+    "+wiring_gate=/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/configs/GFP_seed1_gate.json",
+    "save_dir=/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/output",
+    "hydra.run.dir=/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/runs/GFP_seed1/hydra"
+  ],
+  "environment": {
+    "COMPARATIVE_ROOT": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015",
+    "COMPARATIVE_JOB": "GFP_seed1",
+    "COMPARATIVE_PHASE": "T1",
+    "COMPARATIVE_PHASE_STOP": "1000000",
+    "CUDA_VISIBLE_DEVICES": "4",
+    "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MUJOCO_GL": "egl",
+    "HOME": "/home/xushijie3/work/gfp_task4_baseline_pilot_v1_20261015/home",
+    "WANDB_MODE": "disabled",
+    "PYTHONUNBUFFERED": "1"
+  }
+}
