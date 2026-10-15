@@ -40,11 +40,16 @@ def scene_check(scene):
  assert np.array_equal(np.sort(a['topview'],axis=1),np.broadcast_to(np.arange(300),(n,300)))
  meta=loadmat(camera/'meta/0000.mat');obj=meta['cls_indexes'].reshape(-1).astype(int)-1
  assert np.all(a['pointid']<len(obj))
- probes=[]
+ probes=[];empty_objects=[]
  with np.load(ROOT/'collision_label'/name/'collision_labels.npz') as collision:
   for ordinal,oid in enumerate(obj):
-   select=np.flatnonzero(a['pointid']==ordinal);assert len(select)>0,(name,'empty object',oid)
+   select=np.flatnonzero(a['pointid']==ordinal)
    with np.load(ROOT/'grasp_label'/f'{oid:03d}_labels.npz') as raw:
+    if len(select)==0:
+     raw_scores=raw['scores'];raw_collision=collision[f'arr_{ordinal}']
+     assert not np.any((raw_scores>0)&(raw_scores<=.4)&~raw_collision),(name,'missing valid object',oid)
+     empty_objects.append({'object_id':int(oid),'ordinal':ordinal,'raw_points':len(raw_scores),'official_retained_points':0})
+     continue
     points=raw['points'];lookup={tuple(p):i for i,p in enumerate(points)}
     raw_indices=np.array([lookup[tuple(p)] for p in a['points'][select]])
     assert np.array_equal(points[raw_indices],a['points'][select])
@@ -65,7 +70,7 @@ def scene_check(scene):
       assert np.array_equal(np.take_along_axis(value,order,axis=1),a[key][rows]),(name,oid,key,'semantic probe')
      probes.append({'object':int(oid),'rows':rows.tolist()})
  digest=sha(ep);records.append(f'{ep.relative_to(ROOT)}\t{ep.stat().st_size}\t{digest}\n')
- result={'scene':scene,'graspness_frames':256,'graspness_point_count_range':[min(counts),max(counts)],'range':[min(mins),max(maxs)],'economic_points':n,'economic_sha256':digest,'manifest_sha256':hashlib.sha256(''.join(records).encode()).hexdigest(),'raw_semantic_probes':probes}
+ result={'scene':scene,'graspness_frames':256,'graspness_point_count_range':[min(counts),max(counts)],'range':[min(mins),max(maxs)],'economic_points':n,'economic_sha256':digest,'manifest_sha256':hashlib.sha256(''.join(records).encode()).hexdigest(),'raw_semantic_probes':probes,'empty_objects_verified_against_raw':empty_objects}
  (R/'data_recovery'/f'supervision_scene_{scene:04d}.json').write_text(json.dumps(result))
  return result
 if __name__=='__main__':

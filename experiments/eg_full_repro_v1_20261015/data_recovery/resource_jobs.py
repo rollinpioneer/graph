@@ -1,5 +1,5 @@
 """Project-owned child jobs, fresh idle-GPU checks, process-group monitoring."""
-import csv,fcntl,json,os,subprocess,time,threading
+import csv,fcntl,json,os,subprocess,time,threading,resource
 from pathlib import Path
 R=Path(__file__).resolve().parents[1];guard=threading.Lock()
 def snapshot():
@@ -43,11 +43,13 @@ def own_processes(pgid):
   except (FileNotFoundError,PermissionError,ProcessLookupError,ValueError):pass
  return out
 def run(name,command,cwd=None,gpu=False,preferred=None):
+ soft,hard=resource.getrlimit(resource.RLIMIT_NOFILE);desired=65536 if hard==resource.RLIM_INFINITY else min(65536,hard)
+ if soft<desired:resource.setrlimit(resource.RLIMIT_NOFILE,(desired,hard))
  token=None;before=None;env=os.environ.copy();env['PYTHONUNBUFFERED']='1'
  if gpu:
   chosen,token,before=acquire_gpu(name,preferred);env['CUDA_VISIBLE_DEVICES']=str(chosen['index'])
  else:env['CUDA_VISIBLE_DEVICES']=''
- started=time.time();receipt={'name':name,'command':list(map(str,command)),'cwd':str(cwd or R),'status':'RUNNING','started_unix':started,'gpu_before':before,'selected_gpu':chosen if gpu else None,'peak_own_rss_bytes':0,'peak_own_gpu_memory_mib':0,'resource_sample_interval_seconds':15}
+ started=time.time();receipt={'name':name,'command':list(map(str,command)),'cwd':str(cwd or R),'status':'RUNNING','started_unix':started,'gpu_before':before,'selected_gpu':chosen if gpu else None,'peak_own_rss_bytes':0,'peak_own_gpu_memory_mib':0,'resource_sample_interval_seconds':15,'open_files_soft_limit':resource.getrlimit(resource.RLIMIT_NOFILE)[0]}
  target=R/'receipts'/f'{name}.json';log=R/'logs'/f'{name}.log';samples=R/'logs'/f'{name}.resources.jsonl'
  def save():
   tmp=target.with_suffix('.tmp');tmp.write_text(json.dumps(receipt,indent=2));tmp.replace(target)

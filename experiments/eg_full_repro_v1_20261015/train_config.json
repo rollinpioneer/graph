@@ -39,8 +39,8 @@
   "expected_optimizer_updates": 64000,
   "gradient_accumulation": 1,
   "training_replicates": 1,
-  "preflight_passed": false,
-  "formal_training_started": false,
+  "preflight_passed": true,
+  "formal_training_started": true,
   "official_reference_ap_percent": {
     "seen": 62.59,
     "similar": 51.73,
@@ -81,5 +81,18 @@
   "training_directory": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/train",
   "test_output_parent": "/home/xushijie3/work/eg_full_repro_v1_20261015/runs/EG_FULL_V1/test",
   "evaluation_processes": 4,
-  "preserve_exact_inference_inputs": true
+  "preserve_exact_inference_inputs": true,
+  "training_attempt": 2,
+  "process_nofile_soft_limit": 65536,
+  "shared_gpu_authorized_indices": [
+    0,
+    1
+  ],
+  "graspness_preparation_backend": "isolated CPU equivalent float32 FMA with GPU exact-hash probes",
+  "first_attempt_interruption": {
+    "reason": "RLIMIT_NOFILE1024 exhausted",
+    "updates": 9,
+    "checkpoint_count": 0,
+    "recovery": "identical recipe/seed restarted because no checkpoint existed"
+  }
 }

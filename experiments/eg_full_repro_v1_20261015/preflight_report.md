@@ -1,16 +1,7 @@
-# 正式训练预检查：NOT_RELEASED
+# 正式训练前检查：PASS
 
-- dependencies_import: PASS
-- torch_cuda_forward_backward: PASS
-- knn_vs_reference: PASS
-- pointnet2_fps_gather_cylinder_grouping: PASS
-- minkowski_cuda_convolution_backward: PASS
-- official_checkpoint_load_synthetic_inference: PASS
-- complete_training_dataset: BLOCKED_DATA
-- complete_supervision: NOT_RUN_DATA_BLOCKED
-- real_dataloader: NOT_RUN_DATA_BLOCKED
-- real_model_forward_loss_backward_update: NOT_RUN_DATA_BLOCKED
-- same_experiment_checkpoint_save_reload: NOT_RUN_DATA_BLOCKED
-- formal_training: NOT_RUN_DATA_BLOCKED
+2026-10-15T05:24:57.570602+00:00。环境与主要CUDA扩展已通过；完整Kinect原始数据、25,600帧Graspness和100场景Economic全量核验PASS。监督核验耗时879.31秒，形状/范围/哈希/工作区掩码及原始点物体对应通过，scene0/50/99固定语义探针通过。
 
-环境工程检查不能替代真实训练数据的前向、各项 Loss、反向更新、Checkpoint 保存重载检查。当前数据门未通过；本卡正式训练不放行。
+真实8个训练样本、两个batch4更新完成。七项损失有限，梯度范数分别129.2557和257.4157，均有152个参数张量改变；模型与Adam checkpoint严格保存重载成功。Torch allocated峰值2.207GiB，耗时12.52秒。Smoke权重未进入正式训练。
+
+正式训练首次尝试在9更新后触发继承NOFILE软上限1024，无checkpoint；失败目录完整保留。仅将本卡子进程上限提高至65536后，同种子同配方恢复，快照141更新且有限。主要配方、样本、损失和模型不变。预检查通过不等于完整训练成功，仍监控正式运行。

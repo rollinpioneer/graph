@@ -20,6 +20,7 @@ def full_graspness():
  state['graspness_files']=25600
 
 def economic():
+ (R/'data/graspnet/economic_grasp_label_300views').mkdir(parents=True,exist_ok=True)
  def shard(i):
   return run(f'economic_full_shard_{i}',[sys.executable,str(S/'dataset/generate_economic.py'),'--dataset_root',str(R/'data/graspnet'),'--camera_type','kinect','--scene_start',str(i),'--scene_end','100','--scene_stride','2','--resume_verified'],cwd=S)
  with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:list(pool.map(shard,range(2)))
