@@ -1,3 +1,5 @@
+> Historical training-completion snapshot. Current final outcome: [final_reproduction_report.md](final_reproduction_report.md) and [bad_case_report.md](bad_case_report.md).
+
 # EG-SUB25-V1：训练完成并通过最终检查，评价待执行
 
 2026-10-15台北16:44:05，唯一seed20261015的25%子集训练正常退出（原生返回码0）。50场景x128帧=6400，10epoch、batch4、原Adam0.001和epoch cosine，严格16000连续更新、每epoch1600，全部记录损失和诊断指标有限。全程使用GPU1单卡共享，没有新增seed、改参数或重新正式训练。

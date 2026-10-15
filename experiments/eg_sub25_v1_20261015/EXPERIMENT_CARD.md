@@ -11,3 +11,8 @@
 训练后以10开发场景完整256帧使用官方GraspNetAPI场景AP，明确仅开发验证，不能声称官方Novel泛化。固定补充诊断Seen场景[119, 122]和Novel[188, 189]，每场景完整256帧；子集模型与官方全量预训练模型配对比较。官方预训练不在开发场景做独立泛化判断；固定官方场景若反复使用需标为开发材料，不报为完整Seen/Novel指标。
 
 探索性Bad Case区分子集失败/官方成功、双方失败、点位置合理但方向或评分错误，保存RGB/depth/抓取姿态/评分/碰撞质量/场景AP及必要中间输出；这些表现不直接证明网络模块机制。不据结果自动重训或换划分。所有成功/失败/取消、代码与数据身份留痕，重权重和完整日志留服务器；每轮本分支提交轻量证据并推送核验。
+
+
+## Final execution outcome
+
+COMPLETE for the user-revised25percent card,not full-data paper reproduction. Development AP51.40;fixed Seen54.71/official64.10;fixed Novel40.13/official47.09. Twelve exploratory cases;24replays match. See final_reproduction_report.md,bad_case_report.md and FINAL_VALIDATION.json. Official-data duplicate observations were confirmed and native AP left unchanged. No new seed,module or retraining.
