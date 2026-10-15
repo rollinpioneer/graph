@@ -9,3 +9,15 @@
 7. 初次 Torch 检查的命令引号问题已修正并通过，原失败回执保留。torch.cross 的废弃提示保持记录，本版本尚可运行，不擅自改变方向计算。
 
 原始上游代码（排除文档媒体）在 upstream_source/，286文件、约2.2MB，逐文件散列见 UPSTREAM_SOURCE_MANIFEST.json；完整原仓库仍留服务器。所有实质补丁可追踪，不修改其他项目。
+
+
+## 数据恢复后阶段的工程补丁
+
+- Graspness加入scene范围/stride、frame范围、独立输出目录、可选场景缓存及带SHA回执的原子写入/恢复。缓存计算仅复用同场景、同对象序号和ID的原始点及官方摩擦/碰撞筛选求和，逐帧姿态、KNN10000点分块与min-max均保持原实现。正式全量前必须以scene0和99前2帧逐元素及NPY文件哈希一致放行；当前尚未执行该实数据比对。
+- Economic仅显式100训练场景，增加互不重叠的分片、原子写入和带摘要恢复。所有0.4/0.6/0.1阈值、max-depth/max-angle、topk300、量化和字段表达式保持官方。
+- 训练增加实际更新计数、禁止覆盖的原子checkpoint；原先已登记的种子修复、RNG保存恢复及分项日志保留。参数和模型/损失不变。固定种子提高本次可追踪性，不宣称GPU计算逐位确定，也没有多种子误差估计。
+- 测试固定同一种子，proc由环境变量设为4，创建父目录，拒绝覆盖预测，记录有限性、抓取数及CUDA同步的forward+decode计时。原始pred_decode及评分加权没有softmax；raw score不限定0到1。AP计算仍直接调用官方API，TOP_K50和摩擦系数集合未改。
+- 通过单独flag保留每帧实际采样点/voxel坐标/seg，供测试后有界诊断重放；模型输入与输出未改。推理网络计时不含DataLoader、输入/预测保存和评测，整个测试wall time另由resource receipt记录。
+- 大文件写入检查24GiB磁盘余量。新资源执行器在作业启动时实查GPU占用并保留独立进程组RSS/GPU采样和原生退出码；采样峰值不等同连续精确峰值，Torch每epoch峰值另外保存。资源执行器真实CUDA检查PASS，后续实数据阶段尚未执行。
+
+相对固定上游的完整补丁见 patches/economicgrasp_compatibility.patch；原实现源码快照仍在upstream_source。所有实数据测试必须按门执行，语法检查不替代完整Smoke Test。

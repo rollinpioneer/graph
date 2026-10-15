@@ -1,23 +1,87 @@
 diff --git a/dataset/generate_economic.py b/dataset/generate_economic.py
-index 6eb608f..9b0b17e 100644
+index 6eb608f..31fc476 100644
 --- a/dataset/generate_economic.py
 +++ b/dataset/generate_economic.py
-@@ -28,7 +28,7 @@ if __name__ == "__main__":
+@@ -1,4 +1,7 @@
+ import os
++import shutil
++import hashlib
++import json
+ import sys
+ import torch
+ import numpy as np
+@@ -12,7 +15,12 @@ parser = argparse.ArgumentParser()
+ parser.add_argument('--dataset_root', default='/home/xiaoming/dataset/graspnet', help='the root of the GraspNet dataset')
+ parser.add_argument('--camera_type', default='kinect', help='Camera split [realsense/kinect]')
+ 
++parser.add_argument('--scene_start', type=int, default=0)
++parser.add_argument('--scene_end', type=int, default=100)
++parser.add_argument('--scene_stride', type=int, default=1)
++parser.add_argument('--resume_verified', action='store_true')
+ cfgs = parser.parse_args()
++assert 0 <= cfgs.scene_start < cfgs.scene_end <= 100 and cfgs.scene_stride > 0
+ 
+ obj_data_folders = os.path.join(cfgs.dataset_root, "grasp_label")
+ scenes_data_folders = os.path.join(cfgs.dataset_root, "scenes")
+@@ -28,8 +36,24 @@ if __name__ == "__main__":
  
      # collect the labels from object-level to scene-level
      number = 0
 -    for label_path in os.listdir(scenes_data_folders):
-+    for label_path in [f"scene_{i:04d}" for i in range(100)]:
-         print(f"---------The {number} scenes----------")
+-        print(f"---------The {number} scenes----------")
++    for label_path in [f"scene_{i:04d}" for i in range(cfgs.scene_start, cfgs.scene_end, cfgs.scene_stride)]:
++        output_file = os.path.join(save_data_folders, f"{label_path}_labels.npz")
++        receipt_file = output_file + '.sha256.json'
++        if os.path.exists(output_file):
++            if not cfgs.resume_verified or not os.path.exists(receipt_file):
++                raise FileExistsError(f'Refusing unverified overwrite: {output_file}')
++            with open(receipt_file) as f:
++                receipt = json.load(f)
++            with open(output_file, 'rb') as f:
++                digest = hashlib.sha256(f.read()).hexdigest()
++            if digest != receipt['sha256']:
++                raise ValueError(f'Changed supervision: {output_file}')
++            with np.load(output_file) as existing:
++                if not existing.files or any(not np.isfinite(existing[k]).all() for k in existing.files):
++                    raise ValueError(f'Invalid supervision: {output_file}')
++            print(f'verified resume: {output_file}', flush=True)
++            continue
++        print(f"---------The {number} scenes: {label_path}----------")
          meta = scio.loadmat(os.path.join(scenes_data_folders, label_path, cfgs.camera_type, 'meta', '0000.mat'))
          obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
+         object_list = open(os.path.join(scenes_data_folders, label_path, 'object_id_list.txt'), "r")
+@@ -122,7 +146,10 @@ if __name__ == "__main__":
+         grasp_view_graspness = grasp_view_graspness.numpy()
+         grasp_top_view_index = scene_top_view_index.numpy().astype(np.uint16)
+ 
+-        np.savez(os.path.join(save_data_folders, f"{label_path}_labels.npz"),
++        expected_bytes = sum(x.nbytes for x in [scene_points, grasp_rotations, grasp_depth, grasp_scores, grasp_widths, scene_pointid, grasp_view_graspness, grasp_top_view_index]) + 1024 * 1024
++        if shutil.disk_usage(save_data_folders).free < 24 * 1024**3 + expected_bytes:
++            raise OSError('Insufficient space: preserve 24GiB reserve before supervision write')
++        np.savez(output_file + ".egpartial.npz",
+                  points=scene_points,
+                  rotations=grasp_rotations,
+                  depth=grasp_depth,
+@@ -132,6 +159,11 @@ if __name__ == "__main__":
+                  vgraspness=grasp_view_graspness,
+                  topview=grasp_top_view_index)
+ 
++        os.replace(output_file + '.egpartial.npz', output_file)
++        with open(output_file, 'rb') as f:
++            digest = hashlib.sha256(f.read()).hexdigest()
++        with open(receipt_file, 'w') as f:
++            json.dump({'sha256': digest, 'scene': label_path, 'points': len(scene_points)}, f)
+         number = number + 1
+ 
+     print(f"---------Finishing----------")
 diff --git a/dataset/generate_graspness.py b/dataset/generate_graspness.py
-index 002d16c..0bf4d8a 100755
+index 002d16c..41527cd 100755
 --- a/dataset/generate_graspness.py
 +++ b/dataset/generate_graspness.py
-@@ -1,7 +1,9 @@
+@@ -1,7 +1,10 @@
  import numpy as np
  import os
++import shutil
 +import hashlib
 +import json
  
@@ -26,7 +90,7 @@ index 002d16c..0bf4d8a 100755
  
  from PIL import Image
  import scipy.io as scio
-@@ -20,18 +22,28 @@ import argparse
+@@ -20,18 +23,28 @@ import argparse
  parser = argparse.ArgumentParser()
  parser.add_argument('--dataset_root', default='/home/xiaoming/dataset/graspnet', help='the root of the GraspNet dataset')
  parser.add_argument('--camera_type', default='kinect', help='Camera split [realsense/kinect]')
@@ -57,7 +121,7 @@ index 002d16c..0bf4d8a 100755
          save_path = os.path.join(save_path_root, 'scene_' + str(scene_id).zfill(4), camera_type)
          if not os.path.exists(save_path):
              os.makedirs(save_path)
-@@ -41,7 +53,7 @@ if __name__ == '__main__':
+@@ -41,7 +54,7 @@ if __name__ == '__main__':
          for j in range(len(labels)):
              collision_dump.append(labels['arr_{}'.format(j)])
  
@@ -66,7 +130,7 @@ index 002d16c..0bf4d8a 100755
              # get scene point cloud
              print('generating scene: {} ann: {}'.format(scene_id, ann_id))
              depth = np.array(Image.open(os.path.join(dataset_root, 'scenes', 'scene_' + str(scene_id).zfill(4),
-@@ -69,27 +81,55 @@ if __name__ == '__main__':
+@@ -69,27 +82,55 @@ if __name__ == '__main__':
              cloud_masked = cloud[mask]
              objectness_label = seg[mask]
  
@@ -133,7 +197,7 @@ index 002d16c..0bf4d8a 100755
                  target_points = transform_points(sampled_points, trans_)
                  target_points = transform_points(target_points, np.linalg.inv(camera_pose))  # fix bug
                  grasp_points.append(target_points)
-@@ -119,6 +159,18 @@ if __name__ == '__main__':
+@@ -119,6 +160,20 @@ if __name__ == '__main__':
  
              max_graspness = np.max(cloud_masked_graspness)
              min_graspness = np.min(cloud_masked_graspness)
@@ -142,6 +206,8 @@ index 002d16c..0bf4d8a 100755
              cloud_masked_graspness = (cloud_masked_graspness - min_graspness) / (max_graspness - min_graspness)
  
 -            np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)
++            if shutil.disk_usage(save_path).free < 24 * 1024**3 + cloud_masked_graspness.nbytes:
++                raise OSError('Insufficient space: preserve 24GiB reserve before supervision write')
 +            temporary = output_file + '.egpartial'
 +            with open(temporary, 'wb') as f:
 +                np.save(f, cloud_masked_graspness)
@@ -153,11 +219,122 @@ index 002d16c..0bf4d8a 100755
 +            with open(receipt_file, 'w') as f:
 +                json.dump({'sha256': digest, 'shape': list(cloud_masked_graspness.shape), 'scene': scene_id, 'frame': ann_id}, f)
 +
+diff --git a/test.py b/test.py
+index 2a92612..61d6aeb 100755
+--- a/test.py
++++ b/test.py
+@@ -1,9 +1,18 @@
+ import os
++import shutil
+ import numpy as np
+ import time
++import json
++import random
+ 
+ import torch
+ from torch.utils.data import DataLoader
++
++EXPERIMENT_SEED = int(os.environ.get("EG_SEED", "20261015"))
++random.seed(EXPERIMENT_SEED)
++np.random.seed(EXPERIMENT_SEED)
++torch.manual_seed(EXPERIMENT_SEED)
++torch.cuda.manual_seed_all(EXPERIMENT_SEED)
+ from graspnetAPI import GraspGroup, GraspNetEval
+ 
+ from utils.collision_detector import ModelFreeCollisionDetector
+@@ -14,7 +23,7 @@ from models.economicgrasp import economicgrasp, pred_decode
+ 
+ # ------------ GLOBAL CONFIG ------------
+ if not os.path.exists(cfgs.save_dir):
+-    os.mkdir(cfgs.save_dir)
++    os.makedirs(cfgs.save_dir)
+ 
+ 
+ # Init datasets and dataloaders
+@@ -73,14 +82,20 @@ def inference():
+                 batch_data[key] = batch_data[key].to(device)
+ 
+         # Forward pass
++        torch.cuda.synchronize()
++        inference_started = time.perf_counter()
+         with torch.no_grad():
+             end_points = net(batch_data)
+             grasp_preds = pred_decode(end_points)
++        torch.cuda.synchronize()
++        inference_seconds = time.perf_counter() - inference_started
+ 
+         # Save results for evaluation
+         for i in range(cfgs.batch_size):
+             data_idx = batch_idx * cfgs.batch_size + i
+             preds = grasp_preds[i].detach().cpu().numpy()
++            if preds.ndim != 2 or preds.shape[1] != 17 or not np.isfinite(preds).all():
++                raise ValueError(f"Invalid prediction: data_idx={data_idx}")
+             gg = GraspGroup(preds)
+ 
+             # collision detection
+@@ -90,12 +105,27 @@ def inference():
+                 collision_mask = mfcdetector.detect(gg, approach_dist=0.05, collision_thresh=cfgs.collision_thresh)
+                 gg = gg[~collision_mask]
+ 
++            # Optional exact input replay for the preregistered exploratory diagnostic.
++            if os.environ.get('EG_SAVE_INFERENCE_INPUTS', '0') == '1':
++                input_dir = os.path.join(cfgs.save_dir, 'input_samples', SCENE_LIST[data_idx], cfgs.camera)
++                os.makedirs(input_dir, exist_ok=True)
++                input_file = os.path.join(input_dir, str(data_idx % 256).zfill(4) + '.npz')
++                if os.path.exists(input_file):
++                    raise FileExistsError(input_file)
++                if shutil.disk_usage(input_dir).free < 25 * 1024**3:
++                    raise OSError('Insufficient space: preserve 24GiB reserve for diagnostic inputs')
++                np.savez(input_file, point_clouds=batch_data['point_clouds'][i].detach().cpu().numpy(), coordinates_for_voxel=batch_data['coordinates_for_voxel'][i].detach().cpu().numpy(), seg=batch_data['seg'][i].detach().cpu().numpy())
++
+             # save grasps
+             save_dir = os.path.join(cfgs.save_dir, SCENE_LIST[data_idx], cfgs.camera)
+             save_path = os.path.join(save_dir, str(data_idx % 256).zfill(4) + '.npy')
+             if not os.path.exists(save_dir):
+                 os.makedirs(save_dir)
++            if os.path.exists(save_path):
++                raise FileExistsError(f'Refusing prediction overwrite: {save_path}')
+             gg.save_npy(save_path)
++            with open(os.path.join(cfgs.save_dir, 'inference_metrics.jsonl'), 'a') as metrics:
++                metrics.write(json.dumps({'scene': SCENE_LIST[data_idx], 'frame': data_idx % 256, 'decoded_count': len(preds), 'saved_count': len(gg), 'finite_count': int(np.isfinite(gg.grasp_group_array).all(axis=1).sum()), 'score_min': float(gg.scores.min()) if len(gg) else None, 'score_max': float(gg.scores.max()) if len(gg) else None, 'batch_forward_decode_seconds': inference_seconds, 'batch_idx': batch_idx, 'batch_size': len(grasp_preds), 'seed': EXPERIMENT_SEED}) + '\n')
+ 
+         if batch_idx % batch_interval == 0:
+             toc = time.time()
+@@ -107,7 +137,7 @@ def evaluate_seen():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_seen(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_seen(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_seen.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"seen testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
+@@ -117,7 +147,7 @@ def evaluate_similar():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_similar(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_similar(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_similar.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"similar testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
+@@ -127,7 +157,7 @@ def evaluate_novel():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_novel(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_novel(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_novel.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"novel testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
 diff --git a/train.py b/train.py
-index 011836c..825101b 100755
+index 011836c..1fb4bfc 100755
 --- a/train.py
 +++ b/train.py
-@@ -3,12 +3,20 @@ import os
+@@ -1,14 +1,23 @@
+ # Basic Libraries
+ import os
++import shutil
  import numpy as np
  import math
  import time
@@ -178,7 +355,7 @@ index 011836c..825101b 100755
  # Config
  from utils.arguments import cfgs
  
-@@ -67,6 +75,12 @@ if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
+@@ -67,6 +76,12 @@ if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
      net.load_state_dict(checkpoint['model_state_dict'])
      optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
      start_epoch = checkpoint['epoch']
@@ -191,7 +368,7 @@ index 011836c..825101b 100755
      log_string("-> loaded checkpoint %s (epoch: %d)" % (CHECKPOINT_PATH, start_epoch))
  
  
-@@ -86,6 +100,8 @@ def adjust_learning_rate(optimizer, epoch):
+@@ -86,6 +101,8 @@ def adjust_learning_rate(optimizer, epoch):
  # ------TRAINING BEGIN  ------------
  def train_one_epoch():
      stat_dict = {}  # collect statistics
@@ -200,7 +377,7 @@ index 011836c..825101b 100755
      adjust_learning_rate(optimizer, EPOCH_CNT)
      # set model to training mode
      net.train()
-@@ -113,6 +129,8 @@ def train_one_epoch():
+@@ -113,6 +130,8 @@ def train_one_epoch():
          # Compute loss and gradients, update parameters.
          loss, end_points = get_loss_economicgrasp(end_points)
  
@@ -209,7 +386,7 @@ index 011836c..825101b 100755
          loss.backward()
          if (batch_idx + 1) % 1 == 0:
              optimizer.step()
-@@ -126,6 +144,15 @@ def train_one_epoch():
+@@ -126,6 +145,15 @@ def train_one_epoch():
                  if key not in stat_dict: stat_dict[key] = 0
                  stat_dict[key] += end_points[key].item()
  
@@ -225,7 +402,7 @@ index 011836c..825101b 100755
          batch_interval = 20
  
          if (batch_idx + 1) % batch_interval == 0:
-@@ -140,6 +167,8 @@ def train_one_epoch():
+@@ -140,6 +168,8 @@ def train_one_epoch():
  
          data_start_time = time.time()
  
@@ -234,7 +411,7 @@ index 011836c..825101b 100755
  
  def train(start_epoch):
      global EPOCH_CNT
-@@ -148,12 +177,19 @@ def train(start_epoch):
+@@ -148,18 +178,33 @@ def train(start_epoch):
          log_string(f'**** EPOCH {epoch:<3} ****')
          log_string('Current learning rate: %f' % (get_current_lr(epoch)))
  
@@ -252,7 +429,22 @@ index 011836c..825101b 100755
          save_dict = {'epoch': epoch + 1,  # after training one epoch, the start_epoch should be epoch+1
                       'optimizer_state_dict': optimizer.state_dict(),
 +                     'seed': EXPERIMENT_SEED,
++                     'optimizer_updates': (epoch + 1) * len(TRAIN_DATALOADER),
 +                     'rng_state': {'python': random.getstate(), 'numpy': np.random.get_state(), 'torch': torch.get_rng_state(), 'cuda': torch.cuda.get_rng_state_all()},
                       }
          try:  # with nn.DataParallel() the net is added as a submodule of DataParallel
              save_dict['model_state_dict'] = net.module.state_dict()
+         except:
+             save_dict['model_state_dict'] = net.state_dict()
+-        torch.save(save_dict, os.path.join(cfgs.log_dir, cfgs.model + '_epoch' + str(epoch + 1).zfill(2) + '.tar'))
++        checkpoint_file = os.path.join(cfgs.log_dir, cfgs.model + '_epoch' + str(epoch + 1).zfill(2) + '.tar')
++        if os.path.exists(checkpoint_file):
++            raise FileExistsError(f'Refusing checkpoint overwrite: {checkpoint_file}')
++        if shutil.disk_usage(cfgs.log_dir).free < 25 * 1024**3:
++            raise OSError('Insufficient space: preserve 24GiB reserve for checkpoint')
++        temporary = checkpoint_file + '.incomplete'
++        torch.save(save_dict, temporary)
++        os.replace(temporary, checkpoint_file)
+ 
+ 
+ if __name__ == '__main__':
