@@ -1,0 +1,36 @@
+{
+  "status": "NOT_STARTED_PENDING_TRAINING",
+  "dev_scene_ids": [
+    8,
+    36,
+    41,
+    44,
+    58,
+    65,
+    73,
+    75,
+    80,
+    86
+  ],
+  "dev_frames_per_scene": 256,
+  "dev_model": "subset trained model only",
+  "dev_interpretation": "Development AP from held-out official-training scenes; not Novel generalization",
+  "diagnostic_seen_scene_ids": [
+    119,
+    122
+  ],
+  "diagnostic_novel_scene_ids": [
+    188,
+    189
+  ],
+  "diagnostic_frames_per_scene": 256,
+  "diagnostic_models": [
+    "subset trained model",
+    "official full-data pretrained model"
+  ],
+  "metric": "Unchanged GraspNetAPI scene AP/AP0.4/AP0.8; no partial-frame standard AP",
+  "paired_inputs": "Preserve identical pointcloud inputs for both models",
+  "diagnostic_interpretation": "Exploratory official-test scenes used as development material; not full split AP",
+  "bad_case_bound": "At most3paired frames per diagnostic scene (12total), selected after AP; label exploratory",
+  "no_automatic_75scene_training": true
+}
