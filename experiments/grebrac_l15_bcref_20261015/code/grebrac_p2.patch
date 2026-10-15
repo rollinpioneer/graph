@@ -1,0 +1,142 @@
+Binary files gfp_orig/agents/__pycache__/__init__.cpython-313.pyc and gfp_p2/agents/__pycache__/__init__.cpython-313.pyc differ
+Binary files gfp_orig/agents/__pycache__/fql.cpython-313.pyc and gfp_p2/agents/__pycache__/fql.cpython-313.pyc differ
+Binary files gfp_orig/agents/__pycache__/gfp.cpython-313.pyc and gfp_p2/agents/__pycache__/gfp.cpython-313.pyc differ
+Binary files gfp_orig/agents/__pycache__/ifql.cpython-313.pyc and gfp_p2/agents/__pycache__/ifql.cpython-313.pyc differ
+Binary files gfp_orig/agents/__pycache__/iql.cpython-313.pyc and gfp_p2/agents/__pycache__/iql.cpython-313.pyc differ
+Binary files gfp_orig/agents/__pycache__/rebrac.cpython-313.pyc and gfp_p2/agents/__pycache__/rebrac.cpython-313.pyc differ
+diff -ru gfp_orig/agents/rebrac.py gfp_p2/agents/rebrac.py
+--- gfp_orig/agents/rebrac.py	2026-10-15 10:39:40.193843662 +0000
++++ gfp_p2/agents/rebrac.py	2026-10-15 15:14:30.873116221 +0000
+@@ -6,6 +6,7 @@
+ import jax
+ import jax.numpy as jnp
+ import optax
++from jax.scipy.special import logsumexp
+ 
+ from utils.encoders import encoder_modules
+ from utils.flax_utils import ModuleDict, TrainState, nonpytree_field
+@@ -76,7 +77,20 @@
+         # Normalize Q values by the absolute mean to make the loss scale invariant.
+         lam = jax.lax.stop_gradient(1 / jnp.abs(q).mean())
+         actor_loss = -(lam * q).mean()
+-        bc_loss = (self.config["alpha_actor"] * mse).mean()
++        guidance_info = dict()
++        if self.config["guidance"]:
++            # G-ReBRAC: weight the BC term with GFP's guidance (softmax form).
++            # Reference action: the actor itself, or an independently trained BC network.
++            if self.config["guidance_ref"] == "bc":
++                ref_actions = self.network.select("bc_ref")(batch["observations"]).mode()
++            else:
++                ref_actions = actions
++            weights, guidance_info = self.compute_guidance(
++                batch, jax.lax.stop_gradient(ref_actions), lam
++            )
++            bc_loss = (self.config["alpha_actor"] * weights * mse).mean()
++        else:
++            bc_loss = (self.config["alpha_actor"] * mse).mean()
+ 
+         total_loss = actor_loss + bc_loss
+ 
+@@ -91,7 +105,48 @@
+             "bc_loss": bc_loss,
+             "std": action_std.mean(),
+             "mse": mse.mean(),
++            **guidance_info,
++        }
++
++    def bc_ref_loss(self, batch, grad_params):
++        """Plain (unweighted) MSE behavior cloning for the BC reference network."""
++        ref_actions = self.network.select("bc_ref")(batch["observations"], params=grad_params).mode()
++        mse = jnp.square(ref_actions - batch["actions"]).sum(axis=-1).mean()
++        return mse, {"mse": mse}
++
++    def compute_guidance(self, batch, actor_actions, lam):
++        """GFP guidance weights (gfp.py compute_guidance) with `actor_actions` as the reference."""
++        agg_fn = getattr(jnp, self.config["q_agg"])
++        obs = batch["observations"]
++        q_data = agg_fn(
++            self.network.select("target_critic")(obs, actions=batch["actions"]), axis=0
++        )
++        q_ref = agg_fn(
++            self.network.select("target_critic")(obs, actions=actor_actions), axis=0
++        )
++        scale = lam / self.config["eta_temperature"]
++        scl_q_data = scale * q_data
++        scl_q_ref = scale * q_ref
++        log_denominator = logsumexp(jnp.stack([scl_q_data, scl_q_ref], axis=-1), axis=-1)
++        guidance = jnp.exp(scl_q_data - log_denominator)
++        if self.config["guidance_normalize"]:
++            # Keep the batch-average BC strength of the tuned ReBRAC alpha_actor.
++            weights = guidance / jnp.maximum(guidance.mean(), 1e-6)
++        else:
++            weights = guidance
++        weights = jax.lax.stop_gradient(weights)
++        info = {
++            "q_data": q_data.mean(),
++            "q_ref": q_ref.mean(),
++            "scaled_q_diff": (scl_q_data - scl_q_ref).mean(),
++            "guidance": guidance.mean(),
++            "guidance_above_10": jnp.mean(guidance > 0.1),
++            "guidance_above_25": jnp.mean(guidance > 0.25),
++            "guidance_above_50": jnp.mean(guidance > 0.5),
++            "guidance_above_75": jnp.mean(guidance > 0.75),
++            "weight_max": weights.max(),
+         }
++        return weights, info
+ 
+     @partial(jax.jit, static_argnames=("full_update",))
+     def total_loss(self, batch, grad_params, full_update=True, rng=None):
+@@ -110,6 +165,11 @@
+             actor_loss, actor_info = self.actor_loss(batch, grad_params, actor_rng)
+             for k, v in actor_info.items():
+                 info[f"actor/{k}"] = v
++            if self._has_bc_ref():
++                ref_loss, ref_info = self.bc_ref_loss(batch, grad_params)
++                for k, v in ref_info.items():
++                    info[f"bc_ref/{k}"] = v
++                actor_loss = actor_loss + ref_loss
+         else:
+             # Skip actor update.
+             actor_loss = 0.0
+@@ -117,6 +177,9 @@
+         loss = critic_loss + actor_loss
+         return loss, info
+ 
++    def _has_bc_ref(self):
++        return bool(self.config["guidance"]) and self.config["guidance_ref"] == "bc"
++
+     def target_update(self, network, module_name):
+         """Update the target network."""
+         new_target_params = jax.tree_util.tree_map(
+@@ -244,6 +307,9 @@
+             actor=(actor_def, (ex_observations,)),
+             target_actor=(copy.deepcopy(actor_def), (ex_observations,)),
+         )
++        if config["guidance"] and config["guidance_ref"] == "bc":
++            # Independent BC reference for the guidance weight (same architecture as the actor).
++            network_info["bc_ref"] = (copy.deepcopy(actor_def), (ex_observations,))
+         networks = {k: v[0] for k, v in network_info.items()}
+         network_args = {k: v[1] for k, v in network_info.items()}
+ 
+diff -ru gfp_orig/config/agent/rebrac.yaml gfp_p2/config/agent/rebrac.yaml
+--- gfp_orig/config/agent/rebrac.yaml	2026-10-15 10:39:40.194135750 +0000
++++ gfp_p2/config/agent/rebrac.yaml	2026-10-15 15:14:30.873232503 +0000
+@@ -12,4 +12,11 @@
+ actor_noise: 0.2
+ actor_noise_clip: 0.5
+ actor_fc_scale: 0.01
+-tanh_squash: True
+\ No newline at end of file
++tanh_squash: True
++
++# G-ReBRAC: GFP guidance on the BC term (False = original ReBRAC)
++guidance: False
++eta_temperature: 1e-3
++guidance_normalize: True
++# Guidance reference action: actor (L1 G-ReBRAC) | bc (independent BC network)
++guidance_ref: actor
+Binary files gfp_orig/utils/__pycache__/__init__.cpython-313.pyc and gfp_p2/utils/__pycache__/__init__.cpython-313.pyc differ
+Binary files gfp_orig/utils/__pycache__/datasets.cpython-313.pyc and gfp_p2/utils/__pycache__/datasets.cpython-313.pyc differ
+Binary files gfp_orig/utils/__pycache__/encoders.cpython-313.pyc and gfp_p2/utils/__pycache__/encoders.cpython-313.pyc differ
+Binary files gfp_orig/utils/__pycache__/flax_utils.cpython-313.pyc and gfp_p2/utils/__pycache__/flax_utils.cpython-313.pyc differ
+Binary files gfp_orig/utils/__pycache__/networks.cpython-313.pyc and gfp_p2/utils/__pycache__/networks.cpython-313.pyc differ

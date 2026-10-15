@@ -1,0 +1,77 @@
+diff -ru gfp_patched/agents/rebrac.py gfp_p2/agents/rebrac.py
+--- gfp_patched/agents/rebrac.py	2026-10-15 10:40:09.697054977 +0000
++++ gfp_p2/agents/rebrac.py	2026-10-15 15:14:30.873116221 +0000
+@@ -79,9 +79,14 @@
+         actor_loss = -(lam * q).mean()
+         guidance_info = dict()
+         if self.config["guidance"]:
+-            # G-ReBRAC: weight the BC term with GFP's guidance (softmax form, actor reference).
++            # G-ReBRAC: weight the BC term with GFP's guidance (softmax form).
++            # Reference action: the actor itself, or an independently trained BC network.
++            if self.config["guidance_ref"] == "bc":
++                ref_actions = self.network.select("bc_ref")(batch["observations"]).mode()
++            else:
++                ref_actions = actions
+             weights, guidance_info = self.compute_guidance(
+-                batch, jax.lax.stop_gradient(actions), lam
++                batch, jax.lax.stop_gradient(ref_actions), lam
+             )
+             bc_loss = (self.config["alpha_actor"] * weights * mse).mean()
+         else:
+@@ -103,8 +108,14 @@
+             **guidance_info,
+         }
+ 
++    def bc_ref_loss(self, batch, grad_params):
++        """Plain (unweighted) MSE behavior cloning for the BC reference network."""
++        ref_actions = self.network.select("bc_ref")(batch["observations"], params=grad_params).mode()
++        mse = jnp.square(ref_actions - batch["actions"]).sum(axis=-1).mean()
++        return mse, {"mse": mse}
++
+     def compute_guidance(self, batch, actor_actions, lam):
+-        """GFP guidance weights (gfp.py compute_guidance) with the actor action as reference."""
++        """GFP guidance weights (gfp.py compute_guidance) with `actor_actions` as the reference."""
+         agg_fn = getattr(jnp, self.config["q_agg"])
+         obs = batch["observations"]
+         q_data = agg_fn(
+@@ -154,6 +165,11 @@
+             actor_loss, actor_info = self.actor_loss(batch, grad_params, actor_rng)
+             for k, v in actor_info.items():
+                 info[f"actor/{k}"] = v
++            if self._has_bc_ref():
++                ref_loss, ref_info = self.bc_ref_loss(batch, grad_params)
++                for k, v in ref_info.items():
++                    info[f"bc_ref/{k}"] = v
++                actor_loss = actor_loss + ref_loss
+         else:
+             # Skip actor update.
+             actor_loss = 0.0
+@@ -161,6 +177,9 @@
+         loss = critic_loss + actor_loss
+         return loss, info
+ 
++    def _has_bc_ref(self):
++        return bool(self.config["guidance"]) and self.config["guidance_ref"] == "bc"
++
+     def target_update(self, network, module_name):
+         """Update the target network."""
+         new_target_params = jax.tree_util.tree_map(
+@@ -288,6 +307,9 @@
+             actor=(actor_def, (ex_observations,)),
+             target_actor=(copy.deepcopy(actor_def), (ex_observations,)),
+         )
++        if config["guidance"] and config["guidance_ref"] == "bc":
++            # Independent BC reference for the guidance weight (same architecture as the actor).
++            network_info["bc_ref"] = (copy.deepcopy(actor_def), (ex_observations,))
+         networks = {k: v[0] for k, v in network_info.items()}
+         network_args = {k: v[1] for k, v in network_info.items()}
+ 
+diff -ru gfp_patched/config/agent/rebrac.yaml gfp_p2/config/agent/rebrac.yaml
+--- gfp_patched/config/agent/rebrac.yaml	2026-10-15 10:39:59.213942798 +0000
++++ gfp_p2/config/agent/rebrac.yaml	2026-10-15 15:14:30.873232503 +0000
+@@ -18,3 +18,5 @@
+ guidance: False
+ eta_temperature: 1e-3
+ guidance_normalize: True
++# Guidance reference action: actor (L1 G-ReBRAC) | bc (independent BC network)
++guidance_ref: actor
