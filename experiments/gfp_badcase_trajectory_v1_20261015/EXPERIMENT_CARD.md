@@ -38,3 +38,6 @@ Frozen selection and asset identity; replay gate receipt; full trajectory/checkp
 After necessary verification, archive only explicit lightweight file list on this branch, push normally and verify SHA; sync local handoff.
 Stop after this diagnostic. No new seeds/tasks/training or automatic expanded diagnostic.
 
+
+## Authorized presentation revision
+User explicitly approved re-rendering the same eight videos from saved states using a top-down camera. Original obscured views retained as drafts. Eight final representative cases; zero additional environment episodes or optimizer updates.

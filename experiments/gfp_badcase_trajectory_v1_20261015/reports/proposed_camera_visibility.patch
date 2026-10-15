@@ -1,0 +1,11 @@
+--- code/render.py
++++ code/render.py
+@@ -7,7 +7,7 @@
+ env=ogbench.make_env_and_datasets(meta['task'],env_only=True);u=env.unwrapped
+ u.model.vis.global_.offwidth=640;u.model.vis.global_.offheight=480
+ renderer=mujoco.Renderer(u.model,height=480,width=640);cam=mujoco.MjvCamera()
+-cam.type=mujoco.mjtCamera.mjCAMERA_FREE;cam.distance=6;cam.azimuth=135;cam.elevation=-30
++cam.type=mujoco.mjtCamera.mjCAMERA_FREE;cam.distance=6;cam.azimuth=135;cam.elevation=-90
+ maze=np.array(meta['maze_map']);stride=5;fps=1/(meta['dt']*stride);results=[];thumbs=[];start=time.time()
+ def panel(xy,goal,t,n,label,ok):
+  im=Image.new('RGB',(224,480),'#f2f3f4');d=ImageDraw.Draw(im);scale=7
