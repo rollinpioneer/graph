@@ -1,0 +1,17 @@
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/checksums/REFINE1_PROTOCOL_SHA256SUMS.txt
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/commands/executed_commands.sh
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/configs/g3_refine1_rule.json
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/configs/refine1_input_lock.json
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/configs/refine1_policy_seed_registry.csv
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/configs/refine1_policy_training_protocol.yaml
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/configs/refine_reason.json
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/gpu/gpu_query.log
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/gpu/gpu_query_mode.txt
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/logs/init_protocol.log
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/logs/protocol_gate.log
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/logs/recover_registries.log
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/logs/seed_registry.log
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/metrics/recovered_registry_summary.json
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/metrics/refine1_protocol_gate.json
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/reports/refine1_protocol_summary.md
+/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage6_refine1/rounds/stage6r1_1_refinement_lock/tables/refine1_policy_seed_registry.csv

@@ -1,0 +1,555 @@
+{
+  "audited_at": "2026-09-08T07:08:42.271180+00:00",
+  "checks": [
+    {
+      "details": {
+        "HEAD": "5e08ddcbec72f112a58c42a26d1e6528c489b857",
+        "main": "5e08ddcbec72f112a58c42a26d1e6528c489b857",
+        "origin/main": "5e08ddcbec72f112a58c42a26d1e6528c489b857"
+      },
+      "evidence": "git refs/merge-base",
+      "id": "git.entry_and_refs",
+      "status": "PASS"
+    },
+    {
+      "details": [],
+      "evidence": "git diff entry..HEAD",
+      "id": "git.l1v_immutable",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "missing": []
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/upgrade_v2/visual_refine_l2",
+      "id": "implementation.required_modules",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "coarse_graph_source": "V1",
+        "diagnostic_only": [
+          "mujoco_qpos",
+          "mujoco_qvel",
+          "geom_ids",
+          "hidden_scenario",
+          "future_outcome",
+          "oracle_state"
+        ],
+        "fresh_confirmation_used_once": true,
+        "graph_edit_selection": "development_selection_only",
+        "new_llm_calls_allowed": false,
+        "new_model_training_allowed": false,
+        "predicate_threshold_selection": "development_only",
+        "primary_camera": "front",
+        "primary_online_observation": [
+          "front_rgb",
+          "action_history",
+          "gripper_command",
+          "contact_sensor"
+        ],
+        "real_robot_claim_allowed": false,
+        "reward_or_policy_claim_allowed": false,
+        "schema": "pathgraph_l2r_protocol_v1"
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/protocol_v1/configs/l2r_protocol.json",
+      "id": "protocol.scientific_boundary",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "candidates": 18,
+        "gate": {
+          "coarse_graph_candidate_source": "V1",
+          "entry_commit": "5a3aafd6ac6d139ba324ee57110bbac508e17570",
+          "failures": [],
+          "new_api_calls": 0,
+          "new_training_jobs": 0,
+          "schema": "pathgraph_l2r_entry_gate_v1",
+          "scientific_decision": "L1V_READY_FOR_REFINEMENT_SINGLE_VIEW",
+          "semantic_review_complete": true,
+          "status": "L2R_ENTRY_AND_SOURCE_LOCKED"
+        },
+        "source_lock": {
+          "failures": [],
+          "files": 40,
+          "status": "PASS"
+        }
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_0_entry_and_source_lock/metrics/l2r_entry_gate.json",
+      "id": "l2r0.entry_source_lock",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "evidence_rows": 153,
+        "gate": {
+          "candidate_count": 18,
+          "evidence_rows": 153,
+          "failures": [],
+          "mapping_rows": 18,
+          "schema": "pathgraph_l2r_canonicalization_gate_v1",
+          "status": "V1_COARSE_GRAPH_CANONICALIZED",
+          "unmapped_language_retained": 0
+        }
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_1_coarse_graph_canonicalization/metrics/canonicalization_gate.json",
+      "id": "l2r1.canonicalization",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "families": {
+          "development": 48,
+          "fresh": 24,
+          "pilot": 8
+        },
+        "fresh_scenarios": {
+          "already_on_target_offcenter": 3,
+          "already_satisfied_stable": 3,
+          "distractor_object_ambiguity": 3,
+          "missed_grasp_then_retry": 3,
+          "normal_pick_place": 3,
+          "primary_view_occlusion": 3,
+          "slip_then_recover": 3,
+          "target_occupied": 3
+        },
+        "gate": {
+          "dev_fit_families": 32,
+          "dev_select_families": 16,
+          "event_counts": {
+            "failure_occurrences": 48,
+            "horizon": 6,
+            "recovery_achievements": 48,
+            "recovery_attempts": 48,
+            "stable_goal_confirmations": 186,
+            "terminal_failure": 0
+          },
+          "failures": [],
+          "families": 48,
+          "family_leakage": 0,
+          "rollouts": 192,
+          "schema": "pathgraph_l2r_dynamic_dataset_gate_v1",
+          "status": "DYNAMIC_TABLETOP_DATASET_READY"
+        },
+        "rollouts": {
+          "development": {
+            "failure_count": 0,
+            "failures": [],
+            "frames": 2412,
+            "horizons": 6,
+            "low_level_control_steps": 9954,
+            "rollouts": 192,
+            "status": "PASS",
+            "terminal_failures": 0
+          },
+          "fresh": {
+            "failure_count": 0,
+            "failures": [],
+            "frames": 1206,
+            "horizons": 3,
+            "low_level_control_steps": 4977,
+            "rollouts": 96,
+            "status": "PASS",
+            "terminal_failures": 0
+          },
+          "pilot": {
+            "failure_count": 0,
+            "failures": [],
+            "frames": 206,
+            "horizons": 0,
+            "low_level_control_steps": 852,
+            "rollouts": 16,
+            "status": "PASS",
+            "terminal_failures": 0
+          }
+        }
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_2_dynamic_tabletop_dataset/metrics/dynamic_dataset_gate.json",
+      "id": "l2r2.dynamic_dataset",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "development": [],
+        "l1v": []
+      },
+      "evidence": "family manifests",
+      "id": "split.fresh_disjoint",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "missing": {
+          "l2r_2_dynamic_tabletop_dataset": [],
+          "l2r_3_observable_predicates": [],
+          "l2r_4_graph_binding_and_refinement": [],
+          "l2r_5_fresh_confirmation": []
+        },
+        "runtime_incomplete": []
+      },
+      "evidence": "round gpu directories",
+      "id": "environment.gpu_runtime_evidence",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "B3": {
+          "baseline": "B3_single_view_temporal_contact_action",
+          "failure_f1": "1.0",
+          "false_ready_rate": "0.0",
+          "goal_f1": "0.9491525423728813",
+          "goal_precision": "1.0",
+          "goal_recall": "0.9032258064516129",
+          "recovery_f1": "1.0",
+          "rollouts": "64",
+          "stable_hold_f1": "1.0",
+          "unknown_rate": "0.08640524346343317"
+        },
+        "predictions": {
+          "dev_select": {
+            "failure_count": 0,
+            "failures": [],
+            "frames": 804,
+            "rollouts": 64,
+            "status": "PASS"
+          },
+          "fresh": {
+            "failure_count": 0,
+            "failures": [],
+            "frames": 1206,
+            "rollouts": 96,
+            "status": "PASS"
+          }
+        },
+        "threshold_lock": {
+          "dev_select_used": false,
+          "fit_families": [
+            "L2D_00_00_220710",
+            "L2D_00_01_220710",
+            "L2D_00_02_220710",
+            "L2D_00_03_220710",
+            "L2D_01_00_220710",
+            "L2D_01_01_220710",
+            "L2D_01_02_220710",
+            "L2D_01_03_220710",
+            "L2D_02_00_220710",
+            "L2D_02_01_220710",
+            "L2D_02_02_220710",
+            "L2D_02_03_220710",
+            "L2D_03_00_220710",
+            "L2D_03_01_220710",
+            "L2D_03_02_220710",
+            "L2D_03_03_220710",
+            "L2D_04_00_220710",
+            "L2D_04_01_220710",
+            "L2D_04_02_220710",
+            "L2D_04_03_220710",
+            "L2D_05_00_220710",
+            "L2D_05_01_220710",
+            "L2D_05_02_220710",
+            "L2D_05_03_220710",
+            "L2D_06_00_220710",
+            "L2D_06_01_220710",
+            "L2D_06_02_220710",
+            "L2D_06_03_220710",
+            "L2D_07_00_220710",
+            "L2D_07_01_220710",
+            "L2D_07_02_220710",
+            "L2D_07_03_220710"
+          ],
+          "fit_family_count": 32,
+          "fit_split": "dev_fit",
+          "fresh_confirmation_used": false,
+          "grid_sha256": "d9b52ba652b695e5e88cc62c566131f2ac703ec70d18251663f0cf3fe5dcb757",
+          "online_inputs": [
+            "front_rgb",
+            "action_history",
+            "gripper_command",
+            "contact_sensor"
+          ],
+          "schema": "pathgraph_l2r_predicate_threshold_lock_v1",
+          "selection_score": 0.8285363741542282,
+          "status": "OBSERVABLE_PREDICATES_LOCKED",
+          "thresholds": {
+            "center_tolerance_ratio": 0.15,
+            "co_motion_correlation": 0.55,
+            "contact_loss_history_window": 4,
+            "overlap_ratio": 0.45,
+            "stability_speed_threshold": 0.005,
+            "stability_window": 5,
+            "visual_confidence_threshold": 0.4
+          }
+        }
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_3_observable_predicates/tables/predicate_metrics.csv",
+      "id": "l2r3.observable_predicates",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "edit_ok": true,
+        "edits": 5,
+        "g3_topology_same": true,
+        "lock_same": true,
+        "metrics": {
+          "G0_coarse_direct": {
+            "ambiguous_edge_rate": "0.0",
+            "branch_accuracy": "0.25",
+            "failure_denominator": "16",
+            "failure_recall": "0.0",
+            "false_ready_rate": "0.0",
+            "families": "16",
+            "goal_precision": "1.0",
+            "goal_recall": "0.9032258064516129",
+            "graph_completion_coverage": "0.9460565476190477",
+            "graph_id": "G0_coarse_direct",
+            "recovery_denominator": "16",
+            "recovery_recall": "0.0",
+            "rollouts": "64",
+            "second_view_query_rate": "0.0",
+            "second_view_unknown_resolution_rate": "0.0",
+            "selection_score": "0.24028539258873316",
+            "state_readiness_accuracy": "0.90625",
+            "transition_effect_precision": "0.90625",
+            "transition_precondition_precision": "0.25",
+            "unknown_rate": "0.08640524346343317",
+            "unnecessary_manipulation_rate": "1.0"
+          },
+          "G1_predicate_bound": {
+            "ambiguous_edge_rate": "0.0",
+            "branch_accuracy": "0.375",
+            "failure_denominator": "16",
+            "failure_recall": "0.0",
+            "false_ready_rate": "0.0",
+            "families": "16",
+            "goal_precision": "1.0",
+            "goal_recall": "0.9032258064516129",
+            "graph_completion_coverage": "0.9639136904761905",
+            "graph_id": "G1_predicate_bound",
+            "recovery_denominator": "16",
+            "recovery_recall": "0.0",
+            "rollouts": "64",
+            "second_view_query_rate": "0.0",
+            "second_view_unknown_resolution_rate": "0.0",
+            "selection_score": "0.3170711068744474",
+            "state_readiness_accuracy": "0.90625",
+            "transition_effect_precision": "0.90625",
+            "transition_precondition_precision": "0.375",
+            "unknown_rate": "0.08640524346343317",
+            "unnecessary_manipulation_rate": "0.0"
+          },
+          "G2_evidence_refined": {
+            "ambiguous_edge_rate": "0.0625",
+            "branch_accuracy": "0.9375",
+            "failure_denominator": "16",
+            "failure_recall": "0.75",
+            "false_ready_rate": "0.0",
+            "families": "16",
+            "goal_precision": "1.0",
+            "goal_recall": "0.9032258064516129",
+            "graph_completion_coverage": "0.9639136904761905",
+            "graph_id": "G2_evidence_refined",
+            "recovery_denominator": "16",
+            "recovery_recall": "0.75",
+            "rollouts": "64",
+            "second_view_query_rate": "0.0",
+            "second_view_unknown_resolution_rate": "0.0",
+            "selection_score": "0.6514461068744474",
+            "state_readiness_accuracy": "0.90625",
+            "transition_effect_precision": "0.90625",
+            "transition_precondition_precision": "0.9375",
+            "unknown_rate": "0.08640524346343317",
+            "unnecessary_manipulation_rate": "0.0"
+          },
+          "G3_active_second_view": {
+            "ambiguous_edge_rate": "0.0625",
+            "branch_accuracy": "0.8125",
+            "failure_denominator": "16",
+            "failure_recall": "0.75",
+            "false_ready_rate": "0.0",
+            "families": "16",
+            "goal_precision": "1.0",
+            "goal_recall": "0.9032258064516129",
+            "graph_completion_coverage": "0.9639136904761905",
+            "graph_id": "G3_active_second_view",
+            "recovery_denominator": "16",
+            "recovery_recall": "0.75",
+            "rollouts": "64",
+            "second_view_query_rate": "0.25",
+            "second_view_unknown_resolution_rate": "0.19090909090909092",
+            "selection_score": "0.6264461068744474",
+            "state_readiness_accuracy": "0.90625",
+            "transition_effect_precision": "0.90625",
+            "transition_precondition_precision": "0.8125",
+            "unknown_rate": "0.08640524346343317",
+            "unnecessary_manipulation_rate": "0.0"
+          }
+        },
+        "selection_hashes_ok": true
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/refined_graphs_v1/selection/selection_lock.json",
+      "id": "l2r4.graph_refinement",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "consumption": {
+          "completed_at": "2026-09-08T04:00:38.038428+00:00",
+          "correction_scope": "deterministic executor and control-recording correction; no threshold, camera, family, or fresh-metric-driven edit changes",
+          "families": 24,
+          "family_lock_sha256": "3d0f24646a39daac796001e8be8f44cc6401273e802b5bc57742b18233c9a577",
+          "fresh_family_parameters_unchanged": true,
+          "implementation_correction_reexecution": true,
+          "metric_driven_tuning_after_first_open": false,
+          "output_sha256": {
+            "confirmation_metrics.csv": "1847c01f469d44182de84fe82ed4768de32cd4746b641e31946e88f1ba3646bf",
+            "metrics_by_family.csv": "94a6714146260bd9ff226c0bb7c0df5f11e35e04bd7f8d55a63003281cadd1b0",
+            "metrics_by_scenario.csv": "47221174db5e5e9cc04ded27163376bf80a529b5fab1ee50b2719dfbc01ce320",
+            "refined_minus_baselines.csv": "1e6924a2ac38c05ecac6d7c52ad3bdd7e6c5b835918d25a29a96f4b55e4237e5"
+          },
+          "post_confirmation_tuning": false,
+          "pre_correction_evidence_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/implementation_correction/pre_correction",
+          "rollouts": 96,
+          "schema": "pathgraph_l2r_confirmation_consumption_v1",
+          "second_view_queries": 0,
+          "selected_graph_id": "G2_evidence_refined",
+          "selection_lock_sha256": "98ea8889351cad19a54582a54bc5c02d381c1f84ba9b0350bcfa5022b0821d42",
+          "status": "CONSUMED_ONCE"
+        },
+        "decision": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
+        "lock": {
+          "failures": [],
+          "fresh_families": 24,
+          "selected_graph_id": "G2_evidence_refined",
+          "status": "PASS"
+        },
+        "output_hashes_ok": true,
+        "reasons": [
+          "GO gate not met (ambiguous_edge_rate<=0.10); selected-G0=0.708333, selected-G1=0.583333, noninferior=8/8"
+        ]
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/fresh_confirmation_v1/locks/confirmation_consumption.json",
+      "id": "l2r5.fresh_confirmation",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "manifest_failures": [],
+        "status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
+        "unsupported_claims": {
+          "automatic_graph_refinement_success": false,
+          "new_task_generalization": false,
+          "physical_robot_success": false,
+          "policy_gain": false,
+          "real_image_generalization": false,
+          "reward_gain": false,
+          "schema": "pathgraph_l2r_unsupported_claims_v1",
+          "supported_claim": "On the frozen dynamic MuJoCo primitive benchmark, G2 improved branch routing and recovered failure events, but ambiguous-edge rate 0.125 exceeded the 0.10 GO limit; G1 remains the retained graph."
+        }
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/final_v1/l3_or_stop_handoff.json",
+      "id": "l2r6.final_handoff",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "rounds": 7,
+        "statuses": [
+          "L2R_ENTRY_AND_SOURCE_LOCKED",
+          "V1_COARSE_GRAPH_CANONICALIZED",
+          "DYNAMIC_TABLETOP_DATASET_READY",
+          "OBSERVABLE_PREDICATES_LOCKED",
+          "REFINED_GRAPH_SELECTED",
+          "L2R_FRESH_CONFIRMATION_COMPLETE",
+          "L2R_PARTIAL_KEEP_COARSE_GRAPH"
+        ]
+      },
+      "evidence": "round run manifests",
+      "id": "execution.no_api_or_training",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "index_ok": true,
+        "packages": [
+          {
+            "failures": [],
+            "filename": "L2R_results.zip",
+            "forbidden_payloads": [],
+            "sha256": "374cdc000a819f0d2f700749f5650ad7f77c3e697959f7168cc698fb3a98b3a7",
+            "size_bytes": 424038
+          },
+          {
+            "failures": [],
+            "filename": "l2r_0_entry_and_source_lock.zip",
+            "forbidden_payloads": [],
+            "sha256": "d1cb1fee44ed09a2846bef8b1dc8cdf3dd31fb8053e0e91d60faa654c003b778",
+            "size_bytes": 13579
+          },
+          {
+            "failures": [],
+            "filename": "l2r_1_coarse_graph_canonicalization.zip",
+            "forbidden_payloads": [],
+            "sha256": "a46dab64744c1e4cf184d8db764de86dbb9466f218bb8b6e4160bc5df2f27633",
+            "size_bytes": 11696
+          },
+          {
+            "failures": [],
+            "filename": "l2r_2_dynamic_tabletop_dataset.zip",
+            "forbidden_payloads": [],
+            "sha256": "1fc537dd68803d50953f3b225e46642f068caec6e41846eeaa4f06c9d5e553a5",
+            "size_bytes": 110967
+          },
+          {
+            "failures": [],
+            "filename": "l2r_3_observable_predicates.zip",
+            "forbidden_payloads": [],
+            "sha256": "1c5aee0088db69a9724a1bf9892cb4adebb5e301238385673af74c9a814bf91e",
+            "size_bytes": 36306
+          },
+          {
+            "failures": [],
+            "filename": "l2r_4_graph_binding_and_refinement.zip",
+            "forbidden_payloads": [],
+            "sha256": "9f26e394af73bae99ee35682d9e7043dd8b00de388af5832665fbdcc41d7ef74",
+            "size_bytes": 47854
+          },
+          {
+            "failures": [],
+            "filename": "l2r_5_fresh_confirmation.zip",
+            "forbidden_payloads": [],
+            "sha256": "5ae6a0fb7459b5d1748992e64cfcdd1a438dac91b50af49a9f2c4471d2667e3b",
+            "size_bytes": 68582
+          },
+          {
+            "failures": [],
+            "filename": "l2r_6_final_handoff.zip",
+            "forbidden_payloads": [],
+            "sha256": "c8ddf2e93f083b7a43ca54d384bb34c4b96b906a05572ed6127d46f547296c15",
+            "size_bytes": 61735
+          }
+        ]
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/downloads/l2r/package_index.json",
+      "id": "delivery.zip_integrity",
+      "status": "PASS"
+    },
+    {
+      "details": {
+        "sha256": "dab481dde49a470eb7b1ebc312600111176e18cd022cd5532732cf9c78d98b50"
+      },
+      "evidence": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_6_final_handoff/checksums/U0_U1_complete_actual.sha256",
+      "id": "delivery.legacy_zip_preserved",
+      "status": "PASS"
+    }
+  ],
+  "checks_failed": 0,
+  "checks_passed": 16,
+  "checks_total": 16,
+  "failures": [],
+  "handbook": "/home/xushijie/PathGraph-SARM_L2R_单视图粗图观测绑定与动态细化_Agent操作手册_V1.0.md",
+  "handbook_sha256": "396b58e88f9e8b8c78ad5ed696281c32b1a676bca3b5c1e871ca4d8d15f9deab",
+  "schema": "pathgraph_l2r_manual_completion_audit_v1",
+  "status": "PASS"
+}

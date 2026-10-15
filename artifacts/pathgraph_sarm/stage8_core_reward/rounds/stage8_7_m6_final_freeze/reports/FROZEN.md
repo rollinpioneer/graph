@@ -1,0 +1,15 @@
+milestone = M6_FINAL
+decision = RESEARCH_COMPLETE_CORE_REWARD_ONLY
+research_mode = core_reward_only
+main_method = pathgraph_reward_v1_locked
+manual_graph_is_main = true
+stable_policy_claim = false
+coverage_scaling_claim = false
+unseen_order_claim = false
+automatic_graph_main_claim = false
+eta_nonzero_main_claim = false
+beta_nonzero_main_claim = false
+statistics_unit = content_group_id
+bootstrap_resamples = 10000
+checkpoint_packaged = false
+raw_predictions_packaged = false

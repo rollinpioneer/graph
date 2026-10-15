@@ -1,0 +1,549 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_established",
+      "effects": [
+        "contact_present"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_01"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_approach",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 0,
+          "to_cluster_id": 1
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether approach is uninterrupted by obstacles"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_transporting",
+      "effects": [
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_02"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_initiate_push",
+      "preconditions": [
+        "contact_present"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 1,
+          "to_cluster_id": 2
+        }
+      ],
+      "src": "n_contact_established",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether stochastic forces allow sustained pushing"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_lost",
+      "effects": [
+        "contact_recently_lost",
+        "object_stationary"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_03"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_contact_loss",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 2,
+          "to_cluster_id": 3
+        }
+      ],
+      "src": "n_transporting",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "the cause of contact loss (stochastic perturbation vs. geometry)"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_start",
+      "effects": [
+        "agent_approaching_object",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_04"
+      ],
+      "hypothesized_type": "recovery",
+      "id": "e_recovery_reapproach",
+      "preconditions": [
+        "contact_recently_lost"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 3,
+          "to_cluster_id": 0
+        }
+      ],
+      "src": "n_contact_lost",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the agent can re-establish contact without causing further deviation"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_contact_established",
+      "effects": [
+        "contact_reestablished"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_05"
+      ],
+      "hypothesized_type": "recovery",
+      "id": "e_recovery_recontact",
+      "preconditions": [
+        "contact_recently_lost"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 3,
+          "to_cluster_id": 1
+        }
+      ],
+      "src": "n_contact_lost",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether recontact occurs quickly enough to resume productive transport"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_goal_reached",
+      "effects": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_06"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_transport_success",
+      "preconditions": [
+        "object_approaching_goal",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 2,
+          "to_cluster_id": 5
+        }
+      ],
+      "src": "n_transporting",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_failure_collision",
+      "effects": [
+        "collision_detected"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_07"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_collision_during_transport",
+      "preconditions": [
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 2,
+          "to_cluster_id": 6
+        }
+      ],
+      "src": "n_transporting",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether collision is unavoidable given stochastic dynamics"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_failure_stagnation",
+      "effects": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_08"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_stagnation_during_transport",
+      "preconditions": [
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 2,
+          "to_cluster_id": 7
+        }
+      ],
+      "src": "n_transporting",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "the duration threshold for stagnation判定"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_start",
+      "effects": [
+        "agent_approaching_object",
+        "progress_unknown"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_09"
+      ],
+      "hypothesized_type": "alternative",
+      "id": "e_detour_to_reapproach",
+      "preconditions": [
+        "contact_absent",
+        "stagnation_detected"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 4,
+          "to_cluster_id": 0
+        }
+      ],
+      "src": "n_detour_needed",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "the viability of the detour path around the obstacle"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_failure_collision",
+      "effects": [
+        "collision_detected"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_10"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_collision_from_start",
+      "preconditions": [
+        "contact_absent",
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 0,
+          "to_cluster_id": 6
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the agent collides with an obstacle before reaching the object"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_failure_stagnation",
+      "effects": [
+        "stagnation_detected"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_11"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e_stagnation_from_start",
+      "preconditions": [
+        "contact_absent",
+        "progress_unknown"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 0,
+          "to_cluster_id": 7
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the agent is trapped or merely slow"
+      ]
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_detour_needed",
+      "effects": [
+        "agent_receding_from_object",
+        "stagnation_detected"
+      ],
+      "evidence_segment_ids": [
+        "seg_transition_12"
+      ],
+      "hypothesized_type": "alternative",
+      "id": "e_detour_trigger",
+      "preconditions": [
+        "contact_recently_lost",
+        "object_stationary"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 3,
+          "to_cluster_id": 4
+        }
+      ],
+      "src": "n_contact_lost",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether an obstacle is truly the cause of stagnation"
+      ]
+    }
+  ],
+  "graph_id": "push_object_to_goal_stochastic_v1",
+  "nodes": [
+    {
+      "description": "Initial state where the agent is separated from the object and has not yet established contact; the object is not yet moving toward the goal.",
+      "evidence_segment_ids": [
+        "seg_init_01"
+      ],
+      "id": "n_start",
+      "observable_predicates": [
+        "contact_absent",
+        "agent_approaching_object",
+        "object_stationary",
+        "progress_unknown"
+      ],
+      "role": "start",
+      "source_cluster_ids": [
+        0
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the agent's approach trajectory is collision-free"
+      ]
+    },
+    {
+      "description": "The agent has reached and made contact with the object; contact is present but the object has not yet begun moving reliably with the agent.",
+      "evidence_segment_ids": [
+        "seg_contact_01"
+      ],
+      "id": "n_contact_established",
+      "observable_predicates": [
+        "contact_present",
+        "object_stationary",
+        "agent_approaching_object"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        1
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the contact is stable enough to initiate transport"
+      ]
+    },
+    {
+      "description": "The agent is in sustained contact with the object and both are moving; the object is approaching the goal.",
+      "evidence_segment_ids": [
+        "seg_transport_01",
+        "seg_transport_02"
+      ],
+      "id": "n_transporting",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent",
+        "object_approaching_goal"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        2
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether stochastic perturbations will cause contact loss or deviation"
+      ]
+    },
+    {
+      "description": "Contact between agent and object was recently lost during transport; the object may be stationary or drifting.",
+      "evidence_segment_ids": [
+        "seg_loss_01"
+      ],
+      "id": "n_contact_lost",
+      "observable_predicates": [
+        "contact_recently_lost",
+        "object_stationary",
+        "progress_unknown"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        3
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the object has moved significantly away from the desired path"
+      ]
+    },
+    {
+      "description": "An obstacle is detected between the agent and the object or between the object and the goal, requiring a detour maneuver.",
+      "evidence_segment_ids": [
+        "seg_detour_01"
+      ],
+      "id": "n_detour_needed",
+      "observable_predicates": [
+        "contact_absent",
+        "agent_receding_from_object",
+        "stagnation_detected"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        4
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "the geometry of the obstacle and the feasibility of a detour path"
+      ]
+    },
+    {
+      "description": "The object has entered the goal region and remains stably inside it; the task is complete.",
+      "evidence_segment_ids": [
+        "seg_goal_01"
+      ],
+      "id": "n_goal_reached",
+      "observable_predicates": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [
+        5
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "A collision has been detected between the agent or object and an obstacle, resulting in terminal failure.",
+      "evidence_segment_ids": [
+        "seg_collision_01"
+      ],
+      "id": "n_failure_collision",
+      "observable_predicates": [
+        "collision_detected"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [
+        6
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether the collision is truly terminal or recoverable under the simulator rules"
+      ]
+    },
+    {
+      "description": "The system has stagnated for an extended period with negligible progress toward the goal.",
+      "evidence_segment_ids": [
+        "seg_stagnation_01"
+      ],
+      "id": "n_failure_stagnation",
+      "observable_predicates": [
+        "stagnation_detected",
+        "progress_unknown"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [
+        7
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "whether stagnation is permanent or could resolve with further actions"
+      ]
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [
+        "e_contact_loss",
+        "e_initiate_push"
+      ],
+      "affected_node_ids": [
+        "n_transporting",
+        "n_contact_lost"
+      ],
+      "evidence_needed": "Multiple stochastic simulator rollouts from transporting state to estimate contact loss frequency",
+      "question": "What is the exact probability of contact loss during transport under stochastic perturbations?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_collision_during_transport",
+        "e_collision_from_start"
+      ],
+      "affected_node_ids": [
+        "n_failure_collision"
+      ],
+      "evidence_needed": "Simulator documentation or rollout observation to determine if collision_detected always leads to episode termination",
+      "question": "Is collision truly terminal or can the simulator recover after a collision event?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_stagnation_during_transport",
+        "e_stagnation_from_start"
+      ],
+      "affected_node_ids": [
+        "n_failure_stagnation"
+      ],
+      "evidence_needed": "Simulator configuration or empirical observation of episode termination due to stagnation",
+      "question": "What is the stagnation time threshold that triggers terminal failure?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_recovery_reapproach",
+        "e_recovery_recontact"
+      ],
+      "affected_node_ids": [
+        "n_contact_lost",
+        "n_contact_established",
+        "n_start"
+      ],
+      "evidence_needed": "Stochastic rollout data measuring steps from contact_recently_lost to contact_reestablished",
+      "question": "Can the agent reliably recover from contact loss within a bounded number of steps?"
+    },
+    {
+      "affected_edge_ids": [
+        "e_detour_to_reapproach",
+        "e_detour_trigger"
+      ],
+      "affected_node_ids": [
+        "n_detour_needed"
+      ],
+      "evidence_needed": "Observations of agent behavior in simulator scenarios with obstacles between agent, object, and goal",
+      "question": "How does obstacle geometry affect the feasibility of detour maneuvers?"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+=== 1 入口与配置 ===
+eval.py
+train.py
+diffusion_policy/config/train_bet_lowdim_workspace.yaml
+diffusion_policy/config/train_diffusion_transformer_hybrid_workspace.yaml
+diffusion_policy/config/train_diffusion_transformer_lowdim_kitchen_workspace.yaml
+diffusion_policy/config/train_diffusion_transformer_lowdim_pusht_workspace.yaml
+diffusion_policy/config/train_diffusion_transformer_lowdim_workspace.yaml
+diffusion_policy/config/train_diffusion_transformer_real_hybrid_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_ddim_hybrid_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_ddim_lowdim_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_hybrid_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_image_pretrained_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_image_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_lowdim_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_real_hybrid_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_real_image_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_real_pretrained_workspace.yaml
+diffusion_policy/config/train_diffusion_unet_video_workspace.yaml
+diffusion_policy/config/train_ibc_dfo_hybrid_workspace.yaml
+diffusion_policy/config/train_ibc_dfo_lowdim_workspace.yaml
+diffusion_policy/config/train_ibc_dfo_real_hybrid_workspace.yaml
+diffusion_policy/config/train_robomimic_image_workspace.yaml
+diffusion_policy/config/train_robomimic_lowdim_workspace.yaml
+diffusion_policy/config/train_robomimic_real_image_workspace.yaml
+square_image.yaml
+square_image_abs.yaml
+square_lowdim.yaml
+square_lowdim_abs.yaml
+=== 2 保存与指标消毒逻辑 ===
+diffusion_policy/workspace/train_bet_lowdim_workspace.py:264:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_demo_score_hybrid_workspace.py:233:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_demo_score_image_workspace.py:237:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_demo_score_lowdim_workspace.py:234:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_diffusion_transformer_hybrid_workspace.py:266:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_diffusion_transformer_lowdim_workspace.py:274:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_diffusion_unet_hybrid_workspace.py:279:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_diffusion_unet_image_workspace.py:271:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py:380:                        new_key = key.replace('/', '_')
+diffusion_policy/workspace/train_ibc_dfo_hybrid_workspace.py:254:                        new_key = key.replace('/', '_')
+65:        # resume training
+66:        if cfg.training.resume:
+127:        topk_manager = TopKCheckpointManager(
+129:            **cfg.checkpoint.topk
+147:            cfg.training.checkpoint_every = 1
+264:                if (self.epoch % cfg.training.checkpoint_every) == 0:
+266:                    if cfg.checkpoint.save_last_ckpt:
+280:                    topk_ckpt_path = topk_manager.get_ckpt_path(metric_dict)
+282:                    if topk_ckpt_path is not None:
+283:                        self.save_checkpoint(path=topk_ckpt_path)
+=== 3 数据集与缓存 ===
+data/robomimic/datasets/square
+data/outputs/train/20260720_cupid_square_smoke
+data/outputs/train/20260720_cupid_square_smoke/20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0_archived_20260721_023159
+data/outputs/train/20260720_cupid_square_smoke/20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0_archived_20260721_023750
+data/outputs/train/20260720_cupid_square_smoke/20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0_archived_gpu0_20260721_061225
+data/outputs/train/20260720_cupid_square_smoke/20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0
+data/outputs/train/20260720_cupid_square_minrep
+data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0_attempt1_failed_20260721_100311
+data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0
+data/outputs/eval_save_episodes/20260721_cupid_square_rollout100
+data/outputs/eval_save_episodes/20260721_cupid_square_rollout100/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0
+22G	data
+=== 4 硬件 ===
+Tue Aug 25 17:40:00 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:14:00.0 Off |                    0 |
+| N/A   36C    P0            108W /  400W |     775MiB /  40960MiB |     23%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          On  |   00000000:15:00.0 Off |                    0 |
+| N/A   39C    P0             92W /  400W |    2431MiB /  40960MiB |     81%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-40GB          On  |   00000000:18:00.0 Off |                    0 |
+| N/A   37C    P0             71W /  400W |    7585MiB /  40960MiB |     18%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-40GB          On  |   00000000:1D:00.0 Off |                    0 |
+| N/A   38C    P0            105W /  400W |    2440MiB /  40960MiB |     82%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA A100-SXM4-40GB          On  |   00000000:1E:00.0 Off |                    0 |
+| N/A   34C    P0             99W /  400W |     775MiB /  40960MiB |     27%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA A100-SXM4-40GB          On  |   00000000:21:00.0 Off |                    0 |
+| N/A   38C    P0             82W /  400W |    2437MiB /  40960MiB |     84%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA A100-SXM4-40GB          On  |   00000000:25:00.0 Off |                    0 |
+| N/A   29C    P0             36W /  400W |    1659MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA A100-SXM4-40GB          On  |   00000000:2D:00.0 Off |                    0 |
+| N/A   36C    P0             97W /  400W |     781MiB /  40960MiB |     24%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         2037514      C   .../.conda/envs/dfpir/bin/python        766MiB |
+|    1   N/A  N/A         2036075      C   .../.conda/envs/cupid/bin/python       1650MiB |
+|    1   N/A  N/A         2037515      C   .../.conda/envs/dfpir/bin/python        766MiB |
+|    2   N/A  N/A         1914449      C   ...x18_repro_20260819/bin/python       5920MiB |
+|    2   N/A  N/A         2035542      C   .../.conda/envs/cupid/bin/python       1650MiB |
+|    3   N/A  N/A         2036034      C   .../.conda/envs/cupid/bin/python       1650MiB |
+|    3   N/A  N/A         2037516      C   .../.conda/envs/dfpir/bin/python        766MiB |
+|    4   N/A  N/A         2037517      C   .../.conda/envs/dfpir/bin/python        766MiB |
+|    5   N/A  N/A         2036040      C   .../.conda/envs/cupid/bin/python       1650MiB |
+|    5   N/A  N/A         2037518      C   .../.conda/envs/dfpir/bin/python        772MiB |
+|    6   N/A  N/A         2035482      C   .../.conda/envs/cupid/bin/python       1650MiB |
+|    7   N/A  N/A         2037519      C   .../.conda/envs/dfpir/bin/python        772MiB |
++-----------------------------------------------------------------------------------------+
+112
+               total        used        free      shared  buff/cache   available
+Mem:             503         126          44           0         336         376
+=== 5 持久化手段 ===
+which: no sbatch in (/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/__compress_data/xushijie/.codex/tmp/arg0/codex-arg0Uvh0K4:/tmp/vscode-xushijie/.vscode-server/bin/110a328ea54b42367b803ec53ee0bf52ef26b419/bin/remote-cli:/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/opt/miniconda3/bin:/opt/miniconda3/condabin:/home/xushijie/.local/bin:/home/xushijie/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/tmp/vscode-xushijie/.vscode-server/extensions/openai.chatgpt-26.814.41407-linux-x64/bin/linux-x86_64)
+which: no squeue in (/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/__compress_data/xushijie/.codex/tmp/arg0/codex-arg0Uvh0K4:/tmp/vscode-xushijie/.vscode-server/bin/110a328ea54b42367b803ec53ee0bf52ef26b419/bin/remote-cli:/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/opt/miniconda3/bin:/opt/miniconda3/condabin:/home/xushijie/.local/bin:/home/xushijie/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/tmp/vscode-xushijie/.vscode-server/extensions/openai.chatgpt-26.814.41407-linux-x64/bin/linux-x86_64)
+which: no screen in (/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/__compress_data/xushijie/.codex/tmp/arg0/codex-arg0Uvh0K4:/tmp/vscode-xushijie/.vscode-server/bin/110a328ea54b42367b803ec53ee0bf52ef26b419/bin/remote-cli:/home/__compress_data/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/home/xushijie/texlive/2026/bin/x86_64-linux:/opt/miniconda3/bin:/opt/miniconda3/condabin:/home/xushijie/.local/bin:/home/xushijie/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/tmp/vscode-xushijie/.vscode-server/extensions/openai.chatgpt-26.814.41407-linux-x64/bin/linux-x86_64)
+/usr/bin/tmux
+ 17:40:00 up 6 days, 20:38, 23 users,  load average: 40.55, 87.62, 77.44
+=== 6 当前进程 ===
+=== 7 脚本副本 ===

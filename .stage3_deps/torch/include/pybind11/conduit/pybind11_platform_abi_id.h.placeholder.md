@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `pybind11_platform_abi_id.h`
+- Original relative path: `.stage3_deps/torch/include/pybind11/conduit/pybind11_platform_abi_id.h`
+- File type: `environment_binary`
+- Intended use: local CUDA/PyTorch environment installation
+- Original size: 3991 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `.stage3_deps/torch/include/pybind11/conduit/pybind11_platform_abi_id.h`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

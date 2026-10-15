@@ -1,0 +1,58 @@
+AUDIT {
+  "matrix_shape": [
+    100,
+    192
+  ],
+  "success_count": 71,
+  "failure_count": 29,
+  "delete_k": 38,
+  "reconstruction": {
+    "max_abs_error": 7.1316965239986985e-06,
+    "rmse": 1.3010468700718802e-06
+  }
+}
+
+BOTTOM BUDGET
+   sampling  budget  repeats  spearman_mean  spearman_std  bottom_jaccard_mean  bottom_jaccard_std  bottom_overlap_mean  bottom_mistakes_mean
+    random       5      200       0.220261      0.131785             0.224888            0.068560               13.760                24.240
+    random      10      200       0.339241      0.131725             0.278158            0.072537               16.345                21.655
+    random      25      200       0.563016      0.113232             0.405570            0.080820               21.750                16.250
+    random      50      200       0.780215      0.065016             0.563983            0.076314               27.290                10.710
+    random      75      200       0.902570      0.034978             0.704294            0.070417               31.330                 6.670
+    random     100      200       1.000000      0.000000             1.000000            0.000000               38.000                 0.000
+stratified       5      200       0.201938      0.109590             0.204674            0.053484               12.790                25.210
+stratified      10      200       0.359974      0.113057             0.288977            0.060269               16.910                21.090
+stratified      25      200       0.544377      0.095383             0.388305            0.065688               21.135                16.865
+stratified      50      200       0.746048      0.064551             0.537097            0.062471               26.475                11.525
+stratified      75      200       0.902866      0.025769             0.702907            0.062725               31.310                 6.690
+stratified     100      200       1.000000      0.000000             1.000000            0.000000               38.000                 0.000
+
+DISJOINT
+  budget_per_pool  repeats  spearman_mean  spearman_std  bottom_jaccard_mean  bottom_jaccard_std  bottom_overlap_mean  bottom_mistakes_mean
+               5      200       0.008655      0.099227             0.126341            0.044896                8.420                29.580
+              10      200       0.038369      0.108493             0.151314            0.052745                9.855                28.145
+              25      200       0.114299      0.112186             0.197386            0.057419               12.385                25.615
+              50      200       0.235924      0.091652             0.266837            0.052750               15.905                22.095
+
+FULL REFERENCE
+                 method  repeats  early_stop_rate  mean_budget  median_budget  budget_std  bottom_jaccard_mean  bottom_jaccard_std  bottom_overlap_mean  bottom_mistakes_mean
+    bootstrap_balanced       60              0.0   100.000000          100.0    0.000000             1.000000            0.000000            38.000000              0.000000
+bootstrap_conservative       60              0.0   100.000000          100.0    0.000000             1.000000            0.000000            38.000000              0.000000
+  bootstrap_permissive       60              0.0   100.000000          100.0    0.000000             1.000000            0.000000            38.000000              0.000000
+     naive_consecutive       60              0.7    78.083333           80.0   19.202129             0.778917            0.172397            32.883333              5.116667
+
+CROSS POOL
+                 method  repeats  early_stop_rate  mean_budget  median_budget  budget_std  bottom_jaccard_mean  bottom_jaccard_std  bottom_overlap_mean  bottom_mistakes_mean
+    bootstrap_balanced       60         0.000000    60.000000           60.0    0.000000             0.270923            0.063609            16.050000             21.950000
+bootstrap_conservative       60         0.000000    60.000000           60.0    0.000000             0.270923            0.063609            16.050000             21.950000
+  bootstrap_permissive       60         0.000000    60.000000           60.0    0.000000             0.270923            0.063609            16.050000             21.950000
+              fixed_25       60         1.000000    25.000000           25.0    0.000000             0.220434            0.068237            13.533333             24.466667
+              fixed_50       60         1.000000    50.000000           50.0    0.000000             0.256789            0.061480            15.383333             22.616667
+              fixed_60       60         0.000000    60.000000           60.0    0.000000             0.270923            0.063609            16.050000             21.950000
+     naive_consecutive       60         0.183333    56.916667           60.0    7.651945             0.266365            0.066906            15.816667             22.183333
+
+Saved to /home/xushijie/CUPID/results/stage2_bottom_filter_sequential_v1
+
+real	0m7.413s
+user	0m8.926s
+sys	0m6.987s

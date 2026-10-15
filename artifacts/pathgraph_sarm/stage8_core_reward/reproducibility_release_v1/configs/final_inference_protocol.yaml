@@ -1,0 +1,20 @@
+protocol_version: stage8-core-reproduction-v1
+model:
+  source_bundle: stage6 persistent reward_v1
+  ensemble_seeds: [20260906, 20260907, 20260908]
+  eval_mode: true
+  torch_inference_mode: true
+  augmentation: false
+  dropout: false
+  history_steps: 32
+suites: [val, test, stage3_diagnostic]
+determinism:
+  cudnn_benchmark: false
+  cudnn_deterministic: true
+  allow_tf32: false
+  fixed_batch_order: true
+output:
+  per_sample_prediction: true
+  compression: jsonl.gz
+  include_checkpoint_sha256: true
+  statistics_unit: content_group_id

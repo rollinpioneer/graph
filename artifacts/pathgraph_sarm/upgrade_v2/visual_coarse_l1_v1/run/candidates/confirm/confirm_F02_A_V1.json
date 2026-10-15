@@ -1,0 +1,138 @@
+{
+  "edges": [
+    {
+      "action": "grasp_object(red_bowl)",
+      "dst": "bowl_grasped",
+      "expected_effects": [
+        "红碗被牢固夹持",
+        "红碗脱离桌面支撑"
+      ],
+      "id": "grasp_bowl",
+      "preconditions": [
+        "红碗在可达范围内",
+        "无遮挡物阻碍抓取路径"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object(red_bowl, white_plate)",
+      "dst": "bowl_over_plate",
+      "expected_effects": [
+        "红碗水平移动至白盘上方",
+        "保持安全悬停高度"
+      ],
+      "id": "transport_to_plate",
+      "preconditions": [
+        "红碗处于被抓取状态",
+        "白盘位置已知且固定"
+      ],
+      "src": "bowl_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object(red_bowl, white_plate) + release_object()",
+      "dst": "goal_achieved",
+      "expected_effects": [
+        "红碗平稳接触盘面中心",
+        "抓持力解除",
+        "机械臂 retract"
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "红碗位于白盘正上方",
+        "下降路径无障碍"
+      ],
+      "src": "bowl_over_plate",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将红色碗从当前位置移动并放置到白色盘子的几何中心，随后释放抓取。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：红碗与白盘分离放置在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗位于左侧",
+        "白色盘子位于右侧",
+        "两者之间无遮挡"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红碗的确切重量和摩擦系数",
+        "白盘表面的平整度"
+      ]
+    },
+    {
+      "description": "机器人成功抓取红色碗并提起",
+      "id": "bowl_grasped",
+      "observable_conditions": [
+        "机械臂末端执行器闭合",
+        "红碗离开桌面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳固不滑落",
+        "抓取点是否导致碗倾斜"
+      ]
+    },
+    {
+      "description": "红色碗被运输至白色盘子正上方",
+      "id": "bowl_over_plate",
+      "observable_conditions": [
+        "红碗投影覆盖白盘区域",
+        "高度高于盘面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "垂直对齐精度",
+        "是否存在微小碰撞风险"
+      ]
+    },
+    {
+      "description": "红色碗稳定放置在白色盘子中央且已释放",
+      "id": "goal_achieved",
+      "observable_conditions": [
+        "红碗接触白盘表面",
+        "机械臂已松开",
+        "碗位于盘子视觉中心"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "放置后碗是否静止不动",
+        "重心是否完全落在盘子支撑范围内"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的红色圆柱形碗状物体",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的白色扁平圆盘",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取红碗时的夹持力是否足以防止滑动",
+    "确认红碗底部与白盘表面的接触稳定性",
+    "检查运输过程中红碗是否会碰撞白盘边缘",
+    "核实释放后红碗是否因惯性发生位移"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

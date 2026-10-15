@@ -1,0 +1,41 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"graph_id\":\"u3_candidate_graph_v1\",\"scope\":\"stochastic_simulator_only\",\"nodes\":[{\"id\":\"n_start\",\"description\":\"Agent approaches object with contact present\",\"role\":\"start\",\"observable_predicates\":[\"contact_present\",\"agent_approaching_object\",\"progress_unknown\"],\"unknown_conditions\":[\"whether agent is aligned for stable push\"],\"source_cluster_ids\":[3,10],\"evidence_segment_ids\":[\"formal_u2_family_000_r00_s00\"],\"status\":\"hypothesized\"},{\"id\":\"n_inter\",\"description\":\"Object is being transported with contact maintained\",\"role\":\"intermediate\",\"observable_predicates\":[\"contact_present\",\"object_moving_with_agent\",\"object_approaching_goal\"],\"unknown_conditions\":[\"whether transport will remain stable or detach\"],\"source_cluster_ids\":[5,4],\"evidence_segment_ids\":[\"formal_u2_family_000_r00_s01\"],\"status\":\"hypothesized\"},{\"id\":\"n_success\",\"description\":\"Object reaches and remains in goal region\",\"role\":\"success_terminal\",\"observable_predicates\":[\"object_inside_goal\",\"stable_goal_occupancy\"],\"unknown_conditions\":[\"whether goal occupancy is truly stable across future steps\"],\"source_cluster_ids\":[2],\"evidence_segment_ids\":[\"formal_u2_family_000_r00_s04\"],\"status\":\"hypothesized\"}],\"edges\":[{\"id\":\"e1\",\"src\":\"n_start\",\"dst\":\"n_inter\",\"preconditions\":[\"contact_present\",\"agent_approaching_object\"],\"effects\":[\"object_moving_with_agent\",\"object_approaching_goal\"],\"hypothesized_type\":\"forward\",\"source_transition_pairs\":[{\"from_cluster_id\":3,\"to_cluster_id\":5}],\"evidence_segment_ids\":[\"formal_u2_family_000_r00_s01\"],\"unknown_conditions\":[\"exact threshold for stable contact establishment\"],\"cost_measurement_needed\":true,\"status\":\"hypothesized\"},{\"id\":\"e2\",\"src\":\"n_inter\",\"dst\":\"n_success\",\"preconditions\":[\"object_approaching_goal\",\"contact_present\"],\"effects\":[\"object_inside_goal\",\"stable_goal_occupancy\"],\"hypothesized_type\":\"forward\",\"source_transition_pairs\":[{\"from_cluster_id\":9,\"to_cluster_id\":2}],\"evidence_segment_ids\":[\"formal_u2_family_000_r00_s04\"],\"unknown_conditions\":[\"minimum stable occupancy duration required\"],\"cost_measurement_needed\":true,\"status\":\"hypothesized\"}],\"unresolved_questions\":[{\"question\":\"What is the minimum duration of stable_goal_occupancy required to confirm success?\",\"affected_node_ids\":[\"n_success\"],\"affected_edge_ids\":[\"e2\"],\"evidence_needed\":\"observation of stable_goal_occupancy persisting across multiple timesteps in success_terminal cluster\"}]}",
+        "function_call": null,
+        "reasoning_content_present": true,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788624873,
+  "id": "chatcmpl-826793b6-1da8-92e5-82ce-de9ef395ed9b",
+  "model": "qwen3.7-plus",
+  "usage": {
+    "completion_tokens": 2994,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 2453,
+      "rejected_prediction_tokens": null,
+      "text_tokens": 2994
+    },
+    "prompt_tokens": 30190,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "image_tokens": null,
+      "text_tokens": 30190
+    },
+    "total_tokens": 33184
+  }
+}

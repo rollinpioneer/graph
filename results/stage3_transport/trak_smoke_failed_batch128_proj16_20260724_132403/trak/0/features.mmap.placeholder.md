@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `features.mmap`
+- Original relative path: `results/stage3_transport/trak_smoke_failed_batch128_proj16_20260724_132403/trak/0/features.mmap`
+- File type: `memory_mapped_tensor`
+- Intended use: TRAK/influence intermediate arrays
+- Original size: 65536128 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `results/stage3_transport/trak_smoke_failed_batch128_proj16_20260724_132403/trak/0/features.mmap`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

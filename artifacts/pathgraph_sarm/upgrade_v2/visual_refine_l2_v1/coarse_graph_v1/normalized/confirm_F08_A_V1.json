@@ -1,0 +1,160 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object(blue_cube) -> grasp_object(blue_cube) -> verify_hold(blue_cube)",
+      "canonical_action": "verify_grasp",
+      "dst": "cube_grasped",
+      "expected_effects": [
+        "方块被提起并悬空",
+        "建立稳固抓持状态"
+      ],
+      "id": "grasp_cube",
+      "preconditions": [
+        "蓝色方块可见且未被遮挡",
+        "机械臂可达方块位置"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object(blue_cube, transparent_box)",
+      "canonical_action": "transport_object",
+      "dst": "box_aligned",
+      "expected_effects": [
+        "方块水平移动至盒子上方",
+        "方块与盒子开口对齐"
+      ],
+      "id": "transport_to_box",
+      "preconditions": [
+        "方块处于被抓取状态",
+        "透明盒子位置已知"
+      ],
+      "src": "cube_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object(blue_cube, inside_transparent_box) -> release_object(blue_cube)",
+      "canonical_action": "release_object",
+      "dst": "goal_achieved",
+      "expected_effects": [
+        "方块落入盒内",
+        "机械臂松开方块"
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "方块位于盒子开口正上方",
+        "下方无阻碍物"
+      ],
+      "src": "box_aligned",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation(blue_cube, inside, transparent_box)",
+      "canonical_action": "verify_goal_relation",
+      "dst": "goal_achieved",
+      "expected_effects": [
+        "确认方块在盒子内部",
+        "任务状态更新为完成"
+      ],
+      "id": "verify_final_state",
+      "preconditions": [
+        "释放动作已完成"
+      ],
+      "src": "goal_achieved",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将蓝色方块从桌面当前位置移动并放入透明盒子内部，随后释放抓取，确保方块稳定停留在盒底。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "canonical_state": "target_blocked",
+      "description": "初始场景：蓝色方块和透明盒子均静止在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块位于盒子左侧",
+        "透明盒子开口朝上且内部看似为空"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块与盒子的精确三维坐标及相对距离",
+        "盒子内部是否有不可见障碍物或残留物"
+      ]
+    },
+    {
+      "canonical_state": "object_lifted",
+      "description": "机器人已稳固抓取蓝色方块并将其提起",
+      "id": "cube_grasped",
+      "observable_conditions": [
+        "机械臂末端执行器闭合",
+        "方块离开桌面表面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否牢固（无滑动风险）",
+        "方块重心是否对齐"
+      ]
+    },
+    {
+      "canonical_state": "object_above_target",
+      "description": "方块被移动至透明盒子开口正上方并对准中心",
+      "id": "box_aligned",
+      "observable_conditions": [
+        "方块投影位于盒子开口范围内",
+        "方块底部高于盒子边缘"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "垂直高度是否足以避免碰撞盒壁",
+        "水平对准精度是否满足落入要求"
+      ]
+    },
+    {
+      "canonical_state": "goal_stability_candidate",
+      "description": "方块已释放并稳定位于透明盒子内部底部",
+      "id": "goal_achieved",
+      "observable_conditions": [
+        "方块不再被夹持",
+        "方块处于盒子轮廓内部"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块是否完全落底而非卡在侧壁",
+        "释放后盒子是否发生位移"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的蓝色立方体",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的开口透明容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取蓝色方块时的摩擦系数是否足以防止滑落",
+    "确认透明盒子边缘高度低于方块当前悬停高度以避免碰撞",
+    "检查盒子内部深度是否大于方块边长以确保能完全容纳",
+    "评估释放瞬间方块下落轨迹是否会撞击盒壁导致弹出"
+  ],
+  "schema_version": "l2r_normalized_source_graph_v1",
+  "source_request_id": "confirm_F08_A_V1"
+}

@@ -1,0 +1,431 @@
+{
+  "devices": [
+    "cuda:0"
+  ],
+  "forbidden_call_count": 0,
+  "host": "dfql",
+  "jax": "0.6.2",
+  "online_learning": false,
+  "optimizer_steps": 0,
+  "precision": {
+    "enable_x64": false,
+    "matmul_precision": "None"
+  },
+  "status": "ZERO_TRAIN_VERIFIED",
+  "tests": [
+    {
+      "details": {
+        "backup_ensemble_before_sample": true,
+        "distillation_target_stop_gradient": true,
+        "ema_arrays_only": true,
+        "endpoint_clip_before_gradient": true,
+        "integral_atol": 1e-06,
+        "noise_sum": 8
+      },
+      "seconds": 2.2563092708587646,
+      "status": "PASS",
+      "test": "Z2_Z3_Z4_Z5_Z6_synthetic_fixtures"
+    },
+    {
+      "details": {
+        "current_state_vabc_preserved": true,
+        "dfql_multistep": true,
+        "next_state_value": true,
+        "source_mean_order": true
+      },
+      "seconds": 0.3606224060058594,
+      "status": "PASS",
+      "test": "Z3_host_action_and_state_sources"
+    },
+    {
+      "details": {
+        "atol": 0,
+        "identical_rng": true,
+        "no_floq_params": true,
+        "rtol": 0
+      },
+      "seconds": 69.33592391014099,
+      "status": "PASS",
+      "test": "Z0_humanoidmaze-medium-navigate-singletask-task1-v0"
+    },
+    {
+      "details": {
+        "batch_sha256": "cecd9c0ff13dc2986f54ae159bd334ffcfcd338d23cf3d5c852b27abef7d5fb6",
+        "critic_shape": [
+          2,
+          256
+        ],
+        "device": "cuda:0",
+        "flow_shape": [
+          2,
+          256,
+          1
+        ],
+        "gradient_norms": {
+          "modules_actor_bc_flow": 35.59792431137073,
+          "modules_critic": 279.80737745473033,
+          "modules_floq": 318.27369876834234,
+          "modules_target_floq": 0.0
+        },
+        "loss": 425.2415466308594
+      },
+      "seconds": 32.9468834400177,
+      "status": "PASS",
+      "test": "Z1_humanoidmaze-medium-navigate-singletask-task1-v0_full_loss_and_gradient_JIT"
+    },
+    {
+      "details": {
+        "HL_Gauss_atol": 2e-06,
+        "host_discount": 0.995,
+        "noise_range": [
+          -19.999999999999982,
+          0.0
+        ],
+        "q_support": [
+          -201.99999999999983,
+          1.9999999999999982
+        ],
+        "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+      },
+      "seconds": 0.3813936710357666,
+      "status": "PASS",
+      "test": "Z2_humanoidmaze-medium-navigate-singletask-task1-v0_encoding"
+    },
+    {
+      "details": {
+        "atol": 2e-05,
+        "host_next_action_callback": true,
+        "loss_and_all_parameter_gradients_compared": true,
+        "reference": "AST-extracted pinned FloQAgent.critic_loss",
+        "rtol": 2e-05
+      },
+      "seconds": 25.210097312927246,
+      "status": "PASS",
+      "test": "Z4_humanoidmaze-medium-navigate-singletask-task1-v0_pinned_floq_loss_control"
+    },
+    {
+      "details": {
+        "DFQL BC": {
+          "modules_actor_bc_flow": 35.561684066974664,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "DFQL terminal Q guidance": {
+          "modules_actor_bc_flow": 0.12730631282492372,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "Flow Critic": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 0.0,
+          "modules_floq": 250.86697281260624,
+          "modules_target_floq": 0.0
+        },
+        "Scalar distillation": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 292.4263079943747,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        }
+      },
+      "seconds": 25.051437616348267,
+      "status": "PASS",
+      "test": "Z4_humanoidmaze-medium-navigate-singletask-task1-v0_parameter_gradient_routes"
+    },
+    {
+      "details": {
+        "actor_type": "multi-step tanh velocity",
+        "host_methods_inherited_verbatim": true
+      },
+      "seconds": 1.239776611328125e-05,
+      "status": "PASS",
+      "test": "Z5_humanoidmaze-medium-navigate-singletask-task1-v0_host_actor_preserved"
+    },
+    {
+      "details": {
+        "old_whole_agent_compatible": false,
+        "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_humanoidmaze-medium-navigate-singletask-task1-v0.msgpack",
+        "random_init_only": true,
+        "sha256": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853"
+      },
+      "seconds": 0.5586593151092529,
+      "status": "PASS",
+      "test": "Z7_humanoidmaze-medium-navigate-singletask-task1-v0_new_combination_roundtrip"
+    },
+    {
+      "details": {
+        "final_state_step": 1,
+        "initialized_state_step": 1,
+        "optimizer_steps": 0,
+        "params_rng_optimizer_unchanged": true,
+        "state_sha256_after": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853",
+        "state_sha256_before": "f0d6856111651bf80ce94bd364fabfcd4079f049252015c1964e30c02e620853"
+      },
+      "seconds": 0.44192051887512207,
+      "status": "PASS",
+      "test": "Z8_humanoidmaze-medium-navigate-singletask-task1-v0_zero_update_state_proof"
+    },
+    {
+      "details": {
+        "atol": 0,
+        "identical_rng": true,
+        "no_floq_params": true,
+        "rtol": 0
+      },
+      "seconds": 63.75800395011902,
+      "status": "PASS",
+      "test": "Z0_cube-double-play-singletask-task2-v0"
+    },
+    {
+      "details": {
+        "batch_sha256": "5b043257471a164ae6d663a8d4dfa10253d52d857437e86b822ec56786cf670d",
+        "critic_shape": [
+          2,
+          256
+        ],
+        "device": "cuda:0",
+        "flow_shape": [
+          2,
+          256,
+          1
+        ],
+        "gradient_norms": {
+          "modules_actor_bc_flow": 2.2225286112052594,
+          "modules_critic": 545.824812059455,
+          "modules_floq": 717.3172045528016,
+          "modules_target_floq": 0.0
+        },
+        "loss": 417.9039001464844
+      },
+      "seconds": 29.73028254508972,
+      "status": "PASS",
+      "test": "Z1_cube-double-play-singletask-task2-v0_full_loss_and_gradient_JIT"
+    },
+    {
+      "details": {
+        "HL_Gauss_atol": 2e-06,
+        "host_discount": 0.99,
+        "noise_range": [
+          -19.999999999999982,
+          0.0
+        ],
+        "q_support": [
+          -200.9999999999998,
+          0.9999999999999991
+        ],
+        "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+      },
+      "seconds": 0.3932669162750244,
+      "status": "PASS",
+      "test": "Z2_cube-double-play-singletask-task2-v0_encoding"
+    },
+    {
+      "details": {
+        "atol": 2e-05,
+        "host_next_action_callback": true,
+        "loss_and_all_parameter_gradients_compared": true,
+        "reference": "AST-extracted pinned FloQAgent.critic_loss",
+        "rtol": 2e-05
+      },
+      "seconds": 20.957757711410522,
+      "status": "PASS",
+      "test": "Z4_cube-double-play-singletask-task2-v0_pinned_floq_loss_control"
+    },
+    {
+      "details": {
+        "DFQL BC": {
+          "modules_actor_bc_flow": 1.7902271836901438,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "DFQL terminal Q guidance": {
+          "modules_actor_bc_flow": 0.03607788176229104,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "Flow Critic": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 0.0,
+          "modules_floq": 651.9374437749475,
+          "modules_target_floq": 0.0
+        },
+        "Scalar distillation": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 568.5616422954131,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        }
+      },
+      "seconds": 23.33958673477173,
+      "status": "PASS",
+      "test": "Z4_cube-double-play-singletask-task2-v0_parameter_gradient_routes"
+    },
+    {
+      "details": {
+        "actor_type": "multi-step tanh velocity",
+        "host_methods_inherited_verbatim": true
+      },
+      "seconds": 1.2159347534179688e-05,
+      "status": "PASS",
+      "test": "Z5_cube-double-play-singletask-task2-v0_host_actor_preserved"
+    },
+    {
+      "details": {
+        "old_whole_agent_compatible": false,
+        "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_cube-double-play-singletask-task2-v0.msgpack",
+        "random_init_only": true,
+        "sha256": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55"
+      },
+      "seconds": 0.21324372291564941,
+      "status": "PASS",
+      "test": "Z7_cube-double-play-singletask-task2-v0_new_combination_roundtrip"
+    },
+    {
+      "details": {
+        "final_state_step": 1,
+        "initialized_state_step": 1,
+        "optimizer_steps": 0,
+        "params_rng_optimizer_unchanged": true,
+        "state_sha256_after": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55",
+        "state_sha256_before": "d170930c9ff330055abfacd715c71f8ef59b3b45c30c4e7152f33923c03b1c55"
+      },
+      "seconds": 0.155670166015625,
+      "status": "PASS",
+      "test": "Z8_cube-double-play-singletask-task2-v0_zero_update_state_proof"
+    },
+    {
+      "details": {
+        "atol": 0,
+        "identical_rng": true,
+        "no_floq_params": true,
+        "rtol": 0
+      },
+      "seconds": 58.221184730529785,
+      "status": "PASS",
+      "test": "Z0_puzzle-3x3-play-singletask-task4-v0"
+    },
+    {
+      "details": {
+        "batch_sha256": "c1ea8fc89f08de7d42652ebbd693d6049cef3a7e4928e15687007506d8ff8725",
+        "critic_shape": [
+          2,
+          256
+        ],
+        "device": "cuda:0",
+        "flow_shape": [
+          2,
+          256,
+          1
+        ],
+        "gradient_norms": {
+          "modules_actor_bc_flow": 2.090824117369985,
+          "modules_critic": 3879.112549178045,
+          "modules_floq": 3347.0995345878805,
+          "modules_target_floq": 0.0
+        },
+        "loss": 8125.67578125
+      },
+      "seconds": 29.2858669757843,
+      "status": "PASS",
+      "test": "Z1_puzzle-3x3-play-singletask-task4-v0_full_loss_and_gradient_JIT"
+    },
+    {
+      "details": {
+        "HL_Gauss_atol": 2e-06,
+        "host_discount": 0.99,
+        "noise_range": [
+          -89.99999999999993,
+          0.0
+        ],
+        "q_support": [
+          -900.9999999999992,
+          0.9999999999999991
+        ],
+        "time_encoding_actual": "cos(t), 1 channel; time_embed_dim unused"
+      },
+      "seconds": 0.3992176055908203,
+      "status": "PASS",
+      "test": "Z2_puzzle-3x3-play-singletask-task4-v0_encoding"
+    },
+    {
+      "details": {
+        "atol": 2e-05,
+        "host_next_action_callback": true,
+        "loss_and_all_parameter_gradients_compared": true,
+        "reference": "AST-extracted pinned FloQAgent.critic_loss",
+        "rtol": 2e-05
+      },
+      "seconds": 23.1302387714386,
+      "status": "PASS",
+      "test": "Z4_puzzle-3x3-play-singletask-task4-v0_pinned_floq_loss_control"
+    },
+    {
+      "details": {
+        "DFQL BC": {
+          "modules_actor_bc_flow": 1.5474858642259575,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "DFQL terminal Q guidance": {
+          "modules_actor_bc_flow": 0.15508517656779874,
+          "modules_critic": 0.0,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        },
+        "Flow Critic": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 0.0,
+          "modules_floq": 2578.9127177672567,
+          "modules_target_floq": 0.0
+        },
+        "Scalar distillation": {
+          "modules_actor_bc_flow": 0.0,
+          "modules_critic": 4013.4892305772873,
+          "modules_floq": 0.0,
+          "modules_target_floq": 0.0
+        }
+      },
+      "seconds": 25.046850204467773,
+      "status": "PASS",
+      "test": "Z4_puzzle-3x3-play-singletask-task4-v0_parameter_gradient_routes"
+    },
+    {
+      "details": {
+        "actor_type": "multi-step tanh velocity",
+        "host_methods_inherited_verbatim": true
+      },
+      "seconds": 1.2874603271484375e-05,
+      "status": "PASS",
+      "test": "Z5_puzzle-3x3-play-singletask-task4-v0_host_actor_preserved"
+    },
+    {
+      "details": {
+        "old_whole_agent_compatible": false,
+        "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/tests_zero_train/dfql_puzzle-3x3-play-singletask-task4-v0.msgpack",
+        "random_init_only": true,
+        "sha256": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff"
+      },
+      "seconds": 0.5170369148254395,
+      "status": "PASS",
+      "test": "Z7_puzzle-3x3-play-singletask-task4-v0_new_combination_roundtrip"
+    },
+    {
+      "details": {
+        "final_state_step": 1,
+        "initialized_state_step": 1,
+        "optimizer_steps": 0,
+        "params_rng_optimizer_unchanged": true,
+        "state_sha256_after": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff",
+        "state_sha256_before": "11321a52cf7a69af9a5c99121c4c2209fda3b091e6d6c85c26e7978521b483ff"
+      },
+      "seconds": 0.4253246784210205,
+      "status": "PASS",
+      "test": "Z8_puzzle-3x3-play-singletask-task4-v0_zero_update_state_proof"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "observe_and_verify",
+      "expected_effects": [
+        "获取托盘空位和杯子的相对位置信息"
+      ],
+      "id": "edge_observe",
+      "preconditions": [
+        "场景图像可用"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_cup",
+      "expected_effects": [
+        "机器人持有绿色杯子"
+      ],
+      "id": "edge_grasp",
+      "preconditions": [
+        "目标物体(green_cup)位置已知",
+        "无障碍物阻挡抓取路径"
+      ],
+      "src": "observe_and_verify",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "transport_to_tray",
+      "expected_effects": [
+        "杯子移动到灰色托盘空位上方"
+      ],
+      "id": "edge_transport",
+      "preconditions": [
+        "成功抓取绿色杯子",
+        "verify_hold 通过"
+      ],
+      "src": "grasp_cup",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "release_and_verify",
+      "expected_effects": [
+        "杯子被放置在托盘空位中",
+        "夹爪释放物体"
+      ],
+      "id": "edge_place",
+      "preconditions": [
+        "杯子对准托盘空位",
+        "高度适当"
+      ],
+      "src": "transport_to_tray",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "release_and_verify",
+      "expected_effects": [
+        "确认杯子在托盘内且稳定"
+      ],
+      "id": "edge_verify_goal",
+      "preconditions": [
+        "物体已释放"
+      ],
+      "src": "release_and_verify",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "识别场景中的绿色杯子和灰色托盘，确认托盘上有可用空位，将杯子移动至该空位上方并释放，最后验证放置状态。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景状态，包含绿色杯子和灰色托盘",
+      "id": "start_state",
+      "observable_conditions": [
+        "绿色杯子在桌面上可见",
+        "灰色托盘在桌面上可见"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子的确切重心和抓取点",
+        "托盘空位的具体几何约束"
+      ]
+    },
+    {
+      "description": "观察场景以确认托盘空位及杯子状态",
+      "id": "observe_and_verify",
+      "observable_conditions": [
+        "托盘空位坐标已估算",
+        "杯子未被其他物体遮挡"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "空位是否足够容纳杯子底部"
+      ]
+    },
+    {
+      "description": "执行抓取绿色杯子的动作",
+      "id": "grasp_cup",
+      "observable_conditions": [
+        "机械臂已接近杯子",
+        "夹爪已闭合"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳固无滑动",
+        "抓取过程中是否发生碰撞"
+      ]
+    },
+    {
+      "description": "将杯子运输至托盘空位上方",
+      "id": "transport_to_tray",
+      "observable_conditions": [
+        "杯子位于托盘空位正上方",
+        "高度适合释放"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "运输路径是否完全无碰撞"
+      ]
+    },
+    {
+      "description": "释放杯子并验证其是否稳定位于托盘空位内",
+      "id": "release_and_verify",
+      "observable_conditions": [
+        "夹爪已张开",
+        "杯子静止在托盘上"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子是否完全落入空位而非边缘悬挂"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "绿色的杯子，待操作物体",
+      "id": "green_cup",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "灰色的托盘，目标放置区域",
+      "id": "gray_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "灰色托盘上的空闲位置",
+      "id": "tray_empty_slot",
+      "observability": "partially_observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取绿色杯子时的摩擦力和稳定性",
+    "验证运输过程中杯子不与托盘边缘或其他物体碰撞",
+    "验证释放后杯子是否真正稳定停留在托盘空位内而不倾倒"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

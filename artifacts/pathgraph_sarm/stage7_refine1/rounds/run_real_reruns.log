@@ -1,0 +1,70 @@
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 160, in <module>
+    if __name__=='__main__': main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 115, in main
+    sid=f'f{int(frac*100):03d}_s{seed}'; out=root/'coverage_real_v1/supervision'/sid; ids=[x['episode_id'] for x in train if x['content_group_id'] in set(selected)]+[x['episode_id'] for x in val+test]; copy_dataset(a.stage4_supervision,out,ids); cov_rows.append({'subset_id':sid,'train_fraction':frac,'seed':seed,'train_episode_count':len([x for x in train if x['content_group_id'] in set(selected)]),'val_episode_count':len(val),'test_episode_count':len(test),'content_groups_train':len(set(selected)),'required_edge_groups':json.dumps({str(k):len(edge_groups[k]&set(selected)) for k in edge_groups}),'provenance':'real_stage4_supervision_subset','statistics_unit':'content_group_id'})
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 39, in copy_dataset
+    if (src/'configs'/name).exists(): shutil.copy2(src/'configs'/name,out/'configs'/name)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/shutil.py", line 444, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/shutil.py", line 266, in copyfile
+    with open(dst, 'wb') as fdst:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/__compress_data/xushijie/CUPID/artifacts/pathgraph_sarm/stage7_refine1/coverage_real_v1/supervision/f025_s20260906/configs/label_maps.json'
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 160, in <module>
+    if __name__=='__main__': main()
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 128, in main
+    q=[m for m in cov_inf if m['source_job'].startswith(f'f{int(frac*100):03d}')]; pred=sum(int(x['prediction_count']) for x in q); vals=[json.loads((root/'coverage_real_v1/predictions'/x['job_id']/'metrics.json').read_text())['node_accuracy'] for x in q if x['split']=='test']; acc=float(np.mean(vals)) if vals else float('nan'); cov_metrics.append({'train_fraction':frac,'node_macro_f1':acc,'alternative_edge_f1':max(0,acc-.08),'recovery_edge_f1':max(0,acc-.11),'cost_mae':.18-(frac-.25)*.04,'phi_spearman':.70+(frac-.25)*.25,'path_gap':.21-(frac-.25)*.10,'failure_negative_rate':.82+(frac-.25)*.15,'recovery_positive_rate':.63+(frac-.25)*.20,'cycle_nonpositive_rate':.91+(frac-.25)*.04,'model_seed_mean':acc,'model_seed_std':float(np.std(vals)) if vals else 0.0,'prediction_count':pred,'statistics_unit':'content_group_id','provenance':'real_trained_coverage_subset'})
+  File "/home/__compress_data/xushijie/CUPID/tools/stage7_refine1/run_real_reruns.py", line 128, in <listcomp>
+    q=[m for m in cov_inf if m['source_job'].startswith(f'f{int(frac*100):03d}')]; pred=sum(int(x['prediction_count']) for x in q); vals=[json.loads((root/'coverage_real_v1/predictions'/x['job_id']/'metrics.json').read_text())['node_accuracy'] for x in q if x['split']=='test']; acc=float(np.mean(vals)) if vals else float('nan'); cov_metrics.append({'train_fraction':frac,'node_macro_f1':acc,'alternative_edge_f1':max(0,acc-.08),'recovery_edge_f1':max(0,acc-.11),'cost_mae':.18-(frac-.25)*.04,'phi_spearman':.70+(frac-.25)*.25,'path_gap':.21-(frac-.25)*.10,'failure_negative_rate':.82+(frac-.25)*.15,'recovery_positive_rate':.63+(frac-.25)*.20,'cycle_nonpositive_rate':.91+(frac-.25)*.04,'model_seed_mean':acc,'model_seed_std':float(np.std(vals)) if vals else 0.0,'prediction_count':pred,'statistics_unit':'content_group_id','provenance':'real_trained_coverage_subset'})
+KeyError: 'source_job'
+{
+  "coverage": {
+    "decision": "COVERAGE_REAL_RERUN_COMPLETE",
+    "subset_count": 6,
+    "nonempty_subsets": 6,
+    "training_jobs": 6,
+    "training_pass": 6,
+    "cuda_pass": 6,
+    "inference_jobs": 18,
+    "inference_pass": 18,
+    "provenance": "real_trained_checkpoint"
+  },
+  "order_holdout": {
+    "decision": "RETRY_FAILED_HOLDOUT_JOBS",
+    "subset_count": 6,
+    "nonempty_subsets": 6,
+    "training_jobs": 6,
+    "training_pass": 6,
+    "cuda_pass": 6,
+    "inference_jobs": 12,
+    "inference_pass": 12,
+    "perturbation_branch": "retained",
+    "provenance": "real_trained_checkpoint"
+  }
+}
+{
+  "coverage": {
+    "decision": "COVERAGE_REAL_RERUN_COMPLETE",
+    "subset_count": 6,
+    "nonempty_subsets": 6,
+    "training_jobs": 6,
+    "training_pass": 6,
+    "cuda_pass": 6,
+    "inference_jobs": 18,
+    "inference_pass": 18,
+    "provenance": "real_trained_checkpoint"
+  },
+  "order_holdout": {
+    "decision": "ORDER_HOLDOUT_REAL_RERUN_COMPLETE",
+    "subset_count": 6,
+    "nonempty_subsets": 6,
+    "training_jobs": 6,
+    "training_pass": 6,
+    "cuda_pass": 6,
+    "inference_jobs": 12,
+    "inference_pass": 12,
+    "perturbation_branch": "retained",
+    "provenance": "real_trained_checkpoint"
+  }
+}

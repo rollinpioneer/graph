@@ -1,0 +1,72 @@
+{
+  "action": {
+    "causal_timing": "observations[t] are x_t and previous_action fields contain a_(t-1) that enters x_t",
+    "dimension": 2,
+    "fields": [
+      "action_x",
+      "action_y"
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ]
+  },
+  "boundary_fallback": {
+    "automatic_boundary_supported": false,
+    "disclosure": "explicitly_disclosed_simulator_gold_train_clip",
+    "fallback_required": true
+  },
+  "forbidden_fields": [
+    "gold_event",
+    "gold_mode",
+    "scenario",
+    "future_outcome",
+    "root_family_id",
+    "episode_id"
+  ],
+  "object_roles": {
+    "agent": "controlled two-dimensional pusher",
+    "goal": "fixed target region",
+    "object": "transported object",
+    "obstacle": "fixed obstacle with observable relative geometry"
+  },
+  "objective": "A two-dimensional agent approaches and contacts an object, transports it to the observable goal region, and must account for collision, contact loss, recovery, detour, and stagnation branches.",
+  "schema": "u3_task_contract_v1",
+  "scope": "stochastic_simulator_only",
+  "sensor_fields": [
+    "agent_to_object_position_x",
+    "agent_to_object_position_y",
+    "agent_velocity_x",
+    "agent_velocity_y",
+    "object_to_goal_position_x",
+    "object_to_goal_position_y",
+    "object_velocity_x",
+    "object_velocity_y",
+    "agent_to_obstacle_position_x",
+    "agent_to_obstacle_position_y",
+    "object_to_obstacle_position_x",
+    "object_to_obstacle_position_y",
+    "contact_sensor",
+    "collision_sensor",
+    "object_in_goal_sensor",
+    "previous_action_x",
+    "previous_action_y"
+  ],
+  "success_observable": {
+    "field": "object_in_goal_sensor",
+    "predicate": "object_inside_goal",
+    "stable_variant": "stable_goal_occupancy"
+  },
+  "terminal_failure_observable": {
+    "fields": [
+      "collision_sensor",
+      "object_to_goal_position_x",
+      "object_to_goal_position_y",
+      "object_velocity_x",
+      "object_velocity_y"
+    ],
+    "predicate": "collision_detected_or_stagnation_detected",
+    "unknown_when_unresolved": true
+  },
+  "unknown_handling": "retain unknown conditions and unresolved questions; do not infer hidden state as fact"
+}

@@ -1,0 +1,178 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object",
+      "dst": "approach_cube",
+      "expected_effects": [
+        "机械臂到达蓝色方块抓取位姿"
+      ],
+      "id": "e1_approach",
+      "preconditions": [
+        "蓝色方块位置已知"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "holding_cube",
+      "expected_effects": [
+        "蓝色方块被夹持"
+      ],
+      "id": "e2_grasp",
+      "preconditions": [
+        "末端执行器对准蓝色方块"
+      ],
+      "src": "approach_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "holding_cube",
+      "expected_effects": [
+        "确认抓取稳定，无滑动迹象"
+      ],
+      "id": "e3_verify_hold",
+      "preconditions": [
+        "物体已被夹持"
+      ],
+      "src": "holding_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "cube_in_box",
+      "expected_effects": [
+        "蓝色方块移动至透明盒子上方或内部"
+      ],
+      "id": "e4_transport",
+      "preconditions": [
+        "稳固持有蓝色方块",
+        "透明盒子位置已知"
+      ],
+      "src": "holding_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "末端执行器张开",
+        "蓝色方块留在盒子内"
+      ],
+      "id": "e5_place_release",
+      "preconditions": [
+        "蓝色方块位于透明盒子内部合适位置"
+      ],
+      "src": "cube_in_box",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "goal_state",
+      "expected_effects": [
+        "视觉确认蓝色方块在透明盒子内"
+      ],
+      "id": "e6_verify_goal",
+      "preconditions": [
+        "释放动作已完成"
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "识别场景中的蓝色方块和透明盒子，将蓝色方块抓取并移动至透明盒子内部，然后释放方块，最后验证方块是否成功位于盒子内。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景状态，包含蓝色方块和透明盒子",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块在桌面上可见",
+        "透明盒子在桌面上可见"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块的具体重量和摩擦系数",
+        "透明盒子的开口方向及内部空间大小"
+      ]
+    },
+    {
+      "description": "机器人接近蓝色方块准备抓取",
+      "id": "approach_cube",
+      "observable_conditions": [
+        "机械臂末端执行器位于蓝色方块上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取路径是否存在不可见的障碍物"
+      ]
+    },
+    {
+      "description": "机器人已抓取并稳固持有蓝色方块",
+      "id": "holding_cube",
+      "observable_conditions": [
+        "蓝色方块被夹持在末端执行器中"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取的稳定性（是否打滑）"
+      ]
+    },
+    {
+      "description": "蓝色方块被放置于透明盒子内部",
+      "id": "cube_in_box",
+      "observable_conditions": [
+        "蓝色方块位于透明盒子的边界范围内"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块是否与盒子底部接触稳定"
+      ]
+    },
+    {
+      "description": "任务完成，蓝色方块在透明盒子内且已被释放",
+      "id": "goal_state",
+      "observable_conditions": [
+        "机械臂已离开蓝色方块",
+        "蓝色方块静止在透明盒子内"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "objects": [
+    {
+      "description": "蓝色的立方体对象",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "透明的容器或盒子",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证蓝色方块是否能通过透明盒子的开口",
+    "验证抓取力度是否足以提起蓝色方块但不造成损坏",
+    "验证放置时蓝色方块是否会从盒子中弹出或倾倒"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,32 @@
+{
+  "comparison": {
+    "method_a": "pathgraph_reward_v1_locked",
+    "method_b": "linear_sarm_equiv",
+    "new_policy_seeds": [
+      20260912,
+      20260913,
+      20260914
+    ],
+    "old_policy_seeds": [
+      20260909,
+      20260910,
+      20260911
+    ]
+  },
+  "go_stage7": {
+    "combined_fixed_order_drop_max": 0.05,
+    "combined_graph_task_success_gain_min": 0.05,
+    "new_seed_count": 3,
+    "new_seed_improved_count_min": 2,
+    "paired_evaluation": true,
+    "reward_retuned_after_test": false,
+    "structure_specific_any": {
+      "combined_long_horizon_completion_gain_min": 0.05,
+      "combined_recovery_success_gain_min": 0.08,
+      "combined_worst_order_success_gain_min": 0.08
+    }
+  },
+  "infrastructure_failure_decision": "REPAIR_REFINE1_INFRA",
+  "locked_before_new_training": true,
+  "terminal_failure_decision": "NARROW_TO_REWARD_ONLY"
+}

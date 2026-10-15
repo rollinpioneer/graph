@@ -1,0 +1,22 @@
+base_model:
+  input_dim: 14
+  hidden_dim: 64
+  selection_split: val
+  test_for_selection: false
+variants:
+- id: history_1_default
+  history_steps: 1
+  granularity: default
+- id: history_8_default
+  history_steps: 8
+  granularity: default
+- id: history_32_coarse
+  history_steps: 32
+  granularity: coarse
+- id: history_32_fine
+  history_steps: 32
+  granularity: fine_progress_split
+seeds:
+- 20260906
+- 20260907
+- 20260908

@@ -1,0 +1,43 @@
+project:
+  repo_root: /home/xushijie/CUPID
+  stage1_root: artifacts/pathgraph_sarm/stage1
+  stage2_root: artifacts/pathgraph_sarm/stage2
+  stage3_root: artifacts/pathgraph_sarm/stage3
+inputs:
+  m1_root: artifacts/pathgraph_sarm/stage2/m1_freeze_v1
+  stage2_collection_root: artifacts/pathgraph_sarm/stage2/rounds/stage2_2_targeted_collection/jobs/synthetic
+  stage1_episode_manifest: artifacts/pathgraph_sarm/stage1/1.3_dataset_v0.1/episode_manifest.jsonl
+frozen_tasks:
+  graph_tasks: [transport_recovery, transport_dual_order]
+runtime_adapter:
+  output_version: m1_runtime_adapter_v1
+  preserve_m1_read_only: true
+  statistics_unit: content_group_id
+features:
+  numeric_fields: [eef_pos, object_pos, target_pos, gripper_state, action]
+  current_state_flags: [subgoal_A_done, subgoal_B_done]
+  forbidden_fields: [success, scenario, controller_source, episode_id, outcome]
+  history_steps: 32
+linearizations:
+  dual_order_A_first: [start, A_done, B_done, success]
+  dual_order_B_first: [start, B_done, A_done, success]
+  transport_recovery_chain: [start, grasped, in_transit, placed, success]
+training:
+  seeds: [20260903, 20260904, 20260905]
+  batch_size: 128
+  epochs: 80
+  learning_rate: 0.0003
+  hidden_dim: 128
+  gru_layers: 1
+  dropout: 0.1
+diagnostics:
+  bootstrap_resamples: 2000
+  ci: 0.95
+thresholds:
+  control_monotonicity_min: 0.90
+  alternative_legal_negative_rate_min: 0.20
+  normalized_path_score_gap_min: 0.10
+  recovery_positive_rate_max_for_failure_evidence: 0.70
+  recovery_rank_error_min: 0.20
+  cycle_positive_rate_min: 0.10
+  required_independent_failure_signatures: 2

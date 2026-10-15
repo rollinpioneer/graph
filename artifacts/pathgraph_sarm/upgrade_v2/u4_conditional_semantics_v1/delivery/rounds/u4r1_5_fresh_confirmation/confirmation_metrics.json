@@ -1,0 +1,100 @@
+{
+  "confirmation_frozen": true,
+  "graphs": [
+    {
+      "eligible_family_count": 36,
+      "failure_event_recall_macro": 0.016862696626314486,
+      "false_terminal_claim_rate_macro": 0.8333333333333334,
+      "graph_id": "G0_raw_topology",
+      "label_origin": "simulator_info.events_and_explicit_terminal_reason",
+      "occurrence_count": 1540,
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/u4_conditional_semantics_v1/conditional_graphs_v1/G0_raw_topology.json",
+      "recovery_achieved_recall_macro": 0.01565206085685519,
+      "transition_coverage_macro": 1.0,
+      "typed_occurrence_coverage_macro": 0.5850339247449574
+    },
+    {
+      "eligible_family_count": 36,
+      "failure_event_recall_macro": 0.016862696626314486,
+      "false_terminal_claim_rate_macro": 0.8333333333333334,
+      "graph_id": "G1_semantic_only",
+      "label_origin": "simulator_info.events_and_explicit_terminal_reason",
+      "occurrence_count": 1540,
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/u4_conditional_semantics_v1/conditional_graphs_v1/G1_semantic_only.json",
+      "recovery_achieved_recall_macro": 0.01565206085685519,
+      "transition_coverage_macro": 1.0,
+      "typed_occurrence_coverage_macro": 0.5850339247449574
+    },
+    {
+      "eligible_family_count": 36,
+      "failure_event_recall_macro": 0.016862696626314486,
+      "false_terminal_claim_rate_macro": 0.8333333333333334,
+      "graph_id": "G2_conditional_multigraph",
+      "label_origin": "simulator_info.events_and_explicit_terminal_reason",
+      "occurrence_count": 1540,
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/u4_conditional_semantics_v1/conditional_graphs_v1/G2_conditional_multigraph.json",
+      "recovery_achieved_recall_macro": 0.01565206085685519,
+      "transition_coverage_macro": 1.0,
+      "typed_occurrence_coverage_macro": 0.5850339247449574
+    }
+  ],
+  "horizon_is_censored": true,
+  "paired_effects": [
+    {
+      "bootstrap_resamples": 5000,
+      "bootstrap_unit": "root_family_id",
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "comparison": "G2_minus_G1",
+      "effect": 0.0,
+      "metric": "transition_coverage_macro",
+      "paired_family_count": 36,
+      "status": "estimable"
+    },
+    {
+      "bootstrap_resamples": 5000,
+      "bootstrap_unit": "root_family_id",
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "comparison": "G2_minus_G1",
+      "effect": 0.0,
+      "metric": "typed_occurrence_coverage_macro",
+      "paired_family_count": 36,
+      "status": "estimable"
+    },
+    {
+      "bootstrap_resamples": 5000,
+      "bootstrap_unit": "root_family_id",
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "comparison": "G2_minus_G1",
+      "effect": 0.0,
+      "metric": "failure_event_recall_macro",
+      "paired_family_count": 36,
+      "status": "estimable"
+    },
+    {
+      "bootstrap_resamples": 5000,
+      "bootstrap_unit": "root_family_id",
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "comparison": "G2_minus_G1",
+      "effect": 0.0,
+      "metric": "recovery_achieved_recall_macro",
+      "paired_family_count": 36,
+      "status": "estimable"
+    },
+    {
+      "bootstrap_resamples": 5000,
+      "bootstrap_unit": "root_family_id",
+      "ci_high": 0.0,
+      "ci_low": 0.0,
+      "comparison": "G2_minus_G1",
+      "effect": 0.0,
+      "metric": "false_terminal_claim_rate_macro",
+      "paired_family_count": 36,
+      "status": "estimable"
+    }
+  ],
+  "schema": "u4r1_confirmation_metrics_v1"
+}

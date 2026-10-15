@@ -1,0 +1,95 @@
+{
+  "claims": {
+    "dynamic_mujoco_primitive_evidence": true,
+    "new_task_generalization": false,
+    "physical_robot": false,
+    "policy_gain": false,
+    "reward_gain": false
+  },
+  "created_at": "2026-09-08T02:38:16.495451+00:00",
+  "dynamic_benchmark": {
+    "active_objects": true,
+    "kind": "dynamic MuJoCo primitive tabletop refinement benchmark",
+    "real_robot": false
+  },
+  "execution": {
+    "api_calls": 0,
+    "api_key_read": false,
+    "training_jobs": 0
+  },
+  "graph": {
+    "accepted_development_edits": 5,
+    "accepted_edits": 5,
+    "fresh_confirmation_metrics": {
+      "ambiguous_edge_rate": "0.0",
+      "branch_accuracy": "0.375",
+      "failure_denominator": "24",
+      "failure_recall": "0.0",
+      "false_ready_rate": "0.0",
+      "families": "24",
+      "goal_precision": "1.0",
+      "goal_recall": "0.8602150537634409",
+      "graph_completion_coverage": "0.7700000000000012",
+      "graph_id": "G1_predicate_bound",
+      "recovery_denominator": "24",
+      "recovery_recall": "0.0",
+      "rollouts": "96",
+      "second_view_query_rate": "0.0",
+      "state_readiness_accuracy": "0.8645833333333334",
+      "transition_effect_precision": "0.8645833333333334",
+      "transition_precondition_precision": "0.375",
+      "unknown_rate": "0.08502569628647222",
+      "unnecessary_manipulation_rate": "0.0"
+    },
+    "selected_graph_id": "G1_predicate_bound",
+    "selected_graph_sha256": "eab883ea97895e12ecbb37338d38c8526b16c650dfffd376a4084f3752dab024",
+    "selected_graph_uses_development_edits": false
+  },
+  "l3_interface": {
+    "allowed_if_go": [
+      "learn q/D/remaining cost on the frozen graph",
+      "construct potential reward from frozen state transitions",
+      "compare coarse, predicate-bound, and refined graph rewards"
+    ],
+    "entry_allowed": false,
+    "not_allowed": [
+      "start policy training before reward validation",
+      "claim physical robot success",
+      "claim policy gain",
+      "claim new-task generalization"
+    ],
+    "online_observation_schema": [
+      "front_rgb",
+      "action_history",
+      "gripper_command",
+      "contact_sensor"
+    ]
+  },
+  "predicate_interface": {
+    "metrics": {
+      "baseline": "B3_single_view_temporal_contact_action",
+      "failure_f1": "1.0",
+      "false_ready_rate": "0.0",
+      "goal_f1": "0.9491525423728813",
+      "goal_precision": "1.0",
+      "goal_recall": "0.9032258064516129",
+      "recovery_f1": "1.0",
+      "rollouts": "64",
+      "stable_hold_f1": "1.0",
+      "unknown_rate": "0.08640524346343317"
+    },
+    "threshold_lock_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/observable_predicates_v1/locks/predicate_thresholds.json",
+    "threshold_lock_sha256": "f1af7101121d62d4739e4a735b79a0fb9d3b080934089ff7f705540c1956d570"
+  },
+  "reasons": [
+    "failure and recovery recalls are both below 0.40 (0.0, 0.0)"
+  ],
+  "schema": "pathgraph_l2r_l3_or_stop_handoff_v1",
+  "source": {
+    "coarse_graph_source": "V1",
+    "l1v_decision": "L1V_READY_FOR_REFINEMENT_SINGLE_VIEW",
+    "source_candidates": 18,
+    "source_lock_sha256": "9fb5c2e9c04f00cd29718a5bcde582336cb4446814bf84c348d288a7bc14da85"
+  },
+  "status": "STOP_VISUAL_REFINEMENT"
+}

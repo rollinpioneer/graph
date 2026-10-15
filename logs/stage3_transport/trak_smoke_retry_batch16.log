@@ -1,0 +1,78 @@
+/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/llvmlite/binding/ffi.py:175: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+numcodec 'imagecodecs_aec' already registered
+numcodec 'imagecodecs_apng' already registered
+numcodec 'imagecodecs_avif' already registered
+numcodec 'imagecodecs_bitorder' already registered
+numcodec 'imagecodecs_bitshuffle' already registered
+numcodec 'imagecodecs_blosc' already registered
+numcodec 'imagecodecs_blosc2' already registered
+numcodec 'imagecodecs_brotli' already registered
+numcodec 'imagecodecs_byteshuffle' already registered
+numcodec 'imagecodecs_bz2' already registered
+numcodec 'imagecodecs_cms' already registered
+numcodec 'imagecodecs_deflate' already registered
+numcodec 'imagecodecs_delta' already registered
+numcodec 'imagecodecs_float24' already registered
+numcodec 'imagecodecs_floatpred' already registered
+numcodec 'imagecodecs_gif' already registered
+numcodec 'imagecodecs_heif' already registered
+numcodec 'imagecodecs_jetraw' already registered
+numcodec 'imagecodecs_jpeg' already registered
+numcodec 'imagecodecs_jpeg2k' already registered
+numcodec 'imagecodecs_jpegls' already registered
+numcodec 'imagecodecs_jpegxl' already registered
+numcodec 'imagecodecs_jpegxr' already registered
+numcodec 'imagecodecs_lerc' already registered
+numcodec 'imagecodecs_ljpeg' already registered
+numcodec 'imagecodecs_lz4' already registered
+numcodec 'imagecodecs_lz4f' already registered
+numcodec 'imagecodecs_lzf' already registered
+numcodec 'imagecodecs_lzma' already registered
+numcodec 'imagecodecs_lzw' already registered
+numcodec 'imagecodecs_packbits' already registered
+numcodec 'imagecodecs_pglz' already registered
+numcodec 'imagecodecs_png' already registered
+numcodec 'imagecodecs_qoi' already registered
+numcodec 'imagecodecs_rcomp' already registered
+numcodec 'imagecodecs_snappy' already registered
+numcodec 'imagecodecs_spng' already registered
+numcodec 'imagecodecs_tiff' already registered
+numcodec 'imagecodecs_webp' already registered
+numcodec 'imagecodecs_xor' already registered
+numcodec 'imagecodecs_zfp' already registered
+numcodec 'imagecodecs_zlib' already registered
+numcodec 'imagecodecs_zlibng' already registered
+numcodec 'imagecodecs_zopfli' already registered
+numcodec 'imagecodecs_zstd' already registered
+Diffusion params: 1.718120e+07
+Loading hdf5 to ReplayBuffer:   0%|          | 0/300 [00:00<?, ?it/s]Loading hdf5 to ReplayBuffer:  11%|█         | 32/300 [00:00<00:00, 316.09it/s]Loading hdf5 to ReplayBuffer:  22%|██▏       | 65/300 [00:00<00:00, 319.41it/s]Loading hdf5 to ReplayBuffer:  32%|███▏      | 97/300 [00:00<00:00, 319.19it/s]Loading hdf5 to ReplayBuffer:  43%|████▎     | 129/300 [00:00<00:00, 311.72it/s]Loading hdf5 to ReplayBuffer:  54%|█████▎    | 161/300 [00:00<00:00, 280.48it/s]Loading hdf5 to ReplayBuffer:  64%|██████▍   | 192/300 [00:00<00:00, 289.21it/s]Loading hdf5 to ReplayBuffer:  74%|███████▍  | 222/300 [00:00<00:00, 249.57it/s]Loading hdf5 to ReplayBuffer:  84%|████████▍ | 253/300 [00:00<00:00, 265.18it/s]Loading hdf5 to ReplayBuffer:  96%|█████████▌| 288/300 [00:01<00:00, 287.07it/s]Loading hdf5 to ReplayBuffer: 100%|██████████| 300/300 [00:01<00:00, 289.02it/s]
+ERROR:TRAK:Could not use CudaProjector.
+Reason: No module named 'fast_jl'
+ERROR:TRAK:Defaulting to BasicProjector.
+INFO:STORE:No existing model IDs in /home/__compress_data/xushijie/CUPID/results/stage3_transport/trak_smoke/trak.
+INFO:STORE:No existing TRAK scores in /home/__compress_data/xushijie/CUPID/results/stage3_transport/trak_smoke/trak.
+Traceback (most recent call last):
+  File "/home/xushijie/CUPID/tools/stage3_transport_trak_smoke.py", line 180, in <module>
+    raise SystemExit(main())
+  File "/home/xushijie/CUPID/tools/stage3_transport_trak_smoke.py", line 128, in main
+    timed(result, "featurize_source", featurize)
+  File "/home/xushijie/CUPID/tools/stage3_transport_trak_smoke.py", line 33, in timed
+    function()
+  File "/home/xushijie/CUPID/tools/stage3_transport_trak_smoke.py", line 125, in featurize
+    traker.featurize(add_timesteps(batch), num_samples=count)
+  File "/home/__compress_data/xushijie/CUPID/repo/third_party/trak/trak/traker.py", line 424, in featurize
+    grads = self.gradient_computer.compute_per_sample_grad(batch=batch)
+  File "/home/xushijie/CUPID/repo/diffusion_policy/data_attribution/gradient_computers.py", line 121, in compute_per_sample_grad
+    g=functional_vmap(
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/functorch/_src/vmap.py", line 365, in wrapped
+    batched_outputs = func(*batched_inputs, **kwargs)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/functorch/_src/eager_transforms.py", line 1205, in wrapper
+    results = grad_and_value(func, argnums, has_aux=has_aux)(*args, **kwargs)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/functorch/_src/eager_transforms.py", line 1097, in wrapper
+    flat_grad_input = _autograd_grad(flat_outputs, flat_diff_args, create_graph=True)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/functorch/_src/eager_transforms.py", line 115, in _autograd_grad
+    grad_inputs = torch.autograd.grad(diff_outputs, inputs, grad_outputs,
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/torch/autograd/__init__.py", line 276, in grad
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: CUDA out of memory. Tried to allocate 640.00 MiB (GPU 0; 39.49 GiB total capacity; 20.29 GiB already allocated; 372.56 MiB free; 20.34 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

@@ -1,0 +1,26 @@
+# Run Manifest
+
+- schema: `pathgraph_l2r_run_manifest_v1`
+- round_id: `l2r_1_coarse_graph_canonicalization`
+- purpose: `Canonicalize 18 V1 coarse graphs without dynamic-result tuning`
+- status: `V1_COARSE_GRAPH_CANONICALIZED`
+- start_time: `2026-09-08T08:26:23+08:00`
+- end_time: `2026-09-08T08:26:24+08:00`
+- recorded_at: `2026-09-08T00:26:24.480071+00:00`
+- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- python: `/home/xushijie/.conda/envs/lerobot/bin/python`
+- commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_1_coarse_graph_canonicalization/commands/executed_commands.txt`
+- commands_sha256: `05fb553ebafa3f9d87de9581504ee5fbb39bc869e53456fb1c76434c60164273`
+- gpu_used: `False`
+- gpu_ids: `none`
+- jobs_run: `2`
+- jobs_failed: `0`
+- new_api_calls: `0`
+- new_training_jobs: `0`
+- api_key_read: `False`
+- scientific_scope: `dynamic MuJoCo primitive tabletop refinement benchmark`
+- actual_denominators:
+  - source_candidates: `18`
+  - mapping_evidence_records: `153`
+  - api_calls: `0`
+  - training_jobs: `0`

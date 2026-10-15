@@ -1,0 +1,41 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"u3_candidate_graph_v1\",\n  \"graph_id\": \"fallback_min_graph_001\",\n  \"scope\": \"stochastic_simulator_only\",\n  \"nodes\": [\n    {\n      \"id\": \"n_start\",\n      \"description\": \"Initial state before any contact or transport events are observed.\",\n      \"role\": \"start\",\n      \"observable_predicates\": [\n        \"progress_unknown\"\n      ],\n      \"unknown_conditions\": [\n        \"Whether contact is present at initialization.\"\n      ],\n      \"source_cluster_ids\": [\n        10\n      ],\n      \"evidence_segment_ids\": [\n        \"formal_u2_family_005_r00_s00\"\n      ],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n_intermediate\",\n      \"description\": \"Intermediate state where contact is present and progress is unknown.\",\n      \"role\": \"intermediate\",\n      \"observable_predicates\": [\n        \"contact_present\",\n        \"progress_unknown\"\n      ],\n      \"unknown_conditions\": [\n        \"Whether transport is active or object is moving with agent.\"\n      ],\n      \"source_cluster_ids\": [\n        3\n      ],\n      \"evidence_segment_ids\": [\n        \"formal_u2_family_000_r00_s00\"\n      ],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n_success\",\n      \"description\": \"Terminal success state where object is inside the goal region.\",\n      \"role\": \"success_terminal\",\n      \"observable_predicates\": [\n        \"object_inside_goal\"\n      ],\n      \"unknown_conditions\": [\n        \"Whether stable_goal_occupancy is achieved.\"\n      ],\n      \"source_cluster_ids\": [\n        2\n      ],\n      \"evidence_segment_ids\": [\n        \"formal_u2_family_080_r04_s00\"\n      ],\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"e_start_to_intermediate\",\n      \"src\": \"n_start\",\n      \"dst\": \"n_intermediate\",\n      \"preconditions\": [\n        \"contact_present\"\n      ],\n      \"effects\": [\n        \"progress_unknown\"\n      ],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\n          \"from_cluster_id\": 10,\n          \"to_cluster_id\": 3\n        }\n      ],\n      \"evidence_segment_ids\": [\n        \"formal_u2_family_005_r00_s00\"\n      ],\n      \"unknown_conditions\": [\n        \"Whether contact is established before transport begins.\"\n      ],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"e_intermediate_to_success\",\n      \"src\": \"n_intermediate\",\n      \"dst\": \"n_success\",\n      \"preconditions\": [\n        \"contact_present\"\n      ],\n      \"effects\": [\n        \"object_inside_goal\"\n      ],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\n          \"from_cluster_id\": 3,\n          \"to_cluster_id\": 2\n        }\n      ],\n      \"evidence_segment_ids\": [\n        \"formal_u2_family_000_r00_s00\"\n      ],\n      \"unknown_conditions\": [\n        \"Whether object reaches goal without collision or stagnation.\"\n      ],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"unresolved_questions\": [\n    {\n      \"question\": \"What conditions determine transition from contact_present to object_inside_goal?\",\n      \"affected_node_ids\": [\n        \"n_intermediate\",\n        \"n_success\"\n      ],\n      \"affected_edge_ids\": [\n        \"e_intermediate_to_success\"\n      ],\n      \"evidence_needed\": \"Observations of object_to_goal_position_x, object_to_goal_position_y, and object_in_goal_sensor during transport.\"\n    }\n  ]\n}",
+        "function_call": null,
+        "reasoning_content_present": true,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788624873,
+  "id": "chatcmpl-172422c5-287a-9576-bd23-5c9cf13a9b65",
+  "model": "qwen3.7-plus",
+  "usage": {
+    "completion_tokens": 5272,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 4306,
+      "rejected_prediction_tokens": null,
+      "text_tokens": 5272
+    },
+    "prompt_tokens": 30190,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "image_tokens": null,
+      "text_tokens": 30190
+    },
+    "total_tokens": 35462
+  }
+}

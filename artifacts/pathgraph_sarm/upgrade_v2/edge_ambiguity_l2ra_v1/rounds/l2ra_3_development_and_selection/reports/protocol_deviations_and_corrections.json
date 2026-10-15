@@ -1,0 +1,24 @@
+{
+  "schema": "pathgraph_l2ra_protocol_corrections_v1",
+  "candidate_grid_changed": false,
+  "confirmation_data_seen": false,
+  "corrections": [
+    {
+      "id": "event_contract_materialization",
+      "effect_on_selection": "none",
+      "record": "The causal event definitions were implemented before probe collection. Their explicit JSON contract and hash lock were materialized during the same unsealed development run, before selection and without confirmation access."
+    },
+    {
+      "id": "commanded_release_alignment",
+      "effect_on_selection": "probe records and metrics recomputed; no candidate grid or family/seed changed",
+      "record": "The commanded-release reference was aligned to require a prior closed command. Probe records were rebuilt from the same locked rollout files, families, and seeds; no dynamic rollout was resampled."
+    },
+    {
+      "id": "deterministic_content_duplicates",
+      "effect_on_selection": "independent unit remains root_family_id",
+      "record": "The 96 rollout records form 19 unique predicate-content groups. Repeated streams are reported as correlated deterministic content and are not claimed as independent rollout evidence."
+    }
+  ],
+  "new_dynamic_rollouts_resampled_for_correction": 0,
+  "selection_open_when_corrected": true
+}

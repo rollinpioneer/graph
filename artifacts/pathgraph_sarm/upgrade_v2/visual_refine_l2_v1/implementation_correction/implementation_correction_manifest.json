@@ -1,0 +1,94 @@
+{
+  "archived_files": [
+    {
+      "relative_path": "pre_correction/confirmation/confirmation_metrics.csv",
+      "sha256": "c54b8cd33d181ca489b70394b64d8fa84a62d2c1267100c1167c9227fdd2cc1a",
+      "size_bytes": 688
+    },
+    {
+      "relative_path": "pre_correction/confirmation/fresh_confirmation_report.md",
+      "sha256": "1b83037f18ca4222021b6516da819739433eba31580377b6367029b999fb4885",
+      "size_bytes": 240
+    },
+    {
+      "relative_path": "pre_correction/confirmation/metrics_by_family.csv",
+      "sha256": "3565ca9fa9fb7b37a11424af91c98d14b04e43da774e286ba46d29cdefaaf47a",
+      "size_bytes": 6503
+    },
+    {
+      "relative_path": "pre_correction/confirmation/metrics_by_scenario.csv",
+      "sha256": "f6d963fd96bae5f1ff5d627e2946e0e9133761796d7f7f00c40a1b09ae000614",
+      "size_bytes": 2455
+    },
+    {
+      "relative_path": "pre_correction/confirmation/refined_minus_baselines.csv",
+      "sha256": "e0d2e482ef083d5ae99ec1fed38473c198b2e4802cab58ba5322db9d7bccef28",
+      "size_bytes": 266
+    },
+    {
+      "relative_path": "pre_correction/final/l2r_final_report.md",
+      "sha256": "58c91a858d8f574f5436d020a391899095cdbd172b3d1f0bd0b1a5e7fb1dd058",
+      "size_bytes": 1004
+    },
+    {
+      "relative_path": "pre_correction/final/l3_or_stop_handoff.json",
+      "sha256": "d8497b2284dd320feb31f94c0e739649558c4042d1fd353e2d2dfae51e788ad4",
+      "size_bytes": 3257
+    },
+    {
+      "relative_path": "pre_correction/final/verification_summary.json",
+      "sha256": "6d363f1a114877f02b61a5fcc78d13df5c5e9a629dd3eaa30047cf522f3f8b19",
+      "size_bytes": 2279
+    },
+    {
+      "relative_path": "pre_correction/graphs/G0_coarse_direct.json",
+      "sha256": "7f20e91a7c44af079f5c3b19827b3141a5494c674688397f49685cc35326c4f9",
+      "size_bytes": 4687
+    },
+    {
+      "relative_path": "pre_correction/graphs/G1_predicate_bound.json",
+      "sha256": "eab883ea97895e12ecbb37338d38c8526b16c650dfffd376a4084f3752dab024",
+      "size_bytes": 2456
+    },
+    {
+      "relative_path": "pre_correction/graphs/G2_evidence_refined.json",
+      "sha256": "8c18f1a65c758c94edcd800ff2ae196ac879f1b6fbad7c36a0ab32823f0fd1ed",
+      "size_bytes": 2802
+    },
+    {
+      "relative_path": "pre_correction/graphs/G3_active_second_view.json",
+      "sha256": "43ec1191e341f79616d26386b319f9a081e3fc83ba39935bbb470d0f79e3e5ad",
+      "size_bytes": 2912
+    },
+    {
+      "relative_path": "pre_correction/selection_lock.json",
+      "sha256": "671fedd359007b8373b7ab691de7fc17a7e737ed83081823d24b2f111aa2daee",
+      "size_bytes": 3509
+    }
+  ],
+  "corrected_development_selected_graph": "G2_evidence_refined",
+  "corrected_retained_graph": "G1_predicate_bound",
+  "corrected_scientific_status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
+  "defects_corrected": [
+    "actions did not preserve low-level control sequences",
+    "graph execution used capability heuristics instead of frozen edge conditions",
+    "graph completion coverage used constants rather than frame-aligned evidence",
+    "accepted G2 edits did not always materialize as graph nodes or edges",
+    "active-view GO did not require 50 percent unknown resolution",
+    "documented simulator jitter arguments were parsed but ignored"
+  ],
+  "entry_commit": "75bca93877e3de02c398bc72447681d8ea7ea8aa",
+  "fresh_reexecution": {
+    "camera_changed_after_first_open": false,
+    "families_regenerated": false,
+    "fresh_metric_driven_graph_edits": false,
+    "reason": "The first confirmation used an invalid executor and was archived; the corrected deterministic pipeline was rerun on the unchanged frozen family set.",
+    "rollouts_regenerated": false,
+    "thresholds_changed_after_first_open": false
+  },
+  "pre_correction_implementation_commit": "c2705b2bf95d4a8ca5756a2368848e8259ad6daf",
+  "pre_correction_scientific_status": "STOP_VISUAL_REFINEMENT",
+  "recorded_at": "2026-09-08T04:00:38.040245+00:00",
+  "schema": "pathgraph_l2r_implementation_correction_v1",
+  "status": "CORRECTED_AND_RECOMPUTED"
+}

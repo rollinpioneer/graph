@@ -1,0 +1,10 @@
+{
+  "low_head": "head height <0.8m for >=40 steps, after >=20 steps with head >1.2m and torso zz >0.6; posture proxy, not official fall",
+  "stall": "For each trailing 200-step position window, bounding-box diagonal <1m; flag if this condition persists for >=100 consecutive window endpoints. Not a unique causal onset.",
+  "near_goal": "Minimum horizontal distance <=2m; actual success tolerance is <=0.5m",
+  "final_low_head": "At least 60% of final400 state samples have head height <0.8m",
+  "final_wall": "At least25% of final400 control steps end with a wall contact; not substep-complete",
+  "reversal": "At least4 immediate returns in raw grid-cell transition sequence; includes boundary jitter, not a verified wrong turn",
+  "path_separation": "Euclidean separation >2m for >=40 steps between time-aligned trajectories; can reflect speed difference",
+  "counts": "Overlapping descriptive labels within selected cases, never population prevalence"
+}

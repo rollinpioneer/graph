@@ -1,0 +1,17 @@
+{
+  "bootstrap_resamples": 5000,
+  "independent_unit": "root_family_id",
+  "legacy_metrics": "frozen summarize_executions denominator and branch semantics",
+  "new_metrics": {
+    "decision_delay": "observation steps and seconds from first decidable observation to first correct action",
+    "effective_conflict_rollout_rate": "rollouts with any effective guard conflict / all rollouts",
+    "event_window_conflict_rate": "event windows with effective conflict / evaluable windows",
+    "false_emergency_rate": "negative opportunities with retry/recover / negative opportunities",
+    "held_loss_type_recall": "correct recover / evaluable held-loss events",
+    "missed_grasp_type_recall": "correct retry / evaluable missed-grasp events",
+    "raw_rule_overlap_rollout_rate": "rollouts with any raw retry/recover overlap / all rollouts",
+    "unjustified_definite_rate": "insufficient-history opportunities with definite action / opportunities"
+  },
+  "schema": "pathgraph_l2ra_metric_definitions_v1",
+  "zero_denominator": "NOT_ESTIMABLE_NOT_PASS"
+}

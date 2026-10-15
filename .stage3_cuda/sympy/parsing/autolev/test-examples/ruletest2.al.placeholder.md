@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `ruletest2.al`
+- Original relative path: `.stage3_cuda/sympy/parsing/autolev/test-examples/ruletest2.al`
+- File type: `environment_binary`
+- Intended use: local CUDA/PyTorch environment installation
+- Original size: 237 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `.stage3_cuda/sympy/parsing/autolev/test-examples/ruletest2.al`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

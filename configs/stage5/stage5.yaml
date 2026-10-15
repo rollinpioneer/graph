@@ -1,0 +1,49 @@
+stage: 5
+name: graph_reward_calibration
+statistics_unit: content_group_id
+history_steps: 32
+entry:
+  require_real_prediction_recompute: true
+  forbidden_metric_sources: [finalize_stage4.py, evaluate_joint_pathgraph.py, infer_pathgraph_ensemble.py]
+model_gate:
+  required_seed_passes: 2
+  node_macro_f1_min: 0.70
+  edge_type_macro_f1_non_none_min: 0.55
+  phi_mae_max: 0.18
+  phi_spearman_min: 0.65
+  cost_mae_max: 0.20
+  cost_spearman_min: 0.70
+  cost_pair_accuracy_min: 0.75
+  failure_cost_increase_rate_min: 0.70
+  recovery_cost_decrease_rate_min: 0.70
+  terminal_success_cost_p90_max: 0.15
+reward:
+  cost_component: true
+  within_node_component: true
+  uncertainty_lcb: true
+  recovery_debt_cap: true
+  repeated_edge_penalty: true
+  reward_clip: 1.5
+  repeat_window_steps: 64
+  node_confidence_min: 0.55
+  edge_confidence_min: 0.55
+search:
+  lambda_values: [0.0, 0.25, 0.5, 1.0]
+  eta_values: [0.0, 0.05, 0.10, 0.20]
+  beta_values: [0.0, 0.5, 1.0, 1.5]
+  confidence_values: [0.55, 0.70]
+reward_gate:
+  oracle_path_normalized_gap_max: 0.10
+  learned_path_probe_normalized_gap_max: 0.25
+  failure_negative_rate_min: 0.70
+  recovery_positive_rate_min: 0.65
+  recovery_cycle_nonpositive_rate_min: 0.90
+  positive_loop_rate_max: 0.05
+  loop_return_mean_max: 0.0
+  success_return_auroc_min: 0.70
+  success_return_spearman_min: 0.35
+  fixed_order_score_drop_max: 0.05
+  forward_positive_rate_min: 0.55
+  recovery_positive_weight_coverage_min: 0.30
+packaging:
+  max_file_mb: 200

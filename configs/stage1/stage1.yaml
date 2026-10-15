@@ -1,0 +1,41 @@
+project:
+  repo_root: /home/xushijie/CUPID
+  data_roots:
+    - /home/xushijie/CUPID/manifests/rollout100/episode_manifest.csv
+    - /home/xushijie/CUPID/manifests/stage3_transport/rollout100/episode_manifest.csv
+  existing_dataset_configs:
+    - /home/xushijie/CUPID/repo/data/robomimic/datasets/square/ph/low_dim.hdf5
+  existing_sarm_annotation_roots: []
+  existing_checkpoint_roots:
+    - /home/xushijie/CUPID/repo/data/outputs
+runtime:
+  seed: 20260831
+  workers: 1
+  output_root: artifacts/pathgraph_sarm/stage1
+inventory:
+  episode_id_keys: [episode_id, episode, demo_id, traj_id, trajectory_id]
+  task_id_keys: [task_id, task_name, environment_name]
+  success_keys: [success, is_success, task_success, terminal_success]
+  timestamp_keys: [timestamp, timestamps, time, frame_time]
+  action_chunk_keys: [action_chunk, chunk_size, horizon, action_horizon]
+trajectory_taxonomy:
+  outcomes: [success, partial_success, failure, unknown]
+  structural_flags: [alternative_order, recovery, retry, revisit, stagnation]
+  edge_types: [forward, alternative, recovery, failure, stagnation]
+task_semantics:
+  square:
+    subgoals: [reach_object, grasp_object, place_object, release_object]
+  transport:
+    subgoals: [grasp_source, lift_object, transport_object, place_target, release_object]
+split:
+  preserve_official_split: true
+  ratios: {train: 0.80, val: 0.10, test: 0.10}
+  group_key_priority: [task_instance_id, scene_id, session_id, episode_id]
+  stratify_tags: [success, failure, recovery, alternative_order]
+selection:
+  min_usable_episodes_preferred: 20
+  min_recovery_episodes_preferred: 5
+  min_distinct_success_paths_preferred: 2
+  min_full_history_ratio: 0.90
+  min_total_score: 6
+  num_tasks_to_select: 2

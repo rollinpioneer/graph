@@ -1,0 +1,177 @@
+{
+  "episode_id": "transport_recovery__0005",
+  "task_id": "transport_recovery",
+  "graph_id": "transport_recovery_graph",
+  "graph_version": "1.0.0",
+  "source_path": "artifacts/pathgraph_sarm/stage2/rounds/stage2_2_targeted_collection/jobs/synthetic/transport_recovery__0005.json",
+  "path_signature": [
+    "forward"
+  ],
+  "outcome": "success",
+  "node_intervals": [
+    {
+      "node_id": "in_transit",
+      "start_step": 0,
+      "end_step": 19,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "state.gripper_state",
+        "info.controller_source"
+      ]
+    },
+    {
+      "node_id": "grasped",
+      "start_step": 20,
+      "end_step": 39,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "state.gripper_state",
+        "info.controller_source"
+      ]
+    },
+    {
+      "node_id": "in_transit",
+      "start_step": 40,
+      "end_step": 74,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "state.gripper_state",
+        "info.controller_source"
+      ]
+    },
+    {
+      "node_id": "placed",
+      "start_step": 75,
+      "end_step": 94,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "state.gripper_state",
+        "info.controller_source"
+      ]
+    },
+    {
+      "node_id": "success",
+      "start_step": 95,
+      "end_step": 119,
+      "history_required": true,
+      "evidence": [
+        "state.eef_pos",
+        "state.object_pos",
+        "state.gripper_state",
+        "info.controller_source"
+      ]
+    }
+  ],
+  "edge_intervals": [
+    {
+      "edge_id": "in_transit_to_grasped",
+      "edge_type": "forward",
+      "start_step": 19,
+      "end_step": 20,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    },
+    {
+      "edge_id": "grasped_to_in_transit",
+      "edge_type": "forward",
+      "start_step": 39,
+      "end_step": 40,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    },
+    {
+      "edge_id": "in_transit_to_placed",
+      "edge_type": "forward",
+      "start_step": 74,
+      "end_step": 75,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    },
+    {
+      "edge_id": "placed_to_success",
+      "edge_type": "forward",
+      "start_step": 94,
+      "end_step": 95,
+      "attempt_index": 1,
+      "evidence": [
+        "state evidence"
+      ]
+    }
+  ],
+  "progress_anchors": [
+    {
+      "node_id": "in_transit",
+      "step": 0,
+      "value": 0.0
+    },
+    {
+      "node_id": "grasped",
+      "step": 20,
+      "value": 0.0
+    },
+    {
+      "node_id": "in_transit",
+      "step": 40,
+      "value": 0.0
+    },
+    {
+      "node_id": "placed",
+      "step": 75,
+      "value": 0.0
+    },
+    {
+      "node_id": "success",
+      "step": 95,
+      "value": 0.0
+    },
+    {
+      "node_id": "in_transit",
+      "step": 19,
+      "value": 1.0
+    },
+    {
+      "node_id": "grasped",
+      "step": 39,
+      "value": 1.0
+    },
+    {
+      "node_id": "in_transit",
+      "step": 74,
+      "value": 1.0
+    },
+    {
+      "node_id": "placed",
+      "step": 94,
+      "value": 1.0
+    },
+    {
+      "node_id": "success",
+      "step": 119,
+      "value": 1.0
+    }
+  ],
+  "failure_events": [],
+  "recovery_events": [],
+  "review": {
+    "status": "accepted",
+    "reviewer": "stage2_deterministic_rule_review",
+    "notes": "evidence from state trace or intervention log; no stage1 placeholder events"
+  },
+  "provenance": [
+    "state rule"
+  ]
+}

@@ -1,0 +1,15 @@
+# R1 evaluation gate
+
+Decision: `REFINE1_FROZEN_EVALUATION_COMPLETE`
+
+{
+  "jobs_150": true,
+  "status_150_pass": true,
+  "rollouts_1500": true,
+  "duplicates_zero": true,
+  "seeds_exact": true,
+  "methods_exact": true,
+  "paired_registry_present": true,
+  "test_not_used": true,
+  "metrics_finite": true
+}

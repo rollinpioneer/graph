@@ -1,0 +1,177 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object and grasp_object",
+      "dst": "grasp_blue_cube",
+      "expected_effects": [
+        "机械臂夹爪闭合接触蓝色方块"
+      ],
+      "id": "e1_approach_grasp",
+      "preconditions": [
+        "蓝色方块位置已知且无障碍"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "verify_hold",
+      "expected_effects": [
+        "确认抓取成功或失败"
+      ],
+      "id": "e2_verify_stability",
+      "preconditions": [
+        "夹爪已闭合"
+      ],
+      "src": "grasp_blue_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "transport_to_box",
+      "expected_effects": [
+        "蓝色方块悬停于透明盒子上方"
+      ],
+      "id": "e3_move_to_target",
+      "preconditions": [
+        "抓取验证通过"
+      ],
+      "src": "verify_hold",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object and release_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "蓝色方块落入盒内",
+        "机械臂脱离接触"
+      ],
+      "id": "e4_insert_release",
+      "preconditions": [
+        "方块对准盒子开口",
+        "下方无刚性阻挡"
+      ],
+      "src": "transport_to_box",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object and re-grasp",
+      "dst": "grasp_blue_cube",
+      "expected_effects": [
+        "重置抓取姿态再次尝试"
+      ],
+      "id": "e5_recovery_regrasp",
+      "preconditions": [
+        "verify_hold 返回失败信号"
+      ],
+      "src": "verify_hold",
+      "status": "hypothesized",
+      "trigger": "Grasp verification failed"
+    }
+  ],
+  "goal_interpretation": "将位于桌面上的蓝色方块抓取并放入透明盒子内部，随后释放抓持。需确认盒子内黄色方块是否构成空间阻碍或是否需要避让。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：蓝色方块在桌面上，透明盒子内有黄色方块",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块位于桌面可触及区域",
+        "透明盒子位于桌面右侧",
+        "黄色方块占据盒子内部部分空间"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "盒子内部剩余可用空间的精确几何形状",
+        "蓝色方块与黄色方块的尺寸兼容性"
+      ]
+    },
+    {
+      "description": "尝试抓取蓝色方块顶部",
+      "id": "grasp_blue_cube",
+      "observable_conditions": [
+        "机械臂接近蓝色方块上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取稳定性",
+        "方块表面摩擦系数"
+      ]
+    },
+    {
+      "description": "验证蓝色方块是否被稳固抓持",
+      "id": "verify_hold",
+      "observable_conditions": [
+        "力传感器反馈正常",
+        "视觉确认方块未滑落"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "将蓝色方块移动至透明盒子开口正上方",
+      "id": "transport_to_box",
+      "observable_conditions": [
+        "方块位于盒子开口垂直投影范围内"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径是否与盒子边缘发生碰撞",
+        "黄色方块是否阻挡插入路径"
+      ]
+    },
+    {
+      "description": "下降方块进入盒子并释放",
+      "id": "place_and_release",
+      "observable_conditions": [
+        "方块接触盒底或黄色方块",
+        "夹爪张开"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放后方块是否稳定站立",
+        "是否挤压导致黄色方块移位"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的蓝色立方体",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的透明方形容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于透明盒子内部的黄色立方体",
+      "id": "yellow_cube",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "蓝色方块尺寸是否小于透明盒子内部净空尺寸",
+    "黄色方块当前位置是否允许蓝色方块并存而不溢出",
+    "透明盒子壁厚度及开口边缘是否影响插入轨迹",
+    "抓取蓝色方块时是否会因重心偏移导致翻倒"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

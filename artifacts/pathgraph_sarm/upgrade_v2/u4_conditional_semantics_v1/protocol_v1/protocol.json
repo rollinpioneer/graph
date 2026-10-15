@@ -1,0 +1,15 @@
+{
+  "schema": "u4r1_protocol_v1",
+  "scope": "same_explicit_stochastic_simulator_distribution",
+  "historical_lock": "protocol_v1/historical_lock.json",
+  "evaluator": "u4r1_evaluator_v2",
+  "guard_dsl": "declaration_only_no_eval_exec",
+  "online_features": ["observable_context", "past_actions", "past_observed_events_only"],
+  "forbidden_online_features": ["scenario", "phase", "gold_mode", "future outcome", "future events", "root_family_id", "episode_id"],
+  "fresh_confirmation": {"generator_seed": 910500, "families": 36, "rollouts_per_family": 4, "rollout_seed_base": 9110000, "prefix": "u4r1_confirm"},
+  "api_calls": 0,
+  "api_key_read": false,
+  "training_jobs": 0,
+  "device_policy": "use_existing_cupid_environment; cpu_allowed_and_recorded",
+  "confirmation_gate": "final_pipeline_lock_and_family_lock_hashes_required"
+}

@@ -1,0 +1,71 @@
+from __future__ import annotations
+
+import numpy as np
+
+from upgrade_v2.visual_refine_l2.dynamic_simulator import DynamicTabletop, family_spec
+
+
+def simulator(scenario: str = "normal_pick_place") -> DynamicTabletop:
+    return DynamicTabletop(family_spec("test_family", scenario, 7, 100), 101)
+
+
+def test_snapshot_restore_replays_state_exactly() -> None:
+    sim = simulator()
+    sim.perform("approach_object")
+    snapshot = sim.snapshot()
+    first = sim.perform("close_gripper")
+    first_state = sim.snapshot()
+    sim.restore(snapshot)
+    second = sim.perform("close_gripper")
+    second_state = sim.snapshot()
+    assert first == second
+    np.testing.assert_allclose(first_state["qpos"], second_state["qpos"], rtol=0.0, atol=1e-12)
+    assert first_state["attached"] == second_state["attached"]
+
+
+def test_attach_release_and_slip_are_explicit() -> None:
+    sim = simulator()
+    sim.perform("approach_object"); sim.perform("close_gripper")
+    assert sim.attached and sim.data.eq_active[sim.weld_id]
+    sim.perform("open_gripper")
+    assert not sim.attached and not sim.data.eq_active[sim.weld_id]
+    slip = simulator("slip_then_recover")
+    for action in ("approach_object", "close_gripper", "lift", "transport_to_target"):
+        slip.perform(action)
+    assert any(event["event"] == "contact_lost" for event in slip.events)
+    slip.perform("recover")
+    assert any(event["event"] == "recovery_achieved" for event in slip.events)
+
+
+def test_stable_place_and_terminal_classes_are_distinct() -> None:
+    sim = simulator()
+    for action in ("approach_object", "close_gripper", "lift", "transport_to_target", "align", "lower", "open_gripper", "verify"):
+        sim.perform(action)
+    assert sim.oracle_snapshot()["goal_stable"]
+    assert "horizon" != "failure_terminal"
+
+
+def test_action_records_replayable_low_level_controls() -> None:
+    sim = simulator()
+    result = sim.perform("approach_object")
+    controls = result["low_level_control_sequence"]
+    assert len(controls) == 4
+    assert all(step["physics_steps"] == 5 for step in controls)
+    assert controls[0]["start_time"] == result["start_time"]
+    assert controls[-1]["end_time"] == result["end_time"]
+    assert all(len(step["mocap_position"]) == 3 for step in controls)
+
+
+def test_jitter_flags_are_respected() -> None:
+    spec = family_spec(
+        "fixed_family",
+        "normal_pick_place",
+        7,
+        100,
+        camera_jitter=False,
+        object_size_jitter=False,
+        friction_jitter=False,
+    )
+    assert spec.camera_jitter == 0.0
+    assert spec.object_radius == 0.069
+    assert spec.friction == 0.75

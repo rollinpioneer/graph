@@ -1,0 +1,94 @@
+{
+  "active_second_view": false,
+  "capabilities": [
+    "fixed_manipulation_path",
+    "goal_verified_stop",
+    "visual_unknown_observe"
+  ],
+  "edges": [
+    {
+      "action": "stop_no_action",
+      "condition": "goal_verified",
+      "id": "already_done"
+    },
+    {
+      "action": "observe_scene",
+      "condition": "visual_unknown",
+      "id": "observe_unknown"
+    },
+    {
+      "action": "grasp_object",
+      "condition": {
+        "args": [
+          "object_visible",
+          "target_visible",
+          {
+            "arg": "goal_verified",
+            "op": "NOT"
+          }
+        ],
+        "op": "AND"
+      },
+      "id": "manipulate"
+    }
+  ],
+  "graph_id": "G1_predicate_bound",
+  "nodes": [
+    {
+      "id": "scene_unverified",
+      "state": "scene_unverified",
+      "status": "hypothesized"
+    },
+    {
+      "id": "grasp_candidate",
+      "state": "grasp_candidate",
+      "status": "hypothesized"
+    },
+    {
+      "id": "stable_hold_candidate",
+      "state": "stable_hold_candidate",
+      "status": "hypothesized"
+    },
+    {
+      "id": "object_in_transport",
+      "state": "object_in_transport",
+      "status": "hypothesized"
+    },
+    {
+      "id": "object_above_target",
+      "state": "object_above_target",
+      "status": "hypothesized"
+    },
+    {
+      "id": "object_on_target_candidate",
+      "state": "object_on_target_candidate",
+      "status": "hypothesized"
+    },
+    {
+      "id": "object_released",
+      "state": "object_released",
+      "status": "hypothesized"
+    },
+    {
+      "id": "goal_stability_candidate",
+      "state": "goal_stability_candidate",
+      "status": "hypothesized"
+    }
+  ],
+  "numeric_reward_or_cost": null,
+  "online_predicates": [
+    "goal_verified",
+    "gripper_command_open",
+    "object_above_target",
+    "placement_candidate",
+    "stable_hold_observed",
+    "transport_observed",
+    "visual_unknown"
+  ],
+  "predicate_thresholds_path": "/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/observable_predicates_v1/locks/predicate_thresholds.json",
+  "predicate_thresholds_sha256": "f1af7101121d62d4739e4a735b79a0fb9d3b080934089ff7f705540c1956d570",
+  "schema": "pathgraph_l2r_executable_graph_v1",
+  "selection_data": "predicate bindings only; no dynamic structural edits",
+  "source_sha256": "8d3c1c93c1026960649528f6bf73785cdfd5827f291be0b3a517e5be1833c603",
+  "status": "development_frozen"
+}

@@ -1,0 +1,7 @@
+hypothesis,evidence_for,evidence_against,affected_events,affected_families,status
+H1_overbroad_generic_failure,raw grasp_failed overlaps slip in 36 replayed rollouts; held-loss events with prior stable hold=36,does not prove every generic failure is a held-loss event,36,9,SUPPORTED_AS_MECHANISM
+H2_generic_and_specific_actions_are_not_mutually_exclusive,36 rollouts contain simultaneous raw guards while legacy recovery priority still marks ambiguity,raw fact predicates may remain overlapping by design,36,9,SUPPORTED_AS_ACTION_LAYER_PROBLEM
+H3_attempt_history_not_cleared,not established by static summary; checked through per-attempt trace fields,A1 trace exposes no direct legacy attempt state,0,0,NOT_ESTABLISHED
+H4_short_touch_misread_as_stable_hold,requires targeted short-touch probes; frozen data has no independent stable-hold reference for this condition,no valid frozen short-touch label,0,0,UNTESTED_TARGETED_PROBE_REQUIRED
+H5_observation_or_sampling_insufficient,0 diagnostic event windows contain missing/unknown required observations,most replayed held-loss windows have observable contact and command prefixes,0,0,NOT_SUPPORTED
+H6_legacy_whole_sequence_summary_hides_earlier_conflict,4 labeled event windows occurred in rollouts where an earlier-return branch or final arbitration masked a raw overlap,legacy final arbitration still reproduces its original selected branch,4,1,SUPPORTED_AS_REPORTING_PROBLEM

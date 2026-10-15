@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `logs.json.txt`
+- Original relative path: `repo/ec_final/runs/F-cnn/seed4/logs.json.txt`
+- File type: `training_output`
+- Intended use: training run logs, checkpoints, and metrics
+- Original size: 543481 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `repo/ec_final/runs/F-cnn/seed4/logs.json.txt`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

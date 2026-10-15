@@ -1,0 +1,115 @@
+{
+  "schema": "pathgraph_l2ra_protocol_proposal_v1",
+  "protocol_id": "L2R-A1-edge-ambiguity-v1",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "source_commit": "e607131d7745d46745680bc9a6190a467b01dfa2",
+  "historical_status": "L2R_PARTIAL_KEEP_COARSE_GRAPH",
+  "retained_graph": "G1_predicate_bound",
+  "scope": "dynamic MuJoCo primitive tabletop, offline causal observation replay; not physical robot control",
+  "api_calls_max": 0,
+  "training_jobs_max": 0,
+  "read_api_keys": false,
+  "active_second_view": false,
+  "candidate_families": ["C1_current_event_exclusion", "C2_attempt_scoped_event_memory"],
+  "candidate_configurations_max": 5,
+  "candidate_graphs_selected": 1,
+  "candidate_grid": {
+    "C1": [{}],
+    "C2": [
+      {"hold_confirm_observations": 1, "loss_confirm_observations": 1},
+      {"hold_confirm_observations": 1, "loss_confirm_observations": 2},
+      {"hold_confirm_observations": 2, "loss_confirm_observations": 1},
+      {"hold_confirm_observations": 2, "loss_confirm_observations": 2}
+    ]
+  },
+  "new_development": {
+    "family_count": 24,
+    "rollouts_per_family": 4,
+    "fit_families_per_stratum": 2,
+    "select_families_per_stratum": 2,
+    "family_seed": 430000,
+    "rollout_seed_base": 43100000,
+    "strata": [
+      "miss_without_prior_hold",
+      "loss_after_observed_hold",
+      "touch_without_hold_then_loss",
+      "commanded_release",
+      "long_gap_after_loss",
+      "history_or_visual_unavailable"
+    ]
+  },
+  "new_standard_confirmation": {
+    "open_only_after_development_pass": true,
+    "family_count": 24,
+    "rollouts_per_family": 4,
+    "family_seed": 440000,
+    "rollout_seed_base": 44100000,
+    "scenarios": [
+      "normal_pick_place",
+      "already_satisfied_stable",
+      "already_on_target_offcenter",
+      "missed_grasp_then_retry",
+      "slip_then_recover",
+      "target_occupied",
+      "distractor_object_ambiguity",
+      "primary_view_occlusion"
+    ]
+  },
+  "new_challenge_confirmation": {
+    "family_count": 12,
+    "rollouts_per_family": 4,
+    "family_seed": 450000,
+    "rollout_seed_base": 45100000,
+    "strata": [
+      "touch_without_hold_then_loss",
+      "commanded_release",
+      "long_gap_after_loss",
+      "history_or_visual_unavailable"
+    ],
+    "pool_with_standard": false
+  },
+  "new_families_max": 60,
+  "new_rollouts_max": 240,
+  "old_go_thresholds_on_standard": {
+    "branch_accuracy_min": 0.8,
+    "goal_precision_min": 0.85,
+    "false_ready_rate_max": 0.1,
+    "unnecessary_manipulation_rate_max": 0.15,
+    "failure_denominator_min": 20,
+    "failure_recall_min": 0.65,
+    "recovery_denominator_min": 20,
+    "recovery_recall_min": 0.65,
+    "unknown_rate_max": 0.25,
+    "ambiguous_edge_rate_max": 0.1,
+    "graph_completion_coverage_min": 0.8,
+    "selected_minus_g0_branch_min": 0.15,
+    "selected_minus_g1_branch_min": 0.05,
+    "noninferior_scenarios_min": 6,
+    "scenario_count": 8
+  },
+  "new_diagnostic_thresholds": {
+    "standard_any_conflict_rollout_rate_max": 0.1,
+    "event_window_conflict_rate_max": 0.1,
+    "event_type_recall_min": 0.85,
+    "wrong_or_unknown_fraction_max": 0.15,
+    "false_emergency_rate_max": 0.1,
+    "unjustified_definite_rate_max": 0.1,
+    "detection_delay_observation_steps_p95_max": 2,
+    "long_gap_recovery_recall_min": 0.85
+  },
+  "statistics": {
+    "independent_unit": "root_family_id",
+    "paired_bootstrap_resamples": 5000,
+    "bootstrap_seed": 460008,
+    "denominator_zero": "NOT_ESTIMABLE_NOT_PASS",
+    "no_frame_independence": true
+  },
+  "final_status_values": [
+    "L2RA_READY_FOR_L3_ENTRY_REVIEW",
+    "L2RA_PARTIAL_KEEP_G1",
+    "L2RA_OBSERVABILITY_LIMIT",
+    "L2RA_DIAGNOSIS_ONLY",
+    "EXECUTION_BLOCKED"
+  ],
+  "l3_entry_allowed_by_this_manual": false
+}

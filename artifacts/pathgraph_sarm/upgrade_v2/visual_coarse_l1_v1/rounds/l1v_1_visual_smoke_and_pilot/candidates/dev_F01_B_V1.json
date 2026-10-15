@@ -1,0 +1,169 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "target_identified",
+      "expected_effects": [
+        "Target red bowl is distinguished from the distractor."
+      ],
+      "id": "select_target",
+      "preconditions": [
+        "Scene is visible."
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "bowl_grasped",
+      "expected_effects": [
+        "Red bowl is secured in gripper.",
+        "Bowl is lifted from table surface."
+      ],
+      "id": "grasp_bowl",
+      "preconditions": [
+        "Target bowl is identified.",
+        "End-effector is within reach."
+      ],
+      "src": "target_identified",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "bowl_placed_centered",
+      "expected_effects": [
+        "Bowl is moved over the white plate.",
+        "Bowl is lowered onto the plate center."
+      ],
+      "id": "transport_and_place",
+      "preconditions": [
+        "Bowl is grasped.",
+        "White plate location is known."
+      ],
+      "src": "bowl_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "task_complete",
+      "expected_effects": [
+        "Gripper opens.",
+        "Bowl remains on plate."
+      ],
+      "id": "release_and_verify",
+      "preconditions": [
+        "Bowl is in contact with plate.",
+        "Bowl is stable."
+      ],
+      "src": "bowl_placed_centered",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "Identify the specific red bowl among the two visible red cylindrical objects, grasp it securely, transport it to the white plate, align it centrally on the plate surface, and release it.",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "Initial scene with two red bowls and one white plate on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Two red bowl-like objects are present.",
+        "One white plate is present."
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Which red object is the intended target.",
+        "Grasp stability of the red bowl.",
+        "Exact center coordinates of the white plate."
+      ]
+    },
+    {
+      "description": "The correct red bowl has been selected for manipulation.",
+      "id": "target_identified",
+      "observable_conditions": [
+        "Robot end-effector is aligned with the chosen red bowl."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Confirmation that this is the user-intended bowl."
+      ]
+    },
+    {
+      "description": "The red bowl is securely held by the robot gripper.",
+      "id": "bowl_grasped",
+      "observable_conditions": [
+        "Gripper fingers are closed around the bowl rim or body.",
+        "Bowl is lifted slightly off the table."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Friction coefficient between gripper and bowl.",
+        "Weight of the bowl affecting lift dynamics."
+      ]
+    },
+    {
+      "description": "The red bowl is positioned on the white plate, visually centered.",
+      "id": "bowl_placed_centered",
+      "observable_conditions": [
+        "Bowl bottom is in contact with the plate surface.",
+        "Bowl appears equidistant from plate edges."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Precise geometric centering tolerance.",
+        "Stability of the stack (bowl on plate)."
+      ]
+    },
+    {
+      "description": "The red bowl is released and remains stationary on the white plate.",
+      "id": "task_complete",
+      "observable_conditions": [
+        "Gripper is open and retracted.",
+        "Bowl is resting on the plate."
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Long-term stability of the placement."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "Red cylindrical object located at the front-left of the table.",
+      "id": "red_bowl_candidate_1",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Red cylindrical object located behind candidate_1.",
+      "id": "red_bowl_candidate_2",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "White circular plate located on the right side of the table.",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify the red object is a bowl and not a solid cylinder before grasping.",
+    "Check if the white plate surface is flat enough to support the bowl centrally.",
+    "Ensure the grasp force is sufficient to lift the bowl without slipping.",
+    "Confirm the bowl does not slide off the plate upon release."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

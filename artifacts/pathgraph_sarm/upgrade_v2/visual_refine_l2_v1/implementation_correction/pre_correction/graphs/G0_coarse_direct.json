@@ -1,0 +1,178 @@
+{
+  "active_second_view": false,
+  "capabilities": [
+    "fixed_manipulation_path"
+  ],
+  "graph_id": "G0_coarse_direct",
+  "numeric_reward_or_cost": null,
+  "online_predicates": [],
+  "schema": "pathgraph_l2r_executable_graph_v1",
+  "selection_data": "none",
+  "source_sha256": "8d3c1c93c1026960649528f6bf73785cdfd5827f291be0b3a517e5be1833c603",
+  "status": "frozen_baseline",
+  "topology": {
+    "edges": [
+      {
+        "action": "observe_scene",
+        "condition": "unknown",
+        "dst": "grasp_candidate",
+        "id": "observe",
+        "src": "scene_unverified",
+        "status": "hypothesized"
+      },
+      {
+        "action": "grasp_object",
+        "condition": "unknown",
+        "dst": "stable_hold_candidate",
+        "id": "grasp",
+        "src": "grasp_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "action": "transport_object",
+        "condition": "unknown",
+        "dst": "object_in_transport",
+        "id": "transport",
+        "src": "stable_hold_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "action": "align_with_target",
+        "condition": "unknown",
+        "dst": "object_above_target",
+        "id": "align",
+        "src": "object_in_transport",
+        "status": "hypothesized"
+      },
+      {
+        "action": "place_object",
+        "condition": "unknown",
+        "dst": "object_on_target_candidate",
+        "id": "place",
+        "src": "object_above_target",
+        "status": "hypothesized"
+      },
+      {
+        "action": "release_object",
+        "condition": "unknown",
+        "dst": "object_released",
+        "id": "release",
+        "src": "object_on_target_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "action": "verify_goal_relation",
+        "condition": "unknown",
+        "dst": "goal_stability_candidate",
+        "id": "verify",
+        "src": "object_released",
+        "status": "hypothesized"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "scene_unverified",
+        "state": "scene_unverified",
+        "status": "hypothesized"
+      },
+      {
+        "id": "grasp_candidate",
+        "state": "grasp_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "id": "stable_hold_candidate",
+        "state": "stable_hold_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "id": "object_in_transport",
+        "state": "object_in_transport",
+        "status": "hypothesized"
+      },
+      {
+        "id": "object_above_target",
+        "state": "object_above_target",
+        "status": "hypothesized"
+      },
+      {
+        "id": "object_on_target_candidate",
+        "state": "object_on_target_candidate",
+        "status": "hypothesized"
+      },
+      {
+        "id": "object_released",
+        "state": "object_released",
+        "status": "hypothesized"
+      },
+      {
+        "id": "goal_stability_candidate",
+        "state": "goal_stability_candidate",
+        "status": "hypothesized"
+      }
+    ],
+    "numeric_reward_or_cost": null,
+    "objects": [
+      {
+        "id": "manipulated_object",
+        "role": "manipulated_object",
+        "status": "hypothesized"
+      },
+      {
+        "id": "target_object",
+        "role": "target",
+        "status": "hypothesized"
+      }
+    ],
+    "schema": "pathgraph_l2r_canonical_coarse_graph_v1",
+    "source": "18 frozen L1V V1 candidates",
+    "source_action_counts": {
+      "align_with_target": 2,
+      "approach_object": 3,
+      "grasp_object": 12,
+      "observe_scene": 5,
+      "place_object": 5,
+      "release_object": 18,
+      "request_clarification": 2,
+      "transport_object": 13,
+      "verify_goal_relation": 9,
+      "verify_grasp": 4
+    },
+    "source_candidate_ids": [
+      "confirm_F02_A_V1",
+      "confirm_F02_B_V1",
+      "confirm_F03_A_V1",
+      "confirm_F03_B_V1",
+      "confirm_F04_A_V1",
+      "confirm_F04_B_V1",
+      "confirm_F06_A_V1",
+      "confirm_F06_B_V1",
+      "confirm_F07_A_V1",
+      "confirm_F07_B_V1",
+      "confirm_F08_A_V1",
+      "confirm_F08_B_V1",
+      "confirm_F10_A_V1",
+      "confirm_F10_B_V1",
+      "confirm_F11_A_V1",
+      "confirm_F11_B_V1",
+      "confirm_F12_A_V1",
+      "confirm_F12_B_V1"
+    ],
+    "source_state_counts": {
+      "goal_stability_candidate": 18,
+      "goal_verified": 1,
+      "grasp_candidate": 8,
+      "object_above_target": 13,
+      "object_in_transport": 1,
+      "object_lifted": 7,
+      "object_on_target_candidate": 5,
+      "object_released": 9,
+      "scene_unverified": 8,
+      "stable_hold_candidate": 2,
+      "target_blocked": 2,
+      "visual_unknown": 6
+    },
+    "status": "hypothesized",
+    "unmapped_language_retained": 0
+  }
+}

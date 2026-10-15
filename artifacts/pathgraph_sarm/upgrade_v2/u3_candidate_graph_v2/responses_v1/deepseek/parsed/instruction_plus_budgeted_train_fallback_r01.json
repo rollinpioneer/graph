@@ -1,0 +1,125 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_mid",
+      "effects": [
+        "agent_approaching_object"
+      ],
+      "evidence_segment_ids": [
+        "seg_traj1"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_init_to_mid",
+      "preconditions": [
+        "contact_absent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 1,
+          "to_cluster_id": 2
+        }
+      ],
+      "src": "n_start",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "cost_measurement_needed": true,
+      "dst": "n_success",
+      "effects": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "evidence_segment_ids": [
+        "seg_traj2"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e_mid_to_success",
+      "preconditions": [
+        "agent_approaching_object"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 2,
+          "to_cluster_id": 3
+        }
+      ],
+      "src": "n_mid",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "placement_tolerance"
+      ]
+    }
+  ],
+  "graph_id": "graph_001",
+  "nodes": [
+    {
+      "description": "Initial state with no object contact and agent at start.",
+      "evidence_segment_ids": [
+        "seg_init"
+      ],
+      "id": "n_start",
+      "observable_predicates": [
+        "contact_absent"
+      ],
+      "role": "start",
+      "source_cluster_ids": [
+        1
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "initial_pose_uncertainty"
+      ]
+    },
+    {
+      "description": "Agent is approaching but not yet in contact with the object.",
+      "evidence_segment_ids": [
+        "seg_mid"
+      ],
+      "id": "n_mid",
+      "observable_predicates": [
+        "agent_approaching_object",
+        "object_moving"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        2
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "Goal object is stably placed in the goal zone.",
+      "evidence_segment_ids": [
+        "seg_success"
+      ],
+      "id": "n_success",
+      "observable_predicates": [
+        "object_inside_goal",
+        "stable_goal_occupancy"
+      ],
+      "role": "success_terminal",
+      "source_cluster_ids": [
+        3
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": [
+    {
+      "affected_edge_ids": [
+        "e_mid_to_success"
+      ],
+      "affected_node_ids": [
+        "n_mid",
+        "n_success"
+      ],
+      "evidence_needed": "Simulations with obstacle present and collision sensor logs",
+      "question": "Does transitioning from approach to success require detecting collision before placement?"
+    }
+  ]
+}

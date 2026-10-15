@@ -1,0 +1,31 @@
+tasks:
+  square:
+    action: action
+    eef_pos: obs[14:17]
+    gripper_state: obs[21:23]
+    object_pos: obs[0:3]
+    object_quat: obs[3:7]
+    target_pos: obs[7:10]
+    contact: null
+    collision: null
+    success: success
+  transport:
+    action: action
+    eef_pos: obs[41:44]
+    gripper_state: obs[57:59]
+    object_pos: obs[0:3]
+    object_quat: obs[3:7]
+    source_pos: obs[0:3]
+    target_pos: obs[7:10]
+    contact: null
+    collision: null
+    success: success
+  transport_dual_order:
+    action: action
+    eef_pos: state.eef_pos
+    gripper_state: state.gripper_state
+    object_pos: state.object_pos
+    target_pos: state.target_pos
+    subgoal_A_done: info.subgoal_A_done
+    subgoal_B_done: info.subgoal_B_done
+    success: info.success

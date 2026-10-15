@@ -1,0 +1,193 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object",
+      "dst": "approach_cube",
+      "expected_effects": [
+        "Robot arm moves to pre-grasp pose near blue cube."
+      ],
+      "id": "e1_approach",
+      "preconditions": [
+        "Blue cube location is estimated."
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "holding_cube",
+      "expected_effects": [
+        "Gripper closes around blue cube.",
+        "Cube is lifted."
+      ],
+      "id": "e2_grasp",
+      "preconditions": [
+        "End-effector is at pre-grasp pose.",
+        "Object is stationary."
+      ],
+      "src": "approach_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "holding_cube",
+      "expected_effects": [
+        "Confirmation that object is secure.",
+        "Adjustment of grip if necessary."
+      ],
+      "id": "e3_verify_hold",
+      "preconditions": [
+        "Object is grasped."
+      ],
+      "src": "holding_cube",
+      "status": "hypothesized",
+      "trigger": "If visual slip detected or uncertainty high"
+    },
+    {
+      "action": "transport_object",
+      "dst": "above_box",
+      "expected_effects": [
+        "Robot moves cube to position above the transparent box."
+      ],
+      "id": "e4_transport",
+      "preconditions": [
+        "Object is securely held.",
+        "Target box location is known."
+      ],
+      "src": "holding_cube",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "Gripper opens.",
+        "Cube drops into the box."
+      ],
+      "id": "e5_place",
+      "preconditions": [
+        "Cube is aligned with box opening.",
+        "Path into box is clear."
+      ],
+      "src": "above_box",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "Gripper fully retracts.",
+        "Visual check confirms object is inside."
+      ],
+      "id": "e6_release_verify",
+      "preconditions": [
+        "Object is placed."
+      ],
+      "src": "goal_state",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "Identify the blue cube and the transparent box in the scene, grasp the blue cube, transport it to the interior of the transparent box, and release it so that it rests inside the container.",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "Initial scene state with objects on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Blue cube is visible on the table surface.",
+        "Transparent box is visible on the table surface."
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Exact pose and orientation of the blue cube.",
+        "Exact pose and opening orientation of the transparent box.",
+        "Friction coefficients of the objects."
+      ]
+    },
+    {
+      "description": "Robot end-effector positioned near the blue cube for grasping.",
+      "id": "approach_cube",
+      "observable_conditions": [
+        "End-effector is close to the blue cube."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Collision-free path availability.",
+        "Grasp point stability."
+      ]
+    },
+    {
+      "description": "Blue cube is securely grasped by the robot.",
+      "id": "holding_cube",
+      "observable_conditions": [
+        "Blue cube is lifted off the table.",
+        "Visual confirmation of grip contact."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Grasp force sufficiency.",
+        "Slippage risk during transport."
+      ]
+    },
+    {
+      "description": "Robot holds the blue cube directly above the opening of the transparent box.",
+      "id": "above_box",
+      "observable_conditions": [
+        "Blue cube is aligned with the box opening.",
+        "Box interior is accessible."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Clearance between cube and box walls.",
+        "Depth perception accuracy through transparent material."
+      ]
+    },
+    {
+      "description": "Blue cube is released and resting inside the transparent box.",
+      "id": "goal_state",
+      "observable_conditions": [
+        "Blue cube is no longer held by the robot.",
+        "Blue cube is visually contained within the box boundaries."
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Final stability of the cube inside the box.",
+        "Whether the cube is fully settled."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "A blue cubic object intended for manipulation.",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "A transparent container acting as the target destination.",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify that the blue cube fits physically inside the transparent box opening.",
+    "Check for potential collisions with the box walls during insertion.",
+    "Confirm that the transparent box is stable and will not tip over when the cube is dropped.",
+    "Ensure the gripper can open fully within the space above the box if needed for precise placement."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,182 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object",
+      "canonical_action": "approach_object",
+      "dst": "observe_cup",
+      "expected_effects": [
+        "获得绿色杯子的完整视觉信息",
+        "确认可抓取区域"
+      ],
+      "id": "e1_observe",
+      "preconditions": [
+        "机器人处于初始位置"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "canonical_action": "grasp_object",
+      "dst": "grasp_cup",
+      "expected_effects": [
+        "杯子被抓取",
+        "杯子离开支撑面"
+      ],
+      "id": "e2_grasp",
+      "preconditions": [
+        "杯子可见且可接近",
+        "无碰撞风险"
+      ],
+      "src": "observe_cup",
+      "status": "hypothesized",
+      "trigger": "观察到杯子完整形态"
+    },
+    {
+      "action": "transport_object",
+      "canonical_action": "transport_object",
+      "dst": "place_in_tray",
+      "expected_effects": [
+        "杯子移动至托盘正上方",
+        "杯子下降进入托盘"
+      ],
+      "id": "e3_transport_place",
+      "preconditions": [
+        "杯子被稳固抓取",
+        "托盘位置已知"
+      ],
+      "src": "grasp_cup",
+      "status": "hypothesized",
+      "trigger": "verify_hold成功"
+    },
+    {
+      "action": "release_object",
+      "canonical_action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "机械爪张开",
+        "杯子保持原位"
+      ],
+      "id": "e4_release",
+      "preconditions": [
+        "杯子已接触托盘底部",
+        "杯子姿态稳定"
+      ],
+      "src": "place_in_tray",
+      "status": "hypothesized",
+      "trigger": "杯子就位"
+    }
+  ],
+  "goal_interpretation": "将位于木块后方被部分遮挡的绿色杯子抓取，移动并放置到灰色托盘内的空位中，最后释放。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "canonical_state": "grasp_candidate",
+      "description": "初始场景：绿色杯子被木块部分遮挡，托盘空置",
+      "id": "start_state",
+      "observable_conditions": [
+        "木块直立",
+        "托盘在右侧且内部无物体",
+        "绿色物体顶部可见于木块后"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "绿色杯子的完整姿态和重心",
+        "木块与杯子的精确接触关系",
+        "抓取路径是否被木块阻挡"
+      ]
+    },
+    {
+      "canonical_state": "grasp_candidate",
+      "description": "调整视角或接近以确认绿色杯子的完整状态和可抓取性",
+      "id": "observe_cup",
+      "observable_conditions": [
+        "杯子完整轮廓可见",
+        "杯子未被木块卡死"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "杯子表面摩擦系数",
+        "最佳抓取点位置"
+      ]
+    },
+    {
+      "canonical_state": "goal_stability_candidate",
+      "description": "尝试从侧面或上方抓取绿色杯子",
+      "id": "grasp_cup",
+      "observable_conditions": [
+        "机械爪闭合",
+        "杯子脱离桌面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取稳定性",
+        "是否发生滑动"
+      ]
+    },
+    {
+      "canonical_state": "object_on_target_candidate",
+      "description": "将杯子移动至托盘上方并放入空位",
+      "id": "place_in_tray",
+      "observable_conditions": [
+        "杯子位于托盘边界内",
+        "杯子底部接触托盘底面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "放置后的平衡性",
+        "是否触碰托盘边缘"
+      ]
+    },
+    {
+      "canonical_state": "goal_stability_candidate",
+      "description": "杯子稳定放置在托盘内，机械臂已释放并撤离",
+      "id": "goal_state",
+      "observable_conditions": [
+        "杯子静止在托盘中",
+        "机械臂未接触杯子"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "objects": [
+    {
+      "description": "绿色圆柱形物体，推测为杯子，位于木块后方",
+      "id": "green_cup",
+      "observability": "partially_observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "直立的长方体木块，位于桌子左侧",
+      "id": "wooden_block",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    },
+    {
+      "description": "深灰色矩形浅盘，位于桌子右侧",
+      "id": "grey_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证绿色杯子是否为刚性物体且适合抓取",
+    "检查木块是否阻碍了直接抓取路径",
+    "确认托盘内空位尺寸足以容纳杯子",
+    "验证抓取力矩不会导致杯子倾倒",
+    "检查释放后杯子在托盘内的静态稳定性"
+  ],
+  "schema_version": "l2r_normalized_source_graph_v1",
+  "source_request_id": "confirm_F11_B_V1"
+}

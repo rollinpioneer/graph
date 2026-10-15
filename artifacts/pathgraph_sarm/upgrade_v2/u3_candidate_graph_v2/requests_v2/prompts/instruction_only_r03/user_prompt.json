@@ -1,0 +1,555 @@
+{
+  "boundary_fallback_disclosure": {
+    "automatic_boundary_supported": false,
+    "disclosure": "explicitly_disclosed_simulator_gold_train_clip",
+    "fallback_required": true
+  },
+  "condition_evidence": {
+    "cluster_evidence": [],
+    "fallback_confirmations": [],
+    "kind": "instruction_only",
+    "transition_evidence": []
+  },
+  "condition_name": "instruction_only",
+  "output_schema_summary": {
+    "edge_status": "hypothesized",
+    "node_status": "hypothesized",
+    "schema": {
+      "$id": "u3_candidate_graph_v1",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "edges": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "cost_measurement_needed": {
+                "type": "boolean"
+              },
+              "dst": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "effects": {
+                "items": {
+                  "enum": [
+                    "contact_present",
+                    "contact_absent",
+                    "contact_recently_lost",
+                    "contact_reestablished",
+                    "agent_approaching_object",
+                    "agent_receding_from_object",
+                    "object_moving",
+                    "object_stationary",
+                    "object_moving_with_agent",
+                    "object_approaching_goal",
+                    "object_receding_from_goal",
+                    "collision_detected",
+                    "object_inside_goal",
+                    "stable_goal_occupancy",
+                    "stagnation_detected",
+                    "progress_unknown"
+                  ],
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "evidence_segment_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "hypothesized_type": {
+                "enum": [
+                  "forward",
+                  "failure",
+                  "recovery",
+                  "alternative",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "preconditions": {
+                "items": {
+                  "enum": [
+                    "contact_present",
+                    "contact_absent",
+                    "contact_recently_lost",
+                    "contact_reestablished",
+                    "agent_approaching_object",
+                    "agent_receding_from_object",
+                    "object_moving",
+                    "object_stationary",
+                    "object_moving_with_agent",
+                    "object_approaching_goal",
+                    "object_receding_from_goal",
+                    "collision_detected",
+                    "object_inside_goal",
+                    "stable_goal_occupancy",
+                    "stagnation_detected",
+                    "progress_unknown"
+                  ],
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "source_transition_pairs": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "from_cluster_id": {
+                      "type": "integer"
+                    },
+                    "to_cluster_id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "from_cluster_id",
+                    "to_cluster_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "src": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "status": {
+                "const": "hypothesized"
+              },
+              "unknown_conditions": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "id",
+              "src",
+              "dst",
+              "preconditions",
+              "effects",
+              "hypothesized_type",
+              "source_transition_pairs",
+              "evidence_segment_ids",
+              "unknown_conditions",
+              "cost_measurement_needed",
+              "status"
+            ],
+            "type": "object"
+          },
+          "maxItems": 30,
+          "minItems": 2,
+          "type": "array"
+        },
+        "graph_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "nodes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "evidence_segment_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "observable_predicates": {
+                "items": {
+                  "enum": [
+                    "contact_present",
+                    "contact_absent",
+                    "contact_recently_lost",
+                    "contact_reestablished",
+                    "agent_approaching_object",
+                    "agent_receding_from_object",
+                    "object_moving",
+                    "object_stationary",
+                    "object_moving_with_agent",
+                    "object_approaching_goal",
+                    "object_receding_from_goal",
+                    "collision_detected",
+                    "object_inside_goal",
+                    "stable_goal_occupancy",
+                    "stagnation_detected",
+                    "progress_unknown"
+                  ],
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "role": {
+                "enum": [
+                  "start",
+                  "intermediate",
+                  "success_terminal",
+                  "failure_terminal",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              "source_cluster_ids": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "status": {
+                "const": "hypothesized"
+              },
+              "unknown_conditions": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "id",
+              "description",
+              "role",
+              "observable_predicates",
+              "unknown_conditions",
+              "source_cluster_ids",
+              "evidence_segment_ids",
+              "status"
+            ],
+            "type": "object"
+          },
+          "maxItems": 15,
+          "minItems": 3,
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "u3_candidate_graph_v1"
+        },
+        "scope": {
+          "const": "stochastic_simulator_only"
+        },
+        "unresolved_questions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "affected_edge_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "affected_node_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "evidence_needed": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "question": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "question",
+              "affected_node_ids",
+              "affected_edge_ids",
+              "evidence_needed"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "graph_id",
+        "scope",
+        "nodes",
+        "edges",
+        "unresolved_questions"
+      ],
+      "type": "object"
+    },
+    "schema_version": "u3_candidate_graph_v1",
+    "scope": "stochastic_simulator_only"
+  },
+  "predicate_vocabulary": {
+    "allowed_predicates": [
+      {
+        "causal_observables": [
+          "contact_sensor"
+        ],
+        "description": "contact sensor is active",
+        "history_window": 1,
+        "name": "contact_present",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "contact_sensor"
+        ],
+        "description": "contact sensor is inactive",
+        "history_window": 1,
+        "name": "contact_absent",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "contact_sensor"
+        ],
+        "description": "contact changes from present to absent",
+        "history_window": 3,
+        "name": "contact_recently_lost",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "contact_sensor"
+        ],
+        "description": "contact changes from absent to present",
+        "history_window": 3,
+        "name": "contact_reestablished",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "agent_to_object_position_x",
+          "agent_to_object_position_y"
+        ],
+        "description": "agent-object distance decreases over stored history",
+        "history_window": 3,
+        "name": "agent_approaching_object",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "agent_to_object_position_x",
+          "agent_to_object_position_y"
+        ],
+        "description": "agent-object distance increases over stored history",
+        "history_window": 3,
+        "name": "agent_receding_from_object",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_velocity_x",
+          "object_velocity_y"
+        ],
+        "description": "object velocity magnitude is non-negligible",
+        "history_window": 1,
+        "name": "object_moving",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_velocity_x",
+          "object_velocity_y"
+        ],
+        "description": "object velocity magnitude is small",
+        "history_window": 1,
+        "name": "object_stationary",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "contact_sensor",
+          "agent_velocity_x",
+          "agent_velocity_y",
+          "object_velocity_x",
+          "object_velocity_y"
+        ],
+        "description": "contact is present while agent and object move",
+        "history_window": 2,
+        "name": "object_moving_with_agent",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_to_goal_position_x",
+          "object_to_goal_position_y"
+        ],
+        "description": "object-goal distance decreases over stored history",
+        "history_window": 3,
+        "name": "object_approaching_goal",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_to_goal_position_x",
+          "object_to_goal_position_y"
+        ],
+        "description": "object-goal distance increases over stored history",
+        "history_window": 3,
+        "name": "object_receding_from_goal",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "collision_sensor"
+        ],
+        "description": "collision sensor is active",
+        "history_window": 1,
+        "name": "collision_detected",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_in_goal_sensor"
+        ],
+        "description": "object-in-goal sensor is active",
+        "history_window": 1,
+        "name": "object_inside_goal",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_in_goal_sensor"
+        ],
+        "description": "object remains in goal across stored history",
+        "history_window": 3,
+        "name": "stable_goal_occupancy",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [
+          "object_to_goal_position_x",
+          "object_to_goal_position_y",
+          "object_velocity_x",
+          "object_velocity_y"
+        ],
+        "description": "stored history has negligible progress",
+        "history_window": 5,
+        "name": "stagnation_detected",
+        "requires_future": false
+      },
+      {
+        "causal_observables": [],
+        "description": "available observables do not establish progress state",
+        "history_window": 1,
+        "name": "progress_unknown",
+        "requires_future": false
+      }
+    ],
+    "forbidden_predicates": [
+      "future_success",
+      "true_task_stage",
+      "gold_mode",
+      "hidden_controller_state",
+      "scenario_id",
+      "candidate_feasible",
+      "exact_remaining_cost",
+      "optimal_cost"
+    ],
+    "schema": "u3_predicate_vocabulary_v1"
+  },
+  "supervision_cost_ledger": {
+    "additional_fallback_clips": 0,
+    "additional_fallback_frames": 0,
+    "shared_calibration_families": 0,
+    "shared_calibration_frames": 0
+  },
+  "task_contract": {
+    "action": {
+      "causal_timing": "observations[t] are x_t and previous_action fields contain a_(t-1) that enters x_t",
+      "dimension": 2,
+      "fields": [
+        "action_x",
+        "action_y"
+      ],
+      "range": [
+        -1.0,
+        1.0
+      ]
+    },
+    "boundary_fallback": {
+      "automatic_boundary_supported": false,
+      "disclosure": "explicitly_disclosed_simulator_gold_train_clip",
+      "fallback_required": true
+    },
+    "forbidden_fields": [
+      "gold_event",
+      "gold_mode",
+      "scenario",
+      "future_outcome",
+      "root_family_id",
+      "episode_id"
+    ],
+    "object_roles": {
+      "agent": "controlled two-dimensional pusher",
+      "goal": "fixed target region",
+      "object": "transported object",
+      "obstacle": "fixed obstacle with observable relative geometry"
+    },
+    "objective": "A two-dimensional agent approaches and contacts an object, transports it to the observable goal region, and must account for collision, contact loss, recovery, detour, and stagnation branches.",
+    "schema": "u3_task_contract_v1",
+    "scope": "stochastic_simulator_only",
+    "sensor_fields": [
+      "agent_to_object_position_x",
+      "agent_to_object_position_y",
+      "agent_velocity_x",
+      "agent_velocity_y",
+      "object_to_goal_position_x",
+      "object_to_goal_position_y",
+      "object_velocity_x",
+      "object_velocity_y",
+      "agent_to_obstacle_position_x",
+      "agent_to_obstacle_position_y",
+      "object_to_obstacle_position_x",
+      "object_to_obstacle_position_y",
+      "contact_sensor",
+      "collision_sensor",
+      "object_in_goal_sensor",
+      "previous_action_x",
+      "previous_action_y"
+    ],
+    "success_observable": {
+      "field": "object_in_goal_sensor",
+      "predicate": "object_inside_goal",
+      "stable_variant": "stable_goal_occupancy"
+    },
+    "terminal_failure_observable": {
+      "fields": [
+        "collision_sensor",
+        "object_to_goal_position_x",
+        "object_to_goal_position_y",
+        "object_velocity_x",
+        "object_velocity_y"
+      ],
+      "predicate": "collision_detected_or_stagnation_detected",
+      "unknown_when_unresolved": true
+    },
+    "unknown_handling": "retain unknown conditions and unresolved questions; do not infer hidden state as fact"
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "clarification_question": "场景中未提供图像，无法确认蓝色方块和透明盒子的具体位置、相对姿态及是否存在遮挡。请提供场景图像或描述物体大致方位。",
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "observe_scene",
+      "expected_effects": [
+        "获得蓝色方块和透明盒子的位姿估计"
+      ],
+      "id": "e1_observe",
+      "preconditions": [],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "approach_object",
+      "dst": "approach_block",
+      "expected_effects": [
+        "机械臂末端接近蓝色方块"
+      ],
+      "id": "e2_approach",
+      "preconditions": [
+        "蓝色方块位姿已知",
+        "路径规划可行"
+      ],
+      "src": "observe_scene",
+      "status": "hypothesized",
+      "trigger": "观察成功且物体可见"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_block",
+      "expected_effects": [
+        "夹爪闭合并接触方块"
+      ],
+      "id": "e3_grasp",
+      "preconditions": [
+        "末端执行器对准抓取点"
+      ],
+      "src": "approach_block",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_hold",
+      "dst": "transport_to_box",
+      "expected_effects": [
+        "确认物体已被稳固抓取"
+      ],
+      "id": "e4_verify_hold",
+      "preconditions": [
+        "夹爪已闭合"
+      ],
+      "src": "grasp_block",
+      "status": "hypothesized",
+      "trigger": "抓取动作完成"
+    },
+    {
+      "action": "transport_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "方块被移动到盒子开口上方"
+      ],
+      "id": "e5_transport",
+      "preconditions": [
+        "持有蓝色方块",
+        "透明盒子位姿已知"
+      ],
+      "src": "transport_to_box",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "方块进入盒子内部"
+      ],
+      "id": "e6_place",
+      "preconditions": [
+        "方块位于盒子正上方"
+      ],
+      "src": "place_and_release",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "夹爪张开，脱离方块"
+      ],
+      "id": "e7_release",
+      "preconditions": [
+        "方块已接触盒底或支撑面"
+      ],
+      "src": "place_and_release",
+      "status": "hypothesized",
+      "trigger": "放置动作完成"
+    }
+  ],
+  "goal_interpretation": "将蓝色方块移动并放置到透明盒子内部，然后释放抓取。",
+  "needs_clarification": true,
+  "nodes": [
+    {
+      "description": "初始状态，等待视觉输入以定位物体",
+      "id": "start_state",
+      "observable_conditions": [],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块的位置和姿态未知",
+        "透明盒子的位置和开口方向未知",
+        "两者之间是否有障碍物未知"
+      ]
+    },
+    {
+      "description": "执行观察以识别蓝色方块和透明盒子",
+      "id": "observe_scene",
+      "observable_conditions": [
+        "获取场景深度和RGB信息"
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "物体是否被严重遮挡",
+        "透明盒子的材质反光是否影响检测"
+      ]
+    },
+    {
+      "description": "移动到蓝色方块附近准备抓取",
+      "id": "approach_block",
+      "observable_conditions": [
+        "机械臂到达预抓取位姿"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "路径是否无碰撞",
+        "抓取点是否可达"
+      ]
+    },
+    {
+      "description": "尝试抓取蓝色方块",
+      "id": "grasp_block",
+      "observable_conditions": [
+        "夹爪闭合"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳定",
+        "方块重量是否超出负载",
+        "表面摩擦系数是否足够"
+      ]
+    },
+    {
+      "description": "携带蓝色方块移动到透明盒子上方",
+      "id": "transport_to_box",
+      "observable_conditions": [
+        "机械臂持有物体",
+        "末端执行器位于盒子上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动过程中是否发生碰撞",
+        "盒子内部空间是否足够容纳方块"
+      ]
+    },
+    {
+      "description": "将蓝色方块放入盒子并释放",
+      "id": "place_and_release",
+      "observable_conditions": [
+        "夹爪张开",
+        "方块位于盒子内部"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块是否完全落入盒底",
+        "释放后方块是否倾倒出盒子"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "蓝色的立方体或长方体对象",
+      "id": "blue_block",
+      "observability": "not_observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "透明的容器，作为放置目标",
+      "id": "transparent_box",
+      "observability": "not_observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证蓝色方块是否能通过透明盒子的开口",
+    "验证抓取蓝色方块时的摩擦力是否足以防止滑落",
+    "验证透明盒子在放置过程中是否会发生位移",
+    "验证机械臂运动范围内无障碍物阻挡"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

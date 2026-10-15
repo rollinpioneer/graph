@@ -1,0 +1,162 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object(red_bowl) then grasp_object(red_bowl)",
+      "canonical_action": "grasp_object",
+      "dst": "bowl_grasped",
+      "expected_effects": [
+        "红色碗被固定于夹爪中",
+        "碗脱离桌面支撑"
+      ],
+      "id": "grasp_bowl",
+      "preconditions": [
+        "红色碗在视野内且可达",
+        "路径上无动态障碍"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object(red_bowl, target=white_plate_center)",
+      "canonical_action": "align_with_target",
+      "dst": "bowl_over_plate",
+      "expected_effects": [
+        "碗移动至盘子上方",
+        "碗处于待释放高度"
+      ],
+      "id": "transport_to_plate",
+      "preconditions": [
+        "碗已被稳固抓取",
+        "白色盘子位置已知"
+      ],
+      "src": "bowl_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object(red_bowl, on=white_plate) then release_object()",
+      "canonical_action": "release_object",
+      "dst": "goal_achieved",
+      "expected_effects": [
+        "碗落在盘面上",
+        "夹爪张开并撤离"
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "碗位于盘子中心正上方",
+        "下降路径无障碍"
+      ],
+      "src": "bowl_over_plate",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation(red_bowl, centered_on=white_plate)",
+      "canonical_action": "verify_goal_relation",
+      "dst": "goal_achieved",
+      "expected_effects": [
+        "确认碗相对于盘子的居中程度",
+        "更新任务完成状态"
+      ],
+      "id": "verify_placement",
+      "preconditions": [
+        "碗已放置在盘子上",
+        "视线未被机械臂遮挡"
+      ],
+      "src": "goal_achieved",
+      "status": "hypothesized",
+      "trigger": "放置动作完成后"
+    }
+  ],
+  "goal_interpretation": "将红色碗移动到白色盘子的正上方中心位置，释放抓握，并验证碗是否稳定且居中地放置在盘子上。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "canonical_state": "visual_unknown",
+      "description": "初始场景：红色碗和白色盘子分离放置在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗位于白色盘子左侧",
+        "两者之间无遮挡"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗的确切重量和摩擦系数",
+        "白色盘子表面的平整度"
+      ]
+    },
+    {
+      "canonical_state": "object_lifted",
+      "description": "机器人成功抓取红色碗并提起",
+      "id": "bowl_grasped",
+      "observable_conditions": [
+        "机械臂夹爪闭合接触碗壁",
+        "碗离开桌面表面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳固不滑落",
+        "抓取点是否导致碗倾斜"
+      ]
+    },
+    {
+      "canonical_state": "object_above_target",
+      "description": "红色碗被运输至白色盘子正上方悬停",
+      "id": "bowl_over_plate",
+      "observable_conditions": [
+        "碗的投影覆盖盘子中心区域",
+        "碗底与盘面保持安全距离"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "视觉估计的中心位置是否存在偏差",
+        "下方是否有未观察到的微小障碍物"
+      ]
+    },
+    {
+      "canonical_state": "goal_stability_candidate",
+      "description": "红色碗静止放置在白色盘子中央，且已释放",
+      "id": "goal_achieved",
+      "observable_conditions": [
+        "碗与盘子接触",
+        "机械臂已撤回",
+        "碗体无明显倾斜"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "碗是否精确位于几何中心",
+        "放置后是否会因重心不稳而滚动"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面左侧的红色圆柱形物体，识别为任务中的红色碗",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面右侧的白色扁平圆形物体，识别为任务中的白色盘子",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证抓取红色碗时的力矩平衡，防止滑脱",
+    "检查白色盘子表面是否光滑足以支持碗的稳定放置",
+    "确认释放后碗的重心是否落在盘子支撑面内",
+    "评估运输过程中碗与桌面的最小安全 clearance"
+  ],
+  "schema_version": "l2r_normalized_source_graph_v1",
+  "source_request_id": "confirm_F03_A_V1"
+}

@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `remove_inplace_ops_for_onnx.h`
+- Original relative path: `.stage3_deps/torch/include/torch/csrc/jit/passes/onnx/remove_inplace_ops_for_onnx.h`
+- File type: `environment_binary`
+- Intended use: local CUDA/PyTorch environment installation
+- Original size: 455 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `.stage3_deps/torch/include/torch/csrc/jit/passes/onnx/remove_inplace_ops_for_onnx.h`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

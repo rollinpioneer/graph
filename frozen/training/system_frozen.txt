@@ -1,0 +1,88 @@
+Tue Jul 21 22:38:24 CST 2026
+gpu03
+NAME="Rocky Linux"
+VERSION="9.7 (Blue Onyx)"
+ID="rocky"
+ID_LIKE="rhel centos fedora"
+VERSION_ID="9.7"
+PLATFORM_ID="platform:el9"
+PRETTY_NAME="Rocky Linux 9.7 (Blue Onyx)"
+ANSI_COLOR="0;32"
+LOGO="fedora-logo-icon"
+CPE_NAME="cpe:/o:rocky:rocky:9::baseos"
+HOME_URL="https://rockylinux.org/"
+VENDOR_NAME="RESF"
+VENDOR_URL="https://resf.org/"
+BUG_REPORT_URL="https://bugs.rockylinux.org/"
+SUPPORT_END="2032-05-31"
+ROCKY_SUPPORT_PRODUCT="Rocky-Linux-9"
+ROCKY_SUPPORT_PRODUCT_VERSION="9.7"
+REDHAT_SUPPORT_PRODUCT="Rocky Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="9.7"
+Python 3.9.18
+Tue Jul 21 22:38:24 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:14:00.0 Off |                    0 |
+| N/A   36C    P0             43W /  400W |   17926MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          On  |   00000000:15:00.0 Off |                    0 |
+| N/A   36C    P0             37W /  400W |   15702MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-40GB          On  |   00000000:18:00.0 Off |                    0 |
+| N/A   45C    P0            149W /  400W |   26441MiB /  40960MiB |     14%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-40GB          On  |   00000000:1D:00.0 Off |                    0 |
+| N/A   37C    P0             41W /  400W |   38734MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA A100-SXM4-40GB          On  |   00000000:1E:00.0 Off |                    0 |
+| N/A   42C    P0             62W /  400W |   29800MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA A100-SXM4-40GB          On  |   00000000:21:00.0 Off |                    0 |
+| N/A   44C    P0             47W /  400W |   13089MiB /  40960MiB |      9%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA A100-SXM4-40GB          On  |   00000000:25:00.0 Off |                    0 |
+| N/A   39C    P0             38W /  400W |   17664MiB /  40960MiB |     33%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA A100-SXM4-40GB          On  |   00000000:2D:00.0 Off |                    0 |
+| N/A   40C    P0             45W /  400W |   27110MiB /  40960MiB |      8%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          601868      C   VLLM::Worker_TP0                      15634MiB |
+|    0   N/A  N/A         1805963      C   ...conda/envs/igstgnn/bin/python       2222MiB |
+|    1   N/A  N/A          601869      C   VLLM::Worker_TP1                      15634MiB |
+|    2   N/A  N/A          656874      C   ...da/envs/lerobotpi0/bin/python       7970MiB |
+|    2   N/A  N/A         2029431      C   ...s/aw_crata_runtime/bin/python       2696MiB |
+|    2   N/A  N/A         2152708      C   ..._phase1/envs/racer/bin/python      15752MiB |
+|    3   N/A  N/A          269783      C   sema-v2_T10_C5_NonIID0.1_gpu3          3204MiB |
+|    3   N/A  N/A          293964      C   SEMAV2Client_2                         7098MiB |
+|    3   N/A  N/A          293967      C   SEMAV2Client_1                         7098MiB |
+|    3   N/A  N/A          293972      C   SEMAV2Client_4                         7098MiB |
+|    3   N/A  N/A          293975      C   SEMAV2Client_3                         7098MiB |
+|    3   N/A  N/A          293978      C   SEMAV2Client_5                         7098MiB |
+|    4   N/A  N/A          342414      C   ...e1/envs/llava-next/bin/python      29790MiB |
+|    5   N/A  N/A         2122034      C   python                                 4468MiB |
+|    5   N/A  N/A         2437384      C   python                                  904MiB |
+|    5   N/A  N/A         4113584      C   python                                 7696MiB |
+|    6   N/A  N/A         3802420      C   ...u/.conda/envs/mmsf/bin/python      17654MiB |
+|    7   N/A  N/A          342413      C   ...e1/envs/llava-next/bin/python      19392MiB |
+|    7   N/A  N/A         4113116      C   python                                 7700MiB |
++-----------------------------------------------------------------------------------------+

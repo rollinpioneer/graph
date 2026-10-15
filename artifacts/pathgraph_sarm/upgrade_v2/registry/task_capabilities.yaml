@@ -1,0 +1,25 @@
+version: task_capabilities_v2
+scope: mechanism_only
+tasks:
+  - task_id: transport_dual_order
+    actual_environment_id: tools.stage6.policy_env.TransportGraphEnv
+    provenance: deterministic_state_machine_probe
+    available_observables: [eef_pos, object_pos, target_pos, gripper_state, previous_applied_action]
+    final_goal_predicate: TransportGraphEnv.info.success
+    local_grasp_or_place_predicate: null
+    continuation_policy_id: tools.stage6.policy_env.scripted_controller
+    can_resume_complete_state: false
+    physical_reset_varies: false
+    supports_new_independent_groups: false
+    eligible_pair_types: [target_identity]
+  - task_id: transport_recovery
+    actual_environment_id: tools.stage6.policy_env.TransportGraphEnv
+    provenance: deterministic_state_machine_probe
+    available_observables: [eef_pos, object_pos, target_pos, gripper_state, previous_applied_action]
+    final_goal_predicate: TransportGraphEnv.info.success
+    local_grasp_or_place_predicate: null
+    continuation_policy_id: tools.stage6.policy_env.scripted_controller
+    can_resume_complete_state: false
+    physical_reset_varies: false
+    supports_new_independent_groups: false
+    eligible_pair_types: [target_identity]

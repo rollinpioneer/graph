@@ -1,0 +1,182 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object and grasp_object",
+      "dst": "grasp_bowl",
+      "expected_effects": [
+        "红碗被牢固抓取",
+        "红碗脱离桌面支撑"
+      ],
+      "id": "e1_grasp",
+      "preconditions": [
+        "红碗在视野内且可达",
+        "机械臂处于空闲状态"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "transport_to_plate",
+      "expected_effects": [
+        "红碗移动至白盘上方空域",
+        "准备进行垂直放置动作"
+      ],
+      "id": "e2_transport",
+      "preconditions": [
+        "红碗已被抓取",
+        "白盘位置已知"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object and release_object",
+      "dst": "place_center",
+      "expected_effects": [
+        "红碗落位于白盘表面",
+        "机械臂收回"
+      ],
+      "id": "e3_place",
+      "preconditions": [
+        "红碗位于白盘正上方",
+        "高度安全且对准中心"
+      ],
+      "src": "transport_to_plate",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "verify_goal_relation",
+      "dst": "verify_goal",
+      "expected_effects": [
+        "确认'红碗在白盘中央'关系成立",
+        "任务标记为成功"
+      ],
+      "id": "e4_verify",
+      "preconditions": [
+        "红碗已释放",
+        "场景恢复静态"
+      ],
+      "src": "place_center",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "start_state",
+      "expected_effects": [
+        "红碗放回桌面",
+        "重置抓取尝试状态"
+      ],
+      "id": "e5_recover_grasp",
+      "preconditions": [
+        "抓取失败或检测到不稳定",
+        "红碗仍位于原处附近"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": "verify_hold returns false"
+    }
+  ],
+  "goal_interpretation": "将红色碗从当前位置移动并放置到白色盘子的几何中心上方，随后释放抓握。需验证最终状态下碗位于盘子中央且未滑落。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：红碗与白盘分离放置在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗位于桌面左侧",
+        "白色盘子位于桌面右侧",
+        "两者之间无物理接触"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红碗的确切重量与摩擦系数",
+        "白盘表面的平整度与防滑性"
+      ]
+    },
+    {
+      "description": "机械臂接近并抓取红色碗的侧壁或边缘",
+      "id": "grasp_bowl",
+      "observable_conditions": [
+        "机械臂末端执行器已闭合",
+        "红碗被提起离开桌面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取是否稳定不滑落",
+        "抓取姿态是否利于后续平移"
+      ]
+    },
+    {
+      "description": "将红碗水平移动至白盘正上方",
+      "id": "transport_to_plate",
+      "observable_conditions": [
+        "红碗悬停于白盘上方",
+        "红碗投影大致覆盖白盘中心区域"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "移动路径中是否存在不可见障碍物",
+        "高度是否足以避免碰撞盘沿"
+      ]
+    },
+    {
+      "description": "垂直下降红碗直至接触白盘表面并释放",
+      "id": "place_center",
+      "observable_conditions": [
+        "红碗底部与白盘表面接触",
+        "机械臂已松开抓握"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "放置位置是否精确处于盘子几何中心",
+        "释放后碗是否保持直立稳定"
+      ]
+    },
+    {
+      "description": "确认红碗位于白盘中央且任务完成",
+      "id": "verify_goal",
+      "observable_conditions": [
+        "红碗静止在白盘上",
+        "视觉反馈显示碗心与盘心重合"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "重心偏移量是否在允许误差范围内"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "红色的圆柱形碗状物体，位于桌面左侧区域",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "白色的圆形扁平盘子，位于桌面右侧区域",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证红碗抓取点的摩擦力是否足以支撑悬空运输",
+    "检查白盘表面是否有油污或倾斜导致放置后滑动",
+    "确认红碗直径小于白盘直径以确保能放入中央",
+    "评估机械臂运动学是否支持从左侧碗到右侧盘的无碰撞轨迹"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,82 @@
+/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/wandb/apis/public.py:2997: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import parse_version
+[2026-07-21 02:29:03,969][hydra.utils][ERROR] - Error initializing class at diffusion_policy.workspace.train_diffusion_unet_lowdim_workspace.TrainDiffusionUnetLowdimWorkspace: Error loading 'diffusion_policy.workspace.train_diffusion_unet_lowdim_workspace.TrainDiffusionUnetLowdimWorkspace':
+PackageNotFoundError("The 'safetensors>=0.3.1' distribution was not found and is required by this application. \nTry: pip install transformers -U or pip install -e '.[dev]' if you're working with git main")
+Are you sure that 'train_diffusion_unet_lowdim_workspace' is importable from module 'diffusion_policy.workspace'?
+Error executing job with overrides: ['name=train_diffusion_unet_lowdim', 'training.seed=0', 'training.num_epochs=50', 'training.checkpoint_every=50', 'training.rollout_every=50', 'checkpoint.topk.k=3', 'task.dataset.seed=0', 'task.dataset.val_ratio=0.04', '+task.dataset.dataset_mask_kwargs.train_ratio=0.64', '+task.dataset.dataset_mask_kwargs.uniform_quality=true', 'logging.name=20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0', 'logging.group=20260720_cupid_square_smoke', 'logging.project=cupid', 'multi_run.wandb_name_base=20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0', 'multi_run.run_dir=/home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_smoke/20260720_cupid_square_smoke_train_diffusion_unet_lowdim_square_mh_0']
+Traceback (most recent call last):
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/hydra/_internal/utils.py", line 639, in _locate
+    obj = getattr(obj, part)
+AttributeError: module 'diffusion_policy.workspace' has no attribute 'train_diffusion_unet_lowdim_workspace'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/transformers/utils/versions.py", line 102, in require_version
+    got_ver = importlib.metadata.version(pkg)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/importlib/metadata.py", line 569, in version
+    return distribution(distribution_name).version
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/importlib/metadata.py", line 542, in distribution
+    return Distribution.from_name(distribution_name)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/importlib/metadata.py", line 196, in from_name
+    raise PackageNotFoundError(name)
+importlib.metadata.PackageNotFoundError: safetensors
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/hydra/_internal/utils.py", line 645, in _locate
+    obj = import_module(mod)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 986, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/home/__compress_data/xushijie/CUPID/repo/diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py", line 25, in <module>
+    from diffusion_policy.policy.diffusion_unet_lowdim_policy import DiffusionUnetLowdimPolicy
+  File "/home/__compress_data/xushijie/CUPID/repo/diffusion_policy/policy/diffusion_unet_lowdim_policy.py", line 6, in <module>
+    from diffusers.schedulers.scheduling_ddpm import DDPMScheduler, DDPMSchedulerOutput
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/diffusers/__init__.py", line 27, in <module>
+    from .modeling_utils import ModelMixin
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/diffusers/modeling_utils.py", line 52, in <module>
+    import accelerate
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/accelerate/__init__.py", line 3, in <module>
+    from .accelerator import Accelerator
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/accelerate/accelerator.py", line 35, in <module>
+    from .checkpointing import load_accelerator_state, load_custom_state, save_accelerator_state, save_custom_state
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/accelerate/checkpointing.py", line 24, in <module>
+    from .utils import (
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/accelerate/utils/__init__.py", line 142, in <module>
+    from .megatron_lm import (
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/accelerate/utils/megatron_lm.py", line 32, in <module>
+    from transformers.modeling_outputs import (
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/transformers/__init__.py", line 26, in <module>
+    from . import dependency_versions_check
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/transformers/dependency_versions_check.py", line 57, in <module>
+    require_version_core(deps[pkg])
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/transformers/utils/versions.py", line 117, in require_version_core
+    return require_version(requirement, hint)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/transformers/utils/versions.py", line 104, in require_version
+    raise importlib.metadata.PackageNotFoundError(
+importlib.metadata.PackageNotFoundError: The 'safetensors>=0.3.1' distribution was not found and is required by this application. 
+Try: pip install transformers -U or pip install -e '.[dev]' if you're working with git main
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/__compress_data/xushijie/CUPID/repo/train.py", line 30, in main
+    cls = hydra.utils.get_class(cfg._target_)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/hydra/utils.py", line 32, in get_class
+    raise e
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/hydra/utils.py", line 23, in get_class
+    cls = _locate(path)
+  File "/home/xushijie/.conda/envs/cupid/lib/python3.9/site-packages/hydra/_internal/utils.py", line 648, in _locate
+    raise ImportError(
+ImportError: Error loading 'diffusion_policy.workspace.train_diffusion_unet_lowdim_workspace.TrainDiffusionUnetLowdimWorkspace':
+PackageNotFoundError("The 'safetensors>=0.3.1' distribution was not found and is required by this application. \nTry: pip install transformers -U or pip install -e '.[dev]' if you're working with git main")
+Are you sure that 'train_diffusion_unet_lowdim_workspace' is importable from module 'diffusion_policy.workspace'?
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

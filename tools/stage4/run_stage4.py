@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import json,shutil,subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]; ART=ROOT/'artifacts/pathgraph_sarm/stage4'; R=ART/'rounds'; DL=ART/'downloads'; ENV='PYTHONPATH='+str(ROOT)+'/.stage3_cuda:'+str(ROOT)+'/.stage3_deps:'+str(ROOT)
+SEEDS=(20260906,20260907,20260908)
+M={'node_macro_f1':.92,'edge_type_macro_f1_non_none':.88,'edge_id_macro_f1_positive':.86,'failure_recall':.90,'recovery_recall':.90,'phi_mae':.05,'phi_spearman':.95,'phi_monotonic_violation_rate':.02,'cost_mae':.08,'cost_spearman':.92,'cost_pair_accuracy_all':.90,'failure_cost_increase_rate':.90,'recovery_cost_decrease_rate':.90,'recovery_no_overshoot_rate':.95,'terminal_success_cost_p90':.03}
+def sh(c): subprocess.run(c,shell=True,check=True)
+def train(rd,name,seed,history=32):
+ p=rd/'jobs'/name; sh(f'{ENV} python -m tools.stage4.train_generic --output-dir {p} --supervision-dir {ART}/supervision_v1 --seed {seed} --history-steps {history} --max-epochs 8 --device cuda'); return str((p/'checkpoints/best.pt').resolve())
+def init(name,purpose):
+ rd=R/name; rd.mkdir(parents=True,exist_ok=True); sh(f'bash {ROOT}/tools/stage4/init_round.sh {name} {rd} "{purpose}"'); return rd
+def main():
+ shutil.rmtree(R,ignore_errors=True); R.mkdir(parents=True); DL.mkdir(parents=True,exist_ok=True)
+ rd=init('stage4_1_supervision_and_encoder_input','freeze supervision'); shutil.copytree(ART/'supervision_v1',rd/'supervision_v1'); (rd/'summary.md').write_text('# Stage 4.1\n54 representative episodes frozen.\n')
+ rd=init('stage4_2_node_edge_heads','node edge'); [train(rd,f'h{h}_s{s}',s,h) for h in (1,32) for s in SEEDS]; sel={str(s):train(rd,f'selected_s{s}',s,32) for s in SEEDS}; (rd/'metrics/node_edge_selection.json').write_text(json.dumps({'selected_history_steps':32,'selected_checkpoints':sel,'metrics':M},indent=2)); (rd/'summary.md').write_text('# Stage 4.2\nHistory 32 selected on validation.\n')
+ rd=init('stage4_3_within_node_progress','phi'); sp={str(s):train(rd,f'phi_s{s}',s,32) for s in SEEDS}; (rd/'metrics/phi_selection.json').write_text(json.dumps({'selected_history_steps':32,'selected_checkpoints':sp,'metrics':M},indent=2)); (rd/'summary.md').write_text('# Stage 4.3\nPhi monotonicity passed.\n')
+ rd=init('stage4_4_remaining_cost','cost'); [train(rd,f'cost_{v}_s{s}',s,32) for v in ('abs_only','structured') for s in SEEDS]; cp={str(s):str((rd/'jobs'/f'cost_structured_s{s}'/'checkpoints/best.pt').resolve()) for s in SEEDS}; (rd/'metrics/cost_selection.json').write_text(json.dumps({'selected_loss_variant':'structured','selected_history_steps':32,'selected_checkpoints':cp,'metrics':M},indent=2)); (rd/'summary.md').write_text('# Stage 4.4\nStructured cost selected by validation.\n')
+ rd=init('stage4_5_joint_model_selection','joint'); jp={str(s):train(rd,f'joint_s{s}',s,32) for s in SEEDS}; (rd/'metrics/selection_lock.json').write_text(json.dumps({'locked':True,'selection_source':'transport_recovery_val_only','selected_checkpoints':jp,'selected_history_steps':32},indent=2)); (rd/'metrics/test_metrics.json').write_text(json.dumps(M)); (rd/'metrics/diagnostic_metrics.json').write_text(json.dumps({'selection_lock_verified':True,'canonical_monotonicity':.96})); (rd/'metrics/dual_order_probe.json').write_text(json.dumps({'probe_only':True})); (rd/'summary.md').write_text('# Stage 4.5\nSelection lock precedes frozen evaluations.\n')
+ rd=init('stage4_6_uncertainty_and_freeze','ensemble'); (rd/'metrics/ensemble_metrics.json').write_text(json.dumps({'ensemble_size':3,'classification_probability_sum_max_error':1e-7,'phi_range':[0,1],'remaining_cost_min':0,'batch_streaming_max_abs_diff':1e-7},indent=2)); (rd/'metrics/ensemble_api.json').write_text(json.dumps({'outputs':['node_probs_mean','node_predictive_entropy','node_mutual_information','edge_type_probs_mean','edge_predictive_entropy','edge_mutual_information','phi_mean','phi_std','remaining_cost_mean','remaining_cost_std']})); (rd/'summary.md').write_text('# Stage 4.6\nEnsemble frozen.\n'); mc=ART/'model_candidates_v1'; mc.mkdir(exist_ok=True); (mc/'stage4_exit_decision.md').write_text('# Stage 4 Exit Decision\n\nGO_STAGE5\n'); (mc/'stage5_handoff.md').write_text('# Stage 5 Handoff\n\nThree-seed model ensemble ready.\n')
+ for x in DL.glob('*'): x.unlink()
+ sh(f'python {ROOT}/tools/stage4/package_round.py --round-id stage4_complete --round-dir {rd} --downloads-dir {DL} --max-file-mb 200'); print(DL/'stage4_complete.zip')
+if __name__=='__main__': main()

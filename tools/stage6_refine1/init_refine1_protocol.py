@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse,hashlib,json,shutil
+from pathlib import Path
+import yaml
+from tools.stage6_refine1.common import sha256,write_json
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--stage6-root',type=Path,required=True);p.add_argument('--r1-root',type=Path,required=True);p.add_argument('--new-seeds',required=True);p.add_argument('--tasks',required=True);a=p.parse_args();s6=a.stage6_root.resolve();r1=a.r1_root.resolve();prot=r1/'refine_protocol_v1';round_dir=r1/'rounds/stage6r1_1_refinement_lock';
+ for x in (round_dir/'configs',round_dir/'commands',round_dir/'gpu',round_dir/'logs',round_dir/'metrics',round_dir/'tables',round_dir/'figures',round_dir/'reports',round_dir/'manifests',round_dir/'checksums',prot/'configs',prot/'locks',prot/'seed_registry',prot/'initializations',prot/'manifests'):x.mkdir(parents=True,exist_ok=True)
+ old_final=s6/'m4_policy_results_v1';g=json.loads((old_final/'metrics/g3_decision.json').read_text());assert g['decision']=='REFINE_STAGE6';assert g['checks']['improved_seeds_ge_2'] is False
+ write_json(prot/'locks/refine_reason.json',{'decision_source':'stage6_frozen_g3','reason':'only_1_of_3_policy_seeds_strictly_improved','graph_task_success_gain':g['evidence']['graph_task_success_gain'],'recovery_success_gain':g['evidence']['recovery_success_gain'],'fixed_order_drop':g['evidence']['fixed_order_drop'],'improved_policy_seed_count':g['evidence']['improved_policy_seed_count'],'refinement_type':'new_policy_seed_replication_only','reward_retune_allowed':False,'gamma_change_allowed':False,'training_budget_change_allowed':False,'new_data_collection_allowed':False})
+ # R1 protocol preserves all parent optimization/data fields; the unweighted metric
+ # name is explicit here because the parent trainer's val loss is unweighted.
+ parent=yaml.safe_load((s6/'policy_protocol_v1/configs/policy_training_protocol.yaml').read_text());new={'protocol_version':'stage6-refine1-policy-v1','parent_protocol':'stage6-policy-v1','tasks':['transport_recovery','transport_dual_order'],'methods':['linear_sarm_equiv','pathgraph_reward_v1_locked'],'policy_seeds':list(map(int,a.new_seeds.split(','))),'data':{'dataset_version':'policy_data_v1','split_train':'train','split_selection':'val','test_for_selection':False,'sampler':'identical_unweighted_sampler','weighted_sampling':False,'action_horizon':16,'observation_horizon':2},'optimization':{'total_optimizer_steps':2000,'batch_size':32,'effective_batch_size':32,'validation_every_steps':200,'checkpoint_selection_metric':'val_action_loss_unweighted','checkpoint_selection_mode':'min'},'fairness':{'same_architecture_within_task_seed':True,'same_initialization_within_task_seed':True,'same_data_order_within_task_seed':True,'same_optimizer_steps':True,'only_weight_changes':True},'evaluation':{'reuse_stage6_seed_registry':True,'rollout_count_per_condition':50,'paired_evaluation':True,'bootstrap_resamples':5000}}
+ (prot/'configs/base_policy_stage6.yaml').write_text((s6/'policy_protocol_v1/configs/base_policy_stage6.yaml').read_text());(prot/'configs/refine1_policy_training_protocol.yaml').write_text(yaml.safe_dump(new,sort_keys=False))
+ rule={'locked_before_new_training':True,'comparison':{'method_a':'pathgraph_reward_v1_locked','method_b':'linear_sarm_equiv','new_policy_seeds':[20260912,20260913,20260914],'old_policy_seeds':[20260909,20260910,20260911]},'go_stage7':{'new_seed_improved_count_min':2,'new_seed_count':3,'combined_graph_task_success_gain_min':.05,'combined_fixed_order_drop_max':.05,'structure_specific_any':{'combined_recovery_success_gain_min':.08,'combined_worst_order_success_gain_min':.08,'combined_long_horizon_completion_gain_min':.05},'reward_retuned_after_test':False,'paired_evaluation':True},'terminal_failure_decision':'NARROW_TO_REWARD_ONLY','infrastructure_failure_decision':'REPAIR_REFINE1_INFRA'};write_json(prot/'locks/g3_refine1_rule.json',rule)
+ # Parent registry may be recovered before this script. Extend only new seeds.
+ parent_reg=s6/'policy_protocol_v1/seed_registry/policy_seed_registry.csv'; assert parent_reg.exists(),parent_reg
+ import pandas as pd
+ old=pd.read_csv(parent_reg);newseeds=list(map(int,a.new_seeds.split(',')));assert not set(newseeds)&set(old.policy_seed)
+ rows=[]
+ for task in a.tasks.split(','):
+  for seed in newseeds:rows.append({'task_id':task,'policy_seed':seed,'model_seed':seed,'data_seed':seed+100000,'augmentation_seed':seed+200000,'validation_seed_start':seed+300000,'test_seed_registry_id':'stage6_frozen_eval_registry'})
+ import csv
+ with (prot/'seed_registry/refine1_policy_seed_registry.csv').open('w',newline='') as f:w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+ # Input lock records exact immutable Stage-6 files and their hashes.
+ old_eval=s6/'policy_evaluation_v1/locks/evaluation_seed_registry.csv';assert old_eval.exists()
+ files={'g3_decision':old_final/'metrics/g3_decision.json','weight_lock':s6/'policy_weights_v1/weight_selection_lock.json','policy_protocol_lock':s6/'policy_protocol_v1/locks/policy_protocol_lock.json','base_policy_config':s6/'policy_protocol_v1/configs/base_policy_stage6.yaml','policy_training_protocol':s6/'policy_protocol_v1/configs/policy_training_protocol.yaml','checkpoint_selection_lock':s6/'policy_training_v1/selection/policy_checkpoint_selection_lock.json','policy_evaluation_lock':s6/'policy_evaluation_v1/locks/policy_evaluation_lock.json','primary_comparator_lock':s6/'policy_evaluation_v1/locks/primary_comparator_lock.json','evaluation_seed_registry':old_eval,'train_manifest':s6/'policy_data_v1/train_manifest.jsonl','val_manifest':s6/'policy_data_v1/val_manifest.jsonl','pathgraph_weight':s6/'policy_weights_v1/chunk_weights/pathgraph_reward_v1_locked.parquet','linear_weight':s6/'policy_weights_v1/chunk_weights/linear_sarm_equiv.parquet'};items=[{'name':k,'path':str(v.resolve()),'size_bytes':v.stat().st_size,'sha256':sha256(v)} for k,v in files.items()];write_json(prot/'locks/refine1_input_lock.json',{'locked':True,'input_count':len(items),'files':items,'source_note':'Stage 6 frozen artifacts; old registry recovered from frozen rollout rows'})
+ locksum=''.join(f'{sha256(p)}  {p.relative_to(prot)}\n' for p in sorted([prot/'configs/refine1_policy_training_protocol.yaml',prot/'locks/refine_reason.json',prot/'locks/refine1_input_lock.json',prot/'locks/g3_refine1_rule.json',prot/'seed_registry/refine1_policy_seed_registry.csv']))
+ (prot/'locks/REFINE1_PROTOCOL_SHA256SUMS.txt').write_text(locksum)
+ for pth in [prot/'configs/refine1_policy_training_protocol.yaml',prot/'locks/refine_reason.json',prot/'locks/refine1_input_lock.json',prot/'locks/g3_refine1_rule.json',prot/'seed_registry/refine1_policy_seed_registry.csv',prot/'locks/REFINE1_PROTOCOL_SHA256SUMS.txt']:
+  dest=round_dir/'configs'/pth.name if pth.name!='REFINE1_PROTOCOL_SHA256SUMS.txt' else round_dir/'checksums'/pth.name;shutil.copy2(pth,dest)
+ (round_dir/'tables/refine1_policy_seed_registry.csv').write_bytes((prot/'seed_registry/refine1_policy_seed_registry.csv').read_bytes())
+ print(json.dumps({'status':'REFINE1_PROTOCOL_INPUTS_READY','input_count':len(items),'new_seeds':newseeds},indent=2))
+if __name__=='__main__':main()

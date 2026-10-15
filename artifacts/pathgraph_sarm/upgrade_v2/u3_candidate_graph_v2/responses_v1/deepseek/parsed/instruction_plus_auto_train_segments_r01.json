@@ -1,0 +1,122 @@
+{
+  "edges": [
+    {
+      "cost_measurement_needed": true,
+      "dst": "n2",
+      "effects": [
+        "contact_present",
+        "object_moving_with_agent",
+        "contact_absent"
+      ],
+      "evidence_segment_ids": [
+        "seg_0001",
+        "seg_0002"
+      ],
+      "hypothesized_type": "forward",
+      "id": "e1",
+      "preconditions": [
+        "agent_approaching_object",
+        "object_moving"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 101,
+          "to_cluster_id": 102
+        }
+      ],
+      "src": "n1",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "cost_measurement_needed": false,
+      "dst": "n3",
+      "effects": [
+        "contact_recently_lost",
+        "stagnation_detected",
+        "object_stationary"
+      ],
+      "evidence_segment_ids": [
+        "seg_0003"
+      ],
+      "hypothesized_type": "failure",
+      "id": "e2",
+      "preconditions": [
+        "contact_present",
+        "object_moving_with_agent"
+      ],
+      "source_transition_pairs": [
+        {
+          "from_cluster_id": 102,
+          "to_cluster_id": 103
+        }
+      ],
+      "src": "n2",
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "graph_id": "g_candidate_001",
+  "nodes": [
+    {
+      "description": "Initial state with object outside goal and agent approaching object",
+      "evidence_segment_ids": [
+        "seg_0001"
+      ],
+      "id": "n1",
+      "observable_predicates": [
+        "contact_absent",
+        "object_moving",
+        "agent_approaching_object",
+        "object_receding_from_goal"
+      ],
+      "role": "start",
+      "source_cluster_ids": [
+        101
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    },
+    {
+      "description": "Intermediate state with contact established and object moving with agent",
+      "evidence_segment_ids": [
+        "seg_0002"
+      ],
+      "id": "n2",
+      "observable_predicates": [
+        "contact_present",
+        "object_moving_with_agent",
+        "stable_goal_occupancy"
+      ],
+      "role": "intermediate",
+      "source_cluster_ids": [
+        102
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "exact_contact_surface_area"
+      ]
+    },
+    {
+      "description": "Failure terminal state after contact lost and stagnation detected",
+      "evidence_segment_ids": [
+        "seg_0003"
+      ],
+      "id": "n3",
+      "observable_predicates": [
+        "contact_recently_lost",
+        "stagnation_detected",
+        "object_stationary"
+      ],
+      "role": "failure_terminal",
+      "source_cluster_ids": [
+        103
+      ],
+      "status": "hypothesized",
+      "unknown_conditions": []
+    }
+  ],
+  "schema_version": "u3_candidate_graph_v1",
+  "scope": "stochastic_simulator_only",
+  "unresolved_questions": []
+}

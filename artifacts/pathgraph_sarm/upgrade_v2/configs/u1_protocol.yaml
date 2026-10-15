@@ -1,0 +1,32 @@
+version: u1_protocol_v1
+scope: mechanism_only
+pilot_seed: 601
+formal_model_seeds: [611, 612, 613]
+split_seed: 607
+history_steps: 32
+horizon_steps_default: 16
+alpha: 0.5
+local_progress_weight: 0.0
+signed_reward_clip: null
+repeat_penalty_eta: 0.0
+uncertainty_beta: 0.0
+primary_continuation_policy: observed_suffix_only
+training:
+  hidden_dim: 64
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 64
+  pilot_steps: 300
+  formal_steps: 600
+  validate_every: 100
+  mse_time_weight: 1.0
+  qd_consistency_weight: 0.0
+models: [cost_only_norank, success_only_norank, dual_value_nograph]
+new_policy_training: false
+llm_graph_generation: false
+tasks:
+  - task_id: transport_dual_order
+    horizon_steps: 16
+  - task_id: transport_recovery
+    horizon_steps: 16

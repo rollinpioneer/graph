@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+python tools/stage3/aggregate_misscoring.py --adapter-dir artifacts/pathgraph_sarm/stage3/input_adapter_v1 --suite-dir artifacts/pathgraph_sarm/stage3/diagnostic_suite_v1 --prediction-root artifacts/pathgraph_sarm/stage3/rounds/stage3_3_baseline_runs/predictions --output-dir artifacts/pathgraph_sarm/stage3/rounds/stage3_4_misscoring_analysis
+python tools/stage3/bootstrap_metrics.py --metrics artifacts/pathgraph_sarm/stage3/rounds/stage3_4_misscoring_analysis/tables/content_group_metrics.csv --group-column content_group_id --resamples 2000 --seed 20260903 --output /tmp/stage3_bootstrap_check.csv
+python tools/stage3/render_reward_cases.py --suite-dir artifacts/pathgraph_sarm/stage3/diagnostic_suite_v1 --metrics-dir artifacts/pathgraph_sarm/stage3/rounds/stage3_4_misscoring_analysis/tables --prediction-root artifacts/pathgraph_sarm/stage3/rounds/stage3_3_baseline_runs/predictions --output-dir artifacts/pathgraph_sarm/stage3/rounds/stage3_4_misscoring_analysis/plots --case-index artifacts/pathgraph_sarm/stage3/rounds/stage3_4_misscoring_analysis/cases/case_index.md

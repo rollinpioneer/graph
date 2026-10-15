@@ -1,0 +1,67 @@
+{
+  "confirmation_gate": {
+    "lock": true,
+    "status": "PASS"
+  },
+  "episode_alignment": {
+    "contract": "observations[t]=x_t; actions[t]=a_{t-1} enters x_t; observations[t][15:17]=actions[t]",
+    "episodes": 720,
+    "future_action_in_observation": false,
+    "max_abs_error": 0.0,
+    "mismatched_episodes": 0,
+    "status": "U2_OBSERVATION_ACTION_ALIGNMENT_PASS"
+  },
+  "episode_isolation": {
+    "reason": "occurrence keys retain episode_id",
+    "status": "PASS"
+  },
+  "no_hidden_online_features": {
+    "forbidden": [
+      "scenario",
+      "phase",
+      "gold_mode",
+      "future_success"
+    ],
+    "status": "PASS"
+  },
+  "segment_conservation": {
+    "full_delta": 0.4,
+    "segment_sum": 0.4,
+    "status": "PASS"
+  },
+  "snapshot_replay": {
+    "checks": [
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t0",
+        "events_equal": true,
+        "state_equal": true
+      },
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t1",
+        "events_equal": true,
+        "state_equal": true
+      },
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t2",
+        "events_equal": true,
+        "state_equal": true
+      },
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t3",
+        "events_equal": true,
+        "state_equal": true
+      },
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t4",
+        "events_equal": true,
+        "state_equal": true
+      },
+      {
+        "anchor_id": "u4b_u4b_v1_00_840999:t5",
+        "events_equal": true,
+        "state_equal": true
+      }
+    ],
+    "status": "PASS"
+  }
+}

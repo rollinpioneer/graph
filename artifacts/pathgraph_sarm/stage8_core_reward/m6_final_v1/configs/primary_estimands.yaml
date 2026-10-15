@@ -1,0 +1,56 @@
+statistics_unit: content_group_id
+bootstrap_resamples: 10000
+bootstrap_seed: 20261401
+ci: percentile_95
+multiple_comparison: holm
+
+primary_estimands:
+  - id: path_consistency
+    source: reproduced_reward_main_table
+    metric: legal_path_normalized_gap
+    direction: lower_is_better
+  - id: failure_sign
+    source: reproduced_reward_main_table
+    metric: failure_negative_rate
+    direction: higher_is_better
+  - id: recovery_sign
+    source: reproduced_reward_main_table
+    metric: recovery_positive_rate
+    direction: higher_is_better
+  - id: loop_safety
+    source: reproduced_reward_main_table
+    metric: recovery_cycle_nonpositive_rate
+    direction: higher_is_better
+  - id: success_separation
+    source: reproduced_reward_main_table
+    metric: success_failure_margin
+    direction: higher_is_better
+
+primary_structural_contrasts:
+  - id: alternative_A_collapse
+    treatment: full_locked
+    comparator: collapse_alternative_to_A_first
+    metric: alternate_path_return
+  - id: alternative_B_collapse
+    treatment: full_locked
+    comparator: collapse_alternative_to_B_first
+    metric: alternate_path_return
+  - id: remove_recovery
+    treatment: full_locked
+    comparator: remove_recovery_edge
+    metric: recovery_positive_rate
+  - id: remove_debt_cap
+    treatment: full_locked
+    comparator: no_recovery_debt_cap
+    metric: recovery_overshoot_rate
+  - id: remove_phi
+    treatment: full_locked
+    comparator: no_phi
+    metric: within_node_reward_density
+
+secondary:
+  - node_macro_f1
+  - edge_type_macro_f1_non_none
+  - phi_mae
+  - remaining_cost_mae
+  - uncertainty_reward_error_auroc

@@ -1,0 +1,14 @@
+{
+  "version": "transition_contract_v2",
+  "observation_timing": "obs[k] before action[k]; obs[k+1] after action[k]",
+  "transition_uid": "episode_uid:source_step",
+  "action_in_value_state": "previous_applied_action_only",
+  "incoming_label_mapping": "incoming[k+1] -> edge_event[k]",
+  "event_counting": "entry_or_reentry_only",
+  "missing_final_observation": "emit only verified triplets; never duplicate final frame",
+  "closure_levels": [
+    "physical_closed",
+    "semantic_closed",
+    "full_input_closed"
+  ]
+}

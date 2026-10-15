@@ -1,0 +1,77 @@
+{
+  "target": "u0",
+  "checks": [
+    {
+      "name": "node_relabeling",
+      "base_score": -1.2999999999999998,
+      "permuted_score": -1.2999999999999998,
+      "abs_difference": 0.0,
+      "status": "computed",
+      "pass_tolerance_1e_6": true
+    },
+    {
+      "name": "time_alignment",
+      "rows": [
+        {
+          "transition_uid": "three_actions:0",
+          "episode_uid": "three_actions",
+          "source_step": 0,
+          "obs_before": "f0",
+          "action_applied": "left",
+          "obs_after": "f1",
+          "edge_event": "forward",
+          "edge_label_source": "incoming[k+1]"
+        },
+        {
+          "transition_uid": "three_actions:1",
+          "episode_uid": "three_actions",
+          "source_step": 1,
+          "obs_before": "f1",
+          "action_applied": "drop",
+          "obs_after": "f2",
+          "edge_event": "failure",
+          "edge_label_source": "incoming[k+1]"
+        },
+        {
+          "transition_uid": "three_actions:2",
+          "episode_uid": "three_actions",
+          "source_step": 2,
+          "obs_before": "f2",
+          "action_applied": "regrasp",
+          "obs_after": "f3",
+          "edge_event": "recovery",
+          "edge_label_source": "incoming[k+1]"
+        }
+      ],
+      "status": "computed",
+      "action_not_in_current_value": true,
+      "event_instance_ids": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "signed_reward",
+      "legacy_reference_node_reset_return": 1.0,
+      "legacy_reference_step_clip_return": 0.5,
+      "new_potential_rewards": [
+        -0.1,
+        0.30000000000000004,
+        -0.4
+      ],
+      "new_potential_sum": -0.19999999999999998,
+      "endpoint_difference": -0.2,
+      "residual": 2.7755575615628914e-17,
+      "status": "computed"
+    },
+    {
+      "name": "row_permutation_and_average_ties",
+      "rho": 0.8944271909999159,
+      "rho_permuted": 0.8944271909999159,
+      "reference": 0.8944271909999159,
+      "status": "computed",
+      "constant_input_result": null
+    }
+  ]
+}

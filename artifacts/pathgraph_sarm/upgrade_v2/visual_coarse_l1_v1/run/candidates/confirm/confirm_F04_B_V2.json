@@ -1,0 +1,171 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "move_light_obstacle",
+      "dst": "clear_obstacle",
+      "expected_effects": [
+        "黄色立方体被移至桌面其他安全区域",
+        "白色盘子中心区域变为可用"
+      ],
+      "id": "e1_clear_path",
+      "preconditions": [
+        "黄色立方体遮挡白盘中心",
+        "机器人具备移动轻障碍物的能力"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": "检测到目标放置区存在障碍物"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_bowl",
+      "expected_effects": [
+        "红色碗被机械臂稳固夹持",
+        "碗脱离桌面支撑"
+      ],
+      "id": "e2_acquire_bowl",
+      "preconditions": [
+        "白盘中心已清空",
+        "红色碗处于静止状态"
+      ],
+      "src": "clear_obstacle",
+      "status": "hypothesized",
+      "trigger": "路径清理完成"
+    },
+    {
+      "action": "transport_object",
+      "dst": "place_centered",
+      "expected_effects": [
+        "红色碗移动至白盘上方",
+        "碗底接近盘面中心坐标"
+      ],
+      "id": "e3_transport_place",
+      "preconditions": [
+        "红色碗已被抓取",
+        "白盘中心无碰撞风险"
+      ],
+      "src": "grasp_bowl",
+      "status": "hypothesized",
+      "trigger": "抓取验证通过"
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "机械臂松开红色碗",
+        "碗保持直立静止于盘中"
+      ],
+      "id": "e4_release_verify",
+      "preconditions": [
+        "碗已对准盘子中心",
+        "碗底与盘面距离在释放阈值内"
+      ],
+      "src": "place_centered",
+      "status": "hypothesized",
+      "trigger": "放置位置确认"
+    }
+  ],
+  "goal_interpretation": "将红色碗从桌面当前位置移动并放置到白色盘子的几何中心，随后释放抓取。需先处理盘子上的黄色方块障碍物。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：红碗在左，白盘在右且上有黄块",
+      "id": "start_state",
+      "observable_conditions": [
+        "红色碗位于桌面左侧区域",
+        "白色盘子位于桌面右侧区域",
+        "黄色立方体占据白色盘子中心位置"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "红色碗的确切重量与摩擦系数",
+        "黄色立方体与盘子的接触稳定性"
+      ]
+    },
+    {
+      "description": "移除或移开盘子上的黄色立方体以腾出空间",
+      "id": "clear_obstacle",
+      "observable_conditions": [
+        "黄色立方体当前位于盘子正上方"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "是否有足够的桌面空间临时放置黄色立方体",
+        "任务是否允许移动非目标物体"
+      ]
+    },
+    {
+      "description": "稳定抓取红色碗",
+      "id": "grasp_bowl",
+      "observable_conditions": [
+        "红色碗处于可接近位置"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取点是否会导致碗滑动或倾倒",
+        "碗内是否为空或含有液体"
+      ]
+    },
+    {
+      "description": "将红碗放置于白盘几何中心",
+      "id": "place_centered",
+      "observable_conditions": [
+        "白盘表面平整且无障碍物"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "视觉估计的中心点与实际物理中心的偏差",
+        "放置时的垂直对齐精度"
+      ]
+    },
+    {
+      "description": "红碗稳定位于白盘中央且已释放",
+      "id": "goal_state",
+      "observable_conditions": [
+        "红碗与白盘同心度符合预期",
+        "机械臂已脱离接触"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "释放后碗是否因惯性发生位移",
+        "最终状态是否满足'中央'的语义阈值"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面上的红色圆柱形碗状物体",
+      "id": "red_bowl",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面上的白色圆形盘子",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "放置在白色盘子中央的黄色立方体",
+      "id": "yellow_cube",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证黄色立方体移除后的临时放置点不会干扰后续操作",
+    "检查红色碗抓取时的形变风险或滑落可能性",
+    "确认白盘表面摩擦力足以支撑红碗在释放后不发生滑动",
+    "评估'中央'定义的容差范围（如半径1cm以内）"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

@@ -1,0 +1,43 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"u3_candidate_graph_v1\",\n  \"graph_id\": \"graph_001\",\n  \"scope\": \"stochastic_simulator_only\",\n  \"nodes\": [\n    {\n      \"id\": \"n_start\",\n      \"description\": \"Initial state with no object contact and agent at start.\",\n      \"role\": \"start\",\n      \"observable_predicates\": [\"contact_absent\"],\n      \"unknown_conditions\": [\"initial_pose_uncertainty\"],\n      \"source_cluster_ids\": [1],\n      \"evidence_segment_ids\": [\"seg_init\"],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n_mid\",\n      \"description\": \"Agent is approaching but not yet in contact with the object.\",\n      \"role\": \"intermediate\",\n      \"observable_predicates\": [\"agent_approaching_object\", \"object_moving\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [2],\n      \"evidence_segment_ids\": [\"seg_mid\"],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n_success\",\n      \"description\": \"Goal object is stably placed in the goal zone.\",\n      \"role\": \"success_terminal\",\n      \"observable_predicates\": [\"object_inside_goal\", \"stable_goal_occupancy\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [3],\n      \"evidence_segment_ids\": [\"seg_success\"],\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"e_init_to_mid\",\n      \"src\": \"n_start\",\n      \"dst\": \"n_mid\",\n      \"preconditions\": [\"contact_absent\"],\n      \"effects\": [\"agent_approaching_object\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\"from_cluster_id\": 1, \"to_cluster_id\": 2}\n      ],\n      \"evidence_segment_ids\": [\"seg_traj1\"],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"e_mid_to_success\",\n      \"src\": \"n_mid\",\n      \"dst\": \"n_success\",\n      \"preconditions\": [\"agent_approaching_object\"],\n      \"effects\": [\"object_inside_goal\", \"stable_goal_occupancy\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\"from_cluster_id\": 2, \"to_cluster_id\": 3}\n      ],\n      \"evidence_segment_ids\": [\"seg_traj2\"],\n      \"unknown_conditions\": [\"placement_tolerance\"],\n      \"cost_measurement_needed\": true,\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"unresolved_questions\": [\n    {\n      \"question\": \"Does transitioning from approach to success require detecting collision before placement?\",\n      \"affected_node_ids\": [\"n_mid\", \"n_success\"],\n      \"affected_edge_ids\": [\"e_mid_to_success\"],\n      \"evidence_needed\": \"Simulations with obstacle present and collision sensor logs\"\n    }\n  ]\n}",
+        "function_call": null,
+        "reasoning_content_present": true,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788624645,
+  "id": "e4d20acd-6b91-46dc-a7f7-ecdc1dcbb9fc",
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "completion_tokens": 1654,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 954,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1395,
+    "prompt_tokens": 1395,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "total_tokens": 3049
+  }
+}

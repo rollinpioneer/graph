@@ -1,0 +1,143 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "approach_object and grasp_object",
+      "dst": "grasp_block",
+      "expected_effects": [
+        "蓝色方块被机械臂稳固夹持",
+        "方块离开桌面表面"
+      ],
+      "id": "e1_grasp",
+      "preconditions": [
+        "蓝色方块在可达范围内",
+        "无遮挡物阻碍抓取路径"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "align_over_box",
+      "expected_effects": [
+        "方块水平移动至盒子上方",
+        "方块高度高于盒子边缘"
+      ],
+      "id": "e2_transport",
+      "preconditions": [
+        "方块已被成功抓取",
+        "透明盒子位置已知且固定"
+      ],
+      "src": "grasp_block",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object and release_object",
+      "dst": "insert_and_release",
+      "expected_effects": [
+        "方块落入盒子内部",
+        "机械臂恢复空闲状态"
+      ],
+      "id": "e3_insert",
+      "preconditions": [
+        "方块精确对齐盒子开口",
+        "方块底面低于盒子上沿"
+      ],
+      "src": "align_over_box",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将场景中的蓝色方块物体抓取并放入透明盒子容器中，随后释放抓持。需确认蓝色方块的具体位置及尺寸是否适配透明盒子开口。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：蓝色方块与透明盒子分离放置在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块直立于桌面左侧",
+        "透明盒子位于桌面右侧",
+        "两者之间无直接物理连接"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块的确切重量与摩擦系数",
+        "透明盒子内部深度是否足以容纳方块",
+        "方块颜色与任务描述的匹配度"
+      ]
+    },
+    {
+      "description": "机械臂接近并抓取蓝色方块",
+      "id": "grasp_block",
+      "observable_conditions": [
+        "机械臂末端执行器接触方块侧面或顶部"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取姿态是否稳定",
+        "方块重心位置"
+      ]
+    },
+    {
+      "description": "将抓取的方块移动至透明盒子正上方并对齐",
+      "id": "align_over_box",
+      "observable_conditions": [
+        "方块投影位于盒子开口范围内"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块尺寸是否小于盒子内径",
+        "移动路径是否存在碰撞风险"
+      ]
+    },
+    {
+      "description": "将方块放入盒子内部并松开夹爪",
+      "id": "insert_and_release",
+      "observable_conditions": [
+        "方块位于盒子底部或内部空间",
+        "机械臂已脱离接触"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块是否在盒内保持直立或稳定姿态",
+        "释放后方块是否弹出或倾倒"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于左侧的棕色/橙色长方体（任务描述为蓝色方块，视觉上存在颜色差异，需作为目标操作对象）",
+      "id": "blue_block",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于右侧的透明方形容器，开口朝上",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "承载物体的橙色平面工作台",
+      "id": "table_surface",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证蓝色方块的实际颜色是否为蓝色（视觉呈现为棕/橙色）",
+    "检查方块几何尺寸是否严格小于透明盒子内部净空尺寸",
+    "确认抓取力矩足以支撑方块重量而不滑落",
+    "评估插入过程中方块棱角是否会卡住盒子边缘"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

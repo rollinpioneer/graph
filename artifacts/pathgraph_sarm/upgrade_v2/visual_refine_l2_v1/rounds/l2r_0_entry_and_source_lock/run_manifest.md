@@ -1,0 +1,26 @@
+# Run Manifest
+
+- schema: `pathgraph_l2r_run_manifest_v1`
+- round_id: `l2r_0_entry_and_source_lock`
+- purpose: `Freeze audited L1V V1 source and L2R protocol`
+- status: `L2R_ENTRY_AND_SOURCE_LOCKED`
+- start_time: `2026-09-08T08:24:50+08:00`
+- end_time: `2026-09-08T08:24:51+08:00`
+- recorded_at: `2026-09-08T00:24:51.242318+00:00`
+- git_commit: `c2705b2bf95d4a8ca5756a2368848e8259ad6daf`
+- python: `/home/xushijie/.conda/envs/lerobot/bin/python`
+- commands_path: `/home/__compress_data/xushijie/graph_github_upload/artifacts/pathgraph_sarm/upgrade_v2/visual_refine_l2_v1/rounds/l2r_0_entry_and_source_lock/commands/executed_commands.txt`
+- commands_sha256: `95e0969533d430160b5a7e11837a734c05d940d103aea3569d7c152699ded61a`
+- gpu_used: `False`
+- gpu_ids: `none`
+- jobs_run: `2`
+- jobs_failed: `0`
+- new_api_calls: `0`
+- new_training_jobs: `0`
+- api_key_read: `False`
+- scientific_scope: `dynamic MuJoCo primitive tabletop refinement benchmark`
+- actual_denominators:
+  - source_candidates: `18`
+  - locked_source_files: `40`
+  - api_calls: `0`
+  - training_jobs: `0`

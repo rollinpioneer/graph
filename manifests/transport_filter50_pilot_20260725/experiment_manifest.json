@@ -1,0 +1,76 @@
+{
+  "experiment_id": "transport_filter50_pilot_20260725",
+  "task": "transport_mh",
+  "phase": "seed0_pilot",
+  "filter_count": 96,
+  "original_training_count": 192,
+  "remaining_training_count": 96,
+  "training_seed": 0,
+  "dataset_seed": 0,
+  "random_filter_seed": 20260725,
+  "filtered_num_epochs": 2301,
+  "filtered_expected_last_epoch": 2300,
+  "evaluation_test_start_seed": 200000,
+  "evaluation_num_episodes": 100,
+  "quality_component_keys": [
+    "sum_of_sum-net-all",
+    "min_of_max-net-all",
+    "max_of_min-net-all"
+  ],
+  "quality_weights": [
+    0.5,
+    0.25,
+    0.25
+  ],
+  "official_score_max_abs_error": 1.878967283985844e-07,
+  "score_pearson": 0.8787497153482702,
+  "arms": {
+    "baseline": {
+      "mode": "eval_only",
+      "physical_gpu": 2,
+      "filter_ids_file": null
+    },
+    "cupid50": {
+      "mode": "train_then_eval",
+      "physical_gpu": 1,
+      "filter_ids_file": "/home/__compress_data/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/cupid50.txt"
+    },
+    "quality50": {
+      "mode": "train_then_eval",
+      "physical_gpu": 4,
+      "filter_ids_file": "/home/__compress_data/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/quality50.txt"
+    },
+    "random50": {
+      "mode": "train_then_eval",
+      "physical_gpu": 5,
+      "filter_ids_file": "/home/__compress_data/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/random50.txt"
+    }
+  },
+  "overlap": {
+    "cupid50__quality50": {
+      "intersection": 83,
+      "union": 109,
+      "jaccard": 0.7614678899082569
+    },
+    "cupid50__random50": {
+      "intersection": 46,
+      "union": 146,
+      "jaccard": 0.3150684931506849
+    },
+    "quality50__random50": {
+      "intersection": 50,
+      "union": 142,
+      "jaccard": 0.352112676056338
+    }
+  },
+  "inputs": {
+    "dataset": "/home/__compress_data/xushijie/CUPID/repo/data/robomimic/datasets/transport/mh/low_dim_abs.hdf5",
+    "dataset_sha256": "2034f404d1e9dd04514c443f9b2fb2bda99f320b46acd9ffc9983fdbec0f9d95",
+    "training_split": "/home/__compress_data/xushijie/CUPID/manifests/stage3_transport/training_split/dataset_split.json",
+    "training_split_sha256": "3be25c0dd1f5d182c98b8a65650599daafeec543923807e6ead47c72911cccb3",
+    "score_pickle": "/home/__compress_data/xushijie/CUPID/repo/data/outputs/eval_save_episodes/20260722_cupid_transport_stage3_rollout100/20260722_cupid_transport_stage3_train_diffusion_unet_lowdim_transport_mh_0/latest/default_demonstration_scores-seed=0/online_trak_influence.pkl",
+    "score_pickle_sha256": "bb96a8f1f236b38661526eeee0cd07a7334501988101dc595f9b265034815ba0",
+    "official_score_csv": "/home/__compress_data/xushijie/CUPID/results/stage3_transport/influence_layers/final_demo_scores.csv",
+    "official_score_csv_sha256": "c6e21d60385e2c343f8b8d184a62bbbe7a64e69316839c32ac46c1c2b06d828c"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "grasp_object(blue_cube)",
+      "dst": "cube_grasped",
+      "expected_effects": [
+        "蓝色方块被固定于机械臂末端",
+        "方块脱离桌面支撑"
+      ],
+      "id": "grasp_cube",
+      "preconditions": [
+        "蓝色方块处于可接近位置",
+        "机械臂未持有其他物体"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object(blue_cube, transparent_box)",
+      "dst": "box_approached",
+      "expected_effects": [
+        "蓝色方块水平移动至盒子上方",
+        "方块高度调整至适合放入的位置"
+      ],
+      "id": "transport_to_box",
+      "preconditions": [
+        "蓝色方块已被稳定抓取",
+        "透明盒子位置已知且可达"
+      ],
+      "src": "cube_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "place_object(blue_cube, inside_transparent_box); release_object()",
+      "dst": "goal_state",
+      "expected_effects": [
+        "蓝色方块落入或放置于盒子内部",
+        "机械臂松开方块并 retract"
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "方块位于盒子开口正上方",
+        "下方空间无障碍物阻挡"
+      ],
+      "src": "box_approached",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "将蓝色方块从桌面当前位置移动并放置到透明盒子的内部空间中，随后释放抓取。",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "初始场景：蓝色方块和透明盒子均静止在桌面上",
+      "id": "start_state",
+      "observable_conditions": [
+        "蓝色方块位于桌子左侧区域",
+        "透明盒子位于桌子右侧区域",
+        "两者之间无物理接触"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "蓝色方块的精确重心位置",
+        "透明盒子内部的可用空间尺寸是否完全容纳方块"
+      ]
+    },
+    {
+      "description": "机械臂已稳定抓取蓝色方块",
+      "id": "cube_grasped",
+      "observable_conditions": [
+        "机械臂末端执行器闭合",
+        "蓝色方块离开桌面表面"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "抓取点的摩擦系数是否足以支撑后续移动",
+        "抓取力是否会导致方块滑动或损坏"
+      ]
+    },
+    {
+      "description": "蓝色方块被移动至透明盒子开口正上方",
+      "id": "box_approached",
+      "observable_conditions": [
+        "方块水平投影位于盒子开口范围内",
+        "方块底部高于盒子边缘"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "下放路径中是否存在未观测到的内部障碍物",
+        "盒子边缘与方块的间隙是否足够避免碰撞"
+      ]
+    },
+    {
+      "description": "蓝色方块位于透明盒子内部且已释放",
+      "id": "goal_state",
+      "observable_conditions": [
+        "机械臂末端执行器张开",
+        "蓝色方块静止于盒子底部或内部支撑面上",
+        "方块未超出盒子边界"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "方块在盒子内的最终姿态稳定性",
+        "释放后方块是否会因惯性发生位移"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "位于桌面上的蓝色立方体块",
+      "id": "blue_cube",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "位于桌面上的透明方形容器",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    },
+    {
+      "description": "承载物体的橙色平面",
+      "id": "table_surface",
+      "observability": "observed",
+      "role": "obstacle",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "验证透明盒子内部深度是否大于蓝色方块高度",
+    "检查抓取蓝色方块时的接触面摩擦力是否充足",
+    "确认放置过程中方块侧面不与盒子内壁发生刚性碰撞",
+    "验证释放后方块在盒子底部的静态平衡性"
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

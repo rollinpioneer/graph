@@ -1,0 +1,43 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"schema_version\":\"u3_candidate_graph_v1\",\"graph_id\":\"g_candidate_001\",\"scope\":\"stochastic_simulator_only\",\"nodes\":[{\"id\":\"n1\",\"description\":\"Initial state with object outside goal and agent approaching object\",\"role\":\"start\",\"observable_predicates\":[\"contact_absent\",\"object_moving\",\"agent_approaching_object\",\"object_receding_from_goal\"],\"unknown_conditions\":[],\"source_cluster_ids\":[101],\"evidence_segment_ids\":[\"seg_0001\"],\"status\":\"hypothesized\"},{\"id\":\"n2\",\"description\":\"Intermediate state with contact established and object moving with agent\",\"role\":\"intermediate\",\"observable_predicates\":[\"contact_present\",\"object_moving_with_agent\",\"stable_goal_occupancy\"],\"unknown_conditions\":[\"exact_contact_surface_area\"],\"source_cluster_ids\":[102],\"evidence_segment_ids\":[\"seg_0002\"],\"status\":\"hypothesized\"},{\"id\":\"n3\",\"description\":\"Failure terminal state after contact lost and stagnation detected\",\"role\":\"failure_terminal\",\"observable_predicates\":[\"contact_recently_lost\",\"stagnation_detected\",\"object_stationary\"],\"unknown_conditions\":[],\"source_cluster_ids\":[103],\"evidence_segment_ids\":[\"seg_0003\"],\"status\":\"hypothesized\"}],\"edges\":[{\"id\":\"e1\",\"src\":\"n1\",\"dst\":\"n2\",\"preconditions\":[\"agent_approaching_object\",\"object_moving\"],\"effects\":[\"contact_present\",\"object_moving_with_agent\",\"contact_absent\"],\"hypothesized_type\":\"forward\",\"source_transition_pairs\":[{\"from_cluster_id\":101,\"to_cluster_id\":102}],\"evidence_segment_ids\":[\"seg_0001\",\"seg_0002\"],\"unknown_conditions\":[],\"cost_measurement_needed\":true,\"status\":\"hypothesized\"},{\"id\":\"e2\",\"src\":\"n2\",\"dst\":\"n3\",\"preconditions\":[\"contact_present\",\"object_moving_with_agent\"],\"effects\":[\"contact_recently_lost\",\"stagnation_detected\",\"object_stationary\"],\"hypothesized_type\":\"failure\",\"source_transition_pairs\":[{\"from_cluster_id\":102,\"to_cluster_id\":103}],\"evidence_segment_ids\":[\"seg_0003\"],\"unknown_conditions\":[],\"cost_measurement_needed\":false,\"status\":\"hypothesized\"}],\"unresolved_questions\":[]}",
+        "function_call": null,
+        "reasoning_content_present": true,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788624647,
+  "id": "6220c835-9138-41bd-9255-3856293bb7cc",
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "completion_tokens": 802,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 272,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 115,
+    "prompt_tokens": 1395,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 1280,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "total_tokens": 2197
+  }
+}

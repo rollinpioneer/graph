@@ -1,0 +1,90 @@
+{
+  "node_maps": {
+    "transport_dual_order": [
+      "A_done",
+      "B_done",
+      "start",
+      "success"
+    ],
+    "transport_recovery": [
+      "dropped_or_misaligned",
+      "grasped",
+      "in_transit",
+      "placed",
+      "recovery",
+      "start",
+      "success",
+      "terminal_failure"
+    ]
+  },
+  "edge_id_maps": {
+    "transport_dual_order": [
+      "A_done_to_B_done",
+      "A_done_to_success",
+      "B_done_to_A_done",
+      "B_done_to_success",
+      "start_to_A_done",
+      "start_to_B_done"
+    ],
+    "transport_recovery": [
+      "dropped_or_misaligned_to_recovery",
+      "grasped_to_in_transit",
+      "in_transit_to_dropped_or_misaligned",
+      "in_transit_to_placed",
+      "in_transit_to_terminal_failure",
+      "placed_to_success",
+      "recovery_to_grasped",
+      "start_to_grasped"
+    ]
+  },
+  "edge_types": [
+    "none",
+    "forward",
+    "alternative",
+    "recovery",
+    "failure",
+    "stagnation"
+  ],
+  "task_masks": {
+    "transport_dual_order": {
+      "node": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edge_id": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "transport_recovery": {
+      "node": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "edge_id": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  }
+}

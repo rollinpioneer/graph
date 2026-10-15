@@ -1,0 +1,49 @@
+{
+  "agent": {
+    "action_dim": 21,
+    "actor_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "actor_layer_norm": false,
+    "actor_type": "DFQL",
+    "agent_name": "dfql",
+    "alpha": 10,
+    "batch_size": 256,
+    "critic_type": "scalar",
+    "discount": 0.995,
+    "encoder": null,
+    "flow_steps": 10,
+    "layer_norm": true,
+    "lr": 0.0003,
+    "normalize_q_loss": false,
+    "ob_dims": [
+      69
+    ],
+    "q_agg": "mean",
+    "tau": 0.005,
+    "value_hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ]
+  },
+  "execution_stage": "prepare_and_verify",
+  "host": "dfql",
+  "online_learning_allowed": false,
+  "optimizer_steps_allowed": 0,
+  "provenance": {
+    "execution_guard": "card/user authorization; not official algorithm parameters",
+    "flow_parameters": "pinned floq get_config mechanically inherited except card depth",
+    "host_parameters": "pinned dfql get_config + fixed README task flags"
+  },
+  "seeds_prepared": [
+    0,
+    1
+  ],
+  "task": "humanoidmaze-medium-navigate-singletask-task1-v0",
+  "training_authorized": false
+}

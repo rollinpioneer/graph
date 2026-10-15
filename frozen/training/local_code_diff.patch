@@ -1,0 +1,52 @@
+diff --git a/diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py b/diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py
+index 617b8ae..9e24b20 100644
+--- a/diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py
++++ b/diffusion_policy/workspace/train_diffusion_unet_lowdim_workspace.py
+@@ -152,7 +152,7 @@ class TrainDiffusionUnetLowdimWorkspace(BaseWorkspace):
+         # training loop
+         log_path = os.path.join(self.output_dir, 'logs.json.txt')
+         with JsonLogger(log_path) as json_logger:
+-            for local_epoch_idx in range(cfg.training.num_epochs):
++            while self.epoch < cfg.training.num_epochs:
+                 step_log = dict()
+                 # ========= train for this epoch ==========
+                 train_losses = list()
+@@ -212,6 +212,26 @@ class TrainDiffusionUnetLowdimWorkspace(BaseWorkspace):
+                     policy = self.ema_model
+                 policy.eval()
+ 
++                # Rollout uses multiple subprocesses and is the least reliable part of
++                # an epoch. Persist training state synchronously before starting it so a
++                # supervisor restart loses at most the current epoch. An atomic rename
++                # keeps the previous checkpoint loadable if this process is interrupted
++                # while torch is serializing the new one.
++                is_checkpoint_epoch = (
++                    self.epoch % cfg.training.checkpoint_every) == 0
++                if is_checkpoint_epoch and cfg.checkpoint.save_last_ckpt:
++                    ckpt_path = self.get_checkpoint_path()
++                    tmp_ckpt_path = ckpt_path.with_name(ckpt_path.name + '.tmp')
++                    previous_ckpt_path = ckpt_path.with_name(
++                        ckpt_path.name + '.previous')
++                    self.save_checkpoint(path=tmp_ckpt_path, use_thread=False)
++                    if ckpt_path.is_file():
++                        tmp_previous_path = previous_ckpt_path.with_name(
++                            previous_ckpt_path.name + '.tmp')
++                        shutil.copy2(ckpt_path, tmp_previous_path)
++                        os.replace(tmp_previous_path, previous_ckpt_path)
++                    os.replace(tmp_ckpt_path, ckpt_path)
++
+                 # run rollout
+                 if (self.epoch % cfg.training.rollout_every) == 0:
+                     runner_log = env_runner.run(policy)
+@@ -264,10 +284,8 @@ class TrainDiffusionUnetLowdimWorkspace(BaseWorkspace):
+                         del mse
+                 
+                 # checkpoint
+-                if (self.epoch % cfg.training.checkpoint_every) == 0:
++                if is_checkpoint_epoch:
+                     # checkpointing
+-                    if cfg.checkpoint.save_last_ckpt:
+-                        self.save_checkpoint()
+                     if cfg.checkpoint.save_last_snapshot:
+                         self.save_snapshot()
+ 

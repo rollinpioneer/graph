@@ -1,0 +1,210 @@
+{
+  "clarification_question": "There are two blue cubes visible. Should I manipulate the one in the foreground or the one in the background?",
+  "edges": [
+    {
+      "action": "request_clarification",
+      "dst": "clarify_target",
+      "expected_effects": [
+        "Target cube identity resolved"
+      ],
+      "id": "edge_select_target",
+      "preconditions": [
+        "Multiple blue cubes detected"
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": "Ambiguity in object selection"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_cube",
+      "expected_effects": [
+        "Cube secured in gripper"
+      ],
+      "id": "edge_grasp",
+      "preconditions": [
+        "Target cube identified",
+        "Path to cube clear"
+      ],
+      "src": "clarify_target",
+      "status": "hypothesized",
+      "trigger": "Target confirmed"
+    },
+    {
+      "action": "transport_object",
+      "dst": "transport_to_box",
+      "expected_effects": [
+        "Cube positioned above box opening"
+      ],
+      "id": "edge_transport",
+      "preconditions": [
+        "Object firmly grasped",
+        "Verify_hold successful"
+      ],
+      "src": "grasp_cube",
+      "status": "hypothesized",
+      "trigger": "Grasp verified"
+    },
+    {
+      "action": "place_object",
+      "dst": "place_and_release",
+      "expected_effects": [
+        "Cube lowered into box volume"
+      ],
+      "id": "edge_place",
+      "preconditions": [
+        "Cube aligned with box interior",
+        "No collision with box rim"
+      ],
+      "src": "transport_to_box",
+      "status": "hypothesized",
+      "trigger": "Alignment achieved"
+    },
+    {
+      "action": "release_object",
+      "dst": "verify_goal",
+      "expected_effects": [
+        "Gripper opens",
+        "Cube remains in box"
+      ],
+      "id": "edge_release",
+      "preconditions": [
+        "Cube supported by box bottom"
+      ],
+      "src": "place_and_release",
+      "status": "hypothesized",
+      "trigger": "Placement depth reached"
+    },
+    {
+      "action": "observe_scene",
+      "dst": "clarify_target",
+      "expected_effects": [
+        "Re-evaluate object pose",
+        "Retry or select alternative"
+      ],
+      "id": "edge_recovery_grasp_fail",
+      "preconditions": [
+        "Grasp attempt failed",
+        "Object slipped or moved"
+      ],
+      "src": "grasp_cube",
+      "status": "hypothesized",
+      "trigger": "Grasp failure signal"
+    }
+  ],
+  "goal_interpretation": "Identify the specific blue cube intended for manipulation (as there are two), grasp it, transport it over the transparent box, place it inside, and release it to ensure it rests within the container boundaries.",
+  "needs_clarification": true,
+  "nodes": [
+    {
+      "description": "Initial scene with two blue cubes and one transparent box on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Two blue cubes visible on the left",
+        "One transparent box visible on the right"
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Which blue cube is the specific target",
+        "Exact weight and friction of the blue cubes",
+        "Internal dimensions of the transparent box"
+      ]
+    },
+    {
+      "description": "Determine which blue cube to manipulate based on task context or default selection.",
+      "id": "clarify_target",
+      "observable_conditions": [
+        "Visual distinction between front and back cubes"
+      ],
+      "role": "clarification",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "User preference if not specified by position"
+      ]
+    },
+    {
+      "description": "Robot arm approaches and grasps the selected blue cube.",
+      "id": "grasp_cube",
+      "observable_conditions": [
+        "Cube position relative to gripper"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Grasp stability",
+        "Slippage risk during lift"
+      ]
+    },
+    {
+      "description": "Move the held cube horizontally and vertically to align over the transparent box opening.",
+      "id": "transport_to_box",
+      "observable_conditions": [
+        "Box opening location",
+        "Cube pose in gripper"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Collision-free path clearance",
+        "Depth perception accuracy through transparent material"
+      ]
+    },
+    {
+      "description": "Lower the cube into the box and open the gripper to release it.",
+      "id": "place_and_release",
+      "observable_conditions": [
+        "Cube contact with box bottom or sides"
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Final resting orientation",
+        "Whether cube fits without jamming"
+      ]
+    },
+    {
+      "description": "Confirm the blue cube is successfully inside the transparent box and released.",
+      "id": "verify_goal",
+      "observable_conditions": [
+        "Cube visually contained within box boundaries",
+        "Gripper is open and retracted"
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Stability of the placed cube"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "Blue cube located in the foreground left of the table.",
+      "id": "blue_cube_front",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Blue cube located behind the front blue cube.",
+      "id": "blue_cube_back",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Transparent rectangular container located on the right side of the table.",
+      "id": "transparent_box",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify the selected blue cube is within reachable workspace bounds.",
+    "Check if the transparent box opening is large enough to admit the cube.",
+    "Assess grip force required to prevent slipping without crushing.",
+    "Validate that the placement trajectory avoids clipping the box rim.",
+    "Confirm the box is stationary and heavy enough not to tip during insertion."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

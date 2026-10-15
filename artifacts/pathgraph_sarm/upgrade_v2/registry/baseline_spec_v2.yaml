@@ -1,0 +1,32 @@
+version: baseline_spec_v2
+methods:
+  - id: time_fraction_oracle
+    role: offline_reference
+    scorer: upgrade_v2.rewards.graph_rules.time_fraction
+    inputs: [source_step, next_step, observed_episode_transitions]
+    input_privilege: full_episode_length
+    checkpoint: null
+  - id: oracle_graph_cost
+    role: oracle
+    scorer: upgrade_v2.rewards.graph_rules.oracle_topology_cost
+    inputs: [gt_node, graph_spec]
+    input_privilege: gt_state
+    checkpoint: null
+  - id: learned_fixed_chain_proxy
+    role: learned_perception_rule_progress
+    scorer: upgrade_v2.rewards.graph_rules.fixed_chain_from_belief
+    inputs: [pred_node_belief, chain_spec]
+    input_privilege: predicted_state_only
+    checkpoint: resolve_actual
+  - id: manual_graph_topology_v2
+    role: learned_perception_manual_topology
+    scorer: upgrade_v2.rewards.graph_rules.graph_from_belief
+    inputs: [pred_node_belief, graph_spec]
+    input_privilege: predicted_state_only
+    checkpoint: resolve_actual
+  - id: manual_rank_prior_legacy
+    role: historical_reference
+    scorer: upgrade_v2.adapters.legacy.original_reward
+    inputs: [legacy_model_predictions]
+    input_privilege: predicted_state_only
+    checkpoint: resolve_actual

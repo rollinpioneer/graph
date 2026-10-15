@@ -1,0 +1,38 @@
+protocol_version: stage6-policy-v1
+tasks:
+- transport_recovery
+- transport_dual_order
+methods:
+- bc_all
+- linear_sarm_equiv
+- sequential_transition
+- pathgraph_reward_v1_locked
+policy_seeds:
+- 20260909
+- 20260910
+- 20260911
+data:
+  dataset_version: policy_data_v1
+  split_train: train
+  split_selection: val
+  test_for_selection: false
+  sampler: identical_unweighted_sampler
+  weighted_sampling: false
+  action_horizon: 16
+  observation_horizon: 2
+optimization:
+  total_optimizer_steps: 2000
+  batch_size: 32
+  effective_batch_size: 32
+  validation_every_steps: 200
+  checkpoint_selection_metric: val_action_loss
+  checkpoint_selection_mode: min
+fairness:
+  same_architecture_within_task: true
+  same_initialization_within_task_seed: true
+  same_data_order_within_task_seed: true
+  same_optimizer_steps: true
+  only_weight_changes: true
+smoke:
+  optimizer_steps: 2000
+  run_all_tasks_methods: true

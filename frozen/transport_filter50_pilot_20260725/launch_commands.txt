@@ -1,0 +1,10 @@
+experiment=transport_filter50_pilot_20260725
+launch_time=2026-07-25T14:35:18+08:00
+manifest=/home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/experiment_manifest.json
+evaluation_seeds=200000..200099
+filtered_epochs=2301
+checkpoint_resume=true
+arm=baseline gpu=2 mode=eval_only command=bash /home/xushijie/CUPID/tools/run_transport_filter50_arm.sh --manifest /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/experiment_manifest.json --arm baseline --gpu 2 --mode eval_only 
+arm=cupid50 gpu=1 mode=train_then_eval command=bash /home/xushijie/CUPID/tools/run_transport_filter50_arm.sh --manifest /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/experiment_manifest.json --arm cupid50 --gpu 1 --mode train_then_eval --filter-ids-file /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/cupid50.txt 
+arm=quality50 gpu=4 mode=train_then_eval command=bash /home/xushijie/CUPID/tools/run_transport_filter50_arm.sh --manifest /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/experiment_manifest.json --arm quality50 --gpu 4 --mode train_then_eval --filter-ids-file /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/quality50.txt 
+arm=random50 gpu=5 mode=train_then_eval command=bash /home/xushijie/CUPID/tools/run_transport_filter50_arm.sh --manifest /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/experiment_manifest.json --arm random50 --gpu 5 --mode train_then_eval --filter-ids-file /home/xushijie/CUPID/manifests/transport_filter50_pilot_20260725/filter_ids/random50.txt 

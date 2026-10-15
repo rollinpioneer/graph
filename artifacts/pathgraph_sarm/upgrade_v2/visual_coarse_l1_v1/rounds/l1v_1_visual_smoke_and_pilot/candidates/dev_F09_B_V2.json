@@ -1,0 +1,143 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "grasp_object",
+      "dst": "cup_grasped",
+      "expected_effects": [
+        "Cup is lifted from the table.",
+        "Robot holds the cup firmly."
+      ],
+      "id": "grasp_cup",
+      "preconditions": [
+        "Target cup is reachable and not occluded.",
+        "Gripper is open and ready."
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "transport_object",
+      "dst": "cup_in_tray",
+      "expected_effects": [
+        "Cup is moved horizontally over the grey tray.",
+        "Cup is lowered towards an empty slot."
+      ],
+      "id": "transport_to_tray",
+      "preconditions": [
+        "Cup is securely grasped.",
+        "Path to tray is collision-free."
+      ],
+      "src": "cup_grasped",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "release_object",
+      "dst": "goal_state",
+      "expected_effects": [
+        "Gripper opens to release the cup.",
+        "Cup remains in the tray."
+      ],
+      "id": "place_and_release",
+      "preconditions": [
+        "Cup is seated in the tray slot.",
+        "Cup is stable enough to support its own weight."
+      ],
+      "src": "cup_in_tray",
+      "status": "hypothesized",
+      "trigger": null
+    }
+  ],
+  "goal_interpretation": "Select one of the two visible green cups, transport it to the grey tray, and place it securely into an available empty slot within the tray boundaries before releasing.",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "Initial scene with two green cups and a grey tray on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Two green cups are present on the table surface.",
+        "Grey tray is stationary with visible empty slots."
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Exact weight and center of mass of the cups.",
+        "Friction coefficient between cup base and tray surface."
+      ]
+    },
+    {
+      "description": "One green cup is securely held by the robot gripper.",
+      "id": "cup_grasped",
+      "observable_conditions": [
+        "Gripper is closed around the cup body or handle.",
+        "Cup is lifted slightly off the table surface."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Grasp stability under acceleration.",
+        "Whether the selected cup is the intended target if multiple exist."
+      ]
+    },
+    {
+      "description": "The green cup is positioned inside an empty slot of the grey tray.",
+      "id": "cup_in_tray",
+      "observable_conditions": [
+        "Cup is aligned with a tray compartment.",
+        "Cup base is in contact with the tray bottom."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Precise fit tolerance between cup diameter and slot width.",
+        "Stability of the cup once placed without holding."
+      ]
+    },
+    {
+      "description": "Green cup is released and resting stably in the grey tray.",
+      "id": "goal_state",
+      "observable_conditions": [
+        "Robot gripper is open and retracted.",
+        "Cup remains upright within the tray boundaries."
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Long-term stability against vibration.",
+        "Confirmation that the task is fully complete per user intent."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "Green cylindrical cup with handle located on the left side of the table.",
+      "id": "green_cup_1",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Green cylindrical cup with handle located behind or adjacent to the first cup.",
+      "id": "green_cup_2",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Rectangular grey tray with internal compartments/slots positioned on the right side.",
+      "id": "grey_tray",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify grasp stability by lifting the cup slightly before full transport.",
+    "Check for collision between the cup handle and tray edges during insertion.",
+    "Confirm the cup sits flat in the tray slot before releasing grip.",
+    "Ensure the selected cup is not stuck to the table surface due to suction or friction."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

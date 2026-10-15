@@ -1,0 +1,10 @@
+# Omitted file placeholder
+
+- Original filename: `vec_int.h`
+- Original relative path: `.stage3_cuda/torch/include/ATen/cpu/vec/sve/vec_int.h`
+- File type: `environment_binary`
+- Intended use: local CUDA/PyTorch environment installation
+- Original size: 29076 bytes
+- Omission reason: excluded from GitHub snapshot to keep repository lightweight and avoid binary/data upload
+- Restore: recover the original file from the experiment workspace or external artifact storage, then place it at `.stage3_cuda/torch/include/ATen/cpu/vec/sve/vec_int.h`.
+- Source of truth: `LARGE_FILES_OMITTED.tsv` at repository root.

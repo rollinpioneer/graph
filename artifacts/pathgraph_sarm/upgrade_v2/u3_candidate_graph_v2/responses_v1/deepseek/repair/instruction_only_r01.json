@@ -1,0 +1,43 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"u3_candidate_graph_v1\",\n  \"graph_id\": \"candidate_graph_001\",\n  \"scope\": \"stochastic_simulator_only\",\n  \"nodes\": [\n    {\n      \"id\": \"n1\",\n      \"description\": \"Initial state: no contact with object\",\n      \"role\": \"start\",\n      \"observable_predicates\": [\"contact_absent\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n2\",\n      \"description\": \"Agent approaching object\",\n      \"role\": \"intermediate\",\n      \"observable_predicates\": [\"agent_approaching_object\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [],\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"n3\",\n      \"description\": \"Object inside goal and stable\",\n      \"role\": \"success_terminal\",\n      \"observable_predicates\": [\"object_inside_goal\", \"stable_goal_occupancy\"],\n      \"unknown_conditions\": [],\n      \"source_cluster_ids\": [],\n      \"evidence_segment_ids\": [],\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"e1\",\n      \"src\": \"n1\",\n      \"dst\": \"n2\",\n      \"preconditions\": [\"contact_absent\"],\n      \"effects\": [\"agent_approaching_object\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\"from_cluster_id\": 0, \"to_cluster_id\": 1}\n      ],\n      \"evidence_segment_ids\": [],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": false,\n      \"status\": \"hypothesized\"\n    },\n    {\n      \"id\": \"e2\",\n      \"src\": \"n2\",\n      \"dst\": \"n3\",\n      \"preconditions\": [\"agent_approaching_object\"],\n      \"effects\": [\"object_inside_goal\", \"stable_goal_occupancy\"],\n      \"hypothesized_type\": \"forward\",\n      \"source_transition_pairs\": [\n        {\"from_cluster_id\": 1, \"to_cluster_id\": 2}\n      ],\n      \"evidence_segment_ids\": [],\n      \"unknown_conditions\": [],\n      \"cost_measurement_needed\": false,\n      \"status\": \"hypothesized\"\n    }\n  ],\n  \"unresolved_questions\": []\n}",
+        "function_call": null,
+        "reasoning_content_present": true,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788624645,
+  "id": "1e760c57-90c1-49de-aa20-ffd46ccae8da",
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "completion_tokens": 1636,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 1077,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1395,
+    "prompt_tokens": 1395,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "total_tokens": 3031
+  }
+}

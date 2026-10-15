@@ -1,0 +1,251 @@
+graph_id: transport_dual_order_graph
+version: 1.0.0
+task_id: transport_dual_order
+description: two independent subgoals A/B with order-invariant terminal success
+start_node: start
+success_nodes:
+- success
+terminal_failure_nodes:
+- terminal_failure
+nodes:
+- id: start
+  name: start
+  description: start
+  terminal: false
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: false
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: A_done
+  name: A_done
+  description: A_done
+  terminal: false
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: B_done
+  name: B_done
+  description: B_done
+  terminal: false
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: dropped
+  name: dropped
+  description: dropped
+  terminal: false
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: recovery
+  name: recovery
+  description: recovery
+  terminal: false
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: success
+  name: success
+  description: success
+  terminal: true
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+- id: terminal_failure
+  name: terminal_failure
+  description: terminal_failure
+  terminal: true
+  observable_conditions:
+  - info.subgoal_A_done
+  - info.subgoal_B_done
+  - state.eef_pos
+  - state.object_pos
+  entry_condition: info evidence
+  exit_condition: stable for 5 frames
+  history_required: true
+  within_node_progress_signal: active_target_distance
+  allowed_attempt_groups:
+  - A
+  - B
+  - recovery
+edges:
+- id: start_to_A_done
+  src: start
+  dst: A_done
+  type: forward
+  description: start to A_done
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: A_done_to_B_done
+  src: A_done
+  dst: B_done
+  type: forward
+  description: A_done to B_done
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: B_done_to_success
+  src: B_done
+  dst: success
+  type: forward
+  description: B_done to success
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: start_to_B_done
+  src: start
+  dst: B_done
+  type: alternative
+  description: start to B_done
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: B_done_to_A_done
+  src: B_done
+  dst: A_done
+  type: alternative
+  description: B_done to A_done
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: A_done_to_success
+  src: A_done
+  dst: success
+  type: forward
+  description: A_done to success
+  guard_condition: state evidence
+  completion_condition: destination stable
+  repeatable: false
+  attempt_group: forward
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: A_done_to_dropped
+  src: A_done
+  dst: dropped
+  type: failure
+  description: active A subgoal invalidated
+  guard_condition: subgoal state lost
+  completion_condition: drop evidence
+  repeatable: true
+  attempt_group: A
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: B_done_to_dropped
+  src: B_done
+  dst: dropped
+  type: failure
+  description: active B subgoal invalidated
+  guard_condition: subgoal state lost
+  completion_condition: drop evidence
+  repeatable: true
+  attempt_group: B
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: dropped_to_recovery
+  src: dropped
+  dst: recovery
+  type: recovery
+  description: recovery action starts
+  guard_condition: new approach action
+  completion_condition: recovery begins
+  repeatable: true
+  attempt_group: recovery
+  base_step_cost: 1
+  max_repeat_before_stagnation: 3
+- id: stagnation_loop
+  src: dropped
+  dst: dropped
+  type: stagnation
+  description: no effective progress
+  guard_condition: motion/action below threshold
+  completion_condition: 30-frame window
+  repeatable: true
+  attempt_group: recovery
+  base_step_cost: 0
+  max_repeat_before_stagnation: 3
+path_templates:
+- - start
+  - A_done
+  - B_done
+  - success
+- - start
+  - B_done
+  - A_done
+  - success
+history_policy: completed_subgoal_set is part of state
+progress_policy: 0, .25, .5, .75, 1 anchors

@@ -1,0 +1,13 @@
+dataset_version: pathgraph_stage2_dataset_v0.2
+g0_status: SWITCH
+graph_tasks:
+- task_id: transport_recovery
+  role: recovery_task
+  controller_source: scripted_oracle
+- task_id: transport_dual_order
+  role: branch_task
+  controller_source: scripted_oracle
+fixed_chain_control_tasks:
+- square
+- transport
+selection_rule: state/intervention evidence only; no stage1 placeholder events

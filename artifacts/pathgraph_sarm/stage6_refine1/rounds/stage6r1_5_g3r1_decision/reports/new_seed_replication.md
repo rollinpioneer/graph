@@ -1,0 +1,14 @@
+# New-seed replication
+
+{
+  "new_seed_count": 3,
+  "new_seed_improved_count": 1,
+  "new_seed_ceiling_tie_count": 1,
+  "new_seed_degraded_count": 0,
+  "per_seed_difference": {
+    "20260912": 0.1999999999999999,
+    "20260913": 0.0,
+    "20260914": 0.0
+  },
+  "strict_improvement_definition": "difference > 0; ceiling ties are not improvements"
+}

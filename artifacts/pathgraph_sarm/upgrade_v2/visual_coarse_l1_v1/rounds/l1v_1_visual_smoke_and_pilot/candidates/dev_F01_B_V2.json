@@ -1,0 +1,181 @@
+{
+  "clarification_question": null,
+  "edges": [
+    {
+      "action": "observe_scene",
+      "dst": "target_selection",
+      "expected_effects": [
+        "Identification of candidate objects for manipulation."
+      ],
+      "id": "select_target",
+      "preconditions": [
+        "Scene is visible."
+      ],
+      "src": "start_state",
+      "status": "hypothesized",
+      "trigger": null
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_attempt",
+      "expected_effects": [
+        "Red bowl is secured in gripper."
+      ],
+      "id": "execute_grasp",
+      "preconditions": [
+        "Target red bowl is identified.",
+        "Path to bowl is clear."
+      ],
+      "src": "target_selection",
+      "status": "hypothesized",
+      "trigger": "Target selection confirmed"
+    },
+    {
+      "action": "transport_object",
+      "dst": "transport_and_align",
+      "expected_effects": [
+        "Bowl is positioned above the white plate."
+      ],
+      "id": "move_to_plate",
+      "preconditions": [
+        "Object is firmly grasped.",
+        "White plate location is known."
+      ],
+      "src": "grasp_attempt",
+      "status": "hypothesized",
+      "trigger": "Grasp verified"
+    },
+    {
+      "action": "place_object",
+      "dst": "release_and_verify",
+      "expected_effects": [
+        "Bowl contacts plate surface.",
+        "Gripper opens."
+      ],
+      "id": "place_center",
+      "preconditions": [
+        "Bowl is aligned with plate center.",
+        "Vertical clearance is sufficient."
+      ],
+      "src": "transport_and_align",
+      "status": "hypothesized",
+      "trigger": "Alignment complete"
+    },
+    {
+      "action": "grasp_object",
+      "dst": "grasp_attempt",
+      "expected_effects": [
+        "Second attempt to secure the bowl."
+      ],
+      "id": "recovery_regrasp",
+      "preconditions": [
+        "Previous grasp failed or object slipped.",
+        "Object is still on table."
+      ],
+      "src": "grasp_attempt",
+      "status": "hypothesized",
+      "trigger": "Grasp verification failed"
+    }
+  ],
+  "goal_interpretation": "Identify the specific red bowl among the two visible candidates, grasp it securely, transport it to the white plate, align it centrally on the plate surface, and release it.",
+  "needs_clarification": false,
+  "nodes": [
+    {
+      "description": "Initial scene with two red bowls and one white plate on the table.",
+      "id": "start_state",
+      "observable_conditions": [
+        "Two red bowls are present on the left side.",
+        "One white plate is present on the right side."
+      ],
+      "role": "start",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Which red bowl is the intended target for manipulation.",
+        "Grasp stability of the red bowls.",
+        "Exact center coordinates of the white plate."
+      ]
+    },
+    {
+      "description": "Decision point to select the correct red bowl based on task context or default heuristic.",
+      "id": "target_selection",
+      "observable_conditions": [
+        "Spatial relationship between bowls and plate."
+      ],
+      "role": "observation",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "User preference if not specified by position."
+      ]
+    },
+    {
+      "description": "Robot approaches and attempts to grasp the selected red bowl.",
+      "id": "grasp_attempt",
+      "observable_conditions": [
+        "Gripper closure around the bowl rim or body."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Friction coefficient of the bowl material.",
+        "Weight of the bowl affecting grip force."
+      ]
+    },
+    {
+      "description": "Move the held bowl over the white plate and align to the estimated center.",
+      "id": "transport_and_align",
+      "observable_conditions": [
+        "Bowl position relative to plate boundaries."
+      ],
+      "role": "intermediate",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Plate surface flatness.",
+        "Potential collision with plate rim during approach."
+      ]
+    },
+    {
+      "description": "Release the bowl onto the plate and verify it remains centered and stable.",
+      "id": "release_and_verify",
+      "observable_conditions": [
+        "Bowl resting on plate surface.",
+        "Visual symmetry of bowl relative to plate edge."
+      ],
+      "role": "goal",
+      "status": "hypothesized",
+      "unknown_conditions": [
+        "Static stability after release.",
+        "Precise deviation from geometric center."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "description": "Red cylindrical bowl located at the front-left of the table.",
+      "id": "red_bowl_1",
+      "observability": "observed",
+      "role": "manipulated_object",
+      "status": "hypothesized"
+    },
+    {
+      "description": "Red cylindrical bowl located behind red_bowl_1.",
+      "id": "red_bowl_2",
+      "observability": "observed",
+      "role": "distractor",
+      "status": "hypothesized"
+    },
+    {
+      "description": "White circular plate located on the right side of the table.",
+      "id": "white_plate",
+      "observability": "observed",
+      "role": "target",
+      "status": "hypothesized"
+    }
+  ],
+  "physical_checks": [
+    "Verify the selected red bowl is not too heavy for the gripper payload limit.",
+    "Check if the white plate surface is stable and will not slide during placement.",
+    "Confirm the red bowl's geometry allows for a stable top-down or side grasp.",
+    "Ensure the placement height accounts for the plate's thickness to avoid dropping from too high."
+  ],
+  "schema_version": "l1v_coarse_graph_v1"
+}

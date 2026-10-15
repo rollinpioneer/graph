@@ -1,0 +1,98 @@
+Tue Jul 21 18:18:45 CST 2026
+Tue Jul 21 18:18:46 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:14:00.0 Off |                    0 |
+| N/A   37C    P0             44W /  400W |   24298MiB /  40960MiB |     23%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          On  |   00000000:15:00.0 Off |                    0 |
+| N/A   35C    P0             37W /  400W |   18994MiB /  40960MiB |     20%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100-SXM4-40GB          On  |   00000000:18:00.0 Off |                    0 |
+| N/A   36C    P0             44W /  400W |    7982MiB /  40960MiB |     12%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100-SXM4-40GB          On  |   00000000:1D:00.0 Off |                    0 |
+| N/A   36C    P0             41W /  400W |   40390MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA A100-SXM4-40GB          On  |   00000000:1E:00.0 Off |                    0 |
+| N/A   33C    P0             34W /  400W |       4MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA A100-SXM4-40GB          On  |   00000000:21:00.0 Off |                    0 |
+| N/A   38C    P0             29W /  400W |    8615MiB /  40960MiB |      3%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA A100-SXM4-40GB          On  |   00000000:25:00.0 Off |                    0 |
+| N/A   35C    P0             34W /  400W |   17600MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA A100-SXM4-40GB          On  |   00000000:2D:00.0 Off |                    0 |
+| N/A   38C    P0             54W /  400W |    8773MiB /  40960MiB |     39%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          601868      C   VLLM::Worker_TP0                      15634MiB |
+|    0   N/A  N/A         1805963      C   ...conda/envs/igstgnn/bin/python       2222MiB |
+|    0   N/A  N/A         4114002      C   python                                 6366MiB |
+|    1   N/A  N/A          601869      C   VLLM::Worker_TP1                      15634MiB |
+|    1   N/A  N/A         3678298      C   python                                 1778MiB |
+|    1   N/A  N/A         3678833      G   python                                  452MiB |
+|    1   N/A  N/A         3678836      G   python                                  452MiB |
+|    1   N/A  N/A         3678841      G   python                                  282MiB |
+|    1   N/A  N/A         3678842      G   python                                  282MiB |
+|    2   N/A  N/A          656874      C   ...da/envs/lerobotpi0/bin/python       7970MiB |
+|    3   N/A  N/A         3856411      C   sema-v2_T10_C5_NonIID0.1_gpu3          3204MiB |
+|    3   N/A  N/A         3862299      C   SEMAV2Client_4                         7914MiB |
+|    3   N/A  N/A         3862300      C   SEMAV2Client_1                         7914MiB |
+|    3   N/A  N/A         3862303      C   SEMAV2Client_5                         5494MiB |
+|    3   N/A  N/A         3862304      C   SEMAV2Client_2                         7912MiB |
+|    3   N/A  N/A         3862305      C   SEMAV2Client_3                         7912MiB |
+|    5   N/A  N/A         2437384      C   python                                  904MiB |
+|    5   N/A  N/A         4113584      C   python                                 7696MiB |
+|    6   N/A  N/A          661055      C   ...u/.conda/envs/mmsf/bin/python      17590MiB |
+|    7   N/A  N/A         3120920      C   ..._phase1/envs/racer/bin/python       1056MiB |
+|    7   N/A  N/A         4113116      C   python                                 7700MiB |
++-----------------------------------------------------------------------------------------+
+
+checkpoint files:
+2026-07-21 14:41:00.2424062750 18023681 /home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0/checkpoints/epoch=0650-test_mean_score=0.720.ckpt
+2026-07-21 14:57:52.2235609270 18023681 /home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0/checkpoints/epoch=0700-test_mean_score=0.720.ckpt
+2026-07-21 16:28:02.2861539020 18023681 /home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0/checkpoints/epoch=0950-test_mean_score=0.740.ckpt
+2026-07-21 17:50:42.4668866210 18059457 /home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0/checkpoints/latest.ckpt.previous
+2026-07-21 18:10:43.5546313600 18059457 /home/xushijie/CUPID/repo/data/outputs/train/20260720_cupid_square_minrep/20260720_cupid_square_minrep_train_diffusion_unet_lowdim_square_mh_0/checkpoints/latest.ckpt
+
+last log lines:
+{"train_loss": 0.006139320787042379, "global_step": 235570, "epoch": 1200, "lr": 2.242476281041187e-05}
+{"train_loss": 0.003667461220175028, "global_step": 235571, "epoch": 1200, "lr": 2.242438045696785e-05}
+{"train_loss": 0.005902708508074284, "global_step": 235572, "epoch": 1200, "lr": 2.2423998105841255e-05}
+{"train_loss": 0.0055283489637076855, "global_step": 235573, "epoch": 1200, "lr": 2.2423615757032133e-05}
+{"train_loss": 0.005296573042869568, "global_step": 235574, "epoch": 1200, "lr": 2.242323341054049e-05}
+{"train_loss": 0.0059409374371171, "global_step": 235575, "epoch": 1200, "lr": 2.2422851066366394e-05}
+{"train_loss": 0.004757042042911053, "global_step": 235576, "epoch": 1200, "lr": 2.242246872450986e-05}
+{"train_loss": 0.00501891179010272, "global_step": 235577, "epoch": 1200, "lr": 2.2422086384970896e-05}
+{"train_loss": 0.005836114753037691, "global_step": 235578, "epoch": 1200, "lr": 2.2421704047749582e-05}
+{"train_loss": 0.005595315247774124, "global_step": 235579, "epoch": 1200, "lr": 2.2421321712845916e-05}
+{"train_loss": 0.003950317390263081, "global_step": 235580, "epoch": 1200, "lr": 2.2420939380259925e-05}
+{"train_loss": 0.006223613861948252, "global_step": 235581, "epoch": 1200, "lr": 2.2420557049991674e-05}
+{"train_loss": 0.004547408781945705, "global_step": 235582, "epoch": 1200, "lr": 2.2420174722041176e-05}
+{"train_loss": 0.003928038757294416, "global_step": 235583, "epoch": 1200, "lr": 2.241979239640846e-05}
+{"train_loss": 0.004089088179171085, "global_step": 235584, "epoch": 1200, "lr": 2.2419410073093544e-05}
+{"train_loss": 0.008350911550223827, "global_step": 235585, "epoch": 1200, "lr": 2.24190277520965e-05}
+{"train_loss": 0.003474196884781122, "global_step": 235586, "epoch": 1200, "lr": 2.241864543341733e-05}
+{"train_loss": 0.0047933137975633144, "global_step": 235587, "epoch": 1200, "lr": 2.241826311705606e-05}
+{"train_loss": 0.005947575904428959, "global_step": 235588, "epoch": 1200, "lr": 2.2417880803012753e-05}
+{"train_loss": 0.0056578549556434155, "global_step": 235589, "epoch": 1200, "lr": 2.2417498491287425e-05}

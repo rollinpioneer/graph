@@ -1,0 +1,19 @@
+{
+  "round_id": "u1_07_d2_d3_data_bridge",
+  "backend": "upgrade_v2.adapters.stochastic_d1.StochasticGoalSimulator",
+  "d2": {
+    "pairs": 30,
+    "conditions": ["free_approach", "collision_approach"],
+    "match_variable": "Euclidean distance to the fixed goal",
+    "outcome_source": "D3 independent stochastic continuations"
+  },
+  "d3": {
+    "replicates_per_state": 12,
+    "split_unit": "root_family_id",
+    "models": ["geometry_distance_only", "constant", "q_only", "D_only", "q_plus_D"],
+    "D_target": "time-to-success; failed continuations are censored at the fixed horizon",
+    "q_plus_D_selection": "validation root families only"
+  },
+  "scope": "simulator-only",
+  "u2_eligibility": "SIMULATOR_SCOPED_ONLY"
+}

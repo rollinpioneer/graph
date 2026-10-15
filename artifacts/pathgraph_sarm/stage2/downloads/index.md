@@ -1,0 +1,2 @@
+- stage2_complete.zip
+  - sha256: 59b1a8acb4e517cac10e041b3ae6336a5951ce27c82d56671937585a2149f63a

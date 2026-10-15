@@ -1,0 +1,116 @@
+{
+  "additional_fallback": {
+    "clip_count": 30,
+    "frame_count": 135,
+    "source": "oracle30_clip_ids.csv",
+    "unique_clip_count": 30,
+    "unique_frame_count": 135
+  },
+  "allowed_next": [
+    "U3 simulator-scoped candidate graph proposal",
+    "U4 simulator-scoped data validation"
+  ],
+  "boundary": {
+    "automatic_boundary_supported": false,
+    "corrected_metrics": {
+      "locked_source_test_tol2": {
+        "boundary_estimability": "estimable",
+        "boundary_f1": "0.5935190449118818",
+        "boundary_mae": "0.038314176245210725",
+        "boundary_precision": "0.4250814332247557",
+        "boundary_recall": "0.9830508474576272",
+        "boundary_root_family_macro": "0.6105159174435015",
+        "boundary_root_family_macro_ci_high": "0.6637247234123244",
+        "boundary_root_family_macro_ci_low": "0.5607047740998631",
+        "status": "estimable",
+        "unknown_frame_rate": "0.7278911564625851"
+      },
+      "missing_prediction_count": 0,
+      "models_evaluated": [
+        "weak_zero_gold",
+        "weak_plus_small_gold_calibration",
+        "sensor_hysteresis_01",
+        "uniform_00",
+        "boundary_model:causal_weak_only_s621",
+        "boundary_model:causal_weak_only_s622",
+        "boundary_model:causal_weak_only_s623",
+        "boundary_model:causal_weak_plus_oracle30_s621",
+        "boundary_model:causal_weak_plus_oracle30_s622",
+        "boundary_model:causal_weak_plus_oracle30_s623",
+        "boundary_model:offline_teacher_s621",
+        "boundary_model:offline_teacher_s622",
+        "boundary_model:offline_teacher_s623",
+        "boundary_model:offline_teacher_to_causal_s621",
+        "boundary_model:offline_teacher_to_causal_s622",
+        "boundary_model:offline_teacher_to_causal_s623",
+        "budget_model:budget0_s641",
+        "budget_model:budget0_s642",
+        "budget_model:budget0_s643",
+        "budget_model:budget30_entropy_x_event_importance_s641",
+        "budget_model:budget30_entropy_x_event_importance_s642",
+        "budget_model:budget30_entropy_x_event_importance_s643",
+        "budget_model:budget30_random_stratified_s641",
+        "budget_model:budget30_random_stratified_s642",
+        "budget_model:budget30_random_stratified_s643"
+      ],
+      "old_vs_corrected_path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/boundaries_v2/old_vs_corrected_metrics.csv",
+      "path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/boundaries_v2",
+      "status": "BOUNDARY_CACHE_RECOMPUTED"
+    },
+    "fallback_required": true,
+    "locked_source": "offline_teacher_to_causal_s623",
+    "original_metrics": {
+      "locked_source_test_tol2": {
+        "boundary_f1": "0.5878339965889711",
+        "correction_delta": "0.005685048322910724",
+        "source": "artifacts/pathgraph_sarm/upgrade_v2/u2_stochastic_boundary/rounds/u2_3_causal_boundary_models/tables/u2_boundary_model_metrics.csv",
+        "status": "estimable"
+      },
+      "source": "u2_final_report_and_frozen_tables",
+      "status": "historical_preserved"
+    }
+  },
+  "llm_candidates": {
+    "count": 0,
+    "parsed_graphs_present": false,
+    "raw_responses_present": false,
+    "request_count": 9,
+    "status": "MODEL_EXECUTION_PENDING"
+  },
+  "original_archive_decision": "GO_U3_WITH_BOUNDARY_FALLBACK",
+  "original_task_generalization_eligible": false,
+  "physical_generalization_eligible": false,
+  "reward": {
+    "closed_full_input_cycle_residual": "not_measured",
+    "path": "artifacts/pathgraph_sarm/upgrade_v2/u2_handoff_patch_v1/reward_v2",
+    "split": "test",
+    "status": "REWARD_CACHE_RECOMPUTED"
+  },
+  "schema": "u3_minimal_handoff_v1",
+  "scope": "same stochastic simulator family only",
+  "shared_gold_calibration": {
+    "family_count": 8,
+    "family_ids": [
+      "u2_family_002",
+      "u2_family_010",
+      "u2_family_012",
+      "u2_family_034",
+      "u2_family_038",
+      "u2_family_039",
+      "u2_family_080",
+      "u2_family_083"
+    ],
+    "frame_count": 1108,
+    "source": "weak_calibration_families.csv"
+  },
+  "source_commit": "b8a14d56f761e54ff91982a72bedcbd556428f89",
+  "status": "U3_ENTRY_READY_WITH_BOUNDARY_FALLBACK",
+  "u3_prompt_input": {
+    "path": "artifacts/pathgraph_sarm/upgrade_v2/u3_candidate_graph/inputs_v1/prompt_input_manifest.json",
+    "status": "TRAIN_ONLY_VERIFIED_MODEL_EXECUTION_PENDING",
+    "test_gold_in_prompts": false,
+    "train_only_verified": true,
+    "train_root_family_count": 84,
+    "train_segment_count": 2651
+  }
+}

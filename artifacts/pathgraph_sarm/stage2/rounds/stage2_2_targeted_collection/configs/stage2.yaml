@@ -1,0 +1,35 @@
+project:
+  repo_root: /home/xushijie/CUPID
+  stage1_root: artifacts/pathgraph_sarm/stage1
+  stage2_root: artifacts/pathgraph_sarm/stage2
+inputs:
+  episode_manifest: artifacts/pathgraph_sarm/stage1/1.3_dataset_v0.1/episode_manifest.jsonl
+  splits: artifacts/pathgraph_sarm/stage1/1.3_dataset_v0.1/splits.csv
+  trajectory_tags: artifacts/pathgraph_sarm/stage1/1.2_trajectory_coverage/trajectory_tags.csv
+  selected_tasks: artifacts/pathgraph_sarm/stage1/1.4_g0_decision/selected_tasks.yaml
+runtime:
+  seed: 20260831
+  cpu_workers: 16
+  zip_max_file_mb: 200
+stage1_status:
+  g0: SWITCH
+  reject_stage1_placeholder_events_as_gt: true
+evidence_targets:
+  selected_graph_tasks: 2
+  require_at_least_one_alternative_order_task: true
+  require_at_least_one_recovery_task: true
+  min_success_per_legal_path: 10
+  min_recovery_episodes_per_recovery_task: 10
+  min_terminal_failure_episodes_per_task: 8
+  min_forward_success_episodes_per_task: 12
+annotation_targets:
+  min_gt_episodes_per_task: 40
+  min_examples_per_critical_edge: 8
+  min_examples_per_legal_path: 8
+  ambiguous_or_random_review_fraction: 0.10
+  history_window_steps: 32
+  progress_anchors: [0.0, 0.25, 0.5, 0.75, 1.0]
+split:
+  seed: 20260831
+  ratios: {train: 0.60, val: 0.20, test: 0.20}
+  group_keys: [task_instance_id, scene_id, seed, episode_id]
