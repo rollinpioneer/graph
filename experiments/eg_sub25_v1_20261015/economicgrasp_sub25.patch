@@ -1,0 +1,1134 @@
+diff --git a/dataset/generate_economic.py b/dataset/generate_economic.py
+index 6eb608f..7a045c8 100644
+--- a/dataset/generate_economic.py
++++ b/dataset/generate_economic.py
+@@ -1,4 +1,7 @@
+ import os
++import shutil
++import hashlib
++import json
+ import sys
+ import torch
+ import numpy as np
+@@ -12,7 +15,13 @@ parser = argparse.ArgumentParser()
+ parser.add_argument('--dataset_root', default='/home/xiaoming/dataset/graspnet', help='the root of the GraspNet dataset')
+ parser.add_argument('--camera_type', default='kinect', help='Camera split [realsense/kinect]')
+ 
++parser.add_argument('--split_manifest', default=None)
++parser.add_argument('--scene_start', type=int, default=0)
++parser.add_argument('--scene_end', type=int, default=100)
++parser.add_argument('--scene_stride', type=int, default=1)
++parser.add_argument('--resume_verified', action='store_true')
+ cfgs = parser.parse_args()
++assert 0 <= cfgs.scene_start < cfgs.scene_end <= 100 and cfgs.scene_stride > 0
+ 
+ obj_data_folders = os.path.join(cfgs.dataset_root, "grasp_label")
+ scenes_data_folders = os.path.join(cfgs.dataset_root, "scenes")
+@@ -24,12 +33,30 @@ if __name__ == "__main__":
+ 
+     save_data_folders = os.path.join(cfgs.dataset_root, f"economic_grasp_label_{keeping_views_numbers}views")
+     if not os.path.exists(save_data_folders):
+-        os.makedirs(save_data_folders)
++        os.makedirs(save_data_folders, exist_ok=True)
+ 
+     # collect the labels from object-level to scene-level
+     number = 0
+-    for label_path in os.listdir(scenes_data_folders):
+-        print(f"---------The {number} scenes----------")
++    manifest = json.load(open(cfgs.split_manifest)) if cfgs.split_manifest else None
++    scene_ids = [i for i in range(cfgs.scene_start,cfgs.scene_end,cfgs.scene_stride) if manifest is None or i in manifest['train_scene_ids']]
++    for label_path in [f'scene_{i:04d}' for i in scene_ids]:
++        output_file = os.path.join(save_data_folders, f"{label_path}_labels.npz")
++        receipt_file = output_file + '.sha256.json'
++        if os.path.exists(output_file):
++            if not cfgs.resume_verified or not os.path.exists(receipt_file):
++                raise FileExistsError(f'Refusing unverified overwrite: {output_file}')
++            with open(receipt_file) as f:
++                receipt = json.load(f)
++            with open(output_file, 'rb') as f:
++                digest = hashlib.sha256(f.read()).hexdigest()
++            if digest != receipt['sha256']:
++                raise ValueError(f'Changed supervision: {output_file}')
++            with np.load(output_file) as existing:
++                if not existing.files or any(not np.isfinite(existing[k]).all() for k in existing.files):
++                    raise ValueError(f'Invalid supervision: {output_file}')
++            print(f'verified resume: {output_file}', flush=True)
++            continue
++        print(f"---------The {number} scenes: {label_path}----------")
+         meta = scio.loadmat(os.path.join(scenes_data_folders, label_path, cfgs.camera_type, 'meta', '0000.mat'))
+         obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
+         object_list = open(os.path.join(scenes_data_folders, label_path, 'object_id_list.txt'), "r")
+@@ -122,7 +149,10 @@ if __name__ == "__main__":
+         grasp_view_graspness = grasp_view_graspness.numpy()
+         grasp_top_view_index = scene_top_view_index.numpy().astype(np.uint16)
+ 
+-        np.savez(os.path.join(save_data_folders, f"{label_path}_labels.npz"),
++        expected_bytes = sum(x.nbytes for x in [scene_points, grasp_rotations, grasp_depth, grasp_scores, grasp_widths, scene_pointid, grasp_view_graspness, grasp_top_view_index]) + 1024 * 1024
++        if shutil.disk_usage(save_data_folders).free < 24 * 1024**3 + expected_bytes:
++            raise OSError('Insufficient space: preserve 24GiB reserve before supervision write')
++        np.savez(output_file + ".egpartial.npz",
+                  points=scene_points,
+                  rotations=grasp_rotations,
+                  depth=grasp_depth,
+@@ -132,6 +162,11 @@ if __name__ == "__main__":
+                  vgraspness=grasp_view_graspness,
+                  topview=grasp_top_view_index)
+ 
++        os.replace(output_file + '.egpartial.npz', output_file)
++        with open(output_file, 'rb') as f:
++            digest = hashlib.sha256(f.read()).hexdigest()
++        with open(receipt_file, 'w') as f:
++            json.dump({'sha256': digest, 'scene': label_path, 'points': len(scene_points)}, f)
+         number = number + 1
+ 
+     print(f"---------Finishing----------")
+diff --git a/dataset/generate_graspness.py b/dataset/generate_graspness.py
+index 002d16c..ea59b22 100755
+--- a/dataset/generate_graspness.py
++++ b/dataset/generate_graspness.py
+@@ -1,7 +1,10 @@
+ import numpy as np
+ import os
++import shutil
++import hashlib
++import json
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
++# EG-FULL-REPRO-V1: respect the caller CUDA_VISIBLE_DEVICES mapping.
+ 
+ from PIL import Image
+ import scipy.io as scio
+@@ -20,18 +23,32 @@ import argparse
+ parser = argparse.ArgumentParser()
+ parser.add_argument('--dataset_root', default='/home/xiaoming/dataset/graspnet', help='the root of the GraspNet dataset')
+ parser.add_argument('--camera_type', default='kinect', help='Camera split [realsense/kinect]')
++parser.add_argument('--split_manifest', default=None)
++parser.add_argument('--scene_start', type=int, default=0)
++parser.add_argument('--scene_end', type=int, default=100)
++parser.add_argument('--scene_stride', type=int, default=1)
++parser.add_argument('--frame_end', type=int, default=256)
++parser.add_argument('--output_root', default=None)
++parser.add_argument('--cache_scene_graspness', action='store_true')
++parser.add_argument('--resume_verified', action='store_true')
+ 
+ 
+ if __name__ == '__main__':
+     cfgs = parser.parse_args()
+     dataset_root = cfgs.dataset_root   # set dataset root
+     camera_type = cfgs.camera_type   # kinect / realsense
+-    save_path_root = os.path.join(dataset_root, 'graspness')
++    save_path_root = cfgs.output_root or os.path.join(dataset_root, 'graspness')
++    assert 0 <= cfgs.scene_start < cfgs.scene_end <= 100 and cfgs.scene_stride > 0
++    assert 0 < cfgs.frame_end <= 256
+ 
+     num_views, num_angles, num_depths = 300, 12, 4
+     fric_coef_thresh = 0.8
+     point_grasp_num = num_views * num_angles * num_depths
+-    for scene_id in range(0, 100):
++    manifest = json.load(open(cfgs.split_manifest)) if cfgs.split_manifest else None
++    scene_ids = [i for i in range(cfgs.scene_start,cfgs.scene_end,cfgs.scene_stride) if manifest is None or i in manifest['train_scene_ids']]
++    frame_ids = [i for i in range(cfgs.frame_end) if manifest is None or i in manifest['train_frame_ids']]
++    for scene_id in scene_ids:
++        scene_cache = {}
+         save_path = os.path.join(save_path_root, 'scene_' + str(scene_id).zfill(4), camera_type)
+         if not os.path.exists(save_path):
+             os.makedirs(save_path)
+@@ -41,7 +58,7 @@ if __name__ == '__main__':
+         for j in range(len(labels)):
+             collision_dump.append(labels['arr_{}'.format(j)])
+ 
+-        for ann_id in range(256):
++        for ann_id in frame_ids:
+             # get scene point cloud
+             print('generating scene: {} ann: {}'.format(scene_id, ann_id))
+             depth = np.array(Image.open(os.path.join(dataset_root, 'scenes', 'scene_' + str(scene_id).zfill(4),
+@@ -69,27 +86,55 @@ if __name__ == '__main__':
+             cloud_masked = cloud[mask]
+             objectness_label = seg[mask]
+ 
++            output_file = os.path.join(save_path, str(ann_id).zfill(4) + '.npy')
++            receipt_file = output_file + '.sha256.json'
++            if os.path.exists(output_file):
++                if not cfgs.resume_verified or not os.path.exists(receipt_file):
++                    raise FileExistsError(f'Refusing unverified overwrite: {output_file}')
++                with open(receipt_file) as f:
++                    receipt = json.load(f)
++                with open(output_file, 'rb') as f:
++                    digest = hashlib.sha256(f.read()).hexdigest()
++                existing = np.load(output_file)
++                if digest != receipt['sha256'] or existing.shape != (len(cloud_masked), 1) or not np.isfinite(existing).all() or existing.min() < 0 or existing.max() > 1:
++                    raise ValueError(f'Invalid existing supervision: {output_file}')
++                print(f'verified resume: {output_file}', flush=True)
++                continue
++
+             # get scene object and grasp info
+             scene_reader = xmlReader(os.path.join(dataset_root, 'scenes', 'scene_' + str(scene_id).zfill(4),
+                                                   camera_type, 'annotations', '%04d.xml' % ann_id))
+             pose_vectors = scene_reader.getposevectorlist()
+             obj_list, pose_list = get_obj_pose_list(camera_pose, pose_vectors)
+             grasp_labels = {}
+-            for i in obj_list:
+-                file = np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(i).zfill(3))))
+-                grasp_labels[i] = (file['points'].astype(np.float32), file['offsets'].astype(np.float32),
+-                                   file['scores'].astype(np.float32))
+-
++            if not cfgs.cache_scene_graspness:
++                for i in obj_list:
++                    file = np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(i).zfill(3))))
++                    grasp_labels[i] = (file['points'].astype(np.float32), file['offsets'].astype(np.float32),
++                                       file['scores'].astype(np.float32))
++    
+             grasp_points = []
+             grasp_points_graspness = []
+             for i, (obj_idx, trans_) in enumerate(zip(obj_list, pose_list)):
+-                sampled_points, offsets, fric_coefs = grasp_labels[obj_idx]
+-                collision = collision_dump[i]  # Npoints * num_views * num_angles * num_depths
++                if cfgs.cache_scene_graspness:
++                    key = (i, obj_idx)
++                    if key not in scene_cache:
++                        with np.load(os.path.join(dataset_root, 'grasp_label', '{}_labels.npz'.format(str(obj_idx).zfill(3)))) as file:
++                            cached_points = file['points'].astype(np.float32)
++                            cached_scores = file['scores'].astype(np.float32)
++                        cached_valid = ((cached_scores <= fric_coef_thresh) & (cached_scores > 0) & ~collision_dump[i])
++                        cached_graspness = np.sum(cached_valid.reshape(cached_points.shape[0], -1), axis=1) / point_grasp_num
++                        scene_cache[key] = (cached_points, cached_graspness)
++                    sampled_points, graspness = scene_cache[key]
++                else:
++                    sampled_points, offsets, fric_coefs = grasp_labels[obj_idx]
++                    collision = collision_dump[i]  # Npoints * num_views * num_angles * num_depths
++                    num_points = sampled_points.shape[0]
++    
++                    valid_grasp_mask = ((fric_coefs <= fric_coef_thresh) & (fric_coefs > 0) & ~collision)
++                    valid_grasp_mask = valid_grasp_mask.reshape(num_points, -1)
++                    graspness = np.sum(valid_grasp_mask, axis=1) / point_grasp_num
+                 num_points = sampled_points.shape[0]
+-
+-                valid_grasp_mask = ((fric_coefs <= fric_coef_thresh) & (fric_coefs > 0) & ~collision)
+-                valid_grasp_mask = valid_grasp_mask.reshape(num_points, -1)
+-                graspness = np.sum(valid_grasp_mask, axis=1) / point_grasp_num
+                 target_points = transform_points(sampled_points, trans_)
+                 target_points = transform_points(target_points, np.linalg.inv(camera_pose))  # fix bug
+                 grasp_points.append(target_points)
+@@ -119,6 +164,20 @@ if __name__ == '__main__':
+ 
+             max_graspness = np.max(cloud_masked_graspness)
+             min_graspness = np.min(cloud_masked_graspness)
++            if not np.isfinite(cloud_masked_graspness).all() or max_graspness <= min_graspness:
++                raise ValueError(f"Invalid graspness: scene={scene_id} frame={ann_id} min={min_graspness} max={max_graspness}")
+             cloud_masked_graspness = (cloud_masked_graspness - min_graspness) / (max_graspness - min_graspness)
+ 
+-            np.save(os.path.join(save_path, str(ann_id).zfill(4) + '.npy'), cloud_masked_graspness)
++            if shutil.disk_usage(save_path).free < 24 * 1024**3 + cloud_masked_graspness.nbytes:
++                raise OSError('Insufficient space: preserve 24GiB reserve before supervision write')
++            temporary = output_file + '.egpartial'
++            with open(temporary, 'wb') as f:
++                np.save(f, cloud_masked_graspness)
++                f.flush()
++                os.fsync(f.fileno())
++            os.replace(temporary, output_file)
++            with open(output_file, 'rb') as f:
++                digest = hashlib.sha256(f.read()).hexdigest()
++            with open(receipt_file, 'w') as f:
++                json.dump({'sha256': digest, 'shape': list(cloud_masked_graspness.shape), 'scene': scene_id, 'frame': ann_id}, f)
++
+diff --git a/dataset/graspnet_dataset.py b/dataset/graspnet_dataset.py
+index 2397754..6e3fc58 100755
+--- a/dataset/graspnet_dataset.py
++++ b/dataset/graspnet_dataset.py
+@@ -1,278 +1,280 @@
+-import os
+-import sys
+-import numpy as np
+-import scipy.io as scio
+-from PIL import Image
+-import pdb
+-
+-import torch
+-import collections.abc as container_abcs
+-from torch.utils.data import Dataset
+-from tqdm import tqdm
+-
+-from utils.arguments import cfgs
+-from utils.data_utils import CameraInfo, transform_point_cloud, create_point_cloud_from_depth_image, \
+-    get_workspace_mask, remove_invisible_grasp_points
+-
+-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+-ROOT_DIR = os.path.dirname(BASE_DIR)
+-
+-
+-class GraspNetDataset(Dataset):
+-    def __init__(self, root, camera='kinect', split='train', num_points=20000,
+-                 voxel_size=0.005, remove_outlier=False, remove_invisible=True,
+-                 augment=False, load_label=True):
+-        self.root = root
+-        self.split = split
+-        self.voxel_size = voxel_size
+-        self.num_points = num_points
+-        self.remove_outlier = remove_outlier
+-        self.remove_invisible = remove_invisible
+-        self.camera = camera
+-        self.augment = augment
+-        self.load_label = load_label
+-        self.collision_labels = {}
+-
+-        if split == 'train':
+-            self.sceneIds = list(range(100))
+-        elif split == 'test':
+-            self.sceneIds = list(range(100, 190))
+-        elif split == 'test_seen':
+-            self.sceneIds = list(range(100, 130))
+-        elif split == 'test_similar':
+-            self.sceneIds = list(range(130, 160))
+-        elif split == 'test_novel':
+-            self.sceneIds = list(range(160, 190))
+-
+-        self.sceneIds = ['scene_{}'.format(str(x).zfill(4)) for x in self.sceneIds]
+-
+-        self.colorpath = []
+-        self.depthpath = []
+-        self.labelpath = []
+-        self.metapath = []
+-        self.scenename = []
+-        self.frameid = []
+-        self.graspnesspath = []
+-
+-        self.grasp_labels = {}
+-
+-        for x in tqdm(self.sceneIds, desc='Loading the scene data and its labels...'):
+-            for img_num in range(256):
+-                self.colorpath.append(os.path.join(root, 'scenes', x, camera, 'rgb', str(img_num).zfill(4) + '.png'))
+-                self.depthpath.append(os.path.join(root, 'scenes', x, camera, 'depth', str(img_num).zfill(4) + '.png'))
+-                self.labelpath.append(os.path.join(root, 'scenes', x, camera, 'label', str(img_num).zfill(4) + '.png'))
+-                self.metapath.append(os.path.join(root, 'scenes', x, camera, 'meta', str(img_num).zfill(4) + '.mat'))
+-                self.graspnesspath.append(os.path.join(root, 'graspness', x, camera, str(img_num).zfill(4) + '.npy'))
+-                self.scenename.append(x.strip())  # strip is for removing the space at the beginning and the end
+-                self.frameid.append(img_num)
+-
+-            if self.load_label:
+-                self.grasp_labels[x.strip()] = os.path.join(self.root, 'economic_grasp_label_300views', x + '_labels.npz')
+-
+-    def scene_list(self):
+-        return self.scenename
+-
+-    def __len__(self):
+-        return len(self.depthpath)
+-
+-    def augment_data(self, point_clouds, object_poses_list):
+-        # Flipping along the YZ plane
+-        if np.random.random() > 0.5:
+-            flip_mat = np.array([[-1, 0, 0],
+-                                 [0, 1, 0],
+-                                 [0, 0, 1]])
+-            point_clouds = transform_point_cloud(point_clouds, flip_mat, '3x3')
+-            for i in range(len(object_poses_list)):
+-                object_poses_list[i] = np.dot(flip_mat, object_poses_list[i]).astype(np.float32)
+-
+-        return point_clouds, object_poses_list
+-
+-    def __getitem__(self, index):
+-        if self.load_label:
+-            return self.get_data_label(index)
+-        else:
+-            return self.get_data(index)
+-
+-    def get_data(self, index, return_raw_cloud=False):
+-        color = np.array(Image.open(self.colorpath[index]), dtype=np.float32) / 255.0
+-        depth = np.array(Image.open(self.depthpath[index]))
+-        seg = np.array(Image.open(self.labelpath[index]))
+-
+-        # camera in
+-        meta = scio.loadmat(self.metapath[index])
+-        scene = self.scenename[index]
+-        try:
+-            intrinsic = meta['intrinsic_matrix']
+-            factor_depth = meta['factor_depth']
+-        except Exception as e:
+-            print(repr(e))
+-            print(scene)
+-        camera = CameraInfo(1280.0, 720.0, intrinsic[0][0], intrinsic[1][1], intrinsic[0][2], intrinsic[1][2],
+-                            factor_depth)
+-
+-        # generate cloud
+-        cloud = create_point_cloud_from_depth_image(depth, camera, organized=True)
+-
+-        # get valid points
+-        depth_mask = (depth > 0)
+-        seg_mask = (seg > 0)
+-        if self.remove_outlier:  # they are not the outliers, just the points far away from the objects
+-            camera_poses = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'camera_poses.npy'))
+-            align_mat = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'cam0_wrt_table.npy'))
+-            trans = np.dot(align_mat, camera_poses[self.frameid[index]])
+-            workspace_mask = get_workspace_mask(cloud, seg, trans=trans, organized=True, outlier=0.02)
+-            mask = (depth_mask & workspace_mask)
+-        else:
+-            mask = depth_mask
+-        cloud_masked = cloud[mask]
+-        color_masked = color[mask]
+-        seg_masked = seg[mask]
+-        if return_raw_cloud:
+-            return cloud_masked, color_masked
+-
+-        # sample points
+-        if len(cloud_masked) >= self.num_points:
+-            idxs = np.random.choice(len(cloud_masked), self.num_points, replace=False)
+-        else:
+-            idxs1 = np.arange(len(cloud_masked))
+-            idxs2 = np.random.choice(len(cloud_masked), self.num_points - len(cloud_masked), replace=True)
+-            idxs = np.concatenate([idxs1, idxs2], axis=0)
+-        cloud_sampled = cloud_masked[idxs]
+-        color_sampled = color_masked[idxs]
+-        seg_sampled = seg_masked[idxs]
+-
+-        ret_dict = {}
+-        ret_dict['point_clouds'] = cloud_sampled.astype(np.float32)
+-        ret_dict['cloud_colors'] = color_sampled.astype(np.float32)
+-        ret_dict['coordinates_for_voxel'] = cloud_sampled.astype(np.float32) / self.voxel_size
+-        ret_dict['seg'] = seg_sampled.astype(np.float32)
+-
+-        return ret_dict
+-
+-    def get_data_label(self, index):
+-        color = np.array(Image.open(self.colorpath[index]), dtype=np.float32) / 255.0
+-        depth = np.array(Image.open(self.depthpath[index]))
+-        seg = np.array(Image.open(self.labelpath[index]))
+-        meta = scio.loadmat(self.metapath[index])
+-        scene = self.scenename[index]
+-
+-        graspness = np.load(self.graspnesspath[index])  # already remove outliers
+-        try:
+-            obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
+-            poses = meta['poses']
+-            intrinsic = meta['intrinsic_matrix']
+-            factor_depth = meta['factor_depth']
+-        except Exception as e:
+-            print(repr(e))
+-            print(scene)
+-        camera = CameraInfo(1280.0, 720.0, intrinsic[0][0], intrinsic[1][1], intrinsic[0][2], intrinsic[1][2],
+-                            factor_depth)
+-
+-        # generate cloud
+-        # depth is in millimeters (mm), the transformed cloud is in meters (m).
+-        cloud = create_point_cloud_from_depth_image(depth, camera, organized=True)
+-
+-        # get valid points
+-        depth_mask = (depth > 0)
+-        if self.remove_outlier:  # they are not the outliers, just the points far away from the objects
+-            camera_poses = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'camera_poses.npy'))
+-            align_mat = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'cam0_wrt_table.npy'))
+-            trans = np.dot(align_mat, camera_poses[self.frameid[index]])
+-            workspace_mask = get_workspace_mask(cloud, seg, trans=trans, organized=True, outlier=0.02)
+-            mask = (depth_mask & workspace_mask)
+-        else:
+-            mask = depth_mask
+-        cloud_masked = cloud[mask]
+-        color_masked = color[mask]
+-        seg_masked = seg[mask]
+-
+-        # sample points
+-        if len(cloud_masked) >= self.num_points:
+-            idxs = np.random.choice(len(cloud_masked), self.num_points, replace=False)
+-        else:
+-            idxs1 = np.arange(len(cloud_masked))
+-            idxs2 = np.random.choice(len(cloud_masked), self.num_points - len(cloud_masked), replace=True)
+-            idxs = np.concatenate([idxs1, idxs2], axis=0)
+-        cloud_sampled = cloud_masked[idxs]
+-        color_sampled = color_masked[idxs]
+-        seg_sampled = seg_masked[idxs]
+-        graspness_sampled = graspness[idxs]
+-        objectness_label = seg_sampled.copy()
+-        segmentation_label = objectness_label.copy()
+-        objectness_label[objectness_label > 1] = 1
+-
+-        object_poses_list = []
+-        grasp_points_list = []
+-        grasp_rotations_list = []
+-        grasp_depth_list = []
+-        grasp_widths_list = []
+-        grasp_scores_list = []
+-        view_graspness_list = []
+-        top_view_index_list = []
+-
+-        # load labels
+-        grasp_labels = np.load(self.grasp_labels[scene])
+-
+-        points = grasp_labels['points']
+-        rotations = grasp_labels['rotations'].astype(np.int32)
+-        depth = grasp_labels['depth'].astype(np.int32)
+-        scores = grasp_labels['scores'].astype(np.float32) / 10.
+-        widths = grasp_labels['widths'].astype(np.float32) / 1000.
+-        topview = grasp_labels['topview'].astype(np.int32)
+-        view_graspness = grasp_labels['vgraspness'].astype(np.float32)
+-        pointid = grasp_labels['pointid']
+-        for i, obj_idx in enumerate(obj_idxs):
+-            object_poses_list.append(poses[:, :, i])
+-            grasp_points_list.append(points[pointid == i])
+-            grasp_rotations_list.append(rotations[pointid == i])
+-            grasp_depth_list.append(depth[pointid == i])
+-            grasp_scores_list.append(scores[pointid == i])
+-            grasp_widths_list.append(widths[pointid == i])
+-            view_graspness_list.append(view_graspness[pointid == i])
+-            top_view_index_list.append(topview[pointid == i])
+-
+-        if self.augment:
+-            cloud_sampled, object_poses_list = self.augment_data(cloud_sampled, object_poses_list)
+-
+-        ret_dict = {}
+-        ret_dict['point_clouds'] = cloud_sampled.astype(np.float32)
+-        # [scene_points, 3 (coords)]
+-        ret_dict['cloud_colors'] = color_sampled.astype(np.float32)
+-        # [scene_points, 3 (rgb)]
+-        ret_dict['coordinates_for_voxel'] = cloud_sampled.astype(np.float32) / self.voxel_size
+-        # [scene_points, 3 (coords)]
+-        ret_dict['graspness_label'] = graspness_sampled.astype(np.float32)
+-        # [scene_points, 1 (graspness)]
+-        ret_dict['objectness_label'] = objectness_label.astype(np.int64)
+-        # [scene_points, 1 (objectness)]
+-        ret_dict['segmentation_label'] = segmentation_label.astype(np.int64)
+-        # [scene_points, 1 (objectness)]
+-        ret_dict['object_poses_list'] = object_poses_list
+-        # list has a length of objects amount, each has size [3, 4] (pose matrix)
+-        ret_dict['grasp_points_list'] = grasp_points_list
+-        # list has a length of objects amount, each has size [object_points, 3 (coordinate)]
+-        ret_dict['grasp_rotations_list'] = grasp_rotations_list
+-        # list has a length of objects amount, each has size [object_points, 60 (view)]
+-        ret_dict['grasp_depth_list'] = grasp_depth_list
+-        # list has a length of objects amount, each has size [object_points, 60 (view)]
+-        ret_dict['grasp_widths_list'] = grasp_widths_list
+-        # list has a length of objects amount, each has size [object_points, 60 (view)]
+-        ret_dict['grasp_scores_list'] = grasp_scores_list
+-        # list has a length of objects amount, each has size [object_points, 60 (view)]
+-        ret_dict['view_graspness_list'] = view_graspness_list
+-        # list has a length of objects amount, each has size [object_points, 300 (view graspness)]
+-        ret_dict['top_view_index_list'] = top_view_index_list
+-        # list has a length of objects amount, each has size [object_points, top views index]
+-
+-        return ret_dict
+-
+-
+-def collate_fn(batch):
+-    if type(batch[0]).__module__ == 'numpy':
+-        return torch.stack([torch.from_numpy(b) for b in batch], 0)
+-    elif isinstance(batch[0], container_abcs.Mapping):
+-        return {key: collate_fn([d[key] for d in batch]) for key in batch[0]}
+-    elif isinstance(batch[0], container_abcs.Sequence):
+-        return [[torch.from_numpy(sample) for sample in b] for b in batch]
+-
++import os
++import json
++import sys
++import numpy as np
++import scipy.io as scio
++from PIL import Image
++import pdb
++
++import torch
++import collections.abc as container_abcs
++from torch.utils.data import Dataset
++from tqdm import tqdm
++
++from utils.arguments import cfgs
++from utils.data_utils import CameraInfo, transform_point_cloud, create_point_cloud_from_depth_image, \
++    get_workspace_mask, remove_invisible_grasp_points
++
++BASE_DIR = os.path.dirname(os.path.abspath(__file__))
++ROOT_DIR = os.path.dirname(BASE_DIR)
++
++
++class GraspNetDataset(Dataset):
++    def __init__(self, root, camera='kinect', split='train', num_points=20000,
++                 voxel_size=0.005, remove_outlier=False, remove_invisible=True,
++                 augment=False, load_label=True):
++        self.root = root
++        self.split = split
++        self.voxel_size = voxel_size
++        self.num_points = num_points
++        self.remove_outlier = remove_outlier
++        self.remove_invisible = remove_invisible
++        self.camera = camera
++        self.augment = augment
++        self.load_label = load_label
++        self.collision_labels = {}
++
++        manifest_path = getattr(cfgs, 'split_manifest', None)
++        manifest = json.load(open(manifest_path)) if manifest_path else None
++        selection = {'train': 'train_scene_ids', 'dev': 'dev_scene_ids', 'test_dev': 'dev_scene_ids', 'diagnostic_seen': 'diagnostic_seen_scene_ids', 'test_diagnostic_seen': 'diagnostic_seen_scene_ids', 'diagnostic_novel': 'diagnostic_novel_scene_ids', 'test_diagnostic_novel': 'diagnostic_novel_scene_ids'}
++        if manifest is not None and split in selection:
++            self.sceneIds = manifest[selection[split]]
++            frame_ids = manifest['train_frame_ids'] if split == 'train' else list(range(256))
++            assert len(self.sceneIds) == len(set(self.sceneIds)) and len(frame_ids) == len(set(frame_ids))
++            assert all(0 <= i < 256 for i in frame_ids)
++        else:
++            splits = {'train': range(100), 'test': range(100,190), 'test_seen': range(100,130), 'test_similar': range(130,160), 'test_novel': range(160,190)}
++            self.sceneIds = list(splits[split]); frame_ids = list(range(256))
++
++        self.sceneIds = ['scene_{}'.format(str(x).zfill(4)) for x in self.sceneIds]
++
++        self.colorpath = []
++        self.depthpath = []
++        self.labelpath = []
++        self.metapath = []
++        self.scenename = []
++        self.frameid = []
++        self.graspnesspath = []
++
++        self.grasp_labels = {}
++
++        for x in tqdm(self.sceneIds, desc='Loading the scene data and its labels...'):
++            for img_num in frame_ids:
++                self.colorpath.append(os.path.join(root, 'scenes', x, camera, 'rgb', str(img_num).zfill(4) + '.png'))
++                self.depthpath.append(os.path.join(root, 'scenes', x, camera, 'depth', str(img_num).zfill(4) + '.png'))
++                self.labelpath.append(os.path.join(root, 'scenes', x, camera, 'label', str(img_num).zfill(4) + '.png'))
++                self.metapath.append(os.path.join(root, 'scenes', x, camera, 'meta', str(img_num).zfill(4) + '.mat'))
++                self.graspnesspath.append(os.path.join(root, 'graspness', x, camera, str(img_num).zfill(4) + '.npy'))
++                self.scenename.append(x.strip())  # strip is for removing the space at the beginning and the end
++                self.frameid.append(img_num)
++
++            if self.load_label:
++                self.grasp_labels[x.strip()] = os.path.join(self.root, 'economic_grasp_label_300views', x + '_labels.npz')
++
++    def scene_list(self):
++        return self.scenename
++
++    def __len__(self):
++        return len(self.depthpath)
++
++    def augment_data(self, point_clouds, object_poses_list):
++        # Flipping along the YZ plane
++        if np.random.random() > 0.5:
++            flip_mat = np.array([[-1, 0, 0],
++                                 [0, 1, 0],
++                                 [0, 0, 1]])
++            point_clouds = transform_point_cloud(point_clouds, flip_mat, '3x3')
++            for i in range(len(object_poses_list)):
++                object_poses_list[i] = np.dot(flip_mat, object_poses_list[i]).astype(np.float32)
++
++        return point_clouds, object_poses_list
++
++    def __getitem__(self, index):
++        if self.load_label:
++            return self.get_data_label(index)
++        else:
++            return self.get_data(index)
++
++    def get_data(self, index, return_raw_cloud=False):
++        color = np.array(Image.open(self.colorpath[index]), dtype=np.float32) / 255.0
++        depth = np.array(Image.open(self.depthpath[index]))
++        seg = np.array(Image.open(self.labelpath[index]))
++
++        # camera in
++        meta = scio.loadmat(self.metapath[index])
++        scene = self.scenename[index]
++        try:
++            intrinsic = meta['intrinsic_matrix']
++            factor_depth = meta['factor_depth']
++        except Exception as e:
++            print(repr(e))
++            print(scene)
++        camera = CameraInfo(1280.0, 720.0, intrinsic[0][0], intrinsic[1][1], intrinsic[0][2], intrinsic[1][2],
++                            factor_depth)
++
++        # generate cloud
++        cloud = create_point_cloud_from_depth_image(depth, camera, organized=True)
++
++        # get valid points
++        depth_mask = (depth > 0)
++        seg_mask = (seg > 0)
++        if self.remove_outlier:  # they are not the outliers, just the points far away from the objects
++            camera_poses = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'camera_poses.npy'))
++            align_mat = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'cam0_wrt_table.npy'))
++            trans = np.dot(align_mat, camera_poses[self.frameid[index]])
++            workspace_mask = get_workspace_mask(cloud, seg, trans=trans, organized=True, outlier=0.02)
++            mask = (depth_mask & workspace_mask)
++        else:
++            mask = depth_mask
++        cloud_masked = cloud[mask]
++        color_masked = color[mask]
++        seg_masked = seg[mask]
++        if return_raw_cloud:
++            return cloud_masked, color_masked
++
++        # sample points
++        if len(cloud_masked) >= self.num_points:
++            idxs = np.random.choice(len(cloud_masked), self.num_points, replace=False)
++        else:
++            idxs1 = np.arange(len(cloud_masked))
++            idxs2 = np.random.choice(len(cloud_masked), self.num_points - len(cloud_masked), replace=True)
++            idxs = np.concatenate([idxs1, idxs2], axis=0)
++        cloud_sampled = cloud_masked[idxs]
++        color_sampled = color_masked[idxs]
++        seg_sampled = seg_masked[idxs]
++
++        ret_dict = {}
++        ret_dict['point_clouds'] = cloud_sampled.astype(np.float32)
++        ret_dict['cloud_colors'] = color_sampled.astype(np.float32)
++        ret_dict['coordinates_for_voxel'] = cloud_sampled.astype(np.float32) / self.voxel_size
++        ret_dict['seg'] = seg_sampled.astype(np.float32)
++
++        return ret_dict
++
++    def get_data_label(self, index):
++        color = np.array(Image.open(self.colorpath[index]), dtype=np.float32) / 255.0
++        depth = np.array(Image.open(self.depthpath[index]))
++        seg = np.array(Image.open(self.labelpath[index]))
++        meta = scio.loadmat(self.metapath[index])
++        scene = self.scenename[index]
++
++        graspness = np.load(self.graspnesspath[index])  # already remove outliers
++        try:
++            obj_idxs = meta['cls_indexes'].flatten().astype(np.int32)
++            poses = meta['poses']
++            intrinsic = meta['intrinsic_matrix']
++            factor_depth = meta['factor_depth']
++        except Exception as e:
++            print(repr(e))
++            print(scene)
++        camera = CameraInfo(1280.0, 720.0, intrinsic[0][0], intrinsic[1][1], intrinsic[0][2], intrinsic[1][2],
++                            factor_depth)
++
++        # generate cloud
++        # depth is in millimeters (mm), the transformed cloud is in meters (m).
++        cloud = create_point_cloud_from_depth_image(depth, camera, organized=True)
++
++        # get valid points
++        depth_mask = (depth > 0)
++        if self.remove_outlier:  # they are not the outliers, just the points far away from the objects
++            camera_poses = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'camera_poses.npy'))
++            align_mat = np.load(os.path.join(self.root, 'scenes', scene, self.camera, 'cam0_wrt_table.npy'))
++            trans = np.dot(align_mat, camera_poses[self.frameid[index]])
++            workspace_mask = get_workspace_mask(cloud, seg, trans=trans, organized=True, outlier=0.02)
++            mask = (depth_mask & workspace_mask)
++        else:
++            mask = depth_mask
++        cloud_masked = cloud[mask]
++        color_masked = color[mask]
++        seg_masked = seg[mask]
++
++        # sample points
++        if len(cloud_masked) >= self.num_points:
++            idxs = np.random.choice(len(cloud_masked), self.num_points, replace=False)
++        else:
++            idxs1 = np.arange(len(cloud_masked))
++            idxs2 = np.random.choice(len(cloud_masked), self.num_points - len(cloud_masked), replace=True)
++            idxs = np.concatenate([idxs1, idxs2], axis=0)
++        cloud_sampled = cloud_masked[idxs]
++        color_sampled = color_masked[idxs]
++        seg_sampled = seg_masked[idxs]
++        graspness_sampled = graspness[idxs]
++        objectness_label = seg_sampled.copy()
++        segmentation_label = objectness_label.copy()
++        objectness_label[objectness_label > 1] = 1
++
++        object_poses_list = []
++        grasp_points_list = []
++        grasp_rotations_list = []
++        grasp_depth_list = []
++        grasp_widths_list = []
++        grasp_scores_list = []
++        view_graspness_list = []
++        top_view_index_list = []
++
++        # load labels
++        grasp_labels = np.load(self.grasp_labels[scene])
++
++        points = grasp_labels['points']
++        rotations = grasp_labels['rotations'].astype(np.int32)
++        depth = grasp_labels['depth'].astype(np.int32)
++        scores = grasp_labels['scores'].astype(np.float32) / 10.
++        widths = grasp_labels['widths'].astype(np.float32) / 1000.
++        topview = grasp_labels['topview'].astype(np.int32)
++        view_graspness = grasp_labels['vgraspness'].astype(np.float32)
++        pointid = grasp_labels['pointid']
++        for i, obj_idx in enumerate(obj_idxs):
++            object_poses_list.append(poses[:, :, i])
++            grasp_points_list.append(points[pointid == i])
++            grasp_rotations_list.append(rotations[pointid == i])
++            grasp_depth_list.append(depth[pointid == i])
++            grasp_scores_list.append(scores[pointid == i])
++            grasp_widths_list.append(widths[pointid == i])
++            view_graspness_list.append(view_graspness[pointid == i])
++            top_view_index_list.append(topview[pointid == i])
++
++        if self.augment:
++            cloud_sampled, object_poses_list = self.augment_data(cloud_sampled, object_poses_list)
++
++        ret_dict = {}
++        ret_dict['point_clouds'] = cloud_sampled.astype(np.float32)
++        # [scene_points, 3 (coords)]
++        ret_dict['cloud_colors'] = color_sampled.astype(np.float32)
++        # [scene_points, 3 (rgb)]
++        ret_dict['coordinates_for_voxel'] = cloud_sampled.astype(np.float32) / self.voxel_size
++        # [scene_points, 3 (coords)]
++        ret_dict['graspness_label'] = graspness_sampled.astype(np.float32)
++        # [scene_points, 1 (graspness)]
++        ret_dict['objectness_label'] = objectness_label.astype(np.int64)
++        # [scene_points, 1 (objectness)]
++        ret_dict['segmentation_label'] = segmentation_label.astype(np.int64)
++        # [scene_points, 1 (objectness)]
++        ret_dict['object_poses_list'] = object_poses_list
++        # list has a length of objects amount, each has size [3, 4] (pose matrix)
++        ret_dict['grasp_points_list'] = grasp_points_list
++        # list has a length of objects amount, each has size [object_points, 3 (coordinate)]
++        ret_dict['grasp_rotations_list'] = grasp_rotations_list
++        # list has a length of objects amount, each has size [object_points, 60 (view)]
++        ret_dict['grasp_depth_list'] = grasp_depth_list
++        # list has a length of objects amount, each has size [object_points, 60 (view)]
++        ret_dict['grasp_widths_list'] = grasp_widths_list
++        # list has a length of objects amount, each has size [object_points, 60 (view)]
++        ret_dict['grasp_scores_list'] = grasp_scores_list
++        # list has a length of objects amount, each has size [object_points, 60 (view)]
++        ret_dict['view_graspness_list'] = view_graspness_list
++        # list has a length of objects amount, each has size [object_points, 300 (view graspness)]
++        ret_dict['top_view_index_list'] = top_view_index_list
++        # list has a length of objects amount, each has size [object_points, top views index]
++
++        return ret_dict
++
++
++def collate_fn(batch):
++    if type(batch[0]).__module__ == 'numpy':
++        return torch.stack([torch.from_numpy(b) for b in batch], 0)
++    elif isinstance(batch[0], container_abcs.Mapping):
++        return {key: collate_fn([d[key] for d in batch]) for key in batch[0]}
++    elif isinstance(batch[0], container_abcs.Sequence):
++        return [[torch.from_numpy(sample) for sample in b] for b in batch]
++
+     raise TypeError("batch must contain tensors, dicts or lists; found {}".format(type(batch[0])))
+\ No newline at end of file
+diff --git a/test.py b/test.py
+index 2a92612..61d6aeb 100755
+--- a/test.py
++++ b/test.py
+@@ -1,9 +1,18 @@
+ import os
++import shutil
+ import numpy as np
+ import time
++import json
++import random
+ 
+ import torch
+ from torch.utils.data import DataLoader
++
++EXPERIMENT_SEED = int(os.environ.get("EG_SEED", "20261015"))
++random.seed(EXPERIMENT_SEED)
++np.random.seed(EXPERIMENT_SEED)
++torch.manual_seed(EXPERIMENT_SEED)
++torch.cuda.manual_seed_all(EXPERIMENT_SEED)
+ from graspnetAPI import GraspGroup, GraspNetEval
+ 
+ from utils.collision_detector import ModelFreeCollisionDetector
+@@ -14,7 +23,7 @@ from models.economicgrasp import economicgrasp, pred_decode
+ 
+ # ------------ GLOBAL CONFIG ------------
+ if not os.path.exists(cfgs.save_dir):
+-    os.mkdir(cfgs.save_dir)
++    os.makedirs(cfgs.save_dir)
+ 
+ 
+ # Init datasets and dataloaders
+@@ -73,14 +82,20 @@ def inference():
+                 batch_data[key] = batch_data[key].to(device)
+ 
+         # Forward pass
++        torch.cuda.synchronize()
++        inference_started = time.perf_counter()
+         with torch.no_grad():
+             end_points = net(batch_data)
+             grasp_preds = pred_decode(end_points)
++        torch.cuda.synchronize()
++        inference_seconds = time.perf_counter() - inference_started
+ 
+         # Save results for evaluation
+         for i in range(cfgs.batch_size):
+             data_idx = batch_idx * cfgs.batch_size + i
+             preds = grasp_preds[i].detach().cpu().numpy()
++            if preds.ndim != 2 or preds.shape[1] != 17 or not np.isfinite(preds).all():
++                raise ValueError(f"Invalid prediction: data_idx={data_idx}")
+             gg = GraspGroup(preds)
+ 
+             # collision detection
+@@ -90,12 +105,27 @@ def inference():
+                 collision_mask = mfcdetector.detect(gg, approach_dist=0.05, collision_thresh=cfgs.collision_thresh)
+                 gg = gg[~collision_mask]
+ 
++            # Optional exact input replay for the preregistered exploratory diagnostic.
++            if os.environ.get('EG_SAVE_INFERENCE_INPUTS', '0') == '1':
++                input_dir = os.path.join(cfgs.save_dir, 'input_samples', SCENE_LIST[data_idx], cfgs.camera)
++                os.makedirs(input_dir, exist_ok=True)
++                input_file = os.path.join(input_dir, str(data_idx % 256).zfill(4) + '.npz')
++                if os.path.exists(input_file):
++                    raise FileExistsError(input_file)
++                if shutil.disk_usage(input_dir).free < 25 * 1024**3:
++                    raise OSError('Insufficient space: preserve 24GiB reserve for diagnostic inputs')
++                np.savez(input_file, point_clouds=batch_data['point_clouds'][i].detach().cpu().numpy(), coordinates_for_voxel=batch_data['coordinates_for_voxel'][i].detach().cpu().numpy(), seg=batch_data['seg'][i].detach().cpu().numpy())
++
+             # save grasps
+             save_dir = os.path.join(cfgs.save_dir, SCENE_LIST[data_idx], cfgs.camera)
+             save_path = os.path.join(save_dir, str(data_idx % 256).zfill(4) + '.npy')
+             if not os.path.exists(save_dir):
+                 os.makedirs(save_dir)
++            if os.path.exists(save_path):
++                raise FileExistsError(f'Refusing prediction overwrite: {save_path}')
+             gg.save_npy(save_path)
++            with open(os.path.join(cfgs.save_dir, 'inference_metrics.jsonl'), 'a') as metrics:
++                metrics.write(json.dumps({'scene': SCENE_LIST[data_idx], 'frame': data_idx % 256, 'decoded_count': len(preds), 'saved_count': len(gg), 'finite_count': int(np.isfinite(gg.grasp_group_array).all(axis=1).sum()), 'score_min': float(gg.scores.min()) if len(gg) else None, 'score_max': float(gg.scores.max()) if len(gg) else None, 'batch_forward_decode_seconds': inference_seconds, 'batch_idx': batch_idx, 'batch_size': len(grasp_preds), 'seed': EXPERIMENT_SEED}) + '\n')
+ 
+         if batch_idx % batch_interval == 0:
+             toc = time.time()
+@@ -107,7 +137,7 @@ def evaluate_seen():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_seen(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_seen(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_seen.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"seen testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
+@@ -117,7 +147,7 @@ def evaluate_similar():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_similar(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_similar(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_similar.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"similar testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
+@@ -127,7 +157,7 @@ def evaluate_novel():
+     ge = GraspNetEval(root=cfgs.dataset_root, camera=cfgs.camera, split='test')
+     # In test time, we will select top-10 grasps for each objects (sorted by our predicted score).
+     # Then, for all the grasp, we will further select the top-50 grasps for evaluation.
+-    res, ap = ge.eval_novel(cfgs.save_dir, proc=6)
++    res, ap = ge.eval_novel(cfgs.save_dir, proc=int(os.environ.get("EG_EVAL_PROCESSES", "4")))
+     save_dir = os.path.join(cfgs.save_dir, 'ap_{}_novel.npy'.format(cfgs.camera))
+     np.save(save_dir, res)
+     print(f"novel testing, AP 0.8={np.mean(res[:, :, :, 3])}, AP 0.4={np.mean(res[:, :, :, 1])}")
+diff --git a/train.py b/train.py
+index 011836c..1fb4bfc 100755
+--- a/train.py
++++ b/train.py
+@@ -1,14 +1,23 @@
+ # Basic Libraries
+ import os
++import shutil
+ import numpy as np
+ import math
+ import time
++import random
++import json
+ 
+ # PyTorch Libraries
+ import torch
+ import torch.optim as optim
+ from torch.utils.data import DataLoader
+ 
++EXPERIMENT_SEED = int(os.environ.get("EG_SEED", "20261015"))
++random.seed(EXPERIMENT_SEED)
++np.random.seed(EXPERIMENT_SEED)
++torch.manual_seed(EXPERIMENT_SEED)
++torch.cuda.manual_seed_all(EXPERIMENT_SEED)
++
+ # Config
+ from utils.arguments import cfgs
+ 
+@@ -67,6 +76,12 @@ if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
+     net.load_state_dict(checkpoint['model_state_dict'])
+     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+     start_epoch = checkpoint['epoch']
++    if 'rng_state' in checkpoint:
++        rng = checkpoint['rng_state']
++        random.setstate(rng['python'])
++        np.random.set_state(rng['numpy'])
++        torch.set_rng_state(rng['torch'])
++        torch.cuda.set_rng_state_all(rng['cuda'])
+     log_string("-> loaded checkpoint %s (epoch: %d)" % (CHECKPOINT_PATH, start_epoch))
+ 
+ 
+@@ -86,6 +101,8 @@ def adjust_learning_rate(optimizer, epoch):
+ # ------TRAINING BEGIN  ------------
+ def train_one_epoch():
+     stat_dict = {}  # collect statistics
++    epoch_totals = {}
++    epoch_batches = 0
+     adjust_learning_rate(optimizer, EPOCH_CNT)
+     # set model to training mode
+     net.train()
+@@ -113,6 +130,8 @@ def train_one_epoch():
+         # Compute loss and gradients, update parameters.
+         loss, end_points = get_loss_economicgrasp(end_points)
+ 
++        if not torch.isfinite(loss):
++            raise FloatingPointError(f"Nonfinite training loss: epoch={EPOCH_CNT} batch={batch_idx}")
+         loss.backward()
+         if (batch_idx + 1) % 1 == 0:
+             optimizer.step()
+@@ -126,6 +145,15 @@ def train_one_epoch():
+                 if key not in stat_dict: stat_dict[key] = 0
+                 stat_dict[key] += end_points[key].item()
+ 
++        row = {key: float(end_points[key].item()) for key in end_points if ("A" in key or "B" in key or "D" in key) and torch.is_tensor(end_points[key]) and end_points[key].numel() == 1}
++        if not all(math.isfinite(v) for v in row.values()):
++            raise FloatingPointError("Nonfinite training diagnostic")
++        epoch_batches += 1
++        for key, value in row.items():
++            epoch_totals[key] = epoch_totals.get(key, 0.0) + value
++        with open(os.path.join(cfgs.log_dir, "batch_metrics.jsonl"), "a") as metrics:
++            metrics.write(json.dumps({"epoch": EPOCH_CNT + 1, "batch": batch_idx + 1, "global_step": EPOCH_CNT * num_batches + batch_idx + 1, "lr": get_current_lr(EPOCH_CNT), "metrics": row}) + "\n")
++
+         batch_interval = 20
+ 
+         if (batch_idx + 1) % batch_interval == 0:
+@@ -140,6 +168,8 @@ def train_one_epoch():
+ 
+         data_start_time = time.time()
+ 
++    return {key: value / epoch_batches for key, value in epoch_totals.items()}
++
+ 
+ def train(start_epoch):
+     global EPOCH_CNT
+@@ -148,18 +178,33 @@ def train(start_epoch):
+         log_string(f'**** EPOCH {epoch:<3} ****')
+         log_string('Current learning rate: %f' % (get_current_lr(epoch)))
+ 
+-        np.random.seed()
+-        train_one_epoch()
++        np.random.seed(EXPERIMENT_SEED + epoch)
++        torch.cuda.reset_peak_memory_stats()
++        epoch_started = time.perf_counter()
++        epoch_metrics = train_one_epoch()
++        torch.cuda.synchronize()
++        with open(os.path.join(cfgs.log_dir, "epoch_metrics.jsonl"), "a") as metrics:
++            metrics.write(json.dumps({"epoch": epoch + 1, "metrics": epoch_metrics, "lr": get_current_lr(epoch), "wall_seconds": time.perf_counter() - epoch_started, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(), "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved()}) + "\n")
+ 
+         # Save checkpoint
+         save_dict = {'epoch': epoch + 1,  # after training one epoch, the start_epoch should be epoch+1
+                      'optimizer_state_dict': optimizer.state_dict(),
++                     'seed': EXPERIMENT_SEED,
++                     'optimizer_updates': (epoch + 1) * len(TRAIN_DATALOADER),
++                     'rng_state': {'python': random.getstate(), 'numpy': np.random.get_state(), 'torch': torch.get_rng_state(), 'cuda': torch.cuda.get_rng_state_all()},
+                      }
+         try:  # with nn.DataParallel() the net is added as a submodule of DataParallel
+             save_dict['model_state_dict'] = net.module.state_dict()
+         except:
+             save_dict['model_state_dict'] = net.state_dict()
+-        torch.save(save_dict, os.path.join(cfgs.log_dir, cfgs.model + '_epoch' + str(epoch + 1).zfill(2) + '.tar'))
++        checkpoint_file = os.path.join(cfgs.log_dir, cfgs.model + '_epoch' + str(epoch + 1).zfill(2) + '.tar')
++        if os.path.exists(checkpoint_file):
++            raise FileExistsError(f'Refusing checkpoint overwrite: {checkpoint_file}')
++        if shutil.disk_usage(cfgs.log_dir).free < 25 * 1024**3:
++            raise OSError('Insufficient space: preserve 24GiB reserve for checkpoint')
++        temporary = checkpoint_file + '.incomplete'
++        torch.save(save_dict, temporary)
++        os.replace(temporary, checkpoint_file)
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/utils/arguments.py b/utils/arguments.py
+index 3208e6d..6bf60c5 100755
+--- a/utils/arguments.py
++++ b/utils/arguments.py
+@@ -1,51 +1,53 @@
+-import argparse
+-
+-parser = argparse.ArgumentParser()
+-
+-# data relevant
+-parser.add_argument('--dataset_root', required=True, help='Dataset root')
+-parser.add_argument('--camera', required=True, help='Camera split [realsense/kinect]')
+-
+-# log
+-parser.add_argument('--log_dir', default='log', help='Dump dir to save model checkpoint [default: log]')
+-
+-# model setting
+-parser.add_argument('--model', type=str, default='graspness', help='graspnessp')
+-parser.add_argument('--num_point', type=int, default=20000, help='Point number [default: 20000]')
+-
+-# graspness setting
+-parser.add_argument('--grasp_max_width', type=float, default=0.1, help='The max width of the grasp [default: 0.1]')
+-parser.add_argument('--graspness_threshold', type=float, default=0.1,
+-                    help='Threshold of the graspness [default: 0.1], less than the threshold is unacceptable')
+-parser.add_argument('--num_view', type=int, default=300, help='Loss weight of the objectness term')
+-parser.add_argument('--num_angle', type=int, default=12, help='Loss weight of the objectness term')
+-parser.add_argument('--num_depth', type=int, default=4, help='Loss weight of the objectness term')
+-parser.add_argument('--m_point', type=int, default=1024, help='Point number after graspness [default: 1024]')
+-
+-# loss setting
+-parser.add_argument('--objectness_loss_weight', type=float, default=1, help='Loss weight of the objectness term')
+-parser.add_argument('--graspness_loss_weight', type=float, default=10, help='Loss weight of the graspness term')
+-parser.add_argument('--view_loss_weight', type=float, default=100, help='Loss weight of the view term')
+-parser.add_argument('--angle_loss_weight', type=float, default=1, help='Loss weight of the angle term')
+-parser.add_argument('--depth_loss_weight', type=float, default=1, help='Loss weight of the depth term')
+-parser.add_argument('--score_loss_weight', type=float, default=1, help='Loss weight of the score term')
+-parser.add_argument('--width_loss_weight', type=float, default=10, help='Loss weight of the width term')
+-
+-# training setting
+-parser.add_argument('--checkpoint_path', default=None, help='Model checkpoint path [default: None]')
+-parser.add_argument('--resume', action='store_true', help='Whether to resume from checkpoint')
+-parser.add_argument('--max_epoch', type=int, default=20, help='Epoch to run [default: 18]')
+-parser.add_argument('--batch_size', type=int, default=4, help='Batch Size during training [default: 2]')
+-parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
+-parser.add_argument('--weight_decay', type=float, default=0, help='Optimization L2 weight decay [default: 0]')
+-parser.add_argument('--voxel_size', type=float, default=0.005, help='Voxel size (in metters)')
+-
+-# testing setting
+-parser.add_argument('--save_dir', type=str, help='Dir to save outputs')
+-parser.add_argument('--test_mode', type=str, help='Mode of the testing (seen, similar, novel)')
+-parser.add_argument('--collision_thresh', type=float, default=0,
+-                    help='Collision threshold in collision detection [default: 0], if used, set to 0.01')
+-parser.add_argument('--inference', action='store_true', help='Whether to inference')
+-
+-
++import argparse
++
++parser = argparse.ArgumentParser()
++
++# data relevant
++parser.add_argument('--dataset_root', required=True, help='Dataset root')
++parser.add_argument('--camera', required=True, help='Camera split [realsense/kinect]')
++
++# log
++parser.add_argument('--log_dir', default='log', help='Dump dir to save model checkpoint [default: log]')
++
++# model setting
++parser.add_argument('--model', type=str, default='graspness', help='graspnessp')
++parser.add_argument('--num_point', type=int, default=20000, help='Point number [default: 20000]')
++
++# graspness setting
++parser.add_argument('--grasp_max_width', type=float, default=0.1, help='The max width of the grasp [default: 0.1]')
++parser.add_argument('--graspness_threshold', type=float, default=0.1,
++                    help='Threshold of the graspness [default: 0.1], less than the threshold is unacceptable')
++parser.add_argument('--num_view', type=int, default=300, help='Loss weight of the objectness term')
++parser.add_argument('--num_angle', type=int, default=12, help='Loss weight of the objectness term')
++parser.add_argument('--num_depth', type=int, default=4, help='Loss weight of the objectness term')
++parser.add_argument('--m_point', type=int, default=1024, help='Point number after graspness [default: 1024]')
++
++# loss setting
++parser.add_argument('--objectness_loss_weight', type=float, default=1, help='Loss weight of the objectness term')
++parser.add_argument('--graspness_loss_weight', type=float, default=10, help='Loss weight of the graspness term')
++parser.add_argument('--view_loss_weight', type=float, default=100, help='Loss weight of the view term')
++parser.add_argument('--angle_loss_weight', type=float, default=1, help='Loss weight of the angle term')
++parser.add_argument('--depth_loss_weight', type=float, default=1, help='Loss weight of the depth term')
++parser.add_argument('--score_loss_weight', type=float, default=1, help='Loss weight of the score term')
++parser.add_argument('--width_loss_weight', type=float, default=10, help='Loss weight of the width term')
++
++# training setting
++parser.add_argument('--checkpoint_path', default=None, help='Model checkpoint path [default: None]')
++parser.add_argument('--resume', action='store_true', help='Whether to resume from checkpoint')
++parser.add_argument('--max_epoch', type=int, default=20, help='Epoch to run [default: 18]')
++parser.add_argument('--batch_size', type=int, default=4, help='Batch Size during training [default: 2]')
++parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
++parser.add_argument('--weight_decay', type=float, default=0, help='Optimization L2 weight decay [default: 0]')
++parser.add_argument('--voxel_size', type=float, default=0.005, help='Voxel size (in metters)')
++
++# testing setting
++parser.add_argument('--save_dir', type=str, help='Dir to save outputs')
++parser.add_argument('--test_mode', type=str, help='Mode of the testing (seen, similar, novel)')
++parser.add_argument('--collision_thresh', type=float, default=0,
++                    help='Collision threshold in collision detection [default: 0], if used, set to 0.01')
++parser.add_argument('--inference', action='store_true', help='Whether to inference')
++
++
++parser.add_argument('--split_manifest', default=None, help='Frozen scene/frame manifest for subset studies')
++
+ cfgs = parser.parse_args()
+\ No newline at end of file
