@@ -60,12 +60,9 @@ for seed in [0,1]:
     if not m.any():continue
     result=dict(seed=seed,checkpoint=cp,split=split,bfs_bin=label,neutral=public(metric(neutral,m,inv,n,w)),mean_abs_gap=public(metric(abs(a['delta']),m,inv,n,w)),ranking_agreement=public(metric(agree,m,inv,n,w)),saturation=public(metric(((g<.01)|(g>.99)).astype(float),m,inv,n,w)),g_mean=public(metric(g,m,inv,n,w)),gap_quantiles=np.quantile(a['delta'][m],[.1,.25,.5,.75,.9]).tolist(),abs_gap_median=float(np.median(abs(a['delta'][m]))),g_quantiles=np.quantile(g[m],[.1,.25,.5,.75,.9]).tolist(),actor_data_l2=float(a['actor_data_l2'][m].mean()),vabc_data_l2=float(a['vabc_data_l2'][m].mean()))
     rows.append(result)
-   for mult in [.1,.3,1,3,10]:
-    hypothetical=expit(a['logit']/mult)
-    eta.append(dict(seed=seed,checkpoint=cp,split=split,multiplier=mult,near_neutral=float(((hypothetical[near]>=.4)&(hypothetical[near]<=.6)).mean()),far_neutral=float(((hypothetical[far]>=.4)&(hypothetical[far]<=.6)).mean()),near_saturation=float(((hypothetical[near]<.01)|(hypothetical[near]>.99)).mean()),far_saturation=float(((hypothetical[far]<.01)|(hypothetical[far]>.99)).mean())))
    for rep in [1,2]:
     rs=(z['repeat']==rep)&(z['split']==split_id);idx=z['sample_index'][rs];rg=z['g'][rs];rd=d[idx]
     rngrows.append(dict(seed=seed,checkpoint=cp,split=split,repeat=rep,near_neutral=float(((rg[rd<=3]>=.4)&(rg[rd<=3]<=.6)).mean()),far_neutral=float(((rg[rd>=8]>=.4)&(rg[rd>=8]<=.6)).mean()),mean_abs_weight_change=float(abs(rg-g[idx]).mean()),above_half_flip_rate=float(((rg>.5)!=(g[idx]>.5)).mean()),reference_base_near_neutral=float(neutral[idx][rd<=3].mean()),reference_base_far_neutral=float(neutral[idx][rd>=8].mean())))
   print('ANALYZED',seed,cp,flush=True)
-for name,obj in [('distance_metrics',rows),('controlled_effects',effects),('rng_sensitivity',rngrows),('eta_counterfactual',eta)]:
+for name,obj in [('distance_metrics',rows),('controlled_effects',effects),('rng_sensitivity',rngrows)]:
  (R/'reports'/f'{name}.json').write_text(json.dumps(obj,indent=2,allow_nan=False))
