@@ -1,0 +1,22 @@
+import json,subprocess,shutil,hashlib,datetime
+from pathlib import Path
+R=Path(__file__).resolve().parents[1];P=Path('/home/xushijie3/work/flow_critic_comparative_train_v1_20261014');U=Path('/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp')
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,x):p.write_text(json.dumps(x,indent=2,ensure_ascii=False))
+BLOBS={x['path']:x['sha'] for x in json.loads((R/'receipts/public_gfp_blobs.json').read_text())}
+manifest=[]
+for f in ['agents/gfp.py','main.py','config/main.yaml','config/agent/gfp.yaml','config/agent/rebrac.yaml','hyperparams/gfp_params.csv','hyperparams/rebrac_params.csv','hyperparams/fql_params.csv','hyperparams/gfp-advantage_params.csv','hyperparams/hyperparams.py','envs/env_utils.py','utils/datasets.py','LICENSE']+[str(x.relative_to(U)) for x in (U/'results/per_task').glob('*.csv')]:
+ p=U/f;raw=p.read_bytes();assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==BLOBS[f],f
+ d=R/'sources/gfp'/f;d.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,d);manifest.append(dict(path=str(p),archive=str(d.relative_to(R)),sha256=sha(p),source='https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/'+f))
+O=P/'envs/gfp/lib64/python3.12/site-packages/ogbench'
+for f in ['locomaze/maze.py','locomaze/humanoid.py','locomaze/__init__.py','utils.py','relabel_utils.py']:
+ d=R/'sources/ogbench'/f;d.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(O/f,d);manifest.append(dict(path=str(O/f),archive=str(d.relative_to(R)),sha256=sha(O/f),version='1.1.0'))
+assets=[]
+for s in [0,1]:
+ rt=json.loads((P/f'runs/G0_seed{s}/runtime.json').read_text());save(R/f'configs/G0_seed{s}_runtime.json',rt)
+ for k in [200000,600000,1000000]:
+  p=Path(rt['output_dir'])/f'params_{k}.pkl';ident=json.loads(p.with_suffix('.identity.json').read_text());assets.append(dict(seed=s,checkpoint=k,path=str(p),sha256=sha(p),identity=ident))
+save(R/'receipts/source_identity.json',manifest);save(R/'receipts/checkpoints_before.json',assets)
+protocol=dict(card='GFP-GUIDANCE-DISTANCE-Z01-V1',frozen_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),branch='codex/gfp-guidance-distance-z01-20261015',training_authorized=False,optimizer_updates_allowed=0,environment_steps_allowed=0,model_seeds=[0,1],checkpoints=[200000,600000,1000000],batch_size=256,batches_per_model=dict(train=100,validation=100),pilot_batches_per_model=dict(train=10,validation=10),primary_state_evaluations=307200,sampling='Uniform valid transitions WITH replacement in each original split; batches never distance-stratified; same selected indices across six models.',index_rng_seeds=dict(train=2026101511,validation=2026101512),action_rng_base=2026101513,extra_rng_repeats=dict(repeats=2,batches_per_split=10,state_evaluations=61440,base_seeds=[2026101514,2026101515]),geometry='AST-extract maze/task coordinates from installed OGBench 1.1.0; four-neighbor BFS; no simulator construction/reset/step',bfs_bins=[[0,3],[4,7],[8,11],[12,99]],near='BFS<=3',far='BFS>=8',neutral=[0.4,0.6],saturation=[0.01,0.99],proxy_horizons=[25,100],proxy_primary='BFS(s_t)-BFS(s_t+100), no trajectory boundary crossing; imperfect behavior proxy, NOT counterfactual action advantage',proxy_useful='BFS progress >=1 cell',proxy_unhelpful='BFS progress <=0 cells',uncertainty='200 trajectory cluster bootstrap resamples per model and split, seed 2026101516; never independent-state confidence intervals',controls='Trajectory fixed effects; Euclidean distance and its square, head height and torso upright orientation, speed. Linear probability partial association for neutral weights; controlled association of guidance with future BFS progress.',decision='GO recommendation only for consistent harmful-neutralization proxy evidence in both seeds and >=2 checkpoints plus public task gap; still cannot establish task4 mechanism without task4 model. DIAGNOSE for critic disagreement, mixed or proxy-only evidence. NO-GO C1 if no reproducible distance-neutralization pattern. No automatic T1.',eta_counterfactual_multipliers=[0.1,0.3,1,3,10],stops=['Nonfinite','source/config/checkpoint changed','formula mismatch >0.001','accidental environment/optimizer call','count exceeds cap'],sources=manifest)
+save(R/'configs/protocol.json',protocol)
+print('FROZEN',protocol['frozen_utc'],'CHECKPOINTS',len(assets),'SOURCEFILES',len(manifest))

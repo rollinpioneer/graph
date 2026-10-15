@@ -1,0 +1,253 @@
+{
+  "card": "GFP-GUIDANCE-DISTANCE-Z01-V1",
+  "frozen_utc": "2026-10-15T11:39:11.131408+00:00",
+  "branch": "codex/gfp-guidance-distance-z01-20261015",
+  "training_authorized": false,
+  "optimizer_updates_allowed": 0,
+  "environment_steps_allowed": 0,
+  "model_seeds": [
+    0,
+    1
+  ],
+  "checkpoints": [
+    200000,
+    600000,
+    1000000
+  ],
+  "batch_size": 256,
+  "batches_per_model": {
+    "train": 100,
+    "validation": 100
+  },
+  "pilot_batches_per_model": {
+    "train": 10,
+    "validation": 10
+  },
+  "primary_state_evaluations": 307200,
+  "sampling": "Uniform valid transitions WITH replacement in each original split; batches never distance-stratified; same selected indices across six models.",
+  "index_rng_seeds": {
+    "train": 2026101511,
+    "validation": 2026101512
+  },
+  "action_rng_base": 2026101513,
+  "extra_rng_repeats": {
+    "repeats": 2,
+    "batches_per_split": 10,
+    "state_evaluations": 61440,
+    "base_seeds": [
+      2026101514,
+      2026101515
+    ]
+  },
+  "geometry": "AST-extract maze/task coordinates from installed OGBench 1.1.0; four-neighbor BFS; no simulator construction/reset/step",
+  "bfs_bins": [
+    [
+      0,
+      3
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      8,
+      11
+    ],
+    [
+      12,
+      99
+    ]
+  ],
+  "near": "BFS<=3",
+  "far": "BFS>=8",
+  "neutral": [
+    0.4,
+    0.6
+  ],
+  "saturation": [
+    0.01,
+    0.99
+  ],
+  "proxy_horizons": [
+    25,
+    100
+  ],
+  "proxy_primary": "BFS(s_t)-BFS(s_t+100), no trajectory boundary crossing; imperfect behavior proxy, NOT counterfactual action advantage",
+  "proxy_useful": "BFS progress >=1 cell",
+  "proxy_unhelpful": "BFS progress <=0 cells",
+  "uncertainty": "200 trajectory cluster bootstrap resamples per model and split, seed 2026101516; never independent-state confidence intervals",
+  "controls": "Trajectory fixed effects; Euclidean distance and its square, head height and torso upright orientation, speed. Linear probability partial association for neutral weights; controlled association of guidance with future BFS progress.",
+  "decision": "GO recommendation only for consistent harmful-neutralization proxy evidence in both seeds and >=2 checkpoints plus public task gap; still cannot establish task4 mechanism without task4 model. DIAGNOSE for critic disagreement, mixed or proxy-only evidence. NO-GO C1 if no reproducible distance-neutralization pattern. No automatic T1.",
+  "eta_counterfactual_multipliers": [
+    0.1,
+    0.3,
+    1,
+    3,
+    10
+  ],
+  "stops": [
+    "Nonfinite",
+    "source/config/checkpoint changed",
+    "formula mismatch >0.001",
+    "accidental environment/optimizer call",
+    "count exceeds cap"
+  ],
+  "sources": [
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/agents/gfp.py",
+      "archive": "sources/gfp/agents/gfp.py",
+      "sha256": "1a30a8f1e1ad7415e5d69063d825ff70a83b9bcc1e052c9a36dad4557ece13ff",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/agents/gfp.py"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/main.py",
+      "archive": "sources/gfp/main.py",
+      "sha256": "3ed38486dcd9bb5ce7440597d3c974bc61ea156a215a2a2ac405433e9794b7bc",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/main.py"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/config/main.yaml",
+      "archive": "sources/gfp/config/main.yaml",
+      "sha256": "70d1d7a29c025df21ae4f49dae9966b1d96ab3f3905aec2e866179335f7ebceb",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/config/main.yaml"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/config/agent/gfp.yaml",
+      "archive": "sources/gfp/config/agent/gfp.yaml",
+      "sha256": "901c5a3a05e4aaf6d31a530040700b03fde4e28ca857f5b1f57c34638df7a9ae",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/config/agent/gfp.yaml"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/config/agent/rebrac.yaml",
+      "archive": "sources/gfp/config/agent/rebrac.yaml",
+      "sha256": "f7adbb37babd5c42e06a4d4a566d67949af0043091b49184134fcb164c6fbcd3",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/config/agent/rebrac.yaml"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/hyperparams/gfp_params.csv",
+      "archive": "sources/gfp/hyperparams/gfp_params.csv",
+      "sha256": "b7be1b00ab093cc58743757f5f7832fb13ad472b07f5e06e5ec604828a5865bd",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/hyperparams/gfp_params.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/hyperparams/rebrac_params.csv",
+      "archive": "sources/gfp/hyperparams/rebrac_params.csv",
+      "sha256": "30e6ced987bcdec07240be261a20db9f1623ba4aa45ad3061a486c9e7c070858",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/hyperparams/rebrac_params.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/hyperparams/fql_params.csv",
+      "archive": "sources/gfp/hyperparams/fql_params.csv",
+      "sha256": "e9c30186ae974b315bc0ef528e08982489e1821fef533936cb83f3fc9fbc0963",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/hyperparams/fql_params.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/hyperparams/gfp-advantage_params.csv",
+      "archive": "sources/gfp/hyperparams/gfp-advantage_params.csv",
+      "sha256": "ba412fb789dfd02b6e56b0d7745b72552a85937f651dbbe63670690b454e21ad",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/hyperparams/gfp-advantage_params.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/hyperparams/hyperparams.py",
+      "archive": "sources/gfp/hyperparams/hyperparams.py",
+      "sha256": "ccfc1a1b50500361a6c56c6db06ab409a652d440d79acc104a7a15f31810eee1",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/hyperparams/hyperparams.py"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/envs/env_utils.py",
+      "archive": "sources/gfp/envs/env_utils.py",
+      "sha256": "f02b0182178fd24eebb9241359d703099aa06ae45401a892060a2a766edfd7da",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/envs/env_utils.py"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/utils/datasets.py",
+      "archive": "sources/gfp/utils/datasets.py",
+      "sha256": "4fec9b673742409cf5713c26d77477c9f764b3be4f3ffaa2e705a3fc29976f98",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/utils/datasets.py"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/LICENSE",
+      "archive": "sources/gfp/LICENSE",
+      "sha256": "af664574bbfbd8f0328fa9deaaf32c2fa2273e1f35ffe80339aaa3b667c55a12",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/LICENSE"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/gfp-advantage-actor_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/gfp-advantage-actor_per_task_results.csv",
+      "sha256": "e08c4bb9c4494d7e0111a6cba92acca3b6669bd148f7baefe3d00a9d2a753154",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/gfp-advantage-actor_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/rebrac_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/rebrac_per_task_results.csv",
+      "sha256": "09153f965f10ae9d12936e4aebc3238a1dca7a3adb4fe50d1c4bb4619dbf73db",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/rebrac_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/gfp-actor_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/gfp-actor_per_task_results.csv",
+      "sha256": "3d5db1b5b575b5602fe1338d5668667630cac8af8da6de636387343aa113f501",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/gfp-actor_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/iql_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/iql_per_task_results.csv",
+      "sha256": "39378fae7b1c13fbab2b2eb18c555f26874548c4d916971d7e646a94c2e08e4a",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/iql_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/fql-bc_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/fql-bc_per_task_results.csv",
+      "sha256": "0da20b03952fe1bcb2374b5a3b51006e63168d6ade0a772b1b621b37968be9bd",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/fql-bc_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/fql-actor_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/fql-actor_per_task_results.csv",
+      "sha256": "86af9347fbff8bdcb7a9bbb99eb3983b29a3ec17b88297b1c6dbdc5f9e0ce87a",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/fql-actor_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/gfp-vabc_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/gfp-vabc_per_task_results.csv",
+      "sha256": "b26ecca1c7ebe53d787fe6e0818628c2b2a11f629209657c4f182aabad0b8482",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/gfp-vabc_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_dual_host_prep_v1_20261014/upstream_snapshots/gfp/results/per_task/gfp-advantage-vabc_per_task_results.csv",
+      "archive": "sources/gfp/results/per_task/gfp-advantage-vabc_per_task_results.csv",
+      "sha256": "08219f012d18655f1e05d8e9506fa41a934f852f068343792a9f1fc8ab9803c2",
+      "source": "https://github.com/Simple-Robotics/guided-flow-policy/blob/1abbd5f0e287caf9bda70e7bc655d0a499ac8401/results/per_task/gfp-advantage-vabc_per_task_results.csv"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/lib64/python3.12/site-packages/ogbench/locomaze/maze.py",
+      "archive": "sources/ogbench/locomaze/maze.py",
+      "sha256": "142ced860032ba8bed35caacf07d3b4778fc6ec60e2e4c4f8e09e07254fab2bf",
+      "version": "1.1.0"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/lib64/python3.12/site-packages/ogbench/locomaze/humanoid.py",
+      "archive": "sources/ogbench/locomaze/humanoid.py",
+      "sha256": "bcc37e388d50a1cdc0e4cb4fb6fab5b9d1938bb6d154d76e165c170f31f06fed",
+      "version": "1.1.0"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/lib64/python3.12/site-packages/ogbench/locomaze/__init__.py",
+      "archive": "sources/ogbench/locomaze/__init__.py",
+      "sha256": "f8f0875cf73fdf25eb5230d5a7fe5c8e41c7a6ae0419de79783b01b1ca17991c",
+      "version": "1.1.0"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/lib64/python3.12/site-packages/ogbench/utils.py",
+      "archive": "sources/ogbench/utils.py",
+      "sha256": "22cbf67d7c91be875fb25349c16fa2328ac57f84cbe3cbcad7c7203a24bedf11",
+      "version": "1.1.0"
+    },
+    {
+      "path": "/home/xushijie3/work/flow_critic_comparative_train_v1_20261014/envs/gfp/lib64/python3.12/site-packages/ogbench/relabel_utils.py",
+      "archive": "sources/ogbench/relabel_utils.py",
+      "sha256": "7b7ff7ea20fb81301ef251fc41b591de8c5f859dc96de2b4ba4a3a9bebfaa1a7",
+      "version": "1.1.0"
+    }
+  ]
+}
