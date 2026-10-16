@@ -1,0 +1,19 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "training_updates": 0,
+  "failed_conditions": [
+    "L1a_25000",
+    "L1b_25000"
+  ],
+  "unstarted_conditions": [
+    "L1a_50000",
+    "L1b_50000"
+  ],
+  "episodes_per_condition": 100,
+  "change": "Serialize environment construction only; preserve spawn/10 environments/seed schedules; close unused pipe endpoints; record startup costs and require historical initial observation hash equality before policy steps.",
+  "limitation": "EGL failure localized, underlying driver/concurrency cause not proven. Serialized construction is an unvalidated mitigation, not a confirmed fix.",
+  "retry_limit": 1,
+  "physical_control_upper_bound_including_failed_startup": 818400,
+  "physics_substeps_upper_bound": 4092000,
+  "existing_budget_unchanged": true
+}

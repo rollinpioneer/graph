@@ -1,0 +1,79 @@
+--- evaluate.py
++++ evaluate_repair_pending.py
+@@ -1,7 +1,9 @@
+ import os,sys,json,time,pickle,hashlib,multiprocessing as mp,random,resource
+ from pathlib import Path
+ 
+-def worker(conn):
++def worker(conn, startup_path):
++    import fcntl, faulthandler
++    faulthandler.enable()
+     import numpy as np,ogbench
+     from gymnasium.envs.mujoco import MujocoEnv
+     original=MujocoEnv.do_simulation
+@@ -10,7 +12,14 @@
+         counts[0]+=1;counts[1]+=int(n_frames)
+         return original(self,ctrl,n_frames)
+     MujocoEnv.do_simulation=counted
+-    env=ogbench.make_env_and_datasets('humanoidmaze-medium-navigate-singletask-task1-v0',env_only=True)
++    def startup(phase):
++        Path(startup_path).write_text(json.dumps(dict(pid=os.getpid(),phase=phase,control_calls=counts[0],physics_substeps=counts[1])))
++    startup('waiting_constructor_lock')
++    with open(Path(startup_path).parents[3]/'receipts/evaluation_constructor.lock','a') as lock:
++        fcntl.flock(lock,fcntl.LOCK_EX)
++        startup('constructing')
++        env=ogbench.make_env_and_datasets('humanoidmaze-medium-navigate-singletask-task1-v0',env_only=True)
++        startup('ready')
+     conn.send(('ready',counts.copy()))
+     while True:
+         cmd,arg=conn.recv()
+@@ -27,7 +36,9 @@
+ 
+ def main(seed,arm,it,repair=False):
+     process_started=time.time()
+-    assert arm in ('L1a','L1b') and it in (25000,50000) and not repair
++    assert arm in ('L1a','L1b') and it in (25000,50000)
++    approval=Path(__file__).resolve().parents[1]/'receipts/evaluation_repair_authorized.json'
++    assert approval.exists() and json.loads(approval.read_text()).get('authorized') is True, 'Explicit repair approval required'
+     # Only this parent imports JAX; spawned simulators do not initialize CUDA.
+     import numpy as np,jax,flax
+     from common import ROOT,make_agent,write,sha
+@@ -37,16 +48,20 @@
+     with open(checkpoint_path,'rb') as f:payload=pickle.load(f)
+     ag=flax.serialization.from_state_dict(ag,payload['agent'])
+     ctx=mp.get_context('spawn');pairs=[ctx.Pipe() for _ in range(10)]
+-    procs=[ctx.Process(target=worker,args=(c,)) for _,c in pairs]
++    procs=[ctx.Process(target=worker,args=(c,str(out/f'worker_{i}_startup.json'))) for i,(_,c) in enumerate(pairs)]
+     for proc in procs:proc.start()
++    for _,child in pairs:child.close()
+     pipes=[p for p,_ in pairs]
+-    counts=[p.recv()[1] for p in pipes];episodes=[];t0=time.time();external=0
+     try:
++        counts=[p.recv()[1] for p in pipes];episodes=[];t0=time.time();external=0
+         for rnd in range(10):
+             seeds=[4242000+rnd*10+k for k in range(10)]
+             for p,s in zip(pipes,seeds):p.send(('reset',s))
+             replies=[p.recv() for p in pipes];obs=np.stack([x[0] for x in replies]);counts=[x[1] for x in replies]
+             hashes=[hashlib.sha256(x.tobytes()).hexdigest() for x in obs]
++            historical=json.loads((Path('/home/xushijie3/work/gfp_midwindow_td_freeze_v1_20261016/runs/s3_L0')/f'eval_{it}/results.json').read_text())
++            expected={e['episode']:e['initial_obs_sha256'] for e in historical['episodes']}
++            assert all(h==expected[rnd*10+k] for k,h in enumerate(hashes)), 'Initial observation mismatch; stop before policy steps'
+             active=np.ones(10,bool);returns=np.zeros(10);paths=[[x[:2].tolist()] for x in obs]
+             # Common action noise schedule, aligned by global local episode time, independent of termination.
+             key=jax.random.fold_in(jax.random.PRNGKey(4242),rnd)
+@@ -79,8 +94,13 @@
+           external_steps=external,control_calls=sum(c[0] for c in counts),physics_substeps=sum(c[1] for c in counts),
+           seconds=time.time()-t0,checkpoint_unchanged=True))
+     finally:
+-        for p in pipes:p.send(('close',None))
+-        for proc in procs:proc.join(30)
++        for pipe,proc in zip(pipes,procs):
++            if proc.is_alive():
++                try:pipe.send(('close',None))
++                except (BrokenPipeError,EOFError,OSError):pass
++        for proc in procs:
++            proc.join(10)
++            if proc.is_alive():proc.terminate();proc.join(10)
+         me=resource.getrusage(resource.RUSAGE_SELF);children=resource.getrusage(resource.RUSAGE_CHILDREN)
+         write(out/'cost.json',dict(process_wall_seconds=time.time()-process_started,
+           cpu_seconds_self=me.ru_utime+me.ru_stime,cpu_seconds_workers=children.ru_utime+children.ru_stime,
