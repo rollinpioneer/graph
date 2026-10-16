@@ -1,0 +1,35 @@
+{
+  "authorized": true,
+  "authorization": "User explicitly confirmed execution after approval-review clarification",
+  "source": "/home/xushijie3/work/gfp_bfc_dev_screen_v1_20261016/runs/s3_R3/checkpoint_50000.pkl",
+  "arms": {
+    "L0": {
+      "tau_pi": 5e-05,
+      "epsilon": 0,
+      "freeze_td_vabc": false
+    },
+    "L1": {
+      "tau_pi": 0,
+      "epsilon": 0,
+      "freeze_td_vabc": true
+    }
+  },
+  "updates_per_arm": 50000,
+  "total_updates_cap": 100000,
+  "eval_updates": [
+    25000,
+    50000
+  ],
+  "eval_episodes": 100,
+  "total_eval_episodes": 400,
+  "max_external_steps": 800000,
+  "max_control_calls": 833332,
+  "probe_every": 5000,
+  "online_updates": 0,
+  "anomaly_gap_increment": 15,
+  "anomaly_gradient_ratio": 2,
+  "anomaly_consecutive": 2,
+  "behavior_success_max_percent": 5,
+  "behavior_final_start_min_percent": 90,
+  "no_auto_retry": true
+}
