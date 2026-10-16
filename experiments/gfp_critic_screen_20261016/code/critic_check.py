@@ -1,7 +1,7 @@
 """Step 1 (no training): do both critic heads raise the island together, and how do critic values compare
 with independent return references?
 
-usage: python critic_check.py OUT_JSON
+usage: python critic_check.py OUT_JSON [EVAL_JSON ...]   (with eval files: only those checkpoints)
 Run with cwd = official GFP source (source/gfp, 1abbd5f). Read-only: loads existing checkpoints, resets
 evaluation environments (no stepping) and reads existing evaluation episodes and the training dataset.
 
@@ -44,13 +44,13 @@ PKL_EVALS = (sorted(glob.glob(f"{A}/exp_ab/eval_B[0-9].json")) + sorted(glob.glo
 PKL_EVALS = [f for f in PKL_EVALS if "summary" not in f]   # summaries duplicate the per-arm files
 
 
-def collect_pairs():
+def collect_pairs(only=None):
     pairs = []
-    for f in ORIG_EVALS:
+    for f in (ORIG_EVALS if only is None else []):
         for k, v in json.load(open(f)).items():
             run, step = k.split(":")[:2]
             pairs.append(dict(run=run, branch="orig", step=int(step), pkl=None, eval_file=f, key=k))
-    for f in PKL_EVALS:
+    for f in (PKL_EVALS if only is None else only):
         for k, v in json.load(open(f)).items():
             if "pkl" not in v or not os.path.exists(v["pkl"]):
                 continue
@@ -64,7 +64,7 @@ def collect_pairs():
 
 def main():
     out = sys.argv[1]
-    pairs = collect_pairs()
+    pairs = collect_pairs(sys.argv[2:] or None)
     env_name = json.load(open(f"{run_dir('G_task1_s0')}/config.json"))["env_name"]
     envs = gymnasium.vector.AsyncVectorEnv([make_creator(env_name)] * N_ENVS,
                                            autoreset_mode=gymnasium.vector.AutoresetMode.DISABLED, context="spawn")
