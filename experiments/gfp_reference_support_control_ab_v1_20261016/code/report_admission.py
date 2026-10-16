@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 ROOT=Path(__file__).resolve().parents[1]
 def main():
  result=json.loads((ROOT/'receipts/admission_result.json').read_text())
- events=json.loads((ROOT/'receipts/reference_events.json').read_text())
+ events=[e for e in json.loads((ROOT/'receipts/reference_events.json').read_text()) if e['updates']<=500]
  exitinfo=json.loads((ROOT/'receipts/admission_exit.json').read_text());assert exitinfo['exit_code']==0
  out=ROOT/'reports';out.mkdir(exist_ok=True)
  rows=[]
@@ -34,7 +34,7 @@ def main():
  assert all(c['full_restore']=='PASS' and c['step']==350000+c['updates'] for c in checks)
  assert all(checks[i]['agent_rng']==checks[i+3]['agent_rng'] for i in range(3))
  pre=ROOT/'receipts/preflight_attempt1';failed_seconds=json.loads((pre/'execution_error.json').read_text())['time']-json.loads((pre/'admission_started.json').read_text())['time']
- summary=dict(result,initial_preflight_failed_seconds=failed_seconds,initial_preflight_gfp_updates=0,actual_training_process_exit=exitinfo['exit_code'],evaluations_completed=0,full_50k_started=False)
+ summary=dict(result,initial_preflight_failed_seconds=failed_seconds,initial_preflight_gfp_updates=0,actual_training_process_exit=exitinfo['exit_code'],at_admission_end_evaluations_completed=0,continued_after_admission=(ROOT/'receipts/continuation_started.json').exists())
  (out/'admission_summary.json').write_text(json.dumps(summary,indent=2))
  if not result['passed']:
   table='\n'.join(f"| {r['updates']} | {r['radius_fraction']:.3f} | {100*r['global_relative_difference']:.2f}% | {100*r['start_relative_difference']:.2f}% | {100*r['outside_relative_difference']:.2f}% |" for r in rows)

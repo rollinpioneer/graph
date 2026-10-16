@@ -1,0 +1,78 @@
+{
+  "arm": "A",
+  "config": {
+    "seed": 3,
+    "env_name": "humanoidmaze-medium-navigate-singletask-task1-v0",
+    "is_final": true,
+    "wandb": {
+      "project": "gfp",
+      "group": "Final",
+      "settings": {
+        "x_disable_stats": true
+      }
+    },
+    "save_dir": "/home/xushijie3/work/gfp_eta0_ablation_20261015/runs/formal/G_task1_s3/out/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261016_020357_seed_3",
+    "restore_epoch": null,
+    "restore_path": null,
+    "dataset_on_gpu": true,
+    "n_steps_fused": 4,
+    "n_eval_envs": 10,
+    "offline_steps": 1000000,
+    "online_steps": 0,
+    "buffer_size": 2000000,
+    "balanced_sampling": false,
+    "eval_flow_policy": false,
+    "log_metrics": true,
+    "log_on_wandb": false,
+    "log_locally": true,
+    "log_interval": 5000,
+    "eval_interval": 100000,
+    "save_interval": 100000,
+    "save_last_checkpoint": true,
+    "eval_episodes": 100,
+    "video_episodes": 0,
+    "video_frame_skip": 3,
+    "agent": {
+      "lr": 0.0003,
+      "batch_size": 256,
+      "actor_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "value_hidden_dims": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "layer_norm": true,
+      "actor_layer_norm": false,
+      "discount": 0.995,
+      "tau": 0.005,
+      "encoder": null,
+      "agent_name": "gfp",
+      "alpha": 0.3,
+      "eta_temperature": 0.001,
+      "q_agg": "mean",
+      "target_agg": "mean",
+      "guidance_agg": "min",
+      "flow_steps": 10,
+      "eta_temperature_online": null,
+      "guidance_fn": "softmax",
+      "normalize_q_loss": true,
+      "target_use_next": false,
+      "encode_time_dim": 64
+    },
+    "pixel_based": {
+      "p_aug": 0.5,
+      "frame_stack": 3,
+      "encoder": "impala_small"
+    }
+  },
+  "source_sha256": "ffba11e943f7e192134b86093f4b2dc49efbe239cf2d32e3e884406358de1cca",
+  "initial_state_sha256": "8e9f596505271441ab10468840f9e7e5056032a2b9b276b9d0bb53432fff1ee7",
+  "initial_reference_sha256": "b8aab34ed4287b74767ba8c7ca8c1de24cd48e33c90a583d9eaf8f39f049a0c1",
+  "protocol_sha256": "cc39a955f1e4d052b12493760b4edd8d999f50e05244d736445575475cfe3927"
+}
