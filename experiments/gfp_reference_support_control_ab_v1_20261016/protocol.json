@@ -1,9 +1,9 @@
 {
   "card": "GFP-REFERENCE-SUPPORT-CONTROL-AB-V1",
-  "status": "PLAN_ONLY",
-  "training_authorized": false,
-  "environment_interaction_authorized": false,
-  "parameter_updates_allowed_this_turn": 0,
+  "status": "AUTHORIZED_ADMISSION",
+  "training_authorized": true,
+  "environment_interaction_authorized": true,
+  "parameter_updates_allowed_this_turn": 100000,
   "source_checkpoint": "/home/xushijie3/work/gfp_bfc_dev_screen_v1_20261016/runs/s3_R3/checkpoint_50000.pkl",
   "source_sha256": "ffba11e943f7e192134b86093f4b2dc49efbe239cf2d32e3e884406358de1cca",
   "branch": "codex/gfp-reference-support-control-ab-v1-20261016",
@@ -71,5 +71,10 @@
     "disable_internal_reference_ema": true,
     "constraint_model_sha256": "df3a0336c00ca4fc44f6d8aef0dfcd964c8cebb26728ca6ad75e579f9fd8e549",
     "audit_model_sha256": "cc40a0df91b7813129d82bafb86cdd56961055cd8be647a54e47f7e35a77cc01"
+  },
+  "authorization": {
+    "user_instruction": "执行",
+    "scope": "Card as archived; admission failure stops both arms; no tuning or retry",
+    "date": "2026-10-16"
   }
 }
