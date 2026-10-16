@@ -32,7 +32,8 @@ ag,cfg,_=original.make_agent(3,'R3')
 def actor(ref,obs,z):
  params=dict(ag.network.params);params['modules_actor']=ref
  return jnp.clip(ag.network.select('actor')(obs,z,params=params),-1,1)
-noise=[np.asarray(jax.random.normal(jax.random.PRNGKey(k),(4096,21))) for k in [72401,72402]]
+nquery=len(q['obs'])
+noise=[np.asarray(jax.random.normal(jax.random.PRNGKey(k),(nquery,21))) for k in [72401,72402]]
 np.savez(ROOT/'arrays/noise.npz',z0=noise[0],z1=noise[1])
 identities=[];fixed=[];initial=None
 for arm in ['L0','L1a','L1b']:
@@ -43,7 +44,7 @@ for arm in ['L0','L1a','L1b']:
   assert d['updates']==it and int(d['agent']['network']['step'])==350001+it
   ref=d['agent']['reference'];outs=[]
   for z in noise:
-   a=np.concatenate([np.asarray(actor(ref,q['obs'][i:i+512],z[i:i+512])) for i in range(0,4096,512)])
+   a=np.concatenate([np.asarray(actor(ref,q['obs'][i:i+512],z[i:i+512])) for i in range(0,nquery,512)])
    assert np.isfinite(a).all();outs.append(a)
   outs=np.asarray(outs)
   if it==0:
@@ -58,4 +59,4 @@ for arm in ['L0','L1a','L1b']:
   write('receipts/inference_progress.json',dict(arm=arm,updates=it,seconds=time.time()-t0,gfp_updates=0,environment_steps=0))
   print('INFER',arm,it,flush=True);del d,ref;gc.collect()
 write('receipts/checkpoint_identity.json',identities)
-write('receipts/inference_complete.json',dict(seconds=time.time()-t0,reference_action_evaluations=270336,frozen_L1a_exact=True,all_initial_actions_equal=True,gfp_updates=0,environment_steps=0,noise_sha256=sha(ROOT/'arrays/noise.npz'),peak_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
+write('receipts/inference_complete.json',dict(seconds=time.time()-t0,reference_action_evaluations=33*nquery*2,frozen_L1a_exact=True,all_initial_actions_equal=True,gfp_updates=0,environment_steps=0,noise_sha256=sha(ROOT/'arrays/noise.npz'),peak_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))

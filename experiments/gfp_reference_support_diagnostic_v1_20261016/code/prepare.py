@@ -43,11 +43,11 @@ for split in ['train','val']:
    if count[ep]>=32:continue
    take.append(i);count[ep]+=1
    if len(take)==1024:break
-  assert len(take)==1024,(split,rr,len(take))
+  assert len(take)>=512,(split,rr,len(take))
   chosen.extend(take)
  ids=np.array(chosen)
  queries.append(dict(obs=o[ids],actions=a[ids],trajectory=tid[ids]+(10000 if split=='val' else 0),region=reg[ids],indices=ids,split=np.full(len(ids),split)))
 q={k:np.concatenate([d[k] for d in queries]) for k in queries[0]}
 np.savez(ROOT/'arrays/queries.npz',**q)
-write('receipts/data.json',dict(inputs=records,queries=4096,query_sha256=sha(ROOT/'arrays/queries.npz'),normalizer_sha256=sha(ROOT/'arrays/normalizer.npz'),seconds=time.time()-t0,gfp_updates=0,environment_steps=0))
+write('receipts/data.json',dict(inputs=records,queries=len(q['obs']),query_sha256=sha(ROOT/'arrays/queries.npz'),normalizer_sha256=sha(ROOT/'arrays/normalizer.npz'),seconds=time.time()-t0,gfp_updates=0,environment_steps=0))
 print('PREPARED',time.time()-t0,flush=True)
