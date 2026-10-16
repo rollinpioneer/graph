@@ -10,7 +10,7 @@ def sha(p):
  with open(p,'rb') as f:
   for b in iter(lambda:f.read(8<<20),b''):h.update(b)
  return h.hexdigest()
-def write(name,obj):(R/'reports'/name).write_text(json.dumps(obj,indent=2,allow_nan=False))
+def write(name,obj):(R/'reports'/name).write_text(json.dumps(obj,indent=2,allow_nan=False,default=lambda x:x.item() if isinstance(x,np.generic) else x.tolist()))
 def summary(a):
  a=np.asarray(a);a=a[np.isfinite(a)]
  return dict(n=len(a),mean=float(a.mean()),median=float(np.median(a)),p10=float(np.quantile(a,.1)),p90=float(np.quantile(a,.9))) if len(a) else dict(n=0)
