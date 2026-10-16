@@ -63,3 +63,39 @@ dfcc208ab47c0134dea9af27419a372e5bc548d762ae9b787387f2c767341052  eval_B_summary
 
 ## B checkpoints (exp_ab/b_B*/, not copied; full list in results/exp_ab/b_SHA256SUMS)
 B0 params_700000.pkl 0b4b297f... differs from original G_task1_s0 params_700000.pkl 145541f1... -> B0 is a paired continuation, not a bit-exact replay.
+
+# Experiment C (authorized 2026-10-16 07:34 UTC; card a82d388 committed before any C run; run 15:45-16:00 CST)
+
+## Code
+9ff32f3d3bd35375f97a8d8290d04adbcc94fbda0686e1bbd4a88fccde18b3b7  code/exp_c.py
+12e9892677bce76ebd73dfa5cf6d52b686efd513355428be391a251e2967fbc1  code/exp_c_eval.py
+d914ff5c424ba08f9d969d04acbc5506cc95316db947eafb9b95b4bd27841e97  code/island_scan.py
+
+## Outputs (exp_ab/c/; copied to results/exp_ab/c/ except eval_c.json.* and eval_orig_s3.json, which hold per-episode data)
+686871e1fb9e0911dcd4fbe446ad467df51579dbad5cca33596b64fe541c7cd1  eval_c.json.B1a
+64f10c581743c1470d342c81669b37326f938fb75dbe5dc1a8af665980116478  eval_c.json.B1b
+8846db37cd786f05c75e0153b8daddda314a73e317f1a023194770912785e1bf  eval_c.json.s3B0
+a5e94bf99539ee4c190a477b8c64cc2e8ee59ce3405c7360510fed084a9124eb  eval_c.json.s3B1
+e59a7e57b34911eb811801c3fffcba193d070515ea3366f08b573b2ee5b73f96  eval_orig_s3.json
+e5a2537ae8f0db0c196005fe30ed08ae0d2eceef1ca436b281a5eeebc78c93ee  G_task1_s0_B1a/train_B1a.json
+4ff1a8987e79b25110f4ad6c6d8c1c737d17a01386b026bea47587db9cb2b5d1  G_task1_s0_B1b/train_B1b.json
+98895f39970036f50f924c35d37d177d1fa8c8bb1075a888cdc3e46ab36aec76  G_task1_s3_B0/train_B0.json
+a8d6e501a410559206813f0ce2ccb04ab2a8f02dacc9ecb62cd3b0c07db4feae  G_task1_s3_B1/train_B1.json
+eef864529835501d2c3c7af8d64fb9764510dada2882a8c70e26e1718f08a290  eval_C_summary.json
+1f3bbedbec7b4d195c447087eb1373cd1f276c01bdb134b5ddf7eb1b25403a96  C_EVAL_POINTS.txt
+25dee5021b063699c64de3d7680a425db241b91b4377c7a7a80799d3f6b774f9  island_scan.json
+
+## C checkpoints (exp_ab/c/G_*/, not copied; full list in results/exp_ab/c/c_SHA256SUMS)
+Fork points: G_task1_s0 params_600000.pkl 28ce6c95... (above); G_task1_s3 params_300000.pkl a7a146df... (below)
+
+## G_task1_s3 checkpoints read (run dir date_20261016_020357_seed_3; recorded after the C runs, files unchanged under runs/)
+fc6176dd4060eee64bd5097bcf8f654fa7aae9517286b3b06dd5184ce52f9922  params_100000.pkl
+4e4eda3d8fd6ea36bae86eac7ccc2a54406e3c3b350fb2ad7402dd5decd7e8f0  params_200000.pkl
+a7a146df3b8d884988b3dd7a5a9a23a0e0bb44a89c6c79ab68468c51f49a7e0c  params_300000.pkl
+2670e174cd8975ba4027d49dc6539af25667156b53109ea79c993d37770b87b5  params_400000.pkl
+cdbdc40fb2962382d2bb5bd0ca464f443121ec218d1f01659d243dba40ad4257  params_500000.pkl
+b07ae6c7d1df4a9154eaef100050a1e648a6441e8444dc39f92658b8b39b4186  params_600000.pkl
+de8c93127f33ab59dcc12522c0601de2a90afbef17bac6afa6e0c74bd7b453ef  params_700000.pkl
+e9fe4cf2415c807ae5efdc646c901995bcb9b8cb28aa91a39e5ca8190c852228  params_800000.pkl
+a111853063da8a59d4fa384454feeadeb7f1d900fe161a701ec029d091f2812f  params_900000.pkl
+c3f08d37f071e2140b66b77090e5ef634c6bf16719c32ee217c00933927f30d3  params_1000000.pkl
