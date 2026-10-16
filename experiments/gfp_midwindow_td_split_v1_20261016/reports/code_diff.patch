@@ -1,0 +1,176 @@
+--- historical/common.py
++++ split/common.py
+@@ -14,7 +14,7 @@
+ def make_agent(seed, arm):
+     import flax
+     from frozen import FrozenTD
+-    assert seed == 3 and arm in ('L0', 'L1')
++    assert seed == 3 and arm in ('L0', 'L1', 'L1a', 'L1b')
+     ag, cfg, _ = original.make_agent(3, 'R3')
+     with open(CHECKPOINT, 'rb') as f: payload = pickle.load(f)
+     ag = flax.serialization.from_state_dict(ag, payload['agent'])
+@@ -22,9 +22,11 @@
+     assert int(ag.network.opt_state[0].count) == 350000
+     assert ag.tau_pi == 0.00005 and ag.epsilon == 0
+     assert not ag.config['target_use_next']
+-    if arm == 'L1':
++    if arm == 'L1a':
++        ag = ag.replace(tau_pi=0.)
++    elif arm in ('L1', 'L1b'):
+         ag = FrozenTD(ag.rng, ag.network, ag.config, reference=ag.reference,
+-                      tau_pi=0., epsilon=0., frozen_vabc=ag.network.params['modules_vabc'])
++                      tau_pi=0. if arm == 'L1' else 0.00005, epsilon=0., frozen_vabc=ag.network.params['modules_vabc'])
+     return ag, cfg, CHECKPOINT
+ 
+ def digest(tree):
+--- historical/train.py
++++ split/train.py
+@@ -1,14 +1,15 @@
+-import os, sys, time, pickle, random, resource, json
++import os, sys, time, pickle, random, resource, json, pathlib
+ import numpy as np
+ import jax, jax.numpy as jnp, flax
+ from common import ROOT, SOURCE, FORMAL, make_agent, load_base, digest, sha, write
+ 
+ def main(arm):
++    assert arm in ('L1a','L1b'), 'Only two new arms authorized'
+     run = ROOT/'runs'/f's3_{arm}'; run.mkdir(parents=True, exist_ok=False)
+     t0 = time.time(); ag, cfg, source = make_agent(3, arm)
+     source_hash = sha(source)
+     expected = json.loads((SOURCE/'runs/s3_R3/checkpoint_50000.json').read_text())
+-    assert source_hash == expected['sha256']
++    assert source_hash == expected['sha256'] == 'ffba11e943f7e192134b86093f4b2dc49efbe239cf2d32e3e884406358de1cca'
+     l0, _, _ = make_agent(3, 'L0')
+     assert digest(l0) == expected['state_sha256']
+     assert digest(ag.network) == digest(l0.network) and digest(ag.rng) == digest(l0.rng)
+@@ -16,7 +17,7 @@
+     with open(source, 'rb') as f: payload = pickle.load(f)
+     np.random.set_state(payload['numpy_rng']); random.setstate(payload['python_rng'])
+     write(run/'identity.json', dict(arm=arm, source=str(source), source_sha256=source_hash,
+-      protocol_sha256=sha(ROOT/'protocol.json'), config=cfg, initial_state_sha256=digest(ag),
++      protocol_sha256=sha(ROOT/'protocol.json'), config=cfg, intervention=json.loads((ROOT/'protocol.json').read_text())['arms'][arm], initial_state_sha256=digest(ag),
+       initial_agent_rng=np.asarray(ag.rng).tolist(), pid=os.getpid(), gpu=os.environ['CUDA_VISIBLE_DEVICES']))
+     data = {p.stem:jnp.asarray(np.load(p,mmap_mode='r')) for p in (SOURCE/'data').glob('*.npy')}
+     size = json.loads((SOURCE/'receipts/assets.json').read_text())['dataset_size']
+@@ -30,7 +31,13 @@
+     diffs = [float(jnp.max(jnp.abs(a-b))) for a,b in zip(jax.tree_util.tree_leaves(grad0),jax.tree_util.tree_leaves(grad1))]
+     assert np.isclose(loss0,loss1,rtol=3e-5,atol=3e-5)
+     assert all(np.allclose(a,b,rtol=3e-5,atol=3e-5) for a,b in zip(jax.tree_util.tree_leaves(grad0),jax.tree_util.tree_leaves(grad1)))
+-    write(run/'zero_update_admission.json',dict(passed=True,td_exact=True,gradient_max_abs=max(diffs),optimizer_updates=0))
++    l1,_,_=make_agent(3,'L1')
++    assert np.array_equal(np.asarray(l1.td_parts(batch,key)[0]),np.asarray(y0))
++    loss_joint,grad_joint=jax.value_and_grad(lambda p:l1.total_loss(batch,p,key)[0])(l1.network.params)
++    assert np.isclose(loss_joint,loss0,rtol=3e-5,atol=3e-5)
++    assert all(np.allclose(a,b,rtol=3e-5,atol=3e-5) for a,b in zip(jax.tree_util.tree_leaves(grad_joint),jax.tree_util.tree_leaves(grad0)))
++    write(run/'zero_update_admission.json',dict(passed=True,td_exact=True,gradient_max_abs=max(diffs),original_L0_L1_checked=True,optimizer_updates=0))
++    del l1,grad_joint
+     del grad0,grad1,l0
+     probe = np.load(FORMAL/'analysis_p0p1/out/probe/states.npz')
+     obs,z = jnp.asarray(probe['obs']),jnp.asarray(probe['z'])
+@@ -73,7 +80,8 @@
+           historical_gap_increase=float(q[reg].mean()-q.mean()-hist_gap),historical_gradient_ratio=float(norms[reg].mean()/hist_norm))
+         row['joint_anomaly']=row['historical_gap_increase']>=15 and row['historical_gradient_ratio']>=2
+         row.update({k:float(v) for k,v in info.items()})
+-        assert arm!='L1' or (digest(ag.reference)==fixed_ref and digest(ag.frozen_vabc)==fixed_flow)
++        assert arm!='L1a' or digest(ag.reference)==fixed_ref
++        assert arm!='L1b' or digest(ag.frozen_vabc)==fixed_flow
+         rows.append(row);write(run/'probes.json',rows);write(run/'progress.json',dict(row,phase='training'))
+     def save(it):
+         state=flax.serialization.to_state_dict(ag)
+@@ -85,11 +93,13 @@
+         with open(path,'rb') as f:back=pickle.load(f)
+         restored=flax.serialization.from_state_dict(ag,back['agent'])
+         assert digest(restored)==digest(ag)
++        oldmeta=json.loads((pathlib.Path('/home/xushijie3/work/gfp_midwindow_td_freeze_v1_20261016')/f'runs/s3_L0/checkpoint_{it}.json').read_text())
++        assert np.asarray(ag.rng).tolist()==oldmeta['agent_rng'], 'RNG consumption differs from historical control'
+         assert int(restored.network.step)==350001+it and int(restored.network.opt_state[0].count)==350000+it
+         assert pickle.dumps(back['numpy_rng'])==pickle.dumps(np.random.get_state()) and back['python_rng']==random.getstate()
+         write(run/f'checkpoint_{it}.json',dict(sha256=sha(path),state_sha256=digest(ag),full_restore='PASS',step=350000+it,
+           updates=it,agent_rng=np.asarray(ag.rng).tolist(),reference_sha256=digest(ag.reference),
+-          frozen_vabc_sha256=digest(ag.frozen_vabc) if arm=='L1' else None))
++          frozen_vabc_sha256=digest(ag.frozen_vabc) if arm=='L1b' else None))
+         return restored
+     snapshot(0);ag=save(0)
+     for it in range(4,50001,4):
+@@ -98,9 +108,10 @@
+         assert bool(info['fused_all_finite']) and all(np.isfinite(float(x)) for x in info.values())
+         if it==4:
+             assert all(digest(ag.network.params[k])!=digest(before.network.params[k]) for k in ('modules_actor','modules_vabc','modules_critic','modules_target_critic'))
+-            assert (digest(ag.reference)==fixed_ref) if arm=='L1' else (digest(ag.reference)!=fixed_ref)
++            assert (digest(ag.reference)==fixed_ref) if arm=='L1a' else (digest(ag.reference)!=fixed_ref)
++            assert arm!='L1b' or digest(ag.frozen_vabc)==fixed_flow
+             ag=save(4)
+-            write(run/'admission.json',dict(passed=True,actual_updates=4,full_restore=True,online_modules_changed=True,td_sources_frozen=arm=='L1'))
++            write(run/'admission.json',dict(passed=True,actual_updates=4,full_restore=True,online_modules_changed=True,td_reference_frozen=arm=='L1a',td_vabc_frozen=arm=='L1b',unfrozen_reference_changed=arm=='L1b'))
+             del before
+         if it%5000==0:snapshot(it);ag=save(it)
+     assert sha(source)==source_hash
+--- historical/evaluate.py
++++ split/evaluate.py
+@@ -1,4 +1,4 @@
+-import os,sys,json,time,pickle,hashlib,multiprocessing as mp,random
++import os,sys,json,time,pickle,hashlib,multiprocessing as mp,random,resource
+ from pathlib import Path
+ 
+ def worker(conn):
+@@ -26,6 +26,8 @@
+     env.close();conn.close()
+ 
+ def main(seed,arm,it,repair=False):
++    process_started=time.time()
++    assert arm in ('L1a','L1b') and it in (25000,50000) and not repair
+     # Only this parent imports JAX; spawned simulators do not initialize CUDA.
+     import numpy as np,jax,flax
+     from common import ROOT,make_agent,write,sha
+@@ -79,5 +81,10 @@
+     finally:
+         for p in pipes:p.send(('close',None))
+         for proc in procs:proc.join(30)
++        me=resource.getrusage(resource.RUSAGE_SELF);children=resource.getrusage(resource.RUSAGE_CHILDREN)
++        write(out/'cost.json',dict(process_wall_seconds=time.time()-process_started,
++          cpu_seconds_self=me.ru_utime+me.ru_stime,cpu_seconds_workers=children.ru_utime+children.ru_stime,
++          max_rss_self_kib=me.ru_maxrss,max_rss_child_kib=children.ru_maxrss,
++          workers_stopped=all(not p.is_alive() for p in procs)))
+ 
+ if __name__=='__main__':main(int(sys.argv[1]),sys.argv[2],int(sys.argv[3]),repair='--repair' in sys.argv)
+--- historical/manager.py
++++ split/manager.py
+@@ -8,7 +8,7 @@
+     lock=ROOT/'receipts/manager_started.json'
+     with lock.open('x') as f:json.dump(dict(pid=os.getpid(),started=time.time()),f)
+     jobs={};rows={};evaluated=set();evals={}
+-    for arm,gpu in [('L0','4'),('L1','7')]:
++    for arm,gpu in [('L1a','4'),('L1b','7')]:
+         env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES=gpu,XLA_PYTHON_CLIENT_PREALLOCATE='false',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MUJOCO_GL='egl',PYOPENGL_PLATFORM='egl',HOME='/home/xushijie3/work/gfp_eta0_ablation_20261015/home')
+         log=open(ROOT/'logs'/f'{arm}.log','w')
+         proc=subprocess.Popen([PYTHON,str(ROOT/'code/train.py'),arm],stdout=log,stderr=subprocess.STDOUT,env=env)
+@@ -29,7 +29,7 @@
+                 code=e['proc'].poll()
+                 if code is None:continue
+                 e['log'].close();it=(25000,50000)[e['index']]
+-                write(ROOT/f'runs/s3_{arm}/eval_{it}/exit.json',dict(exit_code=code,pid=e['proc'].pid,time=time.time()))
++                write(ROOT/f'runs/s3_{arm}/eval_{it}/exit.json',dict(exit_code=code,pid=e['proc'].pid,time=time.time(),dispatch_time=e['started']))
+                 if code!=0:
+                     rows[arm].update(phase='evaluation_failed',evaluation_exit=code);del evals[arm];continue
+                 evaluated.add((arm,it));e['index']+=1;e['proc']=None
+@@ -37,12 +37,20 @@
+                 rows[arm]['phase']='complete';del evals[arm];continue
+             it=(25000,50000)[e['index']]
+             e['log']=open(ROOT/'logs'/f'{arm}_eval_{it}.log','w')
++            e['started']=time.time()
+             e['proc']=subprocess.Popen([PYTHON,str(ROOT/'code/evaluate.py'),'3',arm,str(it)],stdout=e['log'],stderr=subprocess.STDOUT,env=e['env'])
+             rows[arm].update(phase='evaluation',eval_updates=it,eval_pid=e['proc'].pid)
+         write(ROOT/'receipts/queue.json',rows)
+         # Other-user resource information is aggregate only.
+         gpu=subprocess.run(['nvidia-smi','--query-gpu=index,memory.used,memory.free,utilization.gpu','--format=csv,noheader,nounits'],capture_output=True,text=True)
+         with open(ROOT/'logs/resources.jsonl','a') as f:f.write(json.dumps(dict(time=time.time(),gpu=gpu.stdout))+'\n')
++        active={p.pid for p,_,_ in jobs.values()}|{e['proc'].pid for e in evals.values() if e['proc'] is not None}
++        raw=subprocess.run(['nvidia-smi','--query-compute-apps=pid,used_memory','--format=csv,noheader,nounits'],capture_output=True,text=True)
++        own=[]
++        for line in raw.stdout.splitlines():
++            parts=line.split(',')
++            if len(parts)==2 and parts[0].strip().isdigit() and int(parts[0]) in active:own.append(dict(pid=int(parts[0]),used_mib=int(parts[1])))
++        with open(ROOT/'logs/own_gpu_memory.jsonl','a') as f:f.write(json.dumps(dict(time=time.time(),processes=own))+'\n')
+         time.sleep(10)
+     write(ROOT/'receipts/manager_complete.json',dict(time=time.time(),jobs=rows,evaluations_completed=len(evaluated),auto_retries=0))
+ if __name__=='__main__':
