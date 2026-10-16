@@ -99,3 +99,10 @@ de8c93127f33ab59dcc12522c0601de2a90afbef17bac6afa6e0c74bd7b453ef  params_700000.
 e9fe4cf2415c807ae5efdc646c901995bcb9b8cb28aa91a39e5ca8190c852228  params_800000.pkl
 a111853063da8a59d4fa384454feeadeb7f1d900fe161a701ec029d091f2812f  params_900000.pkl
 c3f08d37f071e2140b66b77090e5ef634c6bf16719c32ee217c00933927f30d3  params_1000000.pkl
+
+# Experiment D (authorized 2026-10-16 08:10 UTC; card 92604096 committed before the run; run 16:10-16:22 CST)
+Code unchanged: exp_c.py 9ff32f3d..., exp_c_eval.py 12e98926...; fork G_task1_s3 params_300000.pkl a7a146df...
+16685ee0d17543cb892368a6299d2aa82ec06f10b210eb6144439c604bfb1c70  c/G_task1_s3_B1a/train_B1a.json   (copied)
+734bf5833a3242c73d3495b21c2560789b890098a8a783356365665fe350d4a0  c/D_window_rule.json   (copied)
+0f026859b42ecb5bbefcca764eb130090edcdbd1db71610c0ed1bd54340a284a  c/eval_c.json.s3B1a   (per-episode, not copied)
+Checkpoints: results/exp_ab/c/d_SHA256SUMS
