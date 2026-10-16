@@ -1,0 +1,75 @@
+{
+  "card": "GFP-REFERENCE-SUPPORT-CONTROL-AB-V1",
+  "status": "PLAN_ONLY",
+  "training_authorized": false,
+  "environment_interaction_authorized": false,
+  "parameter_updates_allowed_this_turn": 0,
+  "source_checkpoint": "/home/xushijie3/work/gfp_bfc_dev_screen_v1_20261016/runs/s3_R3/checkpoint_50000.pkl",
+  "source_sha256": "ffba11e943f7e192134b86093f4b2dc49efbe239cf2d32e3e884406358de1cca",
+  "branch": "codex/gfp-reference-support-control-ab-v1-20261016",
+  "base_commit": "792bb7cf94b8d17be21c82bff0e8345b0e8dc107",
+  "proposed": {
+    "task": "humanoidmaze-medium-navigate-singletask-task1-v0",
+    "arms": {
+      "A": "follow_gradient_with_paired_action_radius",
+      "B": "follow_gradient_projected_to_two_region_density_nonincrease"
+    },
+    "gfp_updates_per_arm": 50000,
+    "gfp_updates_total_cap": 100000,
+    "online_updates": 0,
+    "reference_update_every": 100,
+    "reference_updates_total_cap": 1000,
+    "reference_optimizer": "no_momentum_gradient_direction_and_bounded_line_search",
+    "reference_fit_and_check_samples": {
+      "states_per_region": 256,
+      "noise_repeats": 2,
+      "disjoint_fit_and_check": true,
+      "split": "train"
+    },
+    "radius_calibration": {
+      "states_per_region": 1024,
+      "noise_repeats": 2,
+      "ema_tau": 5e-05,
+      "equivalent_ema_steps": 100,
+      "computed": false
+    },
+    "line_search": {
+      "max_backtracks": 8,
+      "max_refinements": 12,
+      "actual_loss_tolerance": 1e-05
+    },
+    "matching": {
+      "global_relative_tolerance": 0.05,
+      "regional_relative_tolerance": 0.2,
+      "window_path_relative_tolerance": 0.1,
+      "event_pass_fraction": 0.9,
+      "min_common_radius_fraction": 0.5,
+      "denominator_floor": 1e-08,
+      "real_admission_gfp_updates_per_arm": 500,
+      "admission_regional_pass_events": 4
+    },
+    "constraint_density_seed": 1701,
+    "audit_density_seed": 1702,
+    "density_model_training_updates": 0,
+    "probe_and_checkpoint_every": 5000,
+    "eval_updates": [
+      25000,
+      50000
+    ],
+    "eval_episodes_per_point": 100,
+    "eval_episodes_total_cap": 400,
+    "external_control_steps_cap": 800000,
+    "control_calls_cap": 833332,
+    "physics_substeps_cap": 4166660,
+    "auto_retry": false,
+    "auto_tune": false,
+    "auto_extend": false,
+    "no_hours_cap": true,
+    "primary_interpretation_requires_actual_matching_and_continuous_update": true,
+    "reference_rng_seed": 6824100,
+    "calibration_rng_seed": 6824000,
+    "disable_internal_reference_ema": true,
+    "constraint_model_sha256": "df3a0336c00ca4fc44f6d8aef0dfcd964c8cebb26728ca6ad75e579f9fd8e549",
+    "audit_model_sha256": "cc40a0df91b7813129d82bafb86cdd56961055cd8be647a54e47f7e35a77cc01"
+  }
+}
