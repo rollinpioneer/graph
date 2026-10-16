@@ -1,0 +1,119 @@
+{
+  "new_updates": 100000,
+  "new_evaluation_episodes": 400,
+  "external_steps": 762203,
+  "control_calls": 779803,
+  "physics_substeps": 3899015,
+  "failed_evaluation_control_calls_upper_bound": 800,
+  "failed_evaluation_physics_substeps_upper_bound": 4000,
+  "total_control_calls_upper_bound": 780603,
+  "total_physics_substeps_upper_bound": 3903015,
+  "failed_evaluation_cpu_seconds": null,
+  "failed_evaluation_note": "Startup counters lost; retain code-path conservative upper bound. Failed parent/worker wall and CPU cost are not included in measured successful-evaluation totals.",
+  "wall_seconds": 1680.2704648971558,
+  "processes": {
+    "L1a_training": {
+      "pid": 581998,
+      "internal_measured_seconds": 353.0377929210663,
+      "dispatch_to_poll_seconds": 357.12902188301086,
+      "cpu_seconds": 370.08882400000005,
+      "max_rss_kib": 6459784
+    },
+    "L1a_eval_25000": {
+      "pid": 687079,
+      "internal_measured_seconds": 53.720024824142456,
+      "dispatch_to_poll_seconds": 60.724491119384766,
+      "cpu_seconds": 163.15087699999998,
+      "max_rss_kib": 1352528
+    },
+    "L1a_eval_50000": {
+      "pid": 692205,
+      "internal_measured_seconds": 49.33155846595764,
+      "dispatch_to_poll_seconds": 50.611695528030396,
+      "cpu_seconds": 158.803156,
+      "max_rss_kib": 1371628
+    },
+    "L1b_training": {
+      "pid": 581999,
+      "internal_measured_seconds": 375.5232832431793,
+      "dispatch_to_poll_seconds": 378.9148225784302,
+      "cpu_seconds": 397.525183,
+      "max_rss_kib": 6457976
+    },
+    "L1b_eval_25000": {
+      "pid": 687080,
+      "internal_measured_seconds": 98.62307000160217,
+      "dispatch_to_poll_seconds": 101.20290637016296,
+      "cpu_seconds": 178.412127,
+      "max_rss_kib": 1368340
+    },
+    "L1b_eval_50000": {
+      "pid": 695516,
+      "internal_measured_seconds": 94.56593418121338,
+      "dispatch_to_poll_seconds": 101.21989703178406,
+      "cpu_seconds": 177.829409,
+      "max_rss_kib": 1383308
+    }
+  },
+  "gpu_process_samples": {
+    "581998": {
+      "first_observed": 1792154142.821213,
+      "last_observed": 1792154479.5158367,
+      "sampled_peak_mib": 11012,
+      "observed_residence_span_seconds": 336.694623708725
+    },
+    "581999": {
+      "first_observed": 1792154142.821213,
+      "last_observed": 1792154501.3023431,
+      "sampled_peak_mib": 11012,
+      "observed_residence_span_seconds": 358.4811301231384
+    },
+    "609823": {
+      "first_observed": 1792154501.3023431,
+      "last_observed": 1792154767.7958338,
+      "sampled_peak_mib": 552,
+      "observed_residence_span_seconds": 266.49349069595337
+    },
+    "611499": {
+      "first_observed": 1792154522.009568,
+      "last_observed": 1792154767.7958338,
+      "sampled_peak_mib": 680,
+      "observed_residence_span_seconds": 245.78626585006714
+    },
+    "687080": {
+      "first_observed": 1792155703.8973858,
+      "last_observed": 1792155703.8973858,
+      "sampled_peak_mib": 688,
+      "observed_residence_span_seconds": 0.0
+    },
+    "692205": {
+      "first_observed": 1792155703.8973858,
+      "last_observed": 1792155703.8973858,
+      "sampled_peak_mib": 560,
+      "observed_residence_span_seconds": 0.0
+    }
+  },
+  "allocated_process_hours_measured": 0.28466712878810035,
+  "allocated_process_hours_dispatch_to_poll": 0.2916118984752231,
+  "total_cpu_seconds": 1445.809576,
+  "gpu_note": "Process-duration accounting on allocated GPUs, not GPU busy-time integration. GPU residence is sampled; first-to-last spans and sampled peaks are not exact totals/maxima.",
+  "failed_evaluation_processes": [
+    {
+      "arm": "L1a",
+      "exit_code": -15,
+      "pid": 609823,
+      "time": 1792154777.7960935,
+      "dispatch_time": 1792154489.5166714,
+      "dispatch_to_exit_receipt_seconds": 288.279422044754
+    },
+    {
+      "arm": "L1b",
+      "exit_code": -15,
+      "pid": 611499,
+      "time": 1792154777.7964616,
+      "dispatch_time": 1792154511.3031864,
+      "dispatch_to_exit_receipt_seconds": 266.49327516555786
+    }
+  ],
+  "failed_parent_process_hours_dispatch_to_poll": 0.15410352700286442
+}

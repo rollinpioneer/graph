@@ -34,7 +34,7 @@ def main():
         assert all(m['full_restore']=='PASS' and m['step']==350000+m['updates'] for m in metadata)
         ev={};cost={}
         for it in (25000,50000):
-            d=run/f'eval_{it}';e=read(d/'results.json')
+            d=run/(f'eval_{it}_repair1' if arm in NEW_ARMS and it==25000 else f'eval_{it}');e=read(d/'results.json')
             assert read(d/'exit.json')['exit_code']==0 and len(e['episodes'])==100 and e['optimizer_updates']==0
             assert e['checkpoint_sha256']==read(run/f'checkpoint_{it}.json')['sha256']
             hashes[f'{arm}_{it}']={x['episode']:x['initial_obs_sha256'] for x in e['episodes']}
@@ -54,7 +54,7 @@ def main():
             assert read(run/'admission.json')['passed'] and read(run/'zero_update_admission.json')['passed']
             assert all(m['agent_rng']==n['agent_rng'] for m,n in zip(metadata,all_arms['L0']['checkpoint_index']))
     assert sum(all_arms[a]['training']['updates'] for a in NEW_ARMS)==100000
-    assert control<=833332 and external<=800000 and physics<=4166660
+    assert control+800<=833332 and external<=800000 and physics+4000<=4166660
     hashes_match=all(h==hashes['L0_25000'] for h in hashes.values())
     a,b=(all_arms[x]['classification'] for x in NEW_ARMS)
     if a['strong_benefit'] and b['joint_anomaly'] and b['behavior_collapse']:decision='SUPPORT_ACTOR_CONNECTION'
@@ -78,20 +78,29 @@ def main():
             pid=str(p['pid']);s=gpu.setdefault(pid,dict(first_observed=row['time'],last_observed=row['time'],sampled_peak_mib=0))
             s['last_observed']=row['time'];s['sampled_peak_mib']=max(s['sampled_peak_mib'],p['used_mib'])
     for s in gpu.values():s['observed_residence_span_seconds']=s['last_observed']-s['first_observed']
-    complete=read(ROOT/'receipts/manager_complete.json');launch=read(ROOT/'receipts/launch.json')
+    complete=read(ROOT/'receipts/manager_complete.json');complete['time']=read(ROOT/'receipts/repair_manager_complete.json')['time'];launch=read(ROOT/'receipts/launch.json')
     process_bounds={}
     for arm in NEW_ARMS:
         run=ROOT/f'runs/s3_{arm}';t=all_arms[arm]['training'];q=complete['jobs'][arm]
         process_bounds[arm+'_training']=dict(pid=q['pid'],internal_measured_seconds=t['seconds'],dispatch_to_poll_seconds=q['ended']-q['started'],cpu_seconds=t['cpu_seconds'],max_rss_kib=t['max_rss_kib'])
         for it in (25000,50000):
-            c=all_arms[arm]['evaluation_cost'][str(it)];x=read(run/f'eval_{it}/exit.json')
+            c=all_arms[arm]['evaluation_cost'][str(it)];x=read(run/(f'eval_{it}_repair1' if it==25000 else f'eval_{it}')/'exit.json')
             process_bounds[f'{arm}_eval_{it}']=dict(pid=x['pid'],internal_measured_seconds=c['process_wall_seconds'],dispatch_to_poll_seconds=x['time']-x['dispatch_time'],cpu_seconds=c['cpu_seconds_self']+c['cpu_seconds_workers'],max_rss_kib=c['max_rss_self_kib'])
     cost=dict(new_updates=100000,new_evaluation_episodes=400,external_steps=external,control_calls=control,physics_substeps=physics,
+      failed_evaluation_control_calls_upper_bound=800,failed_evaluation_physics_substeps_upper_bound=4000,
+      total_control_calls_upper_bound=control+800,total_physics_substeps_upper_bound=physics+4000,
+      failed_evaluation_cpu_seconds=None,failed_evaluation_note='Startup counters lost; retain code-path conservative upper bound. Failed parent/worker wall and CPU cost are not included in measured successful-evaluation totals.',
       wall_seconds=complete['time']-launch['time'],processes=process_bounds,gpu_process_samples=gpu,
       allocated_process_hours_measured=sum(x['internal_measured_seconds'] for x in process_bounds.values())/3600,
       allocated_process_hours_dispatch_to_poll=sum(x['dispatch_to_poll_seconds'] for x in process_bounds.values())/3600,
       total_cpu_seconds=sum(x['cpu_seconds'] for x in process_bounds.values()),
       gpu_note='Process-duration accounting on allocated GPUs, not GPU busy-time integration. GPU residence is sampled; first-to-last spans and sampled peaks are not exact totals/maxima.')
+    failed=[]
+    for arm in NEW_ARMS:
+        x=read(ROOT/f'runs/s3_{arm}/eval_25000/exit.json')
+        failed.append(dict(arm=arm,**x,dispatch_to_exit_receipt_seconds=x['time']-x['dispatch_time']))
+    cost['failed_evaluation_processes']=failed
+    cost['failed_parent_process_hours_dispatch_to_poll']=sum(x['dispatch_to_exit_receipt_seconds'] for x in failed)/3600
     result=dict(decision=decision,arms=all_arms,initial_observation_hashes_match_all_eight_conditions=hashes_match,
       strict_paired_evaluation_allowed=hashes_match,paired=paired,cost=cost,historical_files_unchanged=True,
       RNG_matches_historical_control_all_saved_points=True,source_checkpoint_unchanged=True,
