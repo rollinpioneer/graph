@@ -1,0 +1,242 @@
+{
+  "dataset_size": 2000000,
+  "reward_rms": 0.9990192690834346,
+  "data": {
+    "actions": {
+      "shape": [
+        2000001,
+        21
+      ],
+      "dtype": "float32",
+      "sha256": "2b5674d3d14bbfcf26b7ae45d774be381815f1396aac1337cf9ec0ff6b2bcf60"
+    },
+    "masks": {
+      "shape": [
+        2000001
+      ],
+      "dtype": "float32",
+      "sha256": "86a83b598f911f22fac69d40280c3ea82f237b61deb3139e0df2be9763edc5c1"
+    },
+    "next_observations": {
+      "shape": [
+        2000001,
+        69
+      ],
+      "dtype": "float32",
+      "sha256": "b6ef03351b7ec4a2ec8d7560b178e38e46563d385f9d323985c17d07f85dd621"
+    },
+    "observations": {
+      "shape": [
+        2000001,
+        69
+      ],
+      "dtype": "float32",
+      "sha256": "f4aa0dcf56d80ba5cc9510dd33cff4d0c828cbcc5184610d55c2d3651949adaf"
+    },
+    "rewards": {
+      "shape": [
+        2000001
+      ],
+      "dtype": "float32",
+      "sha256": "9a40fac3dc2e0cc7c1d6e4712ea2b1415d4608f26a60a7d17eff3a4b55c44ba8"
+    },
+    "terminals": {
+      "shape": [
+        2000001
+      ],
+      "dtype": "float32",
+      "sha256": "e9fc85bfb4a4400c36bd23b07be2a2dc1547c5fd0c699e901d6680a62b9f5566"
+    }
+  },
+  "sources": {
+    "0": {
+      "path": "/home/xushijie3/work/gfp_eta0_ablation_20261015/runs/formal/G_task1_s0/out/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261016_020227_seed_0/params_600000.pkl",
+      "sha256": "28ce6c95a75223675794fe5723a0d455a78efbebeb288628a8035b239285c0c7",
+      "config": {
+        "seed": 0,
+        "env_name": "humanoidmaze-medium-navigate-singletask-task1-v0",
+        "is_final": true,
+        "wandb": {
+          "project": "gfp",
+          "group": "Final",
+          "settings": {
+            "x_disable_stats": true
+          }
+        },
+        "save_dir": "/home/xushijie3/work/gfp_eta0_ablation_20261015/runs/formal/G_task1_s0/out/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261016_020227_seed_0",
+        "restore_epoch": null,
+        "restore_path": null,
+        "dataset_on_gpu": true,
+        "n_steps_fused": 4,
+        "n_eval_envs": 10,
+        "offline_steps": 1000000,
+        "online_steps": 0,
+        "buffer_size": 2000000,
+        "balanced_sampling": false,
+        "eval_flow_policy": false,
+        "log_metrics": true,
+        "log_on_wandb": false,
+        "log_locally": true,
+        "log_interval": 5000,
+        "eval_interval": 100000,
+        "save_interval": 100000,
+        "save_last_checkpoint": true,
+        "eval_episodes": 100,
+        "video_episodes": 0,
+        "video_frame_skip": 3,
+        "agent": {
+          "lr": 0.0003,
+          "batch_size": 256,
+          "actor_hidden_dims": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "value_hidden_dims": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "layer_norm": true,
+          "actor_layer_norm": false,
+          "discount": 0.995,
+          "tau": 0.005,
+          "encoder": null,
+          "agent_name": "gfp",
+          "alpha": 0.3,
+          "eta_temperature": 0.001,
+          "q_agg": "mean",
+          "target_agg": "mean",
+          "guidance_agg": "min",
+          "flow_steps": 10,
+          "eta_temperature_online": null,
+          "guidance_fn": "softmax",
+          "normalize_q_loss": true,
+          "target_use_next": false,
+          "encode_time_dim": 64
+        },
+        "pixel_based": {
+          "p_aug": 0.5,
+          "frame_stack": 3,
+          "encoder": "impala_small"
+        }
+      },
+      "step": 600001
+    },
+    "3": {
+      "path": "/home/xushijie3/work/gfp_eta0_ablation_20261015/runs/formal/G_task1_s3/out/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261016_020357_seed_3/params_300000.pkl",
+      "sha256": "a7a146df3b8d884988b3dd7a5a9a23a0e0bb44a89c6c79ab68468c51f49a7e0c",
+      "config": {
+        "seed": 3,
+        "env_name": "humanoidmaze-medium-navigate-singletask-task1-v0",
+        "is_final": true,
+        "wandb": {
+          "project": "gfp",
+          "group": "Final",
+          "settings": {
+            "x_disable_stats": true
+          }
+        },
+        "save_dir": "/home/xushijie3/work/gfp_eta0_ablation_20261015/runs/formal/G_task1_s3/out/gfp_OGBench_Env_humanoidmaze_medium_navigate_singletask_task1_v0/date_20261016_020357_seed_3",
+        "restore_epoch": null,
+        "restore_path": null,
+        "dataset_on_gpu": true,
+        "n_steps_fused": 4,
+        "n_eval_envs": 10,
+        "offline_steps": 1000000,
+        "online_steps": 0,
+        "buffer_size": 2000000,
+        "balanced_sampling": false,
+        "eval_flow_policy": false,
+        "log_metrics": true,
+        "log_on_wandb": false,
+        "log_locally": true,
+        "log_interval": 5000,
+        "eval_interval": 100000,
+        "save_interval": 100000,
+        "save_last_checkpoint": true,
+        "eval_episodes": 100,
+        "video_episodes": 0,
+        "video_frame_skip": 3,
+        "agent": {
+          "lr": 0.0003,
+          "batch_size": 256,
+          "actor_hidden_dims": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "value_hidden_dims": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "layer_norm": true,
+          "actor_layer_norm": false,
+          "discount": 0.995,
+          "tau": 0.005,
+          "encoder": null,
+          "agent_name": "gfp",
+          "alpha": 0.3,
+          "eta_temperature": 0.001,
+          "q_agg": "mean",
+          "target_agg": "mean",
+          "guidance_agg": "min",
+          "flow_steps": 10,
+          "eta_temperature_online": null,
+          "guidance_fn": "softmax",
+          "normalize_q_loss": true,
+          "target_use_next": false,
+          "encode_time_dim": 64
+        },
+        "pixel_based": {
+          "p_aug": 0.5,
+          "frame_stack": 3,
+          "encoder": "impala_small"
+        }
+      },
+      "step": 300001
+    }
+  },
+  "probe": {
+    "path": "/home/xushijie3/work/gfp_eta0_ablation_20261015/analysis_p0p1/out/probe/states.npz",
+    "sha256": "c639a690fe309be266a954808beb99b00964d5d905c595fb830c9a9b304698bd"
+  },
+  "versions": {
+    "jax": "0.6.2",
+    "flax": "0.10.7",
+    "optax": "0.2.5",
+    "numpy": "1.26.4",
+    "mujoco": "3.3.5"
+  },
+  "ogbench_version": "1.1.0",
+  "source_manifest": "5b992eafe9282bf7d53c725ef26acb343af8cb2113e8de89b8625095908f1d7a  ./agents/fql.py\n1a30a8f1e1ad7415e5d69063d825ff70a83b9bcc1e052c9a36dad4557ece13ff  ./agents/gfp.py\n9075aefa7e230cb0423fa31fb67411ab96f39c94c418071b85b8cd333c066821  ./agents/ifql.py\n5053b669234977cafac6b7ef29150b0f8ff372be2dabe08587ed894316437aaf  ./agents/__init__.py\n9fc12a352eabf64ad5521a3fe27b140c1953f66f80b5502cea4a6ad3363e7b85  ./agents/iql.py\n76813498fb9cbbe64e2a836b863a4c2021e57b650894b0ef346e69621d6bd77f  ./agents/rebrac.py\nc4f1f13763d90bf66283aff4f8c1ab34703f5d56face7485663ad1ac11e4404e  ./config/agent/fql.yaml\n901c5a3a05e4aaf6d31a530040700b03fde4e28ca857f5b1f57c34638df7a9ae  ./config/agent/gfp.yaml\n28b69ac2bb08bbafdc3ba9492f600c294c696ac6734ef1debe043a4555d8f719  ./config/agent/ifql.yaml\ndbf822026826f0c23f55e9a6c905ab8a88393c89ee1840f206cd80e45733f938  ./config/agent/iql.yaml\nf7adbb37babd5c42e06a4d4a566d67949af0043091b49184134fcb164c6fbcd3  ./config/agent/rebrac.yaml\ne00e22b2f3700bd6c34a9ef88fad99eb995fa4a42174df6070a4870c0a8bdf45  ./config/launcher/our_slurm.yaml\n70d1d7a29c025df21ae4f49dae9966b1d96ab3f3905aec2e866179335f7ebceb  ./config/main.yaml\nc935538b3f4a69216baf261c0cd5d143c6fc886d4e765e3ba3c34b1fc3ccdfec  ./config/opt/full_log.yaml\nc3b409789db51e43950439f3beac99289eedf8c5ef2a23f2414ed164e174089a  ./config/opt/light_log.yaml\n679c46e8116eb35692bfdc1050367f768e0773cb80fdb92bc9013b86866be5bb  ./envs/d4rl_utils.py\nf02b0182178fd24eebb9241359d703099aa06ae45401a892060a2a766edfd7da  ./envs/env_utils.py\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./envs/__init__.py\neb72f1b2c764fa25fa4f1c27cf72bc6544a6ced986e98b1e66808404325b7c66  ./envs/minari_utils.py\ne9c30186ae974b315bc0ef528e08982489e1821fef533936cb83f3fc9fbc0963  ./hyperparams/fql_params.csv\nba412fb789dfd02b6e56b0d7745b72552a85937f651dbbe63670690b454e21ad  ./hyperparams/gfp-advantage_params.csv\nb7be1b00ab093cc58743757f5f7832fb13ad472b07f5e06e5ec604828a5865bd  ./hyperparams/gfp_params.csv\nccfc1a1b50500361a6c56c6db06ab409a652d440d79acc104a7a15f31810eee1  ./hyperparams/hyperparams.py\n8f5982d7e9ce637c705c69c489240ae1be3ef8a6175c9d853717efe224ff9932  ./hyperparams/iql_params.csv\n30e6ced987bcdec07240be261a20db9f1623ba4aa45ad3061a486c9e7c070858  ./hyperparams/rebrac_params.csv\n3ed38486dcd9bb5ce7440597d3c974bc61ea156a215a2a2ac405433e9794b7bc  ./main.py\ne131ed4a45d636c1b3033d96115af2d50d3b2867fd82dcbb28f2af7fd1c441ca  ./results/aggregated/fql-actor_aggregate_results.csv\naa4e0d4d70443a02dee09965b07234f95ae8199ece24cd6eea88c20a598fe9a7  ./results/aggregated/fql-bc_aggregate_results.csv\n950553655a1cbe5a1f9d114ad6fe93ec7d5d6847e6b2ca9c5eb5f180fa4e5972  ./results/aggregated/gfp-actor_aggregate_results.csv\n6be996b330b1aaf742ca6b65e9c06916e913b7e8fca658a188de921f03ea3fc6  ./results/aggregated/gfp-advantage-actor_aggregate_results.csv\n3d05094ecf271d2088f3912c4c795b045de056796856e72243f190b7acbf38b7  ./results/aggregated/gfp-advantage-vabc_aggregate_results.csv\n96c07fa15e7ad7092be57d5e381a72813320e5164451b104cb392de220863a00  ./results/aggregated/gfp-vabc_aggregate_results.csv\n019341cc69871d0de22caedf213ded0413347dd392fa5e354a07223c7143fd65  ./results/aggregated/iql_aggregate_results.csv\n8de102043d1c009f5fa47eed8dbb405c9bae07cdd87f0d7fd79a578815df11c7  ./results/aggregated/rebrac_aggregate_results.csv\n86af9347fbff8bdcb7a9bbb99eb3983b29a3ec17b88297b1c6dbdc5f9e0ce87a  ./results/per_task/fql-actor_per_task_results.csv\n0da20b03952fe1bcb2374b5a3b51006e63168d6ade0a772b1b621b37968be9bd  ./results/per_task/fql-bc_per_task_results.csv\n3d5db1b5b575b5602fe1338d5668667630cac8af8da6de636387343aa113f501  ./results/per_task/gfp-actor_per_task_results.csv\ne08c4bb9c4494d7e0111a6cba92acca3b6669bd148f7baefe3d00a9d2a753154  ./results/per_task/gfp-advantage-actor_per_task_results.csv\n08219f012d18655f1e05d8e9506fa41a934f852f068343792a9f1fc8ab9803c2  ./results/per_task/gfp-advantage-vabc_per_task_results.csv\nb26ecca1c7ebe53d787fe6e0818628c2b2a11f629209657c4f182aabad0b8482  ./results/per_task/gfp-vabc_per_task_results.csv\n39378fae7b1c13fbab2b2eb18c555f26874548c4d916971d7e646a94c2e08e4a  ./results/per_task/iql_per_task_results.csv\n09153f965f10ae9d12936e4aebc3238a1dca7a3adb4fe50d1c4bb4619dbf73db  ./results/per_task/rebrac_per_task_results.csv\n4fec9b673742409cf5713c26d77477c9f764b3be4f3ffaa2e705a3fc29976f98  ./utils/datasets.py\na0bcfd587ddce92e8da9f4809e628ed810fde618b3dca66f5402d601dd2de6b9  ./utils/encoders.py\nece6616b35ff682571da357bb41c22159a2b8f20c59f8395d30734bc91c4b917  ./utils/evaluation.py\n5b6a8e9a919bf57dae0c1454f327ded4235385f9d9dcd1e62263fe4fad9fd484  ./utils/flax_utils.py\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./utils/__init__.py\nc71414831da6f61f733911f7edbe400a5436700cd2a0595896529fafe36ad1ba  ./utils/log_utils.py\n6747814acb3187e1bf6aa27ce87963a7d52222bac9775ec372983ab381b27862  ./utils/networks.py\n8512a59800a9e831d9ae6fd414e1ff2ab34cf281bfd5fa5bd6862abfbde6681f  ./utils/video_utils.py\n",
+  "source_files": {
+    "main.py": "3ed38486dcd9bb5ce7440597d3c974bc61ea156a215a2a2ac405433e9794b7bc",
+    "hyperparams/hyperparams.py": "ccfc1a1b50500361a6c56c6db06ab409a652d440d79acc104a7a15f31810eee1",
+    "utils/log_utils.py": "c71414831da6f61f733911f7edbe400a5436700cd2a0595896529fafe36ad1ba",
+    "utils/networks.py": "6747814acb3187e1bf6aa27ce87963a7d52222bac9775ec372983ab381b27862",
+    "utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "utils/datasets.py": "4fec9b673742409cf5713c26d77477c9f764b3be4f3ffaa2e705a3fc29976f98",
+    "utils/encoders.py": "a0bcfd587ddce92e8da9f4809e628ed810fde618b3dca66f5402d601dd2de6b9",
+    "utils/video_utils.py": "8512a59800a9e831d9ae6fd414e1ff2ab34cf281bfd5fa5bd6862abfbde6681f",
+    "utils/flax_utils.py": "5b6a8e9a919bf57dae0c1454f327ded4235385f9d9dcd1e62263fe4fad9fd484",
+    "utils/evaluation.py": "ece6616b35ff682571da357bb41c22159a2b8f20c59f8395d30734bc91c4b917",
+    "agents/rebrac.py": "76813498fb9cbbe64e2a836b863a4c2021e57b650894b0ef346e69621d6bd77f",
+    "agents/fql.py": "5b992eafe9282bf7d53c725ef26acb343af8cb2113e8de89b8625095908f1d7a",
+    "agents/gfp.py": "1a30a8f1e1ad7415e5d69063d825ff70a83b9bcc1e052c9a36dad4557ece13ff",
+    "agents/__init__.py": "5053b669234977cafac6b7ef29150b0f8ff372be2dabe08587ed894316437aaf",
+    "agents/ifql.py": "9075aefa7e230cb0423fa31fb67411ab96f39c94c418071b85b8cd333c066821",
+    "agents/iql.py": "9fc12a352eabf64ad5521a3fe27b140c1953f66f80b5502cea4a6ad3363e7b85",
+    "envs/minari_utils.py": "eb72f1b2c764fa25fa4f1c27cf72bc6544a6ced986e98b1e66808404325b7c66",
+    "envs/env_utils.py": "f02b0182178fd24eebb9241359d703099aa06ae45401a892060a2a766edfd7da",
+    "envs/d4rl_utils.py": "679c46e8116eb35692bfdc1050367f768e0773cb80fdb92bc9013b86866be5bb",
+    "envs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "data_preparation_environment_resets": 0,
+  "data_preparation_external_steps": 0
+}
