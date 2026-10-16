@@ -6,7 +6,7 @@ def main():
     actual=subprocess.check_output(['git','branch','--show-current'],cwd=wt,text=True).strip();assert actual==branch
     dest=wt/'experiments/gfp_bfc_dev_screen_v1_20261016';dest.mkdir(parents=True,exist_ok=True)
     selected=[ROOT/'EXPERIMENT_CARD.md',ROOT/'protocol.json']
-    selected+=list((ROOT/'code').glob('*.py'))+list((ROOT/'reports').glob('*.json'))+list((ROOT/'reports').glob('*.md'))
+    selected+=list((ROOT/'code').glob('*.py'))+list((ROOT/'reports').glob('*.json'))+list((ROOT/'reports').glob('*.md'))+list((ROOT/'reports').glob('*.png'))
     selected+=list((ROOT/'receipts').glob('*.json'))
     for d in (ROOT/'runs').glob('*') if (ROOT/'runs').exists() else []:
         selected+=list(d.glob('*.json'))+list(d.glob('eval_*/results.json'))
