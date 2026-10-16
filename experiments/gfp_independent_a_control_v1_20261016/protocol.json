@@ -1,0 +1,89 @@
+{
+  "card": "GFP-INDEPENDENT-A-CONTROL-V1",
+  "status": "AUTHORIZED_FROZEN",
+  "training_authorized": true,
+  "environment_interaction_authorized": true,
+  "parameter_updates_allowed_this_turn": 50000,
+  "source_checkpoint": "/home/xushijie3/work/gfp_bfc_dev_screen_v1_20261016/runs/s3_R3/checkpoint_50000.pkl",
+  "source_sha256": "ffba11e943f7e192134b86093f4b2dc49efbe239cf2d32e3e884406358de1cca",
+  "branch": "codex/gfp-independent-a-control-v1-20261016",
+  "base_commit": "65ffceb7f759df285b91c3f8394e1f13be1a0f4b",
+  "proposed": {
+    "task": "humanoidmaze-medium-navigate-singletask-task1-v0",
+    "arms": {
+      "A": "independent_follow_gradient_with_action_radius"
+    },
+    "gfp_updates_per_arm": 50000,
+    "gfp_updates_total_cap": 50000,
+    "online_updates": 0,
+    "reference_update_every": 100,
+    "reference_updates_total_cap": 500,
+    "reference_optimizer": "no_momentum_gradient_direction_and_bounded_line_search",
+    "reference_fit_and_check_samples": {
+      "states_per_region": 256,
+      "noise_repeats": 2,
+      "disjoint_fit_and_check": true,
+      "split": "train"
+    },
+    "radius_calibration": {
+      "states_per_region": 1024,
+      "noise_repeats": 2,
+      "ema_tau": 5e-05,
+      "equivalent_ema_steps": 100,
+      "computed": false,
+      "expected_rho0": 0.0005490051116794348,
+      "expected_regional": [
+        0.0005364393000490963,
+        0.0005612896056845784
+      ]
+    },
+    "line_search": {
+      "max_backtracks": 8,
+      "max_refinements": 6,
+      "actual_loss_tolerance": 1e-05
+    },
+    "density_model_training_updates": 0,
+    "probe_and_checkpoint_every": 5000,
+    "eval_updates": [
+      25000,
+      50000
+    ],
+    "eval_episodes_per_point": 100,
+    "eval_episodes_total_cap": 200,
+    "external_control_steps_cap": 400000,
+    "control_calls_cap": 416666,
+    "physics_substeps_cap": 2083330,
+    "auto_retry": false,
+    "auto_tune": false,
+    "auto_extend": false,
+    "no_hours_cap": true,
+    "reference_rng_seed": 6824100,
+    "calibration_rng_seed": 6824000,
+    "disable_internal_reference_ema": true,
+    "primary_interpretation_requires_continuous_update": true,
+    "continuous_update_gate": {
+      "min_actual_global_radius_fraction": 0.5,
+      "nonzero_both_regions": true,
+      "event_fraction": 0.9,
+      "events_total": 500,
+      "minimum_events": 450,
+      "admission_events": 5,
+      "admission_minimum": 4
+    },
+    "research_gates": {
+      "joint_value_gap_increase": 15,
+      "joint_gradient_ratio": 2,
+      "consecutive_points": 2,
+      "historical_anchor_step": 300000,
+      "collapse_success_max": 5,
+      "collapse_start_stay_min": 90,
+      "strong_success_min": 25,
+      "strong_start_stay_max": 30
+    }
+  },
+  "authorization": {
+    "user_instruction": "执行。只验证一个问题：把 A 和 B 彻底分开，让 A 独立更新，还能不能避免崩塌？",
+    "date": "2026-10-16",
+    "scope": "One independent A continuation, 50k updates inclusive of admission, two 100-episode evaluations; no density model, no tuning or retries"
+  }
+}
