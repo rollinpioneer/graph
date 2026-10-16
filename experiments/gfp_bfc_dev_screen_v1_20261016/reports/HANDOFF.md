@@ -1,0 +1,17 @@
+# BFC first-round execution handoff
+
+Approved scope is frozen in EXPERIMENT_CARD.md and protocol.json. The first three jobs (s0_R0, s3_R0, s0_R2) have passed their actual first four updates and complete state save/restore; those updates are part of each 100k budget. Other branches are queued, not failed. No performance conclusions yet.
+
+Manager is code/manager.py; identity in receipts/manager_dispatch.json and manager_started.json. Do not restart or double-dispatch it. It handles all 12 training branches and 24 checkpoint evaluations without additional phase approvals. GPU free-memory gates allow shared cards; they do not demand exclusive cards. No automatic retries on branch failures. Monitor queue.json, dispatch.json, real exit receipts, admission, probes, progress and checkpoints. code/monitor.py is read-only except its new lightweight receipt.
+
+First archive commit: 8193af36bf9eba30161732dc9e6b12b3a5cc664e2, verified remote before dispatch. Actual latest branch SHA must be read again after subsequent archives.
+
+Environment: /home/xushijie3/work/flow_baselines_preflight_20261013/envs/gfp312/bin/python. Runtime HOME points to the formal source experiment's home to reuse its dataset. Original source/checkpoints remain unchanged. Adapter and original source snapshots are in this experiment root. Prepared dataset arrays are exact loader/relabel/clip + buffer outputs with SHA-256 manifests.
+
+Admission notes: initial preparation stopped on the native TrainState one-based step counter; Adam correctly recorded 600k/300k. Corrected before any update. The initial failed preparation and successful retry both constructed one HumanoidMaze environment. Static fixed-source inspection shows each constructor calls reset with exactly 40 do_simulation control calls. Thus add 80 preparation control calls (and frame_skip times 80 physics substeps) to evaluation costs. No external preparation actions were requested. assets.json's zero reset field refers only to explicit reset calls and must not be interpreted as zero constructor resets. Evaluation counts constructor/reset/step calls dynamically. Each evaluation's true worst case is 204400 calls (100*2000 + 110*40); all 24 plus preparation <=4905680, below 5M. Never call 3.2k/4.8M external steps the entire physical budget.
+
+The evaluation action_space RNG is seeded alongside global NumPy/Python and env reset, before any evaluation has started. Online Actor remains deployed. Policy noise uses the new frozen round/time schedule; historical B1a scores are context only. Initial observation hashes must match across all new arms/checkpoints/windows. Report any mismatch and do not rerun to hide it.
+
+After completion, run code/summarize.py with the original Python environment. Supplement the summary with paired per-episode comparisons and the development decision: anomaly control, retained online-Actor success, BFC versus best EMA, clipping activation before anomalies, measured cost and caveats. Two selected fork windows cannot establish general effectiveness. No automatic normal-window, from-scratch, longer-horizon or task4 tests.
+
+Use code/archive.py explicit manifest, inspect staged diff/size, commit and push only codex/gfp-bfc-dev-screen-v1-20261016. Verify remote SHA; copy lightweight handoff to local reports/gfp_bfc_dev_screen_v1_20261016. Do not upload data, weights or complete logs. Monitor lab is now active every 30 minutes; ordinary progress stays quiet. Pause only after final delivery or explicit user instruction.

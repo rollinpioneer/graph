@@ -17,6 +17,7 @@ def worker(conn):
         if cmd=='close':break
         if cmd=='reset':
             np.random.seed(arg);random.seed(arg)
+            env.action_space.seed(arg)
             ob,info=env.reset(seed=arg)
             conn.send((ob,counts.copy()))
         else:

@@ -27,9 +27,12 @@ def main():
                 row[f'eval_{it}']={k:e[k] for k in ('success_percent','start_stay_percent','return_mean','control_calls','seconds')}
             rows.append(row)
     assert hash_match,'matched initial states differ'
-    assert total_calls<=5000000 and total_updates<=1200000
+    preparation_calls=80  # two loader constructions, each fixed 40-action Humanoid reset
+    assert total_calls+preparation_calls<=5000000 and total_updates<=1200000
     write(ROOT/'reports/summary.json',dict(time=time.time(),rows=rows,matched_initial_hashes=hash_match,
-          total_recorded_updates=total_updates,total_eval_control_calls=total_calls,total_external_eval_steps=total_steps))
+          total_recorded_updates=total_updates,total_eval_control_calls=total_calls,
+          preparation_control_calls=preparation_calls,total_control_calls=total_calls+preparation_calls,
+          total_external_eval_steps=total_steps))
     print(json.dumps(rows,indent=2))
 
 if __name__=='__main__':main()

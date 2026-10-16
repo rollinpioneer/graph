@@ -15,7 +15,8 @@ def main():
         if not p.exists():continue
         assert p.stat().st_size<10000000
         rel=p.relative_to(ROOT);out=dest/rel;out.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,out);names.append(str(out.relative_to(wt)))
-    subprocess.run(['git','add','--']+names,cwd=wt,check=True)
+    # Explicit lightweight whitelist only; inherited ignore rules cover all runs/.
+    subprocess.run(['git','add','-f','--']+names,cwd=wt,check=True)
     write(ROOT/'receipts/archive_manifest.json',dict(branch=branch,files=names))
     print(subprocess.check_output(['git','diff','--cached','--stat'],cwd=wt,text=True))
 
