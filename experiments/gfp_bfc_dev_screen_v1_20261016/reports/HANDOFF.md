@@ -1,3 +1,5 @@
+LATEST: read ALL_PARALLEL_AMENDMENT.md first. All 12 training branches started/admitted. Active coordinator is all_parallel_manager.py; repair_evaluation_manager.py handles exactly 9 explicitly approved reporting-failure repairs. Physical control-call budget is now 6750000. Do not restart original manager.py.
+
 # BFC first-round execution handoff
 
 Approved scope is frozen in EXPERIMENT_CARD.md and protocol.json. The first three jobs (s0_R0, s3_R0, s0_R2) have passed their actual first four updates and complete state save/restore; those updates are part of each 100k budget. Other branches are queued, not failed. No performance conclusions yet.

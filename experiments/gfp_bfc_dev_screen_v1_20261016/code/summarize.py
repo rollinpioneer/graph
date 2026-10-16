@@ -19,6 +19,7 @@ def main():
             if (d/'complete.json').exists():row.update(status='completed',cost=json.loads((d/'complete.json').read_text()))
             for it in (50000,100000):
                 path=d/f'eval_{it}/results.json'
+                if not path.exists():path=d/f'eval_{it}_repair1/results.json'
                 if not path.exists():continue
                 e=json.loads(path.read_text());total_calls+=e['control_calls'];total_steps+=e['external_steps']
                 hashes={x['episode']:x['initial_obs_sha256'] for x in e['episodes']}
@@ -28,10 +29,19 @@ def main():
             rows.append(row)
     assert hash_match,'matched initial states differ'
     preparation_calls=80  # two loader constructions, each fixed 40-action Humanoid reset
-    assert total_calls+preparation_calls<=5000000 and total_updates<=1200000
+    failed_calls=0
+    authorization=ROOT/'receipts/evaluation_repair_authorized.json'
+    if authorization.exists():
+        for job in json.loads(authorization.read_text())['jobs']:
+            seed,arm,it=job['seed'],job['arm'],job['id'].rsplit('_',1)[1]
+            progress=json.loads((ROOT/'runs'/f's{seed}_{arm}'/f'eval_{it}'/'progress.json').read_text())
+            assert progress['completed']==100
+            failed_calls+=progress['control_calls']
+    cap=6750000 if authorization.exists() else 5000000
+    assert total_calls+preparation_calls+failed_calls<=cap and total_updates<=1200000
     write(ROOT/'reports/summary.json',dict(time=time.time(),rows=rows,matched_initial_hashes=hash_match,
           total_recorded_updates=total_updates,total_eval_control_calls=total_calls,
-          preparation_control_calls=preparation_calls,total_control_calls=total_calls+preparation_calls,
+          preparation_control_calls=preparation_calls,failed_reporting_control_calls=failed_calls,total_control_calls=total_calls+preparation_calls+failed_calls,
           total_external_eval_steps=total_steps))
     print(json.dumps(rows,indent=2))
 

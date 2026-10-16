@@ -1,4 +1,4 @@
-import shutil,json,subprocess
+import shutil,json,subprocess,hashlib
 from common import ROOT,write
 
 def main():
@@ -14,7 +14,16 @@ def main():
     for p in selected:
         if not p.exists():continue
         assert p.stat().st_size<10000000
-        rel=p.relative_to(ROOT);out=dest/rel;out.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,out);names.append(str(out.relative_to(wt)))
+        rel=p.relative_to(ROOT);out=dest/rel;out.parent.mkdir(parents=True,exist_ok=True);
+        if p.name=='results.json':
+            data=json.loads(p.read_text())
+            for episode in data.get('episodes',[]):episode.pop('path',None)
+            data['full_result_server_path']=str(p)
+            data['full_result_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+            data['archive_omits']='Per-step path retained only on server; per-episode metrics retained here.'
+            out.write_text(json.dumps(data,indent=2)+'\n')
+        else:shutil.copy2(p,out)
+        names.append(str(out.relative_to(wt)))
     # Explicit lightweight whitelist only; inherited ignore rules cover all runs/.
     subprocess.run(['git','add','-f','--']+names,cwd=wt,check=True)
     write(ROOT/'receipts/archive_manifest.json',dict(branch=branch,files=names))

@@ -25,14 +25,14 @@ def worker(conn):
             conn.send((ob,float(r),bool(t),bool(tr),float(info.get('success',0)),counts.copy()))
     env.close();conn.close()
 
-def main(seed,arm,it):
+def main(seed,arm,it,repair=False):
     # Only this parent imports JAX; spawned simulators do not initialize CUDA.
     import numpy as np,jax,flax
     from common import ROOT,make_agent,write,sha
-    run=ROOT/'runs'/f's{seed}_{arm}';out=run/f'eval_{it}';out.mkdir(exist_ok=False)
-    p=run/f'checkpoint_{it}.pkl';before=sha(p)
+    run=ROOT/'runs'/f's{seed}_{arm}';out=run/(f'eval_{it}_repair1' if repair else f'eval_{it}');out.mkdir(exist_ok=False)
+    checkpoint_path=run/f'checkpoint_{it}.pkl';before=sha(checkpoint_path)
     ag,cfg,_=make_agent(seed,arm)
-    with open(p,'rb') as f:payload=pickle.load(f)
+    with open(checkpoint_path,'rb') as f:payload=pickle.load(f)
     ag=flax.serialization.from_state_dict(ag,payload['agent'])
     ctx=mp.get_context('spawn');pairs=[ctx.Pipe() for _ in range(10)]
     procs=[ctx.Process(target=worker,args=(c,)) for _,c in pairs]
@@ -63,11 +63,12 @@ def main(seed,arm,it):
                           policy_seed=4242,policy_round=rnd,length=t,return_=float(returns[k]),success=succ,
                           final_xy=ob[:2].tolist(),final_in_start=inside,path=paths[k]))
                         active[k]=False
-                assert sum(c[0] for c in counts)<=208333,'physical control call budget'
+                assert sum(c[0] for c in counts)<=204400,'physical control call budget'
                 if t%100==0:write(out/'progress.json',dict(completed=len(episodes),external_steps=external,control_calls=sum(c[0] for c in counts),seconds=time.time()-t0))
                 if not active.any():break
             assert not active.any(),'episode exceeded 2000'
-        assert len(episodes)==100 and sha(p)==before
+        write(out/'episodes_unverified.json',dict(episodes=episodes,control_calls=sum(c[0] for c in counts),external_steps=external,checkpoint_sha256=before))
+        assert len(episodes)==100 and sha(checkpoint_path)==before
         assert sum(c[0] for c in counts)>=external,'unaccounted simulation calls'
         write(out/'results.json',dict(seed=seed,arm=arm,updates=it,checkpoint_sha256=before,optimizer_updates=0,
           success_percent=100*float(np.mean([e['success'] for e in episodes])),
@@ -79,4 +80,4 @@ def main(seed,arm,it):
         for p in pipes:p.send(('close',None))
         for proc in procs:proc.join(30)
 
-if __name__=='__main__':main(int(sys.argv[1]),sys.argv[2],int(sys.argv[3]))
+if __name__=='__main__':main(int(sys.argv[1]),sys.argv[2],int(sys.argv[3]),repair='--repair' in sys.argv)
