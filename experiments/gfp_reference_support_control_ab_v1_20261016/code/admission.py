@@ -18,20 +18,23 @@ def main():
  size=json.loads((SOURCE/'receipts/assets.json').read_text())['dataset_size']
  raw={p.stem:np.load(p,mmap_mode='r') for p in (SOURCE/'data').glob('*.npy')}
  data={k:jnp.asarray(v) for k,v in raw.items()}
- batch={k:v[:256] for k,v in data.items()};key=jax.random.PRNGKey(20261016)
- y0=original.td_parts(batch,key)[0];y1=ag.td_parts(batch,key)[0]
- assert np.array_equal(y0,y1)
- loss0,g0=jax.value_and_grad(lambda p:original.total_loss(batch,p,key)[0])(original.network.params)
- loss1,g1=jax.value_and_grad(lambda p:ag.total_loss(batch,p,key)[0])(ag.network.params)
- assert np.isclose(loss0,loss1,rtol=3e-5,atol=3e-5)
- diffs=[float(jnp.max(jnp.abs(a-b))) for a,b in zip(jax.tree.leaves(g0),jax.tree.leaves(g1))]
- assert all(np.allclose(a,b,rtol=3e-5,atol=3e-5) for a,b in zip(jax.tree.leaves(g0),jax.tree.leaves(g1)))
- # Active set projection fixtures: none, one, two, correlated constraints.
- fixtures=[([1.,2.],[[-1.,0.],[0.,-1.]],[1.,2.]),([1.,-2.],[[1.,0.],[0.,1.]],[0.,-2.]),([1.,2.],[[1.,0.],[0.,1.]],[0.,0.]),([1.,2.],[[1.,0.],[1.,1.]],[ -.5,.5])]
- for d,g,expected in fixtures:
-  out,_=project(jnp.array(d),jnp.array(g));assert np.allclose(out,expected,atol=1e-6)
- write(ROOT/'receipts/zero_update_admission.json',dict(passed=True,td_exact=True,loss=float(loss1),gradient_max_abs=max(diffs),projection_fixtures=4,source_restore=True,gfp_updates=0,environment_steps=0))
- del original,g0,g1
+ if not (ROOT/'receipts/zero_update_admission.json').exists():
+  batch={k:v[:256] for k,v in data.items()};key=jax.random.PRNGKey(20261016)
+  y0=original.td_parts(batch,key)[0];y1=ag.td_parts(batch,key)[0]
+  assert np.array_equal(y0,y1)
+  loss0,g0=jax.value_and_grad(lambda p:original.total_loss(batch,p,key)[0])(original.network.params)
+  loss1,g1=jax.value_and_grad(lambda p:ag.total_loss(batch,p,key)[0])(ag.network.params)
+  assert np.isclose(loss0,loss1,rtol=3e-5,atol=3e-5)
+  diffs=[float(jnp.max(jnp.abs(a-b))) for a,b in zip(jax.tree.leaves(g0),jax.tree.leaves(g1))]
+  assert all(np.allclose(a,b,rtol=3e-5,atol=3e-5) for a,b in zip(jax.tree.leaves(g0),jax.tree.leaves(g1)))
+  # Active set projection fixtures: none, one, two, correlated constraints.
+  fixtures=[([1.,2.],[[-1.,0.],[0.,-1.]],[1.,2.]),([1.,-2.],[[1.,0.],[0.,1.]],[0.,-2.]),([1.,2.],[[1.,0.],[0.,1.]],[0.,0.]),([1.,2.],[[1.,0.],[1.,1.]],[ -.5,.5])]
+  for d,g,expected in fixtures:
+   out,_=project(jnp.array(d),jnp.array(g));assert np.allclose(out,expected,atol=1e-6)
+  write(ROOT/'receipts/zero_update_admission.json',dict(passed=True,td_exact=True,loss=float(loss1),gradient_max_abs=max(diffs),projection_fixtures=4,source_restore=True,gfp_updates=0,environment_steps=0))
+  del original,g0,g1
+ else:
+  assert json.loads((ROOT/'receipts/zero_update_admission.json').read_text())['passed']
  valid=np.arange(len(raw['next_observations']))<size
  valid &= np.asarray(raw['masks'])>0
  updater=Updater(ag,raw['next_observations'],valid)

@@ -69,7 +69,7 @@ class Updater:
   chosen=[]
   for r,pool in enumerate(self.pools):
    rk=jax.random.fold_in(key,r)
-   ids=np.asarray(jax.random.choice(rk,jnp.asarray(pool),n*(1 if cal else 2),replace=False))
+   ids=np.asarray(jax.random.choice(rk,jnp.asarray(pool),(n*(1 if cal else 2),),replace=False))
    chosen.append(ids)
   for part in range(1 if cal else 2):
    ids=np.concatenate([np.tile(x[part*n:(part+1)*n],2) for x in chosen])
