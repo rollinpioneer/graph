@@ -5,6 +5,7 @@ Arms (see ANALYSIS_CARD_C_P0REF.md):
   A0 actor K=1 random z (official)   A1 actor z=0           A4 actor K=16 medoid (no Q)
   A2 actor K=16 argmax Q             A3 actor K=16 argmin Q  A5 actor K=64 argmax Q
   F0 flow K=1                        F2 flow K=16 argmax Q   F3 flow K=16 argmin Q
+  A6 actor K=16 farthest from mean (post-hoc control, no Q)
 Q = official critic_eval (target critic, ensemble mean). Episodes/seeds as in frozen_eval.py.
 """
 import os
@@ -26,6 +27,9 @@ ARMS = {
     "A0": ("actor", 1, "single"), "A1": ("actor", 1, "zero"), "A4": ("actor", 16, "medoid"),
     "A2": ("actor", 16, "argmax"), "A3": ("actor", 16, "argmin"), "A5": ("actor", 64, "argmax"),
     "F0": ("flow", 1, "single"), "F2": ("flow", 16, "argmax"), "F3": ("flow", 16, "argmin"),
+    # post-hoc control added after the A2/A3 results (not in the frozen card): K=16, no Q,
+    # pick the candidate farthest from the candidate mean (the "atypical action" counterpart of A3)
+    "A6": ("actor", 16, "farthest"),
 }
 
 
@@ -50,8 +54,9 @@ def make_policy(source, K, mode):
         a3 = a.reshape(B, k, ACT_DIM)
         if k == 1:
             return a3[:, 0]
-        if mode == "medoid":
-            idx = jnp.argmin(((a3 - a3.mean(1, keepdims=True)) ** 2).sum(-1), axis=1)
+        if mode in ("medoid", "farthest"):
+            d2 = ((a3 - a3.mean(1, keepdims=True)) ** 2).sum(-1)
+            idx = jnp.argmin(d2, axis=1) if mode == "medoid" else jnp.argmax(d2, axis=1)
         else:
             q = agent.critic_eval(o, a).reshape(B, k)
             idx = jnp.argmax(q, 1) if mode == "argmax" else jnp.argmin(q, 1)
