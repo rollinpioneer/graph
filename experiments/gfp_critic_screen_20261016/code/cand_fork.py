@@ -17,6 +17,10 @@ ARM / PARAM:
                      value island is measured at actor actions. lam_c = beta * EMA(td loss) / EMA(churn loss)
                      (bias-corrected EMAs, decay 0.99), i.e. the churn term is kept at a fixed fraction of the TD
                      loss. Actor loss unchanged.
+  CQL   alpha        CQL(H)-style conservatism on the critic (Kumar et al. 2020), simplified: official critic loss
+                     + alpha * mean_k[logsumexp_j Q_k(s, a_j) - log 8 - Q_k(s, a_data)] over 8 actions per state
+                     (4 uniform in [-1, 1], 4 current-actor actions with fresh noise, stop-gradient), no importance
+                     weights. Actor loss unchanged. (Added after the I1/C1/C2 round, CARD_SCREEN2_20261016.md.)
   OFF   -            official GFP update (timing reference only).
 Run with cwd = official GFP source (source/gfp, 1abbd5f, unmodified). Probe rows every 5k, same metrics as
 x3_fork.py. Writes only into OUT_DIR.
@@ -150,11 +154,28 @@ def make_classes():
                 _agent = _agent.replace(network=new_network, rng=rng, prev_critic=old, ema=ema)
             return _agent, info
 
-    return GFPAgent, IQLAgent, ChainAgent, ModuleDict, TrainState, Value
+    class CQLAgent(GFPAgent):
+        def critic_loss(self, batch, grad_params, rng):
+            td_loss, info = GFPAgent.critic_loss(self, batch, grad_params, rng)
+            obs = batch["observations"]
+            u_rng, z_rng = jax.random.split(jax.random.fold_in(rng, 7))
+            shape = (4,) + batch["actions"].shape
+            a_u = jax.random.uniform(u_rng, shape, minval=-1.0, maxval=1.0)
+            z = jax.random.normal(z_rng, shape)
+            a_pi = jax.lax.stop_gradient(jax.vmap(lambda zz: jnp.clip(self.network.select("actor")(obs, zz), -1, 1))(z))
+            qf = lambda a: self.network.select("critic")(obs, actions=a, params=grad_params)
+            q_cat = jnp.concatenate([jax.vmap(qf)(a_u), jax.vmap(qf)(a_pi)], axis=0)       # (8, heads, B)
+            lse = jax.scipy.special.logsumexp(q_cat, axis=0) - jnp.log(8.0)
+            q_d = qf(batch["actions"])
+            pen = jnp.mean(lse - q_d)
+            info = dict(info, td_loss=td_loss, cql_pen=pen, q_unif=jnp.mean(q_cat[:4]), q_pi=jnp.mean(q_cat[4:]))
+            return td_loss + self.config["cql_alpha"] * pen, info
+
+    return GFPAgent, IQLAgent, ChainAgent, CQLAgent, ModuleDict, TrainState, Value
 
 
 def build(RUN, START, ARM, PARAM):
-    GFPAgent, IQLAgent, ChainAgent, ModuleDict, TrainState, Value = make_classes()
+    GFPAgent, IQLAgent, ChainAgent, CQLAgent, ModuleDict, TrainState, Value = make_classes()
     base, cfg, path0 = load_agent(RUN, START)
     conf = base.config.copy({"log_metrics": True})
     assert conf["eta_temperature"] != 0 and not conf["target_use_next"] and conf["target_agg"] == "mean"
@@ -170,6 +191,9 @@ def build(RUN, START, ARM, PARAM):
         agent = ChainAgent(rng=base.rng, network=base.network, config=conf,
                            prev_critic=base.network.params["modules_critic"],
                            ema=dict(td=jnp.float32(0), churn=jnp.float32(0), t=jnp.float32(0)))
+    elif ARM == "CQL":
+        conf = conf.copy({"cql_alpha": float(PARAM)})
+        agent = CQLAgent(rng=base.rng, network=base.network, config=conf)
     else:
         agent = GFPAgent(rng=base.rng, network=base.network, config=conf)
     return GFPAgent, base, cfg, path0, agent
@@ -212,6 +236,9 @@ def check(RUN, START, ARM, PARAM):
     if ARM == "IQL":
         vinfo = agent.value_loss(batch, agent.value.params)[1]
         res.update({k: float(v) for k, v in vinfo.items()})
+    if ARM == "CQL":
+        res.update(cql_pen=float(ci["cql_pen"]), q_unif=float(ci["q_unif"]), q_pi=float(ci["q_pi"]),
+                   td_loss=float(ci["td_loss"]))
     if ARM == "CHAIN":
         res.update(churn_at_fork=float(ci["churn_loss"]), lam_at_fork=float(ci["chain_lam"]))
         a2, info2 = agent.multi_sample_and_update(cfg["n_steps_fused"], data, dsize, cfg["agent"]["batch_size"])
@@ -220,6 +247,9 @@ def check(RUN, START, ARM, PARAM):
     print(json.dumps(res, indent=1), flush=True)
     assert abs(res["actor_loss_off"] - res["actor_loss_new"]) < 1e-5 and res["actor_grad_diff"] < 1e-6
     assert res["critic_grad_outside_critic"] < 1e-6
+    if ARM == "CQL":
+        assert abs(res["td_loss"] - res["critic_loss_off"]) < 1e-5
+        assert abs(res["critic_loss_new"] - res["critic_loss_off"] - float(PARAM) * res["cql_pen"]) < 1e-3
     if ARM == "CHAIN":
         assert abs(res["critic_loss_off"] - res["critic_loss_new"]) < 1e-5 and res["churn_at_fork"] == 0.0
         assert res["after_4_updates"]["churn"] > 0 and res["after_4_updates"]["lam"] > 0
@@ -241,7 +271,7 @@ def time_only(RUN, START, ARM, PARAM, N):
 
 
 def train(probe_npz, out_dir, RUN, START, n_updates, ARM, PARAM):
-    assert n_updates <= 200000 and n_updates % 4 == 0 and ARM in ("IQL", "CHAIN")
+    assert n_updates <= 200000 and n_updates % 4 == 0 and ARM in ("IQL", "CHAIN", "CQL")
     os.makedirs(out_dir, exist_ok=True)
     GFPAgent, base, cfg, path0, agent = build(RUN, START, ARM, PARAM)
     data, dsize = dataset(cfg)
