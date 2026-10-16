@@ -46,4 +46,20 @@ c52832de5d5d40259b9d7898bc322faa92a1ee210c6f2e9cfca5ade64fe25f90  actors/actor_A
 3f0d74004fe000c22a39961f4bcca9ca44b04ec5eaeafb4180d81060925915af  code/exp_a.py
 b0cdc490eb00b4486756e79051efd939fd91bcfad47504287b8e0c00b3bbb2f5  code/exp_a_eval.py
 f7781b9b12b4e3b3858208d36c6340948accaab18338b644e3a269c167a3f0ce  code/exp_b.py
-d6eaf220476edcac25e6da7cb421c8002806e8acda65c520b7a9f5a3e5811251  code/exp_b_eval.py   (written for B; not yet run)
+d6eaf220476edcac25e6da7cb421c8002806e8acda65c520b7a9f5a3e5811251  code/exp_b_eval.py
+
+# Experiment B (authorized 2026-10-16 06:41 UTC via decision card; run 14:42-14:55 CST on gpu03 GPUs 0/5/7)
+
+## Outputs (exp_ab/)
+af968375757fda9637f67b7210efb459561203a3a1e70dad994325aef46103c8  B_EVAL_POINTS.txt
+28b1afae707a51307465a386c7219265092dcce6d2e67a8f4b92cee795944398  b_B0/train_B0.json
+0dd2fc891e266c63c2b806f3b80a29a9bc985dc80708e7e8feef418ff47aecc2  b_B1/train_B1.json
+4400a386566e98b787510b0721c39061c60716408d57cca834e7ced5a3b4b767  b_B2/train_B2.json
+98fe41ed28f92182db3059d39b597cd911731b6c041e068650ad240cb2b2d346  eval_B0.json
+a6ed1531222da607ae8bccb7fdb33a5e2b20641642896e60ae34cbdf7a88f670  eval_B1.json
+2f58d77cc8e0a58c4dc805f6b8090d158eb07c5a41e649ad9b164a29ccfb6f60  eval_B2.json
+dfcc208ab47c0134dea9af27419a372e5bc548d762ae9b787387f2c767341052  eval_B_summary.json
+(train_B*.json copied to results/exp_ab/b/, eval_B_summary.json and B_EVAL_POINTS.txt copied; hashes verified)
+
+## B checkpoints (exp_ab/b_B*/, not copied; full list in results/exp_ab/b_SHA256SUMS)
+B0 params_700000.pkl 0b4b297f... differs from original G_task1_s0 params_700000.pkl 145541f1... -> B0 is a paired continuation, not a bit-exact replay.
