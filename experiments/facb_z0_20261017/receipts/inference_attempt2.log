@@ -1,0 +1,42 @@
+2026-10-17 14:46:35.816714: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-10-17 14:46:37.600834: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+ANCHOR I_s0_500000
+ANCHOR I_s1_500000
+ANCHOR I_s2_500000
+ANCHOR I_s3_500000
+ANCHOR I_s4_500000
+ANCHOR I_s5_500000
+ANCHOR I_s6_500000
+ANCHOR I_s7_500000
+2026-10-17 14:46:54.691511: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-10-17 14:46:54.691588: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-10-17 14:46:54.691640: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-10-17 14:46:54.691682: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-10-17 14:47:04.762333: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+SCORED G_s1_600000 calibration 35.02
+SCORED G_s1_800000 calibration 47.08
+SCORED G_s1_1000000 calibration 59.62
+SCORED G_s2_600000 calibration 71.48
+SCORED G_s2_800000 calibration 84.1
+CALIBRATION_LOCKED 44.30327243804936
+SCORED G_s2_1000000 calibration 96.09
+SCORED G_s4_600000 healthy_test 108.48
+SCORED G_s4_800000 healthy_test 120.71
+Traceback (most recent call last):
+  File "/home/xushijie3/work/facb_z0_20261017/infer.py", line 124, in <module>
+    np.testing.assert_allclose(loss,direct,rtol=3e-5,atol=3e-5)
+  File "/home/xushijie3/work/flow_baselines_preflight_20261013/envs/gfp312/lib64/python3.12/site-packages/numpy/testing/_private/utils.py", line 1504, in assert_allclose
+    assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+  File "/usr/lib64/python3.12/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/xushijie3/work/flow_baselines_preflight_20261013/envs/gfp312/lib64/python3.12/site-packages/numpy/testing/_private/utils.py", line 797, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Not equal to tolerance rtol=3e-05, atol=3e-05
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 0.0001086
+Max relative difference: 0.00013784
+ x: array(0.787956, dtype=float32)
+ y: array(0.787848, dtype=float32)

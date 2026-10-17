@@ -5,7 +5,7 @@ R=Path(__file__).resolve().parent
 env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES='0',XLA_PYTHON_CLIENT_PREALLOCATE='false',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONUNBUFFERED='1')
 env.pop('JAX_PLATFORMS',None)
 py='/home/xushijie3/work/flow_baselines_preflight_20261013/envs/gfp312/bin/python'
-prior=json.loads((R/'receipts/inference_attempt1_exit.json').read_text())['wall_seconds']+60
+prior=sum(json.loads((R/f'receipts/inference_attempt{i}_exit.json').read_text())['wall_seconds'] for i in (1,2))+60
 limit=7200-prior
 t=time.monotonic();observed=[];timed_out=False
 with (R/'receipts/inference.log').open('w') as log:

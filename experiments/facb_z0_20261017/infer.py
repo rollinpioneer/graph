@@ -1,6 +1,6 @@
 """Frozen forward passes only; calibration locked before held-out/island scoring."""
 from pathlib import Path
-import os,sys,json,pickle,hashlib,time,resource,importlib.metadata as md
+import os,sys,json,pickle,hashlib,time,resource,copy,importlib.metadata as md
 import numpy as np
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,'/home/xushijie3/work/gfp_eta0_ablation_20261015/source/gfp')
@@ -49,7 +49,7 @@ def make_g(row,p,cls=GFPAgent):
  critic=Value(tuple(cfg['value_hidden_dims']),layer_norm=cfg['layer_norm'],num_ensembles=2)
  actor=ActorVectorField(tuple(cfg['actor_hidden_dims']),action_dim=21,layer_norm=cfg['actor_layer_norm'],need_time=False)
  vabc=ActorVectorField(tuple(cfg['actor_hidden_dims']),action_dim=21,layer_norm=cfg['actor_layer_norm'],need_time=True,encode_time_dim=cfg['encode_time_dim'])
- definition=ModuleDict(dict(critic=critic,target_critic=critic,actor=actor,vabc=vabc))
+ definition=ModuleDict(dict(critic=critic,target_critic=copy.deepcopy(critic),actor=actor,vabc=vabc))
  net=TrainState(step=p['network']['step'],apply_fn=definition.apply,model_def=definition,params=p['network']['params'],tx=None,opt_state=None)
  return cls(rng=p['rng'],network=net,config=cfg)
 def make_v(row,p):
@@ -73,6 +73,17 @@ def native_target(g,obs,nobs,key):
  return g.value_with_all_options('mean',nobs,g.sample_actions(nobs,srng),g.sample_flow_actions(obs,srng))
 @jax.jit
 def native_critic_loss(g,b,key):return g.critic_loss(b,g.network.params,key)
+@jax.jit
+def reconstructed_critic_loss(g,b,key):
+ q,_,_=score(g,b['observations'],b['next_observations'],key)
+ target=b['rewards']+g.config['discount']*b['masks']*q
+ current=g.network.select('critic')(b['observations'],actions=b['actions'])
+ return jnp.square(current-target).mean()
+@jax.jit
+def independent_target_mapping(g,obs,act):
+ native=g.network.select('target_critic')(obs,act)
+ direct=Value((512,)*4,layer_norm=True,num_ensembles=2).apply({'params':g.network.params['modules_target_critic']},obs,act)
+ return jnp.max(jnp.abs(native-direct))
 def finish(row,p,old):
  assert digest(p)==old and sha(row['path'])==row['sha256']
  integrity.append(dict(id=row['id'],checkpoint_sha256=row['sha256'],saved_model_optimizer_rng_unchanged=True,payload_digest=old))
@@ -117,21 +128,27 @@ for row in grows:
     _,srng=jax.random.split(key)
     native=native_target(g,b['observations'],b['next_observations'],key)
     qerr=float(np.max(np.abs(np.asarray(native)-q)));assert qerr<=3e-5
+    mapping_error=float(independent_target_mapping(g,b['next_observations'],b['actions']));assert mapping_error<=3e-5
     loss,info=native_critic_loss(g,b,key)
     target=b['rewards']+.995*b['masks']*jnp.asarray(q)
     current=g.network.select('critic')(b['observations'],actions=b['actions'])
-    direct=jnp.mean((current-target)**2)
+    direct=reconstructed_critic_loss(g,b,key)
     np.testing.assert_allclose(loss,direct,rtol=3e-5,atol=3e-5)
     assert float(jnp.max(jnp.abs(b['rewards']+.995*0*jnp.asarray(q)-b['rewards'])))==0
-    validations.append(dict(id=row['id'],repeat=repeat,native_q_max_abs_error=qerr,critic_loss_abs_error=float(abs(loss-direct)),critic_loss_rtol=3e-5,critic_loss_atol=3e-5,terminal_mask_zero_target_is_reward=True))
+    validations.append(dict(id=row['id'],repeat=repeat,native_q_max_abs_error=qerr,target_parameter_mapping_error=mapping_error,critic_loss_abs_error=float(abs(loss-direct)),critic_loss_rtol=3e-5,critic_loss_atol=3e-5,terminal_mask_zero_target_is_reward=True))
   qvalues.append(np.concatenate(parts));checktime()
  qvalues=np.stack(qvalues);np.save(ROOT/f'arrays/{row["id"]}_q.npy',qvalues)
  if row['group']=='calibration':
   cal_values.append((qvalues-all_v[row['seed']][None,:]).reshape(-1));cal_ids.append(row['id'])
   if len(cal_values)==len(calrows):
    d=np.concatenate(cal_values);c=float(np.quantile(np.abs(d),.99,method='linear'))
-   save('calibration.json',dict(calibration_ids=cal_ids,calibration_samples=int(d.size),calibration_seeds=[1,2],S=200.,kappa=c/200.,c=c,quantile=.99,quantile_method='linear',samples_sha256=sha(ROOT/'arrays/samples.npz'),calibration_ids_only=True,heldout_and_island_scored_at_lock=False,elapsed_seconds=time.monotonic()-t0,selection='pooled six healthy checkpoints x two noises x distinct 7168-state union'))
-   lock_hash=sha(ROOT/'calibration.json');save('receipts/calibration_lock.json',dict(sha256=lock_hash,heldout_and_island_not_yet_scored=True));print('CALIBRATION_LOCKED',c,flush=True)
+   if (ROOT/'calibration.json').exists():
+    previous=json.loads((ROOT/'calibration.json').read_text());assert previous['c']==c and previous['calibration_ids']==cal_ids
+    lock_hash=sha(ROOT/'calibration.json');assert lock_hash==json.loads((ROOT/'receipts/calibration_lock.json').read_text())['sha256']
+    print('CALIBRATION_RECOMPUTATION_IDENTICAL_ORIGINAL_LOCK_PRESERVED',c,flush=True)
+   else:
+    save('calibration.json',dict(calibration_ids=cal_ids,calibration_samples=int(d.size),calibration_seeds=[1,2],S=200.,kappa=c/200.,c=c,quantile=.99,quantile_method='linear',samples_sha256=sha(ROOT/'arrays/samples.npz'),calibration_ids_only=True,heldout_and_island_scored_at_lock=False,elapsed_seconds=time.monotonic()-t0,selection='pooled six healthy checkpoints x two noises x distinct 7168-state union'))
+    lock_hash=sha(ROOT/'calibration.json');save('receipts/calibration_lock.json',dict(sha256=lock_hash,heldout_and_island_not_yet_scored=True));print('CALIBRATION_LOCKED',c,flush=True)
  finish(row,p,old)
  save('receipts/progress.json',dict(last_completed=row['id'],group=row['group'],completed_G=len(integrity)-8,seconds=time.monotonic()-t0,**calls))
  print('SCORED',row['id'],row['group'],round(time.monotonic()-t0,2),flush=True)
