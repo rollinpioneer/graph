@@ -64,6 +64,15 @@ def score(g,obs,nobs,key):
  return (qa+qv)/2,qa,qv
 @jax.jit
 def vscore(v,obs):return v.select('value')(obs)
+@jax.jit
+def direct_vscore(params,obs):
+ return Value((512,)*4,layer_norm=True,num_ensembles=1).apply({'params':params['modules_value']},obs)
+@jax.jit
+def native_target(g,obs,nobs,key):
+ _,srng=jax.random.split(key)
+ return g.value_with_all_options('mean',nobs,g.sample_actions(nobs,srng),g.sample_flow_actions(obs,srng))
+@jax.jit
+def native_critic_loss(g,b,key):return g.critic_loss(b,g.network.params,key)
 def finish(row,p,old):
  assert digest(p)==old and sha(row['path'])==row['sha256']
  integrity.append(dict(id=row['id'],checkpoint_sha256=row['sha256'],saved_model_optimizer_rng_unchanged=True,payload_digest=old))
@@ -81,7 +90,7 @@ for row in [r for r in records if r['arm']=='I']:
  native_loss,_=g.value_loss(batch,p['value']['params'])
  q=jax.lax.stop_gradient(g.critic_eval(batch['observations'],batch['actions']));vv=v.select('value')(batch['observations'])
  direct_loss=jnp.mean(jnp.where(q-vv>0,.7,.3)*(q-vv)**2)
- direct_v=Value(tuple(configs[row['id']]['agent']['value_hidden_dims']),layer_norm=True,num_ensembles=1).apply({'params':p['value']['params']['modules_value']},batch['next_observations'])
+ direct_v=direct_vscore(p['value']['params'],batch['next_observations'])
  verr=float(np.max(np.abs(np.asarray(direct_v)-vals[:256])))
  assert verr<=3e-5;np.testing.assert_allclose(native_loss,direct_loss,rtol=3e-5,atol=3e-5)
  validations.append(dict(id=row['id'],value_direct_max_abs_error=verr,native_value_loss_error=float(abs(native_loss-direct_loss)),V_shape=list(vals.shape),step=row['step']))
@@ -106,9 +115,9 @@ for row in grows:
    if j==0:
     b={n:jnp.asarray(samples[n][:256]) for n in ('observations','next_observations','actions','rewards','masks')}
     _,srng=jax.random.split(key)
-    native=g.value_with_all_options('mean',b['next_observations'],g.sample_actions(b['next_observations'],srng),g.sample_flow_actions(b['observations'],srng))
+    native=native_target(g,b['observations'],b['next_observations'],key)
     qerr=float(np.max(np.abs(np.asarray(native)-q)));assert qerr<=3e-5
-    loss,info=g.critic_loss(b,g.network.params,key)
+    loss,info=native_critic_loss(g,b,key)
     target=b['rewards']+.995*b['masks']*jnp.asarray(q)
     current=g.network.select('critic')(b['observations'],actions=b['actions'])
     direct=jnp.mean((current-target)**2)
