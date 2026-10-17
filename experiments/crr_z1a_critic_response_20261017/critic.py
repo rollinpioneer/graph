@@ -21,11 +21,9 @@ osaved={'0':{'count':sopt['0']['count'],'mu':sopt['0']['mu']['modules_critic'],'
 opt=flax.serialization.from_state_dict(tx.init(cp),osaved);assert digest(flax.serialization.to_state_dict(opt))==digest(osaved)
 states={k:(cp,tp,opt) for k in tds};initial_critic=digest((cp,tp,opt))
 def loss(cp,tp,actor,vabc,b,key):
- _,srng=jax.random.split(key);z=jax.random.normal(srng,(256,21));obs=b['observations'];nobs=b['next_observations']
- aa=jnp.clip(A.apply({'params':actor},nobs,z),-1,1);va=z
- for i in range(10):va=va+V.apply({'params':vabc},obs,va,jnp.full((256,1),i/10),is_encoded=True)/10
- va=jnp.clip(va,-1,1);qa=C.apply({'params':tp},nobs,aa).mean(0);qv=C.apply({'params':tp},nobs,va).mean(0)
- y=b['rewards']+.995*b['masks']*(qa+qv)/2;q=C.apply({'params':cp},obs,b['actions']);return jnp.square(q-y).mean()
+ pp=dict(par);pp['modules_actor']=actor;pp['modules_vabc']=vabc;pp['modules_critic']=cp;pp['modules_target_critic']=tp
+ native_agent=g.replace(network=g.network.replace(params=pp))
+ return native_agent.critic_loss(b,pp,key)[0]
 @jax.jit
 def validation(cp,tp,actor,vabc,b,key):
  pp=dict(par);pp['modules_actor']=actor;pp['modules_critic']=cp;pp['modules_target_critic']=tp

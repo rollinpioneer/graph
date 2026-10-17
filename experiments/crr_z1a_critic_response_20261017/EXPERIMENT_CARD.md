@@ -19,3 +19,6 @@ Primary metric clarification frozen before any response updates: R = E_start nor
 
 
 Startup implementation correction: persisted JSON omits runtime log_metrics; restored config now sets log_metrics=True exactly as historical native continuation code. All4 initial worker exits were proven0 updates, no updated checkpoint, unchanged source hashes. Failed run directories/logs preserved under startup_failure_zero_updates. This is a pre-update implementation repair, not a retry of numerical training failure; no budgets or hyperparameters changed.
+
+
+Critic loss implementation admission correction: two bad-candidate workers stopped before any update when rewritten loss/gradient did not match native. Preserve failure and measured audit. Critic-only updates now call the fixed official GFPAgent.critic_loss directly (same selected TD generators); no tolerance relaxation or algorithm change. Healthy native training continues. Zero-update bad workers resumed once under a separately registered child-exit collector; both generations of exit receipts retained.
