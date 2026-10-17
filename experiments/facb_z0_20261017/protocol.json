@@ -1,0 +1,55 @@
+{
+  "card": "FACB-Z0",
+  "authorization": "User said execute on 2026-10-17; original draft status superseded for this zero-training card only",
+  "branch": "codex/facb-z0-20261017",
+  "source_archive_commit": "8c7caf61b8b91b85c7340df04a2db5c10eeb0a6f",
+  "training_updates": 0,
+  "environment_construct_reset_step": 0,
+  "new_episodes": 0,
+  "new_model_initializations": 0,
+  "one_gpu_process_wall_limit_seconds": 7200,
+  "checkpoint_pairings_primary": 20,
+  "auxiliary_pairings": 6,
+  "auxiliary_definitions": "s0 600k / s3 300k pre-island; s1/s2 400k and 700k stage matched; never used to choose c",
+  "sample_seed": 2026101700,
+  "sample_rule": "Uniform without replacement global 4096; start 2048 excluding global; near-goal 1024 excluding both; disjoint union 7168, equal-state weighting in calibration",
+  "region_state": "next_observations",
+  "start_rectangle": [
+    -2,
+    6,
+    -2,
+    6
+  ],
+  "near_goal_radius": 2,
+  "goal": [
+    20,
+    20
+  ],
+  "main_nonterminal": "native task mask==1; retain truncated data-boundary transitions as official code does",
+  "rng_bases": [
+    2026101701,
+    2026101702
+  ],
+  "rng_rule": "For each fixed 256-state chunk fold_in(base,batch_index); then official critic_loss splits once and shares sample_rng between Actor and VaBC",
+  "batch_size": 256,
+  "bandwidth": "c=linear NumPy 99th percentile of pooled |qG - own-seed V500k| on all s1/s2 600k/800k/1M, both noises, disjoint union; kappa=c/S",
+  "primary_healthy_rate": "pooled s4-s7 x 3 checkpoints x both noises x 7168 states; also each-noise, seed, checkpoint and region reported",
+  "thresholds": {
+    "healthy_upper_max": 0.01,
+    "island_start_upper_strict_min": 0.5,
+    "healthy_lower_warning": 0.05
+  },
+  "rng_consistency": "Require both noises separately meet healthy <=1% and each island >50%, in addition to pooled decision",
+  "q_formula": "mean(target-Q heads at next Actor(next_s), target-Q heads at VaBC(current_s))",
+  "q_max_abs_tolerance": 3e-05,
+  "loss_rtol": 3e-05,
+  "loss_atol": 3e-05,
+  "sensitivity": "All eight V anchors cross-scored using already computed qG; fixed primary c, no recalibration",
+  "decision_labels": [
+    "GO_FOR_CONTROLLED_SCREEN",
+    "NO_GO_PROXY_ANCHOR_SEPARABILITY",
+    "INCONCLUSIVE"
+  ],
+  "calibration_lock_before_test": true,
+  "primary_island_start": "dedicated start pool (2048 distinct samples); union-start also reported"
+}

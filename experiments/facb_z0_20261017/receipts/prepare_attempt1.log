@@ -1,0 +1,15 @@
+致命错误：不是 git 仓库（或者直至挂载点 /home 的任何父目录）
+停止在文件系统边界（未设置 GIT_DISCOVERY_ACROSS_FILESYSTEM）。
+Traceback (most recent call last):
+  File "/home/xushijie3/work/facb_z0_20261017/prepare.py", line 87, in <module>
+    save('source_manifest.json',dict(archive_base_commit=REF,gfp_head=git('rev-parse','HEAD'),gfp_branch=git('branch','--show-current'),gfp_tracked_diff_sha256=hashlib.sha256(subprocess.check_output(['git','-C',str(SOURCE),'diff','HEAD'])).hexdigest(),gfp_status_lines=git('status','--short').splitlines(),sources=sources))
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xushijie3/work/facb_z0_20261017/prepare.py", line 21, in git
+    def git(*args):return subprocess.check_output(['git','-C',str(SOURCE),*args],text=True).strip()
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/home/xushijie3/work/gfp_eta0_ablation_20261015/source/gfp', 'rev-parse', 'HEAD']' returned non-zero exit status 128.
