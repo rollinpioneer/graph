@@ -26,7 +26,7 @@ def loss(cp,tp,actor,vabc,b,key):
  return native_agent.critic_loss(b,pp,key)[0]
 @jax.jit
 def validation(cp,tp,actor,vabc,b,key):
- pp=dict(par);pp['modules_actor']=actor;pp['modules_critic']=cp;pp['modules_target_critic']=tp
+ pp=dict(par);pp['modules_actor']=actor;pp['modules_vabc']=vabc;pp['modules_critic']=cp;pp['modules_target_critic']=tp
  ng=g.replace(network=g.network.replace(params=pp))
  def nloss(p):
   gradparams=dict(pp);gradparams['modules_critic']=p;return ng.critic_loss(b,gradparams,key)[0]
@@ -34,7 +34,7 @@ def validation(cp,tp,actor,vabc,b,key):
  ge=jnp.max(jnp.stack([jnp.max(jnp.abs(x-y)) for x,y in zip(jax.tree_util.tree_leaves(gr),jax.tree_util.tree_leaves(ngr))]));return l,nl,ge
 testbatch={k:v[:256] for k,v in data.items()};checks=[]
 for arm in ['F','P']:
- l,nl,ge=validation(cp,tp,tds[arm],vabc,testbatch,jnp.asarray(post['rng']));l,nl,ge=float(l),float(nl),float(ge);assert abs(l-nl)<=3e-5*max(1,abs(nl)) and ge<=3e-5
+ l,nl,ge=validation(cp,tp,tds[arm],vabc,testbatch,jnp.asarray(post['rng']));l,nl,ge=float(l),float(nl),float(ge);print('NATIVE_ADMISSION',arm,l,nl,ge,flush=True);assert abs(l-nl)<=3e-5*max(1,abs(nl)) and ge<=3e-5
  checks.append(dict(arm=arm,loss=l,native_loss=nl,critic_gradient_max_abs_error=ge))
 save(O/'zero_update_admission.json',dict(status='PASS',native_loss_gradient_checks=checks,initial_critic_Adam_target_digest=initial_critic,Adam_count=after,source_old=dict(path=str(path(before)),sha256=oldhash),source_post=dict(path=str(path(after)),sha256=posthash),TD_actor_hashes=frozen,updates=0))
 savedkey=jnp.asarray(post['rng'])

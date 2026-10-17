@@ -22,3 +22,6 @@ Startup implementation correction: persisted JSON omits runtime log_metrics; res
 
 
 Critic loss implementation admission correction: two bad-candidate workers stopped before any update when rewritten loss/gradient did not match native. Preserve failure and measured audit. Critic-only updates now call the fixed official GFPAgent.critic_loss directly (same selected TD generators); no tolerance relaxation or algorithm change. Healthy native training continues. Zero-update bad workers resumed once under a separately registered child-exit collector; both generations of exit receipts retained.
+
+
+Aligned native admission: use the same dynamic VaBC parameters on both comparison paths. Zero-update validation loss matches and gradient max error<=5.97e-8. All4 candidate attempts before this alignment consumed0 optimizer updates; all their directories/logs are preserved. Full healthy generation is complete exactly80000 updates with exit0. The corrected Critic collector covers all4 candidates once, not retraining healthy generators.

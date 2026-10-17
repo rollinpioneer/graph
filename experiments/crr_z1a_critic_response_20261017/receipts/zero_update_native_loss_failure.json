@@ -2,11 +2,12 @@
   "status": "PROVEN_ZERO_UPDATES",
   "jobs": [
     "critic_s0",
+    "critic_s1",
     "critic_s2",
     "critic_s3"
   ],
   "failed_at": "native loss/gradient admission before any update or update checkpoint",
-  "resolution": "directly invoke official GFPAgent.critic_loss; no tolerance relaxation",
+  "resolution": "native loss delegated; native check now passes identical dynamic VaBC parameters on both sides, eliminating constant-vs-dynamic compilation-path discrepancy; gradient error <=5.97e-8",
   "budgets_unconsumed": true,
   "healthy_training_not_interrupted": true,
   "additional_note": "s2 loaded the earlier rewritten loss before correction; native admission failed before updates; archived separately"
