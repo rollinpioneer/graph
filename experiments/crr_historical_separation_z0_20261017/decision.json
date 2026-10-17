@@ -1,0 +1,32 @@
+{
+  "necessary_condition_screen": "LIMITED_GO_FOR_RELATIVE_GRADIENT_CANDIDATE_ONLY",
+  "prospective_behavior_prediction": "INCONCLUSIVE",
+  "deployable_CRR_gate_or_method_training": "NOT_AUTHORIZED_AND_NOT_ESTABLISHED",
+  "local_Q_large_divergence": "only 5k before finer historical alarm in both development trajectories; do not claim >=10k clear warning from this component",
+  "early_gradient_examples": [
+    {
+      "seed": 0,
+      "delta": 60000,
+      "gradient_ratio": [
+        1.2842766260170302,
+        1.294689359380342
+      ],
+      "lead_to_fine_alarm": 15000,
+      "all_fixed_latents_and_probe_halves_same_direction": true
+    },
+    {
+      "seed": 3,
+      "delta": 20000,
+      "gradient_ratio": [
+        1.3207149266486635,
+        1.322105156189745
+      ],
+      "lead_to_fine_alarm": 15000,
+      "all_fixed_latents_and_probe_halves_same_direction": true
+    }
+  ],
+  "no_numeric_alarm_threshold_fitted": true,
+  "interpretation": "There is a repeatable early relative-gradient difference above numerical noise. This is enough only to consider the next separately approved Critic-only candidate-response screen. It is not a calibrated alarm, causation, independent validation, or demonstrated prospective performance warning.",
+  "single_next_question": "Does a small, controlled candidate TD-Actor replacement induce an adverse fixed-probe Critic response distinguishable from a benign replacement, rather than merely reproducing the difference to a separately frozen training trajectory?",
+  "new_training_or_env_interaction": 0
+}
