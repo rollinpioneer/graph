@@ -1,0 +1,43 @@
+{
+  "card": "CRR-Z1a",
+  "branch": "codex/crr-z1a-critic-response-20261017",
+  "critic_only_updates": 60000,
+  "healthy_generation_updates": 80000,
+  "new_environment_operations": 0,
+  "online_updates": 0,
+  "arms": [
+    "F",
+    "P",
+    "Fprime"
+  ],
+  "updates_per_arm": 5000,
+  "checkpoints": [
+    0,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000
+  ],
+  "probes": "same4096 and2latents from CRR-Z0",
+  "primary": "mean_start(norm(gP-gF))/mean_start(norm(gFork))",
+  "noise": "mean_start(norm(gF-gFprime))/mean_start(norm(gFork))",
+  "absolute_gradient_changes": "raw norms plus (Garm-Gfork)/Gfork and vector drift fromfork separately",
+  "critic_target_update": "original GFP lagged EMA: tau*old_online +(1-tau)*old_target",
+  "data_keys_F_P_base": 20261710,
+  "data_keys_Fprime_base": 20261720,
+  "TD_noise": "fold_in(saved fork Agent RNG,logical_step), all arms identical; official critic_loss internal split retained",
+  "preexisting_data_stream_restored": false,
+  "new_data_streams_preregistered": true,
+  "health_source_Agent_and_Adam_restored": true,
+  "healthy_generation_rng_sidecar_limitation": "new continuations; no claim of bitwise original unsaved path",
+  "bootstrap_replicates": 400,
+  "bootstrap_seed": 20261731,
+  "training_stop": "NaN/Inf/count/hash/freeze/budget failure stop affected arm, no retry",
+  "sufficient_ordering": "both bad lower bounds > both healthy upper bounds and own noise upper bounds, both latents; descriptive only",
+  "followups_not_authorized": [
+    "more candidate times",
+    "behavioral F/P/U",
+    "CRR gate training"
+  ]
+}
