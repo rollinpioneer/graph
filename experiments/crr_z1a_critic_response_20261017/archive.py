@@ -15,5 +15,5 @@ for n in names:
  dest=W/prefix/n;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
  manifest.append(dict(path=n,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()));paths.append(prefix+'/'+n)
 (R/'archive_manifest.json').write_text(json.dumps(manifest,indent=2));shutil.copy2(R/'archive_manifest.json',W/prefix/'archive_manifest.json');paths.append(prefix+'/archive_manifest.json')
-subprocess.run(['git','-C',str(W),'add','--']+paths,check=True);staged=subprocess.check_output(['git','-C',str(W),'diff','--cached','--name-only'],text=True).splitlines();assert set(staged)<=set(paths)
+subprocess.run(['git','-C',str(W),'add','-f','--']+paths,check=True);staged=subprocess.check_output(['git','-C',str(W),'diff','--cached','--name-only'],text=True).splitlines();assert set(staged)<=set(paths)
 print('EXPLICIT_LIGHT_FILES',len(staged),'TOTAL_BYTES',sum(m['bytes'] for m in manifest));print('\n'.join(staged))

@@ -2,10 +2,12 @@
   "status": "PROVEN_ZERO_UPDATES",
   "jobs": [
     "critic_s0",
+    "critic_s2",
     "critic_s3"
   ],
   "failed_at": "native loss/gradient admission before any update or update checkpoint",
   "resolution": "directly invoke official GFPAgent.critic_loss; no tolerance relaxation",
   "budgets_unconsumed": true,
-  "healthy_training_not_interrupted": true
+  "healthy_training_not_interrupted": true,
+  "additional_note": "s2 loaded the earlier rewritten loss before correction; native admission failed before updates; archived separately"
 }
