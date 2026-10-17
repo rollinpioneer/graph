@@ -1,0 +1,59 @@
+{
+  "card": "CRR-HISTORICAL-SEPARATION-Z0",
+  "branch": "codex/crr-historical-separation-z0-20261017",
+  "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/crr-historical-separation-z0-20261017",
+  "training_updates_allowed": 0,
+  "environment_steps_allowed": 0,
+  "new_model_initializations_allowed": 0,
+  "seeds": [
+    0,
+    3
+  ],
+  "fork_steps": [
+    600000,
+    300000
+  ],
+  "deltas": [
+    0,
+    10000,
+    20000,
+    30000,
+    40000,
+    50000,
+    60000,
+    70000,
+    80000,
+    90000,
+    100000
+  ],
+  "states": 4096,
+  "latent_repeats": 2,
+  "checkpoint_arm_time_pairs": 44,
+  "distinct_checkpoint_files": 42,
+  "target_score": "T=.5*(ensemble_mean target_Q(next_s,actor_fork(next_s,z))+ensemble_mean target_Q(next_s,vabc_fork(current_s,z))); fixed clipped actions at all later times",
+  "contrast": "mean_start T - mean_nonstart T; DeltaC=B0-B1a",
+  "Q_difference": "regional absolute and signed between-branch differences plus both arms drift from fork",
+  "gradient": "norm grad_a ensemble_mean ONLINE Q(next_s,a), evaluated at fixed clipped fork Actor action; no derivative through clip or Actor; no guidance min, no lambda normalization",
+  "bootstrap": {
+    "unit": "original raw data trajectory",
+    "replicates": 400,
+    "seed": 2026101731,
+    "interpretation": "descriptive paired cluster intervals, not training-seed significance or a fitted alarm"
+  },
+  "original_alarm_delta": {
+    "0": 80000,
+    "3": 40000
+  },
+  "finer_historical_s3_joint_delta": 35000,
+  "alarm_caution": "s0 start V rise>=20; s3 start-minus-all contrast rise>=15. Original alarms differ. Fine 5k joint s3 alarm begins335k. Never round 5k lead up to10k.",
+  "decision": "Necessary-condition screen only; no fitted numerical risk threshold, no new training/gate/critic-only experiment. A visual separation is not automatically a predictor. Missing behavioral timing => INCONCLUSIVE for prospective performance claims.",
+  "source_gfp_commit": "1abbd5f0e287caf9bda70e7bc655d0a499ac8401",
+  "known_limits": [
+    "B0 uses current online Actor, not EMA",
+    "B1a checkpoints store original GFP state without frozen-generator sidecar; sufficient for Critic reads, not asserted complete B1a resume",
+    "s3 fork already success9%, no healthy pre-decline premise",
+    "existing evaluations sparse and lack verified complete initial-state hashes",
+    "two latents and two probe halves are not independent training replications",
+    "start/nonstart are selected data probes, not on-policy state distribution"
+  ]
+}
