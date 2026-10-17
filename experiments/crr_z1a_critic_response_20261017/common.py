@@ -34,7 +34,7 @@ C=Value((512,)*4,layer_norm=True,num_ensembles=2)
 A=ActorVectorField((512,)*4,action_dim=21,layer_norm=False,need_time=False)
 V=ActorVectorField((512,)*4,action_dim=21,layer_norm=False,need_time=True,encode_time_dim=64)
 def cfg(seed):
- a=json.loads((R/f'sources/s{seed}_config.json').read_text())['agent'];a.update(ob_dims=(69,),action_dim=21)
+ a=json.loads((R/f'sources/s{seed}_config.json').read_text())['agent'];a.update(ob_dims=(69,),action_dim=21,log_metrics=True)
  if a['eta_temperature_online'] is None:a['eta_temperature_online']=a['eta_temperature']
  assert a['q_agg']==a['target_agg']=='mean' and a['guidance_agg']=='min' and not a['target_use_next'] and a['discount']==.995 and a['batch_size']==256 and a['flow_steps']==10 and a['encoder'] is None
  return flax.core.FrozenDict(a)

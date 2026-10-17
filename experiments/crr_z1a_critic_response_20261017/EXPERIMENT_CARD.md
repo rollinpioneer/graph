@@ -16,3 +16,6 @@ Before running: identity/counts, native loss and Critic gradient check, first re
 
 
 Primary metric clarification frozen before any response updates: R = E_start norm(grad_P - grad_F) / E_start norm(grad_fork), with matched fixed action input. N uses grad_F - grad_Fprime. Signed changes of mean gradient norms, absolute norms and vector drift of every arm are reported separately. Primary endpoint5000, both fixed latents separately. Conservative descriptive sufficient ordering: both bad R lower trajectory-bootstrap95% bounds exceed both intended healthy R upper bounds, and each bad R lower bound exceeds own noise N upper bound, in both latents. Failure does not establish equality; extensive overlap lowers priority, one bad signal is INCONCLUSIVE. These intervals describe fixed-data trajectories, not independent training replication. No fitted numeric alarm threshold.
+
+
+Startup implementation correction: persisted JSON omits runtime log_metrics; restored config now sets log_metrics=True exactly as historical native continuation code. All4 initial worker exits were proven0 updates, no updated checkpoint, unchanged source hashes. Failed run directories/logs preserved under startup_failure_zero_updates. This is a pre-update implementation repair, not a retry of numerical training failure; no budgets or hyperparameters changed.
