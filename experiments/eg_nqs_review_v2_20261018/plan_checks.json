@@ -1,0 +1,93 @@
+{
+  "checks": "PASS",
+  "new_training": false,
+  "new_remote_geometry_calls": 0,
+  "official_native_grid": [
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.2
+  ],
+  "mapping": [
+    {
+      "mu": 0.2,
+      "utility": 1.0,
+      "naive_EG_torch_long_class": 4
+    },
+    {
+      "mu": 0.4,
+      "utility": 0.8333333333333334,
+      "naive_EG_torch_long_class": 3
+    },
+    {
+      "mu": 0.6,
+      "utility": 0.6666666666666666,
+      "naive_EG_torch_long_class": 2
+    },
+    {
+      "mu": 0.8,
+      "utility": 0.5,
+      "naive_EG_torch_long_class": 1
+    },
+    {
+      "mu": 1.0,
+      "utility": 0.3333333333333333,
+      "naive_EG_torch_long_class": 0
+    },
+    {
+      "mu": 1.2,
+      "utility": 0.16666666666666666,
+      "naive_EG_torch_long_class": 0
+    }
+  ],
+  "invalid_utility": 0.0,
+  "ce_shift_invariant_error": 0.0,
+  "raw_logit_score_shift": 21.0,
+  "fixed_pool_utility_ranking_check": true,
+  "candidate_timing_seconds": [
+    0.03258243422023952,
+    0.057057914279866964
+  ],
+  "budgets": {
+    "original_stage1_two_models_plus_subset_seen_ablation": {
+      "candidate_calls": 2457600,
+      "serial_process_hours": [
+        22.242941761016844,
+        38.95153614838918
+      ]
+    },
+    "original_stage2_two_models": {
+      "candidate_calls": 2457600,
+      "serial_process_hours": [
+        22.242941761016844,
+        38.95153614838918
+      ]
+    },
+    "revised_fit_plus_calibration_per_model_max": {
+      "candidate_calls": 393216,
+      "serial_process_hours": [
+        3.558870681762696,
+        6.232245783742269
+      ]
+    },
+    "revised_dev_evaluation_uncached_nominal50": {
+      "candidate_calls": 256000,
+      "serial_process_hours": [
+        2.3169731001059213,
+        4.057451682123873
+      ]
+    },
+    "revised_confirmation_uncached_nominal50_per_model": {
+      "candidate_calls": 3072000,
+      "serial_process_hours": [
+        27.803677201271057,
+        48.689420185486476
+      ]
+    }
+  },
+  "float32_feature_bytes_fit_cal_all1024_per_model": 339738624,
+  "mlp_parameters": 41729,
+  "limits": "Arithmetic and static checks only. AP estimates assume 50 evaluated candidates; native ties can increase this, so these are not upper bounds. Timings exclude setup, contention, loading and selection; no new feature export, probe training or AP run."
+}

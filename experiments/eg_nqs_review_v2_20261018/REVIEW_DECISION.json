@@ -1,0 +1,29 @@
+{
+  "review_status": "COMPLETE",
+  "review_rounds": 9,
+  "input": "evidence/claude_original.md",
+  "decision": "Retain lightweight frozen-feature scoring direction; replace original design with bounded three-target controlled pilot.",
+  "central_control": "Native actual utility versus native best-of-six utility at identical center, approach and decoded width; same inputs, model, loss, samples and seed initialization.",
+  "economic_target_control": "Auxiliary approximate bridge; not an identification of the original economic-supervision mechanism.",
+  "major_corrected_issues": [
+    "Native weak-valid grasp conflated with failure by direct reuse of original six-class labels",
+    "CE is invariant to common logit offsets while original weighted raw-logit decoding is not",
+    "Feature/capacity/action information confounded in original S/P design",
+    "Original score token already interacts with angle/depth/width tokens",
+    "Label-source and geometry differences confounded with potential-versus-actual target",
+    "Official training mask includes both distance and top60 view membership",
+    "Fixed post-selection oracle is not a full-pipeline upper bound",
+    "Non-significance and failed pose coverage do not identify causal or information limits",
+    "Official model seen training scenes and limited probe seeds constrain generalization claims",
+    "Annotation arithmetic, evaluation cost and assumed resource parallelism need correction",
+    "GraRe already covers frozen-detector native-quality reranking",
+    "Migration CPU checks do not establish GPU readiness or current capacity"
+  ],
+  "executed_checks": ["pinned_official_source_read_and_hash", "utility_mapping", "logit_shift_identity", "fixed_pool_AP_identity_and_four_item_permutation", "disjoint_planned_splits", "cost_arithmetic"],
+  "not_executed": ["new_feature_export", "native_geometry_label_generation", "GPU_preflight_on_migrated_host", "probe_training", "new_AP_evaluation", "new_bad_case_experiment"],
+  "remaining_execution_uncertainties": ["actual resource availability", "cross-experiment holdout exposure", "feature-export fidelity", "full-candidate geometry-runtime extrapolation", "learnability at chosen sample and update budget"],
+  "scientific_scope": "Executable bounded test, not guaranteed positive or statistically decisive result; uncertainty and technical failure are explicit outcomes.",
+  "new_training": false,
+  "new_remote_geometry_calls": 0,
+  "scheduled_monitor_created": false
+}
