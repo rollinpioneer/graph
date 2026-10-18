@@ -1,0 +1,141 @@
+{
+  "experiment_id": "EG-NQS-PILOT-V2",
+  "status": "EXECUTING",
+  "branch": "codex/eg-nqs-pilot-v2-20261018",
+  "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/eg-nqs-pilot-v2-20261018",
+  "archive_base_commit": "5b4e36a8ded2fbd820db639507d77980a334d1d3",
+  "upstream_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
+  "subset_checkpoint_sha256": "9eb793cfdcaf18cf6dfd1a41294a97db9eddf2b3e97cc208ab21009ad1d71950",
+  "official_checkpoint_sha256": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a",
+  "camera": "kinect",
+  "native_friction_thresholds": [
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.2
+  ],
+  "score_target": "mean_native_threshold_success",
+  "invalid_utility": 0,
+  "model": {
+    "input_dim": 324,
+    "hidden_dim": 128,
+    "output_dim": 1,
+    "hidden_activation": "relu",
+    "output_activation": "sigmoid",
+    "parameters": 41729,
+    "dropout": 0
+  },
+  "input": [
+    "post_interaction_score_token_64",
+    "cylinder_group_feature_256",
+    "sin_2theta",
+    "cos_2theta",
+    "depth_div_0.04",
+    "decoded_width_div_0.1"
+  ],
+  "training": {
+    "loss": "mse",
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 1024,
+    "updates": 1000,
+    "checkpoint_to_evaluate": 1000,
+    "probe_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "paired_initialization_and_sample_order": true,
+    "backbone_updates": 0,
+    "scene_normalization_statistics": "fit_examples_only"
+  },
+  "arms": [
+    "E_economic_proxy",
+    "B6_native_finite_action_max",
+    "A_native_actual"
+  ],
+  "shared_support": "official_distance_lt_5mm_AND_actual_retained_300views_match",
+  "sample_indices_per_frame_before_support_mask": 256,
+  "sample_indices_rule": "uniform_without_replacement_seeded_by_card_model_scene_frame",
+  "B6": {
+    "angle_top_k": 3,
+    "angle_valid_classes": 12,
+    "depth_top_k": 2,
+    "depth_valid_classes": 4,
+    "tie_break": "ascending_class_index",
+    "geometry_fixed": [
+      "center",
+      "approach",
+      "width",
+      "height"
+    ],
+    "actual_action_included": true,
+    "pose_changed_at_inference": false
+  },
+  "baselines": [
+    "original_EG",
+    "original_EG_plus_CD"
+  ],
+  "collision_threshold": 0.01,
+  "evaluate_all_heads_with_and_without_CD": true,
+  "per_backbone_score_configurations_including_baselines": 20,
+  "evaluation": [
+    "diagnostic_fixed_R0_native_pool",
+    "native_pipeline_from_all_1024_candidates"
+  ],
+  "primary_effect": "mean_paired_seed_AP_A_minus_AP_B6_without_CD",
+  "practical_effect": "mean_seed_AP_A_plus_CD_minus_AP_R0_plus_CD",
+  "development_gate": {
+    "either_primary_or_practical": true,
+    "mean_gain_pp": 1.0,
+    "positive_probe_seeds": 3,
+    "positive_scenes_at_least": 6,
+    "scenes": 8
+  },
+  "confirmation_success": {
+    "mean_gain_pp": 1.0,
+    "scene_bootstrap_ci95_lower_gt_zero": true,
+    "positive_probe_seeds": 3,
+    "positive_scenes_at_least": 8,
+    "scenes": 12
+  },
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20261018,
+    "unit": "scene",
+    "strata": [
+      "seen",
+      "similar",
+      "novel"
+    ],
+    "seed_variation_reported_separately": true
+  },
+  "equivalence": {
+    "confidence": 0.9,
+    "margin_pp": 0.5,
+    "scope": "conditional_on_fixed_backbone_and_three_probe_seeds"
+  },
+  "compute_caps": {
+    "exploration_process_hours": 30,
+    "exploration_gpu_hours": 2,
+    "total_process_hours": 180,
+    "total_gpu_hours": 4,
+    "cpu_workers_start": 4,
+    "cpu_workers_max": 8
+  },
+  "conditional_second_backbone": true,
+  "max_probe_fits": 18,
+  "automatic_pose_reselection": false,
+  "automatic_hyperparameter_search": false,
+  "runtime_preflight_passed": false,
+  "new_training_runs_this_review": 0,
+  "actual_retained_views": 300,
+  "execution_authorized_by_user": true,
+  "registered_commit": "52496bb04beefac6a67c87f36b800aa352b419a8",
+  "cpu_workers": 8,
+  "workspace_environment_variable": "GRASP_ROOT",
+  "export_workers": 2
+}
