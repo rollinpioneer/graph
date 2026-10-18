@@ -1,0 +1,37 @@
+[
+  {
+    "issue": "Initial S0 eligibility inspected zero-threshold model-val statistics instead of deployed locked-threshold selector",
+    "resolution": "Retain original receipt; recompute model-val Net using already chosen quantile gate, with no checkpoint, threshold grid or data change",
+    "timing": "Before any new training or application AP; conditional model-val outcomes not inspected before correction"
+  },
+  {
+    "issue": "Gabs micro raw row identity differed from official evaluator while quality/collision/AP were equal",
+    "diagnostic": {
+      "differing_columns": [
+        1
+      ],
+      "max_abs_difference": [
+        0.0,
+        1.4901161138336505e-09,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "resolution": "Apply the same official width clip [0,.1] inside the native selection adapter, after deployment CD and without changing saved predicted geometry or scoring methods",
+    "failed_micro_attempts": 2,
+    "cost_note": "Failed-attempt CPU was not separately timed; reserve 0.5 worker-hour conservatively in budget accounting"
+  }
+]
