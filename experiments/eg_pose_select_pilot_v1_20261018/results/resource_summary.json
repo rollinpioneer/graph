@@ -1,0 +1,66 @@
+{
+  "status": "MEASURED",
+  "cpu_initial_workers": 4,
+  "cpu_max_geometry_workers": 8,
+  "short_auxiliary_overlap": "Latency and gate-bootstrap helpers briefly overlapped eight evaluation workers: up to ten Python compute processes including auxiliaries. Geometry worker limit stayed eight; this is a disclosed process-count scheduling deviation.",
+  "gpu_device": 0,
+  "gpu_shared": true,
+  "label_worker_wall_seconds": 14738.20775270462,
+  "label_cpu_seconds": 14667.380978292002,
+  "evaluation_worker_wall_seconds": 6016.94199681282,
+  "evaluation_cpu_seconds": 5999.341360942,
+  "training_process_wall_seconds": 13.03833532333374,
+  "training_peak_gpu_allocated_bytes": 25626112,
+  "smoke_gpu_phase_seconds": 2.9830596446990967,
+  "new_owned_artifact_bytes": 75319271,
+  "backbone_trainings": 0,
+  "heads": 3,
+  "label_unique_pose_count": 196608,
+  "label_S0_extra_repeat_checks": 128,
+  "known_cost_scope": "Worker wall includes IO/loading. CPU seconds are per-process counters. Existing shared input/features/data excluded from new bytes. S0 GPU allocation may have remained reserved while CPU micro workers ran; its conservative upper bound is hook seconds plus sum micro worker wall.",
+  "io_separate_seconds": null,
+  "io_note": "IO included in measured phase wall times; no separate IO timer was installed, do not infer zero.",
+  "smoke_gpu_reservation_upper_seconds": 120.92514777183533,
+  "warm_label_read_probe": {
+    "files": 32,
+    "materialized_bytes": 6119424,
+    "seconds": 0.08733239106368273,
+    "scope": "Post-run warm filesystem-cache read probe; not original cold-IO cost and not excluded from phase wall times."
+  },
+  "symmetry_check": {
+    "status": "PASS",
+    "additional_native_recheck_calls": 4,
+    "scene": 0,
+    "frame": 0,
+    "local_six_action_indices": [
+      0,
+      18,
+      146,
+      589
+    ],
+    "q": [
+      0.4,
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    "collision": [
+      false,
+      true,
+      false,
+      true
+    ],
+    "empty": [
+      false,
+      false,
+      false,
+      true
+    ],
+    "pi_action_encoding_equal": true,
+    "seconds": 6.909276485443115,
+    "cpu_seconds": 6.100483922
+  },
+  "additional_geometry_recheck_calls": 132,
+  "gpu_hours_upper_bound": 0.03721207863754696,
+  "measured_worker_wall_hours": 5.765319374865956
+}

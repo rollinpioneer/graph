@@ -10,6 +10,7 @@ def budget():
  size=sum(p.stat().st_size for sub in ['labels','heads','results','evaluation','logs'] for p in (R/sub).rglob('*') if p.is_file());assert wall/3600<40 and size<CFG['new_disk_bytes_limit'],('EXPLORATION_BUDGET',wall,size)
  return dict(worker_wall_hours_conservative=wall/3600,disk_bytes=size)
 def evaluate(stage,scenes):
+ write(R/'results/pipeline_status.json',dict(status='RUNNING',stage=stage))
  def one(s):run('evaluate.py',['--stage',stage,'--scene',s]);budget();return s
  with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
   for s in pool.map(one,scenes):write(R/'results/pipeline_status.json',dict(status='RUNNING',stage=stage,last_scene=s,resources=budget()))

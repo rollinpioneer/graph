@@ -11,7 +11,9 @@ def write(p,v):
 def sample_ids(pred,s,f):
  ids=np.lexsort((np.arange(len(pred)),-pred[:,0]));seed=int.from_bytes(hashlib.sha256(f"EG-POSE-SELECT-PILOT-V1|sample|20261018|{s:04d}|{f:04d}".encode()).digest()[:8],'little');return np.r_[ids[:64],np.random.default_rng(seed).choice(ids[64:],64,replace=False)]
 def export(s,f):
- with np.load(N/f'exports/subset/scene_{s:04d}/{f:04d}.npz') as z:
+ source=R/f'exports/subset/scene_{s:04d}/{f:04d}.npz'
+ if not source.exists():source=N/f'exports/subset/scene_{s:04d}/{f:04d}.npz'
+ with np.load(source) as z:
   feat=np.concatenate([z['feature'][:,64:320],z['feature'][:,:64]],axis=1);pred=z['pred'].copy();hyp=z['hypotheses'][:,ORDER].copy();al=z['angle_logits'];dl=z['depth_logits']
  ar=np.argsort(-al,axis=1,kind='stable')[:,:3];dr=np.argsort(-dl,axis=1,kind='stable')[:,:2]
  ai=np.stack([ar[:,i] for j in range(2) for i in range(3)],1);di=np.stack([dr[:,j] for j in range(2) for i in range(3)],1)
