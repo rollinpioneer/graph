@@ -50,7 +50,23 @@ label=[json.loads(p.read_text()) for p in (R/'receipts').glob('label_*_full.json
 evaluation=[json.loads(p.read_text()) for p in (R/'evaluation').glob('*/scene_*/COMPLETE.json')];checks=[json.loads((R/f'receipts/eval_cache_validation_{role}.json').read_text()) for role in ['subset','official']]
 seconds=dict(export=sum(x['wall_seconds'] for x in export),fit=sum(x['wall_seconds'] for x in fit),labels=sum(x['wall_seconds'] for x in label+micro),evaluation=sum(x['wall_seconds'] for x in evaluation+checks))
 resource=dict(successful_stage_seconds=seconds,successful_stage_worker_hours=sum(seconds.values())/3600,gpu_worker_hours=(seconds['export']+seconds['fit'])/3600,confirmation_queue=json.loads((R/'receipts/confirmation_queue.json').read_text()),gpu_peak_allocated_mib=max(x['cuda_peak'] for x in export+fit)/2**20,disk_bytes={n:sum(p.stat().st_size for p in (R/n).rglob('*') if p.is_file()) for n in ['inputs','exports','labels','heads','evaluation','bad_cases','confirmation_bad_cases','logs']},accounting_scope='Successful stage timers; not GPU-utilization integrated. Queue adds process startup/polling. Initial failed dtype export and orchestration are retained in logs but excluded from successful-stage timers.')
+resource['parallelism']={'initial_limit': 8, 'updated_limit': 32, 'observed_peak_workers': 20, 'threads_per_worker': 1, 'nice': 10, 'change_time': '2026-10-18T17:31:18+08:00', 'preserved_workers': 8, 'new_workers': 12, 'source': 'receipts/parallelism_scale32.json and results/parallelism_scale32.json', 'completed_scene_jobs': 24}
 assert resource['confirmation_queue']['status']=='PASS';write_json(out/'final_resource_summary.json',resource)
+import torch
+from torch import nn
+torch.set_num_threads(1);latency={}
+for role in ['subset','official']:
+    checkpoint=torch.load(R/f'heads/{role}/A_20261018/step1000.pt',map_location='cpu',weights_only=False)
+    net=nn.Sequential(nn.Linear(324,128),nn.ReLU(),nn.Linear(128,1),nn.Sigmoid()).eval();net.load_state_dict(checkpoint['model'])
+    with np.load(R/f'exports/{role}/scene_0104/0000.npz') as z:features=z['feature']
+    times=[]
+    for repeat in range(23):
+        t=time.perf_counter();xx=features.copy();xx[:,:320]=(xx[:,:320]-checkpoint['mean'])/checkpoint['std']
+        with torch.no_grad():net(torch.from_numpy(xx))
+        if repeat>=3:times.append((time.perf_counter()-t)*1000)
+    forward=[v['inference_seconds'] for x in export if x['checkpoint_sha256']==json.loads((R/f'receipts/export_{role}_0_full.json').read_text())['checkpoint_sha256'] for v in x['rows']]
+    latency[role]=dict(cpu_head_normalize_and_score_1024_candidates_ms_median=float(np.median(times)),cpu_head_ms_p95=float(np.quantile(times,.95)),repeats=20,warmups=3,torch_threads=1,head='A_20261018',backbone_export_forward_decode_seconds_mean=float(np.mean(forward)),backbone_export_forward_decode_seconds_median=float(np.median(forward)),scope='Offline frozen feature pipeline. Head timing excludes feature IO/backbone/CD; backbone timing excludes loading. Not an integrated robot deployment latency.')
+write_json(out/'inference_latency.json',latency)
 lines=['# EG-NQS-PILOT-V2 最终实验报告','',
 '状态：冻结开发与条件确认均完成。共18个评分头、0次骨干更新；两个骨干各12个官方测试场景×256帧，每骨干20种评分/CD配置。只报告选定场景结果，不称完整90场景官方AP或机械臂成功率。','',
 '分支：`codex/eg-nqs-pilot-v2-20261018`。登记提交 `52496bb04beefac6a67c87f36b800aa352b419a8`；首次执行代码提交 `25bc3c1877575dc8dbd5b90b67b7d12939e6375a`。全部确认权重及输入身份在 `confirmation_freeze.json` 冻结，确认后没有改配方、选权重或新增种子。','',
@@ -86,7 +102,8 @@ for x in cases:
     top=[r for r in x['rows'] if r['rank']==1];lines.append(f"|{x['role']}/{x['split']}|{x['category']}|{x['scene']:04d}/{x['frame']:04d}|{top[0]['mu']:.1f}|{top[1]['mu']:.1f}|")
 lines+=['',f"缺失类别：{case_index['missing']}。原图、深度、投影姿态、候选ID/原始几何/分数/质量/碰撞/场景AP保存在 `confirmation_bad_cases/`，JSON索引可复核。这里只观察重排导致的候选变化，不把图像印象写成已证实的模块机制。",'',
 '## 成本与交付','',
-f"成功计算阶段累计worker时间 {resource['successful_stage_worker_hours']:.3f} 小时，GPU进程计时合计 {resource['gpu_worker_hours']:.4f} 小时，GPU峰值allocated {resource['gpu_peak_allocated_mib']:.1f} MiB。确认队列墙钟 {resource['confirmation_queue']['wall_seconds']/3600:.3f} 小时，最多8个CPU进程。阶段计时不包含首次dtype失败导出及全部编排等待，不等同于整卡显存/利用率。详细资源、文件大小和原始日志均保留。",
+f"成功计算阶段累计worker时间 {resource['successful_stage_worker_hours']:.3f} 小时，GPU进程计时合计 {resource['gpu_worker_hours']:.4f} 小时，GPU峰值allocated {resource['gpu_peak_allocated_mib']:.1f} MiB。确认队列墙钟 {resource['confirmation_queue']['wall_seconds']/3600:.3f} 小时，初始8并行；2026-10-18 17:31提高上限至32，剩余20个场景任务全部启动，实际峰值20并行；每进程单线程，低优先级。阶段计时不包含首次dtype失败导出及全部编排等待，不等同于整卡显存/利用率。详细资源、文件大小和原始日志均保留。",
+f"CPU单线程额外评分头对1024候选归一化+打分中位数：subset {latency['subset']['cpu_head_normalize_and_score_1024_candidates_ms_median']:.3f} ms，official {latency['official']['cpu_head_normalize_and_score_1024_candidates_ms_median']:.3f} ms；不含骨干、文件IO和CD。单帧GPU骨干forward+decode计时另见inference_latency.json，不将两个离线计时冒充机器人端到端时延。",
 '正式确认每骨干3,072帧，20配置全部执行；未自动追加模型、种子、数据规模、姿态重选或超参数搜索。完整checkpoint、输入、预测、几何缓存与逐帧表留服务器；公开归档包含可移植代码、配置、哈希、逐场景/种子结果、案例数值和报告。','',
 '下一步应由本结果决定：若只有目标对照通过而相对R0无收益，先研究支持覆盖、拟合和容量匹配，不能宣传成可用改进；若目标与实用均通过，可另立卡做容量匹配输入消融或新增独立场景验证；若均未通过，保留阴性/不确定结论，不自动扩大实验。']
 (out/'final_confirmation_report.md').write_text('\n'.join(lines)+'\n')
