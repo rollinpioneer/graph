@@ -1,4 +1,4 @@
-"""Run the finite registered confirmation batch, at most eight CPU workers."""
+"""Run the finite registered confirmation batch, at most 32 CPU workers; supports adopting existing workers."""
 import subprocess,sys
 from common import *
 assert json.loads((R/'results/subset_development_decision.json').read_text())['continue_confirmation']
@@ -9,6 +9,29 @@ for role in ['subset','official']:
 jobs=[(role,s) for scenes in SPLIT['official_confirmation'].values() for s in scenes for role in ['subset','official']]
 pending=[(role,s) for role,s in jobs if not (R/f'evaluation/{role}/scene_{s:04d}/COMPLETE.json').exists()]
 active={};done=[];start=time.time();failed=False
+adopt_path=os.environ.get('NQS_ADOPT_QUEUE')
+class Adopted:
+    def __init__(self,pid,role,scene):
+        self.pid=pid;self.role=role;self.scene=scene
+    def poll(self):
+        proc=Path(f'/proc/{self.pid}')
+        try:
+            stat=(proc/'stat').read_text().split()
+            cmd=(proc/'cmdline').read_bytes().replace(b'\x00',b' ').decode()
+            if stat[2]!='Z' and str(R/'code/evaluate.py') in cmd:return None
+        except FileNotFoundError:pass
+        return 0 if (R/f'evaluation/{self.role}/scene_{self.scene:04d}/COMPLETE.json').exists() else 1
+if adopt_path:
+    prior=json.loads(Path(adopt_path).read_text())
+    pending=[tuple(x) for x in prior['pending']];done=prior['done']
+    start=time.time()-prior['wall_seconds']
+    uptime=float(Path('/proc/uptime').read_text().split()[0]);hz=os.sysconf('SC_CLK_TCK')
+    for x in prior['active']:
+        pid=x['pid'];role=x['role'];s=x['scene']
+        try:
+            stat=Path(f'/proc/{pid}/stat').read_text().split();t=time.time()-(uptime-int(stat[21])/hz)
+        except FileNotFoundError:t=time.time()
+        active[role,s]=(Adopted(pid,role,s),t,open(os.devnull,'w'))
 baseline_hours=json.loads((R/'results/resource_summary.json').read_text())['total_worker_hours']
 while pending or active:
     for key,(p,t,log) in list(active.items()):
@@ -22,7 +45,7 @@ while pending or active:
         write_json(R/'receipts/confirmation_queue.json',dict(status='FAILED_OR_BUDGET_STOP',pending=pending,done=done,process_hours=hours,wall_seconds=time.time()-start));sys.exit(1)
     if not failed:
         for role,s in pending.copy():
-            if len(active)>=8:break
+            if len(active)>=32:break
             if not all((R/f'exports/{role}/scene_{s:04d}/{f:04d}.npz').exists() for f in frames(s)):continue
             logfile=R/f'logs/confirmation_{role}_{s}.log';log=logfile.open('a');env=os.environ.copy();env['CUDA_VISIBLE_DEVICES']=''
             p=subprocess.Popen([sys.executable,str(R/'code/evaluate.py'),'--role',role,'--scene',str(s)],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
