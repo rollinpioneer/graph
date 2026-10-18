@@ -35,3 +35,6 @@ Known historical187/170 totals informed this card; new ranked-strategy outcomes 
 
 ## Resources / integrity
 Zero network training. GPU only for frozen replay on currently free device; CPU native scoring per scene parallel up to10 single-thread low-priority workers, below user32 ceiling. Reuse existing environment, no shared modifications. Preserve all source data and earlier results. No scheduled monitor. Validate source/code identities and a small original-action/decoder correspondence check. Stop on material correctness failure; publish partial/blocked results honestly. Archive explicit code/config/card/light results on this branch, leave large data on server.
+
+## Execution completion
+Completed on 2026-10-18. All 640 original predictions replayed exactly; reused 8,976 failure-pose qualities and computed 21,744 success-pose qualities. Zero training. Top3x2, Top2x3 and joint12 passed the frozen ranking-vs-random criterion; joint6 did not. See results/final_report.md. No next-stage training authorized or launched.
