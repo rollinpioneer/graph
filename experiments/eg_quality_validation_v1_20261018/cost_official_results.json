@@ -1,0 +1,90 @@
+{
+  "rows": [
+    {
+      "scene": 8,
+      "retained_points": 256,
+      "full_retained_points": 4213,
+      "original_file_bytes": 12695759,
+      "source_extract_s": 0.511044999002479,
+      "original_best_exact_match": true,
+      "variants": {
+        "official_best": {
+          "bytes": 773318,
+          "write_s": 0.00155983108561486,
+          "median_read_s": 0.002483928925357759,
+          "all_read_s": [
+            0.0027162210317328572,
+            0.002483928925357759,
+            0.0024018241092562675
+          ]
+        },
+        "rich48_uint8": {
+          "bytes": 7838434,
+          "write_s": 0.07538237690459937,
+          "median_read_s": 0.015504336101002991,
+          "all_read_s": [
+            0.01525202498305589,
+            0.01824262796435505,
+            0.015504336101002991
+          ]
+        },
+        "rich48_float32": {
+          "bytes": 29956834,
+          "write_s": 0.11474497604649514,
+          "median_read_s": 0.030021809972822666,
+          "all_read_s": [
+            0.030021809972822666,
+            0.0925249099964276,
+            0.028151702950708568
+          ]
+        }
+      }
+    },
+    {
+      "scene": 36,
+      "retained_points": 256,
+      "full_retained_points": 3970,
+      "original_file_bytes": 11963600,
+      "source_extract_s": 0.20729119901079684,
+      "original_best_exact_match": true,
+      "variants": {
+        "official_best": {
+          "bytes": 773318,
+          "write_s": 0.0015355090145021677,
+          "median_read_s": 0.0025417570723220706,
+          "all_read_s": [
+            0.0027449220651760697,
+            0.0024963569594547153,
+            0.0025417570723220706
+          ]
+        },
+        "rich48_uint8": {
+          "bytes": 7838434,
+          "write_s": 0.008250654907897115,
+          "median_read_s": 0.008163645979948342,
+          "all_read_s": [
+            0.008220211951993406,
+            0.008163645979948342,
+            0.007683170959353447
+          ]
+        },
+        "rich48_float32": {
+          "bytes": 29956834,
+          "write_s": 0.030183920986019075,
+          "median_read_s": 0.0274280869634822,
+          "all_read_s": [
+            0.026951103936880827,
+            0.029061728972010314,
+            0.0274280869634822
+          ]
+        }
+      }
+    }
+  ],
+  "notes": [
+    "Official uncompressed NPZ layout, equal retained points and view ordering; existing best score/width/angle/depth reproduced exactly.",
+    "uint8 uses the official quality and millimeter-width quantization; float32 retains source precision. Neither is a newly trained supervision scheme.",
+    "Shared metadata included. Source extraction, serialization, and warm materialized reads measured; no global OS cache flush.",
+    "Full-scene/dataset costs extrapolated only if explicitly marked."
+  ]
+}

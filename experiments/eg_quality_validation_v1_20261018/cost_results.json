@@ -1,0 +1,84 @@
+{
+  "rows": [
+    {
+      "scene": 8,
+      "objects": 10,
+      "sampled_pointviews": 192000,
+      "full_scene_pointviews": 2977800,
+      "init_s": 0.0160736960824579,
+      "first_source_read_s": 4.319457031902857,
+      "warm_source_read_s": 0.08241255301982164,
+      "reduce_best_s": 0.032653230940923095,
+      "variants": {
+        "best": {
+          "bytes": 296690,
+          "uncompressed_bytes": 1920000,
+          "compressed_write_s": 0.04564823897089809,
+          "read_s": [
+            0.006895874044857919,
+            0.00703889096621424,
+            0.006599250016734004
+          ],
+          "median_read_s": 0.006895874044857919
+        },
+        "rich48": {
+          "bytes": 6665709,
+          "uncompressed_bytes": 73728000,
+          "compressed_write_s": 0.8854754630010575,
+          "read_s": [
+            0.17680015007499605,
+            0.17854092607740313,
+            0.23253588494844735
+          ],
+          "median_read_s": 0.17854092607740313
+        }
+      },
+      "compressed_size_ratio": 22.466914961744582,
+      "median_read_ratio": 25.89097841926748
+    },
+    {
+      "scene": 36,
+      "objects": 10,
+      "sampled_pointviews": 192000,
+      "full_scene_pointviews": 3215100,
+      "init_s": 0.03122636489570141,
+      "first_source_read_s": 4.244792171986774,
+      "warm_source_read_s": 0.22014996001962572,
+      "reduce_best_s": 0.036170326988212764,
+      "variants": {
+        "best": {
+          "bytes": 271724,
+          "uncompressed_bytes": 1920000,
+          "compressed_write_s": 0.04195661097764969,
+          "read_s": [
+            0.007301847916096449,
+            0.006541351089254022,
+            0.006455916096456349
+          ],
+          "median_read_s": 0.006541351089254022
+        },
+        "rich48": {
+          "bytes": 6331325,
+          "uncompressed_bytes": 73728000,
+          "compressed_write_s": 0.8275088520022109,
+          "read_s": [
+            0.17525074107106775,
+            0.17560717195738107,
+            0.17874330701306462
+          ],
+          "median_read_s": 0.17560717195738107
+        }
+      },
+      "compressed_size_ratio": 23.30057337592557,
+      "median_read_ratio": 26.845703519241525
+    }
+  ],
+  "maxrss_kib": 756284,
+  "notes": [
+    "Source files already exist: this measures richer-label cache extraction, not first-principles force closure generation.",
+    "First read is process-first access, not guaranteed cold OS cache; caches were not dropped on the shared server.",
+    "Same sampled point/view rows in both formats; all 48 qualities and widths stored without quantization.",
+    "Compressed NPZ loads materialize arrays; actual training throughput requires a training integration study, not performed.",
+    "Sample size 64 uniformly selected points per scene object, all 300 views; not a full-scene or full-dataset measurement."
+  ]
+}

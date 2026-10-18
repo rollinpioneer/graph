@@ -1,6 +1,6 @@
 # EG-QUALITY-VALIDATION-V1
 
-Status: REGISTERED; execution authorized by user 2026-10-18.
+Status: EXECUTION_COMPLETE; scientific causal attribution remains unestablished. Execution authorized by user 2026-10-18.
 Branch: [codex/eg-quality-validation-v1-20261018](https://github.com/rollinpioneer/graph/tree/codex/eg-quality-validation-v1-20261018)
 
 P0: Validate continuous decoded grasp quality by native geometry/SDF scoring, reproduce saved quality/collision, compare original dense-label cells and width/pose corrections. Never treat missing nearest labels as failed ground truth.
@@ -9,3 +9,9 @@ P0: Freeze native evaluated candidate lists, rank by best-label, actual-label, a
 P1: Measure dense-label extraction, write/read time and bytes on two predetermined dev scenes (8,36), comparing one best cell with all 48 cells at the same point/view. Raw-label widths and quality retained; no new supervision algorithm. Report cold source access versus warm cache limits. Sample retained geometric quality generation cost separately.
 
 Reuse old model predictions, original labels, SDFs and scene geometry read-only. Four low-priority single-thread CPU workers, no GPU reservation. Start with one-scene pilot; correctness failures stop affected stages. All substantive source and runtime provenance archived. Full results stay in new root; only lightweight results and code in Git. No new model or training.
+
+## Execution amendments and evidence
+
+Test scenes lack released training collision caches. Queried original label poses use native geometric collision, with separate provenance; original/Best/Actual scoring is unchanged. See METHOD_ADAPTATION.json. Raw label proxies preserve their 0.1 friction resolution in final analysis. Supplementary development-only decoder-lattice control checks all 187 Top-1 failures, with two CPU workers, without model changes. Sources, initial failures, and both code versions are preserved.
+
+Main 18 groups and all native reproduction checks passed. Final scientific status and numbers: DECISION.json, validation_report.md. Full raw results remain under this card root.

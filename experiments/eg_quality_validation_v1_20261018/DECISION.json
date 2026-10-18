@@ -1,0 +1,44 @@
+{
+  "execution": "COMPLETE",
+  "new_training": false,
+  "new_model_development": false,
+  "P0_actual_quality": {
+    "native_api_reproduction": "PASS",
+    "unique_original_candidates": 4663,
+    "nearest_label_match_5mm": 0.5891238670694864,
+    "nearest_label_agreement": 0.811965811965812,
+    "exact_label_pose_agreement": 0.982051282051282,
+    "interpretation": "Native continuous-pose quality available offline; nearest-cell proxy is not exact actual-grasp truth."
+  },
+  "P0_mechanism": {
+    "top1_failures": 187,
+    "ranking_failures_with_later_valid": 186,
+    "decoder_pose_repair": {
+      "failed_top1": 187,
+      "original_label_frame_pose_repaired": 170,
+      "decoder_pose_repaired": 170,
+      "angle_only": 124,
+      "depth_only": 103,
+      "both_single": 69,
+      "joint_only": 12,
+      "quality_calls": 8976,
+      "notes": "Supplementary check prompted by action-grid definition: original decoded rotation plus k*15 degrees, original four depths, original width/center/view; only frozen development Top-1 failures. Not a causal learning ablation.",
+      "both_grids_repaired": 168,
+      "label_grid_only": 2,
+      "decoder_grid_only": 2
+    },
+    "causal_role_of_economic_supervision": "NOT_IDENTIFIED"
+  },
+  "P0_oracle": {
+    "development_original_ap": 55.53030128727679,
+    "best_geometry_proxy_ap": 58.52310343913714,
+    "actual_geometry_oracle_ap": 68.8688970078285,
+    "target_gap_pp": 10.345793568691356,
+    "within_best_ties_gain_pp": 5.300220725221621,
+    "raw_label_matched_slot_actual_proxy_gain_pp": 1.7440537264976754,
+    "learnable_score_supervision_gain": "UNKNOWN; not a training ablation; privileged geometry and label-frame bounded grid."
+  },
+  "P1_cost": "Measured official-layout sample serialization/read and actual-quality scoring; full training throughput NOT_TESTED. Full 50-scene rich cache exceeds current free disk.",
+  "next_step": "A bounded supervision-alignment/score-only controlled study is motivated; do not assume naive nearest labels are exact or claim the oracle gap is achievable. No follow-up training started.",
+  "total_quality_calls_including_probes": 307681
+}
