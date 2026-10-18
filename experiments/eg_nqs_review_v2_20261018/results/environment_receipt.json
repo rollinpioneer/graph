@@ -1,0 +1,50 @@
+{
+  "time_utc": "2026-10-18T07:09:01Z",
+  "python": "3.10.22",
+  "torch": "2.5.1+cu121",
+  "torch_cuda": "12.1",
+  "numpy": "1.23.4",
+  "cpu_count": 112,
+  "load_average": [
+    14.51025390625,
+    12.34912109375,
+    16.29345703125
+  ],
+  "gpu_snapshot": [
+    "0, NVIDIA A100-SXM4-40GB, 40960 MiB, 22160 MiB, 20 %, 610.57.04",
+    "1, NVIDIA A100-SXM4-40GB, 40960 MiB, 4 MiB, 0 %, 610.57.04",
+    "2, NVIDIA A100-SXM4-40GB, 40960 MiB, 15003 MiB, 94 %, 610.57.04",
+    "3, NVIDIA A100-SXM4-40GB, 40960 MiB, 37034 MiB, 71 %, 610.57.04",
+    "4, NVIDIA A100-SXM4-40GB, 40960 MiB, 38978 MiB, 64 %, 610.57.04",
+    "5, NVIDIA A100-SXM4-40GB, 40960 MiB, 7 MiB, 0 %, 610.57.04",
+    "6, NVIDIA A100-SXM4-40GB, 40960 MiB, 6 MiB, 0 %, 610.57.04",
+    "7, NVIDIA A100-SXM4-40GB, 40960 MiB, 4 MiB, 0 %, 610.57.04"
+  ],
+  "source_sha256": {
+    "models/economicgrasp.py": "cedd97d2f93556fdc87f2506bc227c4fde36e8d8df2f5ebab2d37bd9f0a4ba91",
+    "utils/label_generation.py": "437b6bcae1e12066fde07534ff91c3f9bcd36c56e719a869e90ef4bc4699aa9d",
+    "utils/collision_detector.py": "fbb690c06a2f2464a4b49955df9e10f32945bf53e1864ee9c80b51840a1c1767",
+    "dataset/graspnet_dataset.py": "78b367540aff88f3177a490271965287f6ada4087c922cdfdb23eebb3156c0d2",
+    "dataset/generate_economic.py": "56c02ab0bb60c571de3352aacd4089f4781a819bfeaa6d1c3a98cc5fcb9d1002"
+  },
+  "experiment_source_sha256": {
+    "analyze.py": "b616b7f7321ae90d347fd02c3514f8a8f4b77725c17d3d03076bdef224814eb7",
+    "common.py": "af24be9cd56640fd3d29c78313a3a866981ef14294add74a5be552f1d993e4f1",
+    "evaluate.py": "4d4654b12bd2b2a82154bd83f3d4a33f504cb105bc4f4f7bcb9316b8c5856d79",
+    "export.py": "3642a629976f663a7cb46adf06280d6cb0dad134740a920678e8a5201b011b4f",
+    "export_initial_dtype.py": "5c994cfcc978d3c5071d82c67dec80f2c3f00e41bc8157dbe51ea2a77bfcc67e",
+    "fit.py": "afcc3303ee9d8e1a1bf6288d53be96fd6c5e5dbc016b663c40d3a0610d040ea8",
+    "label.py": "ee311ffe8fc7a7408bfed399dd1b470bcae3ad8afd0a0d98197bc4a833783af8",
+    "native_eval_grasp_reference.py": "a421552d6b85925a96bfbe905a317359f00888953ebf017b38a26823e6351a17",
+    "queue_labels.py": "a0c05f79eccb028d1f7bbcef5068bc64f3a70ec05ac1e59838d6884e007789dd"
+  },
+  "scope": "Fixed subset backbone; no backbone updates; three paired probe seeds",
+  "runtime_support": "official batch_valid_mask with existing 300-view cache",
+  "micro_failures": [
+    {
+      "stage": "initial_export",
+      "cause": "label index dtype int64; adapted to official loader int32 before successful export",
+      "log": "logs/export_micro.log"
+    }
+  ]
+}
