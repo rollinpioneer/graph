@@ -1,0 +1,67 @@
+{
+  "status": "RUNNING_TRAINING_B",
+  "time": "2026-10-19T19:13:51.362799+08:00",
+  "completed_epochs": 3,
+  "current_epoch": 4,
+  "steps": 5440,
+  "total_steps": 16000,
+  "progress_percent": 34.0,
+  "epoch_wall_minutes": [
+    17.6609882961493,
+    16.932444495115973,
+    24.659205153949248
+  ],
+  "last_loss": 3.9560420513153076,
+  "all_recorded_metrics_finite": true,
+  "checkpoint_epochs": [
+    1,
+    2,
+    3
+  ],
+  "recent_measurement_seconds": 39.47285532951355,
+  "recent_measurement_steps": 34,
+  "recent_updates_per_second": 0.8613514202652186,
+  "estimated_training_finish_recent": "2026-10-19T22:38:10.941176+08:00",
+  "ETA_limits": "short shared-load snapshot; excludes label/head/C3 stages",
+  "actual_gpu_training_processes": 1,
+  "actual_train_data_loader_workers": 2,
+  "actual_geometry_workers": 0,
+  "actual_export_workers": 0,
+  "next_stage_limits": {
+    "label_CPU_workers": 32,
+    "evaluation_CPU_tasks": 24,
+    "GPU_export_processes": 8,
+    "head_GPU_processes": 3
+  },
+  "pipeline": {
+    "status": "RUNNING",
+    "stage": "WAITING_FOR_BACKBONE",
+    "controller_pid": 1894651,
+    "wall_seconds": 5.078315734863281e-05,
+    "usage": {
+      "GPU": 33.34928774833679,
+      "CPU": 214.6317126750946
+    }
+  },
+  "backbone": {
+    "status": "RUNNING",
+    "stage": "train_B",
+    "pid": 1815858,
+    "controller_pid": 1812557,
+    "GPU": "6",
+    "started": 1792404130.1254442,
+    "gpu_seconds_used": 33.34928774833679
+  },
+  "resources": {
+    "cpu_busy_percent": 35.44784453875363,
+    "logical_cpus": 112,
+    "own_pmon": [
+      "# gpu         pid   type     sm    mem    enc    dec    jpg    ofa     fb   ccpm    command ",
+      "# Idx           #    C/G      %      %      %      %      %      %     MB     MB    name ",
+      "    6    1815858     C     10      2      -      -      -      -   4368      0    python         "
+    ]
+  },
+  "code_manifest_rechecked": true,
+  "git_parent": "273ea9e14787c86eb425de978a0d56cb07127ae2",
+  "C3_performance_opened": false
+}
