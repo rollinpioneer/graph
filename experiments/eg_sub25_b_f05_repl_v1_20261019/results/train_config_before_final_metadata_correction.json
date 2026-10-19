@@ -1,0 +1,93 @@
+{
+  "experiment_id": "EG-SUB25-B-F05-REPL-V1",
+  "branch": "codex/eg-sub25-b-f05-repl-v1-20261019",
+  "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/eg-sub25-v1-20261015",
+  "upstream_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
+  "seed": 20261015,
+  "training_replicates": 1,
+  "camera": "kinect",
+  "train_scenes": 50,
+  "frames_per_train_scene": 128,
+  "training_frames": 6400,
+  "dev_scenes": 10,
+  "dev_frames": 2560,
+  "reserve_scenes": 40,
+  "smoke_frames": 80,
+  "smoke_updates": 20,
+  "max_epoch": 10,
+  "batch_size": 4,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "weight_decay": 0,
+  "num_point": 20000,
+  "voxel_size": 0.005,
+  "lr_schedule": "official epoch cosine",
+  "initialization": "random; no old or smoke weights",
+  "expected_optimizer_updates": 16000,
+  "updates_per_epoch": 1600,
+  "num_workers": 2,
+  "split_sha256": "a369312daafaca07a5b8dbb8bc747a5f5b8649a05590c2664ec8bb1625980bc4",
+  "runtime_patch_sha256": "67e69d3eeb1f6f10b073f23f51da7c568bc4d445b6515eef0440aba815b851d0",
+  "runtime_source_sha256": {
+    "dataset/generate_economic.py": "56c02ab0bb60c571de3352aacd4089f4781a819bfeaa6d1c3a98cc5fcb9d1002",
+    "dataset/generate_graspness.py": "ff946ce43de9e9d681984c8e7515aeadcd294f3f949f98acf40a99a254f6edf4",
+    "dataset/graspnet_dataset.py": "78b367540aff88f3177a490271965287f6ada4087c922cdfdb23eebb3156c0d2",
+    "models/economicgrasp.py": "cedd97d2f93556fdc87f2506bc227c4fde36e8d8df2f5ebab2d37bd9f0a4ba91",
+    "test.py": "a77a0057f161fa4b388cff3d2e811b9b9f097d65e93a7aa2db012924f86268ed",
+    "train.py": "c16ddf213eb9c6a5bbea7cdd750f339d72fcec627551317fa0dbe435c0e92889",
+    "utils/arguments.py": "338e0b6153f108f884a20086c1d3831bb19ccaa7beb74560f262c763b4ac52ab"
+  },
+  "data_root": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_v1_20261015/data/graspnet",
+  "data_storage_root": "/home/xushijie3/work/eg_full_repro_v1_20261015/data/graspnet",
+  "run_directory": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/runs/B",
+  "timed_monitor": "none; user requested background without scheduled monitoring",
+  "gpu_policy": "InitialGPU6; same-run epoch7 checkpoint resumed onGPU1 after resource recheck; no recipe changes",
+  "preflight_passed": true,
+  "formal_training_started": true,
+  "comparison_limitations": "25percent subset baseline, not a full-paper reproduction; dev scenes are from official training partition; official pretrained only independently assessed on official test scenes",
+  "smoke_batch_order": "official shuffle=True, fixed seed and official worker initializer",
+  "empty_graspable_behavior": "explicit stop; no fallback/threshold/algorithm change",
+  "formal_training_completed": true,
+  "completed_epochs": 10,
+  "completed_optimizer_updates": 16000,
+  "training_validation": "PASS: contiguous16000 finite metrics,10 epochs, final hash and load verified",
+  "environment": "read-only reuse of isolated gpu04 V3 environment",
+  "gpu": 1,
+  "actual_source_identity_sha256": "8612e2064e5bad6c221f0a5116302f52d04e488a38340c6a427956ec76d9330e",
+  "initial_GPU": 6,
+  "GPU_epoch_schedule": [
+    {
+      "epochs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "GPU": 6
+    },
+    {
+      "epochs": [
+        8,
+        9,
+        10
+      ],
+      "GPU": 1
+    }
+  ],
+  "same_run_checkpoint_resume": true,
+  "migration_checkpoint_sha256": "476def0dc78626bf53ef7d30489baea4bea2e64158532395a689dd776374c510",
+  "final_checkpoint": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/runs/B/train/economicgrasp_epoch10.tar",
+  "final_checkpoint_sha256": "533d065386e96a2f76ad2317f0376321a3d2c350a88027d8310e9fd7cd99bc98",
+  "actual_GPU_process_seconds_including_smoke_and_migration": 15107.673702001572,
+  "head_training_completed": true,
+  "head_seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "head_steps": 1000,
+  "head_validation_recovery_additional_updates": 0
+}

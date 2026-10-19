@@ -1,7 +1,6 @@
 {
   "experiment_id": "EG-SUB25-B-F05-REPL-V1",
   "branch": "codex/eg-sub25-b-f05-repl-v1-20261019",
-  "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/eg-sub25-v1-20261015",
   "upstream_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
   "seed": 20261015,
   "training_replicates": 1,
@@ -9,9 +8,6 @@
   "train_scenes": 50,
   "frames_per_train_scene": 128,
   "training_frames": 6400,
-  "dev_scenes": 10,
-  "dev_frames": 2560,
-  "reserve_scenes": 40,
   "smoke_frames": 80,
   "smoke_updates": 20,
   "max_epoch": 10,
@@ -38,9 +34,7 @@
     "utils/arguments.py": "338e0b6153f108f884a20086c1d3831bb19ccaa7beb74560f262c763b4ac52ab"
   },
   "data_root": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_v1_20261015/data/graspnet",
-  "data_storage_root": "/home/xushijie3/work/eg_full_repro_v1_20261015/data/graspnet",
   "run_directory": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/runs/B",
-  "timed_monitor": "none; user requested background without scheduled monitoring",
   "gpu_policy": "InitialGPU6; same-run epoch7 checkpoint resumed onGPU1 after resource recheck; no recipe changes",
   "preflight_passed": true,
   "formal_training_started": true,
@@ -89,5 +83,24 @@
     20261020
   ],
   "head_steps": 1000,
-  "head_validation_recovery_additional_updates": 0
+  "head_validation_recovery_additional_updates": 0,
+  "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/eg-sub25-b-f05-repl-v1-20261019",
+  "data_storage_root": "/aita_data/home/aita_xushijie/work/grasp/eg_full_repro_v1_20261015/data/graspnet",
+  "timed_monitor": "User enabled current-thread 15-minute monitor on 2026-10-19; pause after final delivery",
+  "timed_monitor_id": "eg-sub25-b-f05-15",
+  "inherited_A_metadata_not_applicable_to_B": {
+    "dev_scenes": 10,
+    "dev_frames": 2560,
+    "reserve_scenes": 40,
+    "branch_url": "https://github.com/rollinpioneer/graph/tree/codex/eg-sub25-v1-20261015",
+    "timed_monitor": "none; user requested background without scheduled monitoring",
+    "data_storage_root": "/home/xushijie3/work/eg_full_repro_v1_20261015/data/graspnet"
+  },
+  "B_split_file": "B_frozen_split.json",
+  "B_head_split_file": "B_head_split.json",
+  "official_train_dev_holdout_used": false,
+  "head_fit_scenes": 24,
+  "head_model_validation_scenes": 4,
+  "head_gate_cal_scenes": 4,
+  "metadata_correction": "Final reporting only; supersedes inherited A dev/reserve counts and branch/data/monitor descriptions; training parameters and frozen splits unchanged."
 }
