@@ -1,0 +1,185 @@
+{
+  "time": "2026-10-19T22:16:57.875573+08:00",
+  "backbone": {
+    "status": "PASS",
+    "epochs": 10,
+    "optimizer_updates": 16000,
+    "checkpoint": "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/runs/B/train/economicgrasp_epoch10.tar",
+    "sha256": "533d065386e96a2f76ad2317f0376321a3d2c350a88027d8310e9fd7cd99bc98",
+    "gpu_seconds_used": 15107.673702001572,
+    "resumed_same_experiment": true,
+    "GPU": "1"
+  },
+  "validation": {
+    "steps": 16000,
+    "epochs": 10,
+    "all_losses_finite": true,
+    "steps_contiguous": true,
+    "checkpoint_SHA256_pass": true,
+    "checkpoint_count": 10
+  },
+  "epoch_wall_seconds": [
+    1059.659297768958,
+    1015.9466697069583,
+    1479.552309236955,
+    1862.21146722103,
+    1841.4586563489866,
+    1858.0022307379404,
+    2060.0767329439986,
+    1203.7058652380947,
+    1322.6315057890024,
+    1345.9842367980164
+  ],
+  "pipeline": {
+    "status": "RUNNING",
+    "stage": "P2_LABELS_PARALLEL",
+    "controller_pid": 2849959,
+    "wall_seconds": 3984.2585909366608,
+    "usage": {
+      "GPU": 15265.819029569626,
+      "CPU": 1126.8248460292816
+    },
+    "workers": 32
+  },
+  "assignments": {
+    "CPU_assignment_labels.json": {
+      "workers": 32,
+      "requested": 32,
+      "cpu_busy_percent": 43.85714285714286,
+      "free_cores_estimate": 62,
+      "available_bytes": 409796239360,
+      "per_worker_memory_reserve": 6442450944,
+      "time": 1792419311.7717063
+    },
+    "GPU_assignment_head_B.json": {
+      "snapshot": "0, 7306, 100\n1, 7767, 24\n2, 13411, 100\n3, 2579, 99\n4, 2573, 100\n5, 5936, 100\n6, 5805, 86\n",
+      "slots": [
+        "1",
+        "1"
+      ],
+      "rule": "fresh free>=3072MiB and util<85%; max2 processes/GPU; max8 exporters",
+      "time": 1792419231.441548
+    }
+  },
+  "active_card_processes": [
+    {
+      "pid": 2849959,
+      "command": [
+        "/aita_data/home/aita_xushijie/work/grasp/eg_lqr_build_confirm_v3_20261019/environment/bin/python",
+        "-u",
+        "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/pipeline.py"
+      ]
+    },
+    {
+      "pid": 3222288,
+      "command": [
+        "/aita_data/home/aita_xushijie/work/grasp/eg_lqr_build_confirm_v3_20261019/environment/bin/python",
+        "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/export.py",
+        "--mode",
+        "head",
+        "--bone",
+        "B",
+        "--shard-id",
+        "0",
+        "--shards",
+        "2"
+      ]
+    },
+    {
+      "pid": 3222296,
+      "command": [
+        "/aita_data/home/aita_xushijie/work/grasp/eg_lqr_build_confirm_v3_20261019/environment/bin/python",
+        "/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/export.py",
+        "--mode",
+        "head",
+        "--bone",
+        "B",
+        "--shard-id",
+        "1",
+        "--shards",
+        "2"
+      ]
+    }
+  ],
+  "labels_completed_scenes": 0,
+  "head_files": [],
+  "C3_completed_scenes": 0,
+  "C3_performance_opened": false,
+  "head_export": {
+    "status": "PASS",
+    "shards": 2,
+    "scenes": [
+      57,
+      72,
+      27,
+      3,
+      62,
+      32,
+      23,
+      16,
+      50,
+      12,
+      59,
+      4,
+      10,
+      25,
+      11,
+      56,
+      15,
+      28,
+      51,
+      29,
+      30,
+      14,
+      83,
+      22,
+      18,
+      68,
+      26,
+      49,
+      20,
+      52,
+      21,
+      31
+    ],
+    "GPU_process_seconds": 156.25893211364746,
+    "peak_torch_gpu_bytes": 288837120
+  },
+  "label_frames_logged_complete": 17,
+  "actual_live_CPU_label_workers": 32,
+  "live_label_PIDs": [
+    3229145,
+    3229153,
+    3229154,
+    3229155,
+    3229156,
+    3229168,
+    3229180,
+    3229196,
+    3229198,
+    3229228,
+    3229239,
+    3229258,
+    3229306,
+    3229349,
+    3229376,
+    3229397,
+    3229422,
+    3229454,
+    3229487,
+    3229530,
+    3229544,
+    3229557,
+    3229567,
+    3229571,
+    3229589,
+    3229618,
+    3229644,
+    3229660,
+    3229703,
+    3229717,
+    3229730,
+    3229744
+  ],
+  "checkpoint_size_bytes": 189294618
+}
