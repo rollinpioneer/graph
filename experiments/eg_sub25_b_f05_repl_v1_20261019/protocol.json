@@ -1,0 +1,74 @@
+{
+  "id": "EG-SUB25-B-F05-REPL-V1",
+  "parent": "39287ec8cce182bb914001cf7255290ed2e56839",
+  "branch": "codex/eg-sub25-b-f05-repl-v1-20261019",
+  "C3": {
+    "seen": [
+      100,
+      106,
+      115,
+      124
+    ],
+    "similar": [
+      132,
+      139,
+      150,
+      157
+    ],
+    "novel": [
+      160,
+      169,
+      176,
+      186
+    ]
+  },
+  "A_backbone_sha256": "9eb793cfdcaf18cf6dfd1a41294a97db9eddf2b3e97cc208ab21009ad1d71950",
+  "A_heads": [
+    {
+      "seed": 20261018,
+      "step": 1000,
+      "sha256": "020c34e317d36bb9bd672e0f50c49825e97fea1570d5d2ad4c95e501541d15cb"
+    },
+    {
+      "seed": 20261019,
+      "step": 1000,
+      "sha256": "c5f548d528fe79575afc391c86aa1673c341125a33b83714274634f5be769b8e"
+    },
+    {
+      "seed": 20261020,
+      "step": 1000,
+      "sha256": "27630207cbaf21745d28f74eb2cf9486bbf63e12673885ebc7af9f37b6d23592"
+    }
+  ],
+  "train_seed": 20261015,
+  "head_seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "B_split_sha256": "a369312daafaca07a5b8dbb8bc747a5f5b8649a05590c2664ec8bb1625980bc4",
+  "head_split_sha256": "f272787cbf95cfd9f5ebbdaacdee2ba010712902454236a0968d218492be67ab",
+  "F05": "0.5*z(EG)+0.5*z(Q(original)); float64 ddof0; all1024 beforeCD; V4 exact function",
+  "CD": {
+    "voxel_size": 0.005,
+    "approach_dist": 0.05,
+    "collision_thresh": 0.01
+  },
+  "bootstrap_seed": 20261019,
+  "bootstrap_samples": 10000,
+  "success": {
+    "delta_min": 1.0,
+    "ci95_lower_min_exclusive": 0.0,
+    "all_heads_positive": true,
+    "positive_scenes_min": 8
+  },
+  "budget": {
+    "gpu_seconds": 28800,
+    "cpu_worker_seconds": 180000,
+    "new_bytes": 26843545600,
+    "cpu_workers_initial": 4,
+    "cpu_workers_max": 8
+  },
+  "checkpoint_rule": "EG epoch10; each head step1000",
+  "C3_performance_opened": false
+}
