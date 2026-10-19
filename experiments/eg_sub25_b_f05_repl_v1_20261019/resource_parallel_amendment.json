@@ -1,0 +1,31 @@
+{
+  "user_instruction": "cpu、gpu都并行拉满",
+  "time": 1792404635.8626137,
+  "cpu_workers_initial": 32,
+  "cpu_workers_max": 32,
+  "evaluation_scene_tasks": 24,
+  "GPU_export_processes_max": 8,
+  "head_training_concurrent": 3,
+  "unchanged": [
+    "one EG backbone training",
+    "single GPU EG, batch4",
+    "all scientific parameters",
+    "GPU cumulative8h",
+    "CPU worker50h",
+    "storage25GiB",
+    "C3 freeze-before-performance"
+  ],
+  "stopped_only_waiting_controller": 1838483,
+  "EG_training_PID_untouched": 1815858,
+  "reason": "Increase only independent jobs; no DDP or extra seeds",
+  "initial_GPU_pool": [
+    1,
+    2,
+    3,
+    6
+  ],
+  "future_GPU_selection": "Fresh free>=3GiB, utilization<85%, max2 export processes/GPU, totalmax8; current nodes all A100",
+  "future_CPU_selection": "Fresh available logical CPU estimate and 6GiB/worker reserve, max32 labels or24 evaluation scenes",
+  "input_preparation_CPU_workers": 12,
+  "input_preparation_has_no_model_or_GT_quality": true
+}
