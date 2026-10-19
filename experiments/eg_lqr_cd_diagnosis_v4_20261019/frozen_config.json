@@ -1,0 +1,191 @@
+{
+  "id": "EG-LQR-CD-DIAGNOSIS-V4",
+  "authorization": "User explicitly requested execution on 2026-10-19",
+  "branch": "codex/eg-lqr-cd-diagnosis-v4-20261019",
+  "parent_commit": "4bdf15a9b3a844929ccea5c14317c5f495a2768b",
+  "upstream_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
+  "backbone_sha256": "9eb793cfdcaf18cf6dfd1a41294a97db9eddf2b3e97cc208ab21009ad1d71950",
+  "heads": [
+    {
+      "seed": 20261018,
+      "step": 1000,
+      "sha256": "020c34e317d36bb9bd672e0f50c49825e97fea1570d5d2ad4c95e501541d15cb"
+    },
+    {
+      "seed": 20261019,
+      "step": 1000,
+      "sha256": "c5f548d528fe79575afc391c86aa1673c341125a33b83714274634f5be769b8e"
+    },
+    {
+      "seed": 20261020,
+      "step": 1000,
+      "sha256": "27630207cbaf21745d28f74eb2cf9486bbf63e12673885ebc7af9f37b6d23592"
+    }
+  ],
+  "single_instance_seed": 20261018,
+  "feature_order": [
+    "group256",
+    "score_token64",
+    "sin_2theta",
+    "cos_2theta",
+    "depth_div_0.04",
+    "width_div_0.1"
+  ],
+  "head": "Linear(324,128)-ReLU-Linear(128,1)-Sigmoid",
+  "head_parameters": 41729,
+  "normalization": "Each frozen checkpoint's fit mean/std for first320 features; original action encoding unchanged",
+  "families": [
+    "R0",
+    "S",
+    "F05"
+  ],
+  "F05": {
+    "formula": "0.5*z(original_score)+0.5*z(Q_original)",
+    "population": "all original 1024 candidates before CD/NMS",
+    "dtype": "float64",
+    "ddof": 0,
+    "std_floor": 1e-06,
+    "degenerate_action": "return original EG score and record",
+    "nonfinite_action": "TECHNICAL_STOP"
+  },
+  "p0_frames": [
+    [
+      37,
+      0
+    ],
+    [
+      40,
+      64
+    ],
+    [
+      55,
+      128
+    ],
+    [
+      93,
+      192
+    ]
+  ],
+  "P1": {
+    "seen": [
+      104,
+      116,
+      121,
+      125
+    ],
+    "similar": [
+      148,
+      149,
+      152,
+      155
+    ],
+    "novel": [
+      161,
+      164,
+      182,
+      183
+    ],
+    "frames": "range(0,256,8)",
+    "configurations_per_frame": 14,
+    "eligibility": "mean three-head delta AP+CD >0 and at least2/3 per-head overall delta>0",
+    "priority": "S if eligible, otherwise F05 if eligible, otherwise stop"
+  },
+  "C1": {
+    "seen": [
+      102,
+      109,
+      111,
+      129
+    ],
+    "similar": [
+      136,
+      137,
+      141,
+      158
+    ],
+    "novel": [
+      177,
+      178,
+      185,
+      187
+    ],
+    "frames": "range(256)",
+    "configurations_per_frame": 8,
+    "opening_condition": "P1 selected family locked before C1 performance reading; current known exposure audit clean",
+    "exposed_action": "pause C1, record issue, do not replace scenes"
+  },
+  "confirmation_target": {
+    "mean_delta_ap_min": 1.0,
+    "ci95_lower_strictly_positive": true,
+    "all_three_heads_delta_positive": true,
+    "positive_scenes_min": 8,
+    "scene_count": 12
+  },
+  "confirmation_classification": {
+    "target": "AP_CONFIRMED_TARGET",
+    "positive_lower95_but_incomplete_target": "LIMITED_GAIN",
+    "upper95_below_zero": "NEGATIVE",
+    "ci90_entirely_inside_minus0.5_plus0.5": "SMALL_DIFFERENCE_IN_THIS_SETTING",
+    "other": "INCONCLUSIVE_OR_NOT_TARGET_REACHED",
+    "technical_failure": "TECHNICAL_STOP"
+  },
+  "statistics": {
+    "split_weight": "equal Seen/Similar/Novel",
+    "scene_weight": "equal within split; average paired heads per scene first",
+    "bootstrap": "10000 stratified scene resamples",
+    "seed": 20261019,
+    "secondary_intervals": "descriptive",
+    "deduplication": "raw observation identity, no prediction-based filtering"
+  },
+  "CD": {
+    "collision_thresh": 0.01,
+    "approach_dist": 0.05,
+    "voxel_size": 0.005
+  },
+  "new_training_runs": 0,
+  "new_training_labels": 0,
+  "backbone_updates": 0,
+  "budget": {
+    "worker_wall_hours": 20,
+    "gpu_process_hours": 0.75,
+    "new_bytes": 12884901888,
+    "max_all_compute_workers": 8,
+    "threads_per_worker": 1
+  },
+  "scope_exclusions": [
+    "new heads",
+    "pose replacement",
+    "coefficient search",
+    "head ensemble",
+    "seed or checkpoint selection from new performance",
+    "new backbone",
+    "card-external research"
+  ],
+  "registration_commit": "72979ff1860bfb327a174df21ca2014a4cc1527a",
+  "base_result_root": "/aita_data/home/aita_xushijie/work/grasp/eg_lqr_build_confirm_v3_20261019",
+  "exploration": {
+    "seen": [
+      102,
+      109,
+      111,
+      129
+    ],
+    "similar": [
+      136,
+      137,
+      141,
+      158
+    ],
+    "novel": [
+      177,
+      178,
+      185,
+      187
+    ],
+    "frames": "range(256)",
+    "configurations_per_frame": 8,
+    "opening_condition": "P1 selected family locked before C1 performance reading; current known exposure audit clean",
+    "exposed_action": "pause C1, record issue, do not replace scenes"
+  },
+  "C2": null
+}

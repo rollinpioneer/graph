@@ -1,0 +1,28 @@
+[
+  {
+    "stage": "candidate_CD_diagnosis",
+    "event": "A scene0102 frame failed exact CD rejection-rate replay after diagnostic code cast prediction to float64 before ModelFreeCollisionDetector",
+    "fix": "Use unmodified original prediction dtype for CD, as in V3; geometric covariates can use float64 separately",
+    "original_results_modified": false,
+    "failure_logs": [
+      "logs/diagnosis_0102.log",
+      "logs/diagnosis_launcher.log"
+    ],
+    "replay_log": "logs/diagnosis_0102_attempt2.log",
+    "scope": "Diagnostic implementation only; no score, CD threshold or official evaluator change"
+  },
+  {
+    "stage": "C2_exposure_audit",
+    "event": "Metadata-only available pool in prior confirmation_manifest was initially misclassified as executed exposure for all90 scenes",
+    "evidence": "Manifest explicitly distinguishes available from selected and states metadata availability is not performance exposure",
+    "fix": "Skip metadata-only available pool; retain selected, fit, performance and computed-cache exclusions; preserve attempt1 audit/reservation",
+    "C2_performance_opened": false,
+    "selection_rule_changed": false
+  },
+  {
+    "stage": "candidate_CD_diagnosis",
+    "event": "Final608 frames uniformly replay original dtype to avoid mixing successful float64 attempt1 with float32 replay",
+    "previous_attempt_preserved": "diagnosis_attempt1_mixed_dtype",
+    "scientific_recipe_changed": false
+  }
+]
