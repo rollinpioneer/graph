@@ -31,6 +31,6 @@ for seed in [args.seed]:
  model.eval();path=R/f'B/heads/{seed}/step1000.pt';path.parent.mkdir(parents=True,exist_ok=True);assert not path.exists();torch.save(dict(model={k:v.cpu().clone() for k,v in model.state_dict().items()},mean=mean,std=std,seed=seed,step=1000,metrics=history[-1]),path)
  ck=torch.load(path,map_location='cpu',weights_only=False);model.load_state_dict(ck['model']);assert metrics(predict(model,xv),val)['scene_equal_mse']==history[-1]['scene_equal_mse']
  # Compare independently reloaded CPU scorer with the saved GPU model on a bounded slice.
- scorer=FrozenScorer(path,sha256(path));q=scorer.quality(val['feature'][:16],val['action'][:16,0]);reference=predict(model,xv[:16])[:,0];assert np.allclose(q,reference,atol=1e-6,rtol=1e-6)
+ scorer=FrozenScorer(path,sha256(path));q=scorer.quality(val['feature'][:1024],val['action'][:1024,0]);reference=predict(model,xv[:1024])[:,0];assert np.allclose(q,reference,atol=1e-6,rtol=1e-6)
  heads.append(dict(seed=seed,path=str(path),sha256=sha256(path),step=1000,fit_groups=len(xf),history=history,training_losses=losses,sample_stream_sha256=stream.hexdigest(),gate_diagnostics=metrics(predict(model,xg),gate),normalization_from='B fit samples only',reload_scoring_pass=True))
 write(R/f'results/B_heads_{args.seed}.json',dict(status='PASS',heads=heads,seconds=time.time()-start,peak_torch_gpu_bytes=torch.cuda.max_memory_allocated(),rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,actions=196608,model_selection='fixed step1000; no gate/model-val selection'))

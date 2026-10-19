@@ -1,0 +1,10 @@
+{
+  "status": "TECHNICAL_STOP",
+  "error": "RuntimeError(('fit_head_20261018', 1))",
+  "traceback": "Traceback (most recent call last):\n  File \"/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/pipeline.py\", line 85, in <module>\n    batch([(f'fit_head_{seed}','fit_heads.py',['--seed',str(seed)],'GPU',dict(CUDA_VISIBLE_DEVICES=slots[i%len(slots)])) for i,seed in enumerate(SEEDS)],len(slots))\n  File \"/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/pipeline.py\", line 44, in batch\n    for f in concurrent.futures.as_completed(pending):f.result()\n  File \"/aita_data/home/aita_xushijie/grasp_env/lib/python3.10/concurrent/futures/_base.py\", line 451, in result\n    return self.__get_result()\n  File \"/aita_data/home/aita_xushijie/grasp_env/lib/python3.10/concurrent/futures/_base.py\", line 403, in __get_result\n    raise self._exception\n  File \"/aita_data/home/aita_xushijie/grasp_env/lib/python3.10/concurrent/futures/thread.py\", line 58, in run\n    result = self.fn(*self.args, **self.kwargs)\n  File \"/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/pipeline.py\", line 39, in py\n    def py(name,script,args=None,kind='CPU',env=None):return run(name,[sys.executable,str(R/'code'/script)]+(args or []),kind,env)\n  File \"/aita_data/home/aita_xushijie/work/grasp/eg_sub25_b_f05_repl_v1_20261019/code/pipeline.py\", line 38, in run\n    if code:abort.set();raise RuntimeError((name,code))\nRuntimeError: ('fit_head_20261018', 1)\n",
+  "wall_seconds": 4840.703866004944,
+  "usage": {
+    "GPU": 15299.592135429382,
+    "CPU": 20349.51545190811
+  }
+}
