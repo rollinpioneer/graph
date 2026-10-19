@@ -1,0 +1,104 @@
+{
+  "status": "COMPLETE",
+  "frames": 608,
+  "scene0136_frames": 256,
+  "other_scenes_frames_each": 32,
+  "known_quality_scope": "Only union selected by V3 official R0/S paths; no unknown-as-failure. Candidate selections and three heads are dependent descriptive observations, not independent causal evidence.",
+  "width_bins": [
+    "<.02",
+    "[.02,.04)",
+    "[.04,.06)",
+    "[.06,.08)",
+    ">=.08 (clipped at .1)"
+  ],
+  "camera_approach_bins": [
+    "<.25",
+    "[.25,.5)",
+    "[.5,.75)",
+    ">=.75 absolute camera-Z approach component"
+  ],
+  "visibility_bins": [
+    "<1%",
+    "1%-5%",
+    "5%-15%",
+    ">=15% observed image area; not full-object visibility/occlusion"
+  ],
+  "full_C1_AP_decomposition": {
+    "delta_noCD": 2.526392392160009,
+    "delta_CD": 1.4328093411595832,
+    "EG_benefit_CD": 2.1059574320047076,
+    "S_benefit_CD": 1.0123743810042825,
+    "CD_change_in_rescoring_gain": -1.0935830510004252
+  },
+  "scene0136_CD_counts": {
+    "scene": 136.0,
+    "known_candidates": 35749.0,
+    "CD_removed": 53351.0,
+    "known_removed": 7039.0,
+    "known_survivors": 28710.0,
+    "known_true_collisions_removed": 5892.0,
+    "known_true_collisions_kept": 12912.0,
+    "known_good_removed": 499.0,
+    "known_good_kept": 5828.0,
+    "candidate_frames": 262144.0,
+    "known_quality_coverage": 0.13637161254882812,
+    "CD_good_rejection_rate_among_known_good": 0.07886834202623676,
+    "CD_missed_collision_rate_among_known_collisions": 0.6866624122527122
+  },
+  "scene0136_median_correlations": {
+    "20261018": {
+      "rho_EG_quality": 0.3300237005442469,
+      "rho_Q_quality": 0.25048798678115347,
+      "rho_EG_quality_after_CD": 0.36099350522615214,
+      "rho_Q_quality_after_CD": 0.20541251276235356
+    },
+    "20261019": {
+      "rho_EG_quality": 0.3300237005442469,
+      "rho_Q_quality": 0.2868548385851069,
+      "rho_EG_quality_after_CD": 0.36099350522615214,
+      "rho_Q_quality_after_CD": 0.2498670288455216
+    },
+    "20261020": {
+      "rho_EG_quality": 0.3300237005442469,
+      "rho_Q_quality": 0.3154964084584947,
+      "rho_EG_quality_after_CD": 0.36099350522615214,
+      "rho_Q_quality_after_CD": 0.27237723016354987
+    }
+  },
+  "scene0136_top1": [
+    {
+      "scene": 136,
+      "seed": 20261018,
+      "use_cd": true,
+      "N": 256,
+      "failure_to_success": 18,
+      "success_to_failure": 68,
+      "EG_good_demoted_Q_rank_median": 210.0,
+      "EG_good_absent_S_selected50": 59,
+      "AP_loss_frames": 223
+    },
+    {
+      "scene": 136,
+      "seed": 20261019,
+      "use_cd": true,
+      "N": 256,
+      "failure_to_success": 38,
+      "success_to_failure": 39,
+      "EG_good_demoted_Q_rank_median": 142.0,
+      "EG_good_absent_S_selected50": 33,
+      "AP_loss_frames": 210
+    },
+    {
+      "scene": 136,
+      "seed": 20261020,
+      "use_cd": true,
+      "N": 256,
+      "failure_to_success": 62,
+      "success_to_failure": 38,
+      "EG_good_demoted_Q_rank_median": 82.0,
+      "EG_good_absent_S_selected50": 30,
+      "AP_loss_frames": 180
+    }
+  ],
+  "exploratory_bad_case_selection": "Two most negative AP frames per head in0136 and two worst frames from each other negative scene102/158; illustrative posthoc selection, no unbiased causal claim"
+}
