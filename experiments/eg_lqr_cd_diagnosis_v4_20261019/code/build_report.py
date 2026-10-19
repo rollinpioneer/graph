@@ -24,6 +24,27 @@ if semantics:
  lines+=['']
 if conf:
  x=conf['primary'];lines+=['## C2 固定方法确认','',f"结论：**{conf['status']}**。F05 相对 EG 平均 {x['delta']:+.3f} AP，场景分层95%CI=[{x['ci95'][0]:+.3f},{x['ci95'][1]:+.3f}]；三头差值 {x['seed_delta']}；正向场景 {x['positive_scenes']}/12。",'',f"Seen/Similar/Novel 差值：{x['split_delta']}。",'','仅代表冻结的12场景×完整256帧，不是官方90场景全评测。三头先场景内平均，划分/场景等权，分层场景bootstrap10000次，种子20261019；不把帧、候选或头当独立样本。AP不等于机器人抓取成功率。','']
+raw_audit=load('results/C2_raw_observation_audit.json')
+if raw_audit:
+ lines+=['## 原始观测核验','',f"C2 {raw_audit['unique_current']}/{raw_audit['current_count']}帧联合RGB/深度/K指纹互异，与原C1精确重复数{raw_audit['overlap_with_prior_C1']}。审计只覆盖C2内部和原C1原始指纹；其他历史按场景ID审计，不保证未知外部使用。完整256帧协议保留；无重复时去重敏感性与主结果相同。",'']
+for phase,title in [('exploration','C1探索'),('confirmation','C2确认')]:
+ path=R/f'results/{phase}_per_scene.csv'
+ if not path.exists():continue
+ with path.open(newline='') as f:scene_rows=list(csv.DictReader(f))
+ lines+=[f'## {title}绝对AP与辅助指标','', '下表仅为每划分固定4场景的AP，不是每划分30场景全量AP；F05三头分别评价后平均。','', '|组别|Seen AP|Similar AP|Novel AP|等权平均AP|Top1合格率%|','|---|---:|---:|---:|---:|---:|']
+ families=['R0','S','F05'] if phase=='exploration' else ['R0','F05']
+ for cd in [False,True]:
+  suffix='_CD' if cd else ''
+  for family in families:
+   names=['R0'+suffix] if family=='R0' else [f'{family}_{seed}{suffix}' for seed in SEEDS];vals=[];valids=[]
+   for split in SPLITS:
+    selected=[v for v in scene_rows if v['split']==split and v['configuration'] in names];vals.append(float(np.mean([float(v['ap']) for v in selected])));valids.append(float(np.mean([float(v['top1_valid']) for v in selected]))*100)
+   lines.append(f"|{family}{'+CD' if cd else ''}|{vals[0]:.3f}|{vals[1]:.3f}|{vals[2]:.3f}|{np.mean(vals):.3f}|{np.mean(valids):.3f}|")
+ comps=load(f'results/{phase}_comparisons.json');primary=next(v for v in comps if v['family']=='F05' and v.get('reference','R0')=='R0' and v['use_cd'])
+ lines+=['', '|F05+CD相对EG+CD辅助指标|差值|描述性95%CI|','|---|---:|---|']
+ for metric in ['ap04','ap08','top1_valid','top1_collision','top1_empty']:
+  v=primary['metrics'][metric];lines.append(f"|{metric}|{v['delta']:+.3f}|[{v['ci95'][0]:+.3f},{v['ci95'][1]:+.3f}]|")
+ lines+=['', 'AP差值为AP百分点，其余为率的百分点；collision为含empty的官方联合标记。辅助区间为描述性，不作新增成功标准。','']
 visual=load('results/visualized_bad_cases.json')
 if visual:
  lines+=['## 探索性示例','', '三个例子固定来自此前最差AP列表；官方抓手网格投影到RGB/深度，仅作位置/姿态示意，质量依据仍是实际姿态的完整官方评价。图注reject含empty。','']
