@@ -5,3 +5,5 @@ EG-B及3个1000步评分头均训练完成，禁止再启动训练。最终骨�
 新接续控制器PID3380582，脚本code/continue_after_head_validation.py；日志logs/continue_after_head_validation.log。它只执行已有头验证及C3后续，不训练。状态results/pipeline_status.json。
 C3_method_lock.json已冻结，评价结果不得调参。当前A导出，A/B各3072帧；后续24CPU场景评价。实际GPU需读每阶段assignment，配置最多8进程不代表已使用8。
 完成状态COMPLETED_PENDING_GIT_ARCHIVE后核验并最终归档；TECHNICAL_STOP保留现场并查日志，不自动追加训练。SSH结束只退出客户端，不结束后台任务。
+
+用户最新要求（2026-10-19）：启用本线程15分钟监控。自动化id eg-sub25-b-f05-15，状态ACTIVE，每15分钟检查阶段、真实并行、错误及资源；完成交付后暂停。此前“无定时监控”约定由本次明确要求取代。旧economicgrasp-v1和lab保持暂停，未复用旧节点。当前A预测3072/3072完成，B预测进行中；CPU评价最多24路将按空闲资源启动。
