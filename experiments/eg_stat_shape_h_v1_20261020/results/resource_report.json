@@ -1,0 +1,27 @@
+{
+  "GPU_process_hours_upper": 1.7430072071154912,
+  "CPU_worker_hours_upper": 9.425836074948311,
+  "new_logical_bytes": 1089855598,
+  "limits": {
+    "GPU_process_hours_max": 4,
+    "CPU_worker_hours_max": 70,
+    "new_GiB_max": 15,
+    "cumulative_includes_P0": true,
+    "CPU_workers_max": 72,
+    "GPU_training_processes_max": 6,
+    "GPU_scoring_processes_max": 24,
+    "dispatch": "fresh resource check, nice10 single thread; ramp only useful scoring parallelism within memory and budget; reserve64GiB host/4GiB device; no other task stopped",
+    "storage": "cache<=.8GiB S training tensors; stream C3 S point tensors in memory, persist only Q/identities plus C raw if needed, no12GiB C3 token cache",
+    "hard_stop": "Stop affected stage on budget, identity or numerical failure; never alter protected G/C or scientific recipe."
+  },
+  "training_actual_parallel": 6,
+  "scoring_actual_parallel": 24,
+  "evaluation_actual_parallel": 72,
+  "preparation_worker_pool": 72,
+  "formal_updates": 6000,
+  "EG_inference": 0,
+  "EG_training": 0,
+  "new_training_GT": 0,
+  "C4": 0,
+  "engineering_eval_import_failure": true
+}
