@@ -22,6 +22,14 @@ for p in sorted((R/'probes').glob('*_head.npy')):
    y=z['y'][mask,t];pr=pred[mask]
    value=float(roc_auc_score(y,pr)) if t<2 and len(np.unique(y))==2 else float(spearmanr(y,pr).statistic) if t==2 and np.std(y)>0 and np.std(pr)>0 else np.nan
    rows.append([int(scene),int(frame),key,kind,t+1,len(y),value])
+for scene in np.unique(z['scene']):
+ if z['role'][np.flatnonzero(z['scene']==scene)[0]]=='fit':continue
+ for frame in np.unique(z['frame'][z['scene']==scene]):
+  q=np.load(R/f'cache/head/{scene:04d}/{frame:04d}.npz');v=q['V']
+  risk=np.max(v[:,[2,3]]+v[:,[12,13]]+v[:,[22,23]],axis=1)+v[:,39]
+  m=~q['cd'];y=(~q['collision']&~q['empty'])[m]
+  value=float(roc_auc_score(y,-risk[m])) if len(np.unique(y))==2 else np.nan
+  rows.append([int(scene),int(frame),'conservative','fixed',1,len(y),value])
 columns=['scene','frame','features','probe','target','n','metric']
 head=pd.DataFrame(rows,columns=columns);head.to_csv(R/'results/heldout_probe_frames.csv',index=False)
 df=pd.concat([head]+[pd.read_csv(R/f'results/c3_probe_{s}.csv') for s in C3],ignore_index=True)

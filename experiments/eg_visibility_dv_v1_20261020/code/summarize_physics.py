@@ -50,7 +50,7 @@ def main():
     m=group==layer;frameauc.append(dict(scene=scene,frame=frame,head=s,layer=layer,n=int(m.sum()),auc=auct(valid[m],z['q'][hi,pos][m]),failure_rate=float((~valid[m]).mean()) if m.any() else np.nan))
  df=pd.DataFrame(rows);df.to_csv(R/'results/DV1_candidates.csv',index=False)
  fa=pd.DataFrame(frameauc);fa.to_csv(R/'results/DV1_frame_auc.csv',index=False)
- top=df[df['rank']==1];collision=top[top.collision&~top.empty]
+ top=df[df['rank']==1];collision=top[top.collision&~top['empty']]
  stat=[]
  for scene,g in df.groupby('scene'):
   for head,h in g.groupby('head'):
