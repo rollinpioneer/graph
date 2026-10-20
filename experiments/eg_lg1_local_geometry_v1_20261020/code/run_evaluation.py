@@ -2,6 +2,7 @@ from common import *
 import subprocess
 profile=json.load(open(R/'results/eval_0100_profile.json'));assert profile['status']=='PASS' and len(profile['native_checks'])==4 and all(all(v.values()) for v in profile['native_checks'])
 cfg=json.load(open(R/'frozen_config.json'));tasks=[(s,k) for s in sum(cfg['C3'].values(),[]) for k in range(8)];active=[];complete=[];failed=[];peak=0;t=time.time();initial=sum(json.load(open(R/f'results/geometry_{k}.json'))['worker_seconds'] for k in ['pilot','head','C3'])+profile['seconds'];limit=cfg['resources']['CPU_worker_hours_max']*3600
+if (R/'results/engineering_resume.json').exists():initial=json.load(open(R/'results/engineering_resume.json'))['prior_CPU_worker_seconds_upper']+profile['seconds']
 while tasks or active:
  while tasks and len(active)<88 and not failed:
   scene,shard=tasks.pop(0);log=open(R/f'logs/eval_{scene:04d}_{shard}.log','w');env=os.environ.copy();env['CUDA_VISIBLE_DEVICES']='';p=subprocess.Popen([sys.executable,str(R/'code/evaluate.py'),'--scene',str(scene),'--shard',str(shard),'--shards','8'],env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True);active.append(dict(scene=scene,shard=shard,p=p,log=log,start=time.time()))

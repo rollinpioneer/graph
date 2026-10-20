@@ -12,7 +12,7 @@ source=inspect.getsource(EU.eval_grasp);namespace=EU.__dict__.copy();exec(source
 dataset=GraspNetDataset(str(DATA),split='train',camera='kinect',num_points=20000,voxel_size=.005,remove_outlier=True,augment=False,load_label=False)
 heads={(v['family'],v['seed']):GeoScorer(Path(v['path']),v['sha256']) for v in lock['new_heads']}
 source_hashes={v['path']:v['sha256'] for v in json.loads((P/'results/B_artifact_manifest.json').read_text())}
-frames=[0] if a.profile else list(range(256))[a.shard::a.shards];out=R/f'evaluation/development/{a.scene:04d}';out.mkdir(parents=True,exist_ok=True);calls=0;reused=0;checks=[];completed=[]
+frames=[0] if a.profile else list(range(256))[a.shard::a.shards];section='engineering_validation' if a.profile else 'development';out=R/f'evaluation/{section}/{a.scene:04d}';out.mkdir(parents=True,exist_ok=True);calls=0;reused=0;checks=[];completed=[]
 for frame in frames:
  target=out/f'{frame:04d}.json'
  if target.exists():
@@ -30,9 +30,18 @@ for frame in frames:
   name=f'O_{s}';score,info=fused_score(pred[:,0],q);rows[name]=replace_score(pred,score);fallback[name]=info['fallback'];Q[name]=q
  for (family,s),head in heads.items():
   name=f'{family}_{s}';q=head.quality(feat,action,raw_geometry,a.scene,frame);score,info=fused_score(pred[:,0],q);rows[name]=replace_score(pred,score);fallback[name]=info['fallback'];Q[name]=q
- native.frame(frame);folder=DATA/f'scenes/scene_{a.scene:04d}/kinect'
+ native.frame(frame)
+ exact_owner_indices=EU.compute_closest_points(pred[:,13:16].astype(np.float64),native.objpts)
+ owner_lookup={p.tobytes():int(j) for p,j in zip(pred[:,13:16].astype(np.float64),exact_owner_indices)}
+ def cached_closest(A,B):
+  assert np.array_equal(B,native.objpts)
+  return np.array([owner_lookup[np.asarray(v,dtype=np.float64).tobytes()] for v in A])
+ namespace['compute_closest_points']=cached_closest
+ folder=DATA/f'scenes/scene_{a.scene:04d}/kinect'
  for attr,sub,ext in [('colorpath','rgb','png'),('depthpath','depth','png'),('labelpath','label','png'),('metapath','meta','mat')]:getattr(dataset,attr)[0]=str(folder/f'{sub}/{frame:04d}.{ext}')
- dataset.scenename[0]=f'scene_{a.scene:04d}';dataset.frameid[0]=frame;cloud,_=dataset.get_data(0,return_raw_cloud=True);cd=ModelFreeCollisionDetector(cloud,voxel_size=.005).detect(GraspGroup(pred.copy()),approach_dist=.05,collision_thresh=.01);assert float(cd.mean())==old['R0']['cd_rejection_rate']
+ dataset.scenename[0]=f'scene_{a.scene:04d}';dataset.frameid[0]=frame;cloud,_=dataset.get_data(0,return_raw_cloud=True);detector=ModelFreeCollisionDetector(cloud,voxel_size=.005);cd=np.concatenate([detector.detect(GraspGroup(pred[i:i+64].copy()),approach_dist=.05,collision_thresh=.01) for i in range(0,1024,64)])
+ if a.profile:assert np.array_equal(cd,detector.detect(GraspGroup(pred.copy()),approach_dist=.05,collision_thresh=.01))
+ assert float(cd.mean())==old['R0']['cd_rejection_rate']
  selected={};submitted={};native_rows={}
  for name,raw in rows.items():
   assert np.array_equal(raw[:,1:],pred[:,1:]);clipped=raw.copy();clipped[:,1]=clipped[:,1].clip(0,.1);lookup={}
@@ -61,5 +70,5 @@ for frame in frames:
   values.append(v)
  assert len(values)==20 and all(np.isfinite(mu[ids]).all() for ids in selected.values())
  np.savez_compressed(out/f'{frame:04d}.npz',quality=mu,collision=collision,empty=empty,**{'selected_'+k:v for k,v in selected.items()},**{'Q_'+k:v for k,v in Q.items()});write(target,values);completed.append(frame);print('FRAME_DONE',a.scene,frame,'new_native',calls,'seconds',time.time()-start,flush=True)
-receipt=dict(status='PASS',scene=a.scene,frames=completed,profile=a.profile,shard=a.shard,shards=a.shards,seconds=time.time()-start,cpu_seconds=time.process_time(),new_quality_calls=calls,reused_quality_calls=reused,native_checks=checks,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,geometry_unchanged=True,old_all_selection_and_metrics_exact=True)
+receipt=dict(status='PASS',scene=a.scene,frames=completed,profile=a.profile,shard=a.shard,shards=a.shards,seconds=time.time()-start,cpu_seconds=time.process_time(),new_quality_calls=calls,reused_quality_calls=reused,native_checks=checks,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,geometry_unchanged=True,old_all_selection_and_metrics_exact=True,exact_owner_cache=True,chunked_CD=64,evaluation_source_sha256=sha(Path(__file__)))
 write(R/(f'results/eval_{a.scene:04d}_'+('profile.json' if a.profile else f'shard{a.shard}.json')),receipt);print('EVAL_DONE',receipt,flush=True)
