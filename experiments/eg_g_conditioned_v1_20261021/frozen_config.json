@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-21",
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "protected": "EG-B and G; read-only",
+  "F05": 0.5,
+  "CD": 0.01,
+  "C4": "forbidden",
+  "new_GT_training_quality": 0,
+  "EG_forward": 0,
+  "formal_training_authorized": false,
+  "source_parent": "328e838fcd9d44d1ad2d489de725bd3524f06117",
+  "experiment": "EG-G-CONDITIONED-V1",
+  "stage": "P0_ONLY",
+  "groups": [
+    "cap",
+    "concat",
+    "FiLM"
+  ],
+  "trainable_parameters": {
+    "cap": 58963,
+    "concat": 59007,
+    "FiLM": 58816
+  },
+  "G_frozen": true,
+  "FiLM": {
+    "attributes": [
+      "rotation9",
+      "center3",
+      "width",
+      "parent_EG_score"
+    ],
+    "encoder": [
+      14,
+      64,
+      128,
+      128
+    ],
+    "activation": "ReLU",
+    "gamma_beta": [
+      128,
+      256
+    ],
+    "initialization": "gamma,beta projections zero",
+    "output": "frozen G output affine plus Sigmoid"
+  },
+  "controls": {
+    "cap": [
+      128,
+      186,
+      186,
+      1
+    ],
+    "concat": [
+      142,
+      181,
+      181,
+      1
+    ],
+    "initialization": "last residual projection zero"
+  },
+  "normalization": "all six pose attributes of fit only; std clamp1e-6; existing G normalization unchanged",
+  "training": {
+    "steps": 1000,
+    "batch_groups": 128,
+    "poses": 6,
+    "loss": "equal per-pose six-threshold utility MSE",
+    "optimizer": "AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "checkpoint": "step1000",
+    "sampler": "exact original mixed 128-group stream, hashes verified"
+  },
+  "evaluation": {
+    "frames": 3072,
+    "C3": "same frozen12 scenes",
+    "bootstrap": 10000,
+    "primary": "CD",
+    "success_AP": 0.5,
+    "success_Top1_pp": 1.0,
+    "other_AP_CI_lower_min": -0.2,
+    "other_Top1_CI_lower_min_pp": -0.5,
+    "positive_seeds_min": 2,
+    "efficiency": "only passing groups; fixed96 frames interleaved"
+  },
+  "resources": {
+    "GPU_process_hours_max": 2,
+    "CPU_worker_hours_max": 60,
+    "new_GiB_max": 4
+  },
+  "next_stage": "P1-P3 require separate approval after P0",
+  "resource_amendment": "2026-10-21 user removed ALL time limits, including CPU worker-hours and GPU process-hours. Historical suggested time limits retained for reference; disk caps and scientific/stage boundaries unchanged."
+}
