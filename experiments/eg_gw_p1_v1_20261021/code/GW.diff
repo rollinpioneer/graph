@@ -1,0 +1,19 @@
+--- G
++++ GW
+@@ -1,6 +1,6 @@
+ from common import *
+ import torch,argparse,resource
+-a=argparse.ArgumentParser();a.add_argument('--seed',type=int,choices=SEEDS,required=True);a.add_argument('--family',choices=['G','Gshuffle'],required=True);args=a.parse_args();t=time.time();os.nice(10);torch.set_num_threads(1);torch.cuda.reset_peak_memory_stats()
++a=argparse.ArgumentParser();a.add_argument('--seed',type=int,choices=SEEDS,required=True);a.add_argument('--family',choices=['GW','Gshuffle'],required=True);args=a.parse_args();t=time.time();os.nice(10);torch.set_num_threads(1);torch.cuda.reset_peak_memory_stats()
+ cfg=json.load(open(R/'frozen_config.json'));prep=json.load(open(R/'results/preparation.json'));assert prep['status']=='PASS';d={k:v for k,v in np.load(RP/'prepared.npz').items()};z=np.load(R/'prepared_geometry.npz');gg=z['geometry'].copy();norm={k:z[k] for k in ['median','mean','std']}
+ if args.family=='Gshuffle':
+  for i,(s,f) in enumerate(zip(d['scene'],d['frame'])):gg[i]=gg[i,permutation(s,f,128)]
+@@ -10,7 +10,7 @@
+ initial=hashlib.sha256(b''.join(v.detach().numpy().tobytes() for v in net.state_dict().values())).hexdigest();net=net.cuda();optim=torch.optim.AdamW(net.parameters(),lr=.001,weight_decay=.0001);rng=np.random.default_rng(args.seed);order=rng.permutation(len(xf));cursor=0;stream=hashlib.sha256();losses=[]
+ for step in range(1,1001):
+  if cursor+128>len(order):order=rng.permutation(len(xf));cursor=0
+- ix=order[cursor:cursor+128];cursor+=128;stream.update(ix.tobytes());net.train();pred=net(xf[ix].cuda()).squeeze(-1);loss=((pred-yf[ix].cuda())**2).mean();assert torch.isfinite(loss);optim.zero_grad();loss.backward();optim.step();losses.append(float(loss.item()))
++ ix=order[cursor:cursor+128];cursor+=128;stream.update(ix.tobytes());net.train();pred=net(xf[ix].cuda()).squeeze(-1);loss=(((pred-yf[ix].cuda())**2)*pred.new_tensor([.5,.1,.1,.1,.1,.1])).sum(-1).mean();assert torch.isfinite(loss);optim.zero_grad();loss.backward();optim.step();losses.append(float(loss.item()))
+  if step%100==0:print('TRAIN',args.family,args.seed,step,float(loss.item()),flush=True)
+ expected=next(v['old_stream'] for v in prep['old_streams'] if v['seed']==args.seed);assert stream.hexdigest()==expected
+ path=R/f'heads/{args.family}/{args.seed}/step1000.pt';path.parent.mkdir(parents=True,exist_ok=True);assert not path.exists()
