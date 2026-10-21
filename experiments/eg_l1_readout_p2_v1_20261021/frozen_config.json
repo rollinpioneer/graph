@@ -1,0 +1,102 @@
+{
+  "phase": "P2",
+  "approval": "User: \u6267\u884c",
+  "approved_items": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7"
+  ],
+  "freeze_time": 1792578718.7743096,
+  "plan_sha256": "06ae059f6f6e6ddf71b4e12efe9befcec0f59c1c01ac6155bc07a82db7b4a6f0",
+  "P0_input_manifest_sha256": "0d389b5916ea5e66ef2335e037dd485024317db0c52e88832403193498e21a29",
+  "P0_decision_sha256": "4c54c883f36ed3b584556e78ffd59a73485d0cf95b0145650018d84c0113a116",
+  "C3": {
+    "seen": [
+      100,
+      106,
+      115,
+      124
+    ],
+    "similar": [
+      132,
+      139,
+      150,
+      157
+    ],
+    "novel": [
+      160,
+      169,
+      176,
+      186
+    ]
+  },
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "weights": [
+    0.5,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1
+  ],
+  "steps": 1000,
+  "batch_groups": 128,
+  "optimizer": "AdamW",
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "GPU": "A100",
+  "F05": 0.5,
+  "CD": 0.01,
+  "bootstrap_seed": 20261021,
+  "bootstrap_samples": 10000,
+  "gate": {
+    "AP_delta": 0.5,
+    "Top1_delta_pp": 1.0,
+    "AP_CI_lower_min_other": -0.2,
+    "Top1_CI_lower_min_other_pp": -0.5,
+    "positive_seeds": 2,
+    "collision_protection_pp": 0.5
+  },
+  "G_rerun": {
+    "byte_exact_or_maxQ_le_1e5_excluded_from_C3": true,
+    "max_Q_tolerance": 1e-05,
+    "otherwise_additional_route_CI_lower_gt_zero": true
+  },
+  "C4_read": false,
+  "new_training_labels": 0,
+  "new_evaluation_labels_allowed": true,
+  "storage_cap_GiB": 4,
+  "train_G_source_sha256": "ddb7214654e751aee5a305049d0423e76b81bd5f11561c77746d5835158aeb73",
+  "train_GW_sha256": "c7d53e5fe7aac237f8c98334a11424f17c00952d291873553dbff0b52f894e90",
+  "difference_sha256": "f1a2b88d8d806efb63d4574fcd3d8ae8f9ea0929b6a26e615e801e9e29d6cff3",
+  "status": "BLOCKED",
+  "block_reason": "F1 reconstruction exceeds frozen numerical/ranking tolerance",
+  "families": [
+    "E_act",
+    "E_pot",
+    "G-cap65"
+  ],
+  "parameters_each": 65,
+  "CPU_only": true,
+  "initialization": "positive affine original readout fit moments; G-cap zero",
+  "targets": [
+    "u0",
+    "max6",
+    "u0"
+  ],
+  "sequential_order": [
+    "E_act-G",
+    "E_act-E_pot",
+    "E_act-G-cap65"
+  ],
+  "only_E_ACT_FULL_counts": true,
+  "I1_max_F05_error": 1e-09
+}
