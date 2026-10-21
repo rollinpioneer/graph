@@ -1,0 +1,72 @@
+{
+  "reason": "cross-node NFS mkdir visibility race at checkpoint save; no completed weights for seed20261018",
+  "failed_updates": 3000,
+  "retained_successful_heads": 6,
+  "replay_heads": [
+    "cap_20261018",
+    "concat_20261018",
+    "FiLM_20261018"
+  ],
+  "same_seed_initialization_and_recipe": true,
+  "expected_total_executed_updates": 12000,
+  "final_effective_updates_per_head": 1000,
+  "selection_based_on_metrics": false,
+  "failed_save_GPU_process_seconds": null,
+  "failed_save_GPU_cost_note": "Exact failed-process start/end not recorded; successful-process time excludes this additional3000-step work. Do not report successful time as total.",
+  "replay_loss_checks": [
+    {
+      "family": "cap",
+      "seed": 20261018,
+      "compared_steps": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000
+      ],
+      "logged_losses_exact": true,
+      "max_logged_loss_difference": 0.0
+    },
+    {
+      "family": "concat",
+      "seed": 20261018,
+      "compared_steps": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000
+      ],
+      "logged_losses_exact": true,
+      "max_logged_loss_difference": 0.0
+    },
+    {
+      "family": "FiLM",
+      "seed": 20261018,
+      "compared_steps": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000
+      ],
+      "logged_losses_exact": true,
+      "max_logged_loss_difference": 0.0
+    }
+  ]
+}

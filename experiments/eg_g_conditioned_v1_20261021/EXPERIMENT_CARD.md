@@ -25,3 +25,6 @@ Source, frozen configuration, P0/diagnosis report, resource and identity receipt
 User explicitly removed time limits before full A execution. Historical suggested time caps are retained in config for comparison only; disk limits and separate formal-training approval remain unchanged.
 
 Clarification: user removed ALL time limits including cumulative CPU/GPU hours. No scientific or training-stage boundary changed.
+
+## P1-P3 authorization (2026-10-21)
+User explicitly approved B formal stage: 3 groups x3 seeds x1000, full C3 and conditional96frame efficiency check. All time limits removed; new storage cap4GiB. A training and C4 remain prohibited.

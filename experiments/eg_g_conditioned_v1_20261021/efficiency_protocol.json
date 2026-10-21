@@ -1,0 +1,38 @@
+{
+  "C3_scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "frames": [
+    0,
+    32,
+    64,
+    96,
+    128,
+    160,
+    192,
+    224
+  ],
+  "n_frames": 96,
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "device": "CPU same as actual C3 scoring",
+  "methods": "G and only groups passing frozen performance gates",
+  "order": "G/new alternating by frame parity for each seed",
+  "geometry": "Shared unchanged geometry measured once per frame, added equally to each measured scoring pipeline; not independent end-to-end geometry repetitions",
+  "timing": "perf_counter; record common geometry, attribute construction, network scoring, F05, full sum; no transfer for CPU scoring",
+  "before_observing_full_C3_results": true
+}
