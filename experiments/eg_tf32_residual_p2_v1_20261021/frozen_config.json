@@ -1,0 +1,103 @@
+{
+  "phase": "P2_TF32_RESIDUAL",
+  "revision_time": 1792583773.7815478,
+  "user_authorization": "Revise P2 to frozen TF32 score plus zero-initialized 65-parameter affine residual; zero-training invariant checks first; train all three families only after all pass; unchanged thresholds; no C4.",
+  "families": [
+    "Eact",
+    "Epot",
+    "Gcap65"
+  ],
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "C3": {
+    "seen": [
+      100,
+      106,
+      115,
+      124
+    ],
+    "similar": [
+      132,
+      139,
+      150,
+      157
+    ],
+    "novel": [
+      160,
+      169,
+      176,
+      186
+    ]
+  },
+  "parameters_each": 65,
+  "steps": 1000,
+  "batch_groups": 128,
+  "optimizer": "AdamW",
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "training_device": "cuda:0 on lab245; nine concurrent jobs",
+  "residual_dtype": "float64",
+  "G_dtype": "float32",
+  "E_formula": "alpha_fit * (frozen_cached_TF32_score + delta_w.T * standardized_score64 + delta_b) + beta_fit",
+  "Gcap_formula": "sigmoid(frozen_G_logit + delta_w.T * standardized_score64 + delta_b)",
+  "initial_residual": "all 65 entries exactly zero",
+  "scale_source": "fit 24 scenes x8 frames x128 groups only; alpha=target_std/frozen_score_std; beta=target_mean-alpha*frozen_score_mean",
+  "targets": {
+    "Eact": "u0",
+    "Epot": "max6",
+    "Gcap65": "u0"
+  },
+  "trainable_parameters_only": "delta_w[64], delta_b[1]",
+  "gate": {
+    "AP_delta": 0.5,
+    "Top1_delta_pp": 1.0,
+    "AP_CI_lower_min_other": -0.2,
+    "Top1_CI_lower_min_other_pp": -0.5,
+    "positive_seeds": 2,
+    "collision_protection_pp": 0.5
+  },
+  "bootstrap_seed": 20261021,
+  "bootstrap_samples": 10000,
+  "sequential_order": [
+    "Eact-G",
+    "Eact-Epot",
+    "Eact-Gcap65"
+  ],
+  "only_E_ACT_FULL_counts": true,
+  "I1_max_F05_error": 1e-09,
+  "I2_I3_max_Q_error": 1e-06,
+  "F1_max_error": 0.0001,
+  "F1_near_tie": 1e-05,
+  "F05": 0.5,
+  "CD": 0.01,
+  "C4_read": false,
+  "C5_read": false,
+  "new_training_labels": 0,
+  "new_evaluation_labels_allowed": true,
+  "storage_cap_GiB": 0.5,
+  "P0_input_manifest_sha256": "0d389b5916ea5e66ef2335e037dd485024317db0c52e88832403193498e21a29",
+  "F1_exact_replay_evidence_sha256": "8fdcca012de339cad5c2b4d84222456830349e918b29859887cb118efc8d8d71",
+  "F1_original_affine_still_fails": true,
+  "protected_G": [
+    {
+      "seed": 20261018,
+      "path": "/aita_data/home/aita_xushijie/work/grasp/eg_lg1_local_geometry_v1_20261020/heads/G/20261018/step1000.pt",
+      "sha256": "781342a7c8aaa38c13b9491c21877252c3f35612a68a596286effb0dfd86aecb"
+    },
+    {
+      "seed": 20261019,
+      "path": "/aita_data/home/aita_xushijie/work/grasp/eg_lg1_local_geometry_v1_20261020/heads/G/20261019/step1000.pt",
+      "sha256": "db2ad04177fcb04455e22c79a2eae35902d21b95700be16ec2313965ee37f9aa"
+    },
+    {
+      "seed": 20261020,
+      "path": "/aita_data/home/aita_xushijie/work/grasp/eg_lg1_local_geometry_v1_20261020/heads/G/20261020/step1000.pt",
+      "sha256": "be189fd3f5d240c7413d2ada5bb42380efa465eaabb639a977dc90900efe1a3e"
+    }
+  ],
+  "protected_prepared_sha256": "8567a5babf2906c1b87ab67c695e86b0da5cc437ec919bae3d918d9e901f52f5",
+  "protected_geometry_sha256": "3a91276f809a1b04825d350cd3313938c0e127d4e4a716fb9c6ef0fc9119c335"
+}

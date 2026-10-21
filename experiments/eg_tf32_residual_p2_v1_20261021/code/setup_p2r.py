@@ -1,0 +1,14 @@
+import os,json,time,hashlib,shutil
+from pathlib import Path
+B=Path.home()/'work/grasp';R=B/'eg_tf32_residual_p2_v1_20261021';L=B/'eg_lg1_local_geometry_v1_20261020';P0=B/'eg_role_p0_audit_v1_20261021';P1=B/'eg_gw_p1_v1_20261021';F1=B/'eg_f1_precision_diagnosis_v1_20261021'
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert not (R/'frozen_config.json').exists()
+for sub in ['code','results','logs','heads','evaluation','preflight']:(R/sub).mkdir(parents=True,exist_ok=True)
+shutil.copyfile(L/'code/common.py',R/'code/common.py')
+shutil.copyfile(P0/'EXPERIMENT_CARD.md',R/'ORIGINAL_PLAN.md')
+shutil.copyfile(P1/'results/P0_union_manifest.json',R/'results/P0_union_manifest.json')
+cfg0=json.loads((P1/'frozen_config.json').read_text());f1=json.loads((F1/'diagnosis.json').read_text());assert f1['replay']['max_error']==0 and f1['frames']==3328
+cfg=dict(phase='P2_TF32_RESIDUAL',revision_time=time.time(),user_authorization='Revise P2 to frozen TF32 score plus zero-initialized 65-parameter affine residual; zero-training invariant checks first; train all three families only after all pass; unchanged thresholds; no C4.',families=['Eact','Epot','Gcap65'],seeds=cfg0['seeds'],C3=cfg0['C3'],parameters_each=65,steps=1000,batch_groups=128,optimizer='AdamW',lr=.001,weight_decay=.0001,training_device='cuda:0 on lab245; nine concurrent jobs',residual_dtype='float64',G_dtype='float32',E_formula='alpha_fit * (frozen_cached_TF32_score + delta_w.T * standardized_score64 + delta_b) + beta_fit',Gcap_formula='sigmoid(frozen_G_logit + delta_w.T * standardized_score64 + delta_b)',initial_residual='all 65 entries exactly zero',scale_source='fit 24 scenes x8 frames x128 groups only; alpha=target_std/frozen_score_std; beta=target_mean-alpha*frozen_score_mean',targets={'Eact':'u0','Epot':'max6','Gcap65':'u0'},trainable_parameters_only='delta_w[64], delta_b[1]',gate=cfg0['gate'],bootstrap_seed=20261021,bootstrap_samples=10000,sequential_order=['Eact-G','Eact-Epot','Eact-Gcap65'],only_E_ACT_FULL_counts=True,I1_max_F05_error=1e-9,I2_I3_max_Q_error=1e-6,F1_max_error=1e-4,F1_near_tie=1e-5,F05=.5,CD=.01,C4_read=False,C5_read=False,new_training_labels=0,new_evaluation_labels_allowed=True,storage_cap_GiB=.5,P0_input_manifest_sha256=sha(P0/'P0_input_manifest.json'),F1_exact_replay_evidence_sha256=sha(F1/'diagnosis.json'),F1_original_affine_still_fails=True,protected_G=[dict(seed=s,path=str(L/f'heads/G/{s}/step1000.pt'),sha256=sha(L/f'heads/G/{s}/step1000.pt')) for s in cfg0['seeds']],protected_prepared_sha256=sha(B/'eg_b_global_rank_pilot_v1_20261020/prepared.npz'),protected_geometry_sha256=sha(L/'prepared_geometry.npz'))
+assert cfg['protected_prepared_sha256']=='8567a5babf2906c1b87ab67c695e86b0da5cc437ec919bae3d918d9e901f52f5'
+assert cfg['protected_geometry_sha256']=='3a91276f809a1b04825d350cd3313938c0e127d4e4a716fb9c6ef0fc9119c335'
+(R/'frozen_config.json').write_text(json.dumps(cfg,indent=2));print(json.dumps(cfg,indent=2))
