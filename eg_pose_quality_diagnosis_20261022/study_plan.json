@@ -1,0 +1,106 @@
+{
+  "id": "EG_pose_quality_v1_20261022",
+  "frozen_before_inference": true,
+  "seed": 20261022,
+  "C3_scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "C3_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "training_scenes": [
+    2,
+    9,
+    31,
+    33,
+    68,
+    64,
+    76,
+    82
+  ],
+  "training_frames": [
+    0,
+    128
+  ],
+  "training_strata": [
+    {
+      "quartile": 0,
+      "high_count": false,
+      "scene": 2,
+      "nobjects": 9
+    },
+    {
+      "quartile": 0,
+      "high_count": true,
+      "scene": 9,
+      "nobjects": 11
+    },
+    {
+      "quartile": 25,
+      "high_count": false,
+      "scene": 31,
+      "nobjects": 8
+    },
+    {
+      "quartile": 25,
+      "high_count": true,
+      "scene": 33,
+      "nobjects": 11
+    },
+    {
+      "quartile": 50,
+      "high_count": false,
+      "scene": 68,
+      "nobjects": 8
+    },
+    {
+      "quartile": 50,
+      "high_count": true,
+      "scene": 64,
+      "nobjects": 9
+    },
+    {
+      "quartile": 75,
+      "high_count": false,
+      "scene": 76,
+      "nobjects": 9
+    },
+    {
+      "quartile": 75,
+      "high_count": true,
+      "scene": 82,
+      "nobjects": 11
+    }
+  ],
+  "training_object_count": 38,
+  "extension_rule": "Add frames 64 and 192 to the same 8 scenes only if fewer than 200 valid matched raw candidates in total or fewer than 4 scenes have >=20 valid raw candidates; independent of quality outcomes",
+  "primary_feasibility": "not collision and not empty and 0 < mu <= 0.4",
+  "primary_ranking_pool": "official post-CD (0.01), NMS (0.03m,30deg), per-object10, final50",
+  "high_rank": "rank<=50 in original fixed final pool; Top1 separately",
+  "B_evaluate": "P0 all 1024 raw candidates; P1-P5 all valid matches; invalid targets remain unknown",
+  "reference": "exact label point plus transformed label view frame and representative angle/depth/width, re-evaluated; P5 separately keeps prediction point and approach",
+  "controls": [
+    "logit_weighted",
+    "logit_centered",
+    "softmax_expected",
+    "width_no_1.2",
+    "training_inference_frame_angle"
+  ],
+  "GPU_limit": 1,
+  "training": false,
+  "C4_C5": false
+}
