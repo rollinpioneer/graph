@@ -1,0 +1,24 @@
+{
+  "status": "frozen_after_source2_before_remaining_sources",
+  "completed_Adam_updates_at_clarification": 35,
+  "cause": "The implementation incorrectly used an absolute historical raw-logit replay tolerance as a gate for the R1.4 paired intervention. Train-mode sparse-backbone numerical variation is present even for two native forwards with identical parameters, buffers and RNG. A shared actual initial graph now enforces the required paired forward invariance exactly.",
+  "historical_threshold_unchanged": 0.00003,
+  "historical_failures_retained_as_failures": true,
+  "historical_check_role": "Numerical-reproduction audit, not an exclusion criterion for a scientific source batch. No repeated attempts to obtain a passing maximum error.",
+  "paired_experiment_gates": [
+    "Same checkpoint parameters and Adam state for every arm",
+    "Fixed point cloud, queries, sampled directions and previously frozen labels",
+    "Historical full and decoded A/D argmax classes unchanged",
+    "Same-backbone downstream logits and raw loss exactly equal",
+    "Shared step1 full-network gradients with unchanged A/D/Q output-layer gradients",
+    "Original historical heldout TF32 geometry exactly equal",
+    "Unchanged direct analytic feasibility, collision and empty-grasp criteria"
+  ],
+  "scene64": {
+    "first_historical_depth_max_abs": 0.0000457763671875,
+    "first_historical_check_passed": false,
+    "first_native_graph_was_not_retained": true,
+    "reconstruction": "Reconstruct the common initial graph once under the clarified rule, record all logits/gradients and both old and new checks. Do not describe this as reuse of the first graph or retry until numerical success."
+  },
+  "remaining_scope": "No changes to sources, conditions, steps, evaluation outcomes, loss weighting, sample selection or budgets; no outcome-driven tuning."
+}

@@ -1,0 +1,111 @@
+{
+  "status": "stage1_complete_parameter_update_stages_not_executed",
+  "completed": [
+    "R1.1 provenance/tie",
+    "R1.2 width and output derivatives",
+    "R1.3 real training path gradients",
+    "R2 GT-free integer-bin reencoding",
+    "R3 equal-budget joint grid"
+  ],
+  "parameter_updates": 0,
+  "new_analytic_evaluations": 0,
+  "training_optimizer_created": false,
+  "optimizer_metadata_read_only": {
+    "keys": [
+      "epoch",
+      "optimizer_state_dict",
+      "model_state_dict"
+    ],
+    "epoch": 10,
+    "optimizer_state_dict": {
+      "keys": [
+        "state",
+        "param_groups"
+      ],
+      "state_entries": 152,
+      "groups": [
+        {
+          "lr": 2.4471741852423235e-05,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null
+        }
+      ]
+    }
+  },
+  "R1_trace": {
+    "valid": 8732,
+    "q0": 634,
+    "exact": 8732,
+    "unknown": 0
+  },
+  "R1_training_path": {
+    "frames": 16,
+    "batch_size": 1,
+    "valid": 8676,
+    "q0": 3456,
+    "unambiguous_valid": 7675,
+    "unambiguous_q0": 3058,
+    "net_is_training": true,
+    "view_is_training": true,
+    "torch_train": true,
+    "BN_and_dropout": true,
+    "parameters_unchanged": true,
+    "BN_buffers_restored": true,
+    "RNG_saved_per_batch": true
+  },
+  "R2": {
+    "frames": 16,
+    "queries": 256,
+    "all_k0_and_history_exact": true,
+    "physical_action_set_max_abs_bound": 5e-16,
+    "all_parameters_and_buffers_unchanged": true
+  },
+  "R3": {
+    "queries": 256,
+    "scenes": 8,
+    "grid_cells": 12288,
+    "new_network_runs": 0
+  },
+  "C3_new_access": false,
+  "C4_C5_access": false,
+  "Git_writes": false,
+  "R1.4": {
+    "status": "not_executed_waiting_additional_authorization",
+    "effects_file": "gradient_pulse_effects.csv",
+    "effects_rows": 0,
+    "plan": "pulse_preregistration.json"
+  },
+  "R1.5": {
+    "status": "not_executed_evidence_and_authorization_gate"
+  },
+  "unchanged_assets": [
+    "official source",
+    "published checkpoint",
+    "old frozen labels/results"
+  ],
+  "remote_root": "~/work/grasp/eg_causal_mechanism_v2_20261023",
+  "SSH_cleanup": "all_three_closed_saved_credentials_retained",
+  "limitations": [
+    "B1 current-checkpoint training path is not historical official training exposure",
+    "aggregate train gradients include duplicate mapping ambiguous queries",
+    "same physical AD grid, old width only; no new-width or full-pipeline R2 efficacy",
+    "C3 not revisited; only 8 training scenes"
+  ],
+  "verification": {
+    "trace_counts_exact": true,
+    "R2_download_hashes_exact": true,
+    "parameters_and_buffers_receipts_verified": true,
+    "all_summary_links_exist": true,
+    "pulse_data_rows": 0
+  }
+}

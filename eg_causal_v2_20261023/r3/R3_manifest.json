@@ -1,0 +1,20 @@
+{
+  "id": "R3_equal_budget_joint_grid_20261023",
+  "frozen_before_outcome_computation": true,
+  "source_archive": "e4129d73ac263c39b6a7856aa94cbd09910d4318",
+  "population": "All existing 256 queries in local_AD_grid.csv, 8 training scenes and 16 frames; all original strata preserved",
+  "feasible": "finite mu, 0 < mu <= 0.4, collision == false, empty == false",
+  "fixed_quantities": ["query ID", "point", "physical approach", "decoded baseline width", "48 physical AD poses", "analytic labels"],
+  "top2x2": "Stable descending logits over first 12 angle and first 4 depth classes; Cartesian product of first two",
+  "local4": "(a1,d1), ((a1-1) mod 12,d1), ((a1+1) mod 12,d1), (a1,d1+1 if d1<3 else d1-1); no outcome-dependent choices",
+  "random4": "Uniform unordered 4 distinct cells from all 48: exact oracle coverage expectation 1-C(48-m,4)/C(48,4), where m is feasible cell count",
+  "baseline_plus_random3": "Supplementary budget control retaining original cell: for failed baseline 1-C(47-m,3)/C(47,3); for feasible baseline exactly 1",
+  "extra_classes": "Record full-softmax angle class13 and depth class5 masses and argmax before renormalizing first12/first4",
+  "marginal_metrics": ["sum pa*max_d F", "sum pd*max_a F", "sum pa*pd*F", "min(angle_mass,depth_mass)-joint_mass"],
+  "descriptive_high_marginal_low_joint": "Both marginal masses >=0.5 and joint mass <0.25, descriptive cutoff only; continuous distributions also reported",
+  "statistical_unit": "scene",
+  "bootstrap": {"replicates": 20000, "seed": 20261023, "CI": "paired percentile 95%; equal weight per observed scene; only 8 scenes"},
+  "width_link": "Use old exact candidate caches: raw width, decoded width, qref and valid mask. qref analysis restricted to valid matches. Width saturation defined before clip: 1.2*raw_width/10 >=0.1 or <=0",
+  "permissions": {"server_access": false, "parameter_updates": false, "new_pose_evaluation": false, "git": false},
+  "interpretation": "All set coverage outcomes are oracle potential at frozen width, not deployment success; no-grid-feasible is not physical ungraspability"
+}

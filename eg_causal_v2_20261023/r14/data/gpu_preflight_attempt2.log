@@ -1,0 +1,10 @@
+/aita_data/home/aita_xushijie/work/grasp/eg_full_repro_v1_20261015/runtime/EconomicGrasp/utils/loss_utils.py:83: UserWarning: Using torch.cross without specifying the dim arg is deprecated.
+Please either pass the dim explicitly or simply use torch.linalg.cross.
+The default value of dim will change to agree with that of linalg.cross in a future release. (Triggered internally at ../aten/src/ATen/native/Cross.cpp:62.)
+  axis_z = torch.cross(axis_x, axis_y)
+Traceback (most recent call last):
+  File "/aita_data/home/aita_xushijie/work/grasp/eg_causal_mechanism_v2_20261023/r14/code/pulse_train.py", line 287, in <module>
+    for s in scenes:prepare_train(s);prepare_eval(s)
+  File "/aita_data/home/aita_xushijie/work/grasp/eg_causal_mechanism_v2_20261023/r14/code/pulse_train.py", line 150, in prepare_train
+    replayerr={k:maxerr(cpu(repeat[k]),orig[k]) for k in LOGITS};assert max(replayerr.values())<=3e-5,(s,'fixed_query_logits',replayerr)
+AssertionError: (2, 'fixed_query_logits', {'grasp_angle_pred': 2.288818359375e-05, 'grasp_depth_pred': 3.0517578125e-05, 'grasp_width_pred': 1.0728836059570312e-06, 'grasp_score_pred': 9.5367431640625e-06})

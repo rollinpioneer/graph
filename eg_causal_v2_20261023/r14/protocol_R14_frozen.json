@@ -1,0 +1,130 @@
+{
+  "status": "authorized_execution_frozen",
+  "mechanism": "zero-quality width gradient scope; not a new scoring model",
+  "checkpoint": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a",
+  "folds": [
+    [
+      2,
+      31,
+      68,
+      76
+    ],
+    [
+      9,
+      33,
+      64,
+      82
+    ]
+  ],
+  "update_batches": [
+    {
+      "scene": 2,
+      "frame": 0,
+      "seed": 20263023
+    },
+    {
+      "scene": 9,
+      "frame": 0,
+      "seed": 20270023
+    },
+    {
+      "scene": 31,
+      "frame": 0,
+      "seed": 20292023
+    },
+    {
+      "scene": 33,
+      "frame": 0,
+      "seed": 20294023
+    },
+    {
+      "scene": 68,
+      "frame": 0,
+      "seed": 20329023
+    },
+    {
+      "scene": 64,
+      "frame": 0,
+      "seed": 20325023
+    },
+    {
+      "scene": 76,
+      "frame": 0,
+      "seed": 20337023
+    },
+    {
+      "scene": 82,
+      "frame": 0,
+      "seed": 20343023
+    }
+  ],
+  "holdout": "For each independent source batch, use frame128 of four scenes in opposite fold. These are adaptation holdouts, not unseen by official base model.",
+  "steps": [
+    1,
+    5
+  ],
+  "trajectory": "Report step1 and step5 of one five-step branch; reset checkpoint, buffers, optimizer, RNG for every independent batch/arm.",
+  "batch_size": 1,
+  "arms": [
+    "R0_original",
+    "RW_remove_q0_width",
+    "RW_local_keep_final_width_only",
+    "Rrandom_count_matched",
+    "RW_actual_step_norm_matched",
+    "RW_local_actual_step_norm_matched",
+    "Rrandom_actual_step_norm_matched"
+  ],
+  "optimizer": "Restore checkpoint Adam state with 152 state entries; verify parameter order and moment shapes before updates; no silent fresh optimizer fallback.",
+  "learning_rate": 2.4471741852423235e-05,
+  "step_norm_matching": "Each treated actual Adam parameter delta rescaled globally to same-step R0 L2 norm using training batch only; retain own moments; record scale and norm. No validation tuning.",
+  "labels_and_queries": "Reuse each registered augmented batch, query centers, sampled directions, matching mask and labels across arms and all five steps; this is a frozen-query adaptation pulse. Capture/freeze official duplicate-scatter targets once; do not repair the mapping.",
+  "forward_controls": "Before any update, all arms have identical logits/poses and forward losses; only gradient assignment differs. RW-local retains q0-width gradient only for grasp_head.conv_width.weight/bias. A/D/Q and other samples unchanged.",
+  "random_mask": "Same counts within source batch/object slot/original score quartile; fixed seed; sample among all valid queries including q0, disclose overlap. Preserve original N_valid denominator.",
+  "primary": "128 pre-registered held-out fixed queries per frame from previous mechanism_ids; same point/approach, new width/AD evaluated directly; rescue and harm, scene paired results.",
+  "secondary": "All1024 frozen-position/direction candidates for original/new geometry and scores G0S0/G1S0/G0S1/G1S1; official collision/NMS/per-objectTop10/Top50; directly evaluate newly selected actual poses including unknown baseline poses.",
+  "analytic_budget": {
+    "maximum": 131072,
+    "conservative_upper_bound": 124544,
+    "derivation": "8 batches * 7 arms * 2 checkpoints * 4 heldout frames * (128 fixed + <=150 union pipeline poses)",
+    "unknown_policy": "unknown never negative; stop and report if coverage or invariants fail"
+  },
+  "maximum_adam_steps_all_independent_branches": 280,
+  "C3": false,
+  "C4_C5": false,
+  "git_write": false,
+  "short_1000_step_training": false,
+  "stop": "No expansion or hyperparameter tuning. If signal disappears under count/norm controls, report no support; short confirmation requires new decision and authorization.",
+  "authorization": {
+    "scope": "exact R1.4 bounded pulse only",
+    "user_answer": "授权仅执行上述 R1.4 微更新（推荐）",
+    "parameter_updates_cap": 280,
+    "analytic_cap": 131072,
+    "short_confirmation": false,
+    "C3_C4_C5": false,
+    "git_write": false
+  },
+  "preregistration_sha256": "b92b7d044fd173eeed641ceb7fc177b35b5aae1d327f32885141b54a0ea3782c",
+  "execution_notes": {
+    "GPU_hosts": [
+      "172.19.164.245",
+      "172.19.164.248"
+    ],
+    "CPU_primary_host": "172.19.164.161",
+    "stages": [
+      "no-update wiring preflight",
+      "source2 registered pulse and first CPU job",
+      "remaining registered sources in parallel",
+      "paired scene statistics and cleanup"
+    ],
+    "no_extra_pilot_update": "source2 pilot counts as one of8; reuse saved outputs and receipts; do not repeat updated branches",
+    "replay": "historical TF32 heldout baseline; FP32 train gradients/Adam updates; original Nvalid fixed",
+    "actual_step_norm_matching_relative_tolerance": 0.001,
+    "forward_invariance": "same fixed inputs/RNG/snapshot and raw per-sample losses across all7 arms before first step; no treatment modifies forward values",
+    "unknowns": "do not classify unknown as negative; stop job and record",
+    "max_evaluation_jobs": 448,
+    "new_pose_calls_per_job_cap": 228,
+    "evaluator_preflight_max_calls": 16,
+    "conservative_direct_call_cap_after_old_full_label_reuse": 102160,
+    "statistics": "scene primary; aggregate source pulses within scene, report shared-fold dependence; do not countsteps/arms as samples"
+  }
+}

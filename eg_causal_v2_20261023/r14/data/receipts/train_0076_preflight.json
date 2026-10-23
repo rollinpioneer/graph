@@ -1,0 +1,358 @@
+{
+  "source_scene": 76,
+  "input_hash": "235c02c21e38c87158e15e937e97063b8e391afedd2d53baf61438f6c435de75",
+  "query_hash": "75725f259bb843c62f76a1c1e10ebbf3789c0354e5b090c9f35d848498ec5722",
+  "label_replay_differences": {
+    "batch_valid_mask": 1,
+    "batch_grasp_score": 1,
+    "batch_grasp_width": 1,
+    "batch_grasp_rotations": 1,
+    "batch_grasp_depth": 1,
+    "batch_grasp_point": 0
+  },
+  "stage1_logits_max_abs": {
+    "grasp_angle_pred": 1.52587890625e-05,
+    "grasp_depth_pred": 2.288818359375e-05,
+    "grasp_width_pred": 1.3113021850585938e-06,
+    "grasp_score_pred": 1.1444091796875e-05
+  },
+  "stage1_legacy_tolerance_pass": true,
+  "history_check_file": "train_0076_initial_history_check.json",
+  "common_start_rebuilt_after_prior_history_failure": false,
+  "no_numeric_selection_or_retry": true,
+  "fixed_path_logits_max_abs": {
+    "grasp_angle_pred": 0.0,
+    "grasp_depth_pred": 0.0,
+    "grasp_width_pred": 0.0,
+    "grasp_score_pred": 0.0
+  },
+  "layertrace": {
+    "01_backbone": {
+      "exact": false,
+      "max_abs": 1.1444091796875e-05,
+      "rms": 1.6055522947521384e-07,
+      "shape": [
+        10016,
+        512
+      ],
+      "hash_a": "3b1742a52131db7ee9cab1f98f9798108294319c0170a8979b90dd9acf290dd2",
+      "hash_b": "11ab1977422777620527e7cbfdecbef39f29b4a6fc41e3ff680c3f33bad0f57b"
+    },
+    "02_graspable_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        20000
+      ],
+      "hash_a": "e186b8ffe26449420ebd3104b93677ca4841616a672ecc9e61b12da6440152a3",
+      "hash_b": "e186b8ffe26449420ebd3104b93677ca4841616a672ecc9e61b12da6440152a3"
+    },
+    "03_view_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "78f494d4d5de8d452b3df2f0883cb3008b372276a53faa2f6caf0d03555a8280",
+      "hash_b": "78f494d4d5de8d452b3df2f0883cb3008b372276a53faa2f6caf0d03555a8280"
+    },
+    "04_view_residual": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "10017a7f2d368d0b17cd2a94ea33d2ebfe3bdfc31a5e24e5dfb0bac895b41199",
+      "hash_b": "10017a7f2d368d0b17cd2a94ea33d2ebfe3bdfc31a5e24e5dfb0bac895b41199"
+    },
+    "05_group_features": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "db969172523d40cce04921d06249b2093c3c45bd9e1da9d09a5a679b0b84dd4b",
+      "hash_b": "db969172523d40cce04921d06249b2093c3c45bd9e1da9d09a5a679b0b84dd4b"
+    },
+    "06_group_rotation": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        1024,
+        3,
+        3
+      ],
+      "hash_a": "b9c7184b2aba15124383c09c93b93d1cfb367228043a66e36fc0c8086e1a4668",
+      "hash_b": "b9c7184b2aba15124383c09c93b93d1cfb367228043a66e36fc0c8086e1a4668"
+    },
+    "07_head_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        256,
+        1024
+      ],
+      "hash_a": "894abc503986ed84b3cff3f8c0bbd9b2fef76debbd03095f2335d8ee8df16853",
+      "hash_b": "894abc503986ed84b3cff3f8c0bbd9b2fef76debbd03095f2335d8ee8df16853"
+    }
+  },
+  "shared_step1_graph": true,
+  "step1_backbone_gradient_norms": {
+    "total": 1.6589208927784713,
+    "zero": 0.4675668085449622,
+    "random": 0.42379106021357205
+  },
+  "AD_classes_exact": true,
+  "historical_AD_classes_exact": true,
+  "points_views_exact": true,
+  "loss": 3.168919086456299,
+  "valid": 417,
+  "zero": 147,
+  "positive": 270,
+  "random_overlap": 106,
+  "random_mask_rows": [
+    {
+      "object_slot": 0,
+      "score_quartile": 0,
+      "valid": 5,
+      "q0": 3,
+      "random_count": 3,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 1,
+      "valid": 2,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 2,
+      "valid": 3,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 3,
+      "valid": 5,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 0,
+      "valid": 2,
+      "q0": 2,
+      "random_count": 2,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 1,
+      "valid": 5,
+      "q0": 3,
+      "random_count": 3,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 2,
+      "valid": 10,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 3,
+      "valid": 5,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 0,
+      "valid": 40,
+      "q0": 38,
+      "random_count": 38,
+      "q0_overlap": 36
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 1,
+      "valid": 38,
+      "q0": 20,
+      "random_count": 20,
+      "q0_overlap": 10
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 2,
+      "valid": 28,
+      "q0": 2,
+      "random_count": 2,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 3,
+      "valid": 23,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 0,
+      "valid": 14,
+      "q0": 14,
+      "random_count": 14,
+      "q0_overlap": 14
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 1,
+      "valid": 15,
+      "q0": 5,
+      "random_count": 5,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 2,
+      "valid": 20,
+      "q0": 2,
+      "random_count": 2,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 3,
+      "valid": 25,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 0,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 1,
+      "valid": 1,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 2,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 3,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 0,
+      "valid": 13,
+      "q0": 13,
+      "random_count": 13,
+      "q0_overlap": 13
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 1,
+      "valid": 14,
+      "q0": 7,
+      "random_count": 7,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 2,
+      "valid": 17,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 3,
+      "valid": 8,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 8,
+      "score_quartile": 0,
+      "valid": 31,
+      "q0": 25,
+      "random_count": 25,
+      "q0_overlap": 20
+    },
+    {
+      "object_slot": 8,
+      "score_quartile": 1,
+      "valid": 29,
+      "q0": 8,
+      "random_count": 8,
+      "q0_overlap": 4
+    },
+    {
+      "object_slot": 8,
+      "score_quartile": 2,
+      "valid": 26,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 8,
+      "score_quartile": 3,
+      "valid": 38,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    }
+  ],
+  "logit_tolerance_source": "existing historical 3e-5 retained as numerical diagnostic; same-backbone path equality exact",
+  "backbone_recomputed": true,
+  "parameter_updates": 0
+}

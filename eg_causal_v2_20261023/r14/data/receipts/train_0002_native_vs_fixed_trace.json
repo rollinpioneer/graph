@@ -1,0 +1,347 @@
+{
+  "source_scene": 2,
+  "parameter_updates": 0,
+  "controls": {
+    "native1": {
+      "before_rng_hash": "787b50dd2b1afaed7171865e4c47b2e8b4a8684137009052b2dd8f3403c5ab8e",
+      "after_rng_hash": "8b3e18cd21db8ee648cafb9a15908122ad5fe32f20430c9c8864215bb36c3867",
+      "queries_exact": true,
+      "views_exact": true,
+      "FP32": true,
+      "autograd_enabled": true,
+      "BN_train": true
+    },
+    "native2": {
+      "before_rng_hash": "787b50dd2b1afaed7171865e4c47b2e8b4a8684137009052b2dd8f3403c5ab8e",
+      "after_rng_hash": "8b3e18cd21db8ee648cafb9a15908122ad5fe32f20430c9c8864215bb36c3867",
+      "queries_exact": true,
+      "views_exact": true,
+      "FP32": true,
+      "autograd_enabled": true,
+      "BN_train": true
+    },
+    "fixed": {
+      "before_rng_hash": "787b50dd2b1afaed7171865e4c47b2e8b4a8684137009052b2dd8f3403c5ab8e",
+      "after_rng_hash": "8b3e18cd21db8ee648cafb9a15908122ad5fe32f20430c9c8864215bb36c3867",
+      "queries_exact": true,
+      "views_exact": true,
+      "FP32": true,
+      "autograd_enabled": true,
+      "BN_train": true
+    },
+    "fixed_shared_backbone": {
+      "before_rng_hash": "787b50dd2b1afaed7171865e4c47b2e8b4a8684137009052b2dd8f3403c5ab8e",
+      "after_rng_hash": "8b3e18cd21db8ee648cafb9a15908122ad5fe32f20430c9c8864215bb36c3867",
+      "queries_exact": true,
+      "views_exact": true,
+      "FP32": true,
+      "autograd_enabled": true,
+      "BN_train": true
+    }
+  },
+  "native_to_native_logits": {
+    "grasp_angle_pred": 1.33514404296875e-05,
+    "grasp_depth_pred": 2.288818359375e-05,
+    "grasp_width_pred": 9.5367431640625e-07,
+    "grasp_score_pred": 1.049041748046875e-05
+  },
+  "native_to_fixed_logits": {
+    "grasp_angle_pred": 1.33514404296875e-05,
+    "grasp_depth_pred": 2.288818359375e-05,
+    "grasp_width_pred": 1.1920928955078125e-06,
+    "grasp_score_pred": 9.775161743164062e-06
+  },
+  "native_to_shared_backbone_logits": {
+    "grasp_angle_pred": 0.0,
+    "grasp_depth_pred": 0.0,
+    "grasp_width_pred": 0.0,
+    "grasp_score_pred": 0.0
+  },
+  "native_to_native_layers": {
+    "01_backbone": {
+      "exact": false,
+      "max_abs": 1.52587890625e-05,
+      "rms": 1.4625419028508126e-07,
+      "shape": [
+        10935,
+        512
+      ],
+      "hash_a": "358fb3ce40abf8c2e4b414914bede28984699fc89d5da4ad0dffed62a8a444f2",
+      "hash_b": "1c20d5ccd1a2d0a90083a1cab75b442ac1b72c30d013bb995cda765d4534d5a4"
+    },
+    "02_graspable_input": {
+      "exact": false,
+      "max_abs": 1.52587890625e-05,
+      "rms": 1.6069665149982975e-07,
+      "shape": [
+        1,
+        512,
+        20000
+      ],
+      "hash_a": "381aaecb91b4cdaae20df89eb63dbc2574f80cb59eee24e1b60f24abe600c6a4",
+      "hash_b": "248146c4d032bd859d484a3d34acfb9042cfb65f76ef4495a3b494b4ffc80e7d"
+    },
+    "03_view_input": {
+      "exact": false,
+      "max_abs": 1.7881393432617188e-07,
+      "rms": 1.6690179782962905e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "4701b31ee31c504f113454100f52e07a5fe34fec25fcf551e3301f9d421ea8db",
+      "hash_b": "82e40203d1a1dd1eac768cd50069d6de6fe448b455f9bc175a4a4363332c3754"
+    },
+    "04_view_residual": {
+      "exact": false,
+      "max_abs": 5.960464477539062e-07,
+      "rms": 2.165828594835002e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "45db9d3e3b6b4ab15678b2694c3e13f68646c7ec19d5084783d17266455cde8a",
+      "hash_b": "95127981ff3a3180d54ea6b77dfaa8cd78c8d9e5dd966c82794a3b49b47c004d"
+    },
+    "05_group_features": {
+      "exact": false,
+      "max_abs": 5.960464477539062e-07,
+      "rms": 2.6592848751356268e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "b4698e482889d821bba6e91811eb56f566d889d2cb8f1f54501d388a4d4ac7ff",
+      "hash_b": "03493399dfeab1b41266b58b20beed1efab7789372c37f8444f790b1396dec33"
+    },
+    "06_group_rotation": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        1024,
+        3,
+        3
+      ],
+      "hash_a": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2",
+      "hash_b": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2"
+    },
+    "07_head_input": {
+      "exact": false,
+      "max_abs": 4.291534423828125e-06,
+      "rms": 5.473474904455742e-07,
+      "shape": [
+        1,
+        256,
+        1024
+      ],
+      "hash_a": "091caa0fb26c624c99e294e992240d4d4998830136f8c6781fbf648aa1bd3178",
+      "hash_b": "14a3962931f0ee72a9a875a06f8d5836cb14376ebc0e1d157a6afb06231fe7e5"
+    }
+  },
+  "native_to_fixed_layers": {
+    "01_backbone": {
+      "exact": false,
+      "max_abs": 1.33514404296875e-05,
+      "rms": 1.5242542401703798e-07,
+      "shape": [
+        10935,
+        512
+      ],
+      "hash_a": "358fb3ce40abf8c2e4b414914bede28984699fc89d5da4ad0dffed62a8a444f2",
+      "hash_b": "ad9cb3568388a56a97b7c593c2c4e101951fe4b18719e652a7ddfbdc518de4c6"
+    },
+    "02_graspable_input": {
+      "exact": false,
+      "max_abs": 1.33514404296875e-05,
+      "rms": 1.7004757107570542e-07,
+      "shape": [
+        1,
+        512,
+        20000
+      ],
+      "hash_a": "381aaecb91b4cdaae20df89eb63dbc2574f80cb59eee24e1b60f24abe600c6a4",
+      "hash_b": "80d9382715b82f3b6bd6f4f8c1f7539857828269d4e1f07ce99d49afdaa4caac"
+    },
+    "03_view_input": {
+      "exact": false,
+      "max_abs": 1.7881393432617188e-07,
+      "rms": 1.725323254970178e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "4701b31ee31c504f113454100f52e07a5fe34fec25fcf551e3301f9d421ea8db",
+      "hash_b": "327e3cb95981531204cb7c3b0352d24b14d6e23b5b0884a240d25fa33bf2d041"
+    },
+    "04_view_residual": {
+      "exact": false,
+      "max_abs": 5.960464477539062e-07,
+      "rms": 2.1704112176106216e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "45db9d3e3b6b4ab15678b2694c3e13f68646c7ec19d5084783d17266455cde8a",
+      "hash_b": "d216c254396ad36f4be55fe4f655c5b7fb2390e66b5871a782589c3cd90c64b1"
+    },
+    "05_group_features": {
+      "exact": false,
+      "max_abs": 5.960464477539062e-07,
+      "rms": 2.698688356758546e-08,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "b4698e482889d821bba6e91811eb56f566d889d2cb8f1f54501d388a4d4ac7ff",
+      "hash_b": "a908f605f6b1227af781c8d6914964bc3e45949821c06ff7c0b3ad22c41c5b08"
+    },
+    "06_group_rotation": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        1024,
+        3,
+        3
+      ],
+      "hash_a": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2",
+      "hash_b": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2"
+    },
+    "07_head_input": {
+      "exact": false,
+      "max_abs": 4.291534423828125e-06,
+      "rms": 5.513927604125612e-07,
+      "shape": [
+        1,
+        256,
+        1024
+      ],
+      "hash_a": "091caa0fb26c624c99e294e992240d4d4998830136f8c6781fbf648aa1bd3178",
+      "hash_b": "913184f58da61c058b07c807e7816280c92b48ad358754aee47b3701057087c4"
+    }
+  },
+  "native_to_shared_backbone_layers": {
+    "01_backbone": {
+      "exact": false,
+      "max_abs": 1.52587890625e-05,
+      "rms": 1.6472569571031298e-07,
+      "shape": [
+        10935,
+        512
+      ],
+      "hash_a": "358fb3ce40abf8c2e4b414914bede28984699fc89d5da4ad0dffed62a8a444f2",
+      "hash_b": "3f70fbedda6e2eee6043e2264bea8eae7bcb5ccabedc0f0c45fabe796c6c1ea3"
+    },
+    "02_graspable_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        20000
+      ],
+      "hash_a": "381aaecb91b4cdaae20df89eb63dbc2574f80cb59eee24e1b60f24abe600c6a4",
+      "hash_b": "381aaecb91b4cdaae20df89eb63dbc2574f80cb59eee24e1b60f24abe600c6a4"
+    },
+    "03_view_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "4701b31ee31c504f113454100f52e07a5fe34fec25fcf551e3301f9d421ea8db",
+      "hash_b": "4701b31ee31c504f113454100f52e07a5fe34fec25fcf551e3301f9d421ea8db"
+    },
+    "04_view_residual": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "45db9d3e3b6b4ab15678b2694c3e13f68646c7ec19d5084783d17266455cde8a",
+      "hash_b": "45db9d3e3b6b4ab15678b2694c3e13f68646c7ec19d5084783d17266455cde8a"
+    },
+    "05_group_features": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "b4698e482889d821bba6e91811eb56f566d889d2cb8f1f54501d388a4d4ac7ff",
+      "hash_b": "b4698e482889d821bba6e91811eb56f566d889d2cb8f1f54501d388a4d4ac7ff"
+    },
+    "06_group_rotation": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        1024,
+        3,
+        3
+      ],
+      "hash_a": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2",
+      "hash_b": "6cf2b52e88dbb89ac097df93f9daa7efb05889dfc92339a13dd0c659d9502ad2"
+    },
+    "07_head_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        256,
+        1024
+      ],
+      "hash_a": "091caa0fb26c624c99e294e992240d4d4998830136f8c6781fbf648aa1bd3178",
+      "hash_b": "091caa0fb26c624c99e294e992240d4d4998830136f8c6781fbf648aa1bd3178"
+    }
+  },
+  "historical_logits": {
+    "native1": {
+      "grasp_angle_pred": 1.33514404296875e-05,
+      "grasp_depth_pred": 2.288818359375e-05,
+      "grasp_width_pred": 1.5497207641601562e-06,
+      "grasp_score_pred": 8.58306884765625e-06
+    },
+    "native2": {
+      "grasp_angle_pred": 1.52587890625e-05,
+      "grasp_depth_pred": 2.288818359375e-05,
+      "grasp_width_pred": 1.817941665649414e-06,
+      "grasp_score_pred": 1.1444091796875e-05
+    },
+    "fixed": {
+      "grasp_angle_pred": 1.52587890625e-05,
+      "grasp_depth_pred": 3.0517578125e-05,
+      "grasp_width_pred": 1.4007091522216797e-06,
+      "grasp_score_pred": 1.0967254638671875e-05
+    },
+    "fixed_shared_backbone": {
+      "grasp_angle_pred": 1.33514404296875e-05,
+      "grasp_depth_pred": 2.288818359375e-05,
+      "grasp_width_pred": 1.5497207641601562e-06,
+      "grasp_score_pred": 8.58306884765625e-06
+    }
+  },
+  "tolerance_unchanged": 3e-05,
+  "native_repeat_pass": true,
+  "fixed_path_pass": true
+}

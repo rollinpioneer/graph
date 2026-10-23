@@ -1,0 +1,24 @@
+{
+  "status": "frozen_before_any_Adam_update",
+  "reason": "Independent FP32 train-mode sparse-backbone forwards show small numerical variation despite restored model/BN/RNG. Native and frozen-query downstream paths become bitwise identical when given the same backbone output.",
+  "evidence": "queue211; receipts/train_0002_native_vs_fixed_trace.json",
+  "observed_native_repeat_max_logit_abs": 0.00002288818359375,
+  "observed_native_to_fixed_max_logit_abs": 0.00002288818359375,
+  "observed_shared_backbone_max_logit_abs": 0.0,
+  "prior_independent_replay_failures": [0.000034332275390625, 0.000030517578125],
+  "historical_logit_threshold_unchanged": 0.00003,
+  "implementation": {
+    "step1": "Each source uses one actual native full-network autograd graph, with the previously frozen labels. Derive total, q0-width and count-matched-random-width gradients from that graph; form the seven gradient-scope conditions. Each independent branch still starts from the original parameters, optimizer moments, and that same forward's BN/RNG state.",
+    "steps2_to5": "Recompute full backbone and backward for every branch and update; no cached or detached features used for optimization.",
+    "equivalence": "Use a shared-backbone zero-update check to verify downstream outputs exactly; independent-forward numerical differences remain visible in receipts and are not selected by repeated retries.",
+    "scientific_scope": "Unchanged seven conditions, eight source batches, two folds, both post-update steps1/5, fixed loss denominator, actual Adam moments, count and step-norm controls.",
+    "initial_gradient_scope": "R0 total; RW total minus q0-width; RW-local retains q0-width only in final width layer; random total minus fixed matched-count subset. A/D/Q final-layer gradients must be unchanged."
+  },
+  "budgets_unchanged": {
+    "Adam_steps_max": 280,
+    "analytic_evaluations_max": 131072,
+    "short_training": false,
+    "C3_C4_C5": false,
+    "git": false
+  }
+}

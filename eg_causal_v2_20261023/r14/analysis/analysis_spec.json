@@ -1,0 +1,76 @@
+{
+  "statistical_unit": "heldout scene; average its four independent source pulses first",
+  "scene_count": 8,
+  "folds": [
+    [
+      2,
+      31,
+      68,
+      76
+    ],
+    [
+      9,
+      33,
+      64,
+      82
+    ]
+  ],
+  "steps_reported_separately": [
+    1,
+    5
+  ],
+  "bootstrap": {
+    "method": "paired percentile scene bootstrap",
+    "replicates": 10000,
+    "seed": 20261023
+  },
+  "dependence_limit": "Four heldout scenes within a fold share the same four source pulses. Eight-scene bootstrap is conditional on these sources and not a full independent-source/population interval. Report fold means and crossed source/target resampling as sensitivity, not independent replication.",
+  "unknown": "Exclude unknown from numerator and denominator; report and fail completeness when any remain. Never convert unknown to failure.",
+  "primary": "128 fixed queries; scene-equal analytic feasibility difference",
+  "comparisons": [
+    [
+      "RW_remove_q0_width",
+      "R0_original"
+    ],
+    [
+      "RW_actual_step_norm_matched",
+      "R0_original"
+    ],
+    [
+      "RW_remove_q0_width",
+      "Rrandom_count_matched"
+    ],
+    [
+      "RW_actual_step_norm_matched",
+      "Rrandom_actual_step_norm_matched"
+    ],
+    [
+      "RW_local_keep_final_width_only",
+      "R0_original"
+    ],
+    [
+      "RW_local_actual_step_norm_matched",
+      "R0_original"
+    ],
+    [
+      "RW_remove_q0_width",
+      "RW_local_keep_final_width_only"
+    ],
+    [
+      "RW_actual_step_norm_matched",
+      "RW_local_actual_step_norm_matched"
+    ],
+    [
+      "Rrandom_count_matched",
+      "R0_original"
+    ],
+    [
+      "Rrandom_actual_step_norm_matched",
+      "R0_original"
+    ]
+  ],
+  "rescue_harm": "Paired candidate IDs vs original checkpoint and same-source/step R0; report both rather than only net change.",
+  "pipeline": "G0S0/G1S0/G0S1/G1S1 each use full official collision/NMS/objectTop10/Top50 selection; top1, feasible count and candidate coverage separate.",
+  "ranking": "Within-object success/failure pair inversions on the same known fixed-query ID intersection; compare old/new scores at each frozen geometry. Equal weight objects within source/scene, then sources within scene. Diagnostic, not AP.",
+  "decision": "No best-step selection. Loss descent, gradient norm or oracle gains alone are not benefit. Require consistent treated-vs-R0 evidence surviving count and actual-step controls; small pulse evidence cannot establish a method or generalization."
+}

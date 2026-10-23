@@ -1,0 +1,140 @@
+{
+  "id": "GRASP_EG_causal_mechanism_v2_20261023",
+  "status": "stage1_execution_frozen",
+  "archive_commit": "e4129d73ac263c39b6a7856aa94cbd09910d4318",
+  "official_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
+  "checkpoint_sha256": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a",
+  "current_permissions": {
+    "parameter_updates": false,
+    "server_execution": false,
+    "git_write": false,
+    "C4_C5": false
+  },
+  "proposed_no_update_work": [
+    "R1_label_provenance_and_tie_rule",
+    "R1_training_path_statistics",
+    "R3_equal_budget_joint_grid_analysis",
+    "R2_GT_free_basis_reencoding"
+  ],
+  "main_hypothesis": "zero_quality_pose_target_semantics_and_harmful_update_not_attention_module_utility",
+  "basis_shift_angle_bins": [
+    0,
+    1,
+    3,
+    6
+  ],
+  "basis_bin_radians": "pi/12",
+  "basis_invariants": [
+    "point_cloud",
+    "query_centers",
+    "physical_approaches",
+    "neighbor_ids",
+    "physical_AD_action_set",
+    "baseline_width_for_primary"
+  ],
+  "pulse_design_after_authorization": {
+    "paired_batches_cap_proposed": 16,
+    "steps": [
+      1,
+      5
+    ],
+    "arms": [
+      "original",
+      "zero_width_gradient_removed",
+      "zero_width_final_layer_only",
+      "count_matched_random_width_removal"
+    ],
+    "additional_control": "actual_parameter_step_norm_matched",
+    "restore_each_comparison": [
+      "parameters",
+      "buffers",
+      "optimizer_state",
+      "RNG"
+    ],
+    "loss_denominator": "original_valid_count"
+  },
+  "short_confirmation_after_authorization": {
+    "selected_mechanisms_max": 1,
+    "seeds": 3,
+    "updates_cap": 1000,
+    "report_steps": [
+      200,
+      1000
+    ]
+  },
+  "quality_target_trial": "Q0_Q1_Q2_frozen_geometry_reserve_only",
+  "primary_outcome": "paired_analytic_feasibility_with_rescue_and_harm_and_full_pipeline",
+  "statistical_unit": "scene",
+  "notes": [
+    "Proposal, not runnable experiment configuration.",
+    "Existing grid labels apply only at their frozen widths.",
+    "No-candidate-grid success does not mean continuous or physical ungraspability.",
+    "Probe statistics are not historical training exposure.",
+    "Innovation and causal evidence are separate decisions."
+  ],
+  "execution_authorization": {
+    "source": "User requested execution of v2 plan in this turn",
+    "server_execution": "stage1_only_no_parameter_update",
+    "parameter_updates": false,
+    "git_write": false,
+    "C4_C5": false
+  },
+  "stage1_scope": {
+    "train_scenes": [
+      2,
+      9,
+      31,
+      33,
+      68,
+      64,
+      76,
+      82
+    ],
+    "train_frames": [
+      0,
+      128
+    ],
+    "R1_trace": "all original 634 q_ref=0 valid fixed inference queries plus positive controls",
+    "R1_training_path": {
+      "batches": 16,
+      "batch_size": 1,
+      "seed_rule": "20261023 + scene*1000 + frame",
+      "net_is_training": true,
+      "view_is_training": true,
+      "torch_train": true,
+      "augmentation": "official dataset augment=True",
+      "repeat_control": "first batch RNG/state replay, duplicate view writes stratified",
+      "paired_eval_control": "same captured grouping inputs, directions and labels; cy/head eval only",
+      "optimizer": null,
+      "restore_buffers_each_batch": true
+    },
+    "R2": {
+      "k": [
+        0,
+        1,
+        3,
+        6
+      ],
+      "frames": 16,
+      "queries": 256,
+      "width": "original frozen decoded width",
+      "new_analytic_evaluations": 0,
+      "identity_control": true,
+      "pilot_frames": 1
+    },
+    "R3": {
+      "queries": 256,
+      "all_48_grid_cells": 12288,
+      "unit": "scene",
+      "random4": "exact hypergeometric expectation plus seeded reference if needed",
+      "new_analytic_evaluations": 0
+    },
+    "new_C3_forward": false,
+    "new_physical_evaluation": false
+  },
+  "next_stage_gate": "R1.4 temporary parameter updates need explicit additional authorization after stage1 results and concrete reviewable pulse design; R1.5 remains gated by pulse evidence and authorization.",
+  "input_hashes": {
+    "protocol_design.json": "c3b775227d02a115f8a42080a7c0fa4229e2237d1c9a8cb2676407b3d2dfb00e",
+    "plan_v2.md": "ac57fe06de25b3960842b09117d15d4d6785398be6eebeadad972cba39ac927f"
+  }
+}

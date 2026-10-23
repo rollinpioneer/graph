@@ -1,0 +1,385 @@
+{
+  "source_scene": 33,
+  "input_hash": "23515ed08b88f6f54bef47af99cbcd2a70e60cdb461c6473427ded21aec911f2",
+  "query_hash": "01e2abd110ec08d3f01534e3978892622dd1242b7ffee6c4219e0b7a562cb930",
+  "label_replay_differences": {
+    "batch_valid_mask": 0,
+    "batch_grasp_score": 1,
+    "batch_grasp_width": 1,
+    "batch_grasp_rotations": 1,
+    "batch_grasp_depth": 1,
+    "batch_grasp_point": 0
+  },
+  "stage1_logits_max_abs": {
+    "grasp_angle_pred": 1.9073486328125e-05,
+    "grasp_depth_pred": 2.288818359375e-05,
+    "grasp_width_pred": 1.1324882507324219e-06,
+    "grasp_score_pred": 9.179115295410156e-06
+  },
+  "fixed_path_logits_max_abs": {
+    "grasp_angle_pred": 0.0,
+    "grasp_depth_pred": 0.0,
+    "grasp_width_pred": 0.0,
+    "grasp_score_pred": 0.0
+  },
+  "layertrace": {
+    "01_backbone": {
+      "exact": false,
+      "max_abs": 1.52587890625e-05,
+      "rms": 1.7334916980188467e-07,
+      "shape": [
+        9923,
+        512
+      ],
+      "hash_a": "12d15489d186b6aaf88ee14c478c73c80b8ee05975af5e2c211e39e9d1a16ca5",
+      "hash_b": "5c0497a4c040da3dc32935bec89d04f4db2f8542f52d3e995e5569807e6f1dba"
+    },
+    "02_graspable_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        20000
+      ],
+      "hash_a": "6a52a7cff0a525aa2f9f6c60005be2650299ece0c4f9fcc2883ac90a888a2420",
+      "hash_b": "6a52a7cff0a525aa2f9f6c60005be2650299ece0c4f9fcc2883ac90a888a2420"
+    },
+    "03_view_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "5447c3c2665d7ab1be8ef7e093f7c118f147feb42f7a7821a8b5eada24822bd5",
+      "hash_b": "5447c3c2665d7ab1be8ef7e093f7c118f147feb42f7a7821a8b5eada24822bd5"
+    },
+    "04_view_residual": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "b9a87c9e1e5a36afa09fa34ac7e0803f8f03a558fcd790ffc0925ce3554b1039",
+      "hash_b": "b9a87c9e1e5a36afa09fa34ac7e0803f8f03a558fcd790ffc0925ce3554b1039"
+    },
+    "05_group_features": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        512,
+        1024
+      ],
+      "hash_a": "e7d466bb7847d72fe798500796ff30b7daed9f7e90b32151e0e313be7353780d",
+      "hash_b": "e7d466bb7847d72fe798500796ff30b7daed9f7e90b32151e0e313be7353780d"
+    },
+    "06_group_rotation": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        1024,
+        3,
+        3
+      ],
+      "hash_a": "fae2ab5e7f690102d6ae72c598b8416ac1f48c083f78d507b3333c55a4f9ef63",
+      "hash_b": "fae2ab5e7f690102d6ae72c598b8416ac1f48c083f78d507b3333c55a4f9ef63"
+    },
+    "07_head_input": {
+      "exact": true,
+      "max_abs": 0.0,
+      "rms": 0.0,
+      "shape": [
+        1,
+        256,
+        1024
+      ],
+      "hash_a": "2fa7643b894386e0b8cbdd5cd33270a485ce80c9b74af4595dda7215795c2040",
+      "hash_b": "2fa7643b894386e0b8cbdd5cd33270a485ce80c9b74af4595dda7215795c2040"
+    }
+  },
+  "shared_step1_graph": true,
+  "step1_backbone_gradient_norms": {
+    "total": 1.8804432110193932,
+    "zero": 0.382021346864419,
+    "random": 0.28205169138298847
+  },
+  "AD_classes_exact": true,
+  "points_views_exact": true,
+  "loss": 2.9724044799804688,
+  "valid": 565,
+  "zero": 208,
+  "positive": 357,
+  "random_overlap": 161,
+  "random_mask_rows": [
+    {
+      "object_slot": 0,
+      "score_quartile": 0,
+      "valid": 53,
+      "q0": 47,
+      "random_count": 47,
+      "q0_overlap": 42
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 1,
+      "valid": 32,
+      "q0": 10,
+      "random_count": 10,
+      "q0_overlap": 3
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 2,
+      "valid": 35,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 0,
+      "score_quartile": 3,
+      "valid": 19,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 0,
+      "valid": 23,
+      "q0": 23,
+      "random_count": 23,
+      "q0_overlap": 23
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 1,
+      "valid": 21,
+      "q0": 12,
+      "random_count": 12,
+      "q0_overlap": 8
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 2,
+      "valid": 28,
+      "q0": 2,
+      "random_count": 2,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 2,
+      "score_quartile": 3,
+      "valid": 18,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 0,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 1,
+      "valid": 1,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 2,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 3,
+      "score_quartile": 3,
+      "valid": 0,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 0,
+      "valid": 2,
+      "q0": 2,
+      "random_count": 2,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 1,
+      "valid": 8,
+      "q0": 3,
+      "random_count": 3,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 2,
+      "valid": 7,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 4,
+      "score_quartile": 3,
+      "valid": 3,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 5,
+      "score_quartile": 0,
+      "valid": 34,
+      "q0": 34,
+      "random_count": 34,
+      "q0_overlap": 34
+    },
+    {
+      "object_slot": 5,
+      "score_quartile": 1,
+      "valid": 35,
+      "q0": 12,
+      "random_count": 12,
+      "q0_overlap": 4
+    },
+    {
+      "object_slot": 5,
+      "score_quartile": 2,
+      "valid": 32,
+      "q0": 3,
+      "random_count": 3,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 5,
+      "score_quartile": 3,
+      "valid": 29,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 0,
+      "valid": 5,
+      "q0": 5,
+      "random_count": 5,
+      "q0_overlap": 5
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 1,
+      "valid": 8,
+      "q0": 5,
+      "random_count": 5,
+      "q0_overlap": 2
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 2,
+      "valid": 3,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 6,
+      "score_quartile": 3,
+      "valid": 1,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 0,
+      "valid": 6,
+      "q0": 5,
+      "random_count": 5,
+      "q0_overlap": 4
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 1,
+      "valid": 10,
+      "q0": 3,
+      "random_count": 3,
+      "q0_overlap": 1
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 2,
+      "valid": 8,
+      "q0": 1,
+      "random_count": 1,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 7,
+      "score_quartile": 3,
+      "valid": 6,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 10,
+      "score_quartile": 0,
+      "valid": 19,
+      "q0": 19,
+      "random_count": 19,
+      "q0_overlap": 19
+    },
+    {
+      "object_slot": 10,
+      "score_quartile": 1,
+      "valid": 26,
+      "q0": 16,
+      "random_count": 16,
+      "q0_overlap": 10
+    },
+    {
+      "object_slot": 10,
+      "score_quartile": 2,
+      "valid": 28,
+      "q0": 4,
+      "random_count": 4,
+      "q0_overlap": 0
+    },
+    {
+      "object_slot": 10,
+      "score_quartile": 3,
+      "valid": 65,
+      "q0": 0,
+      "random_count": 0,
+      "q0_overlap": 0
+    }
+  ],
+  "logit_tolerance_source": "existing module protocol historical_logits_max_abs=3e-5; same-backbone path equality exact",
+  "backbone_recomputed": true,
+  "parameter_updates": 0
+}
