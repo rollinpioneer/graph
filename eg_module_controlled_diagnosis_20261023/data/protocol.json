@@ -1,0 +1,178 @@
+{
+  "name": "GRASP_EG_module_controlled_diagnosis",
+  "version": "20261023_design_v1",
+  "status": "execution_frozen",
+  "official_commit": "4119bdcd6bf5d3712a110f78ca87504dd359eec0",
+  "archive_commit": "0b3df6b",
+  "checkpoint_sha256": "a47b717ad41870e9b34e85b1487de2a3f0f134ddc1a71a98a1b55bca7fc5804a",
+  "allow_training": false,
+  "allow_C4_C5": false,
+  "allow_git_write": false,
+  "phase1": [
+    "E0_gradient_routes",
+    "E1_frame_control",
+    "E2_directional_attention",
+    "E3_0_target_gradient",
+    "E3_1_zero_target_ledger",
+    "E4_local_AD_grid"
+  ],
+  "optional_after_parameter_update_authorization": [
+    "E3_2_temporary_updates",
+    "E5_fixed_pose_target_training",
+    "E6_one_mechanism_confirmation"
+  ],
+  "train_probe_scenes": [
+    2,
+    9,
+    31,
+    33,
+    68,
+    64,
+    76,
+    82
+  ],
+  "train_probe_frames": [
+    0,
+    128
+  ],
+  "c3_scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "c3_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "head_token_order": [
+    "angle",
+    "depth",
+    "width",
+    "score"
+  ],
+  "attention_masks": {
+    "pose_to_score_off": {
+      "zero_entries": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "score_to_pose_off": {
+      "zero_entries": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    }
+  },
+  "attention_edge_strengths": [
+    1.0,
+    0.5,
+    0.0
+  ],
+  "geometry_score_composition": [
+    [
+      "original",
+      "original"
+    ],
+    [
+      "intervention",
+      "original"
+    ],
+    [
+      "original",
+      "intervention"
+    ],
+    [
+      "intervention",
+      "intervention"
+    ]
+  ],
+  "new_analytic_evaluation_cap_proposed": 50000,
+  "local_AD_grid_queries_cap": 256,
+  "local_AD_grid_size": 48,
+  "training_proposed": {
+    "seeds": 3,
+    "updates_cap": 1000,
+    "checkpoints": [
+      200,
+      1000
+    ],
+    "E6_max_selected_mechanisms": 1
+  },
+  "note": "Configuration is a plan manifest, not a runnable training program. Read the Markdown for controls, definitions, and limitations.",
+  "seed": 20261023,
+  "GPU_host": "172.19.164.245",
+  "GPU_count": 1,
+  "analytic_cap": 50000,
+  "allocation": {
+    "train_fixed_queries_per_frame": 128,
+    "train_variants": 8,
+    "C3_original_final_pool_pose_variants": 5,
+    "E4_queries_per_frame": 16,
+    "E4_total_calls_cap": 12288,
+    "C3_auxiliary_only": [
+      "H1_off",
+      "H2_off"
+    ],
+    "conservative_total_calls_cap": 45472
+  },
+  "tolerances": {
+    "historical_pose_max_abs": 0,
+    "historical_logits_max_abs": 3e-05,
+    "full_open_max_abs": 0,
+    "H1_pose_max_abs": 0,
+    "H2_score_max_abs": 0,
+    "geometry_roundtrip_max_abs": 2e-06,
+    "gradient_sum_relative_L2": 0.0001
+  },
+  "selection": "train: original final pool plus remaining raw score-rank evenly spaced to total128; E4 original raw Top1+7 evenly spaced other raw ranks+8 seeded random remaining, 16 unique each. C3 original final pool fixed; auxiliary H1_off/H2_off complete pipeline only. No outcome-based expansion.",
+  "task_steps": [
+    {
+      "step": "assets_and_freeze",
+      "status": "in_progress"
+    },
+    {
+      "step": "two_frame_pilot",
+      "status": "pending"
+    },
+    {
+      "step": "E0_E4",
+      "status": "pending"
+    },
+    {
+      "step": "report_cleanup",
+      "status": "pending"
+    }
+  ]
+}

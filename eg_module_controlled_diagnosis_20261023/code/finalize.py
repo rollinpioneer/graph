@@ -1,0 +1,11 @@
+import json,hashlib
+from pathlib import Path
+O=Path(r'C:\Users\jackx\Documents\Codex\2026-10-21\ssh-aita-xushijie-172-19-164\outputs\eg_module_controlled_diagnosis_20261023')
+S=json.loads((O/'statistics.json').read_text(encoding='utf-8'))
+receipt=dict(status='completed_E0_E4',parameter_updates=0,training_executed=False,git_write=False,C4_C5_access=False,ssh_closed=True,saved_credentials_preserved=True,remote_probe_processes_remaining=0,evaluation_hashes_verified=64,resources=S['resources'],conclusion='Method development HOLD; only prioritize E6 zero-quality ADW-mask controlled training if separately authorized',next_control=['T0 original losses','T1 remove ADW only for q_ref=0; retain Q and denominator','T2 stratified matched-count random ADW removal'],implementation_notes=['Exact historical ADWQ matches and targets retained after all view-replay differences were verified as duplicate-destination view-mapping ambiguity; no position-match changes','Original TF32 forward retained; FP32 backward satisfies original 1e-4 gradient-additivity tolerance','No uniform-neighbor extension: destructive removal established dependency but did not identify a harmful learned-weight mechanism','E1 uses projected GT closing axis, has oracle information, and is not a deployable train/inference basis fix'],unexecuted=['E3-2','E5','E6'])
+(O/'execution_receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+required=['protocol.json','source_map.md','baseline_replay.json','gradient_routes.csv','loss_population.csv','intervention_results.csv','counterfactual_composition.json','local_AD_grid.csv','training_receipts.json','mechanism_report.html']
+assert all((O/n).exists() and (O/n).stat().st_size>0 for n in required)
+assert S['replay']['frames']==64 and S['resources']['analytic_calls']==40489 and S['grid']['queries']==256
+manifest={str(p.relative_to(O)):dict(bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in O.iterdir() if p.is_file() and p.name!='deliverable_manifest.json'}
+(O/'deliverable_manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8');print('Required deliverables and baseline checks passed.')

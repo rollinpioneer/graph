@@ -1,0 +1,34 @@
+{
+  "status": "completed_E0_E4",
+  "parameter_updates": 0,
+  "training_executed": false,
+  "git_write": false,
+  "C4_C5_access": false,
+  "ssh_closed": true,
+  "saved_credentials_preserved": true,
+  "remote_probe_processes_remaining": 0,
+  "evaluation_hashes_verified": 64,
+  "resources": {
+    "analytic_calls": 40489,
+    "analytic_CPU_hours": 0.2569261145441667,
+    "forward_probe_seconds": 86.45542907714844,
+    "updates": 0
+  },
+  "conclusion": "Method development HOLD; only prioritize E6 zero-quality ADW-mask controlled training if separately authorized",
+  "next_control": [
+    "T0 original losses",
+    "T1 remove ADW only for q_ref=0; retain Q and denominator",
+    "T2 stratified matched-count random ADW removal"
+  ],
+  "implementation_notes": [
+    "Exact historical ADWQ matches and targets retained after all view-replay differences were verified as duplicate-destination view-mapping ambiguity; no position-match changes",
+    "Original TF32 forward retained; FP32 backward satisfies original 1e-4 gradient-additivity tolerance",
+    "No uniform-neighbor extension: destructive removal established dependency but did not identify a harmful learned-weight mechanism",
+    "E1 uses projected GT closing axis, has oracle information, and is not a deployable train/inference basis fix"
+  ],
+  "unexecuted": [
+    "E3-2",
+    "E5",
+    "E6"
+  ]
+}
