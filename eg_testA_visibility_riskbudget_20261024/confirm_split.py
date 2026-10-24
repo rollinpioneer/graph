@@ -55,11 +55,13 @@ def interval(x):
 
 
 TIEKEY = DIST * 12 + np.arange(12)[None, :]; TIEKEY[IX, NOM] = -1
-def z0_choose(allowed):
+def z0_choose(allowed, keep_missing_orig=True):
     valid = allowed & np.isfinite(A['I1'])
     mn = np.min(np.where(valid, A['I1'], np.inf), 1)
     ties = valid & np.isclose(A['I1'], mn[:, None], rtol=0, atol=1e-7)
     out = np.argmin(np.where(ties, TIEKEY, 999), 1); fb = ~valid.any(1); out[fb] = NOM[fb]
+    if keep_missing_orig:  # protocol section 8: candidates whose original-angle I1 is missing do not switch
+        miss = ~np.isfinite(A['I1'][IX, NOM]); out[miss] = NOM[miss]
     return out
 
 
@@ -86,9 +88,10 @@ def choose(p, lam):
 
 
 L3 = z0_choose(DIST <= 1); oL3 = outcomes(L3); TARGET = int(oL3['recovery'].sum())
+oL3_z0 = outcomes(z0_choose(DIST <= 1, keep_missing_orig=False))  # report only: Z0's literal rule
 LAMS = np.concatenate([[0.0], np.logspace(-5, 0, 501)])
 res = dict(split=SPLIT, candidates_clean=N, weak=int(WEAK.sum()), good=int(GOOD.sum()), orig_I1_missing=orig_i1_missing,
-           L3=counts(oL3), target_recovery=TARGET)
+           L3=counts(oL3), L3_z0_literal_report_only=counts(oL3_z0), target_recovery=TARGET)
 sel = {}
 for name in ['R_d', 'R_do', 'R_de']:
     p = risk(name)
