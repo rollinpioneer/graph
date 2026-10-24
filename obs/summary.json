@@ -1,0 +1,143 @@
+{
+  "status": "STOPPED_I1_REPLAY_MISMATCH",
+  "complete": false,
+  "scope": "Partial completed exports only; failed frame is evidence, not an exported frame. In-flight tasks completed before workers exited.",
+  "splits": {
+    "cal": {
+      "completed_frames": 24,
+      "planned_frames": 48,
+      "candidates": 938,
+      "variants": 11256,
+      "outlier_removed_fraction": {
+        "mean": 0.043070590761700965,
+        "max": 0.07528650355922828
+      },
+      "found_proportions": {
+        "r2": {
+          "0": 0.08759772565742716,
+          "1": 0.3758884150675195,
+          "2": 0.5365138592750534
+        },
+        "r3": {
+          "0": 0.060145700071073206,
+          "1": 0.24013859275053304,
+          "2": 0.6997157071783937
+        },
+        "r5": {
+          "0": 0.030650319829424306,
+          "1": 0.08999644633972992,
+          "2": 0.8793532338308457
+        }
+      }
+    },
+    "C3": {
+      "completed_frames": 1,
+      "planned_frames": 48,
+      "candidates": 50,
+      "variants": 600,
+      "outlier_removed_fraction": {
+        "mean": 0.07490261030557877,
+        "max": 0.07490261030557877
+      },
+      "found_proportions": {
+        "r2": {
+          "0": 0.085,
+          "1": 0.335,
+          "2": 0.58
+        },
+        "r3": {
+          "0": 0.055,
+          "1": 0.245,
+          "2": 0.7
+        },
+        "r5": {
+          "0": 0.015,
+          "1": 0.09833333333333333,
+          "2": 0.8866666666666667
+        }
+      }
+    },
+    "P2": {
+      "completed_frames": 0,
+      "planned_frames": 48,
+      "candidates": 0,
+      "variants": 0,
+      "outlier_removed_fraction": null,
+      "found_proportions": null
+    }
+  },
+  "outlier_removed_fraction": {
+    "mean": 0.04434387154345607,
+    "max": 0.07528650355922828
+  },
+  "verification": {
+    "convention": {
+      "scope": "completed and failed recorded attempts, excluding duplicate pilot",
+      "required_fraction": 0.99,
+      "actual_joint_fraction": 0.9997767358785443,
+      "minimum_frame_joint_fraction": 0.9978021978021978,
+      "GT_two_contact_variants": 8958,
+      "all_recorded_attempts_passed": true
+    },
+    "I1_replay": {
+      "all_recorded_attempts_passed": false,
+      "all_missing_masks_equal": true,
+      "max_absolute_error": 0.004220114723950813,
+      "required_error_less_than": 1e-07,
+      "scope": "Only stored finite I1 recomputed; originally missing entries preserved."
+    },
+    "alignment": {
+      "scope": "completed exports",
+      "all_candidate_ids_equal": true,
+      "all_original_angles_equal": true
+    },
+    "repeatability": {
+      "passed": true,
+      "frame": "C3_0100_0000",
+      "fields_bitwise_equal": {
+        "candidate_id": true,
+        "original_angle": true,
+        "gt_pts_cam": true,
+        "I1obs_r2": true,
+        "found_r2": true,
+        "I1obs_r3": true,
+        "found_r3": true,
+        "I1obs_r5": true,
+        "found_r5": true,
+        "I1half_r3": true,
+        "I1obs_seg_r3": true,
+        "found_seg_r3": true,
+        "obs_pts_r3": true,
+        "obs_normals_r3": true
+      },
+      "repeat_wall_seconds": 21.98410177230835,
+      "repeat_cpu_seconds": 22.065033554
+    }
+  },
+  "failed_frames": [
+    {
+      "frame": "cal_0065_0000",
+      "checks": {
+        "gt_two_contact_variants": 250,
+        "joint_convention_fraction": 1.0,
+        "line_fraction": 1.0,
+        "order_fraction": 1.0,
+        "width_fraction": 1.0,
+        "convention_passed": true,
+        "I1_missing_mask_equal": true,
+        "I1_max_absolute_error": 0.004220114723950813,
+        "I1_passed": false,
+        "recompute_scope": "stored finite I1 only; originally missing entries retained",
+        "contact_errors": {}
+      }
+    }
+  ],
+  "segmentation_mapping": "pixel label = zero-based GraspNet object_id + 1; 0 background; scene IDs+1 checked against meta cls_indexes in completed exports",
+  "CPU": {
+    "worker_processes": 12,
+    "BLAS_OMP_MKL_threads_per_process": 1,
+    "recorded_cpu_seconds": 511.70320771800004,
+    "recorded_frame_wall_seconds_sum": 518.6222887039185,
+    "timing_scope": "Recorded completed frames, failed frame and repeated C3 pilot; excludes setup and orchestration. Wall sum is not elapsed time."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "cal_scenes": [
+    67,
+    4,
+    50,
+    56,
+    14,
+    65,
+    62,
+    30,
+    45,
+    1,
+    96,
+    71
+  ],
+  "cal_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "test_scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "C3_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "P2_frames": [
+    32,
+    96,
+    160,
+    224
+  ],
+  "base_commit": "05affc00ef878eb4479ba7b482e7d699aa450421",
+  "training": false,
+  "inference": false,
+  "selection_statistics": false,
+  "GPU": false,
+  "SOR": {
+    "nb_neighbors": 20,
+    "std_ratio": 2.0
+  },
+  "normal_radius_m": 0.01,
+  "min_normal_neighbors": 10,
+  "tube_radii_m": [
+    0.002,
+    0.003,
+    0.005
+  ],
+  "two_contact_min_span_m": 0.005,
+  "contact_line_tolerance_m": 0.001,
+  "convention_min_fraction": 0.99,
+  "I1_replay_tolerance": 1e-07,
+  "segmentation_mapping": "zero-based object_id + 1; background 0",
+  "single_contact_side_rule": "test the minimum-y point normal; choose minimum-y for side 0 if dot(normal,R[:,1])<0, otherwise maximum-y for side 1",
+  "input_fields_used": [
+    "candidate_id",
+    "original_angle",
+    "object_id",
+    "pred",
+    "I1"
+  ]
+}
