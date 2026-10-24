@@ -1,0 +1,37 @@
+def adapted_decode(end_points):
+    batch_size = len(end_points['point_clouds'])
+    grasp_preds = []
+    for i in range(batch_size):
+        grasp_center = end_points['xyz_graspable'][i].float()
+
+        # composite score estimation
+        grasp_score_prob = end_points['grasp_score_pred'][i].float()
+        score = torch.tensor([0, 0.2, 0.4, 0.6, 0.8, 1]).view(-1, 1).expand(-1, grasp_score_prob.shape[1]).to(grasp_score_prob)
+        score = torch.sum(score * grasp_score_prob, dim=0)
+        grasp_score = score.view(-1, 1)
+
+        grasp_angle_pred = end_points['grasp_angle_pred'][i].float()
+        grasp_angle, grasp_angle_indxs = torch.max(grasp_angle_pred.squeeze(0)[:cfgs.num_angle], 0)
+        grasp_angle = grasp_angle_indxs * np.pi / 12
+        grasp_angle = angle_st(grasp_angle_pred.squeeze(0), grasp_angle)
+
+        grasp_depth_pred = end_points['grasp_depth_pred'][i].float()
+        grasp_depth, grasp_depth_indxs = torch.max(grasp_depth_pred.squeeze(0)[:cfgs.num_depth], 0)
+        grasp_depth = (grasp_depth_indxs + 1) * 0.01
+        grasp_depth = depth_st(grasp_depth_pred.squeeze(0), grasp_depth)
+        grasp_depth = grasp_depth.view(-1, 1)
+
+        grasp_width = 1.2 * end_points['grasp_width_pred'][i] / 10.
+        grasp_width = torch.clamp(grasp_width, min=0., max=cfgs.grasp_max_width)
+        grasp_width = grasp_width.view(-1, 1)
+
+        approaching = -end_points['grasp_top_view_xyz'][i].float()
+        grasp_rot = batch_viewpoint_params_to_matrix(approaching, grasp_angle)
+        grasp_rot = grasp_rot.view(cfgs.m_point, 9)
+
+        # merge preds
+        grasp_height = 0.02 * torch.ones_like(grasp_score)
+        obj_ids = -1 * torch.ones_like(grasp_score)
+        grasp_preds.append(
+            torch.cat([grasp_score, grasp_width, grasp_height, grasp_depth, grasp_rot, grasp_center, obj_ids], axis=-1))
+    return grasp_preds

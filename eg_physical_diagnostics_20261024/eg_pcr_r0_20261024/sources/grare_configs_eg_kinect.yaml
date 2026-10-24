@@ -1,0 +1,18 @@
+extends: _base.yaml
+name: eg_kinect
+detector: economicgrasp
+camera: kinect
+paths:
+  local_cloud_train: ${GRARE_DATA_ROOT}/relabeled/economicgrasp/kinect/local_cloud/train
+  local_cloud_test: ${GRARE_DATA_ROOT}/relabeled/economicgrasp/kinect/local_cloud/test
+  object_pooled_train: ${GRARE_DATA_ROOT}/relabeled/economicgrasp/kinect/object_pooled/train
+  object_pooled_test: ${GRARE_DATA_ROOT}/relabeled/economicgrasp/kinect/object_pooled/test
+  checkpoint_dir: ${GRARE_OUTPUT_ROOT}/checkpoints/eg_kinect
+  rerank_dir: ${GRARE_OUTPUT_ROOT}/predictions/eg_kinect
+  eval_dir: ${GRARE_OUTPUT_ROOT}/evaluation/eg_kinect
+  packed_train: ${GRARE_DATA_ROOT}/packed/economicgrasp/kinect/train
+train:
+  # EconomicGrasp emits more candidates per frame than GN/SBG.
+  num_workers: 16
+rerank:
+  lambda: 0.8

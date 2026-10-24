@@ -1,0 +1,15 @@
+{
+  "scope": "EG differentiable decoding zero-update check only",
+  "training": false, "parameter_updates": 0, "C4_C5": false,
+  "forward_panel": "Existing 48 C3 frames, all 49152 cached raw candidates",
+  "gradient_panel": "Frame 0 of each of the same 12 scenes; all existing final clean feasible/weak candidates; fixed before results",
+  "temperature": 1.0,
+  "temperature_sensitivity": [0.5, 2.0],
+  "PCR": "Official RA+RC+RS; preserve detached SDF normals; no new normal derivative",
+  "angle_surrogate": "softmax weighted pi-wrapped local offsets about hard argmax; antipodal 90deg bin offset zero",
+  "depth_surrogate": "softmax expected 1,2,3,4 cm",
+  "direction_checks": "Only ephemeral pose variables, no model weights updated; compare gradient direction with recomputed and frozen-normal PCR at +/-0.1 and +/-0.5 degree; +/-0.05 and +/-0.2 mm",
+  "unchanged_check": "Adapted and original decoder same inputs/device bitwise equality; cached prediction discrepancies separately reported",
+  "gradient_nonzero_threshold": 1e-7,
+  "caveat": "Gradient connectivity and proxy descent do not establish force-closure improvement or learning benefit"
+}

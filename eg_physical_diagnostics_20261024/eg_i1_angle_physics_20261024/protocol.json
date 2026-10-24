@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "selected_constraint": "I1: mean of 0.5*(1-outward_normal dot outward_closure_axis) at two official close_fingers contacts",
+  "selection_evidence": {
+    "AUROC_advantage": 0.17649277925874116,
+    "ci95": [
+      0.14386555638814377,
+      0.2091151146166289
+    ],
+    "threshold": 0.1
+  },
+  "scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "base_candidates": "Existing final 1229 clean feasible/weak candidates; 641 feasible and 588 weak. Do not select on new outcomes.",
+  "angles": "All 12 absolute EG angle classes; nominal rotation times Rx(class-minus-original)*15deg; nominal class kept bitwise original",
+  "fixed": "candidate ID, score, center, approach, depth, width, object assignment, original final candidate membership",
+  "evaluation": "Official continuous-pose collision/empty/get_grasp_score; no NMS or truncation applied to angle variants",
+  "friction_bins": [
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.2
+  ],
+  "feasible": "clean, nonempty, 0<mu<=0.4",
+  "I1_collision_policy": "Recover contacts even on collided poses where possible; primary I1 selection does NOT consult collision, empty or mu labels",
+  "missing_contact_policy": "I1 undefined, excluded from conditional expected risk; report missing mass and cases separately, not imputed feasible",
+  "primary_selection": "minimum I1 over all 12 classes, keep nominal class on ties; GT-contact oracle, not inference algorithm",
+  "secondary_selection": "minimum I1 in +/-1 and +/-2 cyclic neighboring classes; report all, do not choose best setting post hoc",
+  "physical_oracle": "best feasible/lowest-mu clean class, explicitly separate upper bound",
+  "gradient": "softmax(logits/temperature) expected detached I1 over contact-defined classes; primary temperature 1; analytic p*(risk-mean)/T checked by autograd and finite difference",
+  "logit_probe": "One ephemeral normalized negative-gradient displacement with max absolute logit change 0.25/0.5/1.0, main 0.5; not a parameter update, not a learned/deployable result",
+  "model_realized": "Frozen original EG argmax, no training. Thus unchanged actual model outputs; logit probes are GT-assisted attainability only",
+  "decision_gate": "Proceed to training only if primary I1 selection and main logit probe yield positive scene-bootstrap net feasible change; weak recovery positive and collision/empty increase and feasible-harm rate each <=5 percentage points. These are operational conservative gates fixed before evaluation, not significance guarantees.",
+  "statistics": "Paired scene units; 10000 bootstrap draws within seen/similar/novel strata; equal scene weighting; 48 frames are not independent scenes",
+  "training": "No training in experiments 1/2. Experiment3 conditional on gate and a fully specified common training budget; do not run if HOLD/STOP.",
+  "C4_C5": false,
+  "historical_changes": false,
+  "numerically_equal_I1_tolerance": 1e-07,
+  "numerical_note": "Set before aggregate analysis after nominal cross-host contact differences of order 1e-9; preserve nominal class for numerically tied I1; physical quality and GO gates unchanged."
+}

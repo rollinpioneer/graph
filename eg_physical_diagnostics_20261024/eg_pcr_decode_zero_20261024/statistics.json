@@ -1,0 +1,352 @@
+{
+  "n": 313,
+  "scenes": 12,
+  "objects": 50,
+  "feasible": 176,
+  "weak": 137,
+  "outside": 6,
+  "PCR_replay_max": 5.662441253662109e-07,
+  "parameter_updates": 0,
+  "training": false,
+  "forward": {
+    "n_candidates": 49152,
+    "frames": 48,
+    "adaptation_bitwise_all": true,
+    "grad_enabled_bitwise_all": true,
+    "gpu_history_bitwise_all": true,
+    "cpu_history_max": 1.9073486328125e-06,
+    "synthetic": {
+      "forward_equal": true,
+      "angle_seam_11_from_0_gradient": -0.019083986058831215,
+      "angle_seam_0_from_11_gradient": 0.01908397674560547,
+      "invalid_grad_zero": true,
+      "finite": true
+    }
+  },
+  "gradient": {
+    "RA": {
+      "angle_logits": {
+        "active": 313,
+        "total": 313,
+        "scene_ci": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "scenes": 12
+        },
+        "median": 0.0033713229931890965,
+        "max": 0.04972388967871666
+      },
+      "depth_logits": {
+        "active": 0,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0
+      }
+    },
+    "RC": {
+      "angle_logits": {
+        "active": 69,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.2074719787317876,
+          "lo": 0.1580983375144586,
+          "hi": 0.2638509800833688,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0013592876493930817
+      },
+      "depth_logits": {
+        "active": 69,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.2074719787317876,
+          "lo": 0.1580983375144586,
+          "hi": 0.2638509800833688,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0016666670562699437
+      }
+    },
+    "RS": {
+      "angle_logits": {
+        "active": 89,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.2898237597617923,
+          "lo": 0.21380442788488663,
+          "hi": 0.36737091444870434,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0033943369053304195
+      },
+      "depth_logits": {
+        "active": 89,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.2898237597617923,
+          "lo": 0.21380442788488663,
+          "hi": 0.36737091444870434,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0013950844295322895
+      }
+    },
+    "PCR": {
+      "angle_logits": {
+        "active": 313,
+        "total": 313,
+        "scene_ci": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "scenes": 12
+        },
+        "median": 0.0033295289613306522,
+        "max": 0.04972388967871666
+      },
+      "depth_logits": {
+        "active": 145,
+        "total": 313,
+        "scene_ci": {
+          "mean": 0.4586614617522227,
+          "lo": 0.40607264987027086,
+          "hi": 0.5062825512928137,
+          "scenes": 12
+        },
+        "median": 0.0,
+        "max": 0.0017476825742051005
+      }
+    }
+  },
+  "directions": [
+    {
+      "coordinate": "angle",
+      "step": 0.0017453292519943296,
+      "filter": "all",
+      "n": 313,
+      "frozen_decrease": 313,
+      "recomputed_decrease": 243,
+      "recomputed_increase": 70,
+      "scene_ci": {
+        "mean": 0.8122744500269876,
+        "lo": 0.7535929474010098,
+        "hi": 0.8630865599345142,
+        "scenes": 12
+      },
+      "improved_scenes": 11,
+      "median_change": -0.0001258254051208496
+    },
+    {
+      "coordinate": "angle",
+      "step": 0.0017453292519943296,
+      "filter": "inside_sdf",
+      "n": 307,
+      "frozen_decrease": 307,
+      "recomputed_decrease": 239,
+      "recomputed_increase": 68,
+      "scene_ci": {
+        "mean": 0.8130386821510497,
+        "lo": 0.757192979796434,
+        "hi": 0.8615387600690799,
+        "scenes": 12
+      },
+      "improved_scenes": 12,
+      "median_change": -0.0001300126314163208
+    },
+    {
+      "coordinate": "angle",
+      "step": 0.0017453292519943296,
+      "filter": "inside_sdf_and_depth_range",
+      "n": 307,
+      "frozen_decrease": 307,
+      "recomputed_decrease": 239,
+      "recomputed_increase": 68,
+      "scene_ci": {
+        "mean": 0.8130386821510497,
+        "lo": 0.757192979796434,
+        "hi": 0.8615387600690799,
+        "scenes": 12
+      },
+      "improved_scenes": 12,
+      "median_change": -0.0001300126314163208
+    },
+    {
+      "coordinate": "angle",
+      "step": 0.008726646259971648,
+      "filter": "all",
+      "n": 313,
+      "frozen_decrease": 298,
+      "recomputed_decrease": 229,
+      "recomputed_increase": 84,
+      "scene_ci": {
+        "mean": 0.7739800515658173,
+        "lo": 0.7072072010348806,
+        "hi": 0.8416628712928873,
+        "scenes": 12
+      },
+      "improved_scenes": 11,
+      "median_change": -0.000585826113820076
+    },
+    {
+      "coordinate": "angle",
+      "step": 0.008726646259971648,
+      "filter": "inside_sdf",
+      "n": 307,
+      "frozen_decrease": 292,
+      "recomputed_decrease": 225,
+      "recomputed_increase": 82,
+      "scene_ci": {
+        "mean": 0.774971742097485,
+        "lo": 0.7102881444408281,
+        "hi": 0.840763211101367,
+        "scenes": 12
+      },
+      "improved_scenes": 11,
+      "median_change": -0.0006026569753885269
+    },
+    {
+      "coordinate": "angle",
+      "step": 0.008726646259971648,
+      "filter": "inside_sdf_and_depth_range",
+      "n": 307,
+      "frozen_decrease": 292,
+      "recomputed_decrease": 225,
+      "recomputed_increase": 82,
+      "scene_ci": {
+        "mean": 0.774971742097485,
+        "lo": 0.7102881444408281,
+        "hi": 0.840763211101367,
+        "scenes": 12
+      },
+      "improved_scenes": 11,
+      "median_change": -0.0006026569753885269
+    },
+    {
+      "coordinate": "depth",
+      "step": 5e-05,
+      "filter": "all",
+      "n": 145,
+      "frozen_decrease": 145,
+      "recomputed_decrease": 72,
+      "recomputed_increase": 73,
+      "scene_ci": {
+        "mean": 0.515771752613858,
+        "lo": 0.4407407407407407,
+        "hi": 0.5929321726032253,
+        "scenes": 12
+      },
+      "improved_scenes": 5,
+      "median_change": 1.564621925354004e-07
+    },
+    {
+      "coordinate": "depth",
+      "step": 5e-05,
+      "filter": "inside_sdf",
+      "n": 139,
+      "frozen_decrease": 139,
+      "recomputed_decrease": 69,
+      "recomputed_increase": 70,
+      "scene_ci": {
+        "mean": 0.5210171568627452,
+        "lo": 0.44210103485838786,
+        "hi": 0.6035903458605665,
+        "scenes": 12
+      },
+      "improved_scenes": 5,
+      "median_change": 1.564621925354004e-07
+    },
+    {
+      "coordinate": "depth",
+      "step": 5e-05,
+      "filter": "inside_sdf_and_depth_range",
+      "n": 123,
+      "frozen_decrease": 123,
+      "recomputed_decrease": 63,
+      "recomputed_increase": 60,
+      "scene_ci": {
+        "mean": 0.5437538156288156,
+        "lo": 0.4528819444444444,
+        "hi": 0.644047619047619,
+        "scenes": 12
+      },
+      "improved_scenes": 5,
+      "median_change": -1.2293457984924316e-06
+    },
+    {
+      "coordinate": "depth",
+      "step": 0.0002,
+      "filter": "all",
+      "n": 145,
+      "frozen_decrease": 145,
+      "recomputed_decrease": 72,
+      "recomputed_increase": 73,
+      "scene_ci": {
+        "mean": 0.5160154173312068,
+        "lo": 0.4453703703703704,
+        "hi": 0.5875863902179692,
+        "scenes": 12
+      },
+      "improved_scenes": 6,
+      "median_change": 1.4603137969970703e-06
+    },
+    {
+      "coordinate": "depth",
+      "step": 0.0002,
+      "filter": "inside_sdf",
+      "n": 139,
+      "frozen_decrease": 139,
+      "recomputed_decrease": 69,
+      "recomputed_increase": 70,
+      "scene_ci": {
+        "mean": 0.5207107843137255,
+        "lo": 0.44744008714596956,
+        "hi": 0.5961056644880175,
+        "scenes": 12
+      },
+      "improved_scenes": 6,
+      "median_change": 1.4603137969970703e-06
+    },
+    {
+      "coordinate": "depth",
+      "step": 0.0002,
+      "filter": "inside_sdf_and_depth_range",
+      "n": 123,
+      "frozen_decrease": 123,
+      "recomputed_decrease": 63,
+      "recomputed_increase": 60,
+      "scene_ci": {
+        "mean": 0.5425518925518925,
+        "lo": 0.4588095238095237,
+        "hi": 0.6357188644688645,
+        "scenes": 12
+      },
+      "improved_scenes": 5,
+      "median_change": -4.563480615615845e-06
+    }
+  ],
+  "temperature": {
+    "0.5": {
+      "angle_logits": 313,
+      "depth_logits": 142
+    },
+    "2.0": {
+      "angle_logits": 313,
+      "depth_logits": 145
+    }
+  },
+  "decision": "HOLD for joint angle-depth PCR; angle-path technical feasibility supported",
+  "weak_depth_active": 57,
+  "weak_angle_active": 137,
+  "input_hashes_unchanged": true
+}

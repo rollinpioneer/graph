@@ -1,0 +1,25 @@
+{
+  "status": "conditional proposal only; not executed or authorized",
+  "joint_angle_depth_decision": "HOLD",
+  "testable_narrow_hypothesis": "PCR angle surrogate gives incremental benefit beyond existing hard-decoded PCR paths",
+  "arms": {
+    "A": "Original EG supervision; adapter installed, PCR coefficient zero",
+    "B": "Same supervision plus PCR; hard angle and hard depth",
+    "C": "Same as B; angle straight-through only, depth remains hard"
+  },
+  "initialization": "Same official complete EG Kinect epoch-10 checkpoint and identical optimizer initialization",
+  "updates_per_seed_per_arm": 200,
+  "paired_seeds": 3,
+  "batch_size": 4,
+  "total_proposed_updates": 1800,
+  "data": "Training scenes 0-99 only; paired streams/augmentation, never C3 for training",
+  "decode": "Original hard decoder at inference for all arms",
+  "PCR_coefficient_and_weighting": "Identical B/C; lock from training-only first-batch zero-update integration check before updates; no C3 tuning",
+  "budget_control": "Same updates/examples and optimizer; optional detached PCR computation in A to match compute; report walltime and peak memory",
+  "primary_contrasts": ["C-B", "C-A"],
+  "primary_metrics": ["clean FF@10", "Top-1 weak force closure", "Top-1 feasible"],
+  "guardrail_metrics": ["no closure solution", "collision", "empty grasp", "harm to originally feasible grasps"],
+  "evaluation": "Existing C3 48-frame development panel; scene and paired-seed uncertainty; not held-out-test evidence",
+  "unverified_before_training": ["full-network backprop", "training mask and score weighting", "PCR scale"],
+  "C4_C5": false
+}
