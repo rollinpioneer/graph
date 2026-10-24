@@ -1,27 +1,116 @@
 {
-  "status": "STOPPED_CASE_C",
+  "status": "STOPPED_V2_REPLAY_MISMATCH",
   "completed": false,
-  "failed_frame": "cal_0067_0000",
+  "failed_frame": "cal_0067_0064",
+  "replay_protocol": "v2",
   "splits": {
     "probe": {
-      "exported_frames": 0,
-      "candidates": 0,
-      "variants": 0
+      "feature_frames": 0,
+      "feature_candidates": 0,
+      "associated_angle_variants": 0,
+      "new_evaluation_frames": 0,
+      "new_evaluation_candidates": 0,
+      "new_evaluation_variants": 0,
+      "replay_attempted_frames": 0,
+      "replay_passed_frames": 0,
+      "all_seed_view_flips_total_attempted": 0,
+      "all_seed_depth_flips_total_attempted": 0,
+      "attempted_width_error_distribution": null,
+      "attempted_logit_error_distribution": null,
+      "passed_width_error_distribution": null,
+      "passed_logit_error_distribution": null,
+      "all_seed_view_flips_distribution": null,
+      "all_seed_depth_flips_distribution": null
     },
     "cal": {
-      "exported_frames": 0,
-      "candidates": 0,
-      "variants": 0
+      "feature_frames": 1,
+      "feature_candidates": 50,
+      "associated_angle_variants": 600,
+      "new_evaluation_frames": 0,
+      "new_evaluation_candidates": 0,
+      "new_evaluation_variants": 0,
+      "replay_attempted_frames": 2,
+      "replay_passed_frames": 1,
+      "all_seed_view_flips_total_attempted": 621,
+      "all_seed_depth_flips_total_attempted": 434,
+      "attempted_width_error_distribution": {
+        "n": 2,
+        "min": 3.473460674285889e-05,
+        "median": 0.03147648647427559,
+        "p95": 0.05977406315505504,
+        "max": 0.06291823834180832
+      },
+      "attempted_logit_error_distribution": {
+        "n": 2,
+        "min": 0.008031845092773438,
+        "median": 6.089518308639526,
+        "p95": 11.562856125831603,
+        "max": 12.17100477218628
+      },
+      "passed_width_error_distribution": {
+        "n": 1,
+        "min": 3.473460674285889e-05,
+        "median": 3.473460674285889e-05,
+        "p95": 3.473460674285889e-05,
+        "max": 3.473460674285889e-05
+      },
+      "passed_logit_error_distribution": {
+        "n": 1,
+        "min": 0.008031845092773438,
+        "median": 0.008031845092773438,
+        "p95": 0.008031845092773438,
+        "max": 0.008031845092773438
+      },
+      "all_seed_view_flips_distribution": {
+        "n": 2,
+        "min": 1.0,
+        "median": 310.5,
+        "p95": 589.05,
+        "max": 620.0
+      },
+      "all_seed_depth_flips_distribution": {
+        "n": 2,
+        "min": 1.0,
+        "median": 217.0,
+        "p95": 411.4,
+        "max": 433.0
+      }
     },
     "C3": {
-      "exported_frames": 0,
-      "candidates": 0,
-      "variants": 0
+      "feature_frames": 0,
+      "feature_candidates": 0,
+      "associated_angle_variants": 0,
+      "new_evaluation_frames": 0,
+      "new_evaluation_candidates": 0,
+      "new_evaluation_variants": 0,
+      "replay_attempted_frames": 0,
+      "replay_passed_frames": 0,
+      "all_seed_view_flips_total_attempted": 0,
+      "all_seed_depth_flips_total_attempted": 0,
+      "attempted_width_error_distribution": null,
+      "attempted_logit_error_distribution": null,
+      "passed_width_error_distribution": null,
+      "passed_logit_error_distribution": null,
+      "all_seed_view_flips_distribution": null,
+      "all_seed_depth_flips_distribution": null
     },
     "P2": {
-      "exported_frames": 0,
-      "candidates": 0,
-      "variants": 0
+      "feature_frames": 0,
+      "feature_candidates": 0,
+      "associated_angle_variants": 0,
+      "new_evaluation_frames": 0,
+      "new_evaluation_candidates": 0,
+      "new_evaluation_variants": 0,
+      "replay_attempted_frames": 0,
+      "replay_passed_frames": 0,
+      "all_seed_view_flips_total_attempted": 0,
+      "all_seed_depth_flips_total_attempted": 0,
+      "attempted_width_error_distribution": null,
+      "attempted_logit_error_distribution": null,
+      "passed_width_error_distribution": null,
+      "passed_logit_error_distribution": null,
+      "all_seed_view_flips_distribution": null,
+      "all_seed_depth_flips_distribution": null
     }
   },
   "probe": {
@@ -31,79 +120,40 @@
     "reason": "Not evaluated"
   },
   "reproduction": {
-    "attempted_frames": 1,
-    "passed_frames": 0,
-    "pred_max_absolute_error": 0.36499732732772827,
-    "pred_tolerance": 1e-05,
-    "pred_passed": false,
-    "angle_index_equal_on_attempted_frame": true,
+    "gates": "protocol.json/replay_v2",
+    "failed_checks": [
+      "center_exact_equal",
+      "view_index_equal",
+      "depth_index_equal",
+      "angle_index_equal",
+      "width_max_absolute_error",
+      "logit_max_absolute_error"
+    ],
+    "failed_frame_receipt": "failure_v2_cal_0067_0064.json",
     "C3_logit_max_absolute_error": null,
     "cal_collision_equal": null,
-    "cal_empty_equal": null,
-    "untested_checks": "C3/P2 forward replay and all cal official evaluations were not started"
+    "cal_empty_equal": null
   },
   "gpu": {
-    "model": "NVIDIA A100-SXM4-40GB",
-    "total_forward_seconds": 4.477136986097321,
-    "forward_frames": 3,
-    "diagnostic_forward_seconds": [
-      1.8379968530498445,
-      0.14354189089499414
+    "models": [
+      "NVIDIA A100-SXM4-40GB"
     ],
-    "diagnostic_forward_frames": 2
+    "total_forward_seconds": 0.9666872462257743,
+    "forward_frames": 2,
+    "scope": "This v2 execution only"
   },
   "execution": {
     "training": false,
     "parameter_updates": 0,
-    "batch_export_started": false,
+    "view_override": false,
+    "skipped_frames": 0,
+    "removed_candidates": 0,
     "official_evaluation_started": false,
     "angle_selection_run": false
   },
-  "case": "C",
-  "diagnosis_file": "diagnosis_cal_0067_0000.json",
-  "D1": {
-    "pred_max_absolute_error": 0.36499732732772827,
-    "per_column_max_absolute_error": [
-      0.36499732732772827,
-      0.0006880536675453186,
-      0.0,
-      0.009999999776482582,
-      0.054799020290374756,
-      0.08010788261890411,
-      0.22596827149391174,
-      0.094085693359375,
-      0.020282387733459473,
-      0.0302189439535141,
-      0.22666670382022858,
-      0.0,
-      0.07628065347671509,
-      0.0,
-      0.0,
-      0.0,
-      0.0
-    ],
-    "seeds_over_1e5": 1020,
-    "candidate_seeds_over_1e5": 50,
-    "view_flips_all": 1,
-    "view_flips_candidates": 0,
-    "view_flip_seed_ids": [
-      150
-    ],
-    "view_flip_candidate_ids": [],
-    "depth_index_mismatches_all": 1,
-    "depth_index_mismatches_candidates": 0,
-    "angle_index_mismatches_all": 0,
-    "center_max_absolute_error": 0.0,
-    "same_view_pred_max_absolute_error": 0.011001110076904297,
-    "same_view_seeds_over_1e5": 1019,
-    "seed_count": 1024,
-    "candidate_count": 50
-  },
-  "D2": {
-    "pred_max_absolute_error": 0.0,
-    "pred_exact_equal": true,
-    "view_index_exact_equal": true
-  },
-  "export_resumed": false,
-  "view_override_applied": false
+  "notes": [
+    "all_seed flip counts compare equal seed indices; they do not establish geometric correspondence when centers differ",
+    "associated_angle_variants is the feature row count times 12, not newly evaluated labels",
+    "null means not run, not zero missingness or passed verification"
+  ]
 }

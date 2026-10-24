@@ -8,7 +8,7 @@ sys.path.insert(0,str(ROOT.parent/'eg_p2_i1_mu_20261024'))
 import evaluate_p2 as P
 E=P.E
 assert E.sha(Path(P.__file__))=='15d5795c22a45f1149c4b6f38c3dab961888e2e883064fceca2474c44decb684'
-STOP=ROOT/'STOP_ON_MISMATCH'
+STOP=ROOT/'STOP_V2_ON_MISMATCH'
 def save_json(p,r):p.write_text(json.dumps(r,indent=2,allow_nan=False))
 def run(task):
  split,s,f=task;key=f'{split}_{s:04d}_{f:04d}';start=time.time();cpu=time.process_time()
@@ -56,7 +56,7 @@ def run(task):
  except BaseException:
   STOP.write_text(key+'\n'+traceback.format_exc());raise
 def main():
- assert json.loads((ROOT/'pilot_passed.json').read_text())['passed']
+ assert json.loads((ROOT/'history_v2_passed.json').read_text())['passed']
  plan=json.loads((ROOT/'protocol.json').read_text());shard,workers=map(int,sys.argv[1:3])
  tasks=[('cal',s,f) for s in plan['cal_scenes'] for f in plan['cal_frames']]+[('probe',s,f) for s in plan['probe_train_scenes']+plan['probe_validation_scenes'] for f in plan['probe_frames']]
  todo=tasks[shard::3]
