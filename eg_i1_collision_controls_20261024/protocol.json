@@ -1,0 +1,25 @@
+{
+  "date":"2026-10-24",
+  "scope":"Zero-training I1 versus existing collision/PCR controls",
+  "input":"Prior 48 C3 frames, 1229 candidates, 14748 evaluated angle variants; no new analytic force-closure evaluation",
+  "groups":{
+    "O":"original EG angle",
+    "A":"argmin I1, contact-defined angles",
+    "B":"argmin I1 among contact-defined angles passing existing EG point-cloud CD",
+    "C":"argmin (I1 + RC + RS), all coefficients 1, no scale fitting",
+    "D":"same objective as C, restrict to existing EG CD pass",
+    "E":"argmin I1 among contact-defined GT noncollision/nonempty angles; Oracle only",
+    "F":"argmin (RA + RC + RS), original unweighted per-candidate PCR sum; offline GT-SDF proxy"
+  },
+  "selection":"All 12 angle classes; finite required terms; ties within 1e-7 keep nominal else closest cyclic class then smallest class; no eligible angle retains original and records fallback",
+  "physical_definition":"0<mu<=0.4 feasible if nonempty/noncollision; 0.4<mu<=1.2 weak; no-FC, collision, empty, unknown separate",
+  "PCR":"Use existing object SDF, official fingertip d-0.002 and +/-width/2; RC relu(0.005-s), RS relu(s-0.02), RA original normal opposition; align_corners=False/border padding unchanged; record out-of-grid",
+  "EG_CD":{"voxel_size":0.005,"approach_dist":0.05,"collision_thresh":0.01,"input":"original raw valid depth cloud within official workspace crop; existing official detector; no learned completion","record":"global,left,right,bottom,shifting occupancy ratios"},
+  "postprocess":"Replace only the selected 1229 candidate IDs inside each original 1024-candidate raw pool; retain all other candidates. For all O-F rerun identical EG CD -> NMS(0.03m,pi/6) -> per-object top10 -> top50. Reuse original labels for unchanged IDs and prior angle labels for changed IDs. Any newly promoted unlabelled candidate remains unknown; no extra FC computation.",
+  "fixed":"position, approach, depth, width, original quality scores and raw candidate IDs",
+  "detector_metrics":"Miss rate on GT nonempty collision; false-filter rate on GT clean nonempty and separately GT feasible. Report all variants, nonnominal variants and selected A/B/D distributions. Unknowns separate.",
+  "mechanism_caution":"No observed collision occupancy is not an occlusion ground truth. EG swept-volume geometry and occupancy threshold differ from official static collision criterion. PCR probes only two tips on assigned object.",
+  "statistics":"Scene-equal paired contrasts; 10000 stratified bootstrap draws (seen/similar/novel), never candidate-independent confidence intervals",
+  "operational_decision":"Support diagnostic GO only if B/C/D/F retains positive net feasible gain (scene CI lower>0), reduces collision relative to A (paired scene CI upper<0), and scene-average feasible-harm<=5%, new collision<=5%, and weak recovery>0. Report fixed/pipeline Top1 and unknown bounds too. This is not a deployable-method GO because I1/PCR use GT.",
+  "training":false,"parameter_updates":0,"C4_C5":false,"history_modified":false,"parameter_search":false
+}
