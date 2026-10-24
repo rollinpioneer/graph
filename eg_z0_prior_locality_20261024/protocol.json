@@ -1,0 +1,22 @@
+{
+  "scope": "Z0 only; existing C3 angle table, no training/inference/new force-closure labels",
+  "seed": 20261024,
+  "scenes": [100,106,115,124,132,139,150,157,160,169,176,186],
+  "frames": [0,64,128,192],
+  "k": [3,5],
+  "primary": "P3 versus L3 without EG collision filtering",
+  "filters": ["none","EG_cd"],
+  "P": "Highest k among first 12 angle outputs; stable class-index tie break. Force nominal into set by replacing worst selected class if absent; keep cardinality k.",
+  "L": "Nominal plus cyclic offsets -floor(k/2)..floor(k/2)",
+  "R": "1000 uniform draws: nominal plus k-1 distinct other classes. Common random permutations couple k=3 and k=5 and both filters. Generator PCG64 seed20261024; frames sorted by scene/frame; candidates in stored order.",
+  "choose": "Minimum finite I1 among permitted classes; ties atol1e-7 keep original, else shortest cyclic distance, then smallest class index. No eligible class retains original and records fallback.",
+  "statistics": "12 scenes equally weighted; stratified seen/similar/novel scene bootstrap10000 seed20261024, paired draws. Random group scene intervals use per-candidate outcomes averaged over1000 draws; separately report fixed-panel Monte Carlo 2.5/97.5 percentiles, not a population confidence interval.",
+  "rate_denominators": {"feasible":"all1229","collision":"all1229","empty":"all1229","no_FC":"all1229","recovery":"original588weak","harm":"original641feasible"},
+  "mechanism": "Non-original angle variants. AUROC label=GT collision and nonempty; exclude empty and unknown labels from this comparison and report exclusions. Scores: within-candidate descending-logit average rank, versus cyclic class distance; larger is more collision risk. Report scene-equal AUROC and paired interval, pooled AUROC descriptive only.",
+  "tertiles": "Within each cyclic distance, quantiles of logit rank at1/3,2/3; equal ranks remain in same bin; show rank cutpoints and possibly unequal bin sizes. Labels never choose cutpoints.",
+  "decision": "Evaluate PRIOR first (P3 collision<=0.7L3, paired collision-rate CI upper<0, P3 recovery>=0.9L3). Otherwise LOCALITY when collision difference within +/-30%; NO-PRIOR when P3 collision worse beyond that band. If collision reduction>30% but PRIOR fails another condition, report INCONCLUSIVE rather than invent a preregistered label. Also explicitly report any P3 worse-than-L3 point estimate inside overlap of original verbal rules.",
+  "T_training": false,
+  "risk_label_precomputation": false,
+  "C4_C5": false,
+  "remote_access_needed": false
+}
