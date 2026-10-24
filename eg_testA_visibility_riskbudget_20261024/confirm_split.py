@@ -20,10 +20,13 @@ for f in sorted(glob.glob(f'{PP}/{SPLIT}_*.npz')):
     a = np.load(f)
     s, fr = map(int, os.path.basename(f)[:-4].split('_')[1:])
     v = np.load(f'{I1D}/{s:04d}_{fr:04d}.npz')
-    for k in ['candidate_id', 'original_angle', 'mu', 'collision', 'empty']:
+    for k in ['candidate_id', 'original_angle', 'collision', 'empty']:
         assert np.array_equal(a[k], v[k]), (s, fr, k)
-    d = {k: a[k] for k in ['candidate_id', 'original_angle', 'collision', 'empty', 'mu', 'ref_occ', 'R1', 'R3']}
-    d['I1'] = v['I1']; d['scene'] = np.full(len(d['candidate_id']), s); d['frame'] = np.full(len(d['candidate_id']), fr)
+    # N0 per_pose has no mu for P2/train (all NaN); mu comes from the I1 evaluation file.
+    known = np.isfinite(a['mu'])
+    assert np.array_equal(a['mu'][known], v['mu'][known]), (s, fr, 'mu')
+    d = {k: a[k] for k in ['candidate_id', 'original_angle', 'collision', 'empty', 'ref_occ', 'R1', 'R3']}
+    d['mu'] = v['mu']; d['I1'] = v['I1']; d['scene'] = np.full(len(d['candidate_id']), s); d['frame'] = np.full(len(d['candidate_id']), fr)
     rows.append(d)
 A = {k: np.concatenate([r[k] for r in rows]) for k in rows[0]}
 ix = np.arange(len(A['original_angle'])); nom = A['original_angle']
