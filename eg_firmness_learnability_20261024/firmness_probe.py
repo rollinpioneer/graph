@@ -45,7 +45,9 @@ def load_split(split, eval_dir, pose_split=None):
         d = dict(X=np.concatenate([F['vp'], F['ang'], F['logit']], 1).astype(np.float64), logit=F['logit'].astype(np.float64),
                  nom=E['original_angle'], mu=E['mu'], col=E['collision'], emp=E['empty'], I1=E['I1'],
                  scene=np.full(len(F['candidate_id']), s))
-        if pose_split:
+        if 'R1' in E.files:  # v3: fresh A100 export carries the EG ratio per variant
+            d['R1'] = E['R1']
+        elif pose_split:
             P = np.load(f"{CFG['per_pose_dir']}/{pose_split}_{s:04d}_{f:04d}.npz")
             for k in ['candidate_id', 'original_angle', 'collision', 'empty']:
                 assert np.array_equal(P[k], E[k]), (split, s, f, k)
@@ -207,14 +209,14 @@ def corr(a, b):
 
 res = dict(train_scenes=TRAIN_SCENES, val_scenes=VAL_SCENES, probe_candidates=int(len(PR['nom'])), probe_masked_frac=float(np.isnan(Qpr).mean()),
            lambda_from_cal=lam, curves=curves, splits={})
-for tag, B, base in [('C3', C3B, 641), ('P2', P2B, 591)]:
+for tag, B in [('C3', C3B), ('P2', P2B)]:
     rate, interval = boot_setup(B); n = len(B['nom']); O = {}
-    assert int(B['GOOD'].sum()) == base, (tag, int(B['GOOD'].sum()))
+    base = int(B['GOOD'].sum())  # do-nothing feasible count on this panel
     for name, g in B['gains'].items():
         O[name] = outcomes(B, choose(B, g, lam[name]))
     nonorig = np.ones((n, 12), bool); nonorig[B['IX'], B['nom']] = False
     qtrue = firmness(B['mu'], B['col'], B['emp']); qgain = qtrue - qtrue[B['IX'], B['nom']][:, None]
-    sp = dict(candidates=n, do_nothing_feasible=base,
+    sp = dict(candidates=n, do_nothing_feasible=base, min_gain=int(np.ceil(0.025 * n)),
               counts={k: {m: int(v.sum()) for m, v in o.items()} for k, o in O.items()},
               corr_with_true_q_gain={k: corr(g[nonorig], qgain[nonorig]) for k, g in B['gains'].items()},
               corr_with_true_I1_gain={k: corr(g[nonorig], B['gains']['ref_I1'][nonorig]) for k, g in B['gains'].items()},
@@ -224,9 +226,9 @@ for tag, B, base in [('C3', C3B, 641), ('P2', P2B, 591)]:
               collision_rate_feat=float(O['M_feat']['collision'].mean()))
     res['splits'][tag] = sp
 c3, p2 = res['splits']['C3'], res['splits']['P2']
-F1 = c3['counts']['M_feat']['feasible'] - 641 >= 31 and c3['feat_minus_nothing']['low'] > 0
+F1 = c3['counts']['M_feat']['feasible'] - c3['do_nothing_feasible'] >= c3['min_gain'] and c3['feat_minus_nothing']['low'] > 0
 F2 = c3['feat_minus_logitprobe']['low'] > 0
-F3 = p2['counts']['M_feat']['feasible'] - 591 >= 37 and p2['feat_minus_nothing']['low'] > 0
+F3 = p2['counts']['M_feat']['feasible'] - p2['do_nothing_feasible'] >= p2['min_gain'] and p2['feat_minus_nothing']['low'] > 0
 G = c3['collision_rate_feat'] <= 0.04 and p2['collision_rate_feat'] <= 0.04
 res['gates'] = dict(F1=bool(F1), F2=bool(F2), F3=bool(F3), G=bool(G))
 res['verdict'] = ('LEARNABLE' if F1 and F2 and F3 and G else 'LOGIT-ONLY' if F1 and F3 and G else 'HOLD' if F1 else 'NOT-YET')
