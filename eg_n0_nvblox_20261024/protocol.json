@@ -1,0 +1,88 @@
+{
+  "seed": 20261024,
+  "training_scenes": [
+    67,
+    4,
+    50,
+    56,
+    14,
+    65,
+    62,
+    30,
+    45,
+    1,
+    96,
+    71
+  ],
+  "training_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "C3_scenes": [
+    100,
+    106,
+    115,
+    124,
+    132,
+    139,
+    150,
+    157,
+    160,
+    169,
+    176,
+    186
+  ],
+  "C3_frames": [
+    0,
+    64,
+    128,
+    192
+  ],
+  "P2_frames": [
+    32,
+    96,
+    160,
+    224
+  ],
+  "excluded_training_scenes": [
+    2,
+    9,
+    31,
+    33,
+    64,
+    68,
+    76,
+    82
+  ],
+  "voxel_size": 0.0025,
+  "truncation": 0.01,
+  "epsilon": 0.0025,
+  "kappa_grid": [
+    0,
+    0.1,
+    0.25,
+    0.5
+  ],
+  "initial_check": [
+    [
+      67,
+      0
+    ],
+    [
+      4,
+      0
+    ]
+  ],
+  "agreement_min": 0.99,
+  "agreement_definition": "Report both pointwise continuous projection and identical voxel-center projection; do not silently replace one gate by the other. If continuous fails, report it explicitly before any C3 comparison.",
+  "calibration_false_filter_denominator": "GT clean and nonempty (no FC needed); feasible separately on C3",
+  "calibration_ties": "choose strict r>threshold with maximum scene-equal recall subject to scene-equal false-filter budget; ties: lower false filter, then lower kappa",
+  "OP1": "EG original calibration false filter",
+  "OP2": "EG original calibration false filter +0.05",
+  "C3_formal_runs": 0,
+  "training": false,
+  "parameter_updates": 0,
+  "C4_C5": false
+}
