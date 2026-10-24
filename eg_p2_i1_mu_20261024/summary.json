@@ -1,0 +1,36 @@
+{
+  "c3_replay": {
+    "passed": true,
+    "scene": 100,
+    "frame": 0,
+    "candidates": 31,
+    "variants": 372,
+    "mu": true,
+    "collision": true,
+    "empty": true,
+    "I1_missing_mask_equal": true,
+    "I1_max_absolute_error": 2.7755575615628914e-16
+  },
+  "frames": 48,
+  "candidates": 2247,
+  "variants": 26964,
+  "original_angle_clean": 1469,
+  "original_angle_feasible": 591,
+  "original_angle_weak": 592,
+  "mu_unknown": 0,
+  "I1_missing": 9327,
+  "original_angle_I1_missing": 467,
+  "verification": {
+    "all_48_candidate_ids_match": true,
+    "all_48_original_angles_match": true,
+    "all_48_owner_mappings_match": true,
+    "all_26964_collision_labels_match": true,
+    "all_26964_empty_labels_match": true
+  },
+  "definitions": {
+    "original_angle_clean": "not collision and not empty",
+    "original_angle_feasible": "clean and 0 < mu <= 0.4",
+    "original_angle_weak": "clean and mu > 0.4",
+    "unknown": "mu is NaN; no force-closure solution (-1) is not unknown"
+  }
+}
